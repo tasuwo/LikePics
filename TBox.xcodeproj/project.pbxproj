@@ -19,6 +19,9 @@
 		2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */; };
 		2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278B24DDCEF700672CA7 /* Constants.swift */; };
+		2C99279524DDD65E00672CA7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99279424DDD65E00672CA7 /* ShareViewController.swift */; };
+		2C99279824DDD65E00672CA7 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C99279624DDD65E00672CA7 /* MainInterface.storyboard */; };
+		2C99279C24DDD65E00672CA7 /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2C99279224DDD65E00672CA7 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228C24DD9F5E00329251 /* AppDelegate.swift */; };
 		2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */; };
 		2CA0229124DD9F5E00329251 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0229024DD9F5E00329251 /* ViewController.swift */; };
@@ -67,6 +70,13 @@
 			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
 			remoteInfo = Domain;
 		};
+		2C99279A24DDD65E00672CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99279124DDD65E00672CA7;
+			remoteInfo = ShareExtension;
+		};
 		2CA022A024DD9F5F00329251 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
@@ -109,6 +119,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2C9927A024DDD65E00672CA7 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2C99279C24DDD65E00672CA7 /* ShareExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -138,6 +159,12 @@
 		2C99277C24DDC7E600672CA7 /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageProtocol.swift; sourceTree = "<group>"; };
 		2C99278B24DDCEF700672CA7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2C99278D24DDD60C00672CA7 /* TBox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TBox.entitlements; sourceTree = "<group>"; };
+		2C99279224DDD65E00672CA7 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C99279424DDD65E00672CA7 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		2C99279724DDD65E00672CA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		2C99279924DDD65E00672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		2CA0228924DD9F5E00329251 /* TBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA0228C24DD9F5E00329251 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -180,6 +207,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C99278F24DDD65E00672CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +328,17 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		2C99279324DDD65E00672CA7 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */,
+				2C99279424DDD65E00672CA7 /* ShareViewController.swift */,
+				2C99279624DDD65E00672CA7 /* MainInterface.storyboard */,
+				2C99279924DDD65E00672CA7 /* Info.plist */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
 		2CA0228024DD9F5E00329251 = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +348,7 @@
 				2CCECE2224DDC0CB00ADFE54 /* PersistenceTests */,
 				2C99275F24DDC7D300672CA7 /* Domain */,
 				2C99276C24DDC7D400672CA7 /* DomainTests */,
+				2C99279324DDD65E00672CA7 /* ShareExtension */,
 				2CA0228A24DD9F5E00329251 /* Products */,
 				365F1EF69CF3A637940810AE /* Pods */,
 				2665183E622257296D7CF08A /* Frameworks */,
@@ -318,6 +364,7 @@
 				2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */,
 				2C99275E24DDC7D300672CA7 /* Domain.framework */,
 				2C99276624DDC7D400672CA7 /* DomainTests.xctest */,
+				2C99279224DDD65E00672CA7 /* ShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -325,6 +372,7 @@
 		2CA0228B24DD9F5E00329251 /* TBox */ = {
 			isa = PBXGroup;
 			children = (
+				2C99278D24DDD60C00672CA7 /* TBox.entitlements */,
 				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
 				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
 				2CA0229024DD9F5E00329251 /* ViewController.swift */,
@@ -440,6 +488,23 @@
 			productReference = 2C99276624DDC7D400672CA7 /* DomainTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2C99279124DDD65E00672CA7 /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C99279D24DDD65E00672CA7 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				2C99278E24DDD65E00672CA7 /* Sources */,
+				2C99278F24DDD65E00672CA7 /* Frameworks */,
+				2C99279024DDD65E00672CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareExtension;
+			productName = ShareExtension;
+			productReference = 2C99279224DDD65E00672CA7 /* ShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		2CA0228824DD9F5E00329251 /* TBox */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CA022A824DD9F5F00329251 /* Build configuration list for PBXNativeTarget "TBox" */;
@@ -452,12 +517,14 @@
 				2CA0228724DD9F5E00329251 /* Resources */,
 				2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */,
 				AD46BD4DC66BC1374E1B3611 /* [CP] Embed Pods Frameworks */,
+				2C9927A024DDD65E00672CA7 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				2CCECE2824DDC0CB00ADFE54 /* PBXTargetDependency */,
 				2C99277224DDC7D400672CA7 /* PBXTargetDependency */,
+				2C99279B24DDD65E00672CA7 /* PBXTargetDependency */,
 			);
 			name = TBox;
 			productName = TBox;
@@ -543,6 +610,9 @@
 						CreatedOnToolsVersion = 11.4.1;
 						TestTargetID = 2CA0228824DD9F5E00329251;
 					};
+					2C99279124DDD65E00672CA7 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
 					2CA0228824DD9F5E00329251 = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
@@ -579,6 +649,7 @@
 				2CCECE1B24DDC0CB00ADFE54 /* PersistenceTests */,
 				2C99275D24DDC7D300672CA7 /* Domain */,
 				2C99276524DDC7D400672CA7 /* DomainTests */,
+				2C99279124DDD65E00672CA7 /* ShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -595,6 +666,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C99279024DDD65E00672CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99279824DDD65E00672CA7 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -810,6 +889,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2C99278E24DDD65E00672CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99279524DDD65E00672CA7 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CA0228524DD9F5E00329251 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -870,6 +957,11 @@
 			target = 2C99275D24DDC7D300672CA7 /* Domain */;
 			targetProxy = 2C99278024DDC85C00672CA7 /* PBXContainerItemProxy */;
 		};
+		2C99279B24DDD65E00672CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99279124DDD65E00672CA7 /* ShareExtension */;
+			targetProxy = 2C99279A24DDD65E00672CA7 /* PBXContainerItemProxy */;
+		};
 		2CA022A124DD9F5F00329251 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2CA0228824DD9F5E00329251 /* TBox */;
@@ -893,6 +985,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2C99279624DDD65E00672CA7 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C99279724DDD65E00672CA7 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		2CA0229224DD9F5E00329251 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -916,9 +1016,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -946,9 +1048,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -976,6 +1080,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -995,6 +1100,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1006,6 +1112,46 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+			};
+			name = Release;
+		};
+		2C99279E24DDD65E00672CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2C99279F24DDD65E00672CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1129,7 +1275,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = TBox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1149,7 +1297,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = TBox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1170,6 +1320,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1192,6 +1343,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1212,9 +1364,11 @@
 			baseConfigurationReference = E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1243,9 +1397,11 @@
 			baseConfigurationReference = 24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1274,6 +1430,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1294,6 +1451,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1325,6 +1483,15 @@
 			buildConfigurations = (
 				2C99277924DDC7D400672CA7 /* Debug */,
 				2C99277A24DDC7D400672CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C99279D24DDD65E00672CA7 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C99279E24DDD65E00672CA7 /* Debug */,
+				2C99279F24DDD65E00672CA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
