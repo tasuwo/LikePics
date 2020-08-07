@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
+		2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* ClipStorage.swift */; };
+		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
+		2C99276E24DDC7D400672CA7 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99276D24DDC7D400672CA7 /* DomainTests.swift */; };
+		2C99277024DDC7D400672CA7 /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C99276024DDC7D300672CA7 /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2C99277324DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
+		2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99277C24DDC7E600672CA7 /* Clip.swift */; };
+		2C99277E24DDC85C00672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
+		2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */; };
+		2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278B24DDCEF700672CA7 /* Constants.swift */; };
 		2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228C24DD9F5E00329251 /* AppDelegate.swift */; };
 		2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */; };
 		2CA0229124DD9F5E00329251 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0229024DD9F5E00329251 /* ViewController.swift */; };
@@ -19,6 +31,7 @@
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */; };
 		55F45F4812801E2180291BA7 /* Pods_Persistence_PersistenceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860BAC25B1E0196A0635E44F /* Pods_Persistence_PersistenceTests.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
 		A23DF61484F1653DE1630077 /* Pods_TBoxTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */; };
@@ -26,6 +39,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2C99276824DDC7D400672CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
+			remoteInfo = Domain;
+		};
+		2C99276A24DDC7D400672CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CA0228824DD9F5E00329251;
+			remoteInfo = TBox;
+		};
+		2C99277124DDC7D400672CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
+			remoteInfo = Domain;
+		};
+		2C99278024DDC85C00672CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
+			remoteInfo = Domain;
+		};
 		2CA022A024DD9F5F00329251 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
@@ -57,12 +98,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2C99278224DDC85C00672CA7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */,
 				2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -74,6 +127,17 @@
 		0268012C1F191506323EA6CB /* Pods-Persistence-PersistenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence-PersistenceTests.release.xcconfig"; path = "Target Support Files/Pods-Persistence-PersistenceTests/Pods-Persistence-PersistenceTests.release.xcconfig"; sourceTree = "<group>"; };
 		04B00148182685E95C21EF58 /* Pods-TBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.release.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.release.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
+		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
+		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
+		2C99275E24DDC7D300672CA7 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C99276024DDC7D300672CA7 /* Domain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Domain.h; sourceTree = "<group>"; };
+		2C99276124DDC7D300672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C99276624DDC7D400672CA7 /* DomainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C99276D24DDC7D400672CA7 /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
+		2C99276F24DDC7D400672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C99277C24DDC7E600672CA7 /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
+		2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageProtocol.swift; sourceTree = "<group>"; };
+		2C99278B24DDCEF700672CA7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2CA0228924DD9F5E00329251 /* TBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA0228C24DD9F5E00329251 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +155,7 @@
 		2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersistenceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
 		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipObject.swift; sourceTree = "<group>"; };
 		65700814FC5D4DB0F85CB23B /* Pods_TBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debug.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debug.xcconfig"; sourceTree = "<group>"; };
 		860BAC25B1E0196A0635E44F /* Pods_Persistence_PersistenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Persistence_PersistenceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,10 +168,26 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2C99275B24DDC7D300672CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C99276324DDC7D400672CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CA0228624DD9F5E00329251 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C99277324DDC7D400672CA7 /* Domain.framework in Frameworks */,
 				2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */,
 				EB2DA02CBD88EB7C2F01C67A /* Pods_TBox.framework in Frameworks */,
 			);
@@ -124,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C99277E24DDC85C00672CA7 /* Domain.framework in Frameworks */,
 				73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,6 +233,67 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2C2F623624DDC4C4000A8CDB /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */,
+				2C99275424DDC68100672CA7 /* Persistable.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C99275624DDC6DB00672CA7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		2C99275F24DDC7D300672CA7 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2C99278424DDCAA100672CA7 /* Storage */,
+				2C99277B24DDC7DA00672CA7 /* Entity */,
+				2C99276024DDC7D300672CA7 /* Domain.h */,
+				2C99276124DDC7D300672CA7 /* Info.plist */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2C99276C24DDC7D400672CA7 /* DomainTests */ = {
+			isa = PBXGroup;
+			children = (
+				2C99276D24DDC7D400672CA7 /* DomainTests.swift */,
+				2C99276F24DDC7D400672CA7 /* Info.plist */,
+			);
+			path = DomainTests;
+			sourceTree = "<group>";
+		};
+		2C99277B24DDC7DA00672CA7 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				2C99277C24DDC7E600672CA7 /* Clip.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C99278424DDCAA100672CA7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		2C99278A24DDCED700672CA7 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				2C99278B24DDCEF700672CA7 /* Constants.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
 		2CA0228024DD9F5E00329251 = {
 			isa = PBXGroup;
 			children = (
@@ -158,6 +301,8 @@
 				2CA022A224DD9F5F00329251 /* TBoxTests */,
 				2CCECE1524DDC0CB00ADFE54 /* Persistence */,
 				2CCECE2224DDC0CB00ADFE54 /* PersistenceTests */,
+				2C99275F24DDC7D300672CA7 /* Domain */,
+				2C99276C24DDC7D400672CA7 /* DomainTests */,
 				2CA0228A24DD9F5E00329251 /* Products */,
 				365F1EF69CF3A637940810AE /* Pods */,
 				2665183E622257296D7CF08A /* Frameworks */,
@@ -171,6 +316,8 @@
 				2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */,
 				2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */,
 				2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */,
+				2C99275E24DDC7D300672CA7 /* Domain.framework */,
+				2C99276624DDC7D400672CA7 /* DomainTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,6 +348,9 @@
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				2C99278A24DDCED700672CA7 /* Configuration */,
+				2C99275624DDC6DB00672CA7 /* Storage */,
+				2C2F623624DDC4C4000A8CDB /* Entity */,
 				2CCECE1624DDC0CB00ADFE54 /* Persistence.h */,
 				2CCECE1724DDC0CB00ADFE54 /* Info.plist */,
 			);
@@ -234,6 +384,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		2C99275924DDC7D300672CA7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99277024DDC7D400672CA7 /* Domain.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CCECE0F24DDC0CB00ADFE54 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -245,6 +403,43 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2C99275D24DDC7D300672CA7 /* Domain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C99277524DDC7D400672CA7 /* Build configuration list for PBXNativeTarget "Domain" */;
+			buildPhases = (
+				2C99275924DDC7D300672CA7 /* Headers */,
+				2C99275A24DDC7D300672CA7 /* Sources */,
+				2C99275B24DDC7D300672CA7 /* Frameworks */,
+				2C99275C24DDC7D300672CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Domain;
+			productName = Domain;
+			productReference = 2C99275E24DDC7D300672CA7 /* Domain.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2C99276524DDC7D400672CA7 /* DomainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C99277824DDC7D400672CA7 /* Build configuration list for PBXNativeTarget "DomainTests" */;
+			buildPhases = (
+				2C99276224DDC7D400672CA7 /* Sources */,
+				2C99276324DDC7D400672CA7 /* Frameworks */,
+				2C99276424DDC7D400672CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C99276924DDC7D400672CA7 /* PBXTargetDependency */,
+				2C99276B24DDC7D400672CA7 /* PBXTargetDependency */,
+			);
+			name = DomainTests;
+			productName = DomainTests;
+			productReference = 2C99276624DDC7D400672CA7 /* DomainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2CA0228824DD9F5E00329251 /* TBox */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CA022A824DD9F5F00329251 /* Build configuration list for PBXNativeTarget "TBox" */;
@@ -262,6 +457,7 @@
 			);
 			dependencies = (
 				2CCECE2824DDC0CB00ADFE54 /* PBXTargetDependency */,
+				2C99277224DDC7D400672CA7 /* PBXTargetDependency */,
 			);
 			name = TBox;
 			productName = TBox;
@@ -296,10 +492,12 @@
 				2CCECE1024DDC0CB00ADFE54 /* Sources */,
 				2CCECE1124DDC0CB00ADFE54 /* Frameworks */,
 				2CCECE1224DDC0CB00ADFE54 /* Resources */,
+				2C99278224DDC85C00672CA7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2C99278124DDC85C00672CA7 /* PBXTargetDependency */,
 			);
 			name = Persistence;
 			productName = Persistence;
@@ -337,6 +535,14 @@
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Tasuku Tozawa";
 				TargetAttributes = {
+					2C99275D24DDC7D300672CA7 = {
+						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1140;
+					};
+					2C99276524DDC7D400672CA7 = {
+						CreatedOnToolsVersion = 11.4.1;
+						TestTargetID = 2CA0228824DD9F5E00329251;
+					};
 					2CA0228824DD9F5E00329251 = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
@@ -346,6 +552,7 @@
 					};
 					2CCECE1324DDC0CB00ADFE54 = {
 						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1140;
 					};
 					2CCECE1B24DDC0CB00ADFE54 = {
 						CreatedOnToolsVersion = 11.4.1;
@@ -370,11 +577,27 @@
 				2CA0229E24DD9F5F00329251 /* TBoxTests */,
 				2CCECE1324DDC0CB00ADFE54 /* Persistence */,
 				2CCECE1B24DDC0CB00ADFE54 /* PersistenceTests */,
+				2C99275D24DDC7D300672CA7 /* Domain */,
+				2C99276524DDC7D400672CA7 /* DomainTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2C99275C24DDC7D300672CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C99276424DDC7D400672CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CA0228724DD9F5E00329251 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -570,6 +793,23 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2C99275A24DDC7D300672CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
+				2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C99276224DDC7D400672CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C99276E24DDC7D400672CA7 /* DomainTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CA0228524DD9F5E00329251 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -592,6 +832,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
+				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
+				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
+				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,6 +850,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2C99276924DDC7D400672CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99275D24DDC7D300672CA7 /* Domain */;
+			targetProxy = 2C99276824DDC7D400672CA7 /* PBXContainerItemProxy */;
+		};
+		2C99276B24DDC7D400672CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CA0228824DD9F5E00329251 /* TBox */;
+			targetProxy = 2C99276A24DDC7D400672CA7 /* PBXContainerItemProxy */;
+		};
+		2C99277224DDC7D400672CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99275D24DDC7D300672CA7 /* Domain */;
+			targetProxy = 2C99277124DDC7D400672CA7 /* PBXContainerItemProxy */;
+		};
+		2C99278124DDC85C00672CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99275D24DDC7D300672CA7 /* Domain */;
+			targetProxy = 2C99278024DDC85C00672CA7 /* PBXContainerItemProxy */;
+		};
 		2CA022A124DD9F5F00329251 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2CA0228824DD9F5E00329251 /* TBox */;
@@ -648,6 +912,103 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2C99277624DDC7D400672CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Domain;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2C99277724DDC7D400672CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Domain;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2C99277924DDC7D400672CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.DomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+			};
+			name = Debug;
+		};
+		2C99277A24DDC7D400672CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.DomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+			};
+			name = Release;
+		};
 		2CA022A624DD9F5F00329251 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -766,9 +1127,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -784,9 +1147,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04B00148182685E95C21EF58 /* Pods-TBox.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -846,6 +1211,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -854,6 +1220,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -862,6 +1229,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -873,6 +1242,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -881,6 +1251,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -889,6 +1260,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -939,6 +1311,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2C99277524DDC7D400672CA7 /* Build configuration list for PBXNativeTarget "Domain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C99277624DDC7D400672CA7 /* Debug */,
+				2C99277724DDC7D400672CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C99277824DDC7D400672CA7 /* Build configuration list for PBXNativeTarget "DomainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C99277924DDC7D400672CA7 /* Debug */,
+				2C99277A24DDC7D400672CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2CA0228424DD9F5E00329251 /* Build configuration list for PBXProject "TBox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
