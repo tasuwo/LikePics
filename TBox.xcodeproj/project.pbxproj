@@ -14,6 +14,11 @@
 		2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229524DD9F5F00329251 /* Assets.xcassets */; };
 		2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */; };
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
+		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
+		2CCECE2424DDC0CB00ADFE54 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */; };
+		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
+		2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,7 +29,42 @@
 			remoteGlobalIDString = 2CA0228824DD9F5E00329251;
 			remoteInfo = TBox;
 		};
+		2CCECE1E24DDC0CB00ADFE54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CCECE1324DDC0CB00ADFE54;
+			remoteInfo = Persistence;
+		};
+		2CCECE2024DDC0CB00ADFE54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CA0228824DD9F5E00329251;
+			remoteInfo = TBox;
+		};
+		2CCECE2724DDC0CB00ADFE54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CCECE1324DDC0CB00ADFE54;
+			remoteInfo = Persistence;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2CA0228924DD9F5E00329251 /* TBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,6 +78,12 @@
 		2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA022A324DD9F5F00329251 /* TBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxTests.swift; sourceTree = "<group>"; };
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
+		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersistenceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
+		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +99,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CCECE1124DDC0CB00ADFE54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CCECE1924DDC0CB00ADFE54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +125,8 @@
 			children = (
 				2CA0228B24DD9F5E00329251 /* TBox */,
 				2CA022A224DD9F5F00329251 /* TBoxTests */,
+				2CCECE1524DDC0CB00ADFE54 /* Persistence */,
+				2CCECE2224DDC0CB00ADFE54 /* PersistenceTests */,
 				2CA0228A24DD9F5E00329251 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,6 +136,8 @@
 			children = (
 				2CA0228924DD9F5E00329251 /* TBox.app */,
 				2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */,
+				2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */,
+				2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,7 +165,36 @@
 			path = TBoxTests;
 			sourceTree = "<group>";
 		};
+		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				2CCECE1624DDC0CB00ADFE54 /* Persistence.h */,
+				2CCECE1724DDC0CB00ADFE54 /* Info.plist */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		2CCECE2224DDC0CB00ADFE54 /* PersistenceTests */ = {
+			isa = PBXGroup;
+			children = (
+				2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */,
+				2CCECE2524DDC0CB00ADFE54 /* Info.plist */,
+			);
+			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2CCECE0F24DDC0CB00ADFE54 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		2CA0228824DD9F5E00329251 /* TBox */ = {
@@ -111,10 +206,12 @@
 				2CA0228524DD9F5E00329251 /* Sources */,
 				2CA0228624DD9F5E00329251 /* Frameworks */,
 				2CA0228724DD9F5E00329251 /* Resources */,
+				2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2CCECE2824DDC0CB00ADFE54 /* PBXTargetDependency */,
 			);
 			name = TBox;
 			productName = TBox;
@@ -139,6 +236,43 @@
 			productReference = 2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2CCECE1324DDC0CB00ADFE54 /* Persistence */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CCECE3024DDC0CB00ADFE54 /* Build configuration list for PBXNativeTarget "Persistence" */;
+			buildPhases = (
+				2CCECE0F24DDC0CB00ADFE54 /* Headers */,
+				2CCECE1024DDC0CB00ADFE54 /* Sources */,
+				2CCECE1124DDC0CB00ADFE54 /* Frameworks */,
+				2CCECE1224DDC0CB00ADFE54 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Persistence;
+			productName = Persistence;
+			productReference = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2CCECE1B24DDC0CB00ADFE54 /* PersistenceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CCECE3124DDC0CB00ADFE54 /* Build configuration list for PBXNativeTarget "PersistenceTests" */;
+			buildPhases = (
+				2CCECE1824DDC0CB00ADFE54 /* Sources */,
+				2CCECE1924DDC0CB00ADFE54 /* Frameworks */,
+				2CCECE1A24DDC0CB00ADFE54 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2CCECE1F24DDC0CB00ADFE54 /* PBXTargetDependency */,
+				2CCECE2124DDC0CB00ADFE54 /* PBXTargetDependency */,
+			);
+			name = PersistenceTests;
+			productName = PersistenceTests;
+			productReference = 2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -153,6 +287,13 @@
 						CreatedOnToolsVersion = 11.4.1;
 					};
 					2CA0229E24DD9F5F00329251 = {
+						CreatedOnToolsVersion = 11.4.1;
+						TestTargetID = 2CA0228824DD9F5E00329251;
+					};
+					2CCECE1324DDC0CB00ADFE54 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
+					2CCECE1B24DDC0CB00ADFE54 = {
 						CreatedOnToolsVersion = 11.4.1;
 						TestTargetID = 2CA0228824DD9F5E00329251;
 					};
@@ -173,6 +314,8 @@
 			targets = (
 				2CA0228824DD9F5E00329251 /* TBox */,
 				2CA0229E24DD9F5F00329251 /* TBoxTests */,
+				2CCECE1324DDC0CB00ADFE54 /* Persistence */,
+				2CCECE1B24DDC0CB00ADFE54 /* PersistenceTests */,
 			);
 		};
 /* End PBXProject section */
@@ -189,6 +332,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2CA0229D24DD9F5F00329251 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CCECE1224DDC0CB00ADFE54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CCECE1A24DDC0CB00ADFE54 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,6 +412,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2CCECE1024DDC0CB00ADFE54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CCECE1824DDC0CB00ADFE54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CCECE2424DDC0CB00ADFE54 /* PersistenceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -262,6 +434,21 @@
 			isa = PBXTargetDependency;
 			target = 2CA0228824DD9F5E00329251 /* TBox */;
 			targetProxy = 2CA022A024DD9F5F00329251 /* PBXContainerItemProxy */;
+		};
+		2CCECE1F24DDC0CB00ADFE54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CCECE1324DDC0CB00ADFE54 /* Persistence */;
+			targetProxy = 2CCECE1E24DDC0CB00ADFE54 /* PBXContainerItemProxy */;
+		};
+		2CCECE2124DDC0CB00ADFE54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CA0228824DD9F5E00329251 /* TBox */;
+			targetProxy = 2CCECE2024DDC0CB00ADFE54 /* PBXContainerItemProxy */;
+		};
+		2CCECE2824DDC0CB00ADFE54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CCECE1324DDC0CB00ADFE54 /* Persistence */;
+			targetProxy = 2CCECE2724DDC0CB00ADFE54 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -475,6 +662,96 @@
 			};
 			name = Release;
 		};
+		2CCECE2C24DDC0CB00ADFE54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Persistence/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2CCECE2D24DDC0CB00ADFE54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Persistence/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2CCECE2E24DDC0CB00ADFE54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PersistenceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.PersistenceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+			};
+			name = Debug;
+		};
+		2CCECE2F24DDC0CB00ADFE54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PersistenceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.PersistenceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -501,6 +778,24 @@
 			buildConfigurations = (
 				2CA022AC24DD9F5F00329251 /* Debug */,
 				2CA022AD24DD9F5F00329251 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2CCECE3024DDC0CB00ADFE54 /* Build configuration list for PBXNativeTarget "Persistence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CCECE2C24DDC0CB00ADFE54 /* Debug */,
+				2CCECE2D24DDC0CB00ADFE54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2CCECE3124DDC0CB00ADFE54 /* Build configuration list for PBXNativeTarget "PersistenceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CCECE2E24DDC0CB00ADFE54 /* Debug */,
+				2CCECE2F24DDC0CB00ADFE54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
