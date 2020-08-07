@@ -1,0 +1,12 @@
+--binarygrouping none
+--comments indent
+--decimalgrouping none
+--disable emptyBraces,fileHeader,redundantInit,redundantPattern,redundantRawValues,redundantReturn,redundantSelf,specifiers,trailingClosures,unusedArguments,trailingCommas
+--empty void
+--hexgrouping none
+--hexliteralcase lowercase
+--octalgrouping none
+--self insert
+--stripunusedargs closure-only
+--wrapcollections beforefirst
+
