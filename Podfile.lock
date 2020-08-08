@@ -1,5 +1,20 @@
 PODS:
+  - Erik (5.0.0):
+    - Erik/Core (= 5.0.0)
+    - Kanna
+  - Erik/Core (5.0.0):
+    - Kanna
+  - Kanna (5.2.2)
   - Nimble (8.0.9)
+  - PromiseKit (6.13.1):
+    - PromiseKit/CorePromise (= 6.13.1)
+    - PromiseKit/Foundation (= 6.13.1)
+    - PromiseKit/UIKit (= 6.13.1)
+  - PromiseKit/CorePromise (6.13.1)
+  - PromiseKit/Foundation (6.13.1):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.13.1):
+    - PromiseKit/CorePromise
   - Quick (2.2.1)
   - Realm (5.3.3):
     - Realm/Headers (= 5.3.3)
@@ -8,23 +23,31 @@ PODS:
     - Realm (= 5.3.3)
 
 DEPENDENCIES:
+  - Erik (~> 5.0.0)
   - Nimble (~> 8.0.5)
+  - PromiseKit (~> 6.8)
   - Quick (~> 2.2.0)
   - RealmSwift (~> 5.3.3)
 
 SPEC REPOS:
   trunk:
+    - Erik
+    - Kanna
     - Nimble
+    - PromiseKit
     - Quick
     - Realm
     - RealmSwift
 
 SPEC CHECKSUMS:
+  Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
+  Kanna: 2c4eddaaa4bfb9a1ed19e53c0b3d42ef02838046
   Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
+  PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
   Realm: 2d57ea355bf8ca2a0964d6bfb38d28d7ff2addf6
   RealmSwift: 0a709536ecea30eea1d3c514f6ade2ed078dee3c
 
-PODFILE CHECKSUM: 66481129da3489cce4be3a92fb3c382c648f9f60
+PODFILE CHECKSUM: bd8bc1c387bc3051eb71939d9c26ba3e5649a045
 
 COCOAPODS: 1.9.1

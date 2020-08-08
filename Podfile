@@ -21,6 +21,9 @@ end
 target 'Domain' do
   use_frameworks!
 
+  pod 'Erik', '~> 5.0.0'
+  pod 'PromiseKit', '~> 6.8'
+
   target 'DomainTests' do
     inherit! :search_paths
     test_shared_pods

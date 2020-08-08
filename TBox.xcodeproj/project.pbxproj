@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		25D157F00CE2CE137E028F2E /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD982A953CB84789D6B8AF /* Pods_Domain.framework */; };
+		2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A224DED48500FEF1BD /* WebImageResolver.swift */; };
+		2C2727A524DED4C600FEF1BD /* WebImageResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */; };
+		2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A724DED57D00FEF1BD /* OnMainThread.swift */; };
+		2C2727AA24DED75C00FEF1BD /* Promise+Attempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */; };
+		2C2727AC24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727AB24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift */; };
+		2C2727AE24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -183,6 +189,12 @@
 		12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.release.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.release.xcconfig"; sourceTree = "<group>"; };
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
+		2C2727A224DED48500FEF1BD /* WebImageResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolver.swift; sourceTree = "<group>"; };
+		2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolverError.swift; sourceTree = "<group>"; };
+		2C2727A724DED57D00FEF1BD /* OnMainThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnMainThread.swift; sourceTree = "<group>"; };
+		2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+Attempt.swift"; sourceTree = "<group>"; };
+		2C2727AB24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolverPreprocessor.swift; sourceTree = "<group>"; };
+		2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterWebImageResolverPreprocessor.swift; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
@@ -315,6 +327,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2C27279F24DED44D00FEF1BD /* WebImageResolver */ = {
+			isa = PBXGroup;
+			children = (
+				2C2727A224DED48500FEF1BD /* WebImageResolver.swift */,
+				2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */,
+				2C2727AB24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift */,
+				2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */,
+			);
+			path = WebImageResolver;
+			sourceTree = "<group>";
+		};
+		2C2727A624DED57100FEF1BD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2C2727A724DED57D00FEF1BD /* OnMainThread.swift */,
+				2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2C2F623624DDC4C4000A8CDB /* Entity */ = {
 			isa = PBXGroup;
 			children = (
@@ -343,6 +375,8 @@
 		2C99275F24DDC7D300672CA7 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2C2727A624DED57100FEF1BD /* Extensions */,
+				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
 				2C82CCC024DE5FBC001E2F02 /* AppExtension */,
 				2C99278424DDCAA100672CA7 /* Storage */,
 				2C99277B24DDC7DA00672CA7 /* Entity */,
@@ -1024,9 +1058,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2727AE24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift in Sources */,
+				2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */,
+				2C2727AC24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift in Sources */,
+				2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */,
 				2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */,
+				2C2727A524DED4C600FEF1BD /* WebImageResolverError.swift in Sources */,
+				2C2727AA24DED75C00FEF1BD /* Promise+Attempt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
