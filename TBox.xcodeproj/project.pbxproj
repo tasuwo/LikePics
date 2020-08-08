@@ -14,6 +14,8 @@
 		2C2727AA24DED75C00FEF1BD /* Promise+Attempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */; };
 		2C2727AC24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727AB24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift */; };
 		2C2727AE24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */; };
+		2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */; };
+		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -31,8 +33,6 @@
 		2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */; };
 		2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278B24DDCEF700672CA7 /* Constants.swift */; };
-		2C99279524DDD65E00672CA7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99279424DDD65E00672CA7 /* ShareViewController.swift */; };
-		2C99279824DDD65E00672CA7 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C99279624DDD65E00672CA7 /* MainInterface.storyboard */; };
 		2C99279C24DDD65E00672CA7 /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2C99279224DDD65E00672CA7 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228C24DD9F5E00329251 /* AppDelegate.swift */; };
 		2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */; };
@@ -195,6 +195,8 @@
 		2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+Attempt.swift"; sourceTree = "<group>"; };
 		2C2727AB24DEDC3E00FEF1BD /* WebImageResolverPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolverPreprocessor.swift; sourceTree = "<group>"; };
 		2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterWebImageResolverPreprocessor.swift; sourceTree = "<group>"; };
+		2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewController.swift; sourceTree = "<group>"; };
+		2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
@@ -209,8 +211,6 @@
 		2C99278B24DDCEF700672CA7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2C99278D24DDD60C00672CA7 /* TBox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TBox.entitlements; sourceTree = "<group>"; };
 		2C99279224DDD65E00672CA7 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C99279424DDD65E00672CA7 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		2C99279724DDD65E00672CA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		2C99279924DDD65E00672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		2CA0228924DD9F5E00329251 /* TBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -423,9 +423,9 @@
 			isa = PBXGroup;
 			children = (
 				2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */,
-				2C99279424DDD65E00672CA7 /* ShareViewController.swift */,
-				2C99279624DDD65E00672CA7 /* MainInterface.storyboard */,
 				2C99279924DDD65E00672CA7 /* Info.plist */,
+				2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */,
+				2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -777,7 +777,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C99279824DDD65E00672CA7 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1082,7 +1081,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C99279524DDD65E00672CA7 /* ShareViewController.swift in Sources */,
+				2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */,
+				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1184,14 +1184,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		2C99279624DDD65E00672CA7 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2C99279724DDD65E00672CA7 /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
 		2CA0229224DD9F5E00329251 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
