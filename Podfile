@@ -40,3 +40,11 @@ target 'TBox' do
   end
 
 end
+
+target 'ShareExtension' do
+  use_frameworks!
+
+  pod 'PromiseKit', '~> 6.8'
+  pod 'Kingfisher', '~> 5.14.1'
+
+end

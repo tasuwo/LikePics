@@ -11,7 +11,7 @@ class ShareNavigationController: UINavigationController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        self.setViewControllers([ClipTargetCollecitonViewController()], animated: false)
+        self.setViewControllers([ClipTargetCollectionViewController()], animated: false)
     }
 
     required init?(coder aDecoder: NSCoder) {

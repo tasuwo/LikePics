@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21F6427C98F672FC692809BC /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */; };
 		25D157F00CE2CE137E028F2E /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD982A953CB84789D6B8AF /* Pods_Domain.framework */; };
 		2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A224DED48500FEF1BD /* WebImageResolver.swift */; };
 		2C2727A524DED4C600FEF1BD /* WebImageResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */; };
@@ -16,6 +17,9 @@
 		2C2727AE24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */; };
 		2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
+		2C2AB06624DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */; };
+		2C2AB06824DF00B0007E2B18 /* ClipTargetCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */; };
+		2C6C8F8B24DF0BAC00692301 /* ClipTargetcollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -186,6 +190,8 @@
 /* Begin PBXFileReference section */
 		0268012C1F191506323EA6CB /* Pods-Persistence-PersistenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence-PersistenceTests.release.xcconfig"; path = "Target Support Files/Pods-Persistence-PersistenceTests/Pods-Persistence-PersistenceTests.release.xcconfig"; sourceTree = "<group>"; };
 		04B00148182685E95C21EF58 /* Pods-TBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.release.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.release.xcconfig"; sourceTree = "<group>"; };
+		0D9B4CE0202AABEC93AF1EBA /* Pods-ShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.release.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.release.xcconfig"; sourceTree = "<group>"; };
+		0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShareExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.release.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.release.xcconfig"; sourceTree = "<group>"; };
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
@@ -197,6 +203,9 @@
 		2C2727AD24DEDC6F00FEF1BD /* TwitterWebImageResolverPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterWebImageResolverPreprocessor.swift; sourceTree = "<group>"; };
 		2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewController.swift; sourceTree = "<group>"; };
 		2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
+		2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewPresenter.swift; sourceTree = "<group>"; };
+		2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipTargetCollectionViewController.xib; sourceTree = "<group>"; };
+		2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetcollectionView.swift; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
@@ -231,6 +240,7 @@
 		2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
 		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipObject.swift; sourceTree = "<group>"; };
+		40C0EDB5E640F2A429804FCA /* Pods-ShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debug.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		4485BA038102576BB180BA86 /* Pods_PersistenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PersistenceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65700814FC5D4DB0F85CB23B /* Pods_TBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debug.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debug.xcconfig"; sourceTree = "<group>"; };
@@ -272,6 +282,7 @@
 			files = (
 				2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */,
 				2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */,
+				21F6427C98F672FC692809BC /* Pods_ShareExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +334,7 @@
 				76DD982A953CB84789D6B8AF /* Pods_Domain.framework */,
 				DB1E5E3D9404A4CE8F2BDC41 /* Pods_DomainTests.framework */,
 				4485BA038102576BB180BA86 /* Pods_PersistenceTests.framework */,
+				0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -345,6 +357,25 @@
 				2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2C2AB06324DEFACF007E2B18 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */,
+				2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */,
+				2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */,
+				2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */,
+			);
+			path = Presenter;
 			sourceTree = "<group>";
 		};
 		2C2F623624DDC4C4000A8CDB /* Entity */ = {
@@ -422,10 +453,10 @@
 		2C99279324DDD65E00672CA7 /* ShareExtension */ = {
 			isa = PBXGroup;
 			children = (
+				2C2AB06424DEFAD8007E2B18 /* Presenter */,
+				2C2AB06324DEFACF007E2B18 /* View */,
 				2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */,
 				2C99279924DDD65E00672CA7 /* Info.plist */,
-				2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */,
-				2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -522,6 +553,8 @@
 				12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */,
 				17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */,
 				E53A6F720BE737FA1BBEC165 /* Pods-PersistenceTests.release.xcconfig */,
+				40C0EDB5E640F2A429804FCA /* Pods-ShareExtension.debug.xcconfig */,
+				0D9B4CE0202AABEC93AF1EBA /* Pods-ShareExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -592,6 +625,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C99279D24DDD65E00672CA7 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
 			buildPhases = (
+				751A0D565C19DCFBE422C98E /* [CP] Check Pods Manifest.lock */,
 				2C99278E24DDD65E00672CA7 /* Sources */,
 				2C99278F24DDD65E00672CA7 /* Frameworks */,
 				2C99279024DDD65E00672CA7 /* Resources */,
@@ -777,6 +811,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2AB06824DF00B0007E2B18 /* ClipTargetCollectionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,6 +985,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TBoxTests/Pods-TBoxTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		751A0D565C19DCFBE422C98E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShareExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		98DB2403190477C8AD44E6DB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1081,8 +1138,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2AB06624DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift in Sources */,
 				2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */,
 				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
+				2C6C8F8B24DF0BAC00692301 /* ClipTargetcollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1312,6 +1371,7 @@
 		};
 		2C99279E24DDD65E00672CA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 40C0EDB5E640F2A429804FCA /* Pods-ShareExtension.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1332,6 +1392,7 @@
 		};
 		2C99279F24DDD65E00672CA7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D9B4CE0202AABEC93AF1EBA /* Pods-ShareExtension.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;

@@ -7,6 +7,8 @@ import PromiseKit
 import WebKit
 
 public protocol WebImageResolverProtocol {
+    var webView: WKWebView { get }
+
     func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[URL], WebImageResolverError>) -> Void)
 }
 

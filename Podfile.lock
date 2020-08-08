@@ -5,6 +5,9 @@ PODS:
   - Erik/Core (5.0.0):
     - Kanna
   - Kanna (5.2.2)
+  - Kingfisher (5.14.1):
+    - Kingfisher/Core (= 5.14.1)
+  - Kingfisher/Core (5.14.1)
   - Nimble (8.0.9)
   - PromiseKit (6.13.1):
     - PromiseKit/CorePromise (= 6.13.1)
@@ -24,6 +27,7 @@ PODS:
 
 DEPENDENCIES:
   - Erik (~> 5.0.0)
+  - Kingfisher (~> 5.14.1)
   - Nimble (~> 8.0.5)
   - PromiseKit (~> 6.8)
   - Quick (~> 2.2.0)
@@ -33,6 +37,7 @@ SPEC REPOS:
   trunk:
     - Erik
     - Kanna
+    - Kingfisher
     - Nimble
     - PromiseKit
     - Quick
@@ -42,12 +47,13 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
   Kanna: 2c4eddaaa4bfb9a1ed19e53c0b3d42ef02838046
+  Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
   PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
   Realm: 2d57ea355bf8ca2a0964d6bfb38d28d7ff2addf6
   RealmSwift: 0a709536ecea30eea1d3c514f6ade2ed078dee3c
 
-PODFILE CHECKSUM: bd8bc1c387bc3051eb71939d9c26ba3e5649a045
+PODFILE CHECKSUM: 8315ece5b128b4c978060a0ef0755a8ca7145db4
 
 COCOAPODS: 1.9.1
