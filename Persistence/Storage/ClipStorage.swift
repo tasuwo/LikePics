@@ -33,7 +33,7 @@ public class ClipStorage {
         self.configuration = realmConfiguration
     }
 
-    convenience init() {
+    public convenience init() {
         self.init(realmConfiguration: StorageConfiguration.makeConfiguration())
     }
 }

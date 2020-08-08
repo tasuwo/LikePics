@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
+		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
+		2C82CCBD24DDD77C001E2F02 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
 		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
 		2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* ClipStorage.swift */; };
 		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -42,6 +47,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2C82CCB924DDD770001E2F02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
+			remoteInfo = Domain;
+		};
+		2C82CCBE24DDD77C001E2F02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CCECE1324DDC0CB00ADFE54;
+			remoteInfo = Persistence;
+		};
 		2C99276824DDC7D400672CA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
@@ -108,6 +127,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2C82CCBB24DDD770001E2F02 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2C82CCBD24DDD77C001E2F02 /* Persistence.framework in Embed Frameworks */,
+				2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2C99278224DDC85C00672CA7 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -148,6 +179,7 @@
 		0268012C1F191506323EA6CB /* Pods-Persistence-PersistenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence-PersistenceTests.release.xcconfig"; path = "Target Support Files/Pods-Persistence-PersistenceTests/Pods-Persistence-PersistenceTests.release.xcconfig"; sourceTree = "<group>"; };
 		04B00148182685E95C21EF58 /* Pods-TBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.release.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.release.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
+		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
 		2C99275E24DDC7D300672CA7 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +246,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */,
+				2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +310,14 @@
 			path = Entity;
 			sourceTree = "<group>";
 		};
+		2C82CCC024DE5FBC001E2F02 /* AppExtension */ = {
+			isa = PBXGroup;
+			children = (
+				2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */,
+			);
+			path = AppExtension;
+			sourceTree = "<group>";
+		};
 		2C99275624DDC6DB00672CA7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,6 +329,7 @@
 		2C99275F24DDC7D300672CA7 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2C82CCC024DE5FBC001E2F02 /* AppExtension */,
 				2C99278424DDCAA100672CA7 /* Storage */,
 				2C99277B24DDC7DA00672CA7 /* Entity */,
 				2C99276024DDC7D300672CA7 /* Domain.h */,
@@ -495,10 +538,13 @@
 				2C99278E24DDD65E00672CA7 /* Sources */,
 				2C99278F24DDD65E00672CA7 /* Frameworks */,
 				2C99279024DDD65E00672CA7 /* Resources */,
+				2C82CCBB24DDD770001E2F02 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2C82CCBA24DDD770001E2F02 /* PBXTargetDependency */,
+				2C82CCBF24DDD77C001E2F02 /* PBXTargetDependency */,
 			);
 			name = ShareExtension;
 			productName = ShareExtension;
@@ -877,6 +923,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
+				2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */,
 				2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -937,6 +984,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2C82CCBA24DDD770001E2F02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99275D24DDC7D300672CA7 /* Domain */;
+			targetProxy = 2C82CCB924DDD770001E2F02 /* PBXContainerItemProxy */;
+		};
+		2C82CCBF24DDD77C001E2F02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CCECE1324DDC0CB00ADFE54 /* Persistence */;
+			targetProxy = 2C82CCBE24DDD77C001E2F02 /* PBXContainerItemProxy */;
+		};
 		2C99276924DDC7D400672CA7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2C99275D24DDC7D300672CA7 /* Domain */;
