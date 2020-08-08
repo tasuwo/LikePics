@@ -3,36 +3,50 @@
 //
 
 import Domain
-import MobileCoreServices
-import Persistence
 import Social
 import UIKit
 
 class ShareViewController: SLComposeServiceViewController {
+    private lazy var resolver: WebImageResolverProtocol = {
+        return DispatchQueue.main.sync {
+            let resolver = WebImageResolver()
+            self.view.addSubview(resolver.webView)
+            resolver.webView.isHidden = true
+            return resolver
+        }
+    }()
+
+    var images: [UIImage] = []
+
     override func isContentValid() -> Bool {
         return true
     }
 
     override func didSelectPost() {
-        self.extensionContext?.inputItems
+        let attachment = self.extensionContext?.inputItems
             .compactMap { $0 as? NSExtensionItem }
-            .forEach { item in
-                item.attachments?
-                    .compactMap { $0 }
-                    .forEach { attachment in
-                        attachment.resolveImage { result in
-                            print(result)
-                        }
-                        attachment.resolveUrl { result in
-                            print(result)
-                        }
-                        attachment.resolveText { result in
-                            print(result)
-                        }
-                    }
-            }
+            .compactMap { $0.attachments }
+            .flatMap { $0 }
+            .first(where: { $0.isUrl })
 
-        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+        attachment?.resolveUrl { result in
+            switch result {
+            case let .success(url):
+                self.resolver.resolveWebImages(inUrl: url) { result in
+                    switch result {
+                    case let .success(urls):
+                        self.images = urls
+                            .compactMap { try? Data(contentsOf: $0) }
+                            .compactMap { UIImage(data: $0) }
+                    default:
+                        break
+                    }
+                    self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+                }
+            default:
+                self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+            }
+        }
     }
 
     override func configurationItems() -> [Any]! {

@@ -11,15 +11,15 @@ public enum NSItemProviderResolutionError: Error {
 }
 
 extension NSItemProvider {
-    var isUrl: Bool {
+    public var isUrl: Bool {
         return self.hasItemConformingToTypeIdentifier(kUTTypeURL as String)
     }
 
-    var isText: Bool {
+    public var isText: Bool {
         return self.hasItemConformingToTypeIdentifier(kUTTypeText as String)
     }
 
-    var isImage: Bool {
+    public var isImage: Bool {
         return hasItemConformingToTypeIdentifier(kUTTypeImage as String)
     }
 
