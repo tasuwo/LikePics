@@ -12,6 +12,32 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
+    override public var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.8,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                   self.transform = self.transform.scaledBy(x: 0.9, y: 0.9)
+                               },
+                               completion: nil)
+            } else {
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.2,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                   self.transform = CGAffineTransform.identity.scaledBy(x: 1.0, y: 1.0)
+                               },
+                               completion: nil)
+            }
+        }
+    }
+
     public var primaryImage: UIImage? {
         get {
             self.primaryImageView.image

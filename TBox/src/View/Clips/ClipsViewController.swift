@@ -94,7 +94,7 @@ extension ClipsViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 }
 
