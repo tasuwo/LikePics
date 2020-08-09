@@ -16,10 +16,6 @@ public class WebImageResolver {
     private static let maxRetryCount = 3
     private static let delayAtRetry = 1
 
-    private let preprocessors: [WebImageResolverPreprocessor] = [
-        TwitterWebImageResolverPreprocessor()
-    ]
-
     public let webView: WKWebView
     private let browser: Erik
 
@@ -96,10 +92,11 @@ extension WebImageResolver: WebImageResolverProtocol {
         }
 
         var preprocessedStep: Promise<Document>
-        if let preprocessor = self.preprocessors.first(where: { $0.shouldPreprocess(url: url) }) {
+        if let provider = WebImageProviderPreset.resolveProvider(by: url),
+            provider.shouldPreprocess {
             preprocessedStep = baseStep.then { document in
                 attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: .seconds(Self.delayAtRetry), ignoredBy: document) {
-                    preprocessor.preprocess(self.browser, document: document)
+                    provider.preprocess(self.browser, document: document)
                 }
             }
         } else {

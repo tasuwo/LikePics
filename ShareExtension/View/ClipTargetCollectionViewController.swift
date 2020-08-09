@@ -90,6 +90,8 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return }
+        print(self.presenter.imageUrls[indexPath.row])
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -120,8 +122,18 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         imageView.leftAnchor.constraint(equalTo: cell.leftAnchor).isActive = true
         imageView.rightAnchor.constraint(equalTo: cell.rightAnchor).isActive = true
 
+        var options: KingfisherOptionsInfo = []
+
+        if let provider = WebImageProviderPreset.resolveProvider(by: imageUrl),
+            provider.shouldModifyRequest {
+            let modifier = AnyModifier(modify: provider.modifyRequest)
+            options.append(.requestModifier(modifier))
+        }
+
         let processor = RoundCornerImageProcessor(cornerRadius: 10)
-        imageView.kf.setImage(with: imageUrl, placeholder: nil, options: [.processor(processor)])
+        options.append(.processor(processor))
+
+        imageView.kf.setImage(with: imageUrl, placeholder: nil, options: options)
         imageView.layer.cornerRadius = 10
 
         cell.layer.cornerRadius = 10
