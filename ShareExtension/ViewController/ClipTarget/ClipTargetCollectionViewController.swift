@@ -46,11 +46,10 @@ class ClipTargetCollectionViewController: UIViewController {
     // MARK: - Methods
 
     private func setupNavBar() {
-        self.navigationItem.title = "Select Image!"
+        self.navigationItem.title = "画像を選択"
 
         let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
         self.navigationItem.setLeftBarButton(itemCancel, animated: false)
-
         let itemDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
         self.navigationItem.setRightBarButton(itemDone, animated: false)
     }
@@ -61,7 +60,35 @@ class ClipTargetCollectionViewController: UIViewController {
     }
 
     @objc private func doneAction() {
-        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+        guard let collectionView = self.collectionView,
+            let selectedIndices = collectionView.indexPathsForSelectedItems,
+            !selectedIndices.isEmpty
+        else {
+            self.show(errorMessage: "No images selected.")
+            return
+        }
+
+        let alert = UIAlertController(title: "保存", message: "\(selectedIndices.count)件のアイテムが選択されています。保存しますか？", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+
+            self.startLoading()
+            self.presenter.saveImages(at: selectedIndices.map { $0.row }) { isSucceeded in
+                self.endLoading()
+
+                guard isSucceeded else {
+                    self.show(errorMessage: "Failed to save images.")
+                    return
+                }
+
+                self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+            }
+        }))
+
+        alert.addAction(.init(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -81,7 +108,7 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
     func show(errorMessage: String) {
         let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default, handler: nil))
-        alert.present(self, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 
     func reload() {

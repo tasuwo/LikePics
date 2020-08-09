@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Persistence
 import PromiseKit
 import UIKit
 
@@ -31,17 +32,20 @@ class ClipTargetCollecitonViewPresenter {
         }
     }
 
+    private var url: URL?
     private var imageSizes: [CGSize] = []
 
     private let sizeCalculationQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.sizeCalculationQueue")
     private let findImageQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.findImageQueue")
 
     weak var view: ClipTargetCollectionViewProtocol?
+    private let storage: ClipStorageProtocol
     private let resolver: WebImageResolverProtocol
 
     // MARK: - Lifecycle
 
     init() {
+        self.storage = ClipStorage()
         self.resolver = WebImageResolver()
     }
 
@@ -61,10 +65,11 @@ class ClipTargetCollecitonViewPresenter {
         self.view?.startLoading()
 
         firstly {
-            return Promise<URL> { seal in
+            return Promise<URL> { [weak self] seal in
                 attachment.resolveUrl { result in
                     switch result {
                     case let .success(url):
+                        self?.url = url
                         seal.resolve(.fulfilled(url))
                     case .failure:
                         seal.resolve(.rejected(PresenterError.failedToResolveUrl))
@@ -102,6 +107,40 @@ class ClipTargetCollecitonViewPresenter {
             let size = self.imageSizes[index]
             guard size != .zero else { return .zero }
             return width * (size.height / size.width)
+        }
+    }
+
+    func saveImages(at indices: [Int], completion: @escaping (Bool) -> Void) {
+        guard indices.allSatisfy({ i in self.imageUrls.indices.contains(i) }) else {
+            self.view?.show(errorMessage: "Invalid indices selected.")
+            completion(false)
+            return
+        }
+
+        guard let url = self.url else {
+            self.view?.show(errorMessage: "No url.")
+            completion(false)
+            return
+        }
+
+        let webImages: [WebImage] = self.imageUrls.enumerated()
+            .filter { indices.contains($0.offset) }
+            .map { $0.element }
+            .map { url in
+                let data = try! Data(contentsOf: url)
+                let image = UIImage(data: data)!
+                return WebImage(url: url, image: image)
+            }
+        let clip = Clip(url: url, webImages: webImages)
+
+        let result = self.storage.create(clip: clip)
+        switch result {
+        case .success:
+            completion(true)
+        case let .failure(error):
+            print(error)
+            completion(false)
+            self.view?.show(errorMessage: "Failed to save images.")
         }
     }
 

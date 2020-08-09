@@ -7,7 +7,7 @@ import RealmSwift
 
 final class ClipObject: Object {
     @objc dynamic var url: String = ""
-    @objc dynamic var image: Data?
+    let webImages = List<WebImageObject>()
 
     override static func primaryKey() -> String? {
         return "url"
@@ -18,18 +18,16 @@ extension Clip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ClipObject) -> Clip {
-        let image: UIImage? = {
-            guard let data = managedObject.image else { return nil }
-            return UIImage(data: data)
-        }()
-        return .init(url: URL(string: managedObject.url)!, image: image)
+        let webImages = Array(managedObject.webImages.map { WebImage.make(by: $0) })
+        return .init(url: URL(string: managedObject.url)!, webImages: webImages)
     }
 
     func asManagedObject() -> ClipObject {
         let obj = ClipObject()
         obj.url = self.url.absoluteString
-        // TODO: 保存フォーマットを考える
-        obj.image = self.image?.pngData()
+        self.webImages.forEach {
+            obj.webImages.append($0.asManagedObject())
+        }
         return obj
     }
 }
