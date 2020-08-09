@@ -5,6 +5,7 @@
 import UIKit
 
 protocol ClipCollectionLayoutDelegate: AnyObject {
+    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
@@ -45,14 +46,62 @@ public class ClipCollectionLayout: UICollectionViewLayout {
     // MARK: - UICollectionViewLayout
 
     override public func prepare() {
-        guard self.cache.isEmpty, let collectionView = self.collectionView else {
-            return
-        }
+        self.resetAttributes()
+        self.setupAttributes()
+    }
+
+    // MARK: - UICollectionViewLayout
+
+    override public var collectionViewContentSize: CGSize {
+        return CGSize(width: self.contentWidth, height: self.contentHeight)
+    }
+
+    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        return self.cache.filter { $0.frame.intersects(rect) }
+    }
+
+    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        return self.cache[indexPath.item]
+    }
+
+    // MARK: - Privates
+
+    private func resetAttributes() {
+        self.cache = []
+        self.contentHeight = 0
+    }
+
+    private func setupAttributes() {
+        guard self.cache.isEmpty, let collectionView = self.collectionView else { return }
 
         let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
-
         let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth }
-        var yOffset = [CGFloat].init(repeating: 0, count: self.numberOfColumns)
+
+        let headerViewHeight = self.setupHeaderAttributes()
+        setupCellAttributes(collectionView: collectionView,
+                            columnWidth: columnWidth,
+                            xOffset: xOffset,
+                            headerViewHeight: headerViewHeight)
+    }
+
+    private func setupHeaderAttributes() -> CGFloat {
+        guard let collectionView = collectionView else { return 0 }
+        let indexPath = IndexPath(item: 0, section: 0)
+        let headerViewAttribute = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, with: indexPath)
+        let headerViewHeight = self.delegate?.collectionView(collectionView, heightForHeaderAtIndexPath: indexPath) ?? 0
+        headerViewAttribute.frame = .init(origin: .zero, size: .init(width: collectionView.bounds.size.width, height: headerViewHeight))
+        self.cache.append(headerViewAttribute)
+        self.contentHeight = max(contentHeight, headerViewAttribute.frame.maxY)
+
+        return headerViewHeight
+    }
+
+    private func setupCellAttributes(collectionView: UICollectionView,
+                                     columnWidth: CGFloat,
+                                     xOffset: [CGFloat],
+                                     headerViewHeight: CGFloat)
+    {
+        var yOffset = [CGFloat].init(repeating: headerViewHeight, count: self.numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {
             let indexPath = IndexPath(item: $0, section: 0)
@@ -72,24 +121,5 @@ public class ClipCollectionLayout: UICollectionViewLayout {
             self.contentHeight = max(contentHeight, frame.maxY)
             yOffset[column] += columnHeight
         }
-    }
-
-    override public var collectionViewContentSize: CGSize {
-        return CGSize(width: self.contentWidth, height: self.contentHeight)
-    }
-
-    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        return false
-    }
-
-    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        return self.cache.compactMap { attributes in
-            guard attributes.frame.intersects(rect) else { return nil }
-            return attributes
-        }
-    }
-
-    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return self.cache[indexPath.item]
     }
 }

@@ -105,11 +105,17 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // NOP
+        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipTargetCollectionViewHeader }).first else {
+            return
+        }
+        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        // NOP
+        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipTargetCollectionViewHeader }).first else {
+            return
+        }
+        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
     }
 }
 
@@ -122,6 +128,17 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.presenter.imageUrls.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let dequeuedHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                             withReuseIdentifier: type(of: self.collectionView).headerIdentifier,
+                                                                             for: indexPath)
+        guard let header = dequeuedHeader as? ClipTargetCollectionViewHeader else { return dequeuedHeader }
+
+        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
+
+        return header
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -140,5 +157,9 @@ extension ClipTargetCollectionViewController: ClipCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         self.presenter.resolveImageHeight(for: width, at: indexPath.row)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
+        return ClipTargetCollectionViewHeader.preferredHeight
     }
 }

@@ -6,6 +6,7 @@ import UIKit
 
 class ClipTargetCollectionView: UICollectionView {
     static let cellIdentifier = "Cell"
+    static let headerIdentifier = "Header"
 
     // MARK: - Lifecycle
 
@@ -28,6 +29,9 @@ class ClipTargetCollectionView: UICollectionView {
     private func registerCell() {
         self.register(ClipTargetCollectionViewCell.nib,
                       forCellWithReuseIdentifier: Self.cellIdentifier)
+        self.register(ClipTargetCollectionViewHeader.nib,
+                      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                      withReuseIdentifier: Self.headerIdentifier)
     }
 
     private func setupAppearance() {
