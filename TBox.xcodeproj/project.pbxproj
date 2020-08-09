@@ -23,7 +23,7 @@
 		2C55D11A24DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11924DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift */; };
 		2C55D11C24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C55D11B24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib */; };
 		2C55D11E24DFA2DC00A43B8D /* ClipCollecitonLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */; };
-		2C6C8F8B24DF0BAC00692301 /* ClipTargetcollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */; };
+		2C6C8F8B24DF0BAC00692301 /* ClipTargetCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8A24DF0BAC00692301 /* ClipTargetCollectionView.swift */; };
 		2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -215,7 +215,7 @@
 		2C55D11924DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C55D11B24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipTargetCollectionViewCell.xib; sourceTree = "<group>"; };
 		2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollecitonLayout.swift; sourceTree = "<group>"; };
-		2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetcollectionView.swift; sourceTree = "<group>"; };
+		2C6C8F8A24DF0BAC00692301 /* ClipTargetCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionView.swift; sourceTree = "<group>"; };
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
 		2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Twitter.swift; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
@@ -373,13 +373,8 @@
 		2C2AB06324DEFACF007E2B18 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */,
-				2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */,
-				2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */,
-				2C6C8F8A24DF0BAC00692301 /* ClipTargetcollectionView.swift */,
-				2C55D11924DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift */,
-				2C55D11B24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib */,
-				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
+				2C55D12524DFD19300A43B8D /* Clip */,
+				2C55D12424DFD18900A43B8D /* ClipTarget */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -387,7 +382,7 @@
 		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */,
+				2C55D11F24DFD10700A43B8D /* ClipTarget */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -399,6 +394,50 @@
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C55D11F24DFD10700A43B8D /* ClipTarget */ = {
+			isa = PBXGroup;
+			children = (
+				2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */,
+			);
+			path = ClipTarget;
+			sourceTree = "<group>";
+		};
+		2C55D12024DFD10E00A43B8D /* ClipTarget */ = {
+			isa = PBXGroup;
+			children = (
+				2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */,
+				2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */,
+			);
+			path = ClipTarget;
+			sourceTree = "<group>";
+		};
+		2C55D12424DFD18900A43B8D /* ClipTarget */ = {
+			isa = PBXGroup;
+			children = (
+				2C6C8F8A24DF0BAC00692301 /* ClipTargetCollectionView.swift */,
+				2C55D11924DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift */,
+				2C55D11B24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib */,
+			);
+			path = ClipTarget;
+			sourceTree = "<group>";
+		};
+		2C55D12524DFD19300A43B8D /* Clip */ = {
+			isa = PBXGroup;
+			children = (
+				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
+			);
+			path = Clip;
+			sourceTree = "<group>";
+		};
+		2C55D12624DFD1B000A43B8D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */,
+				2C55D12024DFD10E00A43B8D /* ClipTarget */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		2C6C8F8D24DF981800692301 /* WebImageProvider */ = {
@@ -480,6 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				2C2AB06424DEFAD8007E2B18 /* Presenter */,
+				2C55D12624DFD1B000A43B8D /* ViewController */,
 				2C2AB06324DEFACF007E2B18 /* View */,
 				2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */,
 				2C99279924DDD65E00672CA7 /* Info.plist */,
@@ -1173,7 +1213,7 @@
 				2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */,
 				2C55D11A24DF9F7700A43B8D /* ClipTargetCollectionViewCell.swift in Sources */,
 				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
-				2C6C8F8B24DF0BAC00692301 /* ClipTargetcollectionView.swift in Sources */,
+				2C6C8F8B24DF0BAC00692301 /* ClipTargetCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
