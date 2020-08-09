@@ -12,4 +12,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        self.present(DependencyContainer().makeClipsViewController(), animated: true, completion: nil)
+    }
 }

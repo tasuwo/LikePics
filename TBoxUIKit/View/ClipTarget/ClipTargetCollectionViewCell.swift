@@ -24,6 +24,15 @@ public class ClipTargetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var image: UIImage? {
+        get {
+            self.imageView.image
+        }
+        set {
+            self.imageView.image = newValue
+        }
+    }
+
     override public var isSelected: Bool {
         didSet {
             self.overlayView.isHidden = !isSelected
