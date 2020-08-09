@@ -93,23 +93,23 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return self.presenter.imageUrls.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return self.presenter.imageUrls.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return self.presenter.imageUrls.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return }
-        print(self.presenter.imageUrls[indexPath.row])
+        // NOP
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        // NOP
     }
 }
 

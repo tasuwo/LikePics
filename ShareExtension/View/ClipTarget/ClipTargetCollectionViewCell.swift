@@ -24,7 +24,39 @@ class ClipTargetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    override var isSelected: Bool {
+        didSet {
+            self.overlayView.isHidden = !isSelected
+            self.checkMarkView.isHidden = !isSelected
+
+            guard self.isSelected != oldValue else { return }
+            if isSelected {
+                UIView.animate(withDuration: 0.2,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.8,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                   self.transform = self.transform.scaledBy(x: 0.85, y: 0.85)
+                               },
+                               completion: nil)
+            } else {
+                UIView.animate(withDuration: 0.2,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.4,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                   self.transform = CGAffineTransform.identity.scaledBy(x: 1.0, y: 1.0)
+                               },
+                               completion: nil)
+            }
+        }
+    }
+
     @IBOutlet var imageView: UIImageView!
+    @IBOutlet var checkMarkView: UIImageView!
+    @IBOutlet var overlayView: UIView!
 
     // MARK: - Lifecycle
 
@@ -37,6 +69,8 @@ class ClipTargetCollectionViewCell: UICollectionViewCell {
 
     private func setupAppearance() {
         self.layer.cornerRadius = 10
+        self.overlayView.isHidden = true
+        self.checkMarkView.isHidden = true
     }
 
     private func apply(imageUrl: URL) {

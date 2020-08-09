@@ -39,9 +39,13 @@ class ClipTargetCollecitonViewPresenter {
     weak var view: ClipTargetCollectionViewProtocol?
     private let resolver: WebImageResolverProtocol
 
+    // MARK: - Lifecycle
+
     init() {
         self.resolver = WebImageResolver()
     }
+
+    // MARK: - Methods
 
     func attachWebView(to view: UIView) {
         view.addSubview(self.resolver.webView)
@@ -100,6 +104,8 @@ class ClipTargetCollecitonViewPresenter {
             return width * (size.height / size.width)
         }
     }
+
+    // MARK: Privates
 
     private func calcImageSize(ofUrl url: URL) -> CGSize {
         if let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) {
