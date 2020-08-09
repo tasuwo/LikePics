@@ -111,10 +111,19 @@ extension ClipsViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipTargetCollectionViewCell else { return dequeuedCell }
+        guard let cell = dequeuedCell as? ClipCollectionViewCell else { return dequeuedCell }
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
-        cell.image = self.presenter.clips[indexPath.row].webImages.first?.image
+        let webImages = self.presenter.clips[indexPath.row].webImages
+        if webImages.count > 0 {
+            cell.primaryImage = webImages[0].image
+        }
+        if webImages.count > 1 {
+            cell.secondaryImage = webImages[1].image
+        }
+        if webImages.count > 2 {
+            cell.tertiaryImage = webImages[2].image
+        }
 
         return cell
     }
@@ -124,12 +133,21 @@ extension ClipsViewController: ClipCollectionLayoutDelegate {
     // MARK: - ClipsLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard self.presenter.clips.indices.contains(indexPath.row),
-            let size = self.presenter.clips[indexPath.row].webImages.first?.image.size
-        else {
-            return .zero
+        guard self.presenter.clips.indices.contains(indexPath.row) else { return .zero }
+        let clip = self.presenter.clips[indexPath.row]
+
+        guard let primaryImage = clip.webImages.first?.image else { return .zero }
+        let baseHeight = width * (primaryImage.size.height / primaryImage.size.width)
+
+        if clip.webImages.count > 1 {
+            if clip.webImages.count > 2 {
+                return baseHeight + ClipCollectionViewCell.secondaryStickingOutMargin + ClipCollectionViewCell.tertiaryStickingOutMargin
+            } else {
+                return baseHeight + ClipCollectionViewCell.secondaryStickingOutMargin
+            }
+        } else {
+            return baseHeight
         }
-        return width * (size.height / size.width)
     }
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
