@@ -526,6 +526,35 @@
 			path = WebImageProvider;
 			sourceTree = "<group>";
 		};
+		2C810D0024E04A6600BC0FDF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2CA0229224DD9F5E00329251 /* Main.storyboard */,
+				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
+				2CA0229024DD9F5E00329251 /* ViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2C810D0124E04A6E00BC0FDF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2CA0229524DD9F5F00329251 /* Assets.xcassets */,
+				2CA0229A24DD9F5F00329251 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2C810D0224E04A8100BC0FDF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
+				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
+				2C810D0024E04A6600BC0FDF /* View */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		2C82CCC024DE5FBC001E2F02 /* AppExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -666,14 +695,9 @@
 		2CA0228B24DD9F5E00329251 /* TBox */ = {
 			isa = PBXGroup;
 			children = (
+				2C810D0124E04A6E00BC0FDF /* Resources */,
+				2C810D0224E04A8100BC0FDF /* src */,
 				2C99278D24DDD60C00672CA7 /* TBox.entitlements */,
-				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
-				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
-				2CA0229024DD9F5E00329251 /* ViewController.swift */,
-				2CA0229224DD9F5E00329251 /* Main.storyboard */,
-				2CA0229524DD9F5F00329251 /* Assets.xcassets */,
-				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
-				2CA0229A24DD9F5F00329251 /* Info.plist */,
 			);
 			path = TBox;
 			sourceTree = "<group>";
@@ -1985,7 +2009,7 @@
 				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = TBox/Info.plist;
+				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2007,7 +2031,7 @@
 				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = TBox/Info.plist;
+				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
