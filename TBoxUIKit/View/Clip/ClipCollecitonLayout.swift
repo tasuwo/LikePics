@@ -4,13 +4,13 @@
 
 import UIKit
 
-protocol ClipCollectionLayoutDelegate: AnyObject {
+public protocol ClipCollectionLayoutDelegate: AnyObject {
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
 public class ClipCollectionLayout: UICollectionViewLayout {
-    weak var delegate: ClipCollectionLayoutDelegate?
+    public weak var delegate: ClipCollectionLayoutDelegate?
 
     private var numberOfColumns: Int {
         guard let collectionView = self.collectionView else {

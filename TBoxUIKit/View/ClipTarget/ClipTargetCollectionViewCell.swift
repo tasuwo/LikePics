@@ -6,12 +6,12 @@ import Domain
 import Kingfisher
 import UIKit
 
-class ClipTargetCollectionViewCell: UICollectionViewCell {
-    static var nib: UINib {
-        return UINib(nibName: "ClipTargetCollectionViewCell", bundle: Bundle.main)
+public class ClipTargetCollectionViewCell: UICollectionViewCell {
+    public static var nib: UINib {
+        return UINib(nibName: "ClipTargetCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    var imageUrl: URL? {
+    public var imageUrl: URL? {
         willSet {
             // TODO: Cancel loading image
         }
@@ -24,7 +24,7 @@ class ClipTargetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    override var isSelected: Bool {
+    override public var isSelected: Bool {
         didSet {
             self.overlayView.isHidden = !isSelected
             self.checkMarkView.isHidden = !isSelected

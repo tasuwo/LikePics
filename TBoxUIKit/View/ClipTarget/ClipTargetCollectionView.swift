@@ -4,9 +4,9 @@
 
 import UIKit
 
-class ClipTargetCollectionView: UICollectionView {
-    static let cellIdentifier = "Cell"
-    static let headerIdentifier = "Header"
+public class ClipTargetCollectionView: UICollectionView {
+    public static let cellIdentifier = "Cell"
+    public static let headerIdentifier = "Header"
 
     // MARK: - Lifecycle
 

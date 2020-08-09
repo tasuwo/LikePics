@@ -4,14 +4,14 @@
 
 import UIKit
 
-class ClipTargetCollectionViewHeader: UICollectionReusableView {
-    static var nib: UINib {
-        return UINib(nibName: "ClipTargetCollectionViewHeader", bundle: Bundle.main)
+public class ClipTargetCollectionViewHeader: UICollectionReusableView {
+    public static var nib: UINib {
+        return UINib(nibName: "ClipTargetCollectionViewHeader", bundle: Bundle(for: Self.self))
     }
 
-    static let preferredHeight: CGFloat = 50
+    public static let preferredHeight: CGFloat = 50
 
-    var selectionCount: Int = 0 {
+    public var selectionCount: Int = 0 {
         didSet {
             self.titleLabel.text = "\(self.selectionCount) 件を選択"
         }

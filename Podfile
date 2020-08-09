@@ -45,6 +45,17 @@ target 'ShareExtension' do
   use_frameworks!
 
   pod 'PromiseKit', '~> 6.8'
+
+end
+
+target 'TBoxUIKit' do
+  use_frameworks!
+
   pod 'Kingfisher', '~> 5.14.1'
+
+  target 'TBoxUIKitTests' do
+    inherit! :search_paths
+    test_shared_pods
+  end
 
 end

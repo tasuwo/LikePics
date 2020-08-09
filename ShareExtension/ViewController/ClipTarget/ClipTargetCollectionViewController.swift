@@ -3,7 +3,7 @@
 //
 
 import Domain
-import Kingfisher
+import TBoxUIKit
 import UIKit
 
 class ClipTargetCollectionViewController: UIViewController {
