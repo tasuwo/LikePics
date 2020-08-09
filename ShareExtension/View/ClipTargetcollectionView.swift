@@ -31,10 +31,6 @@ class ClipTargetCollectionView: UICollectionView {
     }
 
     private func setupAppearance() {
-        // TODO:
-        // let layout = UICollectionViewFlowLayout()
-        // layout.itemSize = .init(width: 150, height: 150)
-        // layout.sectionInset = .init(top: 30, left: 30, bottom: 30, right: 30)
-        // self.collectionViewLayout = layout
+        self.collectionViewLayout = ClipCollectionLayout()
     }
 }

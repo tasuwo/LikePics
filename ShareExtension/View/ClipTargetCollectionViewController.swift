@@ -28,6 +28,10 @@ class ClipTargetCollectionViewController: UIViewController {
         self.presenter.view = self
         self.presenter.attachWebView(to: self.view)
 
+        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
+            layout.delegate = self
+        }
+
         self.setupNavBar()
 
         guard let item = self.extensionContext?.inputItems.first as? NSExtensionItem else {
@@ -117,5 +121,13 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         cell.imageUrl = self.presenter.imageUrls[indexPath.row]
 
         return cell
+    }
+}
+
+extension ClipTargetCollectionViewController: ClipCollectionLayoutDelegate {
+    // MARK: - ClipCollectionLayoutDelegate
+
+    func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
+        self.presenter.resolveImageHeight(for: width, at: indexPath.row)
     }
 }
