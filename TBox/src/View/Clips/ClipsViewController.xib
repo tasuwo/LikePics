@@ -20,7 +20,7 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="YBk-Ie-9xX" customClass="ClipCollectionView" customModule="TBoxUIKit">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NjM-Nc-2RC">
                         <size key="itemSize" width="128" height="128"/>
@@ -41,9 +41,9 @@
             <constraints>
                 <constraint firstItem="dya-5h-u67" firstAttribute="centerY" secondItem="TRG-79-Pvx" secondAttribute="centerY" id="1af-yg-7K3"/>
                 <constraint firstItem="dya-5h-u67" firstAttribute="centerX" secondItem="TRG-79-Pvx" secondAttribute="centerX" id="4oT-uD-k5F"/>
-                <constraint firstItem="TRG-79-Pvx" firstAttribute="bottom" secondItem="YBk-Ie-9xX" secondAttribute="bottom" id="6F3-3a-FDC"/>
+                <constraint firstAttribute="bottom" secondItem="YBk-Ie-9xX" secondAttribute="bottom" id="6F3-3a-FDC"/>
                 <constraint firstItem="YBk-Ie-9xX" firstAttribute="leading" secondItem="TRG-79-Pvx" secondAttribute="leading" id="9Cw-2N-UQE"/>
-                <constraint firstItem="YBk-Ie-9xX" firstAttribute="top" secondItem="TRG-79-Pvx" secondAttribute="top" id="DbT-Qa-hsc"/>
+                <constraint firstItem="YBk-Ie-9xX" firstAttribute="top" secondItem="BM0-Tu-l6K" secondAttribute="top" id="DbT-Qa-hsc"/>
                 <constraint firstItem="YBk-Ie-9xX" firstAttribute="trailing" secondItem="TRG-79-Pvx" secondAttribute="trailing" id="rOj-pI-Ici"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="TRG-79-Pvx"/>
