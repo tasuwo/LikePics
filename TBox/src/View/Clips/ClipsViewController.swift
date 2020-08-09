@@ -20,10 +20,16 @@ class ClipsViewController: UIViewController {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+
+        self.addBecomeActiveNotification()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        self.removeBecomeActiveNotification()
     }
 
     override func viewDidLoad() {
@@ -34,6 +40,25 @@ class ClipsViewController: UIViewController {
         }
 
         self.presenter.view = self
+        self.presenter.reload()
+    }
+
+    // MARK: - Methods
+
+    private func addBecomeActiveNotification() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.didBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+    }
+
+    private func removeBecomeActiveNotification() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIApplication.didBecomeActiveNotification,
+                                                  object: nil)
+    }
+
+    @objc func didBecomeActive() {
         self.presenter.reload()
     }
 }
