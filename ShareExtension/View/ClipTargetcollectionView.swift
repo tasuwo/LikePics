@@ -26,7 +26,8 @@ class ClipTargetCollectionView: UICollectionView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Self.cellIdentifier)
+        self.register(ClipTargetCollectionViewCell.nib,
+                      forCellWithReuseIdentifier: Self.cellIdentifier)
     }
 
     private func setupAppearance() {

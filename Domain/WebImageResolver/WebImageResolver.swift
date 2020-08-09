@@ -93,7 +93,8 @@ extension WebImageResolver: WebImageResolverProtocol {
 
         var preprocessedStep: Promise<Document>
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
-            provider.shouldPreprocess {
+            provider.shouldPreprocess
+        {
             preprocessedStep = baseStep.then { document in
                 attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: .seconds(Self.delayAtRetry), ignoredBy: document) {
                     provider.preprocess(self.browser, document: document)

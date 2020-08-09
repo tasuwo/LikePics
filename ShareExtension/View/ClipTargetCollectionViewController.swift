@@ -110,38 +110,11 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
+        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
+        guard let cell = dequeuedCell as? ClipTargetCollectionViewCell else { return dequeuedCell }
         guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return cell }
-        let imageUrl = self.presenter.imageUrls[indexPath.row]
 
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        cell.addSubview(imageView)
-        imageView.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
-        imageView.leftAnchor.constraint(equalTo: cell.leftAnchor).isActive = true
-        imageView.rightAnchor.constraint(equalTo: cell.rightAnchor).isActive = true
-
-        var options: KingfisherOptionsInfo = []
-
-        if let provider = WebImageProviderPreset.resolveProvider(by: imageUrl),
-            provider.shouldModifyRequest {
-            let modifier = AnyModifier(modify: provider.modifyRequest)
-            options.append(.requestModifier(modifier))
-        }
-
-        let processor = RoundCornerImageProcessor(cornerRadius: 10)
-        options.append(.processor(processor))
-
-        imageView.kf.setImage(with: imageUrl, placeholder: nil, options: options)
-        imageView.layer.cornerRadius = 10
-
-        cell.layer.cornerRadius = 10
-        cell.backgroundColor = .systemGray6
-
-        let selectedBGView = UIView(frame: cell.frame)
-        selectedBGView.backgroundColor = .blue
-        cell.selectedBackgroundView = selectedBGView
+        cell.imageUrl = self.presenter.imageUrls[indexPath.row]
 
         return cell
     }
