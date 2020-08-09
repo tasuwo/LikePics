@@ -10,6 +10,7 @@ class ClipTargetCollectionViewController: UIViewController {
     private let presenter: ClipTargetCollecitonViewPresenter
 
     @IBOutlet var collectionView: ClipTargetCollectionView!
+    @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
 
@@ -66,6 +67,16 @@ class ClipTargetCollectionViewController: UIViewController {
 
 extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
     // MARK: - ClipTargetCollectionViewProtocol
+
+    func startLoading() {
+        self.indicator.startAnimating()
+        self.indicator.isHidden = false
+    }
+
+    func endLoading() {
+        self.indicator.isHidden = true
+        self.indicator.stopAnimating()
+    }
 
     func show(errorMessage: String) {
         let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)

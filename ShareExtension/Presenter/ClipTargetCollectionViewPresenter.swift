@@ -7,6 +7,10 @@ import PromiseKit
 import UIKit
 
 protocol ClipTargetCollectionViewProtocol: AnyObject {
+    func startLoading()
+
+    func endLoading()
+
     func show(errorMessage: String)
 
     func reload()
@@ -30,6 +34,7 @@ class ClipTargetCollecitonViewPresenter {
     private var imageSizes: [CGSize] = []
 
     private let sizeCalculationQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.sizeCalculationQueue")
+    private let findImageQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.findImageQueue")
 
     weak var view: ClipTargetCollectionViewProtocol?
     private let resolver: WebImageResolverProtocol
@@ -49,6 +54,8 @@ class ClipTargetCollecitonViewPresenter {
             return
         }
 
+        self.view?.startLoading()
+
         firstly {
             return Promise<URL> { seal in
                 attachment.resolveUrl { result in
@@ -60,7 +67,7 @@ class ClipTargetCollecitonViewPresenter {
                     }
                 }
             }
-        }.then { url in
+        }.then(on: self.findImageQueue) { url in
             return Promise<[URL]> { seal in
                 self.resolver.resolveWebImages(inUrl: url) { result in
                     switch result {
@@ -71,14 +78,16 @@ class ClipTargetCollecitonViewPresenter {
                     }
                 }
             }
-        }.done { [weak self] urls in
+        }.done(on: .main) { [weak self] urls in
             self?.imageUrls = urls
+            self?.view?.endLoading()
             self?.view?.reload()
-        }.catch { [weak self] error in
+        }.catch(on: .main) { [weak self] error in
             let error: PresenterError = {
                 guard let error = error as? PresenterError else { return .internalError }
                 return error
             }()
+            self?.view?.endLoading()
             self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
         }
     }

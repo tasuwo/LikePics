@@ -10,6 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClipTargetCollectionViewController" customModule="ShareExtension" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="p6W-aQ-rTk" id="ku2-Z1-w7B"/>
+                <outlet property="indicator" destination="ib4-SI-9D4" id="ubB-TK-fWA"/>
                 <outlet property="view" destination="iN0-l3-epB" id="IXN-k4-hcW"/>
             </connections>
         </placeholder>
@@ -32,11 +33,16 @@
                         <outlet property="delegate" destination="-1" id="rsg-dM-LlK"/>
                     </connections>
                 </collectionView>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ib4-SI-9D4">
+                    <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
+                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="31g-Ey-5Aq"/>
                 <constraint firstAttribute="trailing" secondItem="p6W-aQ-rTk" secondAttribute="trailing" id="3aJ-WG-fMu"/>
                 <constraint firstItem="p6W-aQ-rTk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Dvb-uH-Zml"/>
+                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="O49-7H-Huu"/>
                 <constraint firstAttribute="bottom" secondItem="p6W-aQ-rTk" secondAttribute="bottom" id="QQ9-pq-zA7"/>
                 <constraint firstItem="p6W-aQ-rTk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="go8-3I-VHa"/>
             </constraints>
