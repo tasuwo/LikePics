@@ -115,15 +115,9 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
         let webImages = self.presenter.clips[indexPath.row].webImages
-        if webImages.count > 0 {
-            cell.primaryImage = webImages[0].image
-        }
-        if webImages.count > 1 {
-            cell.secondaryImage = webImages[1].image
-        }
-        if webImages.count > 2 {
-            cell.tertiaryImage = webImages[2].image
-        }
+        cell.primaryImage = webImages.count > 0 ? webImages[0].image : nil
+        cell.secondaryImage = webImages.count > 1 ? webImages[1].image : nil
+        cell.tertiaryImage = webImages.count > 2 ? webImages[2].image : nil
 
         return cell
     }

@@ -44,6 +44,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.primaryImageView.isHidden = (newValue == nil)
+            self.primaryImageShadowView.isHidden = (newValue == nil)
             self.primaryImageView.removeAspectRatioConstraint()
 
             if let image = newValue {
@@ -60,6 +61,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.secondaryImageView.isHidden = (newValue == nil)
+            self.secondaryImageShadowView.isHidden = (newValue == nil)
             self.secondaryImageOverlayView.isHidden = (newValue == nil)
 
             self.secondaryImageView.removeAspectRatioConstraint()
@@ -77,6 +79,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.tertiaryImageView.isHidden = (newValue == nil)
+            self.tertiaryImageShadowView.isHidden = (newValue == nil)
             self.tertiaryImageOverlayView.isHidden = (newValue == nil)
 
             self.tertiaryImageView.removeAspectRatioConstraint()
@@ -92,14 +95,28 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var secondaryImageView: UIImageView!
     @IBOutlet var tertiaryImageView: UIImageView!
 
+    @IBOutlet var primaryImageShadowView: UIView!
+    @IBOutlet var secondaryImageShadowView: UIView!
+    @IBOutlet var tertiaryImageShadowView: UIView!
+
     @IBOutlet var secondaryImageOverlayView: UIView!
     @IBOutlet var tertiaryImageOverlayView: UIView!
+
+    @IBOutlet var imagesContainerView: UIView!
 
     private var imageViews: [UIImageView] {
         return [
             self.primaryImageView,
             self.secondaryImageView,
             self.tertiaryImageView
+        ]
+    }
+
+    private var imageShadowViews: [UIView] {
+        return [
+            self.primaryImageShadowView,
+            self.secondaryImageShadowView,
+            self.tertiaryImageShadowView
         ]
     }
 
@@ -119,20 +136,46 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Methods
 
+    func setupAppearance(imageView: UIImageView) {
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
+    }
+
     private func setupAppearance() {
-        self.layer.cornerRadius = 10
-        self.imageViews.forEach { $0.layer.cornerRadius = 10 }
-        self.overlayViews.forEach { $0.layer.cornerRadius = 10 }
-
-        self.imageViews.forEach { $0.isHidden = true }
-        self.overlayViews.forEach { $0.isHidden = true }
-
         self.imageViews.forEach {
-            $0.layer.borderWidth = 2
-            $0.layer.borderColor = UIColor.lightGray.cgColor
+            $0.isHidden = true
+            self.setupAppearance(imageView: $0)
         }
 
-        self.clipsToBounds = true
+        self.imageShadowViews.forEach {
+            $0.isHidden = true
+            $0.layer.cornerRadius = 10
+            $0.layer.shadowColor = UIColor.black.cgColor
+            $0.layer.shadowOpacity = 0.3
+            $0.layer.shadowRadius = 8
+            $0.layer.shadowOffset = .init(width: 0, height: 8)
+            $0.clipsToBounds = false
+        }
+
+        self.overlayViews.forEach {
+            $0.isHidden = true
+            $0.layer.cornerRadius = 10
+        }
+
+        self.imagesContainerView.layer.cornerRadius = 10
+        self.imagesContainerView.clipsToBounds = true
+        self.imagesContainerView.layer.masksToBounds = true
+
+        self.contentView.layer.cornerRadius = 10
+        self.contentView.layer.shadowColor = UIColor.black.cgColor
+        self.contentView.layer.shadowOpacity = 0.5
+        self.contentView.layer.shadowRadius = 8
+        self.contentView.layer.shadowOffset = .init(width: 0, height: 8)
+        self.contentView.clipsToBounds = false
+        self.contentView.layer.masksToBounds = false
+
+        self.clipsToBounds = false
+        self.layer.masksToBounds = false
     }
 }
 
