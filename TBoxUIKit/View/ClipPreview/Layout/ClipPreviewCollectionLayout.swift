@@ -49,6 +49,62 @@ public class ClipPreviewCollectionLayout: UICollectionViewLayout {
         return true
     }
 
+    override public func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        guard let collectionView = collectionView else {
+            return proposedContentOffset
+        }
+
+        let visibleRect = CGRect(x: collectionView.contentOffset.x,
+                                 y: 0,
+                                 width: collectionView.bounds.width,
+                                 height: collectionView.bounds.height)
+
+        guard let targetAttributes = layoutAttributesForElements(in: visibleRect)?.sorted(by: { $0.frame.minX < $1.frame.minX }) else {
+            return proposedContentOffset
+        }
+
+        let nextAttributes: UICollectionViewLayoutAttributes?
+        if velocity.x > 0 {
+            nextAttributes = targetAttributes.last
+        } else if velocity.x < 0 {
+            nextAttributes = targetAttributes.first
+        } else {
+            nextAttributes = self.resolveAttributesNearByCenter(targetAttributes, in: collectionView)
+        }
+
+        guard let attributes = nextAttributes else {
+            return proposedContentOffset
+        }
+
+        return CGPoint(x: attributes.frame.minX,
+                       y: collectionView.contentOffset.y)
+    }
+
+    override public func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
+        // TODO: 表示中のセルを再表示する
+
+        guard let collectionView = collectionView else {
+            return proposedContentOffset
+        }
+
+        let visibleRect = CGRect(x: collectionView.contentOffset.x,
+                                 y: 0,
+                                 width: collectionView.bounds.width,
+                                 height: collectionView.bounds.height)
+
+        guard let targetAttributes = layoutAttributesForElements(in: visibleRect)?.sorted(by: { $0.frame.minX < $1.frame.minX }) else {
+            return proposedContentOffset
+        }
+
+        let nextAttributes = self.resolveAttributesNearByCenter(targetAttributes, in: collectionView)
+        guard let attributes = nextAttributes else {
+            return proposedContentOffset
+        }
+
+        return CGPoint(x: attributes.frame.minX,
+                       y: collectionView.contentOffset.y)
+    }
+
     // MARK: - Privates
 
     private func resetAttributes() {
@@ -87,5 +143,45 @@ public class ClipPreviewCollectionLayout: UICollectionViewLayout {
 
             xOffset = frame.maxX
         }
+    }
+
+    private func resolveAttributesNearByCenter(_ attributesList: [UICollectionViewLayoutAttributes], in collectionView: UICollectionView) -> UICollectionViewLayoutAttributes? {
+        struct ExaminedAttributes {
+            enum PositionToCenter {
+                case intersect
+                case left(distance: CGFloat)
+                case right(distance: CGFloat)
+
+                var distance: CGFloat {
+                    switch self {
+                    case .intersect:
+                        return 0
+                    case let .left(distance: value):
+                        return value
+                    case let .right(distance: value):
+                        return value
+                    }
+                }
+            }
+
+            let attributes: UICollectionViewLayoutAttributes
+            let position: PositionToCenter
+        }
+
+        let centerX = collectionView.contentOffset.x + collectionView.bounds.width / 2
+
+        let examinedAttributeList: [ExaminedAttributes] = attributesList.map { attributes in
+            if attributes.frame.maxX < centerX {
+                return .init(attributes: attributes, position: .left(distance: centerX - attributes.frame.maxX))
+            } else {
+                if attributes.frame.minX <= centerX {
+                    return .init(attributes: attributes, position: .intersect)
+                } else {
+                    return .init(attributes: attributes, position: .right(distance: attributes.frame.minX - centerX))
+                }
+            }
+        }
+
+        return examinedAttributeList.min(by: { $0.position.distance < $1.position.distance })?.attributes
     }
 }

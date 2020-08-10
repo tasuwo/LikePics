@@ -39,5 +39,7 @@ public class ClipPreviewCollectionView: UICollectionView {
 
         self.alwaysBounceHorizontal = true
         self.alwaysBounceVertical = false
+
+        self.decelerationRate = .fast
     }
 }
