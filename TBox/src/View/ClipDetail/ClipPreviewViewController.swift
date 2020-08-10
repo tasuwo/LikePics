@@ -1,7 +1,7 @@
-//
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import TBoxUIKit
 import UIKit
 
 class ClipPreviewViewController: UIViewController {
@@ -10,7 +10,7 @@ class ClipPreviewViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipPreviewPresenter
 
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var collectionView: ClipPreviewCollectionView!
 
     // MARK: - Lifecycle
 
@@ -28,11 +28,6 @@ class ClipPreviewViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupNavigationBar()
-
-        // TODO: Use collection view
-        let image = self.presenter.clip.webImages.first!.image
-        self.imageView.image = image
-        self.imageView.addAspectRatioConstraint(image: image)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -62,5 +57,40 @@ class ClipPreviewViewController: UIViewController {
 
     @objc func didTapInfoButton() {
         print(#function)
+    }
+}
+
+extension ClipPreviewViewController: UICollectionViewDelegate {
+    // MARK: - UICollectionViewDelegate
+
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+}
+
+extension ClipPreviewViewController: UICollectionViewDataSource {
+    // MARK: - UICollectionViewDataSource
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.presenter.clip.webImages.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipPreviewCollectionView.cellIdentifier, for: indexPath)
+        guard let cell = dequeuedCell as? ClipPreviewCollectionViewCell else { return dequeuedCell }
+        guard self.presenter.clip.webImages.indices.contains(indexPath.row) else { return cell }
+
+        let webImage = self.presenter.clip.webImages[indexPath.row]
+        cell.image = webImage.image
+
+        return cell
     }
 }

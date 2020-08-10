@@ -4,4 +4,38 @@
 
 import UIKit
 
-class ClipPreviewCollectionView: UICollectionView {}
+public class ClipPreviewCollectionView: UICollectionView {
+    public static let cellIdentifier = "Cell"
+
+    // MARK: - Lifecycle
+
+    override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(frame: frame, collectionViewLayout: layout)
+
+        self.registerCell()
+        self.setupAppearance()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+
+        self.registerCell()
+        self.setupAppearance()
+    }
+
+    // MARK: - Methods
+
+    private func registerCell() {
+        self.register(ClipPreviewCollectionViewCell.nib,
+                      forCellWithReuseIdentifier: Self.cellIdentifier)
+    }
+
+    private func setupAppearance() {
+        self.collectionViewLayout = ClipPreviewCollectionLayout()
+        self.allowsSelection = false
+        self.allowsMultipleSelection = false
+
+        self.alwaysBounceHorizontal = true
+        self.alwaysBounceVertical = false
+    }
+}

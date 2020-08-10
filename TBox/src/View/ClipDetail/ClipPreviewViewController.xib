@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClipPreviewViewController" customModule="TBox" customModuleProvider="target">
             <connections>
-                <outlet property="imageView" destination="XWe-k2-pG7" id="ahd-f4-G1z"/>
+                <outlet property="collectionView" destination="H7f-kM-ObU" id="BPv-6L-fmk"/>
                 <outlet property="view" destination="7fU-RQ-VZq" id="5Ls-Bf-XhQ"/>
             </connections>
         </placeholder>
@@ -18,15 +18,27 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="500" translatesAutoresizingMaskIntoConstraints="NO" id="XWe-k2-pG7">
-                    <rect key="frame" x="0.0" y="203" width="414" height="500"/>
-                </imageView>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="H7f-kM-ObU" customClass="ClipPreviewCollectionView" customModule="TBoxUIKit">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PhE-xU-kGf">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="4xA-zg-PXL"/>
+                        <outlet property="delegate" destination="-1" id="PN6-OJ-4Du"/>
+                    </connections>
+                </collectionView>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
-                <constraint firstItem="XWe-k2-pG7" firstAttribute="centerY" secondItem="ecU-DG-f9e" secondAttribute="centerY" id="A3t-Nj-gbe"/>
-                <constraint firstItem="XWe-k2-pG7" firstAttribute="centerX" secondItem="ecU-DG-f9e" secondAttribute="centerX" id="RYZ-Sa-86Z"/>
-                <constraint firstItem="XWe-k2-pG7" firstAttribute="width" secondItem="7fU-RQ-VZq" secondAttribute="width" id="xXV-Im-QuT"/>
+                <constraint firstItem="H7f-kM-ObU" firstAttribute="leading" secondItem="ecU-DG-f9e" secondAttribute="leading" id="HzU-FP-3ke"/>
+                <constraint firstItem="H7f-kM-ObU" firstAttribute="top" secondItem="ecU-DG-f9e" secondAttribute="top" id="bW0-vx-w9D"/>
+                <constraint firstItem="ecU-DG-f9e" firstAttribute="bottom" secondItem="H7f-kM-ObU" secondAttribute="bottom" id="jtP-bS-tz1"/>
+                <constraint firstItem="ecU-DG-f9e" firstAttribute="trailing" secondItem="H7f-kM-ObU" secondAttribute="trailing" id="pNr-lY-uta"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ecU-DG-f9e"/>
             <point key="canvasLocation" x="114" y="146"/>
