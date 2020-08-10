@@ -4,14 +4,6 @@
 
 import UIKit
 
-public protocol ClipPreviewPresentingViewController: UIViewController {
-    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipCollectionView
-}
-
-public protocol ClipPreviewPresentedViewController: UIViewController {
-    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipPreviewCollectionView
-}
-
 public class ClipPreviewTransitioningAnimator: NSObject {
     // MARK: - Methods
 
