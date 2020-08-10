@@ -8,6 +8,10 @@ public protocol ClipPreviewPresentingViewController: UIViewController {
     func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipCollectionView
 }
 
+public protocol ClipPreviewPresentedViewController: UIViewController {
+    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipPreviewCollectionView
+}
+
 public class ClipPreviewTransitioningAnimator: NSObject {
     // MARK: - Methods
 
@@ -28,7 +32,7 @@ extension ClipPreviewTransitioningAnimator: UIViewControllerAnimatedTransitionin
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewController,
-            let to = transitionContext.viewController(forKey: .to),
+            let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentedViewController,
             let selectedIndex = from.collectionView(self).indexPathsForSelectedItems?.first,
             let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipCollectionViewCell,
             let selectedImageView = selectedCell.primaryImageView,
@@ -44,6 +48,7 @@ extension ClipPreviewTransitioningAnimator: UIViewControllerAnimatedTransitionin
 
         to.view.frame = transitionContext.finalFrame(for: to)
         to.view.alpha = 0
+        to.collectionView(self).isHidden = true
         selectedImageView.isHidden = true
 
         containerView.addSubview(to.view)
@@ -59,6 +64,7 @@ extension ClipPreviewTransitioningAnimator: UIViewControllerAnimatedTransitionin
             to.view.alpha = 1.0
         }, completion: { finished in
             selectedImageView.isHidden = false
+            to.collectionView(self).isHidden = false
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         })

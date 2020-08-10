@@ -110,3 +110,11 @@ extension ClipPreviewViewController: ClipPreviewCollectionLayoutDelegate {
         return self.view.bounds.inset(by: self.view.safeAreaInsets).height
     }
 }
+
+extension ClipPreviewViewController: ClipPreviewPresentedViewController {
+    // MARK: - ClipPreviewPresentedViewController
+
+    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipPreviewCollectionView {
+        return self.collectionView
+    }
+}
