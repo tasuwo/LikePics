@@ -10,7 +10,7 @@ public protocol ClipPreviewCollectionLayoutDelegate: AnyObject {
 }
 
 public class ClipPreviewCollectionLayout: UICollectionViewLayout {
-    private static let cellPadding: CGFloat = 10
+    private static let cellPadding: CGFloat = 40
 
     public weak var delegate: ClipPreviewCollectionLayoutDelegate?
 
