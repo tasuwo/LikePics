@@ -23,6 +23,6 @@ extension ClipsNavigationController: UINavigationControllerDelegate {
                               from fromVC: UIViewController,
                               to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        return ClipCollectionTransitionAnimator()
+        return ClipPreviewTransitioningAnimator()
     }
 }

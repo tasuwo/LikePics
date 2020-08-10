@@ -4,19 +4,15 @@
 
 import UIKit
 
-public class ClipCollectionTransitioningDelegate: NSObject {}
+public class ClipPreviewTransitioningDelegate: NSObject {}
 
-extension ClipCollectionTransitioningDelegate: UIViewControllerTransitioningDelegate {
+extension ClipPreviewTransitioningDelegate: UIViewControllerTransitioningDelegate {
     // MARK: - UIViewControllerTransitioningDelegate
 
     public func animationController(forPresented presented: UIViewController,
                                     presenting: UIViewController,
                                     source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        return ClipCollectionTransitionAnimator()
+        return ClipPreviewTransitioningAnimator()
     }
-}
-
-public protocol ClipCollectionTransitionAnimatorDataSource: UIViewController {
-    func collectionView(_ animator: ClipCollectionTransitionAnimator) -> ClipCollectionView
 }

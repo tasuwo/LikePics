@@ -10,7 +10,7 @@ class ClipsViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipsPresenter
-    private let transition = ClipCollectionTransitioningDelegate()
+    private let transition = ClipPreviewTransitioningDelegate()
 
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipCollectionView!
@@ -121,8 +121,8 @@ extension ClipsViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipsViewController: ClipCollectionTransitionAnimatorDataSource {
-    func collectionView(_ animator: ClipCollectionTransitionAnimator) -> ClipCollectionView {
+extension ClipsViewController: ClipPreviewPresentingViewController {
+    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipCollectionView {
         return self.collectionView
     }
 }

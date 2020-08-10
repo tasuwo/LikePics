@@ -4,7 +4,11 @@
 
 import UIKit
 
-public class ClipCollectionTransitionAnimator: NSObject {
+public protocol ClipPreviewPresentingViewController: UIViewController {
+    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipCollectionView
+}
+
+public class ClipPreviewTransitioningAnimator: NSObject {
     // MARK: - Methods
 
     private func calcExpectedImageFrame(from image: UIImage, on finalFrame: CGSize) -> CGSize {
@@ -12,7 +16,7 @@ public class ClipCollectionTransitionAnimator: NSObject {
     }
 }
 
-extension ClipCollectionTransitionAnimator: UIViewControllerAnimatedTransitioning {
+extension ClipPreviewTransitioningAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -23,7 +27,7 @@ extension ClipCollectionTransitionAnimator: UIViewControllerAnimatedTransitionin
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? ClipCollectionTransitionAnimatorDataSource,
+            let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewController,
             let to = transitionContext.viewController(forKey: .to),
             let selectedIndex = from.collectionView(self).indexPathsForSelectedItems?.first,
             let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipCollectionViewCell,
