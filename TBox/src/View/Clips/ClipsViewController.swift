@@ -10,6 +10,7 @@ class ClipsViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipsPresenter
+    private let transition = ClipCollectionTransitioningDelegate()
 
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipCollectionView!
@@ -43,7 +44,19 @@ class ClipsViewController: UIViewController {
         self.presenter.reload()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.updateNavigationBarAppearance()
+    }
+
     // MARK: - Methods
+
+    private func updateNavigationBarAppearance() {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    // MARK: Notification
 
     private func addBecomeActiveNotification() {
         NotificationCenter.default.addObserver(self,
@@ -90,11 +103,27 @@ extension ClipsViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard self.presenter.clips.indices.contains(indexPath.row) else { return }
+        let clip = self.presenter.clips[indexPath.row]
+
+        let nextViewController = self.factory.makeClipDetailViewController(clip: clip)
+        nextViewController.transitioningDelegate = self.transition
+
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+}
+
+extension ClipsViewController: ClipCollectionTransitionAnimatorDataSource {
+    func collectionView(_ animator: ClipCollectionTransitionAnimator) -> ClipCollectionView {
+        return self.collectionView
     }
 }
 

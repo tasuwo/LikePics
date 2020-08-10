@@ -12,32 +12,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
-    override public var isHighlighted: Bool {
-        didSet {
-            if isHighlighted {
-                UIView.animate(withDuration: 0.4,
-                               delay: 0.0,
-                               usingSpringWithDamping: 0.8,
-                               initialSpringVelocity: 1.0,
-                               options: .curveEaseOut,
-                               animations: {
-                                   self.transform = self.transform.scaledBy(x: 0.9, y: 0.9)
-                               },
-                               completion: nil)
-            } else {
-                UIView.animate(withDuration: 0.4,
-                               delay: 0.0,
-                               usingSpringWithDamping: 0.2,
-                               initialSpringVelocity: 1.0,
-                               options: .curveEaseOut,
-                               animations: {
-                                   self.transform = CGAffineTransform.identity.scaledBy(x: 1.0, y: 1.0)
-                               },
-                               completion: nil)
-            }
-        }
-    }
-
     public var primaryImage: UIImage? {
         get {
             self.primaryImageView.image
@@ -136,15 +110,19 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Methods
 
-    func setupAppearance(imageView: UIImageView) {
+    static func setupAppearance(imageView: UIImageView) {
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
+    }
+
+    static func resetAppearance(imageView: UIImageView) {
+        imageView.layer.cornerRadius = 0
     }
 
     private func setupAppearance() {
         self.imageViews.forEach {
             $0.isHidden = true
-            self.setupAppearance(imageView: $0)
+            Self.setupAppearance(imageView: $0)
         }
 
         self.imageShadowViews.forEach {
@@ -176,32 +154,5 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         self.clipsToBounds = false
         self.layer.masksToBounds = false
-    }
-}
-
-private extension UIImageView {
-    func addAspectRatioConstraint(image: UIImage?) {
-        if let image = image {
-            removeAspectRatioConstraint()
-            let aspectRatio = image.size.width / image.size.height
-            let constraint = NSLayoutConstraint(item: self,
-                                                attribute: .width,
-                                                relatedBy: .equal,
-                                                toItem: self,
-                                                attribute: .height,
-                                                multiplier: aspectRatio,
-                                                constant: 0.0)
-            addConstraint(constraint)
-        }
-    }
-
-    func removeAspectRatioConstraint() {
-        for constraint in self.constraints {
-            if (constraint.firstItem as? UIImageView) == self,
-                (constraint.secondItem as? UIImageView) == self
-            {
-                removeConstraint(constraint)
-            }
-        }
     }
 }

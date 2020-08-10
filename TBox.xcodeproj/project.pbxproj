@@ -37,6 +37,9 @@
 		2C82CCBC24DDD77C001E2F02 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2C82CCBD24DDD77C001E2F02 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
+		2C86CC4D24E12DEA0091A89E /* ClipDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4C24E12DEA0091A89E /* ClipDetailViewController.swift */; };
+		2C86CC5024E12E2D0091A89E /* ClipDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4F24E12E2D0091A89E /* ClipDetailPresenter.swift */; };
+		2C86CC5224E12F530091A89E /* ClipDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C86CC5124E12F530091A89E /* ClipDetailViewController.xib */; };
 		2C8FD62524E02267005887F9 /* WebImagerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62424E02267005887F9 /* WebImagerObject.swift */; };
 		2C8FD62724E02297005887F9 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62624E02297005887F9 /* WebImage.swift */; };
 		2C8FD63624E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
@@ -52,6 +55,7 @@
 		2C8FD65024E02E15005887F9 /* ClipTargetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C55D11B24DFA0D200A43B8D /* ClipTargetCollectionViewCell.xib */; };
 		2C8FD65124E02E38005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
 		2C8FD65224E02E38005887F9 /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C95EC4B24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */; };
 		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
 		2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* ClipStorage.swift */; };
 		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -70,6 +74,9 @@
 		2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229524DD9F5F00329251 /* Assets.xcassets */; };
 		2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */; };
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
+		2CB6DA0D24E115E200D527FB /* ClipCollectionTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipCollectionTransitionAnimator.swift */; };
+		2CBD406824E15765003A107C /* ClipsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBD406724E15765003A107C /* ClipsNavigationController.swift */; };
+		2CBD406B24E1590C003A107C /* ClipCollectionTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBD406A24E1590C003A107C /* ClipCollectionTransitioningDelegate.swift */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2424DDC0CB00ADFE54 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */; };
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -278,6 +285,9 @@
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
 		2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Twitter.swift; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
+		2C86CC4C24E12DEA0091A89E /* ClipDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipDetailViewController.swift; sourceTree = "<group>"; };
+		2C86CC4F24E12E2D0091A89E /* ClipDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipDetailPresenter.swift; sourceTree = "<group>"; };
+		2C86CC5124E12F530091A89E /* ClipDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipDetailViewController.xib; sourceTree = "<group>"; };
 		2C8FD62424E02267005887F9 /* WebImagerObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagerObject.swift; sourceTree = "<group>"; };
 		2C8FD62624E02297005887F9 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -286,6 +296,7 @@
 		2C8FD63524E02DCE005887F9 /* TBoxUIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxUIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C8FD63C24E02DCE005887F9 /* TBoxUIKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKitTests.swift; sourceTree = "<group>"; };
 		2C8FD63E24E02DCE005887F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AspectRatioConstraint.swift"; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
 		2C99275E24DDC7D300672CA7 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -310,6 +321,9 @@
 		2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA022A324DD9F5F00329251 /* TBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxTests.swift; sourceTree = "<group>"; };
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CBD406724E15765003A107C /* ClipsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsNavigationController.swift; sourceTree = "<group>"; };
+		2CBD406A24E1590C003A107C /* ClipCollectionTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionTransitioningDelegate.swift; sourceTree = "<group>"; };
+		2CC6F62B24E1034D006AC87D /* ClipCollectionTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionTransitionAnimator.swift; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
 		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -447,6 +461,7 @@
 			isa = PBXGroup;
 			children = (
 				2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */,
+				2CBD406724E15765003A107C /* ClipsNavigationController.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -520,6 +535,7 @@
 		2C55D12524DFD19300A43B8D /* Clip */ = {
 			isa = PBXGroup;
 			children = (
+				2CBD406924E158F2003A107C /* Transition */,
 				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
 				2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */,
 				2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */,
@@ -548,6 +564,7 @@
 		2C570B5C24E04FA400A1DC9F /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2C86CC4E24E12E220091A89E /* ClipDetail */,
 				2C570B5D24E04FAB00A1DC9F /* Clips */,
 			);
 			path = Presenter;
@@ -587,6 +604,7 @@
 			children = (
 				2C1BA03324E08A0E00F96801 /* Root */,
 				2C570B6024E04FEF00A1DC9F /* Clips */,
+				2C86CC4B24E12DDB0091A89E /* ClipDetail */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
@@ -621,9 +639,27 @@
 			path = AppExtension;
 			sourceTree = "<group>";
 		};
+		2C86CC4B24E12DDB0091A89E /* ClipDetail */ = {
+			isa = PBXGroup;
+			children = (
+				2C86CC4C24E12DEA0091A89E /* ClipDetailViewController.swift */,
+				2C86CC5124E12F530091A89E /* ClipDetailViewController.xib */,
+			);
+			path = ClipDetail;
+			sourceTree = "<group>";
+		};
+		2C86CC4E24E12E220091A89E /* ClipDetail */ = {
+			isa = PBXGroup;
+			children = (
+				2C86CC4F24E12E2D0091A89E /* ClipDetailPresenter.swift */,
+			);
+			path = ClipDetail;
+			sourceTree = "<group>";
+		};
 		2C8FD62E24E02DCE005887F9 /* TBoxUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				2C95EC4924E15DB600D6EEB4 /* Extension */,
 				2C8FD64A24E02DE4005887F9 /* View */,
 				2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */,
 				2C8FD63024E02DCE005887F9 /* Info.plist */,
@@ -647,6 +683,14 @@
 				2C55D12424DFD18900A43B8D /* ClipTarget */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		2C95EC4924E15DB600D6EEB4 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		2C99275624DDC6DB00672CA7 /* Storage */ = {
@@ -767,6 +811,15 @@
 				2CA022A524DD9F5F00329251 /* Info.plist */,
 			);
 			path = TBoxTests;
+			sourceTree = "<group>";
+		};
+		2CBD406924E158F2003A107C /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				2CBD406A24E1590C003A107C /* ClipCollectionTransitioningDelegate.swift */,
+				2CC6F62B24E1034D006AC87D /* ClipCollectionTransitionAnimator.swift */,
+			);
+			path = Transition;
 			sourceTree = "<group>";
 		};
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
@@ -1156,6 +1209,7 @@
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
 				2C570B6424E0503800A1DC9F /* ClipsViewController.xib in Resources */,
+				2C86CC5224E12F530091A89E /* ClipDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1512,8 +1566,11 @@
 				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
 				2C8FD64C24E02E00005887F9 /* ClipTargetCollectionView.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipTargetCollectionViewHeader.swift in Sources */,
+				2CB6DA0D24E115E200D527FB /* ClipCollectionTransitionAnimator.swift in Sources */,
+				2CBD406B24E1590C003A107C /* ClipCollectionTransitioningDelegate.swift in Sources */,
 				2C8FD64D24E02E03005887F9 /* ClipTargetCollectionViewCell.swift in Sources */,
 				2C570B6D24E067D200A1DC9F /* ClipCollectionViewCell.swift in Sources */,
+				2C95EC4B24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift in Sources */,
 				2C570B6624E0505F00A1DC9F /* ClipCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1570,10 +1627,13 @@
 			files = (
 				2C570B5F24E04FBF00A1DC9F /* ClipsViewPresenter.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
+				2C86CC4D24E12DEA0091A89E /* ClipDetailViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
+				2CBD406824E15765003A107C /* ClipsNavigationController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* ClipsViewController.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
+				2C86CC5024E12E2D0091A89E /* ClipDetailPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
