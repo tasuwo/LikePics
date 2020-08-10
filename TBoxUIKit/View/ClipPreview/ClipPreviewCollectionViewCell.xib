@@ -10,28 +10,30 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="SvV-Nh-KUY" customClass="ClipPreviewCollectionViewCell" customModule="TBoxUIKit" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="145" height="148"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <rect key="frame" x="0.0" y="0.0" width="279" height="242"/>
+            <autoresizingMask key="autoresizingMask"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="SXE-eQ-aPp">
-                <rect key="frame" x="0.0" y="0.0" width="145" height="148"/>
+                <rect key="frame" x="0.0" y="0.0" width="279" height="242"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YgA-lZ-CuY">
-                        <rect key="frame" x="0.0" y="0.0" width="145" height="148"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="242" translatesAutoresizingMaskIntoConstraints="NO" id="YgA-lZ-CuY">
+                        <rect key="frame" x="39.5" y="0.0" width="200" height="242"/>
                     </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="YgA-lZ-CuY" secondAttribute="trailing" id="GjU-Cj-KVc"/>
-                    <constraint firstAttribute="bottom" secondItem="YgA-lZ-CuY" secondAttribute="bottom" id="K9N-fU-f6T"/>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="leading" secondItem="SXE-eQ-aPp" secondAttribute="leading" id="mFK-cC-QXG"/>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="top" secondItem="SXE-eQ-aPp" secondAttribute="top" id="qLe-8p-7HV"/>
+                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="centerY" secondItem="SXE-eQ-aPp" secondAttribute="centerY" id="Ooa-Nd-2RF"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="YgA-lZ-CuY" secondAttribute="bottom" id="Q2S-7R-kO8"/>
+                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SXE-eQ-aPp" secondAttribute="leading" id="dw7-hm-vbf"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="YgA-lZ-CuY" secondAttribute="trailing" id="n31-lO-kf8"/>
+                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SXE-eQ-aPp" secondAttribute="top" id="vAn-XS-uAS"/>
+                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="centerX" secondItem="SXE-eQ-aPp" secondAttribute="centerX" id="vLH-wV-n1C"/>
                 </constraints>
             </collectionViewCellContentView>
-            <size key="customSize" width="145" height="148"/>
+            <size key="customSize" width="279" height="242"/>
             <connections>
                 <outlet property="imageView" destination="YgA-lZ-CuY" id="cEJ-eq-pkE"/>
             </connections>
-            <point key="canvasLocation" x="68.840579710144937" y="171.42857142857142"/>
+            <point key="canvasLocation" x="165.94202898550725" y="139.95535714285714"/>
         </collectionViewCell>
     </objects>
 </document>

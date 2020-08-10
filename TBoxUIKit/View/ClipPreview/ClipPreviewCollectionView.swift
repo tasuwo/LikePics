@@ -31,9 +31,11 @@ public class ClipPreviewCollectionView: UICollectionView {
     }
 
     private func setupAppearance() {
-        self.collectionViewLayout = ClipPreviewCollectionLayout()
         self.allowsSelection = false
         self.allowsMultipleSelection = false
+
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
 
         self.alwaysBounceHorizontal = true
         self.alwaysBounceVertical = false

@@ -27,6 +27,10 @@ class ClipPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if let layout = self.collectionView?.collectionViewLayout as? ClipPreviewCollectionLayout {
+            layout.delegate = self
+        }
+
         self.setupNavigationBar()
     }
 
@@ -92,5 +96,17 @@ extension ClipPreviewViewController: UICollectionViewDataSource {
         cell.image = webImage.image
 
         return cell
+    }
+}
+
+extension ClipPreviewViewController: ClipPreviewCollectionLayoutDelegate {
+    // MARK: - ClipPreviewCollectionLayoutDelegate
+
+    func itemWidth(_ collectionView: UICollectionView) -> CGFloat {
+        return self.view.bounds.inset(by: self.view.safeAreaInsets).width
+    }
+
+    func itemHeight(_ collectionView: UICollectionView) -> CGFloat {
+        return self.view.bounds.inset(by: self.view.safeAreaInsets).height
     }
 }

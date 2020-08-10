@@ -21,12 +21,7 @@
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="H7f-kM-ObU" customClass="ClipPreviewCollectionView" customModule="TBoxUIKit">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PhE-xU-kGf">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
+                    <collectionViewLayout key="collectionViewLayout" id="Zja-zJ-Jpn" customClass="ClipPreviewCollectionLayout" customModule="TBoxUIKit"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="4xA-zg-PXL"/>
                         <outlet property="delegate" destination="-1" id="PN6-OJ-4Du"/>
