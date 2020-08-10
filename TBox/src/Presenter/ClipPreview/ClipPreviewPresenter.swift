@@ -4,7 +4,7 @@
 
 import Domain
 
-class ClipDetailPresenter {
+class ClipPreviewPresenter {
     let clip: Clip
 
     // MARK: - Lifecycle
