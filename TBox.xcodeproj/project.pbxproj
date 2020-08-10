@@ -543,8 +543,8 @@
 		2C55D12524DFD19300A43B8D /* Clip */ = {
 			isa = PBXGroup;
 			children = (
+				2C95EC5724E17ED400D6EEB4 /* Layout */,
 				2CBD406924E158F2003A107C /* Transition */,
-				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
 				2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */,
 				2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */,
 				2C570B6E24E06AFD00A1DC9F /* ClipCollectionViewCell.xib */,
@@ -717,6 +717,14 @@
 			isa = PBXGroup;
 			children = (
 				2C95EC5524E1645A00D6EEB4 /* ClipPreviewCollectionLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		2C95EC5724E17ED400D6EEB4 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
