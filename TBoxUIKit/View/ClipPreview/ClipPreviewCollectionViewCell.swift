@@ -15,15 +15,40 @@ public class ClipPreviewCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.imageView.image = newValue
-            self.imageView.addAspectRatioConstraint(image: image)
         }
     }
 
+    @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
 
     // MARK: - Lifecycle
 
     override public func awakeFromNib() {
         super.awakeFromNib()
+
+        self.setupScrollView()
+        self.setupImageView()
+    }
+
+    // MARK: - Methods
+
+    private func setupScrollView() {
+        self.scrollView.minimumZoomScale = 1
+        self.scrollView.maximumZoomScale = 3
+
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.showsHorizontalScrollIndicator = false
+    }
+
+    private func setupImageView() {
+        self.imageView.contentMode = .scaleAspectFit
+    }
+}
+
+extension ClipPreviewCollectionViewCell: UIScrollViewDelegate {
+    // MARK: - UIScrollViewDelegate
+
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.imageView
     }
 }

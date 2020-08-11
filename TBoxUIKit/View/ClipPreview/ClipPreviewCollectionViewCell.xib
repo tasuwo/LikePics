@@ -10,30 +10,51 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="SvV-Nh-KUY" customClass="ClipPreviewCollectionViewCell" customModule="TBoxUIKit" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="279" height="242"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="425"/>
             <autoresizingMask key="autoresizingMask"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="SXE-eQ-aPp">
-                <rect key="frame" x="0.0" y="0.0" width="279" height="242"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="425"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="242" translatesAutoresizingMaskIntoConstraints="NO" id="YgA-lZ-CuY">
-                        <rect key="frame" x="39.5" y="0.0" width="200" height="242"/>
-                    </imageView>
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DLX-Hk-y3w">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="425"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="400" translatesAutoresizingMaskIntoConstraints="NO" id="Gjc-Ly-pqK">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="425"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="gGJ-Yx-akS" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gjc-Ly-pqK" secondAttribute="bottom" priority="250" id="5U5-s6-ah5"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="bottom" secondItem="m7m-t4-Po6" secondAttribute="bottom" id="90l-BJ-SKb"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="centerX" secondItem="DLX-Hk-y3w" secondAttribute="centerX" id="9yz-mi-9Ig"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="centerY" secondItem="DLX-Hk-y3w" secondAttribute="centerY" id="NVu-HJ-JPk"/>
+                            <constraint firstItem="gGJ-Yx-akS" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Gjc-Ly-pqK" secondAttribute="trailing" priority="250" id="PXI-qo-Vg5"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="leading" secondItem="m7m-t4-Po6" secondAttribute="leading" id="QMD-CU-XeF"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gGJ-Yx-akS" secondAttribute="top" priority="250" id="TRo-ge-jBB"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="trailing" secondItem="m7m-t4-Po6" secondAttribute="trailing" id="m2i-a5-jMY"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="top" secondItem="m7m-t4-Po6" secondAttribute="top" id="nxP-5v-q9e"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gGJ-Yx-akS" secondAttribute="leading" priority="250" id="rSd-ho-wjL"/>
+                        </constraints>
+                        <viewLayoutGuide key="contentLayoutGuide" id="m7m-t4-Po6"/>
+                        <viewLayoutGuide key="frameLayoutGuide" id="gGJ-Yx-akS"/>
+                        <connections>
+                            <outlet property="delegate" destination="SvV-Nh-KUY" id="Clc-Yz-NVo"/>
+                        </connections>
+                    </scrollView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="centerY" secondItem="SXE-eQ-aPp" secondAttribute="centerY" id="Ooa-Nd-2RF"/>
-                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="YgA-lZ-CuY" secondAttribute="bottom" id="Q2S-7R-kO8"/>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SXE-eQ-aPp" secondAttribute="leading" id="dw7-hm-vbf"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="YgA-lZ-CuY" secondAttribute="trailing" id="n31-lO-kf8"/>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SXE-eQ-aPp" secondAttribute="top" id="vAn-XS-uAS"/>
-                    <constraint firstItem="YgA-lZ-CuY" firstAttribute="centerX" secondItem="SXE-eQ-aPp" secondAttribute="centerX" id="vLH-wV-n1C"/>
+                    <constraint firstAttribute="bottom" secondItem="DLX-Hk-y3w" secondAttribute="bottom" id="i8l-nw-lHe"/>
+                    <constraint firstItem="DLX-Hk-y3w" firstAttribute="leading" secondItem="SXE-eQ-aPp" secondAttribute="leading" id="lau-6f-DGJ"/>
+                    <constraint firstItem="DLX-Hk-y3w" firstAttribute="top" secondItem="SXE-eQ-aPp" secondAttribute="top" id="rX5-I7-pxl"/>
+                    <constraint firstAttribute="trailing" secondItem="DLX-Hk-y3w" secondAttribute="trailing" id="zaS-sb-hFg"/>
                 </constraints>
             </collectionViewCellContentView>
-            <size key="customSize" width="279" height="242"/>
+            <size key="customSize" width="320" height="425"/>
             <connections>
-                <outlet property="imageView" destination="YgA-lZ-CuY" id="cEJ-eq-pkE"/>
+                <outlet property="imageView" destination="Gjc-Ly-pqK" id="v2u-1D-J7P"/>
+                <outlet property="scrollView" destination="DLX-Hk-y3w" id="sEn-pz-Hoq"/>
             </connections>
-            <point key="canvasLocation" x="165.94202898550725" y="139.95535714285714"/>
+            <point key="canvasLocation" x="195.6521739130435" y="201.22767857142856"/>
         </collectionViewCell>
     </objects>
 </document>
