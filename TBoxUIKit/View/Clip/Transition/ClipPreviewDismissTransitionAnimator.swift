@@ -10,7 +10,7 @@ extension ClipPreviewDismissTransitionAnimator: UIViewControllerAnimatedTransiti
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 3
+        return 0.2
     }
 
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

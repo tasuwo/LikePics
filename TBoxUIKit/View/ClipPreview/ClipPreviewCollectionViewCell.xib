@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -25,14 +25,14 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="gGJ-Yx-akS" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Gjc-Ly-pqK" secondAttribute="bottom" priority="250" id="5U5-s6-ah5"/>
-                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="bottom" secondItem="m7m-t4-Po6" secondAttribute="bottom" id="90l-BJ-SKb"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="bottom" secondItem="m7m-t4-Po6" secondAttribute="bottom" priority="999" id="90l-BJ-SKb"/>
                             <constraint firstItem="Gjc-Ly-pqK" firstAttribute="centerX" secondItem="DLX-Hk-y3w" secondAttribute="centerX" id="9yz-mi-9Ig"/>
                             <constraint firstItem="Gjc-Ly-pqK" firstAttribute="centerY" secondItem="DLX-Hk-y3w" secondAttribute="centerY" id="NVu-HJ-JPk"/>
                             <constraint firstItem="gGJ-Yx-akS" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Gjc-Ly-pqK" secondAttribute="trailing" priority="250" id="PXI-qo-Vg5"/>
-                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="leading" secondItem="m7m-t4-Po6" secondAttribute="leading" id="QMD-CU-XeF"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="leading" secondItem="m7m-t4-Po6" secondAttribute="leading" priority="999" id="QMD-CU-XeF"/>
                             <constraint firstItem="Gjc-Ly-pqK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gGJ-Yx-akS" secondAttribute="top" priority="250" id="TRo-ge-jBB"/>
-                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="trailing" secondItem="m7m-t4-Po6" secondAttribute="trailing" id="m2i-a5-jMY"/>
-                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="top" secondItem="m7m-t4-Po6" secondAttribute="top" id="nxP-5v-q9e"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="trailing" secondItem="m7m-t4-Po6" secondAttribute="trailing" priority="999" id="m2i-a5-jMY"/>
+                            <constraint firstItem="Gjc-Ly-pqK" firstAttribute="top" secondItem="m7m-t4-Po6" secondAttribute="top" priority="999" id="nxP-5v-q9e"/>
                             <constraint firstItem="Gjc-Ly-pqK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gGJ-Yx-akS" secondAttribute="leading" priority="250" id="rSd-ho-wjL"/>
                         </constraints>
                         <viewLayoutGuide key="contentLayoutGuide" id="m7m-t4-Po6"/>

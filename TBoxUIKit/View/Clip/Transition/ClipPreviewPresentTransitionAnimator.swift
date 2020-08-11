@@ -4,13 +4,7 @@
 
 import UIKit
 
-public class ClipPreviewPresentTransitionAnimator: NSObject {
-    // MARK: - Methods
-
-    private func calcExpectedImageFrame(from image: UIImage, on finalFrame: CGSize) -> CGSize {
-        return .init(width: finalFrame.width, height: finalFrame.width * (image.size.height / image.size.width))
-    }
-}
+public class ClipPreviewPresentTransitionAnimator: NSObject {}
 
 extension ClipPreviewPresentTransitionAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
@@ -49,9 +43,10 @@ extension ClipPreviewPresentTransitionAnimator: UIViewControllerAnimatedTransiti
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
             ClipCollectionViewCell.resetAppearance(imageView: animatingImageView)
 
-            let finalFrameSize = transitionContext.finalFrame(for: to).size
-            let finalImageSize = self.calcExpectedImageFrame(from: selectedImage, on: finalFrameSize)
-            animatingImageView.frame = .init(origin: .init(x: 0, y: finalFrameSize.height / 2 - finalImageSize.height / 2), size: finalImageSize)
+            let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
+            let frameOnCell = ClipPreviewCollectionViewCell.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
+            animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
+                                             size: frameOnCell.size)
 
             to.view.alpha = 1.0
         }, completion: { finished in
