@@ -10,16 +10,17 @@ class ClipsViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipsPresenter
-    private let transition = ClipPreviewTransitioningDelegate()
+    private let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipsPresenter) {
+    init(factory: Factory, presenter: ClipsPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
         self.factory = factory
         self.presenter = presenter
+        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
 
         self.addBecomeActiveNotification()
@@ -115,13 +116,14 @@ extension ClipsViewController: UICollectionViewDelegate {
         let clip = self.presenter.clips[indexPath.row]
 
         let nextViewController = self.factory.makeClipDetailViewController(clip: clip)
-        nextViewController.transitioningDelegate = self.transition
 
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
 }
 
-extension ClipsViewController: ClipPreviewPresentingViewController {
+extension ClipsViewController: ClipPreviewPresentingViewControllerProtocol {
+    // MARK: - ClipPreviewPresentingViewControllerProtocol
+
     func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipCollectionView {
         return self.collectionView
     }

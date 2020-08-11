@@ -4,6 +4,6 @@
 
 import UIKit
 
-public protocol ClipPreviewPresentingViewController: UIViewController {
+public protocol ClipPreviewPresentingViewControllerProtocol: UIViewController {
     func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipCollectionView
 }

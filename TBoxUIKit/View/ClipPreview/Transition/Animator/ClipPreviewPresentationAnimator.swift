@@ -4,9 +4,9 @@
 
 import UIKit
 
-public class ClipPreviewPresentTransitionAnimator: NSObject {}
+public class ClipPreviewPresentationAnimator: NSObject {}
 
-extension ClipPreviewPresentTransitionAnimator: UIViewControllerAnimatedTransitioning {
+extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -17,8 +17,8 @@ extension ClipPreviewPresentTransitionAnimator: UIViewControllerAnimatedTransiti
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewController,
-            let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentedViewController,
+            let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewControllerProtocol,
+            let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentedViewControllerProtocol,
             let selectedIndex = from.collectionView(self).indexPathsForSelectedItems?.first,
             let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipCollectionViewCell,
             let selectedImageView = selectedCell.primaryImageView,

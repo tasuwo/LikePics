@@ -9,14 +9,16 @@ class ClipPreviewViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipPreviewPresenter
+    private let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var collectionView: ClipPreviewCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipPreviewPresenter) {
+    init(factory: Factory, presenter: ClipPreviewPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
         self.factory = factory
         self.presenter = presenter
+        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -111,8 +113,8 @@ extension ClipPreviewViewController: ClipPreviewCollectionLayoutDelegate {
     }
 }
 
-extension ClipPreviewViewController: ClipPreviewPresentedViewController {
-    // MARK: - ClipPreviewPresentedViewController
+extension ClipPreviewViewController: ClipPreviewPresentedViewControllerProtocol {
+    // MARK: - ClipPreviewPresentedViewControllerProtocol
 
     func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewCollectionView {
         return self.collectionView

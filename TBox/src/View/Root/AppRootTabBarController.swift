@@ -26,7 +26,7 @@ class AppRootTabBarController: UITabBarController {
         clipViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
 
         self.viewControllers = [
-            ClipsNavigationController(rootViewController: clipViewController)
+            self.factory.makeClipPreviewTransitionableNavigationController(root: clipViewController)
         ]
     }
 }
