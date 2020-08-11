@@ -85,6 +85,28 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateWebImages(inClipOfUrl url: URL, to webImages: [WebImage]) -> Result<Clip, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+                return .failure(.notFound)
+            }
+
+            do {
+                try realm.write {
+                    realm.delete(clip.webImages)
+                    clip.webImages.append(objectsIn: webImages.map { $0.asManagedObject() })
+                }
+                return .success(.make(by: clip))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
