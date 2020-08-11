@@ -639,7 +639,7 @@
 			children = (
 				2C1BA03324E08A0E00F96801 /* Root */,
 				2C570B6024E04FEF00A1DC9F /* Clips */,
-				2C86CC4B24E12DDB0091A89E /* ClipDetail */,
+				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
@@ -674,13 +674,13 @@
 			path = AppExtension;
 			sourceTree = "<group>";
 		};
-		2C86CC4B24E12DDB0091A89E /* ClipDetail */ = {
+		2C86CC4B24E12DDB0091A89E /* ClipPreview */ = {
 			isa = PBXGroup;
 			children = (
 				2C86CC4C24E12DEA0091A89E /* ClipPreviewViewController.swift */,
 				2C86CC5124E12F530091A89E /* ClipPreviewViewController.xib */,
 			);
-			path = ClipDetail;
+			path = ClipPreview;
 			sourceTree = "<group>";
 		};
 		2C86CC4E24E12E220091A89E /* ClipPreview */ = {
