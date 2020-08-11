@@ -121,14 +121,6 @@ extension ClipsViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipsViewController: ClipPreviewPresentingViewControllerProtocol {
-    // MARK: - ClipPreviewPresentingViewControllerProtocol
-
-    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipsCollectionView {
-        return self.collectionView
-    }
-}
-
 extension ClipsViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
@@ -177,5 +169,26 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return .zero
+    }
+}
+
+extension ClipsViewController: ClipPreviewPresentingAnimatorDataSource {
+    // MARK: - ClipPreviewAnimatorDataSource
+
+    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
+        guard let selectedIndexPath = self.collectionView.indexPathsForSelectedItems?.first else {
+            return nil
+        }
+
+        if !self.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
+            self.collectionView.scrollToItem(at: selectedIndexPath, at: .centeredVertically, animated: false)
+            self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+            self.collectionView.layoutIfNeeded()
+        }
+
+        guard let selectedCell = self.collectionView.cellForItem(at: selectedIndexPath) as? ClipsCollectionViewCell else {
+            return nil
+        }
+        return selectedCell
     }
 }

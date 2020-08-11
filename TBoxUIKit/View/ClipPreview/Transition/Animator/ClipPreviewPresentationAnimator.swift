@@ -6,23 +6,25 @@ import UIKit
 
 public class ClipPreviewPresentationAnimator: NSObject {}
 
+extension ClipPreviewPresentationAnimator: ClipPreviewAnimator {}
+
 extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.38
+        return 0.3
     }
 
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewControllerProtocol,
-            let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentedViewControllerProtocol,
-            let selectedIndex = from.collectionView(self).indexPathsForSelectedItems?.first,
-            let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipsCollectionViewCell,
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
+            let targetImageView = to.animatingPage(self),
+            let selectedCell = from.animatingCell(self),
             let selectedImageView = selectedCell.primaryImageView,
-            let selectedImage = selectedCell.primaryImageView.image
+            let selectedImage = selectedImageView.image
         else {
             transitionContext.completeTransition(false)
             return
@@ -31,14 +33,14 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         let animatingImageView = UIImageView(image: selectedImage)
         ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = selectedCell.convert(selectedImageView.frame, to: from.view)
+        containerView.addSubview(animatingImageView)
 
-        to.view.frame = transitionContext.finalFrame(for: to)
-        to.view.alpha = 0
-        to.pageView(self).isHidden = true
+        targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
-        containerView.addSubview(to.view)
-        containerView.addSubview(animatingImageView)
+        containerView.insertSubview(to.view, belowSubview: from.view)
+
+        to.view.alpha = 0
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
             ClipsCollectionViewCell.resetAppearance(imageView: animatingImageView)
@@ -48,10 +50,11 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
                                              size: frameOnCell.size)
 
+            from.view.alpha = 0
             to.view.alpha = 1.0
         }, completion: { finished in
+            targetImageView.isHidden = false
             selectedImageView.isHidden = false
-            to.pageView(self).isHidden = false
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         })

@@ -115,8 +115,15 @@ extension ClipPreviewViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension ClipPreviewViewController: ClipPreviewPresentedViewControllerProtocol {
-    // MARK: - ClipPreviewPresentedViewControllerProtocol
+extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
+    // MARK: - ClipPreviewPresentedAnimatorDataSource
+
+    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView? {
+        guard let currentViewController = self.viewControllers?.first as? ClipPreviewPageViewController else {
+            return nil
+        }
+        return currentViewController.pageView
+    }
 
     func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView {
         let currentViewController = self.viewControllers?

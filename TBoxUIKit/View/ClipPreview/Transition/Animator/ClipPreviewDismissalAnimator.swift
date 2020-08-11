@@ -6,21 +6,25 @@ import UIKit
 
 public class ClipPreviewDismissalAnimator: NSObject {}
 
+extension ClipPreviewDismissalAnimator: ClipPreviewAnimator {}
+
 extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.2
+        return 0.3
     }
 
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentedViewControllerProtocol,
-            let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentingViewControllerProtocol,
-            let visibleImageView = from.pageView(self).imageView,
-            let visibleImage = visibleImageView.image
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let visiblePage = from.animatingPage(self),
+            let visibleImageView = visiblePage.imageView,
+            let visibleImage = visibleImageView.image,
+            let targetCell = to.animatingCell(self)
         else {
             transitionContext.completeTransition(false)
             return
@@ -28,20 +32,15 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         let animatingImageView = UIImageView(image: visibleImage)
         animatingImageView.contentMode = .scaleAspectFit
-        animatingImageView.frame = visibleImageView.convert(visibleImageView.frame, to: containerView)
-
-        to.view.frame = transitionContext.finalFrame(for: to)
-        to.view.alpha = 0
-        visibleImageView.isHidden = true
-
-        containerView.addSubview(to.view)
+        animatingImageView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)
         containerView.addSubview(animatingImageView)
 
-        let targetCell = to.collectionView(self).visibleCells.first(where: {
-            guard let cell = $0 as? ClipsCollectionViewCell else { return false }
-            return cell.primaryImage == visibleImage
-        })! as! ClipsCollectionViewCell
         targetCell.isHidden = true
+        visibleImageView.isHidden = true
+
+        containerView.insertSubview(to.view, aboveSubview: from.view)
+
+        to.view.alpha = 0
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
             ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
@@ -53,7 +52,6 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         }, completion: { finished in
             visibleImageView.isHidden = false
             targetCell.isHidden = false
-            to.collectionView(self).isHidden = false
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         })
