@@ -4,7 +4,7 @@
 
 import UIKit
 
-public class ClipTargetCollectionView: UICollectionView {
+public class ClipSelectionCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
     public static let headerIdentifier = "Header"
 
@@ -27,9 +27,9 @@ public class ClipTargetCollectionView: UICollectionView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(ClipTargetCollectionViewCell.nib,
+        self.register(ClipSelectionCollectionViewCell.nib,
                       forCellWithReuseIdentifier: Self.cellIdentifier)
-        self.register(ClipTargetCollectionViewHeader.nib,
+        self.register(ClipSelectionCollectionViewHeader.nib,
                       forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                       withReuseIdentifier: Self.headerIdentifier)
     }

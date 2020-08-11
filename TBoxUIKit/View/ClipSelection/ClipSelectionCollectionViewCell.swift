@@ -6,9 +6,9 @@ import Domain
 import Kingfisher
 import UIKit
 
-public class ClipTargetCollectionViewCell: UICollectionViewCell {
+public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     public static var nib: UINib {
-        return UINib(nibName: "ClipTargetCollectionViewCell", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
     public var imageUrl: URL? {

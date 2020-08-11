@@ -9,7 +9,7 @@ import UIKit
 class ClipTargetCollectionViewController: UIViewController {
     private let presenter: ClipTargetCollecitonViewPresenter
 
-    @IBOutlet var collectionView: ClipTargetCollectionView!
+    @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
@@ -132,14 +132,14 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipTargetCollectionViewHeader }).first else {
+        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first else {
             return
         }
         header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipTargetCollectionViewHeader }).first else {
+        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first else {
             return
         }
         header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
@@ -161,7 +161,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         let dequeuedHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: type(of: self.collectionView).headerIdentifier,
                                                                              for: indexPath)
-        guard let header = dequeuedHeader as? ClipTargetCollectionViewHeader else { return dequeuedHeader }
+        guard let header = dequeuedHeader as? ClipSelectionCollectionViewHeader else { return dequeuedHeader }
 
         header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
 
@@ -170,7 +170,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipTargetCollectionViewCell else { return dequeuedCell }
+        guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
         guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return cell }
 
         cell.imageUrl = self.presenter.imageUrls[indexPath.row]
@@ -187,6 +187,6 @@ extension ClipTargetCollectionViewController: ClipCollectionLayoutDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
-        return ClipTargetCollectionViewHeader.preferredHeight
+        return ClipSelectionCollectionViewHeader.preferredHeight
     }
 }

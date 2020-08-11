@@ -4,9 +4,9 @@
 
 import UIKit
 
-public class ClipTargetCollectionViewHeader: UICollectionReusableView {
+public class ClipSelectionCollectionViewHeader: UICollectionReusableView {
     public static var nib: UINib {
-        return UINib(nibName: "ClipTargetCollectionViewHeader", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "ClipSelectionCollectionViewHeader", bundle: Bundle(for: Self.self))
     }
 
     public static let preferredHeight: CGFloat = 50
