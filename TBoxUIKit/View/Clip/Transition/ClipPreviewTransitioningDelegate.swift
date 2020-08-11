@@ -13,6 +13,6 @@ extension ClipPreviewTransitioningDelegate: UIViewControllerTransitioningDelegat
                                     presenting: UIViewController,
                                     source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        return ClipPreviewTransitioningAnimator()
+        return ClipPreviewPresentTransitionAnimator()
     }
 }

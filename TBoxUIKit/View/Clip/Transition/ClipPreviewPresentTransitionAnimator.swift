@@ -4,7 +4,7 @@
 
 import UIKit
 
-public class ClipPreviewTransitioningAnimator: NSObject {
+public class ClipPreviewPresentTransitionAnimator: NSObject {
     // MARK: - Methods
 
     private func calcExpectedImageFrame(from image: UIImage, on finalFrame: CGSize) -> CGSize {
@@ -12,7 +12,7 @@ public class ClipPreviewTransitioningAnimator: NSObject {
     }
 }
 
-extension ClipPreviewTransitioningAnimator: UIViewControllerAnimatedTransitioning {
+extension ClipPreviewPresentTransitionAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {

@@ -114,7 +114,7 @@ extension ClipPreviewViewController: ClipPreviewCollectionLayoutDelegate {
 extension ClipPreviewViewController: ClipPreviewPresentedViewController {
     // MARK: - ClipPreviewPresentedViewController
 
-    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipPreviewCollectionView {
+    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewCollectionView {
         return self.collectionView
     }
 }

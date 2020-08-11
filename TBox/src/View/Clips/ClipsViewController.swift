@@ -122,7 +122,7 @@ extension ClipsViewController: UICollectionViewDelegate {
 }
 
 extension ClipsViewController: ClipPreviewPresentingViewController {
-    func collectionView(_ animator: ClipPreviewTransitioningAnimator) -> ClipCollectionView {
+    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipCollectionView {
         return self.collectionView
     }
 }
