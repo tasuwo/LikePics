@@ -34,9 +34,9 @@
 		2C570B5F24E04FBF00A1DC9F /* ClipsViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5E24E04FBF00A1DC9F /* ClipsViewPresenter.swift */; };
 		2C570B6224E04FFA00A1DC9F /* ClipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6124E04FFA00A1DC9F /* ClipsViewController.swift */; };
 		2C570B6424E0503800A1DC9F /* ClipsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6324E0503800A1DC9F /* ClipsViewController.xib */; };
-		2C570B6624E0505F00A1DC9F /* ClipCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */; };
-		2C570B6D24E067D200A1DC9F /* ClipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */; };
-		2C570B6F24E06AFD00A1DC9F /* ClipCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6E24E06AFD00A1DC9F /* ClipCollectionViewCell.xib */; };
+		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
+		2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */; };
+		2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */; };
 		2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -310,9 +310,9 @@
 		2C570B5E24E04FBF00A1DC9F /* ClipsViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsViewPresenter.swift; sourceTree = "<group>"; };
 		2C570B6124E04FFA00A1DC9F /* ClipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsViewController.swift; sourceTree = "<group>"; };
 		2C570B6324E0503800A1DC9F /* ClipsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsViewController.xib; sourceTree = "<group>"; };
-		2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionView.swift; sourceTree = "<group>"; };
-		2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionViewCell.swift; sourceTree = "<group>"; };
-		2C570B6E24E06AFD00A1DC9F /* ClipCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipCollectionViewCell.xib; sourceTree = "<group>"; };
+		2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionView.swift; sourceTree = "<group>"; };
+		2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionViewCell.swift; sourceTree = "<group>"; };
+		2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsCollectionViewCell.xib; sourceTree = "<group>"; };
 		2C6C8F8A24DF0BAC00692301 /* ClipSelectionCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionView.swift; sourceTree = "<group>"; };
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
 		2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Twitter.swift; sourceTree = "<group>"; };
@@ -580,9 +580,9 @@
 			isa = PBXGroup;
 			children = (
 				2C95EC5724E17ED400D6EEB4 /* Layout */,
-				2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */,
-				2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */,
-				2C570B6E24E06AFD00A1DC9F /* ClipCollectionViewCell.xib */,
+				2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */,
+				2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */,
+				2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */,
 			);
 			path = ClipsCollection;
 			sourceTree = "<group>";
@@ -1253,7 +1253,7 @@
 			files = (
 				2C8FD65024E02E15005887F9 /* ClipSelectionCollectionViewCell.xib in Resources */,
 				2C95EC5224E1624B00D6EEB4 /* ClipPreviewCollectionViewCell.xib in Resources */,
-				2C570B6F24E06AFD00A1DC9F /* ClipCollectionViewCell.xib in Resources */,
+				2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */,
 				2C8FD64F24E02E10005887F9 /* ClipSelectionCollectionViewHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1657,11 +1657,11 @@
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
 				2C95EC4E24E1602100D6EEB4 /* ClipPreviewCollectionView.swift in Sources */,
 				2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */,
-				2C570B6D24E067D200A1DC9F /* ClipCollectionViewCell.swift in Sources */,
+				2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */,
 				2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */,
 				2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */,
 				2C95EC4B24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift in Sources */,
-				2C570B6624E0505F00A1DC9F /* ClipCollectionView.swift in Sources */,
+				2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */,
 				2C51D45424E1954A006811F6 /* ClipPreviewPresentedViewControllerProtocol.swift in Sources */,
 				2C95EC5024E1622C00D6EEB4 /* ClipPreviewCollectionViewCell.swift in Sources */,
 			);

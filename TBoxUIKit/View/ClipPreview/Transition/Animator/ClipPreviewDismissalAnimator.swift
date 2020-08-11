@@ -39,13 +39,13 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         containerView.addSubview(animatingImageView)
 
         let targetCell = to.collectionView(self).visibleCells.first(where: {
-            guard let cell = $0 as? ClipCollectionViewCell else { return false }
+            guard let cell = $0 as? ClipsCollectionViewCell else { return false }
             return cell.primaryImage == visibleImage
-        })! as! ClipCollectionViewCell
+        })! as! ClipsCollectionViewCell
         targetCell.isHidden = true
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
-            ClipCollectionViewCell.setupAppearance(imageView: visibleImageView)
+            ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
 
             animatingImageView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
 

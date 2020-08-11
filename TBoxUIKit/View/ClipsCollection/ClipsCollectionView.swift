@@ -4,7 +4,7 @@
 
 import UIKit
 
-public class ClipCollectionView: UICollectionView {
+public class ClipsCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
     // MARK: - Lifecycle
@@ -26,7 +26,7 @@ public class ClipCollectionView: UICollectionView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(ClipCollectionViewCell.nib,
+        self.register(ClipsCollectionViewCell.nib,
                       forCellWithReuseIdentifier: Self.cellIdentifier)
     }
 

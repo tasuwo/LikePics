@@ -13,7 +13,7 @@ class ClipsViewController: UIViewController {
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var indicator: UIActivityIndicatorView!
-    @IBOutlet var collectionView: ClipCollectionView!
+    @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
@@ -124,7 +124,7 @@ extension ClipsViewController: UICollectionViewDelegate {
 extension ClipsViewController: ClipPreviewPresentingViewControllerProtocol {
     // MARK: - ClipPreviewPresentingViewControllerProtocol
 
-    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipCollectionView {
+    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipsCollectionView {
         return self.collectionView
     }
 }
@@ -141,8 +141,8 @@ extension ClipsViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipCollectionViewCell else { return dequeuedCell }
+        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
+        guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
         let webImages = self.presenter.clips[indexPath.row].webImages
@@ -154,7 +154,7 @@ extension ClipsViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipsViewController: ClipCollectionLayoutDelegate {
+extension ClipsViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
@@ -166,9 +166,9 @@ extension ClipsViewController: ClipCollectionLayoutDelegate {
 
         if clip.webImages.count > 1 {
             if clip.webImages.count > 2 {
-                return baseHeight + ClipCollectionViewCell.secondaryStickingOutMargin + ClipCollectionViewCell.tertiaryStickingOutMargin
+                return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin + ClipsCollectionViewCell.tertiaryStickingOutMargin
             } else {
-                return baseHeight + ClipCollectionViewCell.secondaryStickingOutMargin
+                return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin
             }
         } else {
             return baseHeight

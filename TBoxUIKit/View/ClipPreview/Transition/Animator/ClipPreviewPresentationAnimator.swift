@@ -20,7 +20,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentingViewControllerProtocol,
             let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentedViewControllerProtocol,
             let selectedIndex = from.collectionView(self).indexPathsForSelectedItems?.first,
-            let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipCollectionViewCell,
+            let selectedCell = from.collectionView(self).cellForItem(at: selectedIndex) as? ClipsCollectionViewCell,
             let selectedImageView = selectedCell.primaryImageView,
             let selectedImage = selectedCell.primaryImageView.image
         else {
@@ -29,7 +29,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         }
 
         let animatingImageView = UIImageView(image: selectedImage)
-        ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = selectedCell.convert(selectedImageView.frame, to: from.view)
 
         to.view.frame = transitionContext.finalFrame(for: to)
@@ -41,7 +41,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         containerView.addSubview(animatingImageView)
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
-            ClipCollectionViewCell.resetAppearance(imageView: animatingImageView)
+            ClipsCollectionViewCell.resetAppearance(imageView: animatingImageView)
 
             let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
             let frameOnCell = ClipPreviewCollectionViewCell.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)

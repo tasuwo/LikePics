@@ -179,8 +179,8 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipTargetCollectionViewController: ClipCollectionLayoutDelegate {
-    // MARK: - ClipCollectionLayoutDelegate
+extension ClipTargetCollectionViewController: ClipsCollectionLayoutDelegate {
+    // MARK: - ClipsCollectionLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         self.presenter.resolveImageHeight(for: width, at: indexPath.row)
