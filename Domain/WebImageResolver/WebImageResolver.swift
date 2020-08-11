@@ -6,10 +6,15 @@ import Erik
 import PromiseKit
 import WebKit
 
+public struct ResolvedImageUrl {
+    public let lowQuality: URL
+    public let highQuality: URL
+}
+
 public protocol WebImageResolverProtocol {
     var webView: WKWebView { get }
 
-    func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[URL], WebImageResolverError>) -> Void)
+    func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[ResolvedImageUrl], WebImageResolverError>) -> Void)
 }
 
 public class WebImageResolver {
@@ -86,7 +91,7 @@ public class WebImageResolver {
 extension WebImageResolver: WebImageResolverProtocol {
     // MARK: - WebImageResolverProtocol
 
-    public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[URL], WebImageResolverError>) -> Void) {
+    public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[ResolvedImageUrl], WebImageResolverError>) -> Void) {
         let baseStep = firstly {
             self.openPage(url: url)
         }
@@ -109,11 +114,18 @@ extension WebImageResolver: WebImageResolverProtocol {
                 self.checkCurrentContent(fulfilled: { $0.querySelectorAll("img").count > 0 })
             }
         }.done { document in
-            let images = document
+            let imageUrls: [ResolvedImageUrl] = document
                 .querySelectorAll("img")
                 .compactMap { $0["src"] }
                 .compactMap { URL(string: $0) }
-            completion(.success(images))
+                .map {
+                    guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
+                        return ResolvedImageUrl(lowQuality: $0, highQuality: $0)
+                    }
+                    return ResolvedImageUrl(lowQuality: provider.composeUrl(higherQualityOf: $0),
+                                            highQuality: provider.composeUrl(lowerQualityOf: $0))
+                }
+            completion(.success(imageUrls))
         }.catch { error in
             guard let error = error as? WebImageResolverError else {
                 completion(.failure(.internalError))

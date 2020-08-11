@@ -22,6 +22,14 @@ extension WebImageProvidingService {
             return Promise { $0.resolve(.fulfilled(document)) }
         }
 
+        public static func composeUrl(lowerQualityOf url: URL) -> URL {
+            return url
+        }
+
+        public static func composeUrl(higherQualityOf url: URL) -> URL {
+            return url
+        }
+
         public static var shouldModifyRequest: Bool {
             return true
         }

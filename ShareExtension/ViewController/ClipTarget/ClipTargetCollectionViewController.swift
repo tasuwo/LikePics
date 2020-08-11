@@ -173,7 +173,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
         guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return cell }
 
-        cell.imageUrl = self.presenter.imageUrls[indexPath.row]
+        cell.imageUrl = self.presenter.imageUrls[indexPath.row].lowQuality
 
         return cell
     }

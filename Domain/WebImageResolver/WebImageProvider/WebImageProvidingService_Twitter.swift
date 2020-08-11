@@ -51,6 +51,38 @@ extension WebImageProvidingService {
             }
         }
 
+        public static func composeUrl(lowerQualityOf url: URL) -> URL {
+            guard var components = URLComponents(string: url.absoluteString),
+                let queryItems = components.queryItems
+            else {
+                return url
+            }
+
+            let newQueryItems: [URLQueryItem] = queryItems
+                .filter { $0.name == "name" }
+                .compactMap { _ in URLQueryItem(name: "name", value: "thumb") }
+
+            components.queryItems = newQueryItems
+
+            return components.url ?? url
+        }
+
+        public static func composeUrl(higherQualityOf url: URL) -> URL {
+            guard var components = URLComponents(string: url.absoluteString),
+                let queryItems = components.queryItems
+            else {
+                return url
+            }
+
+            let newQueryItems: [URLQueryItem] = queryItems
+                .filter { $0.name == "name" }
+                .compactMap { _ in URLQueryItem(name: "name", value: "large") }
+
+            components.queryItems = newQueryItems
+
+            return components.url ?? url
+        }
+
         public static var shouldModifyRequest: Bool {
             return false
         }

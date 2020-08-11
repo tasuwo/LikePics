@@ -24,10 +24,10 @@ class ClipTargetCollecitonViewPresenter {
         case internalError
     }
 
-    private(set) var imageUrls: [URL] = [] {
+    private(set) var imageUrls: [ResolvedImageUrl] = [] {
         didSet {
             self.sizeCalculationQueue.sync {
-                self.imageSizes = self.imageUrls.map { self.calcImageSize(ofUrl: $0) }
+                self.imageSizes = self.imageUrls.map { self.calcImageSize(ofUrl: $0.lowQuality) }
             }
         }
     }
@@ -77,7 +77,7 @@ class ClipTargetCollecitonViewPresenter {
                 }
             }
         }.then(on: self.findImageQueue) { url in
-            return Promise<[URL]> { seal in
+            return Promise<[ResolvedImageUrl]> { seal in
                 self.resolver.resolveWebImages(inUrl: url) { result in
                     switch result {
                     case let .success(urls):
@@ -127,9 +127,9 @@ class ClipTargetCollecitonViewPresenter {
             .filter { indices.contains($0.offset) }
             .map { $0.element }
             .map { url in
-                let data = try! Data(contentsOf: url)
+                let data = try! Data(contentsOf: url.highQuality)
                 let image = UIImage(data: data)!
-                return WebImage(url: url, image: image)
+                return WebImage(url: url.highQuality, image: image)
             }
         let clip = Clip(url: url, webImages: webImages)
 

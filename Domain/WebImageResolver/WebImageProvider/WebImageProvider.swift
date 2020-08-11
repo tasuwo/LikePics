@@ -12,6 +12,10 @@ public protocol WebImageProvider {
 
     static func preprocess(_ browser: Erik, document: Document) -> Promise<Document>
 
+    static func composeUrl(lowerQualityOf url: URL) -> URL
+
+    static func composeUrl(higherQualityOf url: URL) -> URL
+
     static var shouldModifyRequest: Bool { get }
 
     static func modifyRequest(_ request: URLRequest) -> URLRequest
