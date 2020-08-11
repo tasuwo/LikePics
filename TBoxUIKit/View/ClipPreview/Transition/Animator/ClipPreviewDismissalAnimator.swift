@@ -19,8 +19,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         guard
             let from = transitionContext.viewController(forKey: .from) as? ClipPreviewPresentedViewControllerProtocol,
             let to = transitionContext.viewController(forKey: .to) as? ClipPreviewPresentingViewControllerProtocol,
-            let visibleCell = from.collectionView(self).visibleCells.first as? ClipPreviewCollectionViewCell,
-            let visibleImageView = visibleCell.imageView,
+            let visibleImageView = from.pageView(self).imageView,
             let visibleImage = visibleImageView.image
         else {
             transitionContext.completeTransition(false)

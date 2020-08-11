@@ -40,6 +40,9 @@
                     </constraints>
                     <viewLayoutGuide key="contentLayoutGuide" id="7FF-M6-nio"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="QXe-Hz-DxO"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="3Po-UX-1qN"/>
+                    </connections>
                 </scrollView>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>

@@ -4,14 +4,15 @@
 import TBoxUIKit
 import UIKit
 
-class ClipPreviewViewController: UIViewController {
+class ClipPreviewViewController: UIPageViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
     private let presenter: ClipPreviewPresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
-    @IBOutlet var collectionView: ClipPreviewCollectionView!
+    private var nextIndex: Int?
+    private var currentIndex: Int = 0
 
     // MARK: - Lifecycle
 
@@ -19,7 +20,9 @@ class ClipPreviewViewController: UIViewController {
         self.factory = factory
         self.presenter = presenter
         self.transitionController = transitionController
-        super.init(nibName: nil, bundle: nil)
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
+            UIPageViewController.OptionsKey.interPageSpacing: 40
+        ])
     }
 
     required init?(coder: NSCoder) {
@@ -29,11 +32,14 @@ class ClipPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let layout = self.collectionView?.collectionViewLayout as? ClipPreviewCollectionLayout {
-            layout.delegate = self
+        self.setupNavigationBar()
+
+        if let webImage = self.presenter.clip.webImages.first {
+            let viewController = self.factory.makeClipPreviewPageViewController(webImage: webImage)
+            self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
         }
 
-        self.setupNavigationBar()
+        self.dataSource = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -64,59 +70,61 @@ class ClipPreviewViewController: UIViewController {
     @objc func didTapInfoButton() {
         print(#function)
     }
-}
 
-extension ClipPreviewViewController: UICollectionViewDelegate {
-    // MARK: - UICollectionViewDelegate
-
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return false
+    private func resolveIndex(of viewController: UIViewController) -> Int? {
+        guard let viewController = viewController as? ClipPreviewPageViewController else { return nil }
+        guard let currentIndex = self.presenter.clip.webImages.firstIndex(where: { $0.url == viewController.presentingImageUrl }) else { return nil }
+        return currentIndex
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-}
-
-extension ClipPreviewViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.presenter.clip.webImages.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipPreviewCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipPreviewCollectionViewCell else { return dequeuedCell }
-        guard self.presenter.clip.webImages.indices.contains(indexPath.row) else { return cell }
-
-        let webImage = self.presenter.clip.webImages[indexPath.row]
-        cell.image = webImage.image
-
-        return cell
+    private func makeViewController(at index: Int) -> UIViewController? {
+        guard self.presenter.clip.webImages.indices.contains(index) else { return nil }
+        return self.factory.makeClipPreviewPageViewController(webImage: self.presenter.clip.webImages[index])
     }
 }
 
-extension ClipPreviewViewController: ClipPreviewCollectionLayoutDelegate {
-    // MARK: - ClipPreviewCollectionLayoutDelegate
+extension ClipPreviewViewController: UIPageViewControllerDelegate {
+    // MARK: - UIPageViewControllerDelegate
 
-    func itemWidth(_ collectionView: UICollectionView) -> CGFloat {
-        return self.view.bounds.inset(by: self.view.safeAreaInsets).width
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        guard let nextViewController = pendingViewControllers.first, let nextIndex = self.resolveIndex(of: nextViewController) else {
+            fatalError("Unexpected view controller detected.")
+        }
+        self.nextIndex = nextIndex
     }
 
-    func itemHeight(_ collectionView: UICollectionView) -> CGFloat {
-        return self.view.bounds.inset(by: self.view.safeAreaInsets).height
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if let nextIndex = self.nextIndex, completed {
+            self.currentIndex = nextIndex
+        }
+        self.nextIndex = nil
+    }
+}
+
+extension ClipPreviewViewController: UIPageViewControllerDataSource {
+    // MARK: - UIPageViewControllerDataSource
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let currentIndex = self.resolveIndex(of: viewController), currentIndex > 0 else { return nil }
+        return self.makeViewController(at: currentIndex - 1)
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let currentIndex = self.resolveIndex(of: viewController), currentIndex < self.presenter.clip.webImages.count else { return nil }
+        return self.makeViewController(at: currentIndex + 1)
     }
 }
 
 extension ClipPreviewViewController: ClipPreviewPresentedViewControllerProtocol {
     // MARK: - ClipPreviewPresentedViewControllerProtocol
 
-    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewCollectionView {
-        return self.collectionView
+    func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView {
+        let currentViewController = self.viewControllers?
+            .compactMap { $0 as? ClipPreviewPageViewController }
+            .first(where: { $0.presentingImageUrl == self.presenter.clip.webImages[self.currentIndex].url })
+        guard let viewController = currentViewController, let pageView = viewController.pageView else {
+            fatalError("Unexpected view controller presented.")
+        }
+        return pageView
     }
 }

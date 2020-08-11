@@ -5,5 +5,5 @@
 import UIKit
 
 public protocol ClipPreviewPresentedViewControllerProtocol: UIViewController {
-    func collectionView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewCollectionView
+    func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView
 }

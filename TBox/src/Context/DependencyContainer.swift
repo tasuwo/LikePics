@@ -11,6 +11,7 @@ protocol ViewControllerFactory {
     func makeClipPreviewTransitionableNavigationController(root viewController: UIViewController) -> UINavigationController
     func makeClipsViewController() -> ClipsViewController
     func makeClipDetailViewController(clip: Clip) -> ClipPreviewViewController
+    func makeClipPreviewPageViewController(webImage: WebImage) -> ClipPreviewPageViewController
 }
 
 class DependencyContainer {
@@ -35,5 +36,10 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipDetailViewController(clip: Clip) -> ClipPreviewViewController {
         let presenter = ClipPreviewPresenter(clip: clip)
         return ClipPreviewViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+    }
+
+    func makeClipPreviewPageViewController(webImage: WebImage) -> ClipPreviewPageViewController {
+        let presenter = ClipPreviewPagePresenter(webImage: webImage)
+        return ClipPreviewPageViewController(factory: self, presenter: presenter)
     }
 }

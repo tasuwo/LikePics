@@ -34,7 +34,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
 
         to.view.frame = transitionContext.finalFrame(for: to)
         to.view.alpha = 0
-        to.collectionView(self).isHidden = true
+        to.pageView(self).isHidden = true
         selectedImageView.isHidden = true
 
         containerView.addSubview(to.view)
@@ -44,14 +44,14 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             ClipsCollectionViewCell.resetAppearance(imageView: animatingImageView)
 
             let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
-            let frameOnCell = ClipPreviewCollectionViewCell.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
+            let frameOnCell = ClipPreviewPageView.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
             animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
                                              size: frameOnCell.size)
 
             to.view.alpha = 1.0
         }, completion: { finished in
             selectedImageView.isHidden = false
-            to.collectionView(self).isHidden = false
+            to.pageView(self).isHidden = false
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         })
