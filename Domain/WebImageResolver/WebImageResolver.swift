@@ -19,7 +19,7 @@ public protocol WebImageResolverProtocol {
 
 public class WebImageResolver {
     private static let maxRetryCount = 3
-    private static let delayAtRetry = 1
+    private static let delayAtRetry: DispatchTimeInterval = .milliseconds(400)
 
     public let webView: WKWebView
     private let browser: Erik
@@ -101,7 +101,7 @@ extension WebImageResolver: WebImageResolverProtocol {
             provider.shouldPreprocess
         {
             preprocessedStep = baseStep.then { document in
-                attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: .seconds(Self.delayAtRetry), ignoredBy: document) {
+                attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry, ignoredBy: document) {
                     provider.preprocess(self.browser, document: document)
                 }
             }
@@ -110,7 +110,7 @@ extension WebImageResolver: WebImageResolverProtocol {
         }
 
         preprocessedStep.then { document in
-            attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: .seconds(Self.delayAtRetry)) {
+            attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry) {
                 self.checkCurrentContent(fulfilled: { $0.querySelectorAll("img").count > 0 })
             }
         }.done { document in
