@@ -34,4 +34,10 @@ class ClipPreviewPageViewController: UIViewController {
 
         self.pageView.image = self.presenter.webImage.image
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.pageView.shouldRecalculateInitialScale()
+    }
 }

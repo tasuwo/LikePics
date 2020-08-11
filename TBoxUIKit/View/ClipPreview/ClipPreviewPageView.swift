@@ -11,15 +11,21 @@ public class ClipPreviewPageView: UIView {
         }
         set {
             self.imageView.image = newValue
-            if let image = newValue {
-                self.imageView.frame = Self.calcCenterizedFrame(ofImage: image, in: self.bounds)
-            }
+
+            guard let image = self.imageView.image else { return }
+            self.setInitialScale(for: image, on: self.bounds)
+            self.updateConstraints(for: image, on: self.bounds)
         }
     }
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
+
+    @IBOutlet var leftInsetConstraint: NSLayoutConstraint!
+    @IBOutlet var bottomInsetConstraint: NSLayoutConstraint!
+    @IBOutlet var rightInsetConstraint: NSLayoutConstraint!
+    @IBOutlet var topInsetConstraint: NSLayoutConstraint!
 
     // MARK: - Lifecycle
 
@@ -39,6 +45,49 @@ public class ClipPreviewPageView: UIView {
 
     // MARK: - Methods
 
+    public func shouldRecalculateInitialScale() {
+        guard let image = self.imageView.image else { return }
+        self.setInitialScale(for: image, on: self.bounds)
+        self.updateConstraints(for: image, on: self.bounds)
+    }
+
+    private func setupFromNib() {
+        Bundle(for: type(of: self)).loadNibNamed("ClipPreviewPageView", owner: self, options: nil)
+        self.baseView.frame = self.bounds
+        self.addSubview(self.baseView)
+        self.sendSubviewToBack(self.baseView)
+    }
+
+    private func setupAppearance() {
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.showsHorizontalScrollIndicator = false
+        self.scrollView.alwaysBounceVertical = false
+        self.scrollView.alwaysBounceHorizontal = false
+    }
+
+    func setInitialScale(for image: UIImage, on frame: CGRect) {
+        let widthScale = frame.size.width / image.size.width
+        let heightScale = frame.size.height / image.size.height
+        let scale = min(widthScale, heightScale)
+
+        self.scrollView.minimumZoomScale = scale
+        self.scrollView.maximumZoomScale = scale * 3
+
+        self.scrollView.zoomScale = scale
+    }
+
+    func updateConstraints(for image: UIImage, on frame: CGRect) {
+        let currentScale = self.scrollView.zoomScale
+
+        let horizonalInset = max((frame.width - image.size.width * currentScale) / 2, 0)
+        let verticalInset = max((frame.height - image.size.height * currentScale) / 2, 0)
+
+        self.topInsetConstraint.constant = verticalInset
+        self.bottomInsetConstraint.constant = verticalInset
+        self.leftInsetConstraint.constant = horizonalInset
+        self.rightInsetConstraint.constant = horizonalInset
+    }
+
     static func calcCenterizedFrame(ofImage image: UIImage, in frame: CGRect) -> CGRect {
         let widthScale = frame.size.width / image.size.width
         let heightScale = frame.size.height / image.size.height
@@ -51,20 +100,6 @@ public class ClipPreviewPageView: UIView {
 
         return CGRect(origin: imageOrigin, size: imageSize)
     }
-
-    private func setupFromNib() {
-        Bundle(for: type(of: self)).loadNibNamed("ClipPreviewPageView", owner: self, options: nil)
-        self.baseView.frame = self.bounds
-        self.addSubview(self.baseView)
-    }
-
-    private func setupAppearance() {
-        self.scrollView.minimumZoomScale = 1
-        self.scrollView.maximumZoomScale = 3
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.showsHorizontalScrollIndicator = false
-        self.imageView.contentMode = .scaleAspectFit
-    }
 }
 
 extension ClipPreviewPageView: UIScrollViewDelegate {
@@ -72,5 +107,10 @@ extension ClipPreviewPageView: UIScrollViewDelegate {
 
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView
+    }
+
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        guard let image = self.imageView.image else { return }
+        self.updateConstraints(for: image, on: self.bounds)
     }
 }
