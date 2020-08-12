@@ -20,5 +20,7 @@ public protocol ClipStorageProtocol {
 
     func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
 
+    func createImageData(ofUrl url: URL, data: Data, forClipUrl clipUrl: URL) -> Result<Void, ClipStorageError>
+
     func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError>
 }
