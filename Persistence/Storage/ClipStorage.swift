@@ -131,4 +131,19 @@ extension ClipStorage: ClipStorageProtocol {
             }
         }
     }
+
+    public func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            let primaryKey = "\(clipUrl.absoluteString)-\(url.absoluteString)"
+            guard let clippedImage = realm.object(ofType: ClippedImageObject.self, forPrimaryKey: primaryKey) else {
+                return .failure(.notFound)
+            }
+
+            return .success(clippedImage.image)
+        }
+    }
 }

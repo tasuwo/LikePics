@@ -40,6 +40,16 @@ class ClipsPresenter {
         view.endLoading()
     }
 
+    func getImageData(forUrl: URL, in clip: Clip) -> Data? {
+        switch self.storage.getImageData(ofUrl: forUrl, forClipUrl: clip.url) {
+        case let .success(data):
+            return data
+        case .failure:
+            // TODO: Error handling
+            return nil
+        }
+    }
+
     private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
         return "問題が発生しました"
     }

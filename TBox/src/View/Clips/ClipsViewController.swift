@@ -137,23 +137,20 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
-        let items = self.presenter.clips[indexPath.row].items
+        let clip = self.presenter.clips[indexPath.row]
         cell.primaryImage = {
-            guard items.count > 0 else { return nil }
-            // TODO: Use ImageLoader and read image from db.
-            let data = try! Data(contentsOf: items[0].thumbnail.url)
+            guard let item = clip.items.first(where: { $0.clipIndex == 0 }) else { return nil }
+            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
             return UIImage(data: data)!
         }()
         cell.secondaryImage = {
-            guard items.count > 1 else { return nil }
-            // TODO: Use ImageLoader and read image from db.
-            let data = try! Data(contentsOf: items[1].thumbnail.url)
+            guard let item = clip.items.first(where: { $0.clipIndex == 1 }) else { return nil }
+            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
             return UIImage(data: data)!
         }()
         cell.tertiaryImage = {
-            guard items.count > 2 else { return nil }
-            // TODO: Use ImageLoader and read image from db.
-            let data = try! Data(contentsOf: items[2].thumbnail.url)
+            guard let item = clip.items.first(where: { $0.clipIndex == 2 }) else { return nil }
+            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
             return UIImage(data: data)!
         }()
 
@@ -168,14 +165,8 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return .zero }
         let clip = self.presenter.clips[indexPath.row]
 
-        let nullablePrimaryImage: UIImage? = {
-            guard let imageUrl = clip.items.first?.thumbnail.url else { return nil }
-            // TODO: Use ImageLoader and read image from db.
-            let data = try! Data(contentsOf: imageUrl)
-            return UIImage(data: data)!
-        }()
-        guard let primaryImage = nullablePrimaryImage else { return .zero }
-        let baseHeight = width * (primaryImage.size.height / primaryImage.size.width)
+        guard let item = clip.items.first(where: { $0.clipIndex == 0 }) else { return .zero }
+        let baseHeight = width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
 
         if clip.items.count > 1 {
             if clip.items.count > 2 {
