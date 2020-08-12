@@ -86,7 +86,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         var options: KingfisherOptionsInfo = []
 
         if let provider = WebImageProviderPreset.resolveProvider(by: imageUrl),
-            provider.shouldModifyRequest
+            provider.shouldModifyRequest(for: imageUrl)
         {
             let modifier = AnyModifier(modify: provider.modifyRequest)
             options.append(.requestModifier(modifier))

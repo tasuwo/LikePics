@@ -11,11 +11,11 @@ extension WebImageProvidingService {
 
         public static func isProviding(url: URL) -> Bool {
             guard let host = url.host else { return false }
-            return host.contains("twitter")
+            return host.contains("twitter") || host.contains("twimg")
         }
 
-        public static var shouldPreprocess: Bool {
-            return true
+        public static func shouldPreprocess(for url: URL) -> Bool {
+            return url.host?.contains("twitter") == true
         }
 
         public static func preprocess(_ browser: Erik, document: Document) -> Promise<Document> {
@@ -59,8 +59,10 @@ extension WebImageProvidingService {
             }
 
             let newQueryItems: [URLQueryItem] = queryItems
-                .filter { $0.name == "name" }
-                .compactMap { _ in URLQueryItem(name: "name", value: "thumb") }
+                .compactMap { queryItem in
+                    guard queryItem.name == "name" else { return queryItem }
+                    return URLQueryItem(name: "name", value: "small")
+                }
 
             components.queryItems = newQueryItems
 
@@ -75,15 +77,17 @@ extension WebImageProvidingService {
             }
 
             let newQueryItems: [URLQueryItem] = queryItems
-                .filter { $0.name == "name" }
-                .compactMap { _ in URLQueryItem(name: "name", value: "large") }
+                .compactMap { queryItem in
+                    guard queryItem.name == "name" else { return queryItem }
+                    return URLQueryItem(name: "name", value: "large")
+                }
 
             components.queryItems = newQueryItems
 
             return components.url ?? url
         }
 
-        public static var shouldModifyRequest: Bool {
+        public static func shouldModifyRequest(for url: URL) -> Bool {
             return false
         }
 

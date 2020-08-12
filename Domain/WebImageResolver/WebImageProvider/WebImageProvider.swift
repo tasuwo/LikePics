@@ -8,7 +8,7 @@ import PromiseKit
 public protocol WebImageProvider {
     static func isProviding(url: URL) -> Bool
 
-    static var shouldPreprocess: Bool { get }
+    static func shouldPreprocess(for url: URL) -> Bool
 
     static func preprocess(_ browser: Erik, document: Document) -> Promise<Document>
 
@@ -16,7 +16,7 @@ public protocol WebImageProvider {
 
     static func composeUrl(higherQualityOf url: URL) -> URL
 
-    static var shouldModifyRequest: Bool { get }
+    static func shouldModifyRequest(for url: URL) -> Bool
 
     static func modifyRequest(_ request: URLRequest) -> URLRequest
 }

@@ -14,7 +14,7 @@ extension WebImageProvidingService {
             return host.contains("pximg")
         }
 
-        public static var shouldPreprocess: Bool {
+        public static func shouldPreprocess(for url: URL) -> Bool {
             return false
         }
 
@@ -30,7 +30,7 @@ extension WebImageProvidingService {
             return url
         }
 
-        public static var shouldModifyRequest: Bool {
+        public static func shouldModifyRequest(for url: URL) -> Bool {
             return true
         }
 

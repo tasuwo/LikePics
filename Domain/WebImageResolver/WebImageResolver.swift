@@ -98,7 +98,7 @@ extension WebImageResolver: WebImageResolverProtocol {
 
         var preprocessedStep: Promise<Document>
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
-            provider.shouldPreprocess
+            provider.shouldPreprocess(for: url)
         {
             preprocessedStep = baseStep.then { document in
                 attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry, ignoredBy: document) {
@@ -122,8 +122,8 @@ extension WebImageResolver: WebImageResolverProtocol {
                     guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
                         return ResolvedImageUrl(lowQuality: $0, highQuality: $0)
                     }
-                    return ResolvedImageUrl(lowQuality: provider.composeUrl(higherQualityOf: $0),
-                                            highQuality: provider.composeUrl(lowerQualityOf: $0))
+                    return ResolvedImageUrl(lowQuality: provider.composeUrl(lowerQualityOf: $0),
+                                            highQuality: provider.composeUrl(higherQualityOf: $0))
                 }
             completion(.success(imageUrls))
         }.catch { error in
