@@ -34,8 +34,7 @@ class ClipPreviewViewController: UIPageViewController {
 
         self.setupNavigationBar()
 
-        if let item = self.presenter.clip.items.first {
-            let viewController = self.factory.makeClipPreviewPageViewController(item: item)
+        if let viewController = self.makeViewController(at: 0) {
             self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
         }
 
@@ -73,13 +72,13 @@ class ClipPreviewViewController: UIPageViewController {
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipPreviewPageViewController else { return nil }
-        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0.image.url == viewController.presentingImageUrl }) else { return nil }
+        guard let currentIndex = self.presenter.clip.items.first(where: { $0.image.url == viewController.presentingImageUrl })?.clipIndex else { return nil }
         return currentIndex
     }
 
     private func makeViewController(at index: Int) -> UIViewController? {
-        guard self.presenter.clip.items.indices.contains(index) else { return nil }
-        return self.factory.makeClipPreviewPageViewController(item: self.presenter.clip.items[index])
+        guard let item = self.presenter.clip.items.first(where: { $0.clipIndex == index }) else { return nil }
+        return self.factory.makeClipPreviewPageViewController(item: item)
     }
 }
 
