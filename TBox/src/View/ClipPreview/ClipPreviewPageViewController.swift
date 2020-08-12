@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
@@ -32,11 +33,9 @@ class ClipPreviewPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // TODO: Use ImageLoader and read image from db.
-        let data = try! Data(contentsOf: self.presenter.item.image.url)
-        let image = UIImage(data: data)!
-
-        self.pageView.image = image
+        if let data = self.presenter.loadImageData() {
+            self.pageView.image = UIImage(data: data)
+        }
     }
 
     override func viewDidLayoutSubviews() {
