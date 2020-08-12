@@ -73,7 +73,7 @@ class ClipPreviewViewController: UIPageViewController {
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipPreviewPageViewController else { return nil }
-        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0.imageUrl == viewController.presentingImageUrl }) else { return nil }
+        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0.largeImageUrl == viewController.presentingImageUrl }) else { return nil }
         return currentIndex
     }
 
@@ -128,7 +128,7 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
     func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView {
         let currentViewController = self.viewControllers?
             .compactMap { $0 as? ClipPreviewPageViewController }
-            .first(where: { $0.presentingImageUrl == self.presenter.clip.items[self.currentIndex].imageUrl })
+            .first(where: { $0.presentingImageUrl == self.presenter.clip.items[self.currentIndex].largeImageUrl })
         guard let viewController = currentViewController, let pageView = viewController.pageView else {
             fatalError("Unexpected view controller presented.")
         }

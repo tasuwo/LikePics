@@ -127,16 +127,10 @@ class ClipTargetCollecitonViewPresenter {
         let items: [ClipItem] = self.imageUrls.enumerated()
             .filter { indices.contains($0.offset) }
             .map { index, url in
-                let highQualityData = try! Data(contentsOf: url.highQuality)
-                let highQualityImage = UIImage(data: highQualityData)!
-                let lowQualityData = try! Data(contentsOf: url.lowQuality)
-                let lowQualityImage = UIImage(data: lowQualityData)!
-
                 return ClipItem(clipUrl: clipUrl,
                                 clipIndex: index,
-                                imageUrl: url.highQuality,
-                                thumbnailImage: lowQualityImage,
-                                largeImage: highQualityImage)
+                                thumbnailImageUrl: url.lowQuality,
+                                largeImageUrl: url.highQuality)
             }
         let clip = Clip(url: clipUrl, description: nil, items: items)
 

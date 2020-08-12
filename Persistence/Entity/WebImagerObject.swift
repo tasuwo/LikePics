@@ -14,20 +14,47 @@ extension ClipItem: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: WebImageObject) -> ClipItem {
-        let image = UIImage(data: managedObject.image)!
+        let url = URL(string: managedObject.url)!
+
+        // FIXME:
+        let thumbnailImageUrl: URL
+        if url.host?.contains("twimg") == true {
+            thumbnailImageUrl = {
+                guard var components = URLComponents(string: url.absoluteString),
+                    let queryItems = components.queryItems
+                else {
+                    return url
+                }
+
+                let newQueryItems: [URLQueryItem] = queryItems
+                    .compactMap { queryItem in
+                        guard queryItem.name == "name" else { return queryItem }
+                        return URLQueryItem(name: "name", value: "small")
+                    }
+
+                components.queryItems = newQueryItems
+
+                return components.url ?? url
+            }()
+        } else {
+            thumbnailImageUrl = url
+        }
+
         // TODO: Migration
         return .init(clipUrl: URL(string: managedObject.url)!,
                      clipIndex: 0,
-                     imageUrl: URL(string: managedObject.url)!,
-                     thumbnailImage: image,
-                     largeImage: image)
+                     thumbnailImageUrl: thumbnailImageUrl,
+                     largeImageUrl: url)
     }
 
     func asManagedObject() -> WebImageObject {
         let obj = WebImageObject()
-        obj.url = self.imageUrl.absoluteString
+        obj.url = self.largeImageUrl.absoluteString
+
         // TODO: 保存フォーマットを考える
-        obj.image = self.largeImage.pngData()!
+        let data = try! Data(contentsOf: self.largeImageUrl)
+        let image = UIImage(data: data)!
+        obj.image = image.pngData()!
         return obj
     }
 }

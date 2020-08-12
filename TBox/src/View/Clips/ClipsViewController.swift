@@ -138,9 +138,24 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
         let items = self.presenter.clips[indexPath.row].items
-        cell.primaryImage = items.count > 0 ? items[0].thumbnailImage : nil
-        cell.secondaryImage = items.count > 1 ? items[1].thumbnailImage : nil
-        cell.tertiaryImage = items.count > 2 ? items[2].thumbnailImage : nil
+        cell.primaryImage = {
+            guard items.count > 0 else { return nil }
+            // TODO: Use ImageLoader and read image from db.
+            let data = try! Data(contentsOf: items[0].thumbnailImageUrl)
+            return UIImage(data: data)!
+        }()
+        cell.secondaryImage = {
+            guard items.count > 1 else { return nil }
+            // TODO: Use ImageLoader and read image from db.
+            let data = try! Data(contentsOf: items[1].thumbnailImageUrl)
+            return UIImage(data: data)!
+        }()
+        cell.tertiaryImage = {
+            guard items.count > 2 else { return nil }
+            // TODO: Use ImageLoader and read image from db.
+            let data = try! Data(contentsOf: items[2].thumbnailImageUrl)
+            return UIImage(data: data)!
+        }()
 
         return cell
     }
@@ -153,7 +168,13 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return .zero }
         let clip = self.presenter.clips[indexPath.row]
 
-        guard let primaryImage = clip.items.first?.thumbnailImage else { return .zero }
+        let nullablePrimaryImage: UIImage? = {
+            guard let imageUrl = clip.items.first?.thumbnailImageUrl else { return nil }
+            // TODO: Use ImageLoader and read image from db.
+            let data = try! Data(contentsOf: imageUrl)
+            return UIImage(data: data)!
+        }()
+        guard let primaryImage = nullablePrimaryImage else { return .zero }
         let baseHeight = width * (primaryImage.size.height / primaryImage.size.width)
 
         if clip.items.count > 1 {
