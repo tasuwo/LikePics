@@ -18,14 +18,14 @@ extension Clip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ClipObject) -> Clip {
-        let webImages = Array(managedObject.webImages.map { WebImage.make(by: $0) })
-        return .init(url: URL(string: managedObject.url)!, webImages: webImages)
+        let items = Array(managedObject.webImages.map { ClipItem.make(by: $0) })
+        return .init(url: URL(string: managedObject.url)!, description: nil, items: items)
     }
 
     func asManagedObject() -> ClipObject {
         let obj = ClipObject()
         obj.url = self.url.absoluteString
-        self.webImages.forEach {
+        self.items.forEach {
             obj.webImages.append($0.asManagedObject())
         }
         return obj

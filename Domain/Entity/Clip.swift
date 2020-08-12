@@ -6,12 +6,14 @@ import UIKit
 
 public struct Clip {
     public let url: URL
-    public let webImages: [WebImage]
+    public let description: String?
+    public let items: [ClipItem]
 
     // MARK: - Lifecycle
 
-    public init(url: URL, webImages: [WebImage]) {
+    public init(url: URL, description: String?, items: [ClipItem]) {
         self.url = url
-        self.webImages = webImages
+        self.description = description
+        self.items = items
     }
 }

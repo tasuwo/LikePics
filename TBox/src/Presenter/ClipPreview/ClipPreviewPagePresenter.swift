@@ -5,11 +5,11 @@
 import Domain
 
 class ClipPreviewPagePresenter {
-    let webImage: WebImage
+    let item: ClipItem
 
     // MARK: - Lifecyle
 
-    init(webImage: WebImage) {
-        self.webImage = webImage
+    init(item: ClipItem) {
+        self.item = item
     }
 }

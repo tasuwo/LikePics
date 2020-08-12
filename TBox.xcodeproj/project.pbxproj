@@ -51,7 +51,7 @@
 		2C86CC4D24E12DEA0091A89E /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4C24E12DEA0091A89E /* ClipPreviewViewController.swift */; };
 		2C86CC5024E12E2D0091A89E /* ClipPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4F24E12E2D0091A89E /* ClipPreviewPresenter.swift */; };
 		2C8FD62524E02267005887F9 /* WebImagerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62424E02267005887F9 /* WebImagerObject.swift */; };
-		2C8FD62724E02297005887F9 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62624E02297005887F9 /* WebImage.swift */; };
+		2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62624E02297005887F9 /* ClipItem.swift */; };
 		2C8FD63624E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
 		2C8FD63D24E02DCE005887F9 /* TBoxUIKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD63C24E02DCE005887F9 /* TBoxUIKitTests.swift */; };
 		2C8FD63F24E02DCE005887F9 /* TBoxUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -325,7 +325,7 @@
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		2C86CC4F24E12E2D0091A89E /* ClipPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresenter.swift; sourceTree = "<group>"; };
 		2C8FD62424E02267005887F9 /* WebImagerObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagerObject.swift; sourceTree = "<group>"; };
-		2C8FD62624E02297005887F9 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
+		2C8FD62624E02297005887F9 /* ClipItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItem.swift; sourceTree = "<group>"; };
 		2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBoxUIKit.h; sourceTree = "<group>"; };
 		2C8FD63024E02DCE005887F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -795,7 +795,7 @@
 			isa = PBXGroup;
 			children = (
 				2C99277C24DDC7E600672CA7 /* Clip.swift */,
-				2C8FD62624E02297005887F9 /* WebImage.swift */,
+				2C8FD62624E02297005887F9 /* ClipItem.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1675,7 +1675,7 @@
 			files = (
 				2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
-				2C8FD62724E02297005887F9 /* WebImage.swift in Sources */,
+				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */,
 				2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */,
 				2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */,

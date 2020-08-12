@@ -85,7 +85,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateWebImages(inClipOfUrl url: URL, to webImages: [WebImage]) -> Result<Clip, ClipStorageError> {
+    public func updateItems(inClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -98,7 +98,7 @@ extension ClipStorage: ClipStorageProtocol {
             do {
                 try realm.write {
                     realm.delete(clip.webImages)
-                    clip.webImages.append(objectsIn: webImages.map { $0.asManagedObject() })
+                    clip.webImages.append(objectsIn: items.map { $0.asManagedObject() })
                 }
                 return .success(.make(by: clip))
             } catch {

@@ -24,7 +24,7 @@ class ClipTargetCollecitonViewPresenter {
         case internalError
     }
 
-    private(set) var imageUrls: [ResolvedImageUrl] = [] {
+    private(set) var imageUrls: [WebImage] = [] {
         didSet {
             self.sizeCalculationQueue.sync {
                 self.imageSizes = self.imageUrls.map { self.calcImageSize(ofUrl: $0.lowQuality) }
@@ -77,7 +77,7 @@ class ClipTargetCollecitonViewPresenter {
                 }
             }
         }.then(on: self.findImageQueue) { url in
-            return Promise<[ResolvedImageUrl]> { seal in
+            return Promise<[WebImage]> { seal in
                 self.resolver.resolveWebImages(inUrl: url) { result in
                     switch result {
                     case let .success(urls):
@@ -117,21 +117,28 @@ class ClipTargetCollecitonViewPresenter {
             return
         }
 
-        guard let url = self.url else {
+        guard let clipUrl = self.url else {
             self.view?.show(errorMessage: "No url.")
             completion(false)
             return
         }
 
-        let webImages: [WebImage] = self.imageUrls.enumerated()
+        // TODO: 選択順をindexに反映させる
+        let items: [ClipItem] = self.imageUrls.enumerated()
             .filter { indices.contains($0.offset) }
-            .map { $0.element }
-            .map { url in
-                let data = try! Data(contentsOf: url.highQuality)
-                let image = UIImage(data: data)!
-                return WebImage(url: url.highQuality, image: image)
+            .map { index, url in
+                let highQualityData = try! Data(contentsOf: url.highQuality)
+                let highQualityImage = UIImage(data: highQualityData)!
+                let lowQualityData = try! Data(contentsOf: url.lowQuality)
+                let lowQualityImage = UIImage(data: lowQualityData)!
+
+                return ClipItem(clipUrl: clipUrl,
+                                clipIndex: index,
+                                imageUrl: url.highQuality,
+                                thumbnailImage: lowQualityImage,
+                                largeImage: highQualityImage)
             }
-        let clip = Clip(url: url, webImages: webImages)
+        let clip = Clip(url: clipUrl, description: nil, items: items)
 
         let result = self.storage.create(clip: clip)
         switch result {

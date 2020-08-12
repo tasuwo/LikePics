@@ -16,7 +16,7 @@ public protocol ClipStorageProtocol {
 
     func readClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
 
-    func updateWebImages(inClipOfUrl url: URL, to webImages: [WebImage]) -> Result<Clip, ClipStorageError>
+    func updateItems(inClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
     func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
 }

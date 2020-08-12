@@ -137,10 +137,10 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
-        let webImages = self.presenter.clips[indexPath.row].webImages
-        cell.primaryImage = webImages.count > 0 ? webImages[0].image : nil
-        cell.secondaryImage = webImages.count > 1 ? webImages[1].image : nil
-        cell.tertiaryImage = webImages.count > 2 ? webImages[2].image : nil
+        let items = self.presenter.clips[indexPath.row].items
+        cell.primaryImage = items.count > 0 ? items[0].thumbnailImage : nil
+        cell.secondaryImage = items.count > 1 ? items[1].thumbnailImage : nil
+        cell.tertiaryImage = items.count > 2 ? items[2].thumbnailImage : nil
 
         return cell
     }
@@ -153,11 +153,11 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return .zero }
         let clip = self.presenter.clips[indexPath.row]
 
-        guard let primaryImage = clip.webImages.first?.image else { return .zero }
+        guard let primaryImage = clip.items.first?.thumbnailImage else { return .zero }
         let baseHeight = width * (primaryImage.size.height / primaryImage.size.width)
 
-        if clip.webImages.count > 1 {
-            if clip.webImages.count > 2 {
+        if clip.items.count > 1 {
+            if clip.items.count > 2 {
                 return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin + ClipsCollectionViewCell.tertiaryStickingOutMargin
             } else {
                 return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin

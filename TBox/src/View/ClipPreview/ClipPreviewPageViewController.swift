@@ -12,7 +12,7 @@ class ClipPreviewPageViewController: UIViewController {
     private let presenter: ClipPreviewPagePresenter
 
     var presentingImageUrl: URL {
-        self.presenter.webImage.url
+        self.presenter.item.imageUrl
     }
 
     @IBOutlet var pageView: ClipPreviewPageView!
@@ -32,7 +32,7 @@ class ClipPreviewPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.pageView.image = self.presenter.webImage.image
+        self.pageView.image = self.presenter.item.largeImage
     }
 
     override func viewDidLayoutSubviews() {
