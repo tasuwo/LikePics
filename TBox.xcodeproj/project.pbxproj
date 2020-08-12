@@ -515,6 +515,7 @@
 		2C2727A624DED57100FEF1BD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */,
 				2C2727A724DED57D00FEF1BD /* OnMainThread.swift */,
 				2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */,
 			);
@@ -677,14 +678,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		2C82CCC024DE5FBC001E2F02 /* AppExtension */ = {
-			isa = PBXGroup;
-			children = (
-				2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */,
-			);
-			path = AppExtension;
-			sourceTree = "<group>";
-		};
 		2C86CC4B24E12DDB0091A89E /* ClipPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -773,7 +766,6 @@
 			children = (
 				2C2727A624DED57100FEF1BD /* Extensions */,
 				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
-				2C82CCC024DE5FBC001E2F02 /* AppExtension */,
 				2C99278424DDCAA100672CA7 /* Storage */,
 				2C99277B24DDC7DA00672CA7 /* Entity */,
 				2C99276024DDC7D300672CA7 /* Domain.h */,
