@@ -343,10 +343,21 @@ class ClipTargetCollecitonViewPresenter {
 
     private func save(target: SaveData) -> Promise<Void> {
         return Promise<Void> { seal in
+            target.images.forEach { image in
+                switch self.storage.createImageData(ofUrl: image.url, data: image.uiImage.pngData()!, forClipUrl: target.clip.url) {
+                case let .failure(error):
+                    // TODO: Error Handling
+                    seal.resolve(.rejected(error))
+                    return
+                default:
+                    break
+                }
+            }
             switch self.storage.create(clip: target.clip) {
             case .success:
                 seal.resolve(.fulfilled(()))
             case let .failure(error):
+                // TODO: Error Handling
                 seal.resolve(.rejected(error))
             }
         }
