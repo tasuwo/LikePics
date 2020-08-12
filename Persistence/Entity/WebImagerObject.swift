@@ -44,7 +44,9 @@ extension ClipItem: Persistable {
         return .init(clipUrl: URL(string: managedObject.url)!,
                      clipIndex: 0,
                      thumbnailImageUrl: thumbnailImageUrl,
-                     largeImageUrl: url)
+                     thumbnailSize: .zero,
+                     largeImageUrl: url,
+                     largeImageSize: .zero)
     }
 
     func asManagedObject() -> WebImageObject {

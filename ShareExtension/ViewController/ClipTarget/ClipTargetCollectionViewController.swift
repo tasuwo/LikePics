@@ -120,15 +120,15 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.imageUrls.indices.contains(indexPath.row)
+        return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.imageUrls.indices.contains(indexPath.row)
+        return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.imageUrls.indices.contains(indexPath.row)
+        return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -154,7 +154,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.presenter.imageUrls.count
+        return self.presenter.webImages.count
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -171,9 +171,9 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
-        guard self.presenter.imageUrls.indices.contains(indexPath.row) else { return cell }
+        guard self.presenter.webImages.indices.contains(indexPath.row) else { return cell }
 
-        cell.imageUrl = self.presenter.imageUrls[indexPath.row].lowQuality
+        cell.imageUrl = self.presenter.webImages[indexPath.row].lowQualityImageUrl
 
         return cell
     }
@@ -183,7 +183,9 @@ extension ClipTargetCollectionViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        self.presenter.resolveImageHeight(for: width, at: indexPath.row)
+        guard self.presenter.webImages.indices.contains(indexPath.row) else { return .zero }
+        let imageSize = self.presenter.webImages[indexPath.row].lowQualityImageSize
+        return width * (imageSize.height / imageSize.width)
     }
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
