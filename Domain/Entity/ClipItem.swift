@@ -3,27 +3,27 @@
 //
 
 public struct ClipItem {
+    public struct Image {
+        public let url: URL
+        public let size: ImageSize
+
+        public init(url: URL, size: ImageSize) {
+            self.url = url
+            self.size = size
+        }
+    }
+
     public let clipUrl: URL
     public let clipIndex: Int
-    public let thumbnailImageUrl: URL
-    public let thumbnailSize: ImageSize
-    public let largeImageUrl: URL
-    public let largeImageSize: ImageSize
+    public let thumbnail: Image
+    public let image: Image
 
     // MARK: - Lifecycle
 
-    public init(clipUrl: URL,
-                clipIndex: Int,
-                thumbnailImageUrl: URL,
-                thumbnailSize: ImageSize,
-                largeImageUrl: URL,
-                largeImageSize: ImageSize)
-    {
+    public init(clipUrl: URL, clipIndex: Int, thumbnail: Image, image: Image) {
         self.clipUrl = clipUrl
         self.clipIndex = clipIndex
-        self.thumbnailImageUrl = thumbnailImageUrl
-        self.thumbnailSize = thumbnailSize
-        self.largeImageUrl = largeImageUrl
-        self.largeImageSize = largeImageSize
+        self.thumbnail = thumbnail
+        self.image = image
     }
 }

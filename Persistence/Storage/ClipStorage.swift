@@ -10,7 +10,11 @@ public class ClipStorage {
         static let realmFileName = "clips.realm"
 
         public static func makeConfiguration() -> Realm.Configuration {
-            var configuration = Realm.Configuration()
+            var configuration = Realm.Configuration(
+                schemaVersion: 1,
+                migrationBlock: ClipStorageMigrationService.migrationBlock,
+                deleteRealmIfMigrationNeeded: false
+            )
 
             if let appGroupIdentifier = Constants.appGroupIdentifier,
                 let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
@@ -97,8 +101,8 @@ extension ClipStorage: ClipStorageProtocol {
 
             do {
                 try realm.write {
-                    realm.delete(clip.webImages)
-                    clip.webImages.append(objectsIn: items.map { $0.asManagedObject() })
+                    realm.delete(clip.items)
+                    clip.items.append(objectsIn: items.map { $0.asManagedObject() })
                 }
                 return .success(.make(by: clip))
             } catch {

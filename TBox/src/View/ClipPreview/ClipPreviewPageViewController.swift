@@ -12,7 +12,7 @@ class ClipPreviewPageViewController: UIViewController {
     private let presenter: ClipPreviewPagePresenter
 
     var presentingImageUrl: URL {
-        self.presenter.item.largeImageUrl
+        self.presenter.item.image.url
     }
 
     @IBOutlet var pageView: ClipPreviewPageView!
@@ -33,7 +33,7 @@ class ClipPreviewPageViewController: UIViewController {
         super.viewDidLoad()
 
         // TODO: Use ImageLoader and read image from db.
-        let data = try! Data(contentsOf: self.presenter.item.largeImageUrl)
+        let data = try! Data(contentsOf: self.presenter.item.image.url)
         let image = UIImage(data: data)!
 
         self.pageView.image = image

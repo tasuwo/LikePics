@@ -138,10 +138,10 @@ class ClipTargetCollecitonViewPresenter {
 
             let item = ClipItem(clipUrl: url,
                                 clipIndex: index,
-                                thumbnailImageUrl: thumbnailImageUrl,
-                                thumbnailSize: thumbnailSize,
-                                largeImageUrl: largeImageUrl,
-                                largeImageSize: largeImageSize)
+                                thumbnail: .init(url: thumbnailImageUrl,
+                                                 size: thumbnailSize),
+                                image: .init(url: largeImageUrl,
+                                             size: largeImageSize))
             return (item, (.low, thumbnailImageUrl, thumbnailImage), (.high, largeImageUrl, largeImage))
         }
     }

@@ -7,7 +7,8 @@ import RealmSwift
 
 final class ClipObject: Object {
     @objc dynamic var url: String = ""
-    let webImages = List<WebImageObject>()
+    @objc dynamic var descriptionText: String?
+    let items = List<ClipItemObject>()
 
     override static func primaryKey() -> String? {
         return "url"
@@ -18,15 +19,18 @@ extension Clip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ClipObject) -> Clip {
-        let items = Array(managedObject.webImages.map { ClipItem.make(by: $0) })
-        return .init(url: URL(string: managedObject.url)!, description: nil, items: items)
+        let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
+        return .init(url: URL(string: managedObject.url)!,
+                     description: managedObject.descriptionText,
+                     items: items)
     }
 
     func asManagedObject() -> ClipObject {
         let obj = ClipObject()
         obj.url = self.url.absoluteString
+        obj.descriptionText = self.description
         self.items.forEach {
-            obj.webImages.append($0.asManagedObject())
+            obj.items.append($0.asManagedObject())
         }
         return obj
     }
