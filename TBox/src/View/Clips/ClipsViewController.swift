@@ -55,6 +55,7 @@ class ClipsViewController: UIViewController {
 
     private func updateNavigationBarAppearance() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationItem.backBarButtonItem = .init(title: "", style: .plain, target: nil, action: nil)
     }
 
     // MARK: Notification

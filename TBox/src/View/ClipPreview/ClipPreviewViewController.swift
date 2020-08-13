@@ -57,11 +57,6 @@ class ClipPreviewViewController: UIPageViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = ""
 
-        self.navigationItem.backBarButtonItem = .init(title: nil,
-                                                      style: .plain,
-                                                      target: nil,
-                                                      action: nil)
-
         let infoButton = UIButton(type: .infoLight)
         infoButton.addTarget(self, action: #selector(self.didTapInfoButton), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = .init(customView: infoButton)
