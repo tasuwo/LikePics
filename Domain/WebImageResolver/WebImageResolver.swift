@@ -101,9 +101,7 @@ extension WebImageResolver: WebImageResolverProtocol {
             provider.shouldPreprocess(for: url)
         {
             preprocessedStep = baseStep.then { document in
-                attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry, ignoredBy: document) {
-                    provider.preprocess(self.browser, document: document)
-                }
+                provider.preprocess(self.browser, document: document)
             }
         } else {
             preprocessedStep = baseStep
