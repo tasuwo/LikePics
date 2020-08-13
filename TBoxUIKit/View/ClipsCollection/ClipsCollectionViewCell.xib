@@ -21,7 +21,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E64-VG-nTI">
                                 <rect key="frame" x="0.0" y="35" width="197" height="280"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="Sd1-hN-MSQ">
                                 <rect key="frame" x="0.0" y="35" width="197" height="280"/>
@@ -32,7 +32,7 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fe7-GE-hL3">
                                 <rect key="frame" x="0.0" y="20" width="197" height="280"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="Sxz-Ec-Mu0">
                                 <rect key="frame" x="0.0" y="20" width="197" height="280"/>
@@ -43,7 +43,7 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BLd-da-g0k">
                                 <rect key="frame" x="0.0" y="0.0" width="197" height="280"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="wfu-ls-oyC">
                                 <rect key="frame" x="0.0" y="0.0" width="197" height="280"/>

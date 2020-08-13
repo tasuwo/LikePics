@@ -12,6 +12,9 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
+    static let cornerRadius: CGFloat = 10
+    static let shadowOpacity: Float = 0.5
+
     public var primaryImage: UIImage? {
         get {
             self.primaryImageView.image
@@ -111,8 +114,18 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
     // MARK: - Methods
 
     static func setupAppearance(imageView: UIImageView) {
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = Self.cornerRadius
         imageView.clipsToBounds = true
+    }
+
+    static func setupAppearance(shadowView: UIView, onImage: Bool = false) {
+        shadowView.layer.cornerRadius = Self.cornerRadius
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity
+        shadowView.layer.shadowRadius = 8
+        shadowView.layer.shadowOffset = .init(width: 0, height: 8)
+        shadowView.clipsToBounds = false
+        shadowView.layer.masksToBounds = false
     }
 
     static func resetAppearance(imageView: UIImageView) {
@@ -127,30 +140,19 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
 
         self.imageShadowViews.forEach {
             $0.isHidden = true
-            $0.layer.cornerRadius = 10
-            $0.layer.shadowColor = UIColor.black.cgColor
-            $0.layer.shadowOpacity = 0.3
-            $0.layer.shadowRadius = 8
-            $0.layer.shadowOffset = .init(width: 0, height: 8)
-            $0.clipsToBounds = false
+            Self.setupAppearance(shadowView: $0, onImage: true)
         }
 
         self.overlayViews.forEach {
             $0.isHidden = true
-            $0.layer.cornerRadius = 10
+            $0.layer.cornerRadius = Self.cornerRadius
         }
 
-        self.imagesContainerView.layer.cornerRadius = 10
+        self.imagesContainerView.layer.cornerRadius = Self.cornerRadius
         self.imagesContainerView.clipsToBounds = true
         self.imagesContainerView.layer.masksToBounds = true
 
-        self.contentView.layer.cornerRadius = 10
-        self.contentView.layer.shadowColor = UIColor.black.cgColor
-        self.contentView.layer.shadowOpacity = 0.5
-        self.contentView.layer.shadowRadius = 8
-        self.contentView.layer.shadowOffset = .init(width: 0, height: 8)
-        self.contentView.clipsToBounds = false
-        self.contentView.layer.masksToBounds = false
+        Self.setupAppearance(shadowView: self.contentView)
 
         self.clipsToBounds = false
         self.layer.masksToBounds = false
