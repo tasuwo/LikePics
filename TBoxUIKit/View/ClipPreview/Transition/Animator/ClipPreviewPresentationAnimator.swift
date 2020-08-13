@@ -42,22 +42,33 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
 
         to.view.alpha = 0
 
-        UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
+        CATransaction.setCompletionBlock {
+            targetImageView.isHidden = false
+            selectedImageView.isHidden = false
+            animatingImageView.removeFromSuperview()
+            transitionContext.completeTransition(true)
+        }
+
+        let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerAnimation.fromValue = 10
+        cornerAnimation.toValue = 0
+        animatingImageView.layer.cornerRadius = 0
+        animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+
+        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
             ClipsCollectionViewCell.resetAppearance(imageView: animatingImageView)
 
             let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
             let frameOnCell = ClipPreviewPageView.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
             animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
                                              size: frameOnCell.size)
-            animatingImageView.layer.cornerRadius = 0
 
             from.view.alpha = 0
             to.view.alpha = 1.0
-        }, completion: { finished in
-            targetImageView.isHidden = false
-            selectedImageView.isHidden = false
-            animatingImageView.removeFromSuperview()
-            transitionContext.completeTransition(true)
-        })
+        }
+
+        CATransaction.commit()
     }
 }

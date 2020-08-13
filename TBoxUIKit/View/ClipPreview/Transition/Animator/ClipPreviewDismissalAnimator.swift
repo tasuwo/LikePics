@@ -32,6 +32,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         let animatingImageView = UIImageView(image: visibleImage)
         animatingImageView.contentMode = .scaleAspectFit
+        animatingImageView.clipsToBounds = true
         animatingImageView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)
         containerView.addSubview(animatingImageView)
 
@@ -43,19 +44,30 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         to.view.alpha = 0
         from.navigationController?.navigationBar.alpha = 1.0
 
-        UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: {
-            ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
-
-            animatingImageView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
-            animatingImageView.layer.cornerRadius = 0
-
-            to.view.alpha = 1.0
-            from.view.alpha = 0
-        }, completion: { finished in
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
+        CATransaction.setCompletionBlock {
             visibleImageView.isHidden = false
             targetCell.isHidden = false
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
-        })
+        }
+
+        let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerAnimation.fromValue = 0
+        cornerAnimation.toValue = 10
+        animatingImageView.layer.cornerRadius = 10
+        animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+
+        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
+            ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
+
+            animatingImageView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
+
+            to.view.alpha = 1.0
+            from.view.alpha = 0
+        }
+
+        CATransaction.commit()
     }
 }

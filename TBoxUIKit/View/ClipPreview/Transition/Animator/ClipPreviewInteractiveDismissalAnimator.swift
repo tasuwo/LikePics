@@ -18,7 +18,10 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let finalAlpha: CGFloat = 0
 
     private static let startingCornerRadius: CGFloat = 0
-    private static let finalCornerRadius: CGFloat = 20
+    private static let finalCornerRadius: CGFloat = 10
+
+    private static let cancelAnimateDuration: Double = 0.5
+    private static let endAnimateDuration: Double = 0.25
 
     private var innerContext: InnerContext?
 
@@ -48,6 +51,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)
+        let cornerRadius = Self.calcCornerRadius(in: from.view, verticalDelta: verticalDelta)
 
         // Middle Animation
 
@@ -63,7 +67,6 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                                       y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2))
         animatingImageView.center = nextAnchorPoint
         animatingImageView.layer.cornerRadius = Self.calcCornerRadius(in: from.view, verticalDelta: verticalDelta)
-        animatingImageView.clipsToBounds = true
 
         transitionContext.updateInteractiveTransition(1 - scale)
 
@@ -74,54 +77,76 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let scrollToUp = velocity.y < 0
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
             if scrollToUp || releaseAboveInitialPosition {
-                self.startCancelAnimation(hideViews: [to.view], presentViews: [from.view], hiddenViews: [toCell, fromImageView], innerContext: innerContext)
+                self.startCancelAnimation(hideViews: [to.view], presentViews: [from.view], hiddenViews: [toCell, fromImageView], currentCornerRadius: cornerRadius, innerContext: innerContext)
             } else {
-                self.startEndAnimation(finalImageFrame: finalImageFrame, hideViews: [from.view], presentViews: [to.view], hiddenViews: [toCell, fromImageView], innerContext: innerContext)
+                self.startEndAnimation(finalImageFrame: finalImageFrame, hideViews: [from.view], presentViews: [to.view], hiddenViews: [toCell, fromImageView], currentCornerRadius: cornerRadius, innerContext: innerContext)
             }
         }
     }
 
     // MARK: Animation
 
-    private func startCancelAnimation(hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], innerContext: InnerContext) {
+    private func startCancelAnimation(hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], currentCornerRadius: CGFloat, innerContext: InnerContext) {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
+        CATransaction.setCompletionBlock {
+            hiddenViews.forEach { $0.isHidden = false }
+            innerContext.animatingImageView.removeFromSuperview()
+            innerContext.transitionContext.cancelInteractiveTransition()
+            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            self.innerContext = nil
+        }
+
+        let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerAnimation.fromValue = currentCornerRadius
+        cornerAnimation.toValue = 0
+        innerContext.animatingImageView.layer.cornerRadius = 0
+        innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: Self.cancelAnimateDuration,
             delay: 0,
             usingSpringWithDamping: 0.9,
             initialSpringVelocity: 0,
             options: [],
             animations: {
                 innerContext.animatingImageView.frame = innerContext.initialImageFrame
-                innerContext.animatingImageView.layer.cornerRadius = 0
                 hideViews.forEach { $0?.alpha = 0 }
                 presentViews.forEach { $0?.alpha = 1 }
-            },
-            completion: { completed in
-                hiddenViews.forEach { $0.isHidden = false }
-                innerContext.animatingImageView.removeFromSuperview()
-                innerContext.transitionContext.cancelInteractiveTransition()
-                innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
-                self.innerContext = nil
             }
         )
+
+        CATransaction.commit()
     }
 
-    private func startEndAnimation(finalImageFrame: CGRect, hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], innerContext: InnerContext) {
+    private func startEndAnimation(finalImageFrame: CGRect, hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], currentCornerRadius: CGFloat, innerContext: InnerContext) {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(Self.endAnimateDuration)
+        CATransaction.setCompletionBlock {
+            hiddenViews.forEach { $0.isHidden = false }
+            innerContext.animatingImageView.removeFromSuperview()
+            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            self.innerContext = nil
+        }
+
+        let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerAnimation.fromValue = currentCornerRadius
+        cornerAnimation.toValue = 10
+        innerContext.animatingImageView.layer.cornerRadius = 10
+        innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+
         UIView.animate(
-            withDuration: 0.25,
+            withDuration: Self.endAnimateDuration,
             delay: 0,
             options: [],
             animations: {
                 innerContext.animatingImageView.frame = finalImageFrame
                 hideViews.forEach { $0?.alpha = 0 }
                 presentViews.forEach { $0?.alpha = 1 }
-            }, completion: { completed in
-                hiddenViews.forEach { $0.isHidden = false }
-                innerContext.animatingImageView.removeFromSuperview()
-                innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
-                self.innerContext = nil
             }
         )
+
+        CATransaction.commit()
     }
 
     // MARK: Calculation
@@ -172,6 +197,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         let animatingImageView = UIImageView(image: fromImage)
         animatingImageView.contentMode = .scaleAspectFit
+        animatingImageView.clipsToBounds = true
         animatingImageView.frame = initialImageFrame
         containerView.addSubview(animatingImageView)
 
