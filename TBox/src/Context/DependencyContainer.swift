@@ -8,10 +8,9 @@ import TBoxUIKit
 import UIKit
 
 protocol ViewControllerFactory {
-    func makeClipPreviewTransitionableNavigationController(root viewController: UIViewController) -> UINavigationController
-    func makeClipsViewController() -> ClipsViewController
-    func makeClipDetailViewController(clip: Clip) -> ClipPreviewViewController
-    func makeClipPreviewPageViewController(item: ClipItem) -> ClipPreviewPageViewController
+    func makeClipsViewController() -> UIViewController
+    func makeClipDetailViewController(clip: Clip) -> UIViewController
+    func makeClipPreviewPageViewController(item: ClipItem) -> UIViewController
 }
 
 class DependencyContainer {
@@ -22,23 +21,20 @@ class DependencyContainer {
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipPreviewTransitionableNavigationController(root viewController: UIViewController) -> UINavigationController {
+    func makeClipsViewController() -> UIViewController {
+        let presenter = ClipsPresenter(storage: self.clipsStorage)
+        let viewController = ClipsViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.delegate = self.transitionController
         return navigationController
     }
 
-    func makeClipsViewController() -> ClipsViewController {
-        let presenter = ClipsPresenter(storage: self.clipsStorage)
-        return ClipsViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
-    }
-
-    func makeClipDetailViewController(clip: Clip) -> ClipPreviewViewController {
+    func makeClipDetailViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPresenter(clip: clip)
         return ClipPreviewViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
 
-    func makeClipPreviewPageViewController(item: ClipItem) -> ClipPreviewPageViewController {
+    func makeClipPreviewPageViewController(item: ClipItem) -> UIViewController {
         let presenter = ClipPreviewPagePresenter(item: item, storage: self.clipsStorage)
         return ClipPreviewPageViewController(factory: self, presenter: presenter)
     }
