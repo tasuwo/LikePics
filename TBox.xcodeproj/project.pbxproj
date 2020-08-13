@@ -23,7 +23,7 @@
 		2C27D7B524E254A3006B5DA9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
 		2C27D7B624E254A3006B5DA9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */; };
-		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */; };
+		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitionController.swift */; };
 		2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C2AB06624DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */; };
@@ -301,7 +301,7 @@
 		2C2727A724DED57D00FEF1BD /* OnMainThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnMainThread.swift; sourceTree = "<group>"; };
 		2C2727A924DED75C00FEF1BD /* Promise+Attempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Promise+Attempt.swift"; sourceTree = "<group>"; };
 		2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
-		2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewTransitioningController.swift; sourceTree = "<group>"; };
+		2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewTransitionController.swift; sourceTree = "<group>"; };
 		2C2AB05F24DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewController.swift; sourceTree = "<group>"; };
 		2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
 		2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewPresenter.swift; sourceTree = "<group>"; };
@@ -911,7 +911,7 @@
 		2CBD406924E158F2003A107C /* Transition */ = {
 			isa = PBXGroup;
 			children = (
-				2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */,
+				2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitionController.swift */,
 				2C27D7C324E29F39006B5DA9 /* Animator */,
 				2CE22D4724E2A0D600449210 /* DataSource */,
 			);
@@ -1675,7 +1675,7 @@
 				2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */,
 				2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */,
-				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitioningController.swift in Sources */,
+				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
 				2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */,

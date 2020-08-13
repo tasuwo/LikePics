@@ -26,6 +26,15 @@ public class ClipPreviewPageView: UIView {
         self.scrollView.contentOffset
     }
 
+    public var isScrollEnabled: Bool {
+        get {
+            self.scrollView.isScrollEnabled
+        }
+        set {
+            self.scrollView.isScrollEnabled = newValue
+        }
+    }
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!

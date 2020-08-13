@@ -5,15 +5,35 @@
 import UIKit
 
 public protocol ClipPreviewTransitionControllerProtocol {
-    var isInteractive: Bool { get set }
+    var isInteractiveTransitioning: Bool { get }
+    func beginInteractiveTransition()
+    func endInteractiveTransition()
+    func didPan(sender: UIPanGestureRecognizer)
 }
 
-public class ClipPreviewTransitioningController: NSObject, ClipPreviewTransitionControllerProtocol {
+public class ClipPreviewTransitioningController: NSObject {
+    var isInteractive: Bool = false
+    let interactiveAnimator = ClipPreviewInteractiveDismissalAnimator()
+}
+
+extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerProtocol {
     // MARK: - ClipPreviewTransitionControllerProtocol
 
-    public var isInteractive: Bool = false
+    public var isInteractiveTransitioning: Bool {
+        return self.isInteractive
+    }
 
-    let interactiveAnimator = ClipPreviewInteractiveDismissalAnimator()
+    public func beginInteractiveTransition() {
+        self.isInteractive = true
+    }
+
+    public func endInteractiveTransition() {
+        self.isInteractive = false
+    }
+
+    public func didPan(sender: UIPanGestureRecognizer) {
+        self.interactiveAnimator.didPan(sender: sender)
+    }
 }
 
 extension ClipPreviewTransitioningController: UIViewControllerTransitioningDelegate {

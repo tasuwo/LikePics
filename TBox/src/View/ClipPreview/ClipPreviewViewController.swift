@@ -84,7 +84,22 @@ class ClipPreviewViewController: UIPageViewController {
     }
 
     @objc func didPan(_ sender: UIPanGestureRecognizer) {
-        print(#function)
+        switch sender.state {
+        case .began:
+            self.currentViewController?.pageView.isScrollEnabled = false
+            self.transitionController.beginInteractiveTransition()
+            self.navigationController?.popViewController(animated: true)
+        case .ended:
+            if self.transitionController.isInteractiveTransitioning {
+                self.currentViewController?.pageView.isScrollEnabled = true
+                self.transitionController.endInteractiveTransition()
+                self.transitionController.didPan(sender: sender)
+            }
+        default:
+            if self.transitionController.isInteractiveTransitioning {
+                self.transitionController.didPan(sender: sender)
+            }
+        }
     }
 
     // MARK: Page resolution
@@ -156,7 +171,6 @@ extension ClipPreviewViewController: UIGestureRecognizerDelegate {
             gestureRecognizer === self.panGestureRecognizer
         {
             let shouldBegin: Bool = {
-                print(gestureRecognizer.velocity(in: self.view))
                 if UIDevice.current.orientation.isLandscape {
                     return gestureRecognizer.velocity(in: self.view).x > 0
                 } else {
