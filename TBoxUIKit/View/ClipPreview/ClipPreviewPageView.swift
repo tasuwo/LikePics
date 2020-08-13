@@ -18,6 +18,14 @@ public class ClipPreviewPageView: UIView {
         }
     }
 
+    public var panGestureRecognizer: UIPanGestureRecognizer {
+        self.scrollView.panGestureRecognizer
+    }
+
+    public var contentOffset: CGPoint {
+        self.scrollView.contentOffset
+    }
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!

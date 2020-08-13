@@ -12,8 +12,14 @@ class ClipPreviewViewController: UIPageViewController {
     private let presenter: ClipPreviewPresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
+    private var panGestureRecognizer: UIPanGestureRecognizer!
+
     private var nextIndex: Int?
     private var currentIndex: Int = 0
+
+    private var currentViewController: ClipPreviewPageViewController? {
+        return self.viewControllers?.first as? ClipPreviewPageViewController
+    }
 
     // MARK: - Lifecycle
 
@@ -33,13 +39,14 @@ class ClipPreviewViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupNavigationBar()
-
         if let viewController = self.makeViewController(at: 0) {
             self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
         }
 
         self.dataSource = self
+
+        self.setupNavigationBar()
+        self.setupGestureRecognizer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +56,8 @@ class ClipPreviewViewController: UIPageViewController {
     }
 
     // MARK: - Methods
+
+    // MARK: Navigation Bar
 
     private func updateNavigationBarAppearance() {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -65,6 +74,20 @@ class ClipPreviewViewController: UIPageViewController {
     @objc func didTapInfoButton() {
         print(#function)
     }
+
+    // MARK: Gesture Recognizer
+
+    private func setupGestureRecognizer() {
+        self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))
+        self.panGestureRecognizer.delegate = self
+        self.view.addGestureRecognizer(self.panGestureRecognizer)
+    }
+
+    @objc func didPan(_ sender: UIPanGestureRecognizer) {
+        print(#function)
+    }
+
+    // MARK: Page resolution
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipPreviewPageViewController else { return nil }
@@ -114,19 +137,43 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
     func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView? {
-        guard let currentViewController = self.viewControllers?.first as? ClipPreviewPageViewController else {
-            return nil
-        }
-        return currentViewController.pageView
+        return self.currentViewController?.pageView
     }
 
     func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView {
-        let currentViewController = self.viewControllers?
-            .compactMap { $0 as? ClipPreviewPageViewController }
-            .first(where: { $0.presentingImageUrl == self.presenter.clip.items[self.currentIndex].image.url })
-        guard let viewController = currentViewController, let pageView = viewController.pageView else {
+        guard let viewController = self.currentViewController, let pageView = viewController.pageView else {
             fatalError("Unexpected view controller presented.")
         }
         return pageView
+    }
+}
+
+extension ClipPreviewViewController: UIGestureRecognizerDelegate {
+    // MARK: - UIGestureRecognizerDelegate
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer,
+            gestureRecognizer === self.panGestureRecognizer
+        {
+            let shouldBegin: Bool = {
+                print(gestureRecognizer.velocity(in: self.view))
+                if UIDevice.current.orientation.isLandscape {
+                    return gestureRecognizer.velocity(in: self.view).x > 0
+                } else {
+                    return gestureRecognizer.velocity(in: self.view).y > 0
+                }
+            }()
+            return shouldBegin
+        }
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if otherGestureRecognizer == self.currentViewController?.pageView.panGestureRecognizer {
+            if self.currentViewController?.pageView.contentOffset.y == 0 {
+                return true
+            }
+        }
+        return false
     }
 }
