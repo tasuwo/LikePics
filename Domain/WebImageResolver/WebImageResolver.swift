@@ -92,19 +92,17 @@ extension WebImageResolver: WebImageResolverProtocol {
     // MARK: - WebImageResolverProtocol
 
     public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImage], WebImageResolverError>) -> Void) {
-        let baseStep = firstly {
-            self.openPage(url: url)
-        }
-
         var preprocessedStep: Promise<Document>
-        if let provider = WebImageProviderPreset.resolveProvider(by: url),
-            provider.shouldPreprocess(for: url)
-        {
-            preprocessedStep = baseStep.then { document in
+        if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
+            preprocessedStep = firstly {
+                self.openPage(url: provider.modifyUrlForProcessing(url))
+            }.then { document in
                 provider.preprocess(self.browser, document: document)
             }
         } else {
-            preprocessedStep = baseStep
+            preprocessedStep = firstly {
+                self.openPage(url: url)
+            }
         }
 
         preprocessedStep.then { document in
@@ -120,8 +118,8 @@ extension WebImageResolver: WebImageResolverProtocol {
                     guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
                         return WebImage(lowQuality: $0, highQuality: $0)
                     }
-                    return WebImage(lowQuality: provider.composeUrl(lowerQualityOf: $0),
-                                    highQuality: provider.composeUrl(higherQualityOf: $0))
+                    return WebImage(lowQuality: provider.resolveLowQualityImageUrl(of: $0),
+                                    highQuality: provider.resolveHighQualityImageUrl(of: $0))
                 }
             completion(.success(imageUrls))
         }.catch { error in

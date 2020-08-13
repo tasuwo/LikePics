@@ -14,6 +14,10 @@ extension WebImageProvidingService {
             return host.contains("pximg")
         }
 
+        public static func modifyUrlForProcessing(_ url: URL) -> URL {
+            return url
+        }
+
         public static func shouldPreprocess(for url: URL) -> Bool {
             return false
         }
@@ -22,11 +26,11 @@ extension WebImageProvidingService {
             return Promise { $0.resolve(.fulfilled(document)) }
         }
 
-        public static func composeUrl(lowerQualityOf url: URL) -> URL {
+        public static func resolveLowQualityImageUrl(of url: URL) -> URL {
             return url
         }
 
-        public static func composeUrl(higherQualityOf url: URL) -> URL {
+        public static func resolveHighQualityImageUrl(of url: URL) -> URL {
             return url
         }
 

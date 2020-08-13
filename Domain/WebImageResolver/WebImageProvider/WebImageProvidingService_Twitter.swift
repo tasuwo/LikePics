@@ -134,6 +134,19 @@ extension WebImageProvidingService.Twitter {
         return host.contains("twitter") || host.contains("twimg")
     }
 
+    public static func modifyUrlForProcessing(_ url: URL) -> URL {
+        guard var components = URLComponents(string: url.absoluteString),
+            let queryItems = components.queryItems
+        else {
+            return url
+        }
+
+        let newQueryItems: [URLQueryItem] = queryItems.filter { $0.name != "s" }
+        components.queryItems = newQueryItems
+
+        return components.url ?? url
+    }
+
     public static func shouldPreprocess(for url: URL) -> Bool {
         return url.host?.contains("twitter") == true
     }
@@ -156,7 +169,7 @@ extension WebImageProvidingService.Twitter {
         return handle(document, Context())
     }
 
-    public static func composeUrl(lowerQualityOf url: URL) -> URL {
+    public static func resolveLowQualityImageUrl(of url: URL) -> URL {
         guard var components = URLComponents(string: url.absoluteString),
             let queryItems = components.queryItems
         else {
@@ -174,7 +187,7 @@ extension WebImageProvidingService.Twitter {
         return components.url ?? url
     }
 
-    public static func composeUrl(higherQualityOf url: URL) -> URL {
+    public static func resolveHighQualityImageUrl(of url: URL) -> URL {
         guard var components = URLComponents(string: url.absoluteString),
             let queryItems = components.queryItems
         else {
