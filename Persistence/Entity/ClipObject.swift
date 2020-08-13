@@ -9,6 +9,8 @@ final class ClipObject: Object {
     @objc dynamic var url: String = ""
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
+    @objc dynamic var registeredAt: Date = Date()
+    @objc dynamic var updatedAt: Date = Date()
 
     override static func primaryKey() -> String? {
         return "url"
@@ -22,7 +24,9 @@ extension Clip: Persistable {
         let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
         return .init(url: URL(string: managedObject.url)!,
                      description: managedObject.descriptionText,
-                     items: items)
+                     items: items,
+                     registeredDate: managedObject.registeredAt,
+                     updatedDate: managedObject.updatedAt)
     }
 
     func asManagedObject() -> ClipObject {
@@ -32,6 +36,8 @@ extension Clip: Persistable {
         self.items.forEach {
             obj.items.append($0.asManagedObject())
         }
+        obj.registeredAt = self.registeredDate
+        obj.updatedAt = self.updatedDate
         return obj
     }
 }

@@ -9,10 +9,26 @@ enum ClipStorageMigrationService {
     static let migrationBlock: MigrationBlock = { migration, oldSchemaVersion in
         if oldSchemaVersion < 1 {
             Self.migrationToV1(migration)
+        } else if oldSchemaVersion < 2 {
+            Self.migraitonToV2(migration)
         }
     }
 
-    // MARK: Migration to V1
+    private static func migraitonToV2(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
+            newObject!["registeredAt"] = Date()
+            newObject!["updatedAt"] = Date()
+        }
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+            newObject!["key"] = "\(oldObject!["clipUrl"] as! String)-\(oldObject!["largeImageUrl"] as! String)"
+            newObject!["registeredAt"] = Date()
+            newObject!["updatedAt"] = Date()
+        }
+        migration.enumerateObjects(ofType: ClippedImageObject.className()) { oldObject, newObject in
+            newObject!["registeredAt"] = Date()
+            newObject!["updatedAt"] = Date()
+        }
+    }
 
     private static func migrationToV1(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
@@ -54,11 +70,4 @@ enum ClipStorageMigrationService {
         }
         migration.deleteData(forType: "WebImageObject")
     }
-}
-
-// MARK: - Legacy Realm Objects
-
-final class WebImageObject: Object {
-    @objc dynamic var url: String = ""
-    @objc dynamic var image: Data = Data()
 }

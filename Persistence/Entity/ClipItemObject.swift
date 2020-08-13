@@ -15,13 +15,15 @@ final class ClipItemObject: Object {
     @objc dynamic var largeImageUrl: String = ""
     @objc dynamic var largeImageHeight: Double = 0
     @objc dynamic var largeImageWidth: Double = 0
+    @objc dynamic var registeredAt: Date = Date()
+    @objc dynamic var updatedAt: Date = Date()
 
     override static func primaryKey() -> String? {
         return "key"
     }
 
     func makeKey() -> String {
-        return "\(self.clipUrl)-\(self.clipIndex)"
+        return "\(self.clipUrl)-\(self.largeImageUrl)"
     }
 }
 
@@ -36,7 +38,9 @@ extension ClipItem: Persistable {
                                                       width: managedObject.thumbnailWidth)),
                      image: .init(url: URL(string: managedObject.largeImageUrl)!,
                                   size: ImageSize(height: managedObject.largeImageHeight,
-                                                  width: managedObject.largeImageWidth)))
+                                                  width: managedObject.largeImageWidth)),
+                     registeredDate: managedObject.registeredAt,
+                     updatedDate: managedObject.updatedAt)
     }
 
     func asManagedObject() -> ClipItemObject {
@@ -49,6 +53,8 @@ extension ClipItem: Persistable {
         obj.largeImageUrl = self.image.url.absoluteString
         obj.largeImageWidth = self.image.size.width
         obj.largeImageHeight = self.image.size.height
+        obj.registeredAt = self.registeredDate
+        obj.updatedAt = self.updatedDate
 
         obj.key = obj.makeKey()
 

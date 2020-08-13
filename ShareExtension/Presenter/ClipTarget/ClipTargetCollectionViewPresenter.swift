@@ -125,7 +125,7 @@ class ClipTargetCollecitonViewPresenter {
             }
         }
 
-        func toLoadedClipItem(at index: Int, inClip url: URL) -> LoadedClipItem? {
+        func toLoadedClipItem(at index: Int, inClip url: URL, currentDate: Date) -> LoadedClipItem? {
             guard let thumbnailImageUrl = self.thumbnailImageUrl,
                 let thumbnailSize = self.thumbnailSize,
                 let largeImageUrl = self.largeImageUrl,
@@ -141,7 +141,9 @@ class ClipTargetCollecitonViewPresenter {
                                 thumbnail: .init(url: thumbnailImageUrl,
                                                  size: thumbnailSize),
                                 image: .init(url: largeImageUrl,
-                                             size: largeImageSize))
+                                             size: largeImageSize),
+                                registeredDate: currentDate,
+                                updatedDate: currentDate)
             return (item, (.low, thumbnailImageUrl, thumbnailImage), (.high, largeImageUrl, largeImage))
         }
     }
@@ -155,12 +157,17 @@ class ClipTargetCollecitonViewPresenter {
     weak var view: ClipTargetCollectionViewProtocol?
     private let storage: ClipStorageProtocol
     private let resolver: WebImageResolverProtocol
+    private let currentDateResolver: () -> Date
 
     // MARK: - Lifecycle
 
-    init() {
-        self.storage = ClipStorage()
-        self.resolver = WebImageResolver()
+    init(storage: ClipStorageProtocol = ClipStorage(),
+         resolver: WebImageResolverProtocol = WebImageResolver(),
+         currentDateResovler: @escaping () -> Date = { Date() })
+    {
+        self.storage = storage
+        self.resolver = resolver
+        self.currentDateResolver = currentDateResovler
     }
 
     // MARK: - Methods
@@ -302,7 +309,12 @@ class ClipTargetCollecitonViewPresenter {
     }
 
     private func composeSaveData(forClip clipUrl: URL, from images: [LoadedWebImage]) -> Promise<SaveData> {
-        return Promise<SaveData> { seal in
+        return Promise<SaveData> { [weak self] seal in
+            guard let self = self else {
+                seal.resolve(.rejected(PresenterError.internalError))
+                return
+            }
+
             let clipItems = images.reduce(into: [Int: ComposingClipItem]()) { composings, loadedWebImage in
                 let index = loadedWebImage.image.index
                 let displayingWebImage = loadedWebImage.image.displayModel
@@ -322,7 +334,7 @@ class ClipTargetCollecitonViewPresenter {
                                               quality: quality)
                 }
             }.map {
-                $0.value.toLoadedClipItem(at: $0.key, inClip: clipUrl)
+                $0.value.toLoadedClipItem(at: $0.key, inClip: clipUrl, currentDate: self.currentDateResolver())
             }
 
             guard !clipItems.contains(where: { $0 == nil }) else {
@@ -332,7 +344,9 @@ class ClipTargetCollecitonViewPresenter {
 
             let clip = Clip(url: clipUrl,
                             description: nil,
-                            items: clipItems.compactMap { $0?.item })
+                            items: clipItems.compactMap { $0?.item },
+                            registeredDate: self.currentDateResolver(),
+                            updatedDate: self.currentDateResolver())
             let images = clipItems
                 .compactMap { $0 }
                 .flatMap { [$0.high, $0.low] }
