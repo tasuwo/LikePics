@@ -13,8 +13,12 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     private static let startingImageScale: CGFloat = 1.0
     private static let finalImageScale: CGFloat = 0.5
+
     private static let startingAlpha: CGFloat = 1.0
     private static let finalAlpha: CGFloat = 0
+
+    private static let startingCornerRadius: CGFloat = 0
+    private static let finalCornerRadius: CGFloat = 20
 
     private var innerContext: InnerContext?
 
@@ -44,8 +48,6 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)
-        let percentComplete = 1 - scale
-        let alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
 
         // Middle Animation
 
@@ -53,15 +55,17 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         fromImageView.isHidden = true
 
         to.view.alpha = 1
-        from.view.alpha = alpha
+        from.view.alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
 
         animatingImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let initialAnchorPoint = CGPoint(x: initialImageFrame.midX, y: initialImageFrame.midY)
         let nextAnchorPoint = CGPoint(x: initialAnchorPoint.x + translation.x,
                                       y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2))
         animatingImageView.center = nextAnchorPoint
+        animatingImageView.layer.cornerRadius = Self.calcCornerRadius(in: from.view, verticalDelta: verticalDelta)
+        animatingImageView.clipsToBounds = true
 
-        transitionContext.updateInteractiveTransition(percentComplete)
+        transitionContext.updateInteractiveTransition(1 - scale)
 
         // End Animation
 
@@ -88,6 +92,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             options: [],
             animations: {
                 innerContext.animatingImageView.frame = innerContext.initialImageFrame
+                innerContext.animatingImageView.layer.cornerRadius = 0
                 hideViews.forEach { $0?.alpha = 0 }
                 presentViews.forEach { $0?.alpha = 1 }
             },
@@ -133,6 +138,13 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let percentAlpha = min(abs(verticalDelta) / maximumDelta, 1.0)
         let alphaRange = Self.startingAlpha - Self.finalAlpha
         return Self.startingAlpha - (percentAlpha * alphaRange)
+    }
+
+    private static func calcCornerRadius(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let maximumDelta = view.bounds.height / 2
+        let percentCornerRadius = min(abs(verticalDelta) / maximumDelta, 1.0)
+        let cornerRadiusRange = Self.startingCornerRadius - Self.finalCornerRadius
+        return Self.startingCornerRadius - (percentCornerRadius * cornerRadiusRange)
     }
 }
 

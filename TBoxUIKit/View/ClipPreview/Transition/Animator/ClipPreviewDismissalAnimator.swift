@@ -47,10 +47,10 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
 
             animatingImageView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
+            animatingImageView.layer.cornerRadius = 0
 
             to.view.alpha = 1.0
             from.view.alpha = 0
-            from.navigationController?.navigationBar.alpha = 0
         }, completion: { finished in
             visibleImageView.isHidden = false
             targetCell.isHidden = false

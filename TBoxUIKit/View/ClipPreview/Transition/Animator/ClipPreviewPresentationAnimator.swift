@@ -49,6 +49,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let frameOnCell = ClipPreviewPageView.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
             animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
                                              size: frameOnCell.size)
+            animatingImageView.layer.cornerRadius = 0
 
             from.view.alpha = 0
             to.view.alpha = 1.0
