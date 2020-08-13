@@ -78,7 +78,7 @@ class ClipTargetCollectionViewController: UIViewController {
             guard let self = self else { return }
 
             self.startLoading()
-            self.presenter.saveImages(at: selectedIndices.map { $0.row }) { isSucceeded in
+            self.presenter.saveImages { isSucceeded in
                 self.endLoading()
 
                 guard isSucceeded else {
@@ -118,6 +118,19 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
     func reload() {
         self.collectionView.reloadData()
     }
+
+    func updateSelectionOrder(at index: Int, to order: Int) {
+        guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? ClipSelectionCollectionViewCell else { return }
+        cell.selectionOrder = order
+    }
+
+    func resetSelection() {
+        self.collectionView.indexPathsForSelectedItems?
+            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        self.collectionView.visibleCells
+            .compactMap { $0 as? ClipSelectionCollectionViewCell }
+            .forEach { $0.selectionOrder = nil }
+    }
 }
 
 extension ClipTargetCollectionViewController: UICollectionViewDelegate {
@@ -136,17 +149,19 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first else {
-            return
+        self.presenter.selectItem(at: indexPath.row)
+
+        if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
+            header.selectionCount = self.presenter.selectedIndices.count
         }
-        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first else {
-            return
+        self.presenter.deselectItem(at: indexPath.row)
+
+        if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
+            header.selectionCount = self.presenter.selectedIndices.count
         }
-        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
     }
 }
 
@@ -167,7 +182,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
                                                                              for: indexPath)
         guard let header = dequeuedHeader as? ClipSelectionCollectionViewHeader else { return dequeuedHeader }
 
-        header.selectionCount = self.collectionView.indexPathsForSelectedItems?.count ?? 0
+        header.selectionCount = self.presenter.selectedIndices.count
 
         return header
     }
@@ -178,6 +193,9 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         guard self.presenter.webImages.indices.contains(indexPath.row) else { return cell }
 
         cell.imageUrl = self.presenter.webImages[indexPath.row].lowQualityImageUrl
+        if let indexInSelection = self.presenter.selectedIndices.firstIndex(of: indexPath.row) {
+            cell.selectionOrder = indexInSelection + 1
+        }
 
         return cell
     }

@@ -24,19 +24,21 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var image: UIImage? {
-        get {
-            self.imageView.image
-        }
-        set {
-            self.imageView.image = newValue
+    public var selectionOrder: Int? {
+        didSet {
+            if let order = selectionOrder {
+                self.selectionOrderLabel.text = String(order)
+            } else {
+                self.selectionOrderLabel.text = nil
+            }
+            self.updateSelectionOrderAppearance()
         }
     }
 
     override public var isSelected: Bool {
         didSet {
             self.overlayView.isHidden = !isSelected
-            self.checkMarkView.isHidden = !isSelected
+            self.updateSelectionOrderAppearance()
 
             guard self.isSelected != oldValue else { return }
             if isSelected {
@@ -64,8 +66,8 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     }
 
     @IBOutlet var imageView: UIImageView!
-    @IBOutlet var checkMarkView: UIImageView!
     @IBOutlet var overlayView: UIView!
+    @IBOutlet var selectionOrderLabel: UILabel!
 
     // MARK: - Lifecycle
 
@@ -79,7 +81,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     private func setupAppearance() {
         self.layer.cornerRadius = 10
         self.overlayView.isHidden = true
-        self.checkMarkView.isHidden = true
+        self.selectionOrderLabel.isHidden = true
     }
 
     private func apply(imageUrl: URL) {
@@ -96,5 +98,9 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         options.append(.processor(processor))
 
         self.imageView.kf.setImage(with: imageUrl, placeholder: nil, options: options)
+    }
+
+    private func updateSelectionOrderAppearance() {
+        self.selectionOrderLabel.isHidden = !self.isSelected && self.selectionOrder != nil
     }
 }

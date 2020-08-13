@@ -14,6 +14,10 @@ protocol ClipTargetCollectionViewProtocol: AnyObject {
     func show(errorMessage: String)
 
     func reload()
+
+    func updateSelectionOrder(at index: Int, to order: Int)
+
+    func resetSelection()
 }
 
 class ClipTargetCollectionViewPresenter {
@@ -147,7 +151,14 @@ class ClipTargetCollectionViewPresenter {
         }
     }
 
-    private(set) var webImages: [DisplayedWebImage] = []
+    private(set) var webImages: [DisplayedWebImage] = [] {
+        didSet {
+            self.selectedIndices = []
+            self.view?.resetSelection()
+        }
+    }
+
+    private(set) var selectedIndices: [Int] = []
 
     private var url: URL?
 
@@ -201,13 +212,7 @@ class ClipTargetCollectionViewPresenter {
         }
     }
 
-    func saveImages(at indices: [Int], completion: @escaping (Bool) -> Void) {
-        guard indices.allSatisfy({ i in self.webImages.indices.contains(i) }) else {
-            self.view?.show(errorMessage: "Invalid indices selected.")
-            completion(false)
-            return
-        }
-
+    func saveImages(completion: @escaping (Bool) -> Void) {
         guard let clipUrl = self.url else {
             self.view?.show(errorMessage: "No url.")
             completion(false)
@@ -216,21 +221,11 @@ class ClipTargetCollectionViewPresenter {
 
         self.view?.startLoading()
 
-        // TODO: 選択順をindexに反映させる
-        let numberedWebImages = self.webImages
-            .enumerated()
-            .filter { indices.contains($0.offset) }
-            .map { $0.element }
-            .reduce(into: [(Int, DisplayedWebImage)]()) { result, webImage in
-                guard let previous = result.last else {
-                    result.append((0, webImage))
-                    return
-                }
-                result.append((previous.0 + 1, webImage))
-            }
+        let selections: [SelectedWebImage] = self.selectedIndices.enumerated()
+            .map { ($0.offset, self.webImages[$0.element]) }
 
         firstly {
-            when(fulfilled: self.loadImages(for: numberedWebImages))
+            when(fulfilled: self.loadImages(for: selections))
         }.then(on: self.imageLoadQueue) { (results: [LoadedWebImage]) in
             self.composeSaveData(forClip: clipUrl, from: results)
         }.then(on: self.imageLoadQueue) { (saveData: SaveData) in
@@ -247,6 +242,27 @@ class ClipTargetCollectionViewPresenter {
             self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
             completion(false)
         }
+    }
+
+    func selectItem(at index: Int) {
+        guard self.webImages.indices.contains(index) else { return }
+
+        let indexInSelection = self.selectedIndices.count + 1
+        self.selectedIndices.append(index)
+
+        self.view?.updateSelectionOrder(at: index, to: indexInSelection)
+    }
+
+    func deselectItem(at index: Int) {
+        guard let removeAt = self.selectedIndices.firstIndex(of: index) else { return }
+
+        self.selectedIndices.remove(at: removeAt)
+
+        zip(self.selectedIndices.indices, self.selectedIndices)
+            .filter { indexInSelection, _ in indexInSelection >= removeAt }
+            .forEach { indexInSelection, indexInCollection in
+                self.view?.updateSelectionOrder(at: indexInCollection, to: indexInSelection + 1)
+            }
     }
 
     // MARK: Load Images
