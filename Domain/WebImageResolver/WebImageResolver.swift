@@ -18,8 +18,8 @@ public protocol WebImageResolverProtocol {
 }
 
 public class WebImageResolver {
-    private static let maxRetryCount = 3
-    private static let delayAtRetry: DispatchTimeInterval = .milliseconds(400)
+    private static let maxRetryCount = 5
+    private static let delayAtRetry: DispatchTimeInterval = .milliseconds(200)
 
     public let webView: WKWebView
     private let browser: Erik

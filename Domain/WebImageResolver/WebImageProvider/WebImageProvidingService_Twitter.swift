@@ -26,8 +26,8 @@ extension WebImageProvidingService {
 
             func foundSensitiveContentsAlert() -> Self {
                 return Context(isInitialLoaded: true,
-                               delayBeforeRetry: .milliseconds(200),
-                               retryCounter: 10)
+                               delayBeforeRetry: .milliseconds(100),
+                               retryCounter: 3)
             }
 
             func retryCounterDecremented() -> Self {
