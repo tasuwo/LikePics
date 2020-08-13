@@ -28,6 +28,7 @@
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C2AB06624DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */; };
 		2C2AB06824DF00B0007E2B18 /* ClipTargetCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */; };
+		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */; };
@@ -305,6 +306,7 @@
 		2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
 		2C2AB06524DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetCollectionViewPresenter.swift; sourceTree = "<group>"; };
 		2C2AB06724DF00B0007E2B18 /* ClipTargetCollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipTargetCollectionViewController.xib; sourceTree = "<group>"; };
+		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
 		2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
@@ -556,6 +558,14 @@
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C35C13024E4DE1400871C87 /* Cotnext */ = {
+			isa = PBXGroup;
+			children = (
+				2C35C13124E4DE2600871C87 /* DependencyContainer.swift */,
+			);
+			path = Cotnext;
 			sourceTree = "<group>";
 		};
 		2C55D11F24DFD10700A43B8D /* ClipTarget */ = {
@@ -836,6 +846,7 @@
 		2C99279324DDD65E00672CA7 /* ShareExtension */ = {
 			isa = PBXGroup;
 			children = (
+				2C35C13024E4DE1400871C87 /* Cotnext */,
 				2C2AB06424DEFAD8007E2B18 /* Presenter */,
 				2C55D12624DFD1B000A43B8D /* ViewController */,
 				2C9927A124DDD66800672CA7 /* ShareExtension.entitlements */,
@@ -1721,6 +1732,7 @@
 			files = (
 				2C2AB06624DEFAF1007E2B18 /* ClipTargetCollectionViewPresenter.swift in Sources */,
 				2C2AB06024DEF7BA007E2B18 /* ClipTargetCollectionViewController.swift in Sources */,
+				2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */,
 				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

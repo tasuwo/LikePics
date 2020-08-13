@@ -7,15 +7,19 @@ import TBoxUIKit
 import UIKit
 
 class ClipTargetCollectionViewController: UIViewController {
-    private let presenter: ClipTargetCollecitonViewPresenter
+    typealias Factory = ViewControllerFactory
+
+    private let factory: Factory
+    private let presenter: ClipTargetCollectionViewPresenter
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
 
-    public init() {
-        self.presenter = ClipTargetCollecitonViewPresenter()
+    public init(factory: Factory, presenter: ClipTargetCollectionViewPresenter) {
+        self.factory = factory
+        self.presenter = presenter
         super.init(nibName: "ClipTargetCollectionViewController", bundle: nil)
     }
 

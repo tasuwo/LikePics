@@ -3,7 +3,6 @@
 //
 
 import Domain
-import Persistence
 import PromiseKit
 import UIKit
 
@@ -17,7 +16,7 @@ protocol ClipTargetCollectionViewProtocol: AnyObject {
     func reload()
 }
 
-class ClipTargetCollecitonViewPresenter {
+class ClipTargetCollectionViewPresenter {
     typealias SelectedWebImage = (index: Int, displayModel: DisplayedWebImage)
     typealias LoadedWebImage = (image: SelectedWebImage, data: ImageData)
     typealias ImageData = (quality: ImageQuality, url: URL, uiImage: UIImage)
@@ -161,10 +160,7 @@ class ClipTargetCollecitonViewPresenter {
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol = ClipStorage(),
-         resolver: WebImageResolverProtocol = WebImageResolver(),
-         currentDateResovler: @escaping () -> Date = { Date() })
-    {
+    init(storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
         self.storage = storage
         self.resolver = resolver
         self.currentDateResolver = currentDateResovler
