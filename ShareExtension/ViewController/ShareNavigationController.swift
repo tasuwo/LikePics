@@ -10,18 +10,16 @@ class ShareNavigationController: UINavigationController {
 
     // MARK: - Lifecycle
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.navigationItem.hidesBackButton = true
 
         self.setViewControllers(
             [
-                self.factory.makeClipTargetCollectionViewController()
+                self.factory.makeShareNavigationRootViewController()
             ],
             animated: false
         )
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 }

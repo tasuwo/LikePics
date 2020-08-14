@@ -6,7 +6,8 @@ import Domain
 import Persistence
 
 protocol ViewControllerFactory {
-    func makeClipTargetCollectionViewController() -> ClipTargetCollectionViewController
+    func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
+    func makeClipTargetCollectionViewController(url: URL) -> ClipTargetCollectionViewController
 }
 
 class DependencyContainer {
@@ -18,8 +19,14 @@ class DependencyContainer {
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipTargetCollectionViewController() -> ClipTargetCollectionViewController {
-        let presenter = ClipTargetCollectionViewPresenter(storage: self.clipsStorage,
+    func makeShareNavigationRootViewController() -> ShareNavigationRootViewController {
+        let presenter = ShareNavigationRootPresenter(storage: self.clipsStorage)
+        return ShareNavigationRootViewController(factory: self, presenter: presenter)
+    }
+
+    func makeClipTargetCollectionViewController(url: URL) -> ClipTargetCollectionViewController {
+        let presenter = ClipTargetCollectionViewPresenter(url: url,
+                                                          storage: self.clipsStorage,
                                                           resolver: self.webImageResolver,
                                                           currentDateResovler: currentDateResolver)
         return ClipTargetCollectionViewController(factory: self, presenter: presenter)

@@ -39,12 +39,7 @@ class ClipTargetCollectionViewController: UIViewController {
 
         self.setupNavBar()
 
-        guard let item = self.extensionContext?.inputItems.first as? NSExtensionItem else {
-            // TODO: Error handling
-            print("Error!!")
-            return
-        }
-        self.presenter.findImages(fromItem: item)
+        self.presenter.findImages()
     }
 
     // MARK: - Methods

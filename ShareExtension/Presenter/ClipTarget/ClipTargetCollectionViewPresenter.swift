@@ -28,7 +28,6 @@ class ClipTargetCollectionViewPresenter {
     typealias SaveData = (clip: Clip, images: [ImageData])
 
     enum PresenterError: Error {
-        case failedToResolveUrl
         case failedToFindImages
         case failedToDownlaodImages
         case internalError
@@ -160,18 +159,19 @@ class ClipTargetCollectionViewPresenter {
 
     private(set) var selectedIndices: [Int] = []
 
-    private var url: URL?
-
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
     weak var view: ClipTargetCollectionViewProtocol?
+
+    private let url: URL
     private let storage: ClipStorageProtocol
     private let resolver: WebImageResolverProtocol
     private let currentDateResolver: () -> Date
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
+    init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
+        self.url = url
         self.storage = storage
         self.resolver = resolver
         self.currentDateResolver = currentDateResovler
@@ -184,18 +184,11 @@ class ClipTargetCollectionViewPresenter {
         self.resolver.webView.isHidden = true
     }
 
-    func findImages(fromItem item: NSExtensionItem) {
-        guard let attachment = item.attachments?.first(where: { $0.isUrl }) else {
-            self.view?.show(errorMessage: "No url found")
-            return
-        }
-
+    func findImages() {
         self.view?.startLoading()
 
         firstly {
-            self.resolveUrl(from: attachment)
-        }.then(on: self.imageLoadQueue) { (url: URL) in
-            self.resolveWebImages(ofUrl: url)
+            self.resolveWebImages(ofUrl: self.url)
         }.then(on: self.imageLoadQueue) { (webImages: [WebImage]) in
             self.resolveSize(ofWebImages: webImages)
         }.done(on: .main) { [weak self] (displayedWebImages: [DisplayedWebImage]) in
@@ -213,12 +206,6 @@ class ClipTargetCollectionViewPresenter {
     }
 
     func saveImages(completion: @escaping (Bool) -> Void) {
-        guard let clipUrl = self.url else {
-            self.view?.show(errorMessage: "No url.")
-            completion(false)
-            return
-        }
-
         self.view?.startLoading()
 
         let selections: [SelectedWebImage] = self.selectedIndices.enumerated()
@@ -227,7 +214,7 @@ class ClipTargetCollectionViewPresenter {
         firstly {
             when(fulfilled: self.loadImages(for: selections))
         }.then(on: self.imageLoadQueue) { (results: [LoadedWebImage]) in
-            self.composeSaveData(forClip: clipUrl, from: results)
+            self.composeSaveData(forClip: self.url, from: results)
         }.then(on: self.imageLoadQueue) { (saveData: SaveData) in
             self.save(target: saveData)
         }.done { [weak self] _ in
@@ -266,20 +253,6 @@ class ClipTargetCollectionViewPresenter {
     }
 
     // MARK: Load Images
-
-    private func resolveUrl(from attachment: NSItemProvider) -> Promise<URL> {
-        return Promise<URL> { [weak self] seal in
-            attachment.resolveUrl { result in
-                switch result {
-                case let .success(url):
-                    self?.url = url
-                    seal.resolve(.fulfilled(url))
-                case .failure:
-                    seal.resolve(.rejected(PresenterError.failedToResolveUrl))
-                }
-            }
-        }
-    }
 
     private func resolveWebImages(ofUrl url: URL) -> Promise<[WebImage]> {
         return Promise<[WebImage]> { seal in
@@ -406,8 +379,6 @@ class ClipTargetCollectionViewPresenter {
         switch error {
         case .failedToFindImages:
             return "Failed to find images."
-        case .failedToResolveUrl:
-            return "Failed to resolve url."
         case .failedToDownlaodImages:
             return "Failed to donwlaod images."
         case .internalError:
