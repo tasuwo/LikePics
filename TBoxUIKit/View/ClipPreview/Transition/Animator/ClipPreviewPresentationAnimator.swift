@@ -58,8 +58,6 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
-            ClipsCollectionViewCell.resetAppearance(imageView: animatingImageView)
-
             let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
             let frameOnCell = ClipPreviewPageView.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
             animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),

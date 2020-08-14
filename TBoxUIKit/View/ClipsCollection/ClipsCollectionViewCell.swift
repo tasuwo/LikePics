@@ -129,10 +129,6 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         shadowView.layer.masksToBounds = false
     }
 
-    static func resetAppearance(imageView: UIImageView) {
-        imageView.layer.cornerRadius = 0
-    }
-
     private func setupAppearance() {
         self.imageViews.forEach {
             $0.isHidden = true
