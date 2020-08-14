@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
@@ -146,23 +147,17 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
         let clip = self.presenter.clips[indexPath.row]
-        cell.primaryImage = {
-            guard let item = clip.items.first(where: { $0.clipIndex == 0 }) else { return nil }
-            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
-            return UIImage(data: data)!
-        }()
-        cell.secondaryImage = {
-            guard let item = clip.items.first(where: { $0.clipIndex == 1 }) else { return nil }
-            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
-            return UIImage(data: data)!
-        }()
-        cell.tertiaryImage = {
-            guard let item = clip.items.first(where: { $0.clipIndex == 2 }) else { return nil }
-            guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
-            return UIImage(data: data)!
-        }()
+        cell.primaryImage = self.resolveImage(at: 0, in: clip)
+        cell.secondaryImage = self.resolveImage(at: 1, in: clip)
+        cell.tertiaryImage = self.resolveImage(at: 2, in: clip)
 
         return cell
+    }
+
+    private func resolveImage(at index: Int, in clip: Clip) -> UIImage? {
+        guard let item = clip.items.first(where: { $0.clipIndex == index }) else { return nil }
+        guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
+        return UIImage(data: data)!
     }
 }
 
