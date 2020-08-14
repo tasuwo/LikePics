@@ -10,7 +10,7 @@ class ClipItemPreviewViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: ClipPreviewPagePresenter
+    private let presenter: ClipItemPreviewPresenter
 
     var presentingImageUrl: URL {
         self.presenter.item.image.url
@@ -20,7 +20,7 @@ class ClipItemPreviewViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipPreviewPagePresenter) {
+    init(factory: Factory, presenter: ClipItemPreviewPresenter) {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)

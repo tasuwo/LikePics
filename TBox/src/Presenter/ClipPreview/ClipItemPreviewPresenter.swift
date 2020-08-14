@@ -4,7 +4,7 @@
 
 import Domain
 
-class ClipPreviewPagePresenter {
+class ClipItemPreviewPresenter {
     let item: ClipItem
 
     private let storage: ClipStorageProtocol
