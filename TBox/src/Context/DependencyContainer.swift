@@ -28,15 +28,14 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPresenter(clip: clip)
-        let viewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        let pageViewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
 
-        let tabBarController = ClipPreviewViewController(factory: self, viewController: viewController)
-        tabBarController.transitioningDelegate = self.transitionController
-
+        let viewController = ClipPreviewViewController(pageViewController: pageViewController)
+        viewController.transitioningDelegate = self.transitionController
         // FIXME:
-        tabBarController.modalPresentationStyle = .overFullScreen
+        viewController.modalPresentationStyle = .overFullScreen
 
-        return tabBarController
+        return viewController
     }
 
     func makeClipItemPreviewViewController(item: ClipItem) -> UIViewController {
