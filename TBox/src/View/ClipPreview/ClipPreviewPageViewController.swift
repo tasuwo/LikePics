@@ -9,7 +9,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: ClipPreviewPresenter
+    private let presenter: ClipPreviewPagePresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
@@ -23,7 +23,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipPreviewPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: ClipPreviewPagePresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
         self.factory = factory
         self.presenter = presenter
         self.transitionController = transitionController

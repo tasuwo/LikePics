@@ -27,7 +27,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
-        let presenter = ClipPreviewPresenter(clip: clip)
+        let presenter = ClipPreviewPagePresenter(clip: clip)
         let pageViewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
