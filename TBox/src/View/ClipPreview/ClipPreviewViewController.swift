@@ -18,22 +18,6 @@ class ClipPreviewViewController: UINavigationController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.updateToolbarAppearance()
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        self.updateToolbarAppearance()
-    }
-
-    // MARK: - Methods
-
-    private func updateToolbarAppearance() {
-        self.setToolbarHidden(UIDevice.current.orientation.isLandscape, animated: false)
-    }
 }
 
 extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {

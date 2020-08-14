@@ -46,7 +46,14 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.dataSource = self
 
         self.setupNavigationBar()
+        self.setupToolBar()
         self.setupGestureRecognizer()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.updateNavigationBar()
+        self.updateToolbarAppearance()
     }
 
     // MARK: - Methods
@@ -58,17 +65,47 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         self.navigationItem.leftBarButtonItem = .init(title: "Back", style: .plain, target: self, action: #selector(self.didTapBack))
 
-        let infoButton = UIButton(type: .infoLight)
-        infoButton.addTarget(self, action: #selector(self.didTapInfoButton), for: .touchUpInside)
-        self.navigationItem.rightBarButtonItem = .init(customView: infoButton)
+        self.updateNavigationBar()
     }
 
-    @objc func didTapInfoButton() {
-        print(#function)
+    private func updateNavigationBar() {
+        let rightBarButtonItems: [UIBarButtonItem]
+        if UIDevice.current.orientation.isLandscape {
+            let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
+            let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+            rightBarButtonItems = [removeItem, reloadItem]
+        } else {
+            rightBarButtonItems = []
+        }
+        self.navigationItem.rightBarButtonItems = rightBarButtonItems
     }
 
     @objc func didTapBack() {
         self.dismiss(animated: true, completion: nil)
+    }
+
+    // MARK: Tool Bar
+
+    private func setupToolBar() {
+        let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
+        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+
+        self.setToolbarItems([reloadItem, flexibleItem, removeItem], animated: false)
+
+        self.updateToolbarAppearance()
+    }
+
+    private func updateToolbarAppearance() {
+        self.navigationController?.setToolbarHidden(UIDevice.current.orientation.isLandscape, animated: false)
+    }
+
+    @objc private func didTapRemove() {
+        print(#function)
+    }
+
+    @objc private func didTapRefetch() {
+        print(#function)
     }
 
     // MARK: Gesture Recognizer
