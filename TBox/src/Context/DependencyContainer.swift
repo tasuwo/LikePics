@@ -30,7 +30,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipPreviewPresenter(clip: clip)
         let viewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
 
-        let tabBarController = ClipPreviewTabBarController(factory: self, viewController: viewController)
+        let tabBarController = ClipPreviewViewController(factory: self, viewController: viewController)
         tabBarController.transitioningDelegate = self.transitionController
 
         // FIXME:
