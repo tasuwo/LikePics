@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import TBoxUIKit
 import UIKit
 
 class AppRootTabBarController: UITabBarController {
@@ -28,5 +29,33 @@ class AppRootTabBarController: UITabBarController {
         self.viewControllers = [
             clipViewController
         ]
+    }
+}
+
+extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
+    // MARK: - ClipPreviewAnimatorDataSource
+
+    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
+        guard let viewController = self.viewControllers?.compactMap({ $0 as? ClipsViewController }).first else {
+            return nil
+        }
+
+        viewController.view.layoutIfNeeded()
+        viewController.collectionView.layoutIfNeeded()
+
+        guard let selectedIndexPath = viewController.selectedIndexPath else {
+            return nil
+        }
+
+        if !viewController.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
+            viewController.collectionView.scrollToItem(at: selectedIndexPath, at: .centeredVertically, animated: false)
+            viewController.collectionView.reloadItems(at: viewController.collectionView.indexPathsForVisibleItems)
+            viewController.collectionView.layoutIfNeeded()
+        }
+
+        guard let selectedCell = viewController.collectionView.cellForItem(at: selectedIndexPath) as? ClipsCollectionViewCell else {
+            return nil
+        }
+        return selectedCell
     }
 }

@@ -35,6 +35,10 @@ public class ClipPreviewPageView: UIView {
         }
     }
 
+    public var imageViewFrame: CGRect {
+        self.imageView.frame
+    }
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
@@ -103,19 +107,6 @@ public class ClipPreviewPageView: UIView {
         self.bottomInsetConstraint.constant = verticalInset
         self.leftInsetConstraint.constant = horizonalInset
         self.rightInsetConstraint.constant = horizonalInset
-    }
-
-    static func calcCenterizedFrame(ofImage image: UIImage, in frame: CGRect) -> CGRect {
-        let widthScale = frame.size.width / image.size.width
-        let heightScale = frame.size.height / image.size.height
-        let scale = min(widthScale, heightScale)
-
-        let imageSize = CGSize(width: image.size.width * scale,
-                               height: image.size.height * scale)
-        let imageOrigin = CGPoint(x: frame.origin.x + (frame.size.width - imageSize.width) / 2,
-                                  y: frame.origin.y + (frame.size.height - imageSize.height) / 2)
-
-        return CGRect(origin: imageOrigin, size: imageSize)
     }
 }
 

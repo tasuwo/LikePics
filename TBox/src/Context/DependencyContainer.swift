@@ -23,15 +23,20 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipsViewController() -> UIViewController {
         let presenter = ClipsPresenter(storage: self.clipsStorage)
-        let viewController = ClipsViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.delegate = self.transitionController
-        return navigationController
+        return ClipsViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPresenter(clip: clip)
-        return ClipPreviewViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        let viewController = ClipPreviewViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+
+        let tabBarController = ClipPreviewTabBarController(factory: self, viewController: viewController)
+        tabBarController.transitioningDelegate = self.transitionController
+
+        // FIXME:
+        tabBarController.modalPresentationStyle = .overFullScreen
+
+        return tabBarController
     }
 
     func makeClipPreviewPageViewController(item: ClipItem) -> UIViewController {

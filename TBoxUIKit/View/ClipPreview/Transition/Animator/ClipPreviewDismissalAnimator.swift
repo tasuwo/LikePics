@@ -43,8 +43,6 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         targetCell.isHidden = true
         visibleImageView.isHidden = true
 
-        containerView.insertSubview(to.view, aboveSubview: from.view)
-
         to.view.alpha = 0
         from.navigationController?.navigationBar.alpha = 1.0
 

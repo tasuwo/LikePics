@@ -17,7 +17,7 @@ class ClipPreviewViewController: UIPageViewController {
     private var nextIndex: Int?
     private var currentIndex: Int = 0
 
-    private var currentViewController: ClipPreviewPageViewController? {
+    var currentViewController: ClipPreviewPageViewController? {
         return self.viewControllers?.first as? ClipPreviewPageViewController
     }
 
@@ -49,22 +49,14 @@ class ClipPreviewViewController: UIPageViewController {
         self.setupGestureRecognizer()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.updateNavigationBarAppearance()
-    }
-
     // MARK: - Methods
 
     // MARK: Navigation Bar
 
-    private func updateNavigationBarAppearance() {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-    }
-
     private func setupNavigationBar() {
         self.navigationItem.title = ""
+
+        self.navigationItem.leftBarButtonItem = .init(title: "Back", style: .plain, target: self, action: #selector(self.didTapBack))
 
         let infoButton = UIButton(type: .infoLight)
         infoButton.addTarget(self, action: #selector(self.didTapInfoButton), for: .touchUpInside)
@@ -73,6 +65,10 @@ class ClipPreviewViewController: UIPageViewController {
 
     @objc func didTapInfoButton() {
         print(#function)
+    }
+
+    @objc func didTapBack() {
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer
@@ -88,7 +84,7 @@ class ClipPreviewViewController: UIPageViewController {
         case .began:
             self.currentViewController?.pageView.isScrollEnabled = false
             self.transitionController.beginInteractiveTransition()
-            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
         case .ended:
             if self.transitionController.isInteractiveTransitioning {
                 self.currentViewController?.pageView.isScrollEnabled = true
@@ -145,22 +141,6 @@ extension ClipPreviewViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentIndex = self.resolveIndex(of: viewController), currentIndex < self.presenter.clip.items.count else { return nil }
         return self.makeViewController(at: currentIndex + 1)
-    }
-}
-
-extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
-    // MARK: - ClipPreviewPresentedAnimatorDataSource
-
-    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView? {
-        self.view.layoutIfNeeded()
-        return self.currentViewController?.pageView
-    }
-
-    func pageView(_ animator: UIViewControllerAnimatedTransitioning) -> ClipPreviewPageView {
-        guard let viewController = self.currentViewController, let pageView = viewController.pageView else {
-            fatalError("Unexpected view controller presented.")
-        }
-        return pageView
     }
 }
 

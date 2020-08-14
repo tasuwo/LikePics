@@ -219,8 +219,6 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         toCell.isHidden = true
         fromImageView.isHidden = true
 
-        containerView.insertSubview(to.view, belowSubview: from.view)
-
         self.innerContext = .init(
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,

@@ -16,7 +16,7 @@ class ClipsViewController: UIViewController {
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
 
-    private var selectedIndexPath: IndexPath?
+    private(set) var selectedIndexPath: IndexPath?
 
     // MARK: - Lifecycle
 
@@ -48,20 +48,7 @@ class ClipsViewController: UIViewController {
         self.presenter.reload()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.updateNavigationBarAppearance()
-    }
-
     // MARK: - Methods
-
-    // MARK: Configuration
-
-    private func updateNavigationBarAppearance() {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        self.navigationItem.backBarButtonItem = .init(title: "", style: .plain, target: nil, action: nil)
-    }
 
     // MARK: Notification
 
@@ -126,7 +113,7 @@ extension ClipsViewController: UICollectionViewDelegate {
 
         let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
 
-        self.navigationController?.pushViewController(nextViewController, animated: true)
+        self.present(nextViewController, animated: true, completion: nil)
     }
 }
 
@@ -185,29 +172,5 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return .zero
-    }
-}
-
-extension ClipsViewController: ClipPreviewPresentingAnimatorDataSource {
-    // MARK: - ClipPreviewAnimatorDataSource
-
-    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
-        self.view.layoutIfNeeded()
-        self.collectionView.layoutIfNeeded()
-
-        guard let selectedIndexPath = self.selectedIndexPath else {
-            return nil
-        }
-
-        if !self.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
-            self.collectionView.scrollToItem(at: selectedIndexPath, at: .centeredVertically, animated: false)
-            self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
-            self.collectionView.layoutIfNeeded()
-        }
-
-        guard let selectedCell = self.collectionView.cellForItem(at: selectedIndexPath) as? ClipsCollectionViewCell else {
-            return nil
-        }
-        return selectedCell
     }
 }

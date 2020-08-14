@@ -30,15 +30,15 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             return
         }
 
-        let animatingImageView = UIImageView(image: selectedImage)
-        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
-        animatingImageView.frame = selectedCell.convert(selectedImageView.frame, to: from.view)
-        containerView.addSubview(animatingImageView)
-
         targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
         containerView.insertSubview(to.view, belowSubview: from.view)
+
+        let animatingImageView = UIImageView(image: selectedImage)
+        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        animatingImageView.frame = selectedCell.convert(selectedImageView.frame, to: from.view)
+        containerView.addSubview(animatingImageView)
 
         to.view.alpha = 0
 
@@ -58,11 +58,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
-            let cellDisplayedArea = to.view.frame.inset(by: to.view.safeAreaInsets)
-            let frameOnCell = ClipPreviewPageView.calcCenterizedFrame(ofImage: selectedImage, in: cellDisplayedArea)
-            animatingImageView.frame = .init(origin: to.view.convert(frameOnCell.origin, to: containerView),
-                                             size: frameOnCell.size)
-
+            animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView)
             from.view.alpha = 0
             to.view.alpha = 1.0
         }
