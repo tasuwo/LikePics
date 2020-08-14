@@ -29,6 +29,23 @@ class ClipPreviewTabBarController: UITabBarController {
         self.viewControllers = [
             UINavigationController(rootViewController: self.previewViewController)
         ]
+
+        self.updateTabBarAppearance()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.updateTabBarAppearance()
+    }
+
+    // MARK: - Methods
+
+    private func updateTabBarAppearance() {
+        if UIDevice.current.orientation.isLandscape {
+            self.tabBar.isHidden = true
+        } else {
+            self.tabBar.isHidden = false
+        }
     }
 }
 
