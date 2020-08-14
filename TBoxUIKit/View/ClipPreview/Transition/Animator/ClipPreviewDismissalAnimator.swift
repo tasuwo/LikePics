@@ -4,18 +4,18 @@
 
 import UIKit
 
-public class ClipPreviewDismissalAnimator: NSObject {}
+class ClipPreviewDismissalAnimator: NSObject {}
 
 extension ClipPreviewDismissalAnimator: ClipPreviewAnimator {}
 
 extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.3
     }
 
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
 
         guard
