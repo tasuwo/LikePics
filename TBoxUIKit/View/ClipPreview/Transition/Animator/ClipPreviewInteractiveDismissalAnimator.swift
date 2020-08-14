@@ -8,6 +8,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     struct InnerContext {
         let transitionContext: UIViewControllerContextTransitioning
         let initialImageFrame: CGRect
+        let animatingView: UIView
         let animatingImageView: UIImageView
     }
 
@@ -32,6 +33,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let transitionContext = innerContext.transitionContext
         let containerView = transitionContext.containerView
         let initialImageFrame = innerContext.initialImageFrame
+        let animatingView = innerContext.animatingView
         let animatingImageView = innerContext.animatingImageView
 
         guard
@@ -61,12 +63,14 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         to.view.alpha = 1
         from.view.alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
 
-        animatingImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+        animatingView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let initialAnchorPoint = CGPoint(x: initialImageFrame.midX, y: initialImageFrame.midY)
         let nextAnchorPoint = CGPoint(x: initialAnchorPoint.x + translation.x,
                                       y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2))
-        animatingImageView.center = nextAnchorPoint
-        animatingImageView.layer.cornerRadius = Self.calcCornerRadius(in: from.view, verticalDelta: verticalDelta)
+        animatingView.center = nextAnchorPoint
+        animatingImageView.frame = animatingView.bounds
+        animatingView.layer.cornerRadius = cornerRadius
+        animatingImageView.layer.cornerRadius = cornerRadius
 
         transitionContext.updateInteractiveTransition(1 - scale)
 
@@ -91,7 +95,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
-            innerContext.animatingImageView.removeFromSuperview()
+            innerContext.animatingView.removeFromSuperview()
             innerContext.transitionContext.cancelInteractiveTransition()
             innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
             self.innerContext = nil
@@ -100,6 +104,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = currentCornerRadius
         cornerAnimation.toValue = 0
+        innerContext.animatingView.layer.cornerRadius = 0
+        innerContext.animatingView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
         innerContext.animatingImageView.layer.cornerRadius = 0
         innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
@@ -110,7 +116,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             initialSpringVelocity: 0,
             options: [],
             animations: {
-                innerContext.animatingImageView.frame = innerContext.initialImageFrame
+                innerContext.animatingView.frame = innerContext.initialImageFrame
+                innerContext.animatingImageView.frame = innerContext.animatingView.bounds
                 hideViews.forEach { $0?.alpha = 0 }
                 presentViews.forEach { $0?.alpha = 1 }
             }
@@ -124,15 +131,17 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
-            innerContext.animatingImageView.removeFromSuperview()
+            innerContext.animatingView.removeFromSuperview()
             innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
             self.innerContext = nil
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = currentCornerRadius
-        cornerAnimation.toValue = 10
-        innerContext.animatingImageView.layer.cornerRadius = 10
+        cornerAnimation.toValue = ClipsCollectionViewCell.cornerRadius
+        innerContext.animatingView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
+        innerContext.animatingView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+        innerContext.animatingImageView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
         innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(
@@ -140,7 +149,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             delay: 0,
             options: [],
             animations: {
-                innerContext.animatingImageView.frame = finalImageFrame
+                innerContext.animatingView.frame = finalImageFrame
+                innerContext.animatingImageView.frame = innerContext.animatingView.bounds
                 hideViews.forEach { $0?.alpha = 0 }
                 presentViews.forEach { $0?.alpha = 1 }
             }
@@ -195,11 +205,16 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         let initialImageFrame = fromPage.scrollView.convert(fromPage.imageView.frame, to: containerView)
 
+        let animatingView = UIView()
+        ClipsCollectionViewCell.setupAppearance(shadowView: animatingView)
+        animatingView.frame = initialImageFrame
+        animatingView.backgroundColor = .red
+        containerView.addSubview(animatingView)
+
         let animatingImageView = UIImageView(image: fromImage)
-        animatingImageView.contentMode = .scaleAspectFit
-        animatingImageView.clipsToBounds = true
-        animatingImageView.frame = initialImageFrame
-        containerView.addSubview(animatingImageView)
+        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        animatingImageView.frame = animatingView.bounds
+        animatingView.addSubview(animatingImageView)
 
         toCell.isHidden = true
         fromImageView.isHidden = true
@@ -209,6 +224,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         self.innerContext = .init(
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
+            animatingView: animatingView,
             animatingImageView: animatingImageView
         )
     }
