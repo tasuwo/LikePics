@@ -168,17 +168,18 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return .zero }
         let clip = self.presenter.clips[indexPath.row]
 
-        guard let item = clip.items.first(where: { $0.clipIndex == 0 }) else { return .zero }
-        let baseHeight = width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
-
-        if clip.items.count > 1 {
-            if clip.items.count > 2 {
-                return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin + ClipsCollectionViewCell.tertiaryStickingOutMargin
-            } else {
-                return baseHeight + ClipsCollectionViewCell.secondaryStickingOutMargin
-            }
-        } else {
-            return baseHeight
+        switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
+        case let (.some(item), .none, .none):
+            return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
+        case let (.some(item), .some(_), .none):
+            return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
+                + ClipsCollectionViewCell.secondaryStickingOutMargin
+        case let (.some(item), .some(_), .some(_)):
+            return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
+                + ClipsCollectionViewCell.secondaryStickingOutMargin
+                + ClipsCollectionViewCell.tertiaryStickingOutMargin
+        default:
+            return .zero
         }
     }
 

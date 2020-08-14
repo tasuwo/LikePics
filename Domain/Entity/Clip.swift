@@ -9,6 +9,18 @@ public struct Clip {
     public let registeredDate: Date
     public let updatedDate: Date
 
+    public var primaryItem: ClipItem? {
+        return self.items.first(where: { $0.clipIndex == 0 })
+    }
+
+    public var secondaryItem: ClipItem? {
+        return self.items.first(where: { $0.clipIndex == 1 })
+    }
+
+    public var tertiaryItem: ClipItem? {
+        return self.items.first(where: { $0.clipIndex == 2 })
+    }
+
     // MARK: - Lifecycle
 
     public init(url: URL, description: String?, items: [ClipItem], registeredDate: Date, updatedDate: Date) {
