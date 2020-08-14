@@ -6,7 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipPreviewPageViewController: UIViewController {
+class ClipItemPreviewViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory

@@ -11,9 +11,9 @@
 		1ED907618ACF4EB0CE458757 /* Pods_TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */; };
 		21F6427C98F672FC692809BC /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */; };
 		25D157F00CE2CE137E028F2E /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD982A953CB84789D6B8AF /* Pods_Domain.framework */; };
-		2C0B119324E2ABB90054016C /* ClipPreviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119224E2ABB90054016C /* ClipPreviewPageViewController.swift */; };
+		2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */; };
 		2C0B119524E2AC270054016C /* ClipPreviewPagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipPreviewPagePresenter.swift */; };
-		2C0B119724E2AC8E0054016C /* ClipPreviewPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipPreviewPageViewController.xib */; };
+		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
 		2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
 		2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A224DED48500FEF1BD /* WebImageResolver.swift */; };
@@ -290,9 +290,9 @@
 		12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.release.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.release.xcconfig"; sourceTree = "<group>"; };
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
-		2C0B119224E2ABB90054016C /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
+		2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewViewController.swift; sourceTree = "<group>"; };
 		2C0B119424E2AC270054016C /* ClipPreviewPagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPagePresenter.swift; sourceTree = "<group>"; };
-		2C0B119624E2AC8E0054016C /* ClipPreviewPageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewPageViewController.xib; sourceTree = "<group>"; };
+		2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemPreviewViewController.xib; sourceTree = "<group>"; };
 		2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimator.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
@@ -710,8 +710,8 @@
 			children = (
 				2C994F6124E653F000D609BB /* ClipPreviewTabBarController.swift */,
 				2C86CC4C24E12DEA0091A89E /* ClipPreviewViewController.swift */,
-				2C0B119224E2ABB90054016C /* ClipPreviewPageViewController.swift */,
-				2C0B119624E2AC8E0054016C /* ClipPreviewPageViewController.xib */,
+				2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */,
+				2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */,
 			);
 			path = ClipPreview;
 			sourceTree = "<group>";
@@ -1318,7 +1318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
-				2C0B119724E2AC8E0054016C /* ClipPreviewPageViewController.xib in Resources */,
+				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
 				2C570B6424E0503800A1DC9F /* ClipsViewController.xib in Resources */,
 			);
@@ -1749,7 +1749,7 @@
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipPreviewPagePresenter.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewViewController.swift in Sources */,
-				2C0B119324E2ABB90054016C /* ClipPreviewPageViewController.swift in Sources */,
+				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* ClipsViewController.swift in Sources */,

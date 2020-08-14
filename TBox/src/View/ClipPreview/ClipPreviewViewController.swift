@@ -17,8 +17,8 @@ class ClipPreviewViewController: UIPageViewController {
     private var nextIndex: Int?
     private var currentIndex: Int = 0
 
-    var currentViewController: ClipPreviewPageViewController? {
-        return self.viewControllers?.first as? ClipPreviewPageViewController
+    var currentViewController: ClipItemPreviewViewController? {
+        return self.viewControllers?.first as? ClipItemPreviewViewController
     }
 
     // MARK: - Lifecycle
@@ -101,7 +101,7 @@ class ClipPreviewViewController: UIPageViewController {
     // MARK: Page resolution
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
-        guard let viewController = viewController as? ClipPreviewPageViewController else { return nil }
+        guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
         guard let currentIndex = self.presenter.clip.items.first(where: { $0.image.url == viewController.presentingImageUrl })?.clipIndex else { return nil }
         return currentIndex
     }
