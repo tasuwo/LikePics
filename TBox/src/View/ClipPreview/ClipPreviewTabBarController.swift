@@ -9,11 +9,11 @@ class ClipPreviewTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let previewViewController: ClipPreviewViewController
+    private let previewViewController: ClipPreviewPageViewController
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, viewController: ClipPreviewViewController) {
+    init(factory: Factory, viewController: ClipPreviewPageViewController) {
         self.factory = factory
         self.previewViewController = viewController
         super.init(nibName: nil, bundle: nil)

@@ -5,7 +5,7 @@
 import TBoxUIKit
 import UIKit
 
-class ClipPreviewViewController: UIPageViewController {
+class ClipPreviewPageViewController: UIPageViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
@@ -108,11 +108,11 @@ class ClipPreviewViewController: UIPageViewController {
 
     private func makeViewController(at index: Int) -> UIViewController? {
         guard let item = self.presenter.clip.items.first(where: { $0.clipIndex == index }) else { return nil }
-        return self.factory.makeClipPreviewPageViewController(item: item)
+        return self.factory.makeClipItemPreviewViewController(item: item)
     }
 }
 
-extension ClipPreviewViewController: UIPageViewControllerDelegate {
+extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
@@ -130,7 +130,7 @@ extension ClipPreviewViewController: UIPageViewControllerDelegate {
     }
 }
 
-extension ClipPreviewViewController: UIPageViewControllerDataSource {
+extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     // MARK: - UIPageViewControllerDataSource
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -144,7 +144,7 @@ extension ClipPreviewViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension ClipPreviewViewController: UIGestureRecognizerDelegate {
+extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
