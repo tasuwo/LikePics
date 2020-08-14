@@ -124,7 +124,7 @@ extension ClipsViewController: UICollectionViewDelegate {
 
         let clip = self.presenter.clips[indexPath.row]
 
-        let nextViewController = self.factory.makeClipDetailViewController(clip: clip)
+        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
 
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }

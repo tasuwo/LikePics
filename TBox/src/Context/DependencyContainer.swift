@@ -9,7 +9,7 @@ import UIKit
 
 protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
-    func makeClipDetailViewController(clip: Clip) -> UIViewController
+    func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipPreviewPageViewController(item: ClipItem) -> UIViewController
 }
 
@@ -29,7 +29,7 @@ extension DependencyContainer: ViewControllerFactory {
         return navigationController
     }
 
-    func makeClipDetailViewController(clip: Clip) -> UIViewController {
+    func makeClipPreviewViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPresenter(clip: clip)
         return ClipPreviewViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
