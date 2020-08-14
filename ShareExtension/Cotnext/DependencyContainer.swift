@@ -4,6 +4,7 @@
 
 import Domain
 import Persistence
+import TBoxCore
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
@@ -29,6 +30,6 @@ extension DependencyContainer: ViewControllerFactory {
                                                           storage: self.clipsStorage,
                                                           resolver: self.webImageResolver,
                                                           currentDateResovler: currentDateResolver)
-        return ClipTargetCollectionViewController(factory: self, presenter: presenter)
+        return ClipTargetCollectionViewController(presenter: presenter)
     }
 }

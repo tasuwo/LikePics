@@ -6,10 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipTargetCollectionViewController: UIViewController {
-    typealias Factory = ViewControllerFactory
-
-    private let factory: Factory
+public class ClipTargetCollectionViewController: UIViewController {
     private let presenter: ClipTargetCollectionViewPresenter
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
@@ -17,17 +14,16 @@ class ClipTargetCollectionViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    public init(factory: Factory, presenter: ClipTargetCollectionViewPresenter) {
-        self.factory = factory
+    public init(presenter: ClipTargetCollectionViewPresenter) {
         self.presenter = presenter
-        super.init(nibName: "ClipTargetCollectionViewController", bundle: nil)
+        super.init(nibName: "ClipTargetCollectionViewController", bundle: Bundle(for: Self.self))
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         self.presenter.view = self
@@ -131,19 +127,19 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
 extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return self.presenter.webImages.indices.contains(indexPath.row)
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.presenter.selectItem(at: indexPath.row)
 
         if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
@@ -151,7 +147,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         self.presenter.deselectItem(at: indexPath.row)
 
         if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
@@ -163,15 +159,15 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
 extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.presenter.webImages.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let dequeuedHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                              withReuseIdentifier: type(of: self.collectionView).headerIdentifier,
                                                                              for: indexPath)
@@ -182,7 +178,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
         return header
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
         guard self.presenter.webImages.indices.contains(indexPath.row) else { return cell }
@@ -199,13 +195,13 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
 extension ClipTargetCollectionViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
-    func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         guard self.presenter.webImages.indices.contains(indexPath.row) else { return .zero }
         let imageSize = self.presenter.webImages[indexPath.row].lowQualityImageSize
         return width * (imageSize.height / imageSize.width)
     }
 
-    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return ClipSelectionCollectionViewHeader.preferredHeight
     }
 }

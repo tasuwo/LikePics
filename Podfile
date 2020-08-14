@@ -43,9 +43,6 @@ end
 
 target 'ShareExtension' do
   use_frameworks!
-
-  pod 'PromiseKit', '~> 6.8'
-
 end
 
 target 'TBoxUIKit' do
@@ -58,4 +55,10 @@ target 'TBoxUIKit' do
     test_shared_pods
   end
 
+end
+
+target 'TBoxCore' do
+  use_frameworks!
+
+  pod 'PromiseKit', '~> 6.8'
 end

@@ -20,7 +20,7 @@ protocol ClipTargetCollectionViewProtocol: AnyObject {
     func resetSelection()
 }
 
-class ClipTargetCollectionViewPresenter {
+public class ClipTargetCollectionViewPresenter {
     typealias SelectedWebImage = (index: Int, displayModel: DisplayedWebImage)
     typealias LoadedWebImage = (image: SelectedWebImage, data: ImageData)
     typealias ImageData = (quality: ImageQuality, url: URL, uiImage: UIImage)
@@ -170,7 +170,7 @@ class ClipTargetCollectionViewPresenter {
 
     // MARK: - Lifecycle
 
-    init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
+    public init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
         self.url = url
         self.storage = storage
         self.resolver = resolver
