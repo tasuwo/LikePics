@@ -115,6 +115,7 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
 
     static func setupAppearance(imageView: UIImageView) {
         imageView.layer.cornerRadius = Self.cornerRadius
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
     }
 

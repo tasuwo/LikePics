@@ -30,11 +30,15 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             return
         }
 
+        let animatingView = UIView()
+        ClipsCollectionViewCell.setupAppearance(shadowView: animatingView)
+        animatingView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)
+        containerView.addSubview(animatingView)
+
         let animatingImageView = UIImageView(image: visibleImage)
-        animatingImageView.contentMode = .scaleAspectFit
-        animatingImageView.clipsToBounds = true
-        animatingImageView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)
-        containerView.addSubview(animatingImageView)
+        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        animatingImageView.frame = animatingView.bounds
+        animatingView.addSubview(animatingImageView)
 
         targetCell.isHidden = true
         visibleImageView.isHidden = true
@@ -49,20 +53,21 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         CATransaction.setCompletionBlock {
             visibleImageView.isHidden = false
             targetCell.isHidden = false
-            animatingImageView.removeFromSuperview()
+            animatingView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = 0
-        cornerAnimation.toValue = 10
-        animatingImageView.layer.cornerRadius = 10
+        cornerAnimation.toValue = ClipsCollectionViewCell.cornerRadius
+        animatingView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
+        animatingView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+        animatingImageView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
-            ClipsCollectionViewCell.setupAppearance(imageView: visibleImageView)
-
-            animatingImageView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
+            animatingView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
+            animatingImageView.frame = animatingView.bounds
 
             to.view.alpha = 1.0
             from.view.alpha = 0
