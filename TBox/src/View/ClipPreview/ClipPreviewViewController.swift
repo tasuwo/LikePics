@@ -21,8 +21,18 @@ class ClipPreviewViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.updateToolbarAppearance()
+    }
 
-        self.setToolbarHidden(false, animated: false)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.updateToolbarAppearance()
+    }
+
+    // MARK: - Methods
+
+    private func updateToolbarAppearance() {
+        self.setToolbarHidden(UIDevice.current.orientation.isLandscape, animated: false)
     }
 }
 
