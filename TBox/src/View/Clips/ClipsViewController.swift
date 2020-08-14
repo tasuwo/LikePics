@@ -15,6 +15,8 @@ class ClipsViewController: UIViewController {
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
 
+    private var selectedIndexPath: IndexPath?
+
     // MARK: - Lifecycle
 
     init(factory: Factory, presenter: ClipsPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
@@ -114,6 +116,9 @@ extension ClipsViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return }
+
+        self.selectedIndexPath = indexPath
+
         let clip = self.presenter.clips[indexPath.row]
 
         let nextViewController = self.factory.makeClipDetailViewController(clip: clip)
@@ -189,7 +194,10 @@ extension ClipsViewController: ClipPreviewPresentingAnimatorDataSource {
     // MARK: - ClipPreviewAnimatorDataSource
 
     func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
-        guard let selectedIndexPath = self.collectionView.indexPathsForSelectedItems?.first else {
+        self.view.layoutIfNeeded()
+        self.collectionView.layoutIfNeeded()
+
+        guard let selectedIndexPath = self.selectedIndexPath else {
             return nil
         }
 
