@@ -7,6 +7,7 @@ import TBoxUIKit
 import UIKit
 
 public protocol ClipTargetCollectionViewControllerDelegate: AnyObject {
+    func didCancel(_ viewController: ClipTargetCollectionViewController)
     func didFinish(_ viewController: ClipTargetCollectionViewController)
 }
 
@@ -60,8 +61,7 @@ public class ClipTargetCollectionViewController: UIViewController {
     }
 
     @objc private func cancelAction() {
-        let error = NSError(domain: "net.tasuwo.TBox", code: 0, userInfo: [NSLocalizedDescriptionKey: "An error description"])
-        extensionContext?.cancelRequest(withError: error)
+        self.delegate?.didCancel(self)
     }
 
     @objc private func doneAction() {
@@ -91,7 +91,10 @@ public class ClipTargetCollectionViewController: UIViewController {
             }
         }))
 
-        alert.addAction(.init(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(.init(title: "Cancel", style: .cancel, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.didCancel(self)
+        }))
 
         self.present(alert, animated: true, completion: nil)
     }
@@ -114,8 +117,8 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
         let alert = UIAlertController(title: "", message: "既にクリップ済みのURLです。上書きしますか？", preferredStyle: .alert)
 
         alert.addAction(.init(title: "キャンセル", style: .cancel, handler: { [weak self] _ in
-            // TODO: FIXME
-            self?.dismiss(animated: true, completion: nil)
+            guard let self = self else { return }
+            self.delegate?.didCancel(self)
         }))
 
         alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in

@@ -253,4 +253,8 @@ extension ClipPreviewPageViewController: ClipTargetCollectionViewControllerDeleg
         viewController.dismiss(animated: true, completion: nil)
         self.presenter.reload()
     }
+
+    func didCancel(_ viewController: ClipTargetCollectionViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
 }

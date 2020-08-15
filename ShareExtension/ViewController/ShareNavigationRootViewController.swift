@@ -58,4 +58,9 @@ extension ShareNavigationRootViewController: ClipTargetCollectionViewControllerD
     func didFinish(_ viewController: ClipTargetCollectionViewController) {
         self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
+
+    func didCancel(_ viewController: ClipTargetCollectionViewController) {
+        let error = NSError(domain: "net.tasuwo.TBox", code: 0, userInfo: [NSLocalizedDescriptionKey: "An error description"])
+        self.extensionContext?.cancelRequest(withError: error)
+    }
 }
