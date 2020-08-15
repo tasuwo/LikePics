@@ -91,10 +91,7 @@ public class ClipTargetCollectionViewController: UIViewController {
             }
         }))
 
-        alert.addAction(.init(title: "Cancel", style: .cancel, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.didCancel(self)
-        }))
+        alert.addAction(.init(title: "Cancel", style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
