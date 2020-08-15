@@ -246,15 +246,15 @@ extension ClipPreviewPageViewController: ClipItemPreviewViewControllerDelegate {
     }
 }
 
-extension ClipPreviewPageViewController: ClipTargetCollectionViewControllerDelegate {
+extension ClipPreviewPageViewController: ClipTargetFinderDelegate {
     // MARK: - ClipTargetCollectionViewControllerDelegate
 
-    func didFinish(_ viewController: ClipTargetCollectionViewController) {
+    func didFinish(_ viewController: ClipTargetFinderViewController) {
         viewController.dismiss(animated: true, completion: nil)
         self.presenter.reload()
     }
 
-    func didCancel(_ viewController: ClipTargetCollectionViewController) {
+    func didCancel(_ viewController: ClipTargetFinderViewController) {
         viewController.dismiss(animated: true, completion: nil)
     }
 }

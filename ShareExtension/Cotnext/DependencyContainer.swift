@@ -8,7 +8,7 @@ import TBoxCore
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetCollectionViewControllerDelegate) -> ClipTargetCollectionViewController
+    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
 }
 
 class DependencyContainer {
@@ -25,11 +25,11 @@ extension DependencyContainer: ViewControllerFactory {
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetCollectionViewControllerDelegate) -> ClipTargetCollectionViewController {
-        let presenter = ClipTargetCollectionViewPresenter(url: url,
-                                                          storage: self.clipsStorage,
-                                                          resolver: self.webImageResolver,
-                                                          currentDateResovler: currentDateResolver)
-        return ClipTargetCollectionViewController(presenter: presenter, delegate: delegate)
+    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
+        let presenter = ClipTargetFinderPresenter(url: url,
+                                                  storage: self.clipsStorage,
+                                                  resolver: self.webImageResolver,
+                                                  currentDateResovler: currentDateResolver)
+        return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }
 }

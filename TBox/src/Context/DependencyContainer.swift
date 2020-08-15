@@ -12,7 +12,7 @@ protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> UIViewController
-    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetCollectionViewControllerDelegate, isOverwrite: Bool) -> UIViewController
+    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
 }
 
 class DependencyContainer {
@@ -46,13 +46,13 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetCollectionViewControllerDelegate, isOverwrite: Bool) -> UIViewController {
-        let presenter = ClipTargetCollectionViewPresenter(url: clipUrl,
-                                                          storage: self.clipsStorage,
-                                                          resolver: WebImageResolver(),
-                                                          currentDateResovler: { Date() },
-                                                          isEnabledOverwrite: isOverwrite)
-        let viewController = ClipTargetCollectionViewController(presenter: presenter, delegate: delegate)
+    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
+        let presenter = ClipTargetFinderPresenter(url: clipUrl,
+                                                  storage: self.clipsStorage,
+                                                  resolver: WebImageResolver(),
+                                                  currentDateResovler: { Date() },
+                                                  isEnabledOverwrite: isOverwrite)
+        let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
         return UINavigationController(rootViewController: viewController)
     }
 }

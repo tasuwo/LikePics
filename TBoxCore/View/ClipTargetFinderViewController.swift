@@ -6,25 +6,26 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-public protocol ClipTargetCollectionViewControllerDelegate: AnyObject {
-    func didCancel(_ viewController: ClipTargetCollectionViewController)
-    func didFinish(_ viewController: ClipTargetCollectionViewController)
+public protocol ClipTargetFinderDelegate: AnyObject {
+    func didCancel(_ viewController: ClipTargetFinderViewController)
+
+    func didFinish(_ viewController: ClipTargetFinderViewController)
 }
 
-public class ClipTargetCollectionViewController: UIViewController {
-    private let presenter: ClipTargetCollectionViewPresenter
+public class ClipTargetFinderViewController: UIViewController {
+    private let presenter: ClipTargetFinderPresenter
 
-    private weak var delegate: ClipTargetCollectionViewControllerDelegate?
+    private weak var delegate: ClipTargetFinderDelegate?
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
 
-    public init(presenter: ClipTargetCollectionViewPresenter, delegate: ClipTargetCollectionViewControllerDelegate) {
+    public init(presenter: ClipTargetFinderPresenter, delegate: ClipTargetFinderDelegate) {
         self.presenter = presenter
         self.delegate = delegate
-        super.init(nibName: "ClipTargetCollectionViewController", bundle: Bundle(for: Self.self))
+        super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
     }
 
     required init?(coder: NSCoder) {
@@ -97,8 +98,8 @@ public class ClipTargetCollectionViewController: UIViewController {
     }
 }
 
-extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
-    // MARK: - ClipTargetCollectionViewProtocol
+extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
+    // MARK: - ClipTargetFinderViewProtocol
 
     func startLoading() {
         self.indicator.startAnimating()
@@ -150,7 +151,7 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
     }
 }
 
-extension ClipTargetCollectionViewController: UICollectionViewDelegate {
+extension ClipTargetFinderViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -182,7 +183,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipTargetCollectionViewController: UICollectionViewDataSource {
+extension ClipTargetFinderViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -218,7 +219,7 @@ extension ClipTargetCollectionViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipTargetCollectionViewController: ClipsCollectionLayoutDelegate {
+extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {

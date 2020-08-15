@@ -6,7 +6,7 @@ import Domain
 import PromiseKit
 import UIKit
 
-protocol ClipTargetCollectionViewProtocol: AnyObject {
+protocol ClipTargetFinderViewProtocol: AnyObject {
     func startLoading()
 
     func endLoading()
@@ -22,7 +22,7 @@ protocol ClipTargetCollectionViewProtocol: AnyObject {
     func resetSelection()
 }
 
-public class ClipTargetCollectionViewPresenter {
+public class ClipTargetFinderPresenter {
     typealias SelectedWebImage = (index: Int, displayModel: DisplayedWebImage)
     typealias LoadedWebImage = (image: SelectedWebImage, data: ImageData)
     typealias ImageData = (quality: ImageQuality, url: URL, uiImage: UIImage)
@@ -165,7 +165,7 @@ public class ClipTargetCollectionViewPresenter {
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
-    weak var view: ClipTargetCollectionViewProtocol?
+    weak var view: ClipTargetFinderViewProtocol?
 
     private let url: URL
     private let storage: ClipStorageProtocol
