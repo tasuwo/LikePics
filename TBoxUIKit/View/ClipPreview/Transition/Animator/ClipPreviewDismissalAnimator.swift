@@ -30,6 +30,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             return
         }
 
+        containerView.insertSubview(to.view, belowSubview: from.view)
+
         let animatingView = UIView()
         ClipsCollectionViewCell.setupAppearance(shadowView: animatingView)
         animatingView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)

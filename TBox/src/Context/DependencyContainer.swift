@@ -32,8 +32,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
         viewController.transitioningDelegate = self.transitionController
-        // FIXME:
-        viewController.modalPresentationStyle = .overFullScreen
+        viewController.modalPresentationStyle = .fullScreen
 
         return viewController
     }

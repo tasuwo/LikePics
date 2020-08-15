@@ -203,6 +203,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             return
         }
 
+        containerView.insertSubview(to.view, belowSubview: from.view)
+
         let initialImageFrame = fromPage.scrollView.convert(fromPage.imageView.frame, to: containerView)
 
         let animatingView = UIView()

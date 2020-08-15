@@ -19,6 +19,7 @@ class ClipItemPreviewViewController: UIViewController {
     var clipItem: ClipItem {
         self.presenter.item
     }
+
     weak var delegate: ClipItemPreviewViewControllerDelegate?
 
     @IBOutlet var pageView: ClipPreviewPageView!

@@ -50,7 +50,6 @@ class ClipsViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // TODO: FIXME
         self.presenter.reload()
     }
 
