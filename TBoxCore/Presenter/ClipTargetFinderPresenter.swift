@@ -11,17 +11,19 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
 
     func endLoading()
 
+    func reloadList()
+
     func showConfirmationForOverwrite()
 
     func show(errorMessage: String)
 
-    func reload()
-
     func updateSelectionOrder(at index: Int, to order: Int)
+
+    func updateDoneButton(isEnabled: Bool)
 
     func resetSelection()
 
-    func updateDoneButton(isEnabled: Bool)
+    func notifySavedImagesSuccessfully()
 }
 
 public class ClipTargetFinderPresenter {
@@ -216,7 +218,7 @@ public class ClipTargetFinderPresenter {
         }.done(on: .main) { [weak self] (displayedWebImages: [DisplayedWebImage]) in
             self?.webImages = displayedWebImages
             self?.view?.endLoading()
-            self?.view?.reload()
+            self?.view?.reloadList()
         }.catch(on: .main) { [weak self] error in
             let error: PresenterError = {
                 guard let error = error as? PresenterError else { return .internalError }
@@ -227,7 +229,7 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    func saveImages(completion: @escaping (Bool) -> Void) {
+    func saveSelectedImages() {
         self.view?.startLoading()
 
         let selections: [SelectedWebImage] = self.selectedIndices.enumerated()
@@ -241,7 +243,7 @@ public class ClipTargetFinderPresenter {
             self.save(target: saveData)
         }.done { [weak self] _ in
             self?.view?.endLoading()
-            completion(true)
+            self?.view?.notifySavedImagesSuccessfully()
         }.catch(on: .main) { [weak self] error in
             let error: PresenterError = {
                 guard let error = error as? PresenterError else { return .internalError }
@@ -249,7 +251,6 @@ public class ClipTargetFinderPresenter {
             }()
             self?.view?.endLoading()
             self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
-            completion(false)
         }
     }
 

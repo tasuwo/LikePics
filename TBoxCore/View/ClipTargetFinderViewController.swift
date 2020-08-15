@@ -57,7 +57,8 @@ public class ClipTargetFinderViewController: UIViewController {
 
         let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
         self.navigationItem.setLeftBarButton(itemCancel, animated: false)
-        let itemDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
+
+        let itemDone = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAction))
         self.navigationItem.setRightBarButton(itemDone, animated: false)
 
         self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -67,28 +68,8 @@ public class ClipTargetFinderViewController: UIViewController {
         self.delegate?.didCancel(self)
     }
 
-    @objc private func doneAction() {
-        let alert = UIAlertController(title: "保存", message: "\(self.presenter.selectedIndices.count)件のアイテムが選択されています。保存しますか？", preferredStyle: .alert)
-
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] action in
-            guard let self = self else { return }
-
-            self.startLoading()
-            self.presenter.saveImages { isSucceeded in
-                self.endLoading()
-
-                guard isSucceeded else {
-                    self.show(errorMessage: "Failed to save images.")
-                    return
-                }
-
-                self.delegate?.didFinish(self)
-            }
-        }))
-
-        alert.addAction(.init(title: "Cancel", style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
+    @objc private func saveAction() {
+        self.presenter.saveSelectedImages()
     }
 }
 
@@ -103,6 +84,10 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     func endLoading() {
         self.indicator.isHidden = true
         self.indicator.stopAnimating()
+    }
+
+    func reloadList() {
+        self.collectionView.reloadData()
     }
 
     func showConfirmationForOverwrite() {
@@ -127,13 +112,13 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func reload() {
-        self.collectionView.reloadData()
-    }
-
     func updateSelectionOrder(at index: Int, to order: Int) {
         guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? ClipSelectionCollectionViewCell else { return }
         cell.selectionOrder = order
+    }
+
+    func updateDoneButton(isEnabled: Bool) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
     }
 
     func resetSelection() {
@@ -144,8 +129,8 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
             .forEach { $0.selectionOrder = nil }
     }
 
-    func updateDoneButton(isEnabled: Bool) {
-        self.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
+    func notifySavedImagesSuccessfully() {
+        self.delegate?.didFinish(self)
     }
 }
 
