@@ -6,6 +6,10 @@ import Domain
 import TBoxUIKit
 import UIKit
 
+protocol ClipItemPreviewViewControllerDelegate: AnyObject {
+    func reloadPages(_ viewController: ClipItemPreviewViewController)
+}
+
 class ClipItemPreviewViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
@@ -15,6 +19,7 @@ class ClipItemPreviewViewController: UIViewController {
     var clipItem: ClipItem {
         self.presenter.item
     }
+    weak var delegate: ClipItemPreviewViewControllerDelegate?
 
     @IBOutlet var pageView: ClipPreviewPageView!
 
@@ -90,7 +95,11 @@ extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
         alert.addAction(.init(title: "OK", style: .default, handler: nil))
     }
 
-    func closeView() {
+    func reloadPages() {
+        self.delegate?.reloadPages(self)
+    }
+
+    func closePages() {
         self.dismiss(animated: true, completion: nil)
     }
 }

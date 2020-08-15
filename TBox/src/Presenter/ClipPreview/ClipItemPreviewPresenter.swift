@@ -11,7 +11,9 @@ protocol ClipItemPreviewViewProtocol: AnyObject {
 
     func showSucceededMessage()
 
-    func closeView()
+    func reloadPages()
+
+    func closePages()
 }
 
 class ClipItemPreviewPresenter {
@@ -58,31 +60,23 @@ class ClipItemPreviewPresenter {
         self.view?.showConfirmationForDelete(options: options) { [weak self] target in
             guard let self = self, let target = target else { return }
 
-            let result: Result<Void, ClipStorageError>
             switch target {
             case .clip:
                 switch self.storage.removeClip(ofUrl: self.item.clipUrl) {
                 case .success:
-                    result = .success(())
+                    self.view?.showSucceededMessage()
+                    self.view?.closePages()
                 case let .failure(error):
-                    result = .failure(error)
+                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
                 }
             case .item:
                 switch self.storage.removeClipItem(self.item) {
                 case .success:
-                    result = .success(())
+                    self.view?.showSucceededMessage()
+                    self.view?.reloadPages()
                 case let .failure(error):
-                    result = .failure(error)
+                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
                 }
-            }
-
-            switch result {
-            case .success:
-                self.view?.showSucceededMessage()
-                self.view?.closeView()
-            case let .failure(error):
-                self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
-                self.view?.closeView()
             }
         }
     }

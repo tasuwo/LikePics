@@ -30,6 +30,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             UIPageViewController.OptionsKey.interPageSpacing: 40
         ])
+
+        self.presenter.view = self
     }
 
     required init?(coder: NSCoder) {
@@ -39,15 +41,13 @@ class ClipPreviewPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let viewController = self.makeViewController(at: 0) {
-            self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
-        }
-
         self.dataSource = self
 
         self.setupNavigationBar()
         self.setupToolBar()
         self.setupGestureRecognizer()
+
+        self.presenter.reload()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -145,7 +145,9 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func makeViewController(at index: Int) -> UIViewController? {
         guard self.presenter.clip.items.indices.contains(index) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip, item: self.presenter.clip.items[index])
+        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip,
+                                                              item: self.presenter.clip.items[index],
+                                                              delegate: self)
     }
 }
 
@@ -207,5 +209,29 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
             }
         }
         return false
+    }
+}
+
+extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
+    // MARK: - ClipPreviewPageViewProtocol
+
+    func reloadPages() {
+        if let viewController = self.makeViewController(at: 0) {
+            self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
+        }
+    }
+
+    func showErrorMessage(_ message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ClipPreviewPageViewController: ClipItemPreviewViewControllerDelegate {
+    // MARK: - ClipItemPreviewViewControllerDelegate
+
+    func reloadPages(_ viewController: ClipItemPreviewViewController) {
+        self.presenter.reload()
     }
 }

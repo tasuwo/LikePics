@@ -10,7 +10,7 @@ import UIKit
 protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> UIViewController
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> UIViewController
 }
 
 class DependencyContainer {
@@ -27,7 +27,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
-        let presenter = ClipPreviewPagePresenter(clip: clip)
+        let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipsStorage)
         let pageViewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
@@ -38,8 +38,10 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> UIViewController {
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> UIViewController {
         let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage)
-        return ClipItemPreviewViewController(factory: self, presenter: presenter)
+        let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
+        viewController.delegate = delegate
+        return viewController
     }
 }
