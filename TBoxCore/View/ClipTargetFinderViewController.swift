@@ -27,6 +27,8 @@ public class ClipTargetFinderViewController: UIViewController {
         self.presenter = presenter
         self.delegate = delegate
         super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
+
+        self.presenter.view = self
     }
 
     required init?(coder: NSCoder) {
@@ -36,14 +38,13 @@ public class ClipTargetFinderViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.presenter.view = self
         self.presenter.attachWebView(to: self.view)
 
         if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
             layout.delegate = self
         }
 
-        self.setupNavBar()
+        self.setupNavigationBar()
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -53,7 +54,7 @@ public class ClipTargetFinderViewController: UIViewController {
 
     // MARK: - Methods
 
-    private func setupNavBar() {
+    private func setupNavigationBar() {
         self.navigationItem.title = String(localizedKey: "clip_target_finder_view_title", bundle: Bundle(for: Self.self))
 
         let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
@@ -166,18 +167,10 @@ extension ClipTargetFinderViewController: UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.presenter.selectItem(at: indexPath.row)
-
-        if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
-            header.selectionCount = self.presenter.selectedIndices.count
-        }
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         self.presenter.deselectItem(at: indexPath.row)
-
-        if let header = self.collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader).compactMap({ $0 as? ClipSelectionCollectionViewHeader }).first {
-            header.selectionCount = self.presenter.selectedIndices.count
-        }
     }
 }
 
@@ -190,17 +183,6 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.presenter.webImages.count
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let dequeuedHeader = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                             withReuseIdentifier: type(of: self.collectionView).headerIdentifier,
-                                                                             for: indexPath)
-        guard let header = dequeuedHeader as? ClipSelectionCollectionViewHeader else { return dequeuedHeader }
-
-        header.selectionCount = self.presenter.selectedIndices.count
-
-        return header
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -227,6 +209,6 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
-        return ClipSelectionCollectionViewHeader.preferredHeight
+        return .zero
     }
 }
