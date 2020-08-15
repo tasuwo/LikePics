@@ -19,4 +19,12 @@ final class ClippedImageObject: Object {
     func makeKey() -> String {
         return "\(self.clipUrl)-\(self.imageUrl)"
     }
+
+    static func makeImageKey(ofItem item: ClipItemObject, forThumbnail: Bool) -> String {
+        return "\(item.clipUrl)-\(forThumbnail ? item.thumbnailImageUrl : item.largeImageUrl)"
+    }
+
+    static func makeKey(byUrl imageUrl: URL, clipUrl: URL) -> String {
+        return "\(clipUrl.absoluteString)-\(imageUrl.absoluteString)"
+    }
 }

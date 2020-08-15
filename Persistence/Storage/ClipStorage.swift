@@ -40,24 +40,88 @@ public class ClipStorage {
     public convenience init() {
         self.init(realmConfiguration: StorageConfiguration.makeConfiguration())
     }
+
+    // MARK: - Methods
+
+    private static func makeClippedImage(_ imageUrl: URL, clipUrl: URL, data: Data) -> ClippedImageObject {
+        let object = ClippedImageObject()
+        object.clipUrl = clipUrl.absoluteString
+        object.imageUrl = imageUrl.absoluteString
+        object.image = data
+        object.key = object.makeKey()
+        return object
+    }
 }
 
 extension ClipStorage: ClipStorageProtocol {
     // MARK: - ClipStorageProtocol
 
-    public func create(clip: Clip) -> Result<Void, ClipStorageError> {
+    public func create(clip: Clip, withData data: [(URL, Data)], forced: Bool) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            if let _ = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.asManagedObject().url) {
+            guard data.count == Set(data.map { $0.0 }).count else {
+                return .failure(.invalidParameter)
+            }
+
+            // Check duplication
+
+            var duplicatedClip: ClipObject?
+            if let clipObject = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) {
+                if forced {
+                    duplicatedClip = clipObject
+                } else {
+                    return .failure(.duplicated)
+                }
+            }
+
+            let duplicatedClippedImages = data
+                .map { $0.0 }
+                .map { ClippedImageObject.makeKey(byUrl: $0, clipUrl: clip.url) }
+                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
+            if !forced, !duplicatedClippedImages.isEmpty {
                 return .failure(.duplicated)
             }
 
+            // Prepare new objects
+
+            let newClip = clip.asManagedObject()
+            if let oldClip = duplicatedClip {
+                newClip.registeredAt = oldClip.registeredAt
+            }
+            let newClippedImages = data
+                .map { Self.makeClippedImage($0.0, clipUrl: clip.url, data: $0.1) }
+
+            // Check remove targets
+
+            var shouldDeleteClipItems: [ClipItemObject] = []
+            if let oldClip = duplicatedClip {
+                shouldDeleteClipItems = oldClip.items
+                    .filter { oldItem in !newClip.items.contains(where: { $0.makeKey() == oldItem.makeKey() }) }
+            }
+
+            let shouldDeleteImages = shouldDeleteClipItems
+                .flatMap { [(true, $0), (false, $0)] }
+                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
+                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
+
+            // Delete
+
+            let updatePolicy: Realm.UpdatePolicy = forced ? .modified : .error
             do {
                 try realm.write {
-                    realm.add(clip.asManagedObject())
+                    shouldDeleteClipItems.forEach { item in
+                        realm.delete(item)
+                    }
+                    shouldDeleteImages.forEach { image in
+                        realm.delete(image)
+                    }
+                    realm.add(newClip, update: updatePolicy)
+                    newClippedImages.forEach { image in
+                        realm.add(image, update: updatePolicy)
+                    }
                 }
                 return .success(())
             } catch {
@@ -120,40 +184,57 @@ extension ClipStorage: ClipStorageProtocol {
             guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
                 return .failure(.notFound)
             }
+            let removeTarget = Clip.make(by: clip)
+
+            // NOTE: Delete only found objects.
+            let clipItems = clip.items
+                .map { $0.makeKey() }
+                .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
+
+            // NOTE: Delete only found objects.
+            let clippedImages = clip.items
+                .flatMap { [(true, $0), (false, $0)] }
+                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
+                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
 
             do {
                 try realm.write {
+                    realm.delete(clippedImages)
+                    realm.delete(clipItems)
                     realm.delete(clip)
                 }
-                return .success(.make(by: clip))
+                return .success(removeTarget)
             } catch {
                 return .failure(.internalError)
             }
         }
     }
 
-    public func createImageData(ofUrl url: URL, data: Data, forClipUrl clipUrl: URL) -> Result<Void, ClipStorageError> {
-        self.queue.sync {
+    public func removeClipItem(_ item: ClipItem) -> Result<ClipItem, ClipStorageError> {
+        // TODO: Update clipItemIndex
+
+        return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            let primaryKey = "\(clipUrl.absoluteString)-\(url.absoluteString)"
-            if let _ = realm.object(ofType: ClippedImageObject.self, forPrimaryKey: primaryKey) {
-                return .failure(.duplicated)
+            let primaryKey = item.asManagedObject().makeKey()
+            guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: primaryKey) else {
+                return .failure(.notFound)
             }
+            let removeTarget = ClipItem.make(by: item)
 
-            let object = ClippedImageObject()
-            object.clipUrl = clipUrl.absoluteString
-            object.imageUrl = url.absoluteString
-            object.image = data
-            object.key = object.makeKey()
+            // NOTE: Delete only found objects.
+            let clippedImages = [(true, item), (false, item)]
+                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
+                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
 
             do {
                 try realm.write {
-                    realm.add(object)
+                    realm.delete(clippedImages)
+                    realm.delete(item)
                 }
-                return .success(())
+                return .success(removeTarget)
             } catch {
                 return .failure(.internalError)
             }

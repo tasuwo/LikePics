@@ -48,6 +48,12 @@ class ClipsViewController: UIViewController {
         self.presenter.reload()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // TODO: FIXME
+        self.presenter.reload()
+    }
+
     // MARK: - Methods
 
     // MARK: Notification

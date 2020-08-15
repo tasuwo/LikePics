@@ -11,6 +11,8 @@ protocol ClipTargetCollectionViewProtocol: AnyObject {
 
     func endLoading()
 
+    func showConfirmationForOverwrite()
+
     func show(errorMessage: String)
 
     func reload()
@@ -159,6 +161,8 @@ public class ClipTargetCollectionViewPresenter {
 
     private(set) var selectedIndices: [Int] = []
 
+    private var isEnabledOverwrite = false
+
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
     weak var view: ClipTargetCollectionViewProtocol?
@@ -184,7 +188,16 @@ public class ClipTargetCollectionViewPresenter {
         self.resolver.webView.isHidden = true
     }
 
+    func enableOverwrite() {
+        self.isEnabledOverwrite = true
+    }
+
     func findImages() {
+        if !self.isEnabledOverwrite, case .success(_) = self.storage.readClip(ofUrl: self.url) {
+            self.view?.showConfirmationForOverwrite()
+            return
+        }
+
         self.view?.startLoading()
 
         firstly {
@@ -334,7 +347,7 @@ public class ClipTargetCollectionViewPresenter {
                             updatedDate: self.currentDateResolver())
             let images = clipItems
                 .compactMap { $0 }
-                .flatMap { [$0.high, $0.low] }
+                .flatMap { $0.high.url != $0.low.url ? [$0.high, $0.low] : [$0.high] }
 
             seal.resolve(.fulfilled((clip, images)))
         }
@@ -342,17 +355,8 @@ public class ClipTargetCollectionViewPresenter {
 
     private func save(target: SaveData) -> Promise<Void> {
         return Promise<Void> { seal in
-            target.images.forEach { image in
-                switch self.storage.createImageData(ofUrl: image.url, data: image.uiImage.pngData()!, forClipUrl: target.clip.url) {
-                case let .failure(error):
-                    // TODO: Error Handling
-                    seal.resolve(.rejected(error))
-                    return
-                default:
-                    break
-                }
-            }
-            switch self.storage.create(clip: target.clip) {
+            let data = target.images.map { ($0.url, $0.uiImage.pngData()!) }
+            switch self.storage.create(clip: target.clip, withData: data, forced: self.isEnabledOverwrite) {
             case .success:
                 seal.resolve(.fulfilled(()))
             case let .failure(error):

@@ -101,7 +101,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     @objc private func didTapRemove() {
-        print(#function)
+        self.currentViewController?.didTapRemove()
     }
 
     @objc private func didTapRefetch() {

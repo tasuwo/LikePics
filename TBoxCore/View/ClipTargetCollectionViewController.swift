@@ -100,6 +100,22 @@ extension ClipTargetCollectionViewController: ClipTargetCollectionViewProtocol {
         self.indicator.stopAnimating()
     }
 
+    func showConfirmationForOverwrite() {
+        let alert = UIAlertController(title: "", message: "既にクリップ済みのURLです。上書きしますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: { [weak self] _ in
+            // TODO: FIXME
+            self?.dismiss(animated: true, completion: nil)
+        }))
+
+        alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
+            self?.presenter.enableOverwrite()
+            self?.presenter.findImages()
+        }))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
     func show(errorMessage: String) {
         let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default, handler: nil))

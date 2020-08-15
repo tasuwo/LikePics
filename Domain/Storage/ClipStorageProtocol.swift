@@ -10,7 +10,7 @@ public enum ClipStorageError: Error {
 }
 
 public protocol ClipStorageProtocol {
-    func create(clip: Clip) -> Result<Void, ClipStorageError>
+    func create(clip: Clip, withData data: [(URL, Data)], forced: Bool) -> Result<Void, ClipStorageError>
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
 
@@ -20,7 +20,13 @@ public protocol ClipStorageProtocol {
 
     func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
 
-    func createImageData(ofUrl url: URL, data: Data, forClipUrl clipUrl: URL) -> Result<Void, ClipStorageError>
+    func removeClipItem(_ item: ClipItem) -> Result<ClipItem, ClipStorageError>
 
     func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError>
+}
+
+extension ClipStorageProtocol {
+    public func create(clip: Clip, withData data: [(URL, Data)]) -> Result<Void, ClipStorageError> {
+        self.create(clip: clip, withData: data, forced: false)
+    }
 }
