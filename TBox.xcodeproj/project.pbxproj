@@ -67,6 +67,7 @@
 		2C6E09E424E8151A00B541D9 /* String+Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6E09E324E8151A00B541D9 /* String+Localizable.swift */; };
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
@@ -429,6 +430,7 @@
 		2C6E09D424E8150500B541D9 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6E09E324E8151A00B541D9 /* String+Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localizable.swift"; sourceTree = "<group>"; };
+		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
 		2C86CC4F24E12E2D0091A89E /* ClipPreviewPagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPagePresenter.swift; sourceTree = "<group>"; };
@@ -847,6 +849,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		2C6E09EB24E82BC800B541D9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C6E09E924E82BC300B541D9 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		2C810D0024E04A6600BC0FDF /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -911,6 +921,7 @@
 		2C8FD62E24E02DCE005887F9 /* TBoxUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				2C6E09EB24E82BC800B541D9 /* Resources */,
 				2C95EC4924E15DB600D6EEB4 /* Extension */,
 				2C8FD64A24E02DE4005887F9 /* View */,
 				2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */,
@@ -1580,6 +1591,7 @@
 				2C8FD65024E02E15005887F9 /* ClipSelectionCollectionViewCell.xib in Resources */,
 				2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */,
 				2C8FD64F24E02E10005887F9 /* ClipSelectionCollectionViewHeader.xib in Resources */,
+				2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

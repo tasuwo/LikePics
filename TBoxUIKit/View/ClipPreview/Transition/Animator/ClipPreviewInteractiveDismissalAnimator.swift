@@ -203,6 +203,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             return
         }
 
+        containerView.backgroundColor = .clear
         containerView.insertSubview(to.view, belowSubview: from.view)
 
         let initialImageFrame = fromPage.scrollView.convert(fromPage.imageView.frame, to: containerView)

@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,11 +20,11 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yvr-dk-LFa" customClass="ClipPreviewPageView" customModule="TBoxUIKit">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" name="background_client"/>
                 </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <color key="backgroundColor" name="background_client"/>
             <constraints>
                 <constraint firstItem="yvr-dk-LFa" firstAttribute="leading" secondItem="oFO-2E-sV7" secondAttribute="leading" id="BBx-gm-U3i"/>
                 <constraint firstItem="yvr-dk-LFa" firstAttribute="top" secondItem="oFO-2E-sV7" secondAttribute="top" id="X47-JT-OVn"/>
@@ -34,4 +35,9 @@
             <point key="canvasLocation" x="97" y="135"/>
         </view>
     </objects>
+    <resources>
+        <namedColor name="background_client">
+            <color red="0.93725490196078431" green="0.93725490196078431" blue="0.93725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>

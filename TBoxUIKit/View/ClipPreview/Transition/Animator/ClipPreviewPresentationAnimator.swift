@@ -33,6 +33,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
+        containerView.backgroundColor = .clear
         containerView.insertSubview(to.view, belowSubview: from.view)
 
         let animatingImageView = UIImageView(image: selectedImage)
@@ -56,6 +57,10 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         cornerAnimation.toValue = 0
         animatingImageView.layer.cornerRadius = 0
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
+
+        UIView.animate(withDuration: 0.2) {
+            selectedCell.alpha = 0
+        }
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
             animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView)

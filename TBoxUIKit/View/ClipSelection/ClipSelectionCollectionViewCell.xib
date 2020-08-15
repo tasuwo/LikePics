@@ -57,7 +57,7 @@
                         </constraints>
                     </view>
                 </subviews>
-                <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="qYD-9y-JV2" secondAttribute="trailing" id="7gk-09-4le"/>
                     <constraint firstItem="qYD-9y-JV2" firstAttribute="leading" secondItem="3bM-ga-tKg" secondAttribute="leading" id="Gh1-Yk-ave"/>
@@ -69,6 +69,7 @@
                     <constraint firstAttribute="bottom" secondItem="g2B-t9-dHN" secondAttribute="bottom" id="jeo-dd-oJW"/>
                 </constraints>
             </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <size key="customSize" width="170" height="175"/>
             <connections>
                 <outlet property="imageView" destination="g2B-t9-dHN" id="KOk-r9-98N"/>

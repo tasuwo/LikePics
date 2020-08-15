@@ -30,6 +30,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             return
         }
 
+        containerView.backgroundColor = .clear
         containerView.insertSubview(to.view, belowSubview: from.view)
 
         let animatingView = UIView()

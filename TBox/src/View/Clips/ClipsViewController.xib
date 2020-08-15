@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,7 +22,7 @@
             <subviews>
                 <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="YBk-Ie-9xX" customClass="ClipsCollectionView" customModule="TBoxUIKit">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" name="background_client"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NjM-Nc-2RC">
                         <size key="itemSize" width="128" height="128"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -33,10 +35,10 @@
                     </connections>
                 </collectionView>
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="dya-5h-u67">
-                    <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                    <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
                 </activityIndicatorView>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <color key="backgroundColor" name="background_client"/>
             <constraints>
                 <constraint firstItem="dya-5h-u67" firstAttribute="centerY" secondItem="TRG-79-Pvx" secondAttribute="centerY" id="1af-yg-7K3"/>
                 <constraint firstItem="dya-5h-u67" firstAttribute="centerX" secondItem="TRG-79-Pvx" secondAttribute="centerX" id="4oT-uD-k5F"/>
@@ -49,4 +51,9 @@
             <point key="canvasLocation" x="-712" y="156"/>
         </view>
     </objects>
+    <resources>
+        <namedColor name="background_client">
+            <color red="0.93699997663497925" green="0.93699997663497925" blue="0.93699997663497925" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>
