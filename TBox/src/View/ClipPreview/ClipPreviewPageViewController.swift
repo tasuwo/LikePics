@@ -91,11 +91,12 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: Tool Bar
 
     private func setupToolBar() {
-        let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
         let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
         let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+        let openWebItem = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(self.didTapOpenWeb))
 
-        self.setToolbarItems([reloadItem, flexibleItem, removeItem], animated: false)
+        self.setToolbarItems([reloadItem, flexibleItem, openWebItem, flexibleItem, removeItem], animated: false)
 
         self.updateToolbarAppearance()
     }
@@ -111,6 +112,10 @@ class ClipPreviewPageViewController: UIPageViewController {
     @objc private func didTapRefetch() {
         let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: self.presenter.clip.url, delegate: self, isOverwrite: true)
         self.present(viewController, animated: true, completion: nil)
+    }
+
+    @objc private func didTapOpenWeb() {
+        UIApplication.shared.open(self.presenter.clip.url, options: [:], completionHandler: nil)
     }
 
     // MARK: Gesture Recognizer
