@@ -59,6 +59,8 @@ public class ClipTargetFinderViewController: UIViewController {
         self.navigationItem.setLeftBarButton(itemCancel, animated: false)
         let itemDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
         self.navigationItem.setRightBarButton(itemDone, animated: false)
+
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 
     @objc private func cancelAction() {
@@ -66,15 +68,7 @@ public class ClipTargetFinderViewController: UIViewController {
     }
 
     @objc private func doneAction() {
-        guard let collectionView = self.collectionView,
-            let selectedIndices = collectionView.indexPathsForSelectedItems,
-            !selectedIndices.isEmpty
-        else {
-            self.show(errorMessage: "No images selected.")
-            return
-        }
-
-        let alert = UIAlertController(title: "保存", message: "\(selectedIndices.count)件のアイテムが選択されています。保存しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: "保存", message: "\(self.presenter.selectedIndices.count)件のアイテムが選択されています。保存しますか？", preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
@@ -148,6 +142,10 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
         self.collectionView.visibleCells
             .compactMap { $0 as? ClipSelectionCollectionViewCell }
             .forEach { $0.selectionOrder = nil }
+    }
+
+    func updateDoneButton(isEnabled: Bool) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
     }
 }
 

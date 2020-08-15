@@ -20,6 +20,8 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
     func updateSelectionOrder(at index: Int, to order: Int)
 
     func resetSelection()
+
+    func updateDoneButton(isEnabled: Bool)
 }
 
 public class ClipTargetFinderPresenter {
@@ -159,7 +161,13 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private(set) var selectedIndices: [Int] = []
+    private(set) var selectedIndices: [Int] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.view?.updateDoneButton(isEnabled: self.selectedIndices.count > 0)
+            }
+        }
+    }
 
     private var isEnabledOverwrite: Bool
 
