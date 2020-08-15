@@ -14,9 +14,19 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
+    private var tapGestureRecignizer: UITapGestureRecognizer!
 
     private var nextIndex: Int?
     private var currentIndex: Int = 0
+    private var isFullscreen = false {
+        didSet {
+            guard let navigationController = self.navigationController else { return }
+            UIView.animate(withDuration: 0.3, animations: {
+                navigationController.toolbar.alpha = self.isFullscreen ? 0 : 1
+                navigationController.navigationBar.alpha = self.isFullscreen ? 0 : 1
+            })
+        }
+    }
 
     var currentViewController: ClipItemPreviewViewController? {
         return self.viewControllers?.first as? ClipItemPreviewViewController
@@ -126,6 +136,9 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))
         self.panGestureRecognizer.delegate = self
         self.view.addGestureRecognizer(self.panGestureRecognizer)
+
+        self.tapGestureRecignizer = UITapGestureRecognizer(target: self, action: #selector(self.didtap(_:)))
+        self.view.addGestureRecognizer(self.tapGestureRecignizer)
     }
 
     @objc func didPan(_ sender: UIPanGestureRecognizer) {
@@ -145,6 +158,10 @@ class ClipPreviewPageViewController: UIPageViewController {
                 self.transitionController.didPan(sender: sender)
             }
         }
+    }
+
+    @objc func didtap(_ sender: UITapGestureRecognizer) {
+        self.isFullscreen = !self.isFullscreen
     }
 
     // MARK: Page resolution
