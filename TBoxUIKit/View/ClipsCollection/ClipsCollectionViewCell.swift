@@ -13,7 +13,6 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
     static let cornerRadius: CGFloat = 10
-    static let shadowOpacity: Float = 0.5
 
     public var primaryImage: UIImage? {
         get {
@@ -111,6 +110,14 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         self.setupAppearance()
     }
 
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            self.contentView.layer.shadowOpacity = Self.shadowOpacity(for: self.traitCollection.userInterfaceStyle)
+        }
+    }
+
     // MARK: - Methods
 
     static func setupAppearance(imageView: UIImageView) {
@@ -119,10 +126,10 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         imageView.clipsToBounds = true
     }
 
-    static func setupAppearance(shadowView: UIView, onImage: Bool = false) {
+    static func setupAppearance(shadowView: UIView, onImage: Bool = false, interfaceStyle: UIUserInterfaceStyle) {
         shadowView.layer.cornerRadius = Self.cornerRadius
         shadowView.layer.shadowColor = UIColor.black.cgColor
-        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity
+        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity(for: interfaceStyle)
         shadowView.layer.shadowRadius = 8
         shadowView.layer.shadowOffset = .init(width: 0, height: 8)
         shadowView.clipsToBounds = false
@@ -137,7 +144,7 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
 
         self.imageShadowViews.forEach {
             $0.isHidden = true
-            Self.setupAppearance(shadowView: $0, onImage: true)
+            Self.setupAppearance(shadowView: $0, onImage: true, interfaceStyle: self.traitCollection.userInterfaceStyle)
         }
 
         self.overlayViews.forEach {
@@ -149,9 +156,18 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         self.imagesContainerView.clipsToBounds = true
         self.imagesContainerView.layer.masksToBounds = true
 
-        Self.setupAppearance(shadowView: self.contentView)
+        Self.setupAppearance(shadowView: self.contentView, interfaceStyle: self.traitCollection.userInterfaceStyle)
 
         self.clipsToBounds = false
         self.layer.masksToBounds = false
+    }
+
+    private static func shadowOpacity(for userInterfaceStyle: UIUserInterfaceStyle) -> Float {
+        switch userInterfaceStyle {
+        case .dark:
+            return 0.9
+        default:
+            return 0.5
+        }
     }
 }

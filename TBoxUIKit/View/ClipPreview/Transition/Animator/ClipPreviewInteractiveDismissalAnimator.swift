@@ -209,7 +209,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         let initialImageFrame = fromPage.scrollView.convert(fromPage.imageView.frame, to: containerView)
 
         let animatingView = UIView()
-        ClipsCollectionViewCell.setupAppearance(shadowView: animatingView)
+        ClipsCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
         animatingView.frame = initialImageFrame
         animatingView.backgroundColor = .red
         containerView.addSubview(animatingView)
