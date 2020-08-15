@@ -12,8 +12,8 @@ class ClipItemPreviewViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipItemPreviewPresenter
 
-    var presentingImageUrl: URL {
-        self.presenter.item.image.url
+    var clipItem: ClipItem {
+        self.presenter.item
     }
 
     @IBOutlet var pageView: ClipPreviewPageView!

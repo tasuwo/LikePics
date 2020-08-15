@@ -12,6 +12,12 @@ protocol ClipsViewProtocol: AnyObject {
 }
 
 class ClipsPresenter {
+    enum ThumbnailLayer {
+        case primary
+        case secondary
+        case tertiary
+    }
+
     weak var view: ClipsViewProtocol?
 
     private let storage: ClipStorageProtocol
@@ -40,17 +46,30 @@ class ClipsPresenter {
         view.endLoading()
     }
 
-    func getImageData(forUrl: URL, in clip: Clip) -> Data? {
-        switch self.storage.getImageData(ofUrl: forUrl, forClipUrl: clip.url) {
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
+        let nullableClipItem: ClipItem? = {
+            switch layer {
+            case .primary:
+                return clip.primaryItem
+            case .secondary:
+                return clip.secondaryItem
+            case .tertiary:
+                return clip.tertiaryItem
+            }
+        }()
+        guard let clipItem = nullableClipItem else { return nil }
+
+        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
         case let .success(data):
             return data
-        case .failure:
-            // TODO: Error handling
+        case let .failure(error):
+            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
             return nil
         }
     }
 
     private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+        // TODO: Error Handling
         return "問題が発生しました"
     }
 }

@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ClipItem {
-    public struct Image {
+public struct ClipItem: Equatable {
+    public struct Image: Equatable {
         public let url: URL
         public let size: ImageSize
 

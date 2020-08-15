@@ -134,17 +134,20 @@ extension ClipsViewController: UICollectionViewDataSource {
         guard self.presenter.clips.indices.contains(indexPath.row) else { return cell }
 
         let clip = self.presenter.clips[indexPath.row]
-        cell.primaryImage = self.resolveImage(at: 0, in: clip)
-        cell.secondaryImage = self.resolveImage(at: 1, in: clip)
-        cell.tertiaryImage = self.resolveImage(at: 2, in: clip)
+        cell.primaryImage = {
+            guard let data = self.presenter.getImageData(for: .primary, in: clip) else { return nil }
+            return UIImage(data: data)!
+        }()
+        cell.secondaryImage = {
+            guard let data = self.presenter.getImageData(for: .secondary, in: clip) else { return nil }
+            return UIImage(data: data)!
+        }()
+        cell.tertiaryImage = {
+            guard let data = self.presenter.getImageData(for: .tertiary, in: clip) else { return nil }
+            return UIImage(data: data)!
+        }()
 
         return cell
-    }
-
-    private func resolveImage(at index: Int, in clip: Clip) -> UIImage? {
-        guard let item = clip.items.first(where: { $0.clipIndex == index }) else { return nil }
-        guard let data = self.presenter.getImageData(forUrl: item.thumbnail.url, in: clip) else { return nil }
-        return UIImage(data: data)!
     }
 }
 
@@ -165,8 +168,10 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
             return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
                 + ClipsCollectionViewCell.secondaryStickingOutMargin
                 + ClipsCollectionViewCell.tertiaryStickingOutMargin
+        case let (.some(item), _, _):
+            return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
         default:
-            return .zero
+            return width
         }
     }
 

@@ -10,7 +10,7 @@ import UIKit
 protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
-    func makeClipItemPreviewViewController(item: ClipItem) -> UIViewController
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> UIViewController
 }
 
 class DependencyContainer {
@@ -33,13 +33,13 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
         viewController.transitioningDelegate = self.transitionController
         // FIXME:
-        viewController.modalPresentationStyle = .overFullScreen
+        viewController.modalPresentationStyle = .fullScreen
 
         return viewController
     }
 
-    func makeClipItemPreviewViewController(item: ClipItem) -> UIViewController {
-        let presenter = ClipItemPreviewPresenter(item: item, storage: self.clipsStorage)
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> UIViewController {
+        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage)
         return ClipItemPreviewViewController(factory: self, presenter: presenter)
     }
 }

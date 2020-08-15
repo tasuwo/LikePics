@@ -5,20 +5,24 @@
 public struct Clip {
     public let url: URL
     public let description: String?
+    /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
     public let registeredDate: Date
     public let updatedDate: Date
 
     public var primaryItem: ClipItem? {
-        return self.items.first(where: { $0.clipIndex == 0 })
+        guard self.items.indices.contains(0) else { return nil }
+        return self.items[0]
     }
 
     public var secondaryItem: ClipItem? {
-        return self.items.first(where: { $0.clipIndex == 1 })
+        guard self.items.indices.contains(1) else { return nil }
+        return self.items[1]
     }
 
     public var tertiaryItem: ClipItem? {
-        return self.items.first(where: { $0.clipIndex == 2 })
+        guard self.items.indices.contains(2) else { return nil }
+        return self.items[2]
     }
 
     // MARK: - Lifecycle
@@ -26,7 +30,7 @@ public struct Clip {
     public init(url: URL, description: String?, items: [ClipItem], registeredDate: Date, updatedDate: Date) {
         self.url = url
         self.description = description
-        self.items = items
+        self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }

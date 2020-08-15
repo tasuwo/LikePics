@@ -139,13 +139,13 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
-        guard let currentIndex = self.presenter.clip.items.first(where: { $0.image.url == viewController.presentingImageUrl })?.clipIndex else { return nil }
+        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0 == viewController.clipItem }) else { return nil }
         return currentIndex
     }
 
     private func makeViewController(at index: Int) -> UIViewController? {
-        guard let item = self.presenter.clip.items.first(where: { $0.clipIndex == index }) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(item: item)
+        guard self.presenter.clip.items.indices.contains(index) else { return nil }
+        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip, item: self.presenter.clip.items[index])
     }
 }
 
