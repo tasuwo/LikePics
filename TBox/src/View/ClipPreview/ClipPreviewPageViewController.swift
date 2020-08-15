@@ -199,17 +199,8 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer,
-            gestureRecognizer === self.panGestureRecognizer
-        {
-            let shouldBegin: Bool = {
-                if UIDevice.current.orientation.isLandscape {
-                    return gestureRecognizer.velocity(in: self.view).x > 0
-                } else {
-                    return gestureRecognizer.velocity(in: self.view).y > 0
-                }
-            }()
-            return shouldBegin
+        if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
+            return gestureRecognizer.velocity(in: self.view).y > 0
         }
         return true
     }
