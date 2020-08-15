@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import TBoxUIKit
 import UIKit
@@ -53,7 +54,7 @@ public class ClipTargetFinderViewController: UIViewController {
     // MARK: - Methods
 
     private func setupNavBar() {
-        self.navigationItem.title = "画像を選択"
+        self.navigationItem.title = String(localizedKey: "clip_target_finder_view_title", bundle: Bundle(for: Self.self))
 
         let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
         self.navigationItem.setLeftBarButton(itemCancel, animated: false)
@@ -91,24 +92,38 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     }
 
     func showConfirmationForOverwrite() {
-        let alert = UIAlertController(title: "", message: "既にクリップ済みのURLです。上書きしますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: "",
+                                      message: String(localizedKey: "clip_target_finder_view_overwrite_alert_body", bundle: Bundle(for: Self.self)),
+                                      preferredStyle: .alert)
 
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.didCancel(self)
-        }))
+        alert.addAction(
+            .init(title: String(localizedKey: "clip_target_finder_view_overwrite_alert_cancel", bundle: Bundle(for: Self.self)),
+                  style: .cancel,
+                  handler: { [weak self] _ in
+                      guard let self = self else { return }
+                      self.delegate?.didCancel(self)
+                  })
+        )
 
-        alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
-            self?.presenter.enableOverwrite()
-            self?.presenter.findImages()
-        }))
+        alert.addAction(
+            .init(title: String(localizedKey: "clip_target_finder_view_overwrite_alert_ok", bundle: Bundle(for: Self.self)),
+                  style: .default,
+                  handler: { [weak self] _ in
+                      self?.presenter.enableOverwrite()
+                      self?.presenter.findImages()
+                  })
+        )
 
         self.present(alert, animated: true, completion: nil)
     }
 
     func show(errorMessage: String) {
-        let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
+        let alert = UIAlertController(title: String(localizedKey: "clip_target_finder_view_error_alert_title", bundle: Bundle(for: Self.self)),
+                                      message: errorMessage,
+                                      preferredStyle: .alert)
+        alert.addAction(.init(title: String(localizedKey: "clip_target_finder_view_error_alert_ok", bundle: Bundle(for: Self.self)),
+                              style: .default,
+                              handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 

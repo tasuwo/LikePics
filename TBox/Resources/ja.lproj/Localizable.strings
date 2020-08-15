@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/08/15.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+"clip_target_finder_view_title" = "画像を選択";

@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/08/15.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+"clip_target_finder_view_title" = "Select Image";
+"clip_target_finder_view_overwrite_alert_body" = "This url is already clipped. Overwrite it?";
+"clip_target_finder_view_overwrite_alert_ok" = "OK";
+"clip_target_finder_view_overwrite_alert_cancel" = "Cancel";
+"clip_target_finder_view_error_alert_title" = "Error";
+"clip_target_finder_view_error_alert_ok" = "OK";
+"clip_target_finder_view_error_alert_body_failed_to_find_images" = "Failed to find images for clip.";
+"clip_target_finder_view_error_alert_body_failed_to_download_images" = "Failed to download images. Please try again later.";
+"clip_target_finder_view_error_alert_body_failed_to_save_images" = "Filed to save images. Please try again later.";
+"clip_target_finder_view_error_alert_body_internal_error" = "Sorry, somthing went wrong. Please try again later.";

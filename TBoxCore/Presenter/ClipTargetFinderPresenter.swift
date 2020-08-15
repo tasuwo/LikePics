@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import PromiseKit
 import UIKit
@@ -36,6 +37,7 @@ public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
         case failedToFindImages
         case failedToDownlaodImages
+        case failedToSave(ClipStorageError)
         case internalError
     }
 
@@ -370,8 +372,7 @@ public class ClipTargetFinderPresenter {
             case .success:
                 seal.resolve(.fulfilled(()))
             case let .failure(error):
-                // TODO: Error Handling
-                seal.resolve(.rejected(error))
+                seal.resolve(.rejected(PresenterError.failedToSave(error)))
             }
         }
     }
@@ -392,11 +393,13 @@ public class ClipTargetFinderPresenter {
     private static func resolveErrorMessage(_ error: PresenterError) -> String {
         switch error {
         case .failedToFindImages:
-            return "Failed to find images."
+            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_find_images", bundle: Bundle(for: Self.self))
         case .failedToDownlaodImages:
-            return "Failed to donwlaod images."
+            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_download_images", bundle: Bundle(for: Self.self))
+        case .failedToSave:
+            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_save_images", bundle: Bundle(for: Self.self))
         case .internalError:
-            return "Failed"
+            return String(localizedKey: "clip_target_finder_view_error_alert_body_internal_error", bundle: Bundle(for: Self.self))
         }
     }
 }

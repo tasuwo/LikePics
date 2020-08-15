@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/08/15.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+"clip_target_finder_view_title" = "画像を選択";
+"clip_target_finder_view_overwrite_alert_body" = "既にクリップ済みのURLです。上書きしますか？";
+"clip_target_finder_view_overwrite_alert_ok" = "OK";
+"clip_target_finder_view_overwrite_alert_cancel" = "キャンセル";
+"clip_target_finder_view_error_alert_title" = "エラー";
+"clip_target_finder_view_error_alert_ok" = "OK";
+"clip_target_finder_view_error_alert_body_failed_to_find_images" = "保存可能な画像が見つからなかったため、クリップできません";
+"clip_target_finder_view_error_alert_body_failed_to_download_images" = "画像のダウンロードに失敗しました。時間をおいて再度お試しください";
+"clip_target_finder_view_error_alert_body_failed_to_save_images" = "画像の保存に失敗しました。クリップをやり直してください";
+"clip_target_finder_view_error_alert_body_internal_error" = "問題が発生しました。クリップをやり直してください";
