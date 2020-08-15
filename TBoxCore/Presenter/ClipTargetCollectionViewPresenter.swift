@@ -161,7 +161,7 @@ public class ClipTargetCollectionViewPresenter {
 
     private(set) var selectedIndices: [Int] = []
 
-    private var isEnabledOverwrite = false
+    private var isEnabledOverwrite: Bool
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
@@ -174,11 +174,12 @@ public class ClipTargetCollectionViewPresenter {
 
     // MARK: - Lifecycle
 
-    public init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date) {
+    public init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date, isEnabledOverwrite: Bool = false) {
         self.url = url
         self.storage = storage
         self.resolver = resolver
         self.currentDateResolver = currentDateResovler
+        self.isEnabledOverwrite = isEnabledOverwrite
     }
 
     // MARK: - Methods

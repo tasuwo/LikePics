@@ -4,6 +4,7 @@
 
 import Domain
 import Persistence
+import TBoxCore
 import TBoxUIKit
 import UIKit
 
@@ -11,6 +12,7 @@ protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> UIViewController
+    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetCollectionViewControllerDelegate, isOverwrite: Bool) -> UIViewController
 }
 
 class DependencyContainer {
@@ -42,5 +44,15 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
         viewController.delegate = delegate
         return viewController
+    }
+
+    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetCollectionViewControllerDelegate, isOverwrite: Bool) -> UIViewController {
+        let presenter = ClipTargetCollectionViewPresenter(url: clipUrl,
+                                                          storage: self.clipsStorage,
+                                                          resolver: WebImageResolver(),
+                                                          currentDateResovler: { Date() },
+                                                          isEnabledOverwrite: isOverwrite)
+        let viewController = ClipTargetCollectionViewController(presenter: presenter, delegate: delegate)
+        return UINavigationController(rootViewController: viewController)
     }
 }

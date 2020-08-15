@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import TBoxCore
 import UIKit
 
 class ShareNavigationRootViewController: UIViewController {
@@ -47,6 +48,14 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
     }
 
     func presentClipTargetSelectionView(by url: URL) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(url: url), animated: true)
+        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(url: url, delegate: self), animated: true)
+    }
+}
+
+extension ShareNavigationRootViewController: ClipTargetCollectionViewControllerDelegate {
+    // MARK: - ClipTargetCollectionViewControllerDelegate
+
+    func didFinish(_ viewController: ClipTargetCollectionViewController) {
+        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
 }

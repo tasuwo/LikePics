@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import TBoxCore
 import TBoxUIKit
 import UIKit
 
@@ -46,7 +47,10 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.setupNavigationBar()
         self.setupToolBar()
         self.setupGestureRecognizer()
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.presenter.reload()
     }
 
@@ -105,7 +109,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     @objc private func didTapRefetch() {
-        print(#function)
+        let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: self.presenter.clip.url, delegate: self, isOverwrite: true)
+        self.present(viewController, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer
@@ -232,6 +237,15 @@ extension ClipPreviewPageViewController: ClipItemPreviewViewControllerDelegate {
     // MARK: - ClipItemPreviewViewControllerDelegate
 
     func reloadPages(_ viewController: ClipItemPreviewViewController) {
+        self.presenter.reload()
+    }
+}
+
+extension ClipPreviewPageViewController: ClipTargetCollectionViewControllerDelegate {
+    // MARK: - ClipTargetCollectionViewControllerDelegate
+
+    func didFinish(_ viewController: ClipTargetCollectionViewController) {
+        viewController.dismiss(animated: true, completion: nil)
         self.presenter.reload()
     }
 }

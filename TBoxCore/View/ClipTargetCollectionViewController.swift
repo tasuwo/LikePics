@@ -6,16 +6,23 @@ import Domain
 import TBoxUIKit
 import UIKit
 
+public protocol ClipTargetCollectionViewControllerDelegate: AnyObject {
+    func didFinish(_ viewController: ClipTargetCollectionViewController)
+}
+
 public class ClipTargetCollectionViewController: UIViewController {
     private let presenter: ClipTargetCollectionViewPresenter
+
+    private weak var delegate: ClipTargetCollectionViewControllerDelegate?
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
 
-    public init(presenter: ClipTargetCollectionViewPresenter) {
+    public init(presenter: ClipTargetCollectionViewPresenter, delegate: ClipTargetCollectionViewControllerDelegate) {
         self.presenter = presenter
+        self.delegate = delegate
         super.init(nibName: "ClipTargetCollectionViewController", bundle: Bundle(for: Self.self))
     }
 
@@ -34,7 +41,10 @@ public class ClipTargetCollectionViewController: UIViewController {
         }
 
         self.setupNavBar()
+    }
 
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.presenter.findImages()
     }
 
@@ -77,7 +87,7 @@ public class ClipTargetCollectionViewController: UIViewController {
                     return
                 }
 
-                self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+                self.delegate?.didFinish(self)
             }
         }))
 
