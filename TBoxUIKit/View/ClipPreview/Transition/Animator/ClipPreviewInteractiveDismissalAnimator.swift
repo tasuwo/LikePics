@@ -40,6 +40,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
+            let fromIndex = from.currentIndex(self),
             let fromImageView = fromPage.imageView,
             let toCell = to.animatingCell(self)
         else {
@@ -49,7 +50,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // Calculation
 
-        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
+        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)

@@ -12,7 +12,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+        return 5
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -22,6 +22,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
+            let fromIndex = from.currentIndex(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let targetCell = to.animatingCell(self)
@@ -67,7 +68,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
-            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
+            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
             animatingImageView.frame = animatingView.bounds
 
             to.view.alpha = 1.0

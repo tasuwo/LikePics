@@ -16,8 +16,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecignizer: UITapGestureRecognizer!
 
-    private var nextIndex: Int?
-    private(set) var currentIndex: Int = 0
     private var isFullscreen = false {
         didSet {
             guard let navigationController = self.navigationController else { return }
@@ -26,6 +24,11 @@ class ClipPreviewPageViewController: UIPageViewController {
                 navigationController.navigationBar.alpha = self.isFullscreen ? 0 : 1
             })
         }
+    }
+
+    var currentIndex: Int? {
+        guard let currentViewController = self.currentViewController else { return nil }
+        return self.resolveIndex(of: currentViewController)
     }
 
     var currentViewController: ClipItemPreviewViewController? {
@@ -177,24 +180,6 @@ class ClipPreviewPageViewController: UIPageViewController {
         return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip,
                                                               item: self.presenter.clip.items[index],
                                                               delegate: self)
-    }
-}
-
-extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
-    // MARK: - UIPageViewControllerDelegate
-
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        guard let nextViewController = pendingViewControllers.first, let nextIndex = self.resolveIndex(of: nextViewController) else {
-            fatalError("Unexpected view controller detected.")
-        }
-        self.nextIndex = nextIndex
-    }
-
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        if let nextIndex = self.nextIndex, completed {
-            self.currentIndex = nextIndex
-        }
-        self.nextIndex = nil
     }
 }
 

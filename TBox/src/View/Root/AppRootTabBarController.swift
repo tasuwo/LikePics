@@ -43,11 +43,14 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         guard let selectedCell = self.selectedCell() else { return .zero }
         switch index {
         case 0:
-            return selectedCell.primaryImageView.convert(selectedCell.primaryImageView.frame, to: containerView)
+            return selectedCell.convert(selectedCell.primaryImageView.frame, to: containerView)
         case 1:
-            return selectedCell.secondaryImageView.convert(selectedCell.secondaryImageView.frame, to: containerView)
+            return selectedCell.convert(selectedCell.secondaryImageView.frame, to: containerView)
+        case 2:
+            return selectedCell.convert(selectedCell.tertiaryImageView.frame, to: containerView)
         default:
-            return selectedCell.tertiaryImageView.convert(selectedCell.tertiaryImageView.frame, to: containerView)
+            // FIXME:
+            return selectedCell.convert(selectedCell.bounds, to: containerView)
         }
     }
 
