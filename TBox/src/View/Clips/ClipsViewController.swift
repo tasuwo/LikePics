@@ -18,6 +18,10 @@ class ClipsViewController: UIViewController {
 
     private(set) var selectedIndexPath: IndexPath?
 
+    var clips: [Clip] {
+        self.presenter.clips
+    }
+
     // MARK: - Lifecycle
 
     init(factory: Factory, presenter: ClipsPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {

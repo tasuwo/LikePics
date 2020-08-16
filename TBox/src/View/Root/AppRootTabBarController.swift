@@ -49,9 +49,24 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         case 2:
             return selectedCell.convert(selectedCell.tertiaryImageView.frame, to: containerView)
         default:
-            // FIXME:
+            break
+        }
+
+        guard
+            let viewController = self.viewControllers?.compactMap({ $0 as? ClipsViewController }).first,
+            let selectedIndexPath = viewController.selectedIndexPath,
+            viewController.clips.indices.contains(selectedIndexPath.row),
+            viewController.clips[selectedIndexPath.row].items.indices.contains(index)
+        else {
             return selectedCell.convert(selectedCell.bounds, to: containerView)
         }
+        let item = viewController.clips[selectedIndexPath.row].items[index]
+        let imageSize = item.thumbnail.size
+
+        let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
+                                           on: selectedCell.bounds)
+
+        return selectedCell.convert(frame, to: containerView)
     }
 
     private func selectedCell() -> ClipsCollectionViewCell? {
@@ -77,5 +92,19 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         }
 
         return selectedCell
+    }
+
+    private func calcCenteredFrame(for size: CGSize, on frame: CGRect) -> CGRect {
+        let widthScale = frame.width / size.width
+        let heightScale = frame.height / size.height
+        let scale = min(widthScale, heightScale)
+
+        let originX = (frame.width - (size.width * scale)) / 2
+        let originY = (frame.height - (size.height * scale)) / 2
+
+        return .init(x: originX + frame.origin.x,
+                     y: originY + frame.origin.y,
+                     width: size.width * scale,
+                     height: size.height * scale)
     }
 }
