@@ -38,7 +38,7 @@ class ClipsPresenter {
         view.startLoading()
         switch self.storage.readAllClips() {
         case let .success(clips):
-            self.clips = clips
+            self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
             view.reload()
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
