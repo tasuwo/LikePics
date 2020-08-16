@@ -20,7 +20,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
         case .compact:
             return 2
         case .regular:
-            return 3
+            return 4
         case .unspecified:
             return 2
         @unknown default:
