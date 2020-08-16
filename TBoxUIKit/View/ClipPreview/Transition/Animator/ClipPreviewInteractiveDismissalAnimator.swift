@@ -49,7 +49,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // Calculation
 
-        let finalImageFrame = toCell.primaryImageView.convert(toCell.primaryImageView.frame, to: containerView)
+        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)
@@ -206,7 +206,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         containerView.backgroundColor = .clear
         containerView.insertSubview(to.view, belowSubview: from.view)
 
-        let initialImageFrame = fromPage.scrollView.convert(fromPage.imageView.frame, to: containerView)
+        let initialImageFrame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
 
         let animatingView = UIView()
         ClipsCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)

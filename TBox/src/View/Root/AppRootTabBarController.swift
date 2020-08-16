@@ -36,6 +36,22 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
     // MARK: - ClipPreviewAnimatorDataSource
 
     func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
+        return self.selectedCell()
+    }
+
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forIndex index: Int) -> CGRect {
+        guard let selectedCell = self.selectedCell() else { return .zero }
+        switch index {
+        case 0:
+            return selectedCell.primaryImageView.convert(selectedCell.primaryImageView.frame, to: containerView)
+        case 1:
+            return selectedCell.secondaryImageView.convert(selectedCell.secondaryImageView.frame, to: containerView)
+        default:
+            return selectedCell.tertiaryImageView.convert(selectedCell.tertiaryImageView.frame, to: containerView)
+        }
+    }
+
+    private func selectedCell() -> ClipsCollectionViewCell? {
         guard let viewController = self.viewControllers?.compactMap({ $0 as? ClipsViewController }).first else {
             return nil
         }
@@ -56,6 +72,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         guard let selectedCell = viewController.collectionView.cellForItem(at: selectedIndexPath) as? ClipsCollectionViewCell else {
             return nil
         }
+
         return selectedCell
     }
 }

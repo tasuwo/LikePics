@@ -7,5 +7,7 @@ import UIKit
 public protocol ClipPreviewPresentedAnimatorDataSource {
     func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView?
 
+    func currentIndex(_ animator: ClipPreviewAnimator) -> Int?
+
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect
 }

@@ -67,9 +67,9 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @IBOutlet var primaryImageView: UIImageView!
-    @IBOutlet var secondaryImageView: UIImageView!
-    @IBOutlet var tertiaryImageView: UIImageView!
+    @IBOutlet public var primaryImageView: UIImageView!
+    @IBOutlet public var secondaryImageView: UIImageView!
+    @IBOutlet public var tertiaryImageView: UIImageView!
 
     @IBOutlet var primaryImageShadowView: UIView!
     @IBOutlet var secondaryImageShadowView: UIView!

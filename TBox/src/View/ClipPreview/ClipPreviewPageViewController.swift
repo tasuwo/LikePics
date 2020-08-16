@@ -17,7 +17,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var tapGestureRecignizer: UITapGestureRecognizer!
 
     private var nextIndex: Int?
-    private var currentIndex: Int = 0
+    private(set) var currentIndex: Int = 0
     private var isFullscreen = false {
         didSet {
             guard let navigationController = self.navigationController else { return }

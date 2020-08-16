@@ -21,9 +21,9 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
-            let visiblePage = from.animatingPage(self),
-            let visibleImageView = visiblePage.imageView,
-            let visibleImage = visibleImageView.image,
+            let fromPage = from.animatingPage(self),
+            let fromImageView = fromPage.imageView,
+            let fromImage = fromImageView.image,
             let targetCell = to.animatingCell(self)
         else {
             transitionContext.completeTransition(false)
@@ -35,16 +35,16 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         let animatingView = UIView()
         ClipsCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
-        animatingView.frame = visiblePage.scrollView.convert(visiblePage.imageView.frame, to: containerView)
+        animatingView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         containerView.addSubview(animatingView)
 
-        let animatingImageView = UIImageView(image: visibleImage)
+        let animatingImageView = UIImageView(image: fromImage)
         ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = animatingView.bounds
         animatingView.addSubview(animatingImageView)
 
         targetCell.isHidden = true
-        visibleImageView.isHidden = true
+        fromImageView.isHidden = true
 
         to.view.alpha = 0
         from.navigationController?.navigationBar.alpha = 1.0
@@ -52,7 +52,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
-            visibleImageView.isHidden = false
+            fromImageView.isHidden = false
             targetCell.isHidden = false
             animatingView.removeFromSuperview()
             transitionContext.completeTransition(true)
@@ -67,7 +67,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
-            animatingView.frame = targetCell.primaryImageView.convert(targetCell.primaryImageView.frame, to: containerView)
+            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
             animatingImageView.frame = animatingView.bounds
 
             to.view.alpha = 1.0

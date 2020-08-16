@@ -38,7 +38,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
 
         let animatingImageView = UIImageView(image: selectedImage)
         ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
-        animatingImageView.frame = selectedCell.convert(selectedImageView.frame, to: from.view)
+        animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
         containerView.addSubview(animatingImageView)
 
         to.view.alpha = 0

@@ -28,6 +28,11 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
         return self.pageViewController?.currentViewController?.pageView
     }
 
+    func currentIndex(_ animator: ClipPreviewAnimator) -> Int? {
+        self.view.layoutIfNeeded()
+        return self.pageViewController?.currentIndex
+    }
+
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
         self.view.layoutIfNeeded()
         guard let pageView = self.pageViewController?.currentViewController?.pageView else {
