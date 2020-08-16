@@ -74,6 +74,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
             return nil
         }
 
+        self.view.layoutIfNeeded()
         viewController.view.layoutIfNeeded()
         viewController.collectionView.layoutIfNeeded()
 
@@ -84,6 +85,8 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         if !viewController.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
             viewController.collectionView.scrollToItem(at: selectedIndexPath, at: .centeredVertically, animated: false)
             viewController.collectionView.reloadItems(at: viewController.collectionView.indexPathsForVisibleItems)
+
+            viewController.view.layoutIfNeeded()
             viewController.collectionView.layoutIfNeeded()
         }
 
