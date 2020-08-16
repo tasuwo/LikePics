@@ -4,6 +4,10 @@
 
 import UIKit
 
+public protocol ClipPreviewPageViewDelegate: AnyObject {
+    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewPageView)
+}
+
 public class ClipPreviewPageView: UIView {
     public var image: UIImage? {
         get {
@@ -39,6 +43,14 @@ public class ClipPreviewPageView: UIView {
         self.imageView.frame
     }
 
+    public var zoomGestureRecognizer: UITapGestureRecognizer {
+        return self.doubleTapGestureRecognizer
+    }
+
+    public weak var delegate: ClipPreviewPageViewDelegate?
+
+    private var doubleTapGestureRecognizer: UITapGestureRecognizer!
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
@@ -55,6 +67,7 @@ public class ClipPreviewPageView: UIView {
 
         self.setupFromNib()
         self.setupAppearance()
+        self.setupGestureRecognizer()
     }
 
     public required init?(coder: NSCoder) {
@@ -62,6 +75,7 @@ public class ClipPreviewPageView: UIView {
 
         self.setupFromNib()
         self.setupAppearance()
+        self.setupGestureRecognizer()
     }
 
     // MARK: - Methods
@@ -86,6 +100,35 @@ public class ClipPreviewPageView: UIView {
         self.scrollView.alwaysBounceHorizontal = false
     }
 
+    private func setupGestureRecognizer() {
+        self.doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didDoubleTap(_:)))
+        self.doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        self.addGestureRecognizer(self.doubleTapGestureRecognizer)
+    }
+
+    @objc private func didDoubleTap(_ sender: UITapGestureRecognizer) {
+        let point = sender.location(in: self.imageView)
+        guard self.imageView.bounds.contains(point), let image = self.imageView.image else { return }
+
+        let nextScale: CGFloat = {
+            if self.scrollView.zoomScale > self.scrollView.minimumZoomScale {
+                return self.scrollView.minimumZoomScale
+            } else {
+                return self.scrollView.maximumZoomScale
+            }
+        }()
+
+        let currentHorizonalInset = max((self.bounds.width - image.size.width * self.scrollView.zoomScale) / 2, 0)
+        let currentVerticalInset = max((self.bounds.height - image.size.height * self.scrollView.zoomScale) / 2, 0)
+        let width = self.scrollView.bounds.width / nextScale
+        let height = self.scrollView.bounds.height / nextScale
+        let nextPoint = CGPoint(x: point.x - (width / 2.0) - currentHorizonalInset,
+                                y: point.y - (height / 2.0) - currentVerticalInset)
+        let nextRect = CGRect(origin: nextPoint, size: .init(width: width, height: height))
+
+        self.scrollView.zoom(to: nextRect, animated: true)
+    }
+
     func setInitialScale(for image: UIImage, on frame: CGRect) {
         let widthScale = frame.size.width / image.size.width
         let heightScale = frame.size.height / image.size.height
@@ -107,6 +150,10 @@ public class ClipPreviewPageView: UIView {
         self.bottomInsetConstraint.constant = verticalInset
         self.leftInsetConstraint.constant = horizonalInset
         self.rightInsetConstraint.constant = horizonalInset
+
+        self.layoutIfNeeded()
+        self.scrollView.contentSize = .init(width: self.imageView.frame.width + horizonalInset * 2,
+                                            height: self.imageView.frame.height + verticalInset * 2)
     }
 }
 
@@ -120,5 +167,9 @@ extension ClipPreviewPageView: UIScrollViewDelegate {
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         guard let image = self.imageView.image else { return }
         self.updateConstraints(for: image, on: self.bounds)
+    }
+
+    public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        self.delegate?.clipPreviewPageViewWillBeginZoom(self)
     }
 }

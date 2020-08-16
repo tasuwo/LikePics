@@ -8,6 +8,10 @@ import UIKit
 class ClipPreviewViewController: UINavigationController {
     private var pageViewController: ClipPreviewPageViewController?
 
+    override var prefersStatusBarHidden: Bool {
+        return self.pageViewController?.prefersStatusBarHidden ?? true
+    }
+
     // MARK: - Lifecycle
 
     init(pageViewController: ClipPreviewPageViewController) {

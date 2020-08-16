@@ -18,12 +18,18 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private var isFullscreen = false {
         didSet {
+            self.setNeedsStatusBarAppearanceUpdate()
+
             guard let navigationController = self.navigationController else { return }
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.1, animations: {
                 navigationController.toolbar.alpha = self.isFullscreen ? 0 : 1
                 navigationController.navigationBar.alpha = self.isFullscreen ? 0 : 1
             })
         }
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return self.isFullscreen
     }
 
     var currentIndex: Int? {
@@ -55,6 +61,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.delegate = self
         self.dataSource = self
 
         self.setupAppearance()
@@ -141,6 +148,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.view.addGestureRecognizer(self.panGestureRecognizer)
 
         self.tapGestureRecignizer = UITapGestureRecognizer(target: self, action: #selector(self.didtap(_:)))
+        self.tapGestureRecignizer.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(self.tapGestureRecignizer)
     }
 
@@ -183,6 +191,17 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 }
 
+extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
+    // MARK: - UIPageViewControllerDelegate
+
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard completed, let viewController = self.currentViewController else { return }
+
+        self.tapGestureRecignizer.require(toFail: viewController.pageView.zoomGestureRecognizer)
+        viewController.pageView.delegate = self
+    }
+}
+
 extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     // MARK: - UIPageViewControllerDataSource
 
@@ -222,7 +241,12 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
 
     func reloadPages() {
         if let viewController = self.makeViewController(at: 0) {
-            self.setViewControllers([viewController], direction: .forward, animated: true, completion: nil)
+            self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
+                guard let self = self, completed, let viewController = self.currentViewController else { return }
+
+                self.tapGestureRecignizer.require(toFail: viewController.pageView.zoomGestureRecognizer)
+                viewController.pageView.delegate = self
+            })
         }
     }
 
@@ -251,5 +275,13 @@ extension ClipPreviewPageViewController: ClipTargetFinderDelegate {
 
     func didCancel(_ viewController: ClipTargetFinderViewController) {
         viewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
+    // MARK: - ClipPreviewPageViewDelegate
+
+    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewPageView) {
+        self.isFullscreen = true
     }
 }
