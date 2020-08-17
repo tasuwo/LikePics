@@ -13,6 +13,7 @@ protocol ViewControllerFactory {
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
+    func makeSearchEntryViewController() -> UIViewController
 }
 
 class DependencyContainer {
@@ -54,5 +55,9 @@ extension DependencyContainer: ViewControllerFactory {
                                                   isEnabledOverwrite: isOverwrite)
         let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
         return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeSearchEntryViewController() -> UIViewController {
+        return UINavigationController(rootViewController: SearchEntryViewController())
     }
 }

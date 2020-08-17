@@ -23,11 +23,14 @@ class AppRootTabBarController: UITabBarController {
         super.viewDidLoad()
 
         let clipViewController = factory.makeClipsViewController()
+        let searchEntryViewController = factory.makeSearchEntryViewController()
 
         clipViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
+        searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
 
         self.viewControllers = [
-            clipViewController
+            clipViewController,
+            searchEntryViewController
         ]
     }
 }
