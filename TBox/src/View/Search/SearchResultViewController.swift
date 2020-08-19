@@ -6,14 +6,13 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipsViewController: UIViewController {
+class SearchResultViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: ClipsPresenter
+    private let presenter: SearchResultPresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
-    @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
 
     private(set) var selectedIndexPath: IndexPath?
@@ -24,21 +23,17 @@ class ClipsViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipsPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: SearchResultPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
         self.factory = factory
         self.presenter = presenter
         self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
 
-        self.addBecomeActiveNotification()
+        self.presenter.view = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        self.removeBecomeActiveNotification()
     }
 
     override func viewDidLoad() {
@@ -49,60 +44,25 @@ class ClipsViewController: UIViewController {
         }
 
         self.presenter.view = self
-        self.presenter.reload()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.presenter.reload()
-    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-    // MARK: - Methods
-
-    // MARK: Notification
-
-    private func addBecomeActiveNotification() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-    }
-
-    private func removeBecomeActiveNotification() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIApplication.didBecomeActiveNotification,
-                                                  object: nil)
-    }
-
-    @objc func didBecomeActive() {
-        self.presenter.reload()
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.view.backgroundColor = UIColor(named: "background_client")
     }
 }
 
-extension ClipsViewController: ClipsViewProtocol {
-    // MARK: - ClipsViewProtocol
-
-    func startLoading() {
-        self.indicator.startAnimating()
-        self.indicator.isHidden = false
-    }
-
-    func endLoading() {
-        self.indicator.isHidden = true
-        self.indicator.stopAnimating()
-    }
+extension SearchResultViewController: SearchResultViewProtocol {
+    // MARK: - SearchResultViewProtocol
 
     func showErrorMassage(_ message: String) {
-        let alert = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
-    }
-
-    func reload() {
-        self.collectionView.reloadData()
+        print(message)
     }
 }
 
-extension ClipsViewController: UICollectionViewDelegate {
+extension SearchResultViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -126,7 +86,7 @@ extension ClipsViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipsViewController: UICollectionViewDataSource {
+extension SearchResultViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -160,7 +120,7 @@ extension ClipsViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipsViewController: ClipsCollectionLayoutDelegate {
+extension SearchResultViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
@@ -189,4 +149,4 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension ClipsViewController: ClipsPresentingViewController {}
+extension SearchResultViewController: ClipsPresentingViewController {}

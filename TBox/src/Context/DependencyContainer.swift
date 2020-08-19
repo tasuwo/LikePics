@@ -14,6 +14,7 @@ protocol ViewControllerFactory {
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
     func makeSearchEntryViewController() -> UIViewController
+    func makeSearchResultViewController(clips: [Clip]) -> UIViewController
 }
 
 class DependencyContainer {
@@ -58,6 +59,12 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchEntryViewController() -> UIViewController {
-        return UINavigationController(rootViewController: SearchEntryViewController())
+        let presenter = SearchEntryPresenter(storage: self.clipsStorage)
+        return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.transitionController))
+    }
+
+    func makeSearchResultViewController(clips: [Clip]) -> UIViewController {
+        let presenter = SearchResultPresenter(clips: clips, storage: self.clipsStorage)
+        return SearchResultViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
 }

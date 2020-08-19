@@ -33,6 +33,24 @@ class AppRootTabBarController: UITabBarController {
             searchEntryViewController
         ]
     }
+
+    // MARK: - Methods
+
+    private func resolvePresentingViewController() -> ClipsPresentingViewController? {
+        guard let selectedViewController = self.selectedViewController else { return nil }
+
+        if let viewController = selectedViewController as? ClipsViewController {
+            return viewController
+        }
+
+        if let navigationController = selectedViewController as? UINavigationController,
+            let viewController = navigationController.viewControllers.compactMap({ $0 as? ClipsPresentingViewController }).first
+        {
+            return viewController
+        }
+
+        return nil
+    }
 }
 
 extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
@@ -56,7 +74,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         }
 
         guard
-            let viewController = self.viewControllers?.compactMap({ $0 as? ClipsViewController }).first,
+            let viewController = self.resolvePresentingViewController(),
             let selectedIndexPath = viewController.selectedIndexPath,
             viewController.clips.indices.contains(selectedIndexPath.row),
             viewController.clips[selectedIndexPath.row].items.indices.contains(index)
@@ -73,7 +91,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
     }
 
     private func selectedCell() -> ClipsCollectionViewCell? {
-        guard let viewController = self.viewControllers?.compactMap({ $0 as? ClipsViewController }).first else {
+        guard let viewController = self.resolvePresentingViewController() else {
             return nil
         }
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchResultViewController" customModule="TBox" customModuleProvider="target">
+            <connections>
+                <outlet property="collectionView" destination="eJq-PY-3ig" id="er1-X8-eU5"/>
+                <outlet property="view" destination="TiH-yU-lCe" id="mlc-N0-f9l"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="TiH-yU-lCe">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="eJq-PY-3ig" customClass="ClipsCollectionView" customModule="TBoxUIKit">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mzr-cY-GLQ">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="9Ru-99-SdX"/>
+                        <outlet property="delegate" destination="-1" id="3rd-S9-cYh"/>
+                    </connections>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" name="background_client"/>
+            <constraints>
+                <constraint firstItem="QeF-SX-JcE" firstAttribute="bottom" secondItem="eJq-PY-3ig" secondAttribute="bottom" id="GOE-xH-KgA"/>
+                <constraint firstItem="eJq-PY-3ig" firstAttribute="leading" secondItem="QeF-SX-JcE" secondAttribute="leading" id="Wah-tc-ggs"/>
+                <constraint firstItem="QeF-SX-JcE" firstAttribute="trailing" secondItem="eJq-PY-3ig" secondAttribute="trailing" id="XLz-xr-Ho6"/>
+                <constraint firstItem="eJq-PY-3ig" firstAttribute="top" secondItem="QeF-SX-JcE" secondAttribute="top" id="cuC-9z-GMK"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="QeF-SX-JcE"/>
+            <point key="canvasLocation" x="126" y="155"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background_client">
+            <color red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
