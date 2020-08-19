@@ -255,4 +255,24 @@ extension ClipStorage: ClipStorageProtocol {
             return .success(clippedImage.image)
         }
     }
+
+    public func searchClip(byKeywords keywords: [String]) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            let filter = keywords.reduce(into: "") { result, keyword in
+                let predicate = "url CONTAINS '\(keyword)'"
+                if result.isEmpty {
+                    result = predicate
+                } else {
+                    result += "OR \(predicate)"
+                }
+            }
+            let results = realm.objects(ClipObject.self).filter(filter)
+
+            return .success(results.map { Clip.make(by: $0) })
+        }
+    }
 }
