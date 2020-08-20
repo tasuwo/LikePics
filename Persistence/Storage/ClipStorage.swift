@@ -263,7 +263,7 @@ extension ClipStorage: ClipStorageProtocol {
             }
 
             let filter = keywords.reduce(into: "") { result, keyword in
-                let predicate = "url CONTAINS '\(keyword)'"
+                let predicate = "url CONTAINS[cd] '\(keyword)'"
                 if result.isEmpty {
                     result = predicate
                 } else {
