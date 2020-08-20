@@ -275,4 +275,70 @@ extension ClipStorage: ClipStorageProtocol {
             return .success(results.map { Clip.make(by: $0) })
         }
     }
+
+    public func create(albumWithTitle title: String) -> Result<Album, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            if let _ = realm.objects(AlbumObject.self).filter("title = '\(title)'").first {
+                return .failure(.duplicated)
+            }
+
+            let obj = AlbumObject()
+            obj.id = UUID().uuidString
+            obj.title = title
+            obj.registeredAt = Date()
+            obj.updatedAt = Date()
+
+            do {
+                try realm.write {
+                    realm.add(obj)
+                }
+                return .success(Album.make(by: obj))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
+    public func readAllAlbums() -> Result<[Album], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+            return .success(realm.objects(AlbumObject.self).map { Album.make(by: $0) })
+        }
+    }
+
+    public func add(clip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+                return .failure(.notFound)
+            }
+
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipUrl.absoluteString) else {
+                return .failure(.notFound)
+            }
+
+            guard !album.clips.contains(clip) else {
+                return .failure(.duplicated)
+            }
+
+            do {
+                try realm.write {
+                    album.updatedAt = Date()
+                    album.clips.append(clip)
+                }
+                return .success(())
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
 }

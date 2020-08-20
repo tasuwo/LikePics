@@ -10,11 +10,26 @@ import UIKit
 
 protocol ViewControllerFactory {
     func makeClipsViewController() -> UIViewController
+
+    // MARK: Preview
+
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController
+
+    // MARK: Selection
+
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
+
+    // MARK: Search
+
     func makeSearchEntryViewController() -> UIViewController
     func makeSearchResultViewController(clips: [Clip]) -> UIViewController
+
+    // MARK: Album
+
+    func makeAlbumListViewController() -> UIViewController
+    func makeAlbumViewController(album: Album) -> UIViewController
+    func makeAddingClipToAlbumViewController(clip: Clip) -> UIViewController
 }
 
 class DependencyContainer {
@@ -66,5 +81,22 @@ extension DependencyContainer: ViewControllerFactory {
     func makeSearchResultViewController(clips: [Clip]) -> UIViewController {
         let presenter = SearchResultPresenter(clips: clips, storage: self.clipsStorage)
         return SearchResultViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+    }
+
+    func makeAlbumListViewController() -> UIViewController {
+        let presenter = AlbumListPresenter(storage: self.clipsStorage)
+        let viewController = AlbumListViewController(factory: self, presenter: presenter)
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeAlbumViewController(album: Album) -> UIViewController {
+        let presenter = AlbumPresenter(album: album, storage: self.clipsStorage)
+        return AlbumViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+    }
+
+    func makeAddingClipToAlbumViewController(clip: Clip) -> UIViewController {
+        let presenter = AddingClipToAlbumPresenter(sourceClip: clip, storage: self.clipsStorage)
+        let viewController = AddingClipToAlbumViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        return UINavigationController(rootViewController: viewController)
     }
 }

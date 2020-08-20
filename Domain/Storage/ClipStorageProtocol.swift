@@ -25,6 +25,12 @@ public protocol ClipStorageProtocol {
     func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError>
 
     func searchClip(byKeywords: [String]) -> Result<[Clip], ClipStorageError>
+
+    func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
+
+    func readAllAlbums() -> Result<[Album], ClipStorageError>
+
+    func add(clip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

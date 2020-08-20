@@ -26,6 +26,12 @@
 		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitionController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
+		2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */; };
+		2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */; };
+		2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */; };
+		2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */; };
+		2C3ADF6124EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */; };
+		2C3ADF6424EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
@@ -34,6 +40,14 @@
 		2C45D3F624EC2FD00045B6D3 /* SearchResultPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F524EC2FD00045B6D3 /* SearchResultPresenter.swift */; };
 		2C45D3F824EC317F0045B6D3 /* SearchResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C45D3F724EC317F0045B6D3 /* SearchResultViewController.xib */; };
 		2C45D3FC24EC3B3E0045B6D3 /* ClipsPresentingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FB24EC3B3E0045B6D3 /* ClipsPresentingViewController.swift */; };
+		2C45D40024EEACF80045B6D3 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FF24EEACF80045B6D3 /* Album.swift */; };
+		2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40124EEAD750045B6D3 /* AlbumObject.swift */; };
+		2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40424EEB4050045B6D3 /* AlbumListViewController.swift */; };
+		2C45D40824EEBE020045B6D3 /* AlbumListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40724EEBE020045B6D3 /* AlbumListPresenter.swift */; };
+		2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40A24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift */; };
+		2C45D40D24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C45D40C24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib */; };
+		2C45D40F24EEBF620045B6D3 /* AlbumListCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40E24EEBF620045B6D3 /* AlbumListCollectionView.swift */; };
+		2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C45D41024EEC04B0045B6D3 /* AlbumListViewController.xib */; };
 		2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */; };
 		2C51D45424E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */; };
 		2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */; };
@@ -121,6 +135,8 @@
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */; };
+		2CD3DA5F24EEC8720031A065 /* AddingAlbumAlertContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */; };
+		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */; };
 		2CE22D4B24E2A48C00449210 /* ClipPreviewPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
@@ -401,6 +417,12 @@
 		2C2AB06524DEFAF1007E2B18 /* ClipTargetFinderPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetFinderPresenter.swift; sourceTree = "<group>"; };
 		2C2AB06724DF00B0007E2B18 /* ClipTargetFinderViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipTargetFinderViewController.xib; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+		2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
+		2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumViewController.xib; sourceTree = "<group>"; };
+		2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenter.swift; sourceTree = "<group>"; };
+		2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingClipToAlbumViewController.swift; sourceTree = "<group>"; };
+		2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingClipToAlbumViewController.xib; sourceTree = "<group>"; };
+		2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddingClipToAlbumPresenter.swift; path = ../../../../../../../Documents/AddingClipToAlbumPresenter.swift; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
 		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
@@ -409,6 +431,14 @@
 		2C45D3F524EC2FD00045B6D3 /* SearchResultPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultPresenter.swift; sourceTree = "<group>"; };
 		2C45D3F724EC317F0045B6D3 /* SearchResultViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultViewController.xib; sourceTree = "<group>"; };
 		2C45D3FB24EC3B3E0045B6D3 /* ClipsPresentingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsPresentingViewController.swift; sourceTree = "<group>"; };
+		2C45D3FF24EEACF80045B6D3 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		2C45D40124EEAD750045B6D3 /* AlbumObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumObject.swift; sourceTree = "<group>"; };
+		2C45D40424EEB4050045B6D3 /* AlbumListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewController.swift; sourceTree = "<group>"; };
+		2C45D40724EEBE020045B6D3 /* AlbumListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListPresenter.swift; sourceTree = "<group>"; };
+		2C45D40A24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionViewCell.swift; sourceTree = "<group>"; };
+		2C45D40C24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumListCollectionViewCell.xib; sourceTree = "<group>"; };
+		2C45D40E24EEBF620045B6D3 /* AlbumListCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionView.swift; sourceTree = "<group>"; };
+		2C45D41024EEC04B0045B6D3 /* AlbumListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumListViewController.xib; sourceTree = "<group>"; };
 		2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewDismissalAnimator.swift; sourceTree = "<group>"; };
@@ -490,6 +520,8 @@
 		2CCECE2324DDC0CB00ADFE54 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
 		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipObject.swift; sourceTree = "<group>"; };
+		2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingAlbumAlertContainer.swift; sourceTree = "<group>"; };
+		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageView.swift; sourceTree = "<group>"; };
 		2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewPageView.xib; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
@@ -691,6 +723,14 @@
 			path = Animator;
 			sourceTree = "<group>";
 		};
+		2C29789B24EEF19700FBA531 /* AddingAlbumAlert */ = {
+			isa = PBXGroup;
+			children = (
+				2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */,
+			);
+			path = AddingAlbumAlert;
+			sourceTree = "<group>";
+		};
 		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
@@ -706,6 +746,7 @@
 				2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */,
 				2C9B1E2924E4236300D420D9 /* ClippedImageObject.swift */,
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
+				2C45D40124EEAD750045B6D3 /* AlbumObject.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -716,6 +757,40 @@
 				2C35C13124E4DE2600871C87 /* DependencyContainer.swift */,
 			);
 			path = Cotnext;
+			sourceTree = "<group>";
+		};
+		2C3ADF5524EEE2DC007C4AA0 /* Album */ = {
+			isa = PBXGroup;
+			children = (
+				2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */,
+				2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */,
+			);
+			path = Album;
+			sourceTree = "<group>";
+		};
+		2C3ADF5A24EEE436007C4AA0 /* Album */ = {
+			isa = PBXGroup;
+			children = (
+				2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */,
+			);
+			path = Album;
+			sourceTree = "<group>";
+		};
+		2C3ADF5F24EEE6C5007C4AA0 /* AddingClipToAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */,
+				2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */,
+			);
+			path = AddingClipToAlbum;
+			sourceTree = "<group>";
+		};
+		2C3ADF6224EEE6E6007C4AA0 /* AddingClipToAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */,
+			);
+			path = AddingClipToAlbum;
 			sourceTree = "<group>";
 		};
 		2C45D3ED24EACA780045B6D3 /* Search */ = {
@@ -735,6 +810,34 @@
 				2C45D3F524EC2FD00045B6D3 /* SearchResultPresenter.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		2C45D40324EEB3F30045B6D3 /* AlbumList */ = {
+			isa = PBXGroup;
+			children = (
+				2C45D40424EEB4050045B6D3 /* AlbumListViewController.swift */,
+				2C45D41024EEC04B0045B6D3 /* AlbumListViewController.xib */,
+			);
+			path = AlbumList;
+			sourceTree = "<group>";
+		};
+		2C45D40624EEBDF30045B6D3 /* AlbumList */ = {
+			isa = PBXGroup;
+			children = (
+				2C45D40724EEBE020045B6D3 /* AlbumListPresenter.swift */,
+			);
+			path = AlbumList;
+			sourceTree = "<group>";
+		};
+		2C45D40924EEBE420045B6D3 /* AlbumCollection */ = {
+			isa = PBXGroup;
+			children = (
+				2C45D40A24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift */,
+				2C45D40C24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib */,
+				2C45D40E24EEBF620045B6D3 /* AlbumListCollectionView.swift */,
+				2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */,
+			);
+			path = AlbumCollection;
 			sourceTree = "<group>";
 		};
 		2C55D12424DFD18900A43B8D /* ClipSelection */ = {
@@ -782,8 +885,11 @@
 			isa = PBXGroup;
 			children = (
 				2C45D3F224EC1E490045B6D3 /* Search */,
-				2C86CC4E24E12E220091A89E /* ClipPreview */,
+				2C3ADF6224EEE6E6007C4AA0 /* AddingClipToAlbum */,
 				2C570B5D24E04FAB00A1DC9F /* Clips */,
+				2C86CC4E24E12E220091A89E /* ClipPreview */,
+				2C45D40624EEBDF30045B6D3 /* AlbumList */,
+				2C3ADF5A24EEE436007C4AA0 /* Album */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -897,6 +1003,10 @@
 				2C45D3ED24EACA780045B6D3 /* Search */,
 				2C570B6024E04FEF00A1DC9F /* Clips */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
+				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipToAlbum */,
+				2C45D40324EEB3F30045B6D3 /* AlbumList */,
+				2C3ADF5524EEE2DC007C4AA0 /* Album */,
+				2C29789B24EEF19700FBA531 /* AddingAlbumAlert */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
@@ -976,6 +1086,7 @@
 		2C8FD64A24E02DE4005887F9 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2C45D40924EEBE420045B6D3 /* AlbumCollection */,
 				2C95EC4C24E1600A00D6EEB4 /* ClipPreview */,
 				2C55D12524DFD19300A43B8D /* ClipsCollection */,
 				2C55D12424DFD18900A43B8D /* ClipSelection */,
@@ -1046,6 +1157,7 @@
 			children = (
 				2C99277C24DDC7E600672CA7 /* Clip.swift */,
 				2C8FD62624E02297005887F9 /* ClipItem.swift */,
+				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1621,6 +1733,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C45D40D24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib in Resources */,
 				2CE22D4B24E2A48C00449210 /* ClipPreviewPageView.xib in Resources */,
 				2C8FD65024E02E15005887F9 /* ClipSelectionCollectionViewCell.xib in Resources */,
 				2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */,
@@ -1662,6 +1775,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */,
+				2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */,
+				2C3ADF6124EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
@@ -2068,6 +2184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */,
 				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
 				2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */,
@@ -2076,7 +2193,9 @@
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
 				2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */,
+				2C45D40F24EEBF620045B6D3 /* AlbumListCollectionView.swift in Sources */,
 				2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */,
+				2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */,
 				2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */,
 				2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */,
 				2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */,
@@ -2112,6 +2231,7 @@
 				2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */,
 				2C8AF8A524E3EE4F00CB0642 /* ImageSize.swift in Sources */,
 				2C2727AA24DED75C00FEF1BD /* Promise+Attempt.swift in Sources */,
+				2C45D40024EEACF80045B6D3 /* Album.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2140,8 +2260,10 @@
 			files = (
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
 				2C570B5F24E04FBF00A1DC9F /* ClipsPresenter.swift in Sources */,
+				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
+				2C45D40824EEBE020045B6D3 /* AlbumListPresenter.swift in Sources */,
 				2C45D3F624EC2FD00045B6D3 /* SearchResultPresenter.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
@@ -2150,10 +2272,15 @@
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* ClipsViewController.swift in Sources */,
+				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
+				2C3ADF6424EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipsPresentingViewController.swift in Sources */,
+				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
+				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */,
+				2CD3DA5F24EEC8720031A065 /* AddingAlbumAlertContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2170,6 +2297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
+				2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */,
 				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2C9B1E2A24E4236300D420D9 /* ClippedImageObject.swift in Sources */,

@@ -22,14 +22,17 @@ class AppRootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let clipViewController = factory.makeClipsViewController()
-        let searchEntryViewController = factory.makeSearchEntryViewController()
+        let clipViewController = self.factory.makeClipsViewController()
+        let albumViewController = self.factory.makeAlbumListViewController()
+        let searchEntryViewController = self.factory.makeSearchEntryViewController()
 
         clipViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
-        searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
+        albumViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 1)
+        searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
 
         self.viewControllers = [
             clipViewController,
+            albumViewController,
             searchEntryViewController
         ]
     }
@@ -39,7 +42,7 @@ class AppRootTabBarController: UITabBarController {
     private func resolvePresentingViewController() -> ClipsPresentingViewController? {
         guard let selectedViewController = self.selectedViewController else { return nil }
 
-        if let viewController = selectedViewController as? ClipsViewController {
+        if let viewController = selectedViewController as? ClipsPresentingViewController {
             return viewController
         }
 
