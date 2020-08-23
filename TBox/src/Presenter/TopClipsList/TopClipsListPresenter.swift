@@ -4,25 +4,24 @@
 
 import Domain
 
-protocol TopClipsListViewProtocol: AnyObject {
-    func startLoading()
-    func endLoading()
-    func showErrorMassage(_ message: String)
+protocol TopClipsListViewProtocol: ClipsListViewProtocol {}
+
+protocol TopClipsListPresenterProtocol: ClipsListDisplayablePresenter {
+    func set(view: TopClipsListViewProtocol)
+
     func reload()
 }
 
-class TopClipsListPresenter {
-    enum ThumbnailLayer {
-        case primary
-        case secondary
-        case tertiary
+class TopClipsListPresenter: ClipsListPresenter {
+    weak var internalView: TopClipsListViewProtocol?
+
+    var view: ClipsListViewProtocol? {
+        return self.internalView
     }
 
-    weak var view: TopClipsListViewProtocol?
+    let storage: ClipStorageProtocol
 
-    private let storage: ClipStorageProtocol
-
-    private(set) var clips: [Clip] = []
+    var clips: [Clip] = []
 
     // MARK: - Lifecycle
 
@@ -32,44 +31,20 @@ class TopClipsListPresenter {
 
     // MARK: - Methods
 
-    func reload() {
-        guard let view = self.view else { return }
-
-        view.startLoading()
-        switch self.storage.readAllClips() {
-        case let .success(clips):
-            self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
-            view.reload()
-        case let .failure(error):
-            view.showErrorMassage(Self.resolveErrorMessage(error))
-        }
-        view.endLoading()
-    }
-
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        let nullableClipItem: ClipItem? = {
-            switch layer {
-            case .primary:
-                return clip.primaryItem
-            case .secondary:
-                return clip.secondaryItem
-            case .tertiary:
-                return clip.tertiaryItem
-            }
-        }()
-        guard let clipItem = nullableClipItem else { return nil }
-
-        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
-        case let .success(data):
-            return data
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-            return nil
-        }
-    }
-
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
         // TODO: Error Handling
         return "問題が発生しました"
+    }
+}
+
+extension TopClipsListPresenter: TopClipsListPresenterProtocol {
+    // MARK: - TopClipsListPresenterProtocol
+
+    func set(view: TopClipsListViewProtocol) {
+        self.internalView = view
+    }
+
+    func reload() {
+        self.loadAllClips()
     }
 }
