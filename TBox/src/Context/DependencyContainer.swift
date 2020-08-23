@@ -9,7 +9,7 @@ import TBoxUIKit
 import UIKit
 
 protocol ViewControllerFactory {
-    func makeClipsViewController() -> UIViewController
+    func makeClipsListViewController() -> UIViewController
 
     // MARK: Preview
 
@@ -40,9 +40,9 @@ class DependencyContainer {
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipsViewController() -> UIViewController {
+    func makeClipsListViewController() -> UIViewController {
         let presenter = ClipsPresenter(storage: self.clipsStorage)
-        return ClipsViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        return ClipsListViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {

@@ -6,7 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipsViewController: UIViewController {
+class ClipsListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
@@ -79,7 +79,7 @@ class ClipsViewController: UIViewController {
     }
 }
 
-extension ClipsViewController: ClipsViewProtocol {
+extension ClipsListViewController: ClipsViewProtocol {
     // MARK: - ClipsViewProtocol
 
     func startLoading() {
@@ -102,7 +102,7 @@ extension ClipsViewController: ClipsViewProtocol {
     }
 }
 
-extension ClipsViewController: UICollectionViewDelegate {
+extension ClipsListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -126,7 +126,7 @@ extension ClipsViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipsViewController: UICollectionViewDataSource {
+extension ClipsListViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -160,7 +160,7 @@ extension ClipsViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipsViewController: ClipsCollectionLayoutDelegate {
+extension ClipsListViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
@@ -189,4 +189,4 @@ extension ClipsViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension ClipsViewController: ClipsPresentingViewController {}
+extension ClipsListViewController: ClipsPresentingViewController {}
