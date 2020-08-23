@@ -40,6 +40,7 @@
 		2C3CCDB824F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */; };
 		2C3CCDBA24F2CF6E00FAC660 /* SearchResultPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDB924F2CF6E00FAC660 /* SearchResultPresenterProxy.swift */; };
 		2C3CCDBC24F2D35C00FAC660 /* AlbumPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBB24F2D35C00FAC660 /* AlbumPresenterProxy.swift */; };
+		2C3CCDBE24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */; };
 		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
 		2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */; };
 		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
@@ -437,6 +438,7 @@
 		2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListDisplayablePresenter.swift; sourceTree = "<group>"; };
 		2C3CCDB924F2CF6E00FAC660 /* SearchResultPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultPresenterProxy.swift; sourceTree = "<group>"; };
 		2C3CCDBB24F2D35C00FAC660 /* AlbumPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenterProxy.swift; sourceTree = "<group>"; };
+		2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListReloadablePresenter.swift; sourceTree = "<group>"; };
 		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
 		2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
@@ -835,6 +837,7 @@
 			isa = PBXGroup;
 			children = (
 				2C3CCDA924F29A4700FAC660 /* ClipsListPresenter.swift */,
+				2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */,
 				2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */,
 			);
 			path = ClipsList;
@@ -2325,6 +2328,7 @@
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
+				2C3CCDBE24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */,
 				2C3CCDB624F2C67800FAC660 /* TopClipsListPresenterProxy.swift in Sources */,
 				2C3CCDB224F2C55E00FAC660 /* ClipsListDisplayable.swift in Sources */,

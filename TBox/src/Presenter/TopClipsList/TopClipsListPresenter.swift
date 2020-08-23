@@ -4,7 +4,7 @@
 
 import Domain
 
-protocol TopClipsListViewProtocol: ClipsListViewProtocol {}
+protocol TopClipsListViewProtocol: ClipsListReloadableViewProtocol {}
 
 protocol TopClipsListPresenterProtocol: ClipsListDisplayablePresenter {
     func set(view: TopClipsListViewProtocol)
@@ -12,10 +12,14 @@ protocol TopClipsListPresenterProtocol: ClipsListDisplayablePresenter {
     func reload()
 }
 
-class TopClipsListPresenter: ClipsListPresenter {
+class TopClipsListPresenter: ClipsListReloadablePresenter {
     weak var internalView: TopClipsListViewProtocol?
 
     var view: ClipsListViewProtocol? {
+        return self.internalView
+    }
+
+    var reloadableView: ClipsListReloadableViewProtocol? {
         return self.internalView
     }
 

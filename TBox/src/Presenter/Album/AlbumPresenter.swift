@@ -22,12 +22,7 @@ class AlbumPresenter: ClipsListPresenter {
     let storage: ClipStorageProtocol
 
     var clips: [Clip] {
-        get {
-            return self.album.clips
-        }
-        set {
-            // NOP
-        }
+        return self.album.clips
     }
 
     let album: Album

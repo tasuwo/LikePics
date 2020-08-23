@@ -58,18 +58,6 @@ class AlbumViewController: UIViewController, ClipsListDisplayable {
 extension AlbumViewController: AlbumViewProtocol {
     // MARK: - AlbumViewProtocol
 
-    func startLoading() {
-        // NOP
-    }
-
-    func endLoading() {
-        // NOP
-    }
-
-    func reload() {
-        // NOP
-    }
-
     func showErrorMassage(_ message: String) {
         print(message)
     }

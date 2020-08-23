@@ -55,18 +55,6 @@ class SearchResultViewController: UIViewController, ClipsListDisplayable {
 extension SearchResultViewController: SearchResultViewProtocol {
     // MARK: - SearchResultViewProtocol
 
-    func startLoading() {
-        // NOP
-    }
-
-    func endLoading() {
-        // NOP
-    }
-
-    func reload() {
-        self.collectionView.reloadData()
-    }
-
     func showErrorMassage(_ message: String) {
         print(message)
     }
