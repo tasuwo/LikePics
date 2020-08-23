@@ -45,6 +45,8 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
 
         self.presenter.set(view: self)
         self.presenter.reload()
+
+        self.setupAppearance()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +55,22 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
     }
 
     // MARK: - Methods
+
+    // MARK: NavigationBar
+
+    private func setupAppearance() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+
+        self.navigationItem.rightBarButtonItems = [
+            // TODO: Custom Button
+            UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.didTapEdit))
+        ]
+    }
+
+    @objc func didTapEdit() {
+        print(#function)
+    }
 
     // MARK: Notification
 
