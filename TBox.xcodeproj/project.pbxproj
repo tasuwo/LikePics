@@ -54,8 +54,8 @@
 		2C55D11824DF9D2600A43B8D /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */; };
 		2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */; };
 		2C570B5F24E04FBF00A1DC9F /* ClipsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5E24E04FBF00A1DC9F /* ClipsPresenter.swift */; };
-		2C570B6224E04FFA00A1DC9F /* ClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6124E04FFA00A1DC9F /* ClipsListViewController.swift */; };
-		2C570B6424E0503800A1DC9F /* ClipsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6324E0503800A1DC9F /* ClipsListViewController.xib */; };
+		2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */; };
+		2C570B6424E0503800A1DC9F /* TopClipsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */; };
 		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
 		2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */; };
 		2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */; };
@@ -448,8 +448,8 @@
 		2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollecitonLayout.swift; sourceTree = "<group>"; };
 		2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C570B5E24E04FBF00A1DC9F /* ClipsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsPresenter.swift; sourceTree = "<group>"; };
-		2C570B6124E04FFA00A1DC9F /* ClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListViewController.swift; sourceTree = "<group>"; };
-		2C570B6324E0503800A1DC9F /* ClipsListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsListViewController.xib; sourceTree = "<group>"; };
+		2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
+		2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopClipsListViewController.xib; sourceTree = "<group>"; };
 		2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionView.swift; sourceTree = "<group>"; };
 		2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -902,13 +902,13 @@
 			path = Clips;
 			sourceTree = "<group>";
 		};
-		2C570B6024E04FEF00A1DC9F /* ClipsList */ = {
+		2C570B6024E04FEF00A1DC9F /* TopClipsList */ = {
 			isa = PBXGroup;
 			children = (
-				2C570B6124E04FFA00A1DC9F /* ClipsListViewController.swift */,
-				2C570B6324E0503800A1DC9F /* ClipsListViewController.xib */,
+				2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */,
+				2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */,
 			);
-			path = ClipsList;
+			path = TopClipsList;
 			sourceTree = "<group>";
 		};
 		2C69CF3B24E43AAA0008C7AA /* Migration */ = {
@@ -1001,7 +1001,7 @@
 				2C45D3FB24EC3B3E0045B6D3 /* ClipsPresentingViewController.swift */,
 				2C1BA03324E08A0E00F96801 /* Root */,
 				2C45D3ED24EACA780045B6D3 /* Search */,
-				2C570B6024E04FEF00A1DC9F /* ClipsList */,
+				2C570B6024E04FEF00A1DC9F /* TopClipsList */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipToAlbum */,
 				2C45D40324EEB3F30045B6D3 /* AlbumList */,
@@ -1775,7 +1775,7 @@
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2C45D3F824EC317F0045B6D3 /* SearchResultViewController.xib in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
-				2C570B6424E0503800A1DC9F /* ClipsListViewController.xib in Resources */,
+				2C570B6424E0503800A1DC9F /* TopClipsListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2263,7 +2263,7 @@
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
-				2C570B6224E04FFA00A1DC9F /* ClipsListViewController.swift in Sources */,
+				2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2C3ADF6424EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift in Sources */,

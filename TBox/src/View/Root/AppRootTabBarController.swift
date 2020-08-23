@@ -22,16 +22,16 @@ class AppRootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let clipsListViewController = self.factory.makeClipsListViewController()
+        let topClipsListViewController = self.factory.makeTopClipsListViewController()
         let albumViewController = self.factory.makeAlbumListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
 
-        clipsListViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
+        topClipsListViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
         albumViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 1)
         searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
 
         self.viewControllers = [
-            clipsListViewController,
+            topClipsListViewController,
             albumViewController,
             searchEntryViewController
         ]
