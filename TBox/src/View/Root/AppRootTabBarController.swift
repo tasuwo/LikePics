@@ -10,6 +10,8 @@ class AppRootTabBarController: UITabBarController {
 
     private let factory: Factory
 
+    // MARK: - Lifecycle
+
     init(factory: Factory) {
         self.factory = factory
         super.init(nibName: nil, bundle: nil)
@@ -35,5 +37,29 @@ class AppRootTabBarController: UITabBarController {
             albumViewController,
             searchEntryViewController
         ]
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        self.updateAppearance()
+    }
+
+    // MARK: - Methods
+
+    private func updateAppearance() {
+        guard let viewController = self.selectedViewController else {
+            self.tabBar.isHidden = false
+            return
+        }
+
+        guard viewController is TopClipsListViewController
+            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is TopClipsListViewController }) ?? false
+        else {
+            self.tabBar.isHidden = false
+            return
+        }
+
+        self.tabBar.isHidden = UIDevice.current.orientation.isLandscape
     }
 }
