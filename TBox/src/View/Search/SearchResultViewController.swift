@@ -13,13 +13,8 @@ class SearchResultViewController: UIViewController, ClipsListDisplayable {
     let factory: Factory
     let presenter: Presenter
     let transitionController: ClipPreviewTransitionControllerProtocol
-    var selectedIndexPath: IndexPath?
 
     @IBOutlet var collectionView: ClipsCollectionView!
-
-    var clips: [Clip] {
-        self.presenter.clips
-    }
 
     // MARK: - Lifecycle
 
@@ -104,4 +99,4 @@ extension SearchResultViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension SearchResultViewController: ClipsPresentingViewController {}
+extension SearchResultViewController: ClipPreviewPresentingViewController {}

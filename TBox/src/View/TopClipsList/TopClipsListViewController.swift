@@ -11,16 +11,11 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
     typealias Presenter = TopClipsListPresenterProxy
 
     let factory: Factory
-    var presenter: Presenter
+    let presenter: Presenter
     let transitionController: ClipPreviewTransitionControllerProtocol
-    var selectedIndexPath: IndexPath?
 
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
-
-    var clips: [Clip] {
-        self.presenter.clips
-    }
 
     // MARK: - Lifecycle
 
@@ -146,4 +141,4 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension TopClipsListViewController: ClipsPresentingViewController {}
+extension TopClipsListViewController: ClipPreviewPresentingViewController {}

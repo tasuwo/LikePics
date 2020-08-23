@@ -13,13 +13,8 @@ class AlbumViewController: UIViewController, ClipsListDisplayable {
     let factory: Factory
     let presenter: Presenter
     let transitionController: ClipPreviewTransitionControllerProtocol
-    var selectedIndexPath: IndexPath?
 
     @IBOutlet var collectionView: ClipsCollectionView!
-
-    var clips: [Clip] {
-        self.presenter.album.clips
-    }
 
     // MARK: - Lifecycle
 
@@ -107,4 +102,4 @@ extension AlbumViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension AlbumViewController: ClipsPresentingViewController {}
+extension AlbumViewController: ClipPreviewPresentingViewController {}

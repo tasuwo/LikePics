@@ -13,7 +13,9 @@ protocol AlbumPresenterProtocol: ClipsListDisplayablePresenter {
 }
 
 class AlbumPresenter: ClipsListPresenter {
-    weak var internalView: AlbumViewProtocol?
+    // MARK: - Properties
+
+    // MARK: ClipsListPresenter
 
     var view: ClipsListViewProtocol? {
         return self.internalView
@@ -25,12 +27,18 @@ class AlbumPresenter: ClipsListPresenter {
         return self.album.clips
     }
 
-    let album: Album
+    // MARK: Internal
+
+    private weak var internalView: AlbumViewProtocol?
+
+    private var internalSelectedClip: Clip?
+
+    private let internalAlbum: Album
 
     // MARK: - Lifecycle
 
     init(album: Album, storage: ClipStorageProtocol) {
-        self.album = album
+        self.internalAlbum = album
         self.storage = storage
     }
 
@@ -44,6 +52,21 @@ class AlbumPresenter: ClipsListPresenter {
 
 extension AlbumPresenter: AlbumPresenterProtocol {
     // MARK: - AlbumPresenterProtocol
+
+    var selectedClip: Clip? {
+        self.internalSelectedClip
+    }
+
+    func select(at index: Int) -> Clip? {
+        guard self.clips.indices.contains(index) else { return nil }
+        let clip = self.clips[index]
+        self.internalSelectedClip = clip
+        return clip
+    }
+
+    var album: Album {
+        return self.internalAlbum
+    }
 
     func set(view: AlbumViewProtocol) {
         self.internalView = view

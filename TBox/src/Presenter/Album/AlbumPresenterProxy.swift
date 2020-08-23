@@ -33,6 +33,18 @@ extension AlbumPresenterProxy: ClipsListDisplayablePresenter {
         return self.presenter.clips
     }
 
+    var selectedClip: Clip? {
+        return self.presenter.selectedClip
+    }
+
+    var selectedIndex: Int? {
+        return self.presenter.selectedIndex
+    }
+
+    func select(at index: Int) -> Clip? {
+        return self.presenter.select(at: index)
+    }
+
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
         return self.presenter.getImageData(for: layer, in: clip)
     }

@@ -14,7 +14,8 @@ protocol ClipsListDisplayable: UIViewController {
     var factory: Factory { get }
     var presenter: Presenter { get }
     var transitionController: ClipPreviewTransitionControllerProtocol { get }
-    var selectedIndexPath: IndexPath? { get set }
+
+    var collectionView: ClipsCollectionView! { get }
 }
 
 extension ClipsListDisplayable where Self: UICollectionViewDelegate {
@@ -29,14 +30,8 @@ extension ClipsListDisplayable where Self: UICollectionViewDelegate {
     }
 
     func collectionView(_ displayable: Self, _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard self.presenter.clips.indices.contains(indexPath.row) else { return }
-
-        self.selectedIndexPath = indexPath
-
-        let clip = self.presenter.clips[indexPath.row]
-
+        guard let clip = self.presenter.select(at: indexPath.row) else { return }
         let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
-
         self.present(nextViewController, animated: true, completion: nil)
     }
 }
