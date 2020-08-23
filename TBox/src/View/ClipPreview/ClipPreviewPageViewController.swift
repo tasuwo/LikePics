@@ -64,7 +64,6 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.delegate = self
         self.dataSource = self
 
-        self.setupAppearance()
         self.setupNavigationBar()
         self.setupToolBar()
         self.setupGestureRecognizer()
@@ -79,10 +78,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     // MARK: - Methods
-
-    private func setupAppearance() {
-        self.view.backgroundColor = UIColor(named: "background_client")
-    }
 
     // MARK: Navigation Bar
 

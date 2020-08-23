@@ -39,7 +39,6 @@ class SearchEntryViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.view.backgroundColor = UIColor(named: "background_client")
     }
 
     // MARK: - Methods
