@@ -83,7 +83,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeSearchResultViewController(clips: [Clip]) -> UIViewController {
         let presenter = SearchResultPresenter(clips: clips, storage: self.clipsStorage)
-        return SearchResultViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        let proxy = SearchResultPresenterProxy(presenter: presenter)
+        return SearchResultViewController(factory: self, presenter: proxy, transitionController: self.transitionController)
     }
 
     func makeAlbumListViewController() -> UIViewController {

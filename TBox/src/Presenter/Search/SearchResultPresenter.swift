@@ -4,22 +4,22 @@
 
 import Domain
 
-protocol SearchResultViewProtocol: AnyObject {
-    func showErrorMassage(_ message: String)
+protocol SearchResultViewProtocol: ClipsListViewProtocol {}
+
+protocol SearchResultPresenterProtocol: ClipsListDisplayablePresenter {
+    func set(view: SearchResultViewProtocol)
 }
 
-class SearchResultPresenter {
-    enum ThumbnailLayer {
-        case primary
-        case secondary
-        case tertiary
+class SearchResultPresenter: ClipsListPresenter {
+    weak var internalView: SearchResultViewProtocol?
+
+    var view: ClipsListViewProtocol? {
+        return self.internalView
     }
 
-    weak var view: SearchResultViewProtocol?
+    let storage: ClipStorageProtocol
 
-    private let storage: ClipStorageProtocol
-
-    private(set) var clips: [Clip]
+    var clips: [Clip]
 
     // MARK: - Lifecycle
 
@@ -28,32 +28,16 @@ class SearchResultPresenter {
         self.storage = storage
     }
 
-    // MARK: - Methods
-
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        let nullableClipItem: ClipItem? = {
-            switch layer {
-            case .primary:
-                return clip.primaryItem
-            case .secondary:
-                return clip.secondaryItem
-            case .tertiary:
-                return clip.tertiaryItem
-            }
-        }()
-        guard let clipItem = nullableClipItem else { return nil }
-
-        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
-        case let .success(data):
-            return data
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-            return nil
-        }
-    }
-
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
         // TODO: Error Handling
         return "問題が発生しました"
+    }
+}
+
+extension SearchResultPresenter: SearchResultPresenterProtocol {
+    // MARK: - SearchResultPresenterProtocol
+
+    func set(view: SearchResultViewProtocol) {
+        self.internalView = view
     }
 }
