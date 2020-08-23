@@ -19,8 +19,8 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="eJq-PY-3ig" customClass="ClipsCollectionView" customModule="TBoxUIKit">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="eJq-PY-3ig" customClass="ClipsCollectionView" customModule="TBoxUIKit">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mzr-cY-GLQ">
                         <size key="itemSize" width="128" height="128"/>
@@ -36,10 +36,10 @@
             </subviews>
             <color key="backgroundColor" name="background_client"/>
             <constraints>
-                <constraint firstItem="QeF-SX-JcE" firstAttribute="bottom" secondItem="eJq-PY-3ig" secondAttribute="bottom" id="GOE-xH-KgA"/>
+                <constraint firstAttribute="bottom" secondItem="eJq-PY-3ig" secondAttribute="bottom" id="GOE-xH-KgA"/>
                 <constraint firstItem="eJq-PY-3ig" firstAttribute="leading" secondItem="QeF-SX-JcE" secondAttribute="leading" id="Wah-tc-ggs"/>
                 <constraint firstItem="QeF-SX-JcE" firstAttribute="trailing" secondItem="eJq-PY-3ig" secondAttribute="trailing" id="XLz-xr-Ho6"/>
-                <constraint firstItem="eJq-PY-3ig" firstAttribute="top" secondItem="QeF-SX-JcE" secondAttribute="top" id="cuC-9z-GMK"/>
+                <constraint firstItem="eJq-PY-3ig" firstAttribute="top" secondItem="TiH-yU-lCe" secondAttribute="top" id="cuC-9z-GMK"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="QeF-SX-JcE"/>
             <point key="canvasLocation" x="126" y="155"/>
