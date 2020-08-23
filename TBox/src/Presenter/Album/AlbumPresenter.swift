@@ -4,20 +4,31 @@
 
 import Domain
 
-protocol AlbumViewProtocol: AnyObject {
-    func showErrorMassage(_ message: String)
+protocol AlbumViewProtocol: ClipsListViewProtocol {}
+
+protocol AlbumPresenterProtocol: ClipsListDisplayablePresenter {
+    var album: Album { get }
+
+    func set(view: AlbumViewProtocol)
 }
 
-class AlbumPresenter {
-    enum ThumbnailLayer {
-        case primary
-        case secondary
-        case tertiary
+class AlbumPresenter: ClipsListPresenter {
+    weak var internalView: AlbumViewProtocol?
+
+    var view: ClipsListViewProtocol? {
+        return self.internalView
     }
 
-    weak var view: AlbumViewProtocol?
+    let storage: ClipStorageProtocol
 
-    private let storage: ClipStorageProtocol
+    var clips: [Clip] {
+        get {
+            return self.album.clips
+        }
+        set {
+            // NOP
+        }
+    }
 
     let album: Album
 
@@ -30,30 +41,16 @@ class AlbumPresenter {
 
     // MARK: - Methods
 
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        let nullableClipItem: ClipItem? = {
-            switch layer {
-            case .primary:
-                return clip.primaryItem
-            case .secondary:
-                return clip.secondaryItem
-            case .tertiary:
-                return clip.tertiaryItem
-            }
-        }()
-        guard let clipItem = nullableClipItem else { return nil }
-
-        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
-        case let .success(data):
-            return data
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-            return nil
-        }
-    }
-
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
         // TODO: Error Handling
         return "問題が発生しました"
+    }
+}
+
+extension AlbumPresenter: AlbumPresenterProtocol {
+    // MARK: - AlbumPresenterProtocol
+
+    func set(view: AlbumViewProtocol) {
+        self.internalView = view
     }
 }

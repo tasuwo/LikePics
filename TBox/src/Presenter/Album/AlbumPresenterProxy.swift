@@ -1,0 +1,39 @@
+//
+//  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+//
+
+import Domain
+
+struct AlbumPresenterProxy {
+    private let presenter: AlbumPresenterProtocol
+
+    // MARK: - Lifecycle
+
+    init(presenter: AlbumPresenterProtocol) {
+        self.presenter = presenter
+    }
+}
+
+extension AlbumPresenterProxy: AlbumPresenterProtocol {
+    // MARK: - AlbumPresenterProtocol
+
+    var album: Album {
+        self.presenter.album
+    }
+
+    func set(view: AlbumViewProtocol) {
+        self.presenter.set(view: view)
+    }
+}
+
+extension AlbumPresenterProxy: ClipsListDisplayablePresenter {
+    // MARK: - ClipsListDisplayablePresenter
+
+    var clips: [Clip] {
+        return self.presenter.clips
+    }
+
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
+        return self.presenter.getImageData(for: layer, in: clip)
+    }
+}
