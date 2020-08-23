@@ -43,7 +43,7 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController {
-        let presenter = ClipsPresenter(storage: self.clipsStorage)
+        let presenter = TopClipsListPresenter(storage: self.clipsStorage)
         return TopClipsListViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
     }
 

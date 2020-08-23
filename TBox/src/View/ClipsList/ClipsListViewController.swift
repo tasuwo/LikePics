@@ -80,7 +80,7 @@ class ClipsListViewController: UIViewController {
 }
 
 extension ClipsListViewController: ClipsListViewProtocol {
-    // MARK: - ClipsViewProtocol
+    // MARK: - TopClipsListViewProtocol
 
     func startLoading() {
         self.indicator.startAnimating()

@@ -10,7 +10,7 @@ class TopClipsListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: ClipsPresenter
+    private let presenter: TopClipsListPresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var indicator: UIActivityIndicatorView!
@@ -24,7 +24,7 @@ class TopClipsListViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipsPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: TopClipsListPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
         self.factory = factory
         self.presenter = presenter
         self.transitionController = transitionController
@@ -79,8 +79,8 @@ class TopClipsListViewController: UIViewController {
     }
 }
 
-extension TopClipsListViewController: ClipsViewProtocol {
-    // MARK: - ClipsViewProtocol
+extension TopClipsListViewController: TopClipsListViewProtocol {
+    // MARK: - TopClipsListViewProtocol
 
     func startLoading() {
         self.indicator.startAnimating()

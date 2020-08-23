@@ -4,21 +4,21 @@
 
 import Domain
 
-protocol ClipsViewProtocol: AnyObject {
+protocol TopClipsListViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
     func showErrorMassage(_ message: String)
     func reload()
 }
 
-class ClipsPresenter {
+class TopClipsListPresenter {
     enum ThumbnailLayer {
         case primary
         case secondary
         case tertiary
     }
 
-    weak var view: ClipsViewProtocol?
+    weak var view: TopClipsListViewProtocol?
 
     private let storage: ClipStorageProtocol
 

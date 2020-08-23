@@ -56,7 +56,7 @@
 		2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */; };
 		2C55D11824DF9D2600A43B8D /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */; };
 		2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */; };
-		2C570B5F24E04FBF00A1DC9F /* ClipsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5E24E04FBF00A1DC9F /* ClipsPresenter.swift */; };
+		2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5E24E04FBF00A1DC9F /* TopClipsListPresenter.swift */; };
 		2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */; };
 		2C570B6424E0503800A1DC9F /* TopClipsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */; };
 		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
@@ -453,7 +453,7 @@
 		2C55D11B24DFA0D200A43B8D /* ClipSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
 		2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollecitonLayout.swift; sourceTree = "<group>"; };
 		2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
-		2C570B5E24E04FBF00A1DC9F /* ClipsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsPresenter.swift; sourceTree = "<group>"; };
+		2C570B5E24E04FBF00A1DC9F /* TopClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListPresenter.swift; sourceTree = "<group>"; };
 		2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
 		2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopClipsListViewController.xib; sourceTree = "<group>"; };
 		2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionView.swift; sourceTree = "<group>"; };
@@ -910,7 +910,7 @@
 				2C45D3F224EC1E490045B6D3 /* Search */,
 				2C3CCDA824F29A2E00FAC660 /* ClipsList */,
 				2C3ADF6224EEE6E6007C4AA0 /* AddingClipToAlbum */,
-				2C570B5D24E04FAB00A1DC9F /* Clips */,
+				2C570B5D24E04FAB00A1DC9F /* TopClipsList */,
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
@@ -918,12 +918,12 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
-		2C570B5D24E04FAB00A1DC9F /* Clips */ = {
+		2C570B5D24E04FAB00A1DC9F /* TopClipsList */ = {
 			isa = PBXGroup;
 			children = (
-				2C570B5E24E04FBF00A1DC9F /* ClipsPresenter.swift */,
+				2C570B5E24E04FBF00A1DC9F /* TopClipsListPresenter.swift */,
 			);
-			path = Clips;
+			path = TopClipsList;
 			sourceTree = "<group>";
 		};
 		2C570B6024E04FEF00A1DC9F /* TopClipsList */ = {
@@ -2277,7 +2277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
-				2C570B5F24E04FBF00A1DC9F /* ClipsPresenter.swift in Sources */,
+				2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */,
 				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
