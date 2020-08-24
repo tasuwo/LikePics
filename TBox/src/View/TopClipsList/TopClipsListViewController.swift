@@ -62,9 +62,12 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
 
+        let button = RoundedButton()
+        button.setTitle("編集", for: .normal)
+        button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+
         self.navigationItem.rightBarButtonItems = [
-            // TODO: Custom Button
-            UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.didTapEdit))
+            UIBarButtonItem(customView: button)
         ]
     }
 
