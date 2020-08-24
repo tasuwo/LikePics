@@ -13,7 +13,6 @@ protocol ClipsListDisplayable: UIViewController {
 
     var factory: Factory { get }
     var presenter: Presenter { get }
-    var transitionController: ClipPreviewTransitionControllerProtocol { get }
 
     var collectionView: ClipsCollectionView! { get }
 }

@@ -12,6 +12,9 @@ protocol ViewControllerFactory {
     // MARK: Top
 
     func makeTopClipsListViewController() -> UIViewController
+    func makeTopClipsListEditViewController(clips: [Clip],
+                                            initialOffset offset: CGPoint,
+                                            delegate: TopClipsListEditViewControllerDelegate) -> UIViewController
 
     // MARK: Preview
 
@@ -46,6 +49,18 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = TopClipsListPresenter(storage: self.clipsStorage)
         let proxy = TopClipsListPresenterProxy(presenter: presenter)
         return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: proxy, transitionController: self.transitionController))
+    }
+
+    func makeTopClipsListEditViewController(clips: [Clip],
+                                            initialOffset offset: CGPoint,
+                                            delegate: TopClipsListEditViewControllerDelegate) -> UIViewController
+    {
+        let presenter = TopClipsListEditPresenter(clips: clips, storage: self.clipsStorage)
+        let proxy = TopClipsListEditPresenterProxy(presenter: presenter)
+        let viewController = TopClipsListEditViewController(factory: self, presenter: proxy, initialOffset: offset, delegate: delegate)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .overFullScreen
+        return navigationController
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {

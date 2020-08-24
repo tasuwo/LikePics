@@ -6,34 +6,39 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class TopClipsListViewController: UIViewController, ClipsListDisplayable {
+protocol TopClipsListEditViewControllerDelegate: AnyObject {
+    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint)
+}
+
+class TopClipsListEditViewController: UIViewController, ClipsListDisplayable {
     typealias Factory = ViewControllerFactory
-    typealias Presenter = TopClipsListPresenterProxy
+    typealias Presenter = TopClipsListEditPresenterProxy
 
     let factory: Factory
     let presenter: Presenter
-    let transitionController: ClipPreviewTransitionControllerProtocol
 
-    @IBOutlet var indicator: UIActivityIndicatorView!
+    private let initialOffset: CGPoint
+    private var isOffsetInitialized: Bool = false
+    private weak var delegate: TopClipsListEditViewControllerDelegate?
+
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TopClipsListPresenterProxy, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory,
+         presenter: TopClipsListEditPresenterProxy,
+         initialOffset: CGPoint,
+         delegate: TopClipsListEditViewControllerDelegate)
+    {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
+        self.initialOffset = initialOffset
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-
-        self.addBecomeActiveNotification()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        self.removeBecomeActiveNotification()
     }
 
     override func viewDidLoad() {
@@ -44,14 +49,21 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
         }
 
         self.presenter.set(view: self)
-        self.presenter.reload()
 
         self.setupAppearance()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.presenter.reload()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if !self.isOffsetInitialized {
+            self.isOffsetInitialized = true
+            self.collectionView.setContentOffset(self.initialOffset, animated: false)
+        }
     }
 
     // MARK: - Methods
@@ -63,66 +75,32 @@ class TopClipsListViewController: UIViewController, ClipsListDisplayable {
         self.navigationController?.navigationBar.shadowImage = UIImage()
 
         let button = RoundedButton()
-        button.setTitle("編集", for: .normal)
+        button.setTitle("キャンセル", for: .normal)
         button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
 
         self.navigationItem.rightBarButtonItems = [
             UIBarButtonItem(customView: button)
         ]
+
+        self.navigationController?.isToolbarHidden = false
     }
 
     @objc func didTapEdit() {
         self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
-        let viewController = self.factory.makeTopClipsListEditViewController(clips: self.presenter.clips,
-                                                                             initialOffset: self.collectionView.contentOffset,
-                                                                             delegate: self)
-        self.present(viewController, animated: false, completion: nil)
-    }
-
-    // MARK: Notification
-
-    private func addBecomeActiveNotification() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-    }
-
-    private func removeBecomeActiveNotification() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIApplication.didBecomeActiveNotification,
-                                                  object: nil)
-    }
-
-    @objc func didBecomeActive() {
-        self.presenter.reload()
+        self.dismiss(animated: false, completion: nil)
     }
 }
 
-extension TopClipsListViewController: TopClipsListViewProtocol {
-    // MARK: - TopClipsListViewProtocol
-
-    func startLoading() {
-        self.indicator.startAnimating()
-        self.indicator.isHidden = false
-    }
-
-    func endLoading() {
-        self.indicator.isHidden = true
-        self.indicator.stopAnimating()
-    }
+extension TopClipsListEditViewController: TopClipsListEditViewProtocol {
+    // MARK: - TopClipsListEditViewProtocol
 
     func showErrorMassage(_ message: String) {
         let alert = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default, handler: nil))
     }
-
-    func reload() {
-        self.collectionView.reloadData()
-    }
 }
 
-extension TopClipsListViewController: UICollectionViewDelegate {
+extension TopClipsListEditViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -134,11 +112,15 @@ extension TopClipsListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.collectionView(self, collectionView, didSelectItemAt: indexPath)
+        print(#function)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.delegate?.topClipsListEditViewController(self, updatedContentOffset: self.collectionView.contentOffset)
     }
 }
 
-extension TopClipsListViewController: UICollectionViewDataSource {
+extension TopClipsListEditViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -154,7 +136,7 @@ extension TopClipsListViewController: UICollectionViewDataSource {
     }
 }
 
-extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
+extension TopClipsListEditViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
@@ -163,15 +145,5 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
-    }
-}
-
-extension TopClipsListViewController: ClipPreviewPresentingViewController {}
-
-extension TopClipsListViewController: TopClipsListEditViewControllerDelegate {
-    // MARK: - TopClipsListEditViewControllerDelegate
-
-    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint) {
-        self.collectionView.contentOffset = offset
     }
 }
