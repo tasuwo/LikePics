@@ -47,6 +47,10 @@
 		2C3CCDCC24F4119B00FAC660 /* TopClipsListEditPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDCB24F4119B00FAC660 /* TopClipsListEditPresenter.swift */; };
 		2C3CCDCE24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDCD24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift */; };
 		2C3CCDD024F4143D00FAC660 /* TopClipsListEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3CCDCF24F4143D00FAC660 /* TopClipsListEditViewController.xib */; };
+		2C3CCDD224F4246E00FAC660 /* ClipsListPreviewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */; };
+		2C3CCDD424F4259F00FAC660 /* ClipsListPreviewablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */; };
+		2C3CCDD624F4280700FAC660 /* ClipsListEditable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */; };
+		2C3CCDD824F4283F00FAC660 /* ClipsListEditablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */; };
 		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
 		2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */; };
 		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
@@ -451,6 +455,10 @@
 		2C3CCDCB24F4119B00FAC660 /* TopClipsListEditPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListEditPresenter.swift; sourceTree = "<group>"; };
 		2C3CCDCD24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListEditPresenterProxy.swift; sourceTree = "<group>"; };
 		2C3CCDCF24F4143D00FAC660 /* TopClipsListEditViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopClipsListEditViewController.xib; sourceTree = "<group>"; };
+		2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPreviewable.swift; sourceTree = "<group>"; };
+		2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPreviewablePresenter.swift; sourceTree = "<group>"; };
+		2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListEditable.swift; sourceTree = "<group>"; };
+		2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListEditablePresenter.swift; sourceTree = "<group>"; };
 		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
 		2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
@@ -843,6 +851,8 @@
 			isa = PBXGroup;
 			children = (
 				2C3CCDA424F2993E00FAC660 /* ClipsListDisplayable.swift */,
+				2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */,
+				2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */,
 			);
 			path = ClipsList;
 			sourceTree = "<group>";
@@ -853,6 +863,8 @@
 				2C3CCDA924F29A4700FAC660 /* ClipsListPresenter.swift */,
 				2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */,
 				2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */,
+				2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */,
+				2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */,
 			);
 			path = ClipsList;
 			sourceTree = "<group>";
@@ -2350,6 +2362,7 @@
 				2C3CCDB824F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift in Sources */,
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
 				2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */,
+				2C3CCDD224F4246E00FAC660 /* ClipsListPreviewable.swift in Sources */,
 				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
@@ -2357,15 +2370,18 @@
 				2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2C3CCDBC24F2D35C00FAC660 /* AlbumPresenterProxy.swift in Sources */,
 				2C45D3F624EC2FD00045B6D3 /* SearchResultPresenter.swift in Sources */,
+				2C3CCDD424F4259F00FAC660 /* ClipsListPreviewablePresenter.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2C3CCDB424F2C56D00FAC660 /* ClipsListPresenter.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
+				2C3CCDD824F4283F00FAC660 /* ClipsListEditablePresenter.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C3CCDC924F4115300FAC660 /* TopClipsListEditViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */,
+				2C3CCDD624F4280700FAC660 /* ClipsListEditable.swift in Sources */,
 				2C3CCDBA24F2CF6E00FAC660 /* SearchResultPresenterProxy.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,

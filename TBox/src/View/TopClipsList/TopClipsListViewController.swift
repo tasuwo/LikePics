@@ -6,23 +6,21 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class TopClipsListViewController: UIViewController, ClipsListDisplayable {
+class TopClipsListViewController: UIViewController, ClipsListPreviewable {
     typealias Factory = ViewControllerFactory
     typealias Presenter = TopClipsListPresenterProxy
 
     let factory: Factory
     let presenter: Presenter
-    let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TopClipsListPresenterProxy, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: TopClipsListPresenterProxy) {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
 
         self.addBecomeActiveNotification()

@@ -10,7 +10,7 @@ protocol TopClipsListEditViewControllerDelegate: AnyObject {
     func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint)
 }
 
-class TopClipsListEditViewController: UIViewController, ClipsListDisplayable {
+class TopClipsListEditViewController: UIViewController, ClipsListEditable {
     typealias Factory = ViewControllerFactory
     typealias Presenter = TopClipsListEditPresenterProxy
 
@@ -83,6 +83,8 @@ class TopClipsListEditViewController: UIViewController, ClipsListDisplayable {
         ]
 
         self.navigationController?.isToolbarHidden = false
+
+        self.collectionView.allowsMultipleSelection = true
     }
 
     @objc func didTapEdit() {
@@ -112,7 +114,11 @@ extension TopClipsListEditViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#function)
+        self.collectionView(self, collectionView, didSelectItemAt: indexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        self.collectionView(self, collectionView, didDeselectItemAt: indexPath)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

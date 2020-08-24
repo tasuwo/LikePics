@@ -22,7 +22,7 @@ extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
     }
 }
 
-extension SearchResultPresenterProxy: ClipsListDisplayablePresenter {
+extension SearchResultPresenterProxy: ClipsListPreviewablePresenter {
     // MARK: - ClipsListDisplayablePresenter
 
     var clips: [Clip] {

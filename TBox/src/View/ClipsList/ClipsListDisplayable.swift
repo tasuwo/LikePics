@@ -17,24 +17,6 @@ protocol ClipsListDisplayable: UIViewController {
     var collectionView: ClipsCollectionView! { get }
 }
 
-extension ClipsListDisplayable where Self: UICollectionViewDelegate {
-    // MARK: - UICollectionViewDelegate
-
-    func collectionView(_ displayable: Self, _ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    func collectionView(_ displayable: Self, _ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    func collectionView(_ displayable: Self, _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let clip = self.presenter.select(at: indexPath.row) else { return }
-        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
-        self.present(nextViewController, animated: true, completion: nil)
-    }
-}
-
 extension ClipsListDisplayable where Self: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
@@ -64,6 +46,8 @@ extension ClipsListDisplayable where Self: UICollectionViewDataSource {
             guard let data = self.presenter.getImageData(for: .tertiary, in: clip) else { return nil }
             return UIImage(data: data)!
         }()
+
+        cell.visibleSelectedMark = false
 
         return cell
     }

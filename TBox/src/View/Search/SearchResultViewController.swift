@@ -6,22 +6,20 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class SearchResultViewController: UIViewController, ClipsListDisplayable {
+class SearchResultViewController: UIViewController, ClipsListPreviewable {
     typealias Factory = ViewControllerFactory
     typealias Presenter = SearchResultPresenterProxy
 
     let factory: Factory
     let presenter: Presenter
-    let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: SearchResultPresenterProxy, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: SearchResultPresenterProxy) {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
     }
 

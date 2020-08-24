@@ -6,7 +6,7 @@ import Domain
 
 protocol SearchResultViewProtocol: ClipsListViewProtocol {}
 
-protocol SearchResultPresenterProtocol: ClipsListDisplayablePresenter {
+protocol SearchResultPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: SearchResultViewProtocol)
 }
 

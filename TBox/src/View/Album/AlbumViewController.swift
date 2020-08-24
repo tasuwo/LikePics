@@ -6,22 +6,20 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class AlbumViewController: UIViewController, ClipsListDisplayable {
+class AlbumViewController: UIViewController, ClipsListPreviewable {
     typealias Factory = ViewControllerFactory
     typealias Presenter = AlbumPresenterProxy
 
     let factory: Factory
     let presenter: Presenter
-    let transitionController: ClipPreviewTransitionControllerProtocol
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AlbumPresenterProxy, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: AlbumPresenterProxy) {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
     }
 

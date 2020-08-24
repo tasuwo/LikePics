@@ -6,7 +6,7 @@ import Domain
 
 protocol AlbumViewProtocol: ClipsListViewProtocol {}
 
-protocol AlbumPresenterProtocol: ClipsListDisplayablePresenter {
+protocol AlbumPresenterProtocol: ClipsListPreviewablePresenter {
     var album: Album { get }
 
     func set(view: AlbumViewProtocol)

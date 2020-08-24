@@ -12,7 +12,7 @@ protocol ClipPreviewPresentingViewController: UIViewController {
     var clips: [Clip] { get }
 }
 
-extension ClipPreviewPresentingViewController where Self: ClipsListDisplayable {
+extension ClipPreviewPresentingViewController where Self: ClipsListPreviewable {
     var selectedIndexPath: IndexPath? {
         guard let index = self.presenter.selectedIndex else { return nil }
         return IndexPath(row: index, section: 0)

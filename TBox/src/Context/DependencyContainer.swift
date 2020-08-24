@@ -48,7 +48,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeTopClipsListViewController() -> UIViewController {
         let presenter = TopClipsListPresenter(storage: self.clipsStorage)
         let proxy = TopClipsListPresenterProxy(presenter: presenter)
-        return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: proxy, transitionController: self.transitionController))
+        return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: proxy))
     }
 
     func makeTopClipsListEditViewController(clips: [Clip],
@@ -99,7 +99,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeSearchResultViewController(clips: [Clip]) -> UIViewController {
         let presenter = SearchResultPresenter(clips: clips, storage: self.clipsStorage)
         let proxy = SearchResultPresenterProxy(presenter: presenter)
-        return SearchResultViewController(factory: self, presenter: proxy, transitionController: self.transitionController)
+        return SearchResultViewController(factory: self, presenter: proxy)
     }
 
     func makeAlbumListViewController() -> UIViewController {
@@ -111,7 +111,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeAlbumViewController(album: Album) -> UIViewController {
         let presenter = AlbumPresenter(album: album, storage: self.clipsStorage)
         let proxy = AlbumPresenterProxy(presenter: presenter)
-        return AlbumViewController(factory: self, presenter: proxy, transitionController: self.transitionController)
+        return AlbumViewController(factory: self, presenter: proxy)
     }
 
     func makeAddingClipToAlbumViewController(clip: Clip) -> UIViewController {

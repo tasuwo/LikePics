@@ -26,8 +26,8 @@ extension TopClipsListPresenterProxy: TopClipsListPresenterProtocol {
     }
 }
 
-extension TopClipsListPresenterProxy: ClipsListDisplayablePresenter {
-    // MARK: - ClipsListDisplayablePresenter
+extension TopClipsListPresenterProxy: ClipsListPreviewablePresenter {
+    // MARK: - ClipsListPreviewablePresenter
 
     var clips: [Clip] {
         return self.presenter.clips

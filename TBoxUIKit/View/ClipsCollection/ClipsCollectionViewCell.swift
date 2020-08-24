@@ -67,6 +67,18 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var visibleSelectedMark: Bool = false {
+        didSet {
+            self.updateSelectedMarkAppearance()
+        }
+    }
+
+    override public var isSelected: Bool {
+        didSet {
+            self.updateSelectedMarkAppearance()
+        }
+    }
+
     @IBOutlet public var primaryImageView: UIImageView!
     @IBOutlet public var secondaryImageView: UIImageView!
     @IBOutlet public var tertiaryImageView: UIImageView!
@@ -79,6 +91,8 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
     @IBOutlet var tertiaryImageOverlayView: UIView!
 
     @IBOutlet var imagesContainerView: UIView!
+
+    @IBOutlet var selectionMarkContainerView: UIView!
 
     private var imageViews: [UIImageView] {
         return [
@@ -160,6 +174,8 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
 
         self.clipsToBounds = false
         self.layer.masksToBounds = false
+
+        self.updateSelectedMarkAppearance()
     }
 
     private static func shadowOpacity(for userInterfaceStyle: UIUserInterfaceStyle) -> Float {
@@ -169,5 +185,13 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         default:
             return 0.5
         }
+    }
+
+    private func updateSelectedMarkAppearance() {
+        guard self.visibleSelectedMark else {
+            self.selectionMarkContainerView.isHidden = true
+            return
+        }
+        self.selectionMarkContainerView.isHidden = !self.isSelected
     }
 }

@@ -6,7 +6,7 @@ import Domain
 
 protocol TopClipsListViewProtocol: ClipsListReloadableViewProtocol {}
 
-protocol TopClipsListPresenterProtocol: ClipsListDisplayablePresenter {
+protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: TopClipsListViewProtocol)
 
     func reload()

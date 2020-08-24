@@ -22,23 +22,27 @@ extension TopClipsListEditPresenterProxy: TopClipsListEditPresenterProtocol {
     }
 }
 
-extension TopClipsListEditPresenterProxy: ClipsListDisplayablePresenter {
+extension TopClipsListEditPresenterProxy: ClipsListEditablePresenter {
     // MARK: - ClipsListDisplayablePresenter
 
     var clips: [Clip] {
         return self.presenter.clips
     }
 
-    var selectedClip: Clip? {
-        return self.presenter.selectedClip
+    var selectedClips: [Clip] {
+        return self.presenter.selectedClips
     }
 
-    var selectedIndex: Int? {
-        return self.presenter.selectedIndex
+    var selectedIndices: [Int] {
+        return self.presenter.selectedIndices
     }
 
-    func select(at index: Int) -> Clip? {
-        return self.presenter.select(at: index)
+    func select(at index: Int) {
+        self.presenter.select(at: index)
+    }
+
+    func deselect(at index: Int) {
+        self.presenter.deselect(at: index)
     }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {

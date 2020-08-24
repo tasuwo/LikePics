@@ -6,7 +6,7 @@ import Domain
 
 protocol TopClipsListEditViewProtocol: ClipsListViewProtocol {}
 
-protocol TopClipsListEditPresenterProtocol: ClipsListDisplayablePresenter {
+protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter {
     func set(view: TopClipsListEditViewProtocol)
 }
 
@@ -27,7 +27,7 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 
     weak var internalView: TopClipsListEditViewProtocol?
 
-    private var internalSelectedClip: Clip?
+    private var internalSelectedClips: [Clip] = []
 
     // MARK: - Lifecycle
 
@@ -47,15 +47,28 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
     // MARK: - TopClipsListEditPresenterProtocol
 
-    var selectedClip: Clip? {
-        self.internalSelectedClip
+    var selectedClips: [Clip] {
+        self.internalSelectedClips
     }
 
-    func select(at index: Int) -> Clip? {
-        guard self.clips.indices.contains(index) else { return nil }
+    func select(at index: Int) {
+        guard self.clips.indices.contains(index) else { return }
         let clip = self.clips[index]
-        self.internalSelectedClip = clip
-        return clip
+
+        guard !self.internalSelectedClips.contains(where: { $0.url == clip.url }) else {
+            return
+        }
+        self.internalSelectedClips.append(clip)
+    }
+
+    func deselect(at index: Int) {
+        guard self.clips.indices.contains(index) else { return }
+        let clip = self.clips[index]
+
+        guard let index = self.internalSelectedClips.firstIndex(where: { $0.url == clip.url }) else {
+            return
+        }
+        self.internalSelectedClips.remove(at: index)
     }
 
     func set(view: TopClipsListEditViewProtocol) {

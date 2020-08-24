@@ -26,7 +26,7 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
     }
 }
 
-extension AlbumPresenterProxy: ClipsListDisplayablePresenter {
+extension AlbumPresenterProxy: ClipsListPreviewablePresenter {
     // MARK: - ClipsListDisplayablePresenter
 
     var clips: [Clip] {
