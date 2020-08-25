@@ -23,11 +23,13 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 
     var clips: [Clip]
 
+    // MARK: TopClipsListEditPresenterProtocol
+
+    var selectedClips: [Clip] = []
+
     // MARK: Internal
 
     weak var internalView: TopClipsListEditViewProtocol?
-
-    private var internalSelectedClips: [Clip] = []
 
     // MARK: - Lifecycle
 
@@ -47,28 +49,24 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
     // MARK: - TopClipsListEditPresenterProtocol
 
-    var selectedClips: [Clip] {
-        self.internalSelectedClips
-    }
-
     func select(at index: Int) {
         guard self.clips.indices.contains(index) else { return }
         let clip = self.clips[index]
 
-        guard !self.internalSelectedClips.contains(where: { $0.url == clip.url }) else {
+        guard !self.selectedClips.contains(where: { $0.url == clip.url }) else {
             return
         }
-        self.internalSelectedClips.append(clip)
+        self.selectedClips.append(clip)
     }
 
     func deselect(at index: Int) {
         guard self.clips.indices.contains(index) else { return }
         let clip = self.clips[index]
 
-        guard let index = self.internalSelectedClips.firstIndex(where: { $0.url == clip.url }) else {
+        guard let index = self.selectedClips.firstIndex(where: { $0.url == clip.url }) else {
             return
         }
-        self.internalSelectedClips.remove(at: index)
+        self.selectedClips.remove(at: index)
     }
 
     func set(view: TopClipsListEditViewProtocol) {
