@@ -319,6 +319,46 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func remove(clips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+                return .failure(.notFound)
+            }
+
+            var clips: [ClipObject] = []
+            for url in clipUrls {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                guard album.clips.contains(clip) else {
+                    return .failure(.notFound)
+                }
+            }
+
+            let indices = clips.compactMap {
+                album.clips.index(of: $0)
+            }
+
+            do {
+                try realm.write {
+                    album.updatedAt = Date()
+                    album.clips.remove(atOffsets: IndexSet(indices))
+                }
+                return .success(())
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     // MARK: Delete
 
     public func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError> {

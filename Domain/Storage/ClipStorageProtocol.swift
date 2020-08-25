@@ -36,6 +36,8 @@ public protocol ClipStorageProtocol {
 
     func add(clips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError>
 
+    func remove(clips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError>
+
     // MARK: Delete
 
     func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
