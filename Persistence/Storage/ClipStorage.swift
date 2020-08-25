@@ -382,4 +382,43 @@ extension ClipStorage: ClipStorageProtocol {
             }
         }
     }
+
+    public func add(clips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+                return .failure(.notFound)
+            }
+
+            var clips: [ClipObject] = []
+            for url in clipUrls {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                guard !album.clips.contains(clip) else {
+                    return .failure(.duplicated)
+                }
+            }
+
+            do {
+                try realm.write {
+                    album.updatedAt = Date()
+
+                    for clip in clips {
+                        album.clips.append(clip)
+                    }
+                }
+                return .success(())
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
 }

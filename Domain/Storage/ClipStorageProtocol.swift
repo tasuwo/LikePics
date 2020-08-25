@@ -33,6 +33,8 @@ public protocol ClipStorageProtocol {
     func readAllAlbums() -> Result<[Album], ClipStorageError>
 
     func add(clip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError>
+
+    func add(clips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

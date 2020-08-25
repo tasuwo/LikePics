@@ -9,10 +9,12 @@ protocol TopClipsListEditViewProtocol: ClipsListViewProtocol {
 
     func deselectAll()
 
+    func presentAddingClipsToAlbumView(by clips: [Clip])
+
     func endEditing()
 }
 
-protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter {
+protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter & AddingClipsToAlbumPresenterDelegate {
     func set(view: TopClipsListEditViewProtocol)
 
     func deleteAll()
@@ -105,6 +107,19 @@ extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
     }
 
     func addAllToAlbum() {
-        print(#function)
+        self.internalView?.presentAddingClipsToAlbumView(by: self.selectedClips)
+    }
+}
+
+extension TopClipsListEditPresenter: AddingClipsToAlbumPresenterDelegate {
+    // MARK: - AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        guard isSucceeded else { return }
+
+        self.selectedClips = []
+        self.internalView?.deselectAll()
+
+        self.internalView?.endEditing()
     }
 }

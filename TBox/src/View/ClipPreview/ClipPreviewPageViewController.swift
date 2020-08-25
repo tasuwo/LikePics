@@ -137,7 +137,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     @objc private func didTapAddToAlbum() {
-        let viewController = self.factory.makeAddingClipToAlbumViewController(clip: self.presenter.clip)
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
 

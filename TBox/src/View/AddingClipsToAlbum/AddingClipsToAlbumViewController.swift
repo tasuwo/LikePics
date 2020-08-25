@@ -6,21 +6,19 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class AddingClipToAlbumViewController: UIViewController {
+class AddingClipsToAlbumViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: AddingClipToAlbumPresenter
-    private let transitionController: ClipPreviewTransitionControllerProtocol
+    private let presenter: AddingClipsToAlbumPresenter
 
     @IBOutlet var tableView: UITableView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AddingClipToAlbumPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: AddingClipsToAlbumPresenter) {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -50,8 +48,8 @@ class AddingClipToAlbumViewController: UIViewController {
     }
 }
 
-extension AddingClipToAlbumViewController: AddingClipToAlbumViewProtocol {
-    // MARK: - AddingClipToAlbumViewProtocol
+extension AddingClipsToAlbumViewController: AddingClipsToAlbumViewProtocol {
+    // MARK: - AddingClipsToAlbumViewProtocol
 
     func startLoading() {
         // TODO:
@@ -70,12 +68,12 @@ extension AddingClipToAlbumViewController: AddingClipToAlbumViewProtocol {
         self.tableView.reloadData()
     }
 
-    func closeView() {
-        self.dismiss(animated: true, completion: nil)
+    func closeView(completion: @escaping () -> Void) {
+        self.dismiss(animated: true, completion: completion)
     }
 }
 
-extension AddingClipToAlbumViewController: UITableViewDelegate {
+extension AddingClipsToAlbumViewController: UITableViewDelegate {
     // MARK: - UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -83,7 +81,7 @@ extension AddingClipToAlbumViewController: UITableViewDelegate {
     }
 }
 
-extension AddingClipToAlbumViewController: UITableViewDataSource {
+extension AddingClipsToAlbumViewController: UITableViewDataSource {
     // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

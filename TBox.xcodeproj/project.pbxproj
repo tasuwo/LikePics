@@ -29,9 +29,9 @@
 		2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */; };
 		2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */; };
 		2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */; };
-		2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */; };
-		2C3ADF6124EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */; };
-		2C3ADF6424EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */; };
+		2C3ADF5E24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift */; };
+		2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib */; };
+		2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6324EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C3CCDB224F2C55E00FAC660 /* ClipsListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDA424F2993E00FAC660 /* ClipsListDisplayable.swift */; };
@@ -437,9 +437,9 @@
 		2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumViewController.xib; sourceTree = "<group>"; };
 		2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenter.swift; sourceTree = "<group>"; };
-		2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingClipToAlbumViewController.swift; sourceTree = "<group>"; };
-		2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingClipToAlbumViewController.xib; sourceTree = "<group>"; };
-		2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddingClipToAlbumPresenter.swift; path = ../../../../../../../Documents/AddingClipToAlbumPresenter.swift; sourceTree = "<group>"; };
+		2C3ADF5D24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingClipsToAlbumViewController.swift; sourceTree = "<group>"; };
+		2C3ADF6024EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingClipsToAlbumViewController.xib; sourceTree = "<group>"; };
+		2C3ADF6324EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddingClipsToAlbumPresenter.swift; path = ../../../../../../../Documents/AddingClipsToAlbumPresenter.swift; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
 		2C3CCDA424F2993E00FAC660 /* ClipsListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListDisplayable.swift; sourceTree = "<group>"; };
@@ -813,21 +813,21 @@
 			path = Album;
 			sourceTree = "<group>";
 		};
-		2C3ADF5F24EEE6C5007C4AA0 /* AddingClipToAlbum */ = {
+		2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */ = {
 			isa = PBXGroup;
 			children = (
-				2C3ADF5D24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift */,
-				2C3ADF6024EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib */,
+				2C3ADF5D24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift */,
+				2C3ADF6024EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib */,
 			);
-			path = AddingClipToAlbum;
+			path = AddingClipsToAlbum;
 			sourceTree = "<group>";
 		};
-		2C3ADF6224EEE6E6007C4AA0 /* AddingClipToAlbum */ = {
+		2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */ = {
 			isa = PBXGroup;
 			children = (
-				2C3ADF6324EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift */,
+				2C3ADF6324EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift */,
 			);
-			path = AddingClipToAlbum;
+			path = AddingClipsToAlbum;
 			sourceTree = "<group>";
 		};
 		2C3CCDAB24F2C49C00FAC660 /* TargetFinder */ = {
@@ -989,7 +989,7 @@
 			children = (
 				2C3CCDAE24F2C4BF00FAC660 /* ClipsList */,
 				2C45D3F224EC1E490045B6D3 /* Search */,
-				2C3ADF6224EEE6E6007C4AA0 /* AddingClipToAlbum */,
+				2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */,
 				2C570B5D24E04FAB00A1DC9F /* TopClipsList */,
 				2C3CCDCA24F4118400FAC660 /* TopClipsListEdit */,
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
@@ -1109,7 +1109,7 @@
 				2C570B6024E04FEF00A1DC9F /* TopClipsList */,
 				2C3CCDC724F4113700FAC660 /* TopClipsListEdit */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
-				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipToAlbum */,
+				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */,
 				2C45D40324EEB3F30045B6D3 /* AlbumList */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
 				2C29789B24EEF19700FBA531 /* AddingAlbumAlert */,
@@ -1876,7 +1876,7 @@
 			files = (
 				2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */,
 				2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */,
-				2C3ADF6124EEE6DF007C4AA0 /* AddingClipToAlbumViewController.xib in Resources */,
+				2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
@@ -2363,7 +2363,7 @@
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
 				2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */,
 				2C3CCDD224F4246E00FAC660 /* ClipsListPreviewable.swift in Sources */,
-				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipToAlbumViewController.swift in Sources */,
+				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
 				2C45D40824EEBE020045B6D3 /* AlbumListPresenter.swift in Sources */,
@@ -2385,7 +2385,7 @@
 				2C3CCDBA24F2CF6E00FAC660 /* SearchResultPresenterProxy.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
-				2C3ADF6424EEE70F007C4AA0 /* AddingClipToAlbumPresenter.swift in Sources */,
+				2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */,
 				2C3CCDCC24F4119B00FAC660 /* TopClipsListEditPresenter.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,

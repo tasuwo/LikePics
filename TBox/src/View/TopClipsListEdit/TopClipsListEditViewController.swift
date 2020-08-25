@@ -108,7 +108,7 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
     }
 
     @objc func didTapAddToAlbum() {
-        print(#function)
+        self.presenter.addAllToAlbum()
     }
 
     @objc func didTapRemove() {
@@ -139,6 +139,11 @@ extension TopClipsListEditViewController: TopClipsListEditViewProtocol {
         self.collectionView.indexPathsForSelectedItems?.forEach {
             self.collectionView.deselectItem(at: $0, animated: false)
         }
+    }
+
+    func presentAddingClipsToAlbumView(by clips: [Clip]) {
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
+        self.present(viewController, animated: true, completion: nil)
     }
 
     func endEditing() {

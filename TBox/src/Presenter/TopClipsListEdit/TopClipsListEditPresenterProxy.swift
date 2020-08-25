@@ -4,7 +4,7 @@
 
 import Domain
 
-struct TopClipsListEditPresenterProxy {
+class TopClipsListEditPresenterProxy {
     private let presenter: TopClipsListEditPresenterProtocol
 
     // MARK: - Lifecycle
@@ -27,6 +27,10 @@ extension TopClipsListEditPresenterProxy: TopClipsListEditPresenterProtocol {
 
     func addAllToAlbum() {
         self.presenter.addAllToAlbum()
+    }
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        self.presenter.addingClipsToAlbumPresenter(presenter, didSucceededToAdding: isSucceeded)
     }
 }
 
