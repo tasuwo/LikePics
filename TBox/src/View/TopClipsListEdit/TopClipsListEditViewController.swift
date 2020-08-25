@@ -35,6 +35,8 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
         self.initialOffset = initialOffset
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
+
+        self.presenter.set(view: self)
     }
 
     required init?(coder: NSCoder) {
@@ -48,9 +50,9 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
             layout.delegate = self
         }
 
-        self.presenter.set(view: self)
-
-        self.setupAppearance()
+        self.setupCollectionView()
+        self.setupNavigationBar()
+        self.setupToolBar()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -68,9 +70,13 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
 
     // MARK: - Methods
 
+    private func setupCollectionView() {
+        self.collectionView.allowsMultipleSelection = true
+    }
+
     // MARK: NavigationBar
 
-    private func setupAppearance() {
+    private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
 
@@ -81,15 +87,30 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
         self.navigationItem.rightBarButtonItems = [
             UIBarButtonItem(customView: button)
         ]
-
-        self.navigationController?.isToolbarHidden = false
-
-        self.collectionView.allowsMultipleSelection = true
     }
 
     @objc func didTapEdit() {
         self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
         self.dismiss(animated: false, completion: nil)
+    }
+
+    // MARK: ToolBar
+
+    private func setupToolBar() {
+        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
+        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+
+        self.setToolbarItems([addToAlbumItem, flexibleItem, removeItem], animated: false)
+        self.navigationController?.setToolbarHidden(false, animated: false)
+    }
+
+    @objc func didTapAddToAlbum() {
+        print(#function)
+    }
+
+    @objc func didTapRemove() {
+        print(#function)
     }
 }
 
