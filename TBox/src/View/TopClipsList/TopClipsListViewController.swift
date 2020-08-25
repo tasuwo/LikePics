@@ -44,7 +44,7 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
         self.presenter.set(view: self)
         self.presenter.reload()
 
-        self.setupAppearance()
+        self.setupNavigationBar()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -56,7 +56,7 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
 
     // MARK: NavigationBar
 
-    private func setupAppearance() {
+    private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
 
