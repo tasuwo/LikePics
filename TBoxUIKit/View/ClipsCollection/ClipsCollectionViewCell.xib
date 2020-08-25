@@ -83,36 +83,50 @@
                             <constraint firstItem="fe7-GE-hL3" firstAttribute="bottom" secondItem="Sxz-Ec-Mu0" secondAttribute="bottom" id="ygs-e7-tTN"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SE-fc-NHX" userLabel="Selection Mark Container">
-                        <rect key="frame" x="153" y="12" width="32" height="32"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJb-u8-3T5">
+                        <rect key="frame" x="0.0" y="0.0" width="197" height="317"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="nID-Vy-7ka">
-                                <rect key="frame" x="0.0" y="0.5" width="32" height="31"/>
-                                <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SE-fc-NHX" userLabel="Selection Mark Container">
+                                <rect key="frame" x="153" y="12" width="32" height="32"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="nID-Vy-7ka">
+                                        <rect key="frame" x="0.0" y="0.5" width="32" height="31"/>
+                                        <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="nID-Vy-7ka" secondAttribute="bottom" id="5dj-z8-HWS"/>
+                                    <constraint firstAttribute="trailing" secondItem="nID-Vy-7ka" secondAttribute="trailing" id="EKh-B7-8aG"/>
+                                    <constraint firstAttribute="height" constant="32" id="IJF-jH-C9z"/>
+                                    <constraint firstItem="nID-Vy-7ka" firstAttribute="top" secondItem="3SE-fc-NHX" secondAttribute="top" id="ehd-h9-xqb"/>
+                                    <constraint firstItem="nID-Vy-7ka" firstAttribute="leading" secondItem="3SE-fc-NHX" secondAttribute="leading" id="wjc-2S-kYV"/>
+                                    <constraint firstAttribute="width" constant="32" id="xsM-sM-vk7"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="nID-Vy-7ka" secondAttribute="bottom" id="5dj-z8-HWS"/>
-                            <constraint firstAttribute="trailing" secondItem="nID-Vy-7ka" secondAttribute="trailing" id="EKh-B7-8aG"/>
-                            <constraint firstAttribute="height" constant="32" id="IJF-jH-C9z"/>
-                            <constraint firstItem="nID-Vy-7ka" firstAttribute="top" secondItem="3SE-fc-NHX" secondAttribute="top" id="ehd-h9-xqb"/>
-                            <constraint firstItem="nID-Vy-7ka" firstAttribute="leading" secondItem="3SE-fc-NHX" secondAttribute="leading" id="wjc-2S-kYV"/>
-                            <constraint firstAttribute="width" constant="32" id="xsM-sM-vk7"/>
+                            <constraint firstAttribute="trailing" secondItem="3SE-fc-NHX" secondAttribute="trailing" constant="12" id="9Jd-La-e4r"/>
+                            <constraint firstItem="3SE-fc-NHX" firstAttribute="top" secondItem="qJb-u8-3T5" secondAttribute="top" constant="12" id="Y1B-Fd-pky"/>
                         </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                <integer key="value" value="16"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                        </userDefinedRuntimeAttributes>
+                        <string key="userLabel">Overall Overlay View
+</string>
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="3SE-fc-NHX" secondAttribute="trailing" constant="12" id="6hl-8q-UVJ"/>
-                    <constraint firstItem="3SE-fc-NHX" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" constant="12" id="FtC-rT-2X0"/>
+                    <constraint firstAttribute="bottom" secondItem="qJb-u8-3T5" secondAttribute="bottom" id="1jf-5c-GxB"/>
+                    <constraint firstItem="qJb-u8-3T5" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" id="2I4-6w-aGF"/>
                     <constraint firstItem="Cof-mn-eeS" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" id="G3s-Pw-SKn"/>
                     <constraint firstAttribute="trailing" secondItem="Cof-mn-eeS" secondAttribute="trailing" id="RY1-yj-JCx"/>
+                    <constraint firstItem="qJb-u8-3T5" firstAttribute="leading" secondItem="hjv-x9-ehK" secondAttribute="leading" id="Sp8-MW-Nc9"/>
+                    <constraint firstAttribute="trailing" secondItem="qJb-u8-3T5" secondAttribute="trailing" id="ly2-9S-mdD"/>
                     <constraint firstAttribute="bottom" secondItem="Cof-mn-eeS" secondAttribute="bottom" id="pT5-kE-bGU"/>
                     <constraint firstItem="Cof-mn-eeS" firstAttribute="leading" secondItem="hjv-x9-ehK" secondAttribute="leading" id="z8f-4t-cQa"/>
                 </constraints>
@@ -121,12 +135,12 @@
             <size key="customSize" width="197" height="317"/>
             <connections>
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
+                <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
                 <outlet property="primaryImageShadowView" destination="BLd-da-g0k" id="09h-HO-fYW"/>
                 <outlet property="primaryImageView" destination="wfu-ls-oyC" id="JbO-ZO-ycy"/>
                 <outlet property="secondaryImageOverlayView" destination="3ey-X5-ub9" id="gkO-b7-8xj"/>
                 <outlet property="secondaryImageShadowView" destination="fe7-GE-hL3" id="2hk-ZA-eUV"/>
                 <outlet property="secondaryImageView" destination="Sxz-Ec-Mu0" id="tx3-hV-Wt0"/>
-                <outlet property="selectionMarkContainerView" destination="3SE-fc-NHX" id="2El-fr-jQy"/>
                 <outlet property="tertiaryImageOverlayView" destination="Dyn-sy-3hs" id="6r0-ft-f5q"/>
                 <outlet property="tertiaryImageShadowView" destination="E64-VG-nTI" id="vhA-Zz-hGZ"/>
                 <outlet property="tertiaryImageView" destination="Sd1-hN-MSQ" id="6gt-cH-TxQ"/>
