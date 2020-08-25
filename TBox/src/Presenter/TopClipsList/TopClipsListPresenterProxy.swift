@@ -21,6 +21,10 @@ extension TopClipsListPresenterProxy: TopClipsListPresenterProtocol {
         self.presenter.set(view: view)
     }
 
+    func replaceClips(by clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
+    }
+
     func reload() {
         self.presenter.reload()
     }

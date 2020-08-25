@@ -210,6 +210,47 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func removeClips(ofUrls urls: [URL]) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            var clips: [ClipObject] = []
+            for url in urls {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+            let removeTargets = clips.map { Clip.make(by: $0) }
+
+            // NOTE: Delete only found objects.
+            let clipItems = clips
+                .flatMap { $0.items }
+                .map { $0.makeKey() }
+                .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
+
+            // NOTE: Delete only found objects.
+            let clippedImages = clips
+                .flatMap { $0.items }
+                .flatMap { [(true, $0), (false, $0)] }
+                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
+                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
+
+            do {
+                try realm.write {
+                    realm.delete(clippedImages)
+                    realm.delete(clipItems)
+                    realm.delete(clips)
+                }
+                return .success(removeTargets)
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func removeClipItem(_ item: ClipItem) -> Result<ClipItem, ClipStorageError> {
         // TODO: Update clipItemIndex
 

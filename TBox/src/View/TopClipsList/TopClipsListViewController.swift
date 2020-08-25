@@ -169,6 +169,10 @@ extension TopClipsListViewController: ClipPreviewPresentingViewController {}
 extension TopClipsListViewController: TopClipsListEditViewControllerDelegate {
     // MARK: - TopClipsListEditViewControllerDelegate
 
+    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedClipsTo clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
+    }
+
     func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint) {
         self.collectionView.contentOffset = offset
     }

@@ -4,10 +4,20 @@
 
 import Domain
 
-protocol TopClipsListEditViewProtocol: ClipsListViewProtocol {}
+protocol TopClipsListEditViewProtocol: ClipsListViewProtocol {
+    func reload()
+
+    func deselectAll()
+
+    func endEditing()
+}
 
 protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter {
     func set(view: TopClipsListEditViewProtocol)
+
+    func deleteAll()
+
+    func addAllToAlbum()
 }
 
 class TopClipsListEditPresenter: ClipsListPresenter {
@@ -71,5 +81,30 @@ extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
 
     func set(view: TopClipsListEditViewProtocol) {
         self.internalView = view
+    }
+
+    func deleteAll() {
+        switch self.storage.removeClips(ofUrls: self.selectedClips.map { $0.url }) {
+        case .success:
+            // NOP
+            break
+        case let .failure(error):
+            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
+        }
+
+        self.clips.removeAll(where: { clip in
+            self.selectedClips.contains(where: { clip.url == $0.url })
+        })
+
+        self.selectedClips = []
+        self.internalView?.deselectAll()
+
+        self.internalView?.reload()
+
+        self.internalView?.endEditing()
+    }
+
+    func addAllToAlbum() {
+        print(#function)
     }
 }

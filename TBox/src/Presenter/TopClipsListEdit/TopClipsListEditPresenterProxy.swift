@@ -20,6 +20,14 @@ extension TopClipsListEditPresenterProxy: TopClipsListEditPresenterProtocol {
     func set(view: TopClipsListEditViewProtocol) {
         self.presenter.set(view: view)
     }
+
+    func deleteAll() {
+        self.presenter.deleteAll()
+    }
+
+    func addAllToAlbum() {
+        self.presenter.addAllToAlbum()
+    }
 }
 
 extension TopClipsListEditPresenterProxy: ClipsListEditablePresenter {

@@ -7,6 +7,8 @@ import TBoxUIKit
 import UIKit
 
 protocol TopClipsListEditViewControllerDelegate: AnyObject {
+    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedClipsTo clips: [Clip])
+
     func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint)
 }
 
@@ -110,7 +112,14 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
     }
 
     @objc func didTapRemove() {
-        print(#function)
+        let alert = UIAlertController(title: "", message: "選択中の画像を全て削除しますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            self?.presenter.deleteAll()
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -120,6 +129,21 @@ extension TopClipsListEditViewController: TopClipsListEditViewProtocol {
     func showErrorMassage(_ message: String) {
         let alert = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default, handler: nil))
+    }
+
+    func reload() {
+        self.collectionView.reloadData()
+    }
+
+    func deselectAll() {
+        self.collectionView.indexPathsForSelectedItems?.forEach {
+            self.collectionView.deselectItem(at: $0, animated: false)
+        }
+    }
+
+    func endEditing() {
+        self.delegate?.topClipsListEditViewController(self, updatedClipsTo: self.presenter.clips)
+        self.dismiss(animated: false, completion: nil)
     }
 }
 

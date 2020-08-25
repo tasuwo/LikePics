@@ -9,6 +9,8 @@ protocol TopClipsListViewProtocol: ClipsListReloadableViewProtocol {}
 protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: TopClipsListViewProtocol)
 
+    func replaceClips(by clips: [Clip])
+
     func reload()
 }
 
@@ -29,11 +31,13 @@ class TopClipsListPresenter: ClipsListReloadablePresenter {
 
     var clips: [Clip] = []
 
+    // MARK: - TopClipsListPresenterProtocol
+
+    var selectedClip: Clip?
+
     // MARK: Internal
 
     weak var internalView: TopClipsListViewProtocol?
-
-    private var internalSelectedClip: Clip?
 
     // MARK: - Lifecycle
 
@@ -52,19 +56,20 @@ class TopClipsListPresenter: ClipsListReloadablePresenter {
 extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     // MARK: - TopClipsListPresenterProtocol
 
-    var selectedClip: Clip? {
-        self.internalSelectedClip
-    }
-
     func select(at index: Int) -> Clip? {
         guard self.clips.indices.contains(index) else { return nil }
         let clip = self.clips[index]
-        self.internalSelectedClip = clip
+        self.selectedClip = clip
         return clip
     }
 
     func set(view: TopClipsListViewProtocol) {
         self.internalView = view
+    }
+
+    func replaceClips(by clips: [Clip]) {
+        self.clips = clips
+        self.reload()
     }
 
     func reload() {
