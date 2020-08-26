@@ -103,11 +103,18 @@ class AlbumEditViewController: UIViewController, ClipsListEditable, ClipsListSyn
     }
 
     @objc func didTapAddToAlbum() {
-        self.didTapAddButton()
+        self.presenter.addAllToAlbum()
     }
 
     @objc func didTapRemove() {
-        self.didTapRemoveButton()
+        let alert = UIAlertController(title: "", message: "選択中の画像を全て削除しますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            self?.presenter.deleteAll()
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
