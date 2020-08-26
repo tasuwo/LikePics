@@ -18,7 +18,12 @@ extension AlbumEditPresenterProxy: AlbumEditPresenterProtocol {
     // MARK: - AlbumEditPresenterProtocol
 
     var album: Album {
-        return self.presenter.album
+        get {
+            return self.presenter.album
+        }
+        set {
+            // FIXME:
+        }
     }
 
     func set(view: AlbumEditViewProtocol) {

@@ -6,13 +6,14 @@ import Domain
 
 protocol AlbumEditableViewProtocol: ClipsListEditableViewProtocol {}
 
-protocol AlbumEditablePresenter: ClipsListEditablePresenter & AddingClipsToAlbumPresenterDelegate {
-    var album: Album { get }
+protocol AlbumEditablePresenter: ClipsListEditablePresenter {
+    // FIXME:
+    var album: Album { get set }
 
     func deleteFromAlbum()
 }
 
-extension AlbumEditablePresenter where Self: ClipsListPresenter & AlbumEditableContainer {
+extension AlbumEditablePresenter where Self: AlbumContainer & ClipsListPresenter & AlbumEditableContainer {
     var selectedIndices: [Int] {
         return self.selectedClips.compactMap { selectedClip in
             self.clips.firstIndex(where: { $0.url == selectedClip.url })
@@ -51,8 +52,7 @@ extension AlbumEditablePresenter where Self: ClipsListPresenter & AlbumEditableC
         let newClips = self.album.clips.filter { clip in
             self.selectedClips.contains(where: { clip.url != $0.url })
         }
-        // TODO:
-        // self.album = self.album.updatingClips(to: newClips)
+        self.album = self.album.updatingClips(to: newClips)
 
         self.selectedClips = []
         self.editableView?.deselectAll()
@@ -75,11 +75,11 @@ extension AlbumEditablePresenter where Self: ClipsListPresenter & AlbumEditableC
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
         }
 
-        let newClips = self.album.clips.filter { clip in
-            self.selectedClips.contains(where: { clip.url != $0.url })
+        let newClips: [Clip] = self.album.clips.compactMap { clip in
+            if self.selectedClips.contains(where: { clip.url == $0.url }) { return nil }
+            return clip
         }
-        // TODO:
-        // self.album = self.album.updatingClips(to: newClips)
+        self.album = self.album.updatingClips(to: newClips)
 
         self.selectedClips = []
         self.editableView?.deselectAll()
