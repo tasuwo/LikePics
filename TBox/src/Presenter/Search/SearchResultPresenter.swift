@@ -10,7 +10,7 @@ protocol SearchResultPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: SearchResultViewProtocol)
 }
 
-class SearchResultPresenter: ClipsListPresenter {
+class SearchResultPresenter: ClipsListPresenter & SelectedClipContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -23,15 +23,13 @@ class SearchResultPresenter: ClipsListPresenter {
 
     var clips: [Clip]
 
-    // MARK: ClipsListPreviewablePresenter
+    // MARK: SelectedClipContainer
 
     var selectedClip: Clip?
 
     // MARK: Internal
 
     private weak var internalView: SearchResultViewProtocol?
-
-    private var internalSelectedClip: Clip?
 
     // MARK: - Lifecycle
 
@@ -48,13 +46,6 @@ class SearchResultPresenter: ClipsListPresenter {
 
 extension SearchResultPresenter: SearchResultPresenterProtocol {
     // MARK: - SearchResultPresenterProtocol
-
-    func select(at index: Int) -> Clip? {
-        guard self.clips.indices.contains(index) else { return nil }
-        let clip = self.clips[index]
-        self.selectedClip = clip
-        return clip
-    }
 
     func set(view: SearchResultViewProtocol) {
         self.internalView = view

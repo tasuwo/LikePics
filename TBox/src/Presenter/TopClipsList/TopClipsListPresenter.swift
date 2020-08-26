@@ -14,7 +14,7 @@ protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
     func reload()
 }
 
-class TopClipsListPresenter: ClipsListReloadablePresenter {
+class TopClipsListPresenter: ClipsListReloadablePresenter & SelectedClipContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -31,7 +31,7 @@ class TopClipsListPresenter: ClipsListReloadablePresenter {
 
     var clips: [Clip] = []
 
-    // MARK: - ClipsListPreviewablePresenter
+    // MARK: - SelectedClipContainer
 
     var selectedClip: Clip?
 
@@ -55,13 +55,6 @@ class TopClipsListPresenter: ClipsListReloadablePresenter {
 
 extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     // MARK: - TopClipsListPresenterProtocol
-
-    func select(at index: Int) -> Clip? {
-        guard self.clips.indices.contains(index) else { return nil }
-        let clip = self.clips[index]
-        self.selectedClip = clip
-        return clip
-    }
 
     func set(view: TopClipsListViewProtocol) {
         self.internalView = view

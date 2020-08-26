@@ -22,7 +22,7 @@ protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter & AddingC
     func addAllToAlbum()
 }
 
-class TopClipsListEditPresenter: ClipsListPresenter {
+class TopClipsListEditPresenter: ClipsListPresenter & SelectedClipsContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -35,7 +35,7 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 
     var clips: [Clip]
 
-    // MARK: TopClipsListEditPresenterProtocol
+    // MARK: SelectedClipsContainer
 
     var selectedClips: [Clip] = []
 
@@ -60,26 +60,6 @@ class TopClipsListEditPresenter: ClipsListPresenter {
 
 extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
     // MARK: - TopClipsListEditPresenterProtocol
-
-    func select(at index: Int) {
-        guard self.clips.indices.contains(index) else { return }
-        let clip = self.clips[index]
-
-        guard !self.selectedClips.contains(where: { $0.url == clip.url }) else {
-            return
-        }
-        self.selectedClips.append(clip)
-    }
-
-    func deselect(at index: Int) {
-        guard self.clips.indices.contains(index) else { return }
-        let clip = self.clips[index]
-
-        guard let index = self.selectedClips.firstIndex(where: { $0.url == clip.url }) else {
-            return
-        }
-        self.selectedClips.remove(at: index)
-    }
 
     func set(view: TopClipsListEditViewProtocol) {
         self.internalView = view

@@ -860,11 +860,8 @@
 		2C3CCDAE24F2C4BF00FAC660 /* ClipsList */ = {
 			isa = PBXGroup;
 			children = (
-				2C3CCDA924F29A4700FAC660 /* ClipsListPresenter.swift */,
-				2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */,
-				2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */,
-				2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */,
-				2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */,
+				2CA31C5124F6A957004F8C68 /* ForPresenter */,
+				2CA31C5024F6A918004F8C68 /* ForView */,
 			);
 			path = ClipsList;
 			sourceTree = "<group>";
@@ -1346,6 +1343,25 @@
 				2CA022A524DD9F5F00329251 /* Info.plist */,
 			);
 			path = TBoxTests;
+			sourceTree = "<group>";
+		};
+		2CA31C5024F6A918004F8C68 /* ForView */ = {
+			isa = PBXGroup;
+			children = (
+				2C3CCDB724F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift */,
+				2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */,
+				2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */,
+			);
+			path = ForView;
+			sourceTree = "<group>";
+		};
+		2CA31C5124F6A957004F8C68 /* ForPresenter */ = {
+			isa = PBXGroup;
+			children = (
+				2C3CCDA924F29A4700FAC660 /* ClipsListPresenter.swift */,
+				2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */,
+			);
+			path = ForPresenter;
 			sourceTree = "<group>";
 		};
 		2CBD406924E158F2003A107C /* Transition */ = {
