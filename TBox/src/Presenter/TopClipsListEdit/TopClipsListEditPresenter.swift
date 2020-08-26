@@ -6,7 +6,7 @@ import Domain
 
 protocol TopClipsListEditViewProtocol: ClipsListEditableViewProtocol {}
 
-protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter & AddingClipsToAlbumPresenterDelegate {
+protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter {
     func set(view: TopClipsListEditViewProtocol)
 
     func deleteAll()
@@ -52,18 +52,5 @@ extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
 
     func set(view: TopClipsListEditViewProtocol) {
         self.internalView = view
-    }
-}
-
-extension TopClipsListEditPresenter: AddingClipsToAlbumPresenterDelegate {
-    // MARK: - AddingClipsToAlbumPresenterDelegate
-
-    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
-        guard isSucceeded else { return }
-
-        self.selectedClips = []
-        self.internalView?.deselectAll()
-
-        self.internalView?.endEditing()
     }
 }

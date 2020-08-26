@@ -14,7 +14,7 @@ protocol ClipsListEditableViewProtocol: ClipsListViewProtocol {
     func endEditing()
 }
 
-protocol ClipsListEditablePresenter: ClipsListDisplayablePresenter {
+protocol ClipsListEditablePresenter: ClipsListDisplayablePresenter & AddingClipsToAlbumPresenterDelegate {
     var selectedClips: [Clip] { get }
 
     var selectedIndices: [Int] { get }
@@ -78,5 +78,18 @@ extension ClipsListEditablePresenter where Self: ClipsListPresenter & ClipsListE
 
     func addAllToAlbum() {
         self.editableView?.presentAlbumSelectionView(for: self.selectedClips)
+    }
+}
+
+extension ClipsListEditablePresenter where Self: ClipsListPresenter & ClipsListEditableContainer {
+    // MARK: AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        guard isSucceeded else { return }
+
+        self.selectedClips = []
+        self.editableView?.deselectAll()
+
+        self.editableView?.endEditing()
     }
 }
