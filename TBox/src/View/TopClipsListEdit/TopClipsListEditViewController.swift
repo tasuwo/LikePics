@@ -108,18 +108,11 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
     }
 
     @objc func didTapAddToAlbum() {
-        self.presenter.addAllToAlbum()
+        self.didTapAddButton()
     }
 
     @objc func didTapRemove() {
-        let alert = UIAlertController(title: "", message: "選択中の画像を全て削除しますか？", preferredStyle: .alert)
-
-        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
-            self?.presenter.deleteAll()
-        }))
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
+        self.didTapRemoveButton()
     }
 }
 
@@ -170,6 +163,10 @@ extension TopClipsListEditViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         self.collectionView(self, collectionView, didDeselectItemAt: indexPath)
     }
+}
+
+extension TopClipsListEditViewController: UIScrollViewDelegate {
+    // MARK: - UIScrollViewDelegate
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.delegate?.topClipsListEditViewController(self, updatedContentOffset: self.collectionView.contentOffset)

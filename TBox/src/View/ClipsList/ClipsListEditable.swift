@@ -8,6 +8,23 @@ import UIKit
 
 protocol ClipsListEditable: ClipsListDisplayable where Presenter: ClipsListEditablePresenter {}
 
+extension ClipsListEditable {
+    func didTapAddButton() {
+        self.presenter.addAllToAlbum()
+    }
+
+    func didTapRemoveButton() {
+        let alert = UIAlertController(title: "", message: "選択中の画像を全て削除しますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            self?.presenter.deleteAll()
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
 extension ClipsListEditable where Self: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
