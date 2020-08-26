@@ -31,7 +31,7 @@ class TopClipsListPresenter: ClipsListReloadablePresenter {
 
     var clips: [Clip] = []
 
-    // MARK: - TopClipsListPresenterProtocol
+    // MARK: - ClipsListPreviewablePresenter
 
     var selectedClip: Clip?
 

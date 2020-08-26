@@ -27,6 +27,10 @@ class AlbumPresenter: ClipsListPresenter {
         return self.album.clips
     }
 
+    // MARK: ClipsListPreviewablePresenter
+
+    var selectedClip: Clip?
+
     // MARK: Internal
 
     private weak var internalView: AlbumViewProtocol?
@@ -53,14 +57,10 @@ class AlbumPresenter: ClipsListPresenter {
 extension AlbumPresenter: AlbumPresenterProtocol {
     // MARK: - AlbumPresenterProtocol
 
-    var selectedClip: Clip? {
-        self.internalSelectedClip
-    }
-
     func select(at index: Int) -> Clip? {
         guard self.clips.indices.contains(index) else { return nil }
         let clip = self.clips[index]
-        self.internalSelectedClip = clip
+        self.selectedClip = clip
         return clip
     }
 

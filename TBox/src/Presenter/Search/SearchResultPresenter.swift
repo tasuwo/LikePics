@@ -23,6 +23,10 @@ class SearchResultPresenter: ClipsListPresenter {
 
     var clips: [Clip]
 
+    // MARK: ClipsListPreviewablePresenter
+
+    var selectedClip: Clip?
+
     // MARK: Internal
 
     private weak var internalView: SearchResultViewProtocol?
@@ -45,14 +49,10 @@ class SearchResultPresenter: ClipsListPresenter {
 extension SearchResultPresenter: SearchResultPresenterProtocol {
     // MARK: - SearchResultPresenterProtocol
 
-    var selectedClip: Clip? {
-        self.internalSelectedClip
-    }
-
     func select(at index: Int) -> Clip? {
         guard self.clips.indices.contains(index) else { return nil }
         let clip = self.clips[index]
-        self.internalSelectedClip = clip
+        self.selectedClip = clip
         return clip
     }
 
