@@ -35,6 +35,9 @@ protocol ViewControllerFactory {
     func makeAlbumListViewController() -> UIViewController
     func makeAlbumViewController(album: Album) -> UIViewController
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController
+    func makeAlbumEditViewController(album: Album,
+                                     initialOffset offset: CGPoint,
+                                     delegate: ClipsListSynchronizableDelegate) -> UIViewController
 }
 
 class DependencyContainer {
@@ -119,5 +122,17 @@ extension DependencyContainer: ViewControllerFactory {
         presenter.delegate = delegate
         let viewController = AddingClipsToAlbumViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeAlbumEditViewController(album: Album, initialOffset offset: CGPoint, delegate: ClipsListSynchronizableDelegate) -> UIViewController {
+        let presenter = AlbumEditPresenter(album: album, storage: self.clipsStorage)
+        let proxy = AlbumEditPresenterProxy(presenter: presenter)
+        let viewController = AlbumEditViewController(factory: self,
+                                                     presenter: proxy,
+                                                     initialOffset: offset,
+                                                     delegate: delegate)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .overFullScreen
+        return navigationController
     }
 }

@@ -18,4 +18,14 @@ public struct Album {
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }
+
+    // MARK: - Methods
+
+    public func updatingClips(to clips: [Clip]) -> Self {
+        return .init(id: self.id,
+                     title: self.title,
+                     clips: clips,
+                     registeredDate: self.registeredDate,
+                     updatedDate: self.updatedDate)
+    }
 }

@@ -4,10 +4,14 @@
 
 import Domain
 
-protocol AlbumViewProtocol: ClipsListViewProtocol {}
+protocol AlbumViewProtocol: ClipsListViewProtocol {
+    func reload()
+}
 
 protocol AlbumPresenterProtocol: ClipsListPreviewablePresenter {
     var album: Album { get }
+
+    func replaceAlbum(by album: Album)
 
     func set(view: AlbumViewProtocol)
 }
@@ -33,7 +37,7 @@ class AlbumPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
 
     // MARK: AlbumPresenterProtocol
 
-    let album: Album
+    var album: Album
 
     // MARK: Internal
 
@@ -49,6 +53,11 @@ class AlbumPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
 
 extension AlbumPresenter: AlbumPresenterProtocol {
     // MARK: - AlbumPresenterProtocol
+
+    func replaceAlbum(by album: Album) {
+        self.album = album
+        self.internalView?.reload()
+    }
 
     func set(view: AlbumViewProtocol) {
         self.internalView = view

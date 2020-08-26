@@ -21,6 +21,10 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
         self.presenter.album
     }
 
+    func replaceAlbum(by album: Album) {
+        self.presenter.replaceAlbum(by: album)
+    }
+
     func set(view: AlbumViewProtocol) {
         self.presenter.set(view: view)
     }

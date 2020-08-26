@@ -34,22 +34,42 @@ class AlbumViewController: UIViewController, ClipsListPreviewable {
             layout.delegate = self
         }
 
-        self.setupAppearance()
+        self.setupNavigationBar()
 
         self.presenter.set(view: self)
     }
 
     // MARK: - Methods
 
-    private func setupAppearance() {
+    private func setupNavigationBar() {
         self.navigationItem.title = self.presenter.album.title
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = UIColor(named: "background_client")
+
+        let button = RoundedButton()
+        button.setTitle("編集", for: .normal)
+        button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+
+        self.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(customView: button)
+        ]
+    }
+
+    @objc func didTapEdit() {
+        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
+        let viewController = self.factory.makeAlbumEditViewController(album: self.presenter.album,
+                                                                      initialOffset: self.collectionView.contentOffset,
+                                                                      delegate: self)
+        self.present(viewController, animated: false, completion: nil)
     }
 }
 
 extension AlbumViewController: AlbumViewProtocol {
     // MARK: - AlbumViewProtocol
+
+    func reload() {
+        self.collectionView.reloadData()
+    }
 
     func showErrorMassage(_ message: String) {
         print(message)
@@ -101,3 +121,15 @@ extension AlbumViewController: ClipsCollectionLayoutDelegate {
 }
 
 extension AlbumViewController: ClipPreviewPresentingViewController {}
+
+extension AlbumViewController: ClipsListSynchronizableDelegate {
+    // MARK: - ClipsListSynchronizableDelegate
+
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedClipsTo clips: [Clip]) {
+        self.presenter.replaceAlbum(by: self.presenter.album.updatingClips(to: clips))
+    }
+
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedContentOffset offset: CGPoint) {
+        self.collectionView.contentOffset = offset
+    }
+}
