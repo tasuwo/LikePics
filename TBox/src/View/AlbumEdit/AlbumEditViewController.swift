@@ -61,10 +61,7 @@ class AlbumEditViewController: UIViewController, ClipsListEditable, ClipsListSyn
 
         if !self.isOffsetInitialized {
             self.isOffsetInitialized = true
-            // FIXME:
-            self.collectionView.setContentOffset(.init(x: self.initialOffset.x,
-                                                       y: self.initialOffset.y - 60),
-                                                 animated: false)
+            self.collectionView.setContentOffset(self.initialOffset, animated: false)
         }
     }
 
@@ -78,7 +75,6 @@ class AlbumEditViewController: UIViewController, ClipsListEditable, ClipsListSyn
 
     private func setupNavigationBar() {
         self.navigationItem.title = self.presenter.album.title
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = UIColor(named: "background_client")
 
         let button = RoundedButton()

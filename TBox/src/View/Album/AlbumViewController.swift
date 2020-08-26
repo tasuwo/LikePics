@@ -43,7 +43,6 @@ class AlbumViewController: UIViewController, ClipsListPreviewable {
 
     private func setupNavigationBar() {
         self.navigationItem.title = self.presenter.album.title
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = UIColor(named: "background_client")
 
         let button = RoundedButton()
