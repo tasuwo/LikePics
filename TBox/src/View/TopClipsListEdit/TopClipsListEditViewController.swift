@@ -141,7 +141,7 @@ extension TopClipsListEditViewController: TopClipsListEditViewProtocol {
         }
     }
 
-    func presentAddingClipsToAlbumView(by clips: [Clip]) {
+    func presentAlbumSelectionView(for clips: [Clip]) {
         let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
         self.present(viewController, animated: true, completion: nil)
     }

@@ -9,7 +9,7 @@ protocol ClipsListEditableViewProtocol: ClipsListViewProtocol {
 
     func deselectAll()
 
-    func presentAddingClipsToAlbumView(by clips: [Clip])
+    func presentAlbumSelectionView(for clips: [Clip])
 
     func endEditing()
 }
@@ -77,6 +77,6 @@ extension ClipsListEditablePresenter where Self: ClipsListPresenter & ClipsListE
     }
 
     func addAllToAlbum() {
-        self.editableView?.presentAddingClipsToAlbumView(by: self.selectedClips)
+        self.editableView?.presentAlbumSelectionView(for: self.selectedClips)
     }
 }
