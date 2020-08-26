@@ -166,14 +166,14 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
 
 extension TopClipsListViewController: ClipPreviewPresentingViewController {}
 
-extension TopClipsListViewController: TopClipsListEditViewControllerDelegate {
-    // MARK: - TopClipsListEditViewControllerDelegate
+extension TopClipsListViewController: ClipsListSynchronizableDelegate {
+    // MARK: - ClipsListSynchronizableDelegate
 
-    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedClipsTo clips: [Clip]) {
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedClipsTo clips: [Clip]) {
         self.presenter.replaceClips(by: clips)
     }
 
-    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint) {
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedContentOffset offset: CGPoint) {
         self.collectionView.contentOffset = offset
     }
 }

@@ -6,13 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-protocol TopClipsListEditViewControllerDelegate: AnyObject {
-    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedClipsTo clips: [Clip])
-
-    func topClipsListEditViewController(_ viewController: TopClipsListEditViewController, updatedContentOffset offset: CGPoint)
-}
-
-class TopClipsListEditViewController: UIViewController, ClipsListEditable {
+class TopClipsListEditViewController: UIViewController, ClipsListEditable, ClipsListSynchronizable {
     typealias Factory = ViewControllerFactory
     typealias Presenter = TopClipsListEditPresenterProxy
 
@@ -21,7 +15,8 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
 
     private let initialOffset: CGPoint
     private var isOffsetInitialized: Bool = false
-    private weak var delegate: TopClipsListEditViewControllerDelegate?
+
+    weak var delegate: ClipsListSynchronizableDelegate?
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
@@ -30,7 +25,7 @@ class TopClipsListEditViewController: UIViewController, ClipsListEditable {
     init(factory: Factory,
          presenter: TopClipsListEditPresenterProxy,
          initialOffset: CGPoint,
-         delegate: TopClipsListEditViewControllerDelegate)
+         delegate: ClipsListSynchronizableDelegate)
     {
         self.factory = factory
         self.presenter = presenter
@@ -140,7 +135,7 @@ extension TopClipsListEditViewController: TopClipsListEditViewProtocol {
     }
 
     func endEditing() {
-        self.delegate?.topClipsListEditViewController(self, updatedClipsTo: self.presenter.clips)
+        self.delegate?.clipsListSynchronizable(self, updatedClipsTo: self.presenter.clips)
         self.dismiss(animated: false, completion: nil)
     }
 }
@@ -169,7 +164,7 @@ extension TopClipsListEditViewController: UIScrollViewDelegate {
     // MARK: - UIScrollViewDelegate
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.delegate?.topClipsListEditViewController(self, updatedContentOffset: self.collectionView.contentOffset)
+        self.scrollViewDidScroll(self, scrollView)
     }
 }
 

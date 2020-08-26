@@ -76,6 +76,7 @@
 		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
 		2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */; };
 		2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */; };
+		2C603F5924F6C2CC006AD352 /* ClipsListSynchronizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C603F5824F6C2CC006AD352 /* ClipsListSynchronizable.swift */; };
 		2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */; };
 		2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */; };
@@ -491,6 +492,7 @@
 		2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionView.swift; sourceTree = "<group>"; };
 		2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsCollectionViewCell.xib; sourceTree = "<group>"; };
+		2C603F5824F6C2CC006AD352 /* ClipsListSynchronizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListSynchronizable.swift; sourceTree = "<group>"; };
 		2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		2C6C8F8A24DF0BAC00692301 /* ClipSelectionCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionView.swift; sourceTree = "<group>"; };
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
@@ -861,6 +863,7 @@
 				2C3CCDA424F2993E00FAC660 /* ClipsListDisplayable.swift */,
 				2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */,
 				2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */,
+				2C603F5824F6C2CC006AD352 /* ClipsListSynchronizable.swift */,
 			);
 			path = ClipsList;
 			sourceTree = "<group>";
@@ -2413,6 +2416,7 @@
 			files = (
 				2C3CCDB824F2C92E00FAC660 /* ClipsListDisplayablePresenter.swift in Sources */,
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
+				2C603F5924F6C2CC006AD352 /* ClipsListSynchronizable.swift in Sources */,
 				2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */,
 				2C3CCDD224F4246E00FAC660 /* ClipsListPreviewable.swift in Sources */,
 				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift in Sources */,

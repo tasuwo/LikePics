@@ -14,7 +14,7 @@ protocol ViewControllerFactory {
     func makeTopClipsListViewController() -> UIViewController
     func makeTopClipsListEditViewController(clips: [Clip],
                                             initialOffset offset: CGPoint,
-                                            delegate: TopClipsListEditViewControllerDelegate) -> UIViewController
+                                            delegate: ClipsListSynchronizableDelegate) -> UIViewController
 
     // MARK: Preview
 
@@ -53,7 +53,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeTopClipsListEditViewController(clips: [Clip],
                                             initialOffset offset: CGPoint,
-                                            delegate: TopClipsListEditViewControllerDelegate) -> UIViewController
+                                            delegate: ClipsListSynchronizableDelegate) -> UIViewController
     {
         let presenter = TopClipsListEditPresenter(clips: clips, storage: self.clipsStorage)
         let proxy = TopClipsListEditPresenterProxy(presenter: presenter)
