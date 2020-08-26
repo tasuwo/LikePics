@@ -12,7 +12,7 @@ protocol AlbumPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: AlbumViewProtocol)
 }
 
-class AlbumPresenter: ClipsListPresenter & SelectedClipContainer {
+class AlbumPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -27,7 +27,7 @@ class AlbumPresenter: ClipsListPresenter & SelectedClipContainer {
         return self.album.clips
     }
 
-    // MARK: SelectedClipContainer
+    // MARK: ClipsListPreviewableContainer
 
     var selectedClip: Clip?
 
@@ -44,13 +44,6 @@ class AlbumPresenter: ClipsListPresenter & SelectedClipContainer {
     init(album: Album, storage: ClipStorageProtocol) {
         self.album = album
         self.storage = storage
-    }
-
-    // MARK: - Methods
-
-    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "問題が発生しました"
     }
 }
 

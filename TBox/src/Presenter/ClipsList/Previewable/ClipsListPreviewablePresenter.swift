@@ -12,11 +12,7 @@ protocol ClipsListPreviewablePresenter: ClipsListDisplayablePresenter {
     func select(at index: Int) -> Clip?
 }
 
-protocol SelectedClipContainer: AnyObject {
-    var selectedClip: Clip? { get set }
-}
-
-extension ClipsListPreviewablePresenter where Self: SelectedClipContainer {
+extension ClipsListPreviewablePresenter where Self: ClipsListPreviewableContainer {
     var selectedIndex: Int? {
         guard let clip = self.selectedClip else { return nil }
         return self.clips.firstIndex(where: { $0.url == clip.url })

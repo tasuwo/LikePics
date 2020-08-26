@@ -10,7 +10,7 @@ protocol SearchResultPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: SearchResultViewProtocol)
 }
 
-class SearchResultPresenter: ClipsListPresenter & SelectedClipContainer {
+class SearchResultPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -23,7 +23,7 @@ class SearchResultPresenter: ClipsListPresenter & SelectedClipContainer {
 
     var clips: [Clip]
 
-    // MARK: SelectedClipContainer
+    // MARK: ClipsListPreviewableContainer
 
     var selectedClip: Clip?
 
@@ -36,11 +36,6 @@ class SearchResultPresenter: ClipsListPresenter & SelectedClipContainer {
     init(clips: [Clip], storage: ClipStorageProtocol) {
         self.clips = clips
         self.storage = storage
-    }
-
-    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "問題が発生しました"
     }
 }
 

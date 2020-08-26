@@ -15,3 +15,10 @@ protocol ClipsListPresenter: AnyObject {
 
     static func resolveErrorMessage(_ error: ClipStorageError) -> String
 }
+
+extension ClipsListPresenter {
+    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+        // TODO:
+        return "問題が発生しました"
+    }
+}

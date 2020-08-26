@@ -4,15 +4,7 @@
 
 import Domain
 
-protocol TopClipsListEditViewProtocol: ClipsListViewProtocol {
-    func reload()
-
-    func deselectAll()
-
-    func presentAddingClipsToAlbumView(by clips: [Clip])
-
-    func endEditing()
-}
+protocol TopClipsListEditViewProtocol: ClipsListEditableViewProtocol {}
 
 protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter & AddingClipsToAlbumPresenterDelegate {
     func set(view: TopClipsListEditViewProtocol)
@@ -22,7 +14,7 @@ protocol TopClipsListEditPresenterProtocol: ClipsListEditablePresenter & AddingC
     func addAllToAlbum()
 }
 
-class TopClipsListEditPresenter: ClipsListPresenter & SelectedClipsContainer {
+class TopClipsListEditPresenter: ClipsListPresenter & ClipsListEditableContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -35,9 +27,13 @@ class TopClipsListEditPresenter: ClipsListPresenter & SelectedClipsContainer {
 
     var clips: [Clip]
 
-    // MARK: SelectedClipsContainer
+    // MARK: ClipsListEditableContainer
 
     var selectedClips: [Clip] = []
+
+    var editableView: ClipsListEditableViewProtocol? {
+        return self.internalView
+    }
 
     // MARK: Internal
 
@@ -49,13 +45,6 @@ class TopClipsListEditPresenter: ClipsListPresenter & SelectedClipsContainer {
         self.clips = clips
         self.storage = storage
     }
-
-    // MARK: - Methods
-
-    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "問題が発生しました"
-    }
 }
 
 extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
@@ -63,31 +52,6 @@ extension TopClipsListEditPresenter: TopClipsListEditPresenterProtocol {
 
     func set(view: TopClipsListEditViewProtocol) {
         self.internalView = view
-    }
-
-    func deleteAll() {
-        switch self.storage.removeClips(ofUrls: self.selectedClips.map { $0.url }) {
-        case .success:
-            // NOP
-            break
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-        }
-
-        self.clips.removeAll(where: { clip in
-            self.selectedClips.contains(where: { clip.url == $0.url })
-        })
-
-        self.selectedClips = []
-        self.internalView?.deselectAll()
-
-        self.internalView?.reload()
-
-        self.internalView?.endEditing()
-    }
-
-    func addAllToAlbum() {
-        self.internalView?.presentAddingClipsToAlbumView(by: self.selectedClips)
     }
 }
 

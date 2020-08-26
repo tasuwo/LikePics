@@ -14,7 +14,7 @@ protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
     func reload()
 }
 
-class TopClipsListPresenter: ClipsListReloadablePresenter & SelectedClipContainer {
+class TopClipsListPresenter: ClipsListReloadablePresenter & ClipsListReloadableContainer & ClipsListPreviewableContainer {
     // MARK: - Properties
 
     // MARK: ClipsListPresenter
@@ -31,7 +31,7 @@ class TopClipsListPresenter: ClipsListReloadablePresenter & SelectedClipContaine
 
     var clips: [Clip] = []
 
-    // MARK: - SelectedClipContainer
+    // MARK: - ClipsListPreviewableContainer
 
     var selectedClip: Clip?
 
@@ -43,13 +43,6 @@ class TopClipsListPresenter: ClipsListReloadablePresenter & SelectedClipContaine
 
     public init(storage: ClipStorageProtocol) {
         self.storage = storage
-    }
-
-    // MARK: - Methods
-
-    static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "問題が発生しました"
     }
 }
 

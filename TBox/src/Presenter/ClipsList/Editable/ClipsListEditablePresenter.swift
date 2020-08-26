@@ -4,6 +4,16 @@
 
 import Domain
 
+protocol ClipsListEditableViewProtocol: ClipsListViewProtocol {
+    func reload()
+
+    func deselectAll()
+
+    func presentAddingClipsToAlbumView(by clips: [Clip])
+
+    func endEditing()
+}
+
 protocol ClipsListEditablePresenter: ClipsListDisplayablePresenter {
     var selectedClips: [Clip] { get }
 
@@ -12,13 +22,13 @@ protocol ClipsListEditablePresenter: ClipsListDisplayablePresenter {
     func select(at index: Int)
 
     func deselect(at index: Int)
+
+    func deleteAll()
+
+    func addAllToAlbum()
 }
 
-protocol SelectedClipsContainer: AnyObject {
-    var selectedClips: [Clip] { get set }
-}
-
-extension ClipsListEditablePresenter where Self: SelectedClipsContainer {
+extension ClipsListEditablePresenter where Self: ClipsListPresenter & ClipsListEditableContainer {
     var selectedIndices: [Int] {
         return self.selectedClips.compactMap { selectedClip in
             self.clips.firstIndex(where: { $0.url == selectedClip.url })
@@ -43,5 +53,30 @@ extension ClipsListEditablePresenter where Self: SelectedClipsContainer {
             return
         }
         self.selectedClips.remove(at: index)
+    }
+
+    func deleteAll() {
+        switch self.storage.removeClips(ofUrls: self.selectedClips.map { $0.url }) {
+        case .success:
+            // NOP
+            break
+        case let .failure(error):
+            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
+        }
+
+        self.clips.removeAll(where: { clip in
+            self.selectedClips.contains(where: { clip.url == $0.url })
+        })
+
+        self.selectedClips = []
+        self.editableView?.deselectAll()
+
+        self.editableView?.reload()
+
+        self.editableView?.endEditing()
+    }
+
+    func addAllToAlbum() {
+        self.editableView?.presentAddingClipsToAlbumView(by: self.selectedClips)
     }
 }

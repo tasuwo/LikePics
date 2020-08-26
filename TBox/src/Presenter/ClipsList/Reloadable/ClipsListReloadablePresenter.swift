@@ -12,12 +12,11 @@ protocol ClipsListReloadableViewProtocol: ClipsListViewProtocol {
 
 protocol ClipsListReloadablePresenter: ClipsListPresenter {
     var reloadableView: ClipsListReloadableViewProtocol? { get }
-    var clips: [Clip] { get set }
 
     func loadAllClips()
 }
 
-extension ClipsListReloadablePresenter {
+extension ClipsListReloadablePresenter where Self: ClipsListReloadableContainer {
     func loadAllClips() {
         guard let view = self.reloadableView else { return }
 
