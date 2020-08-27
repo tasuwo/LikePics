@@ -164,6 +164,19 @@ extension AlbumViewController: AlbumViewProtocol {
     }
 }
 
+extension AlbumViewController: ClipPreviewPresentingViewController {
+    // MARK: - ClipPreviewPresentingViewController
+
+    var selectedIndexPath: IndexPath? {
+        guard let index = self.presenter.selectedIndices.first else { return nil }
+        return IndexPath(row: index, section: 0)
+    }
+
+    var clips: [Clip] {
+        self.presenter.clips
+    }
+}
+
 extension AlbumViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
