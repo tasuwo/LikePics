@@ -46,16 +46,10 @@
 		2C3CCDBE24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */; };
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
 		2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */; };
-		2C3CCDCC24F4119B00FAC660 /* TopClipsListEditPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDCB24F4119B00FAC660 /* TopClipsListEditPresenter.swift */; };
-		2C3CCDCE24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDCD24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift */; };
 		2C3CCDD224F4246E00FAC660 /* ClipsListPreviewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */; };
 		2C3CCDD424F4259F00FAC660 /* ClipsListPreviewablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */; };
 		2C3CCDD624F4280700FAC660 /* ClipsListEditable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */; };
 		2C3CCDD824F4283F00FAC660 /* ClipsListEditablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */; };
-		2C3D3F4A24F7D73100F068DD /* SearchResultEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D3F4924F7D73100F068DD /* SearchResultEditViewController.swift */; };
-		2C3D3F4C24F7D76900F068DD /* SearchResultEditPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D3F4B24F7D76900F068DD /* SearchResultEditPresenterProxy.swift */; };
-		2C3D3F4E24F7D77600F068DD /* SearchResultEditPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D3F4D24F7D77600F068DD /* SearchResultEditPresenter.swift */; };
-		2C3D3F5024F7D7EF00F068DD /* SearchResultEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3D3F4F24F7D7EF00F068DD /* SearchResultEditViewController.xib */; };
 		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
 		2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */; };
 		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
@@ -470,16 +464,10 @@
 		2C3CCDBD24F2D65A00FAC660 /* ClipsListReloadablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListReloadablePresenter.swift; sourceTree = "<group>"; };
 		2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift"; sourceTree = "<group>"; };
 		2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
-		2C3CCDCB24F4119B00FAC660 /* TopClipsListEditPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListEditPresenter.swift; sourceTree = "<group>"; };
-		2C3CCDCD24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListEditPresenterProxy.swift; sourceTree = "<group>"; };
 		2C3CCDD124F4246E00FAC660 /* ClipsListPreviewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPreviewable.swift; sourceTree = "<group>"; };
 		2C3CCDD324F4259F00FAC660 /* ClipsListPreviewablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPreviewablePresenter.swift; sourceTree = "<group>"; };
 		2C3CCDD524F4280700FAC660 /* ClipsListEditable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListEditable.swift; sourceTree = "<group>"; };
 		2C3CCDD724F4283F00FAC660 /* ClipsListEditablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListEditablePresenter.swift; sourceTree = "<group>"; };
-		2C3D3F4924F7D73100F068DD /* SearchResultEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultEditViewController.swift; sourceTree = "<group>"; };
-		2C3D3F4B24F7D76900F068DD /* SearchResultEditPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultEditPresenterProxy.swift; sourceTree = "<group>"; };
-		2C3D3F4D24F7D77600F068DD /* SearchResultEditPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultEditPresenter.swift; sourceTree = "<group>"; };
-		2C3D3F4F24F7D7EF00F068DD /* SearchResultEditViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultEditViewController.xib; sourceTree = "<group>"; };
 		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
 		2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
@@ -913,23 +901,12 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
-		2C3CCDCA24F4118400FAC660 /* TopClipsListEdit */ = {
-			isa = PBXGroup;
-			children = (
-				2C3CCDCB24F4119B00FAC660 /* TopClipsListEditPresenter.swift */,
-				2C3CCDCD24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift */,
-			);
-			path = TopClipsListEdit;
-			sourceTree = "<group>";
-		};
 		2C45D3ED24EACA780045B6D3 /* Search */ = {
 			isa = PBXGroup;
 			children = (
 				2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */,
 				2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */,
 				2C45D3F724EC317F0045B6D3 /* SearchResultViewController.xib */,
-				2C3D3F4924F7D73100F068DD /* SearchResultEditViewController.swift */,
-				2C3D3F4F24F7D7EF00F068DD /* SearchResultEditViewController.xib */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -940,8 +917,6 @@
 				2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */,
 				2C45D3F524EC2FD00045B6D3 /* SearchResultPresenter.swift */,
 				2C3CCDB924F2CF6E00FAC660 /* SearchResultPresenterProxy.swift */,
-				2C3D3F4B24F7D76900F068DD /* SearchResultEditPresenterProxy.swift */,
-				2C3D3F4D24F7D77600F068DD /* SearchResultEditPresenter.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -1022,7 +997,6 @@
 				2C45D3F224EC1E490045B6D3 /* Search */,
 				2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */,
 				2C570B5D24E04FAB00A1DC9F /* TopClipsList */,
-				2C3CCDCA24F4118400FAC660 /* TopClipsListEdit */,
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
@@ -1971,7 +1945,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C603F6724F6D0F0006AD352 /* AlbumEditViewController.xib in Resources */,
-				2C3D3F5024F7D7EF00F068DD /* SearchResultEditViewController.xib in Resources */,
 				2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */,
 				2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */,
 				2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */,
@@ -2475,13 +2448,11 @@
 				2C3CCDB424F2C56D00FAC660 /* ClipsListPresenter.swift in Sources */,
 				2CA31C5B24F6B67D004F8C68 /* ClipsListPreviewableContainer.swift in Sources */,
 				2C2289E824F7EEEA0026E24A /* ClipsListPresenterProtocol.swift in Sources */,
-				2C3D3F4C24F7D76900F068DD /* SearchResultEditPresenterProxy.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
 				2C3CCDD824F4283F00FAC660 /* ClipsListEditablePresenter.swift in Sources */,
 				2C2289EA24F7EF3D0026E24A /* NewClipsListPresenter.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C603F6524F6CA79006AD352 /* AlbumEditableContainer.swift in Sources */,
-				2C3D3F4A24F7D73100F068DD /* SearchResultEditViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2CA31C5824F6B5CF004F8C68 /* ClipsListEditableContainer.swift in Sources */,
 				2C603F5F24F6C773006AD352 /* AlbumEditPresenter.swift in Sources */,
@@ -2493,10 +2464,8 @@
 				2C3CCDD624F4280700FAC660 /* ClipsListEditable.swift in Sources */,
 				2C3CCDBA24F2CF6E00FAC660 /* SearchResultPresenterProxy.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
-				2C3D3F4E24F7D77600F068DD /* SearchResultEditPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */,
-				2C3CCDCC24F4119B00FAC660 /* TopClipsListEditPresenter.swift in Sources */,
 				2C603F6324F6C927006AD352 /* AlbumEditablePresenter.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
@@ -2508,7 +2477,6 @@
 				2C3CCDB224F2C55E00FAC660 /* ClipsListDisplayable.swift in Sources */,
 				2C7C632F24F6B705008D04FA /* ClipsListReloadableContainer.swift in Sources */,
 				2CD3DA5F24EEC8720031A065 /* AddingAlbumAlertContainer.swift in Sources */,
-				2C3CCDCE24F4123600FAC660 /* TopClipsListEditPresenterProxy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
