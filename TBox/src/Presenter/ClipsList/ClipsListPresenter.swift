@@ -4,7 +4,7 @@
 
 import Domain
 
-protocol NewClipsListViewProtocol: AnyObject {
+protocol ClipsListViewProtocol: AnyObject {
     func reload()
 
     func deselectAll()
@@ -18,8 +18,8 @@ protocol NewClipsListViewProtocol: AnyObject {
     func showErrorMassage(_ message: String)
 }
 
-protocol NewClipsListPresenter: AnyObject {
-    var view: NewClipsListViewProtocol? { get }
+protocol ClipsListPresenter: AnyObject {
+    var view: ClipsListViewProtocol? { get }
 
     var clips: [Clip] { get }
 
@@ -34,14 +34,14 @@ protocol NewClipsListPresenter: AnyObject {
     static func resolveErrorMessage(_ error: ClipStorageError) -> String
 }
 
-extension NewClipsListPresenter {
+extension ClipsListPresenter {
     static func resolveErrorMessage(_ error: ClipStorageError) -> String {
         // TODO:
         return "問題が発生しました"
     }
 }
 
-extension NewClipsListPresenter where Self: ClipsListPresenterProtocol {
+extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
     var selectedIndices: [Int] {
         return self.selectedClips.compactMap { selectedClip in
             self.clips.firstIndex(where: { $0.url == selectedClip.url })
@@ -135,7 +135,7 @@ extension NewClipsListPresenter where Self: ClipsListPresenterProtocol {
     }
 }
 
-extension NewClipsListPresenter where Self: AddingClipsToAlbumPresenterDelegate {
+extension ClipsListPresenter where Self: AddingClipsToAlbumPresenterDelegate {
     // MARK: AddingClipsToAlbumPresenterDelegate
 
     func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {

@@ -4,7 +4,7 @@
 
 import Domain
 
-protocol AlbumViewProtocol: NewClipsListViewProtocol {}
+protocol AlbumViewProtocol: ClipsListViewProtocol {}
 
 protocol AlbumPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
     var album: Album { get }
@@ -16,12 +16,12 @@ protocol AlbumPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbum
     func replaceAlbum(by album: Album)
 }
 
-class AlbumPresenter: NewClipsListPresenter {
+class AlbumPresenter: ClipsListPresenter {
     // MARK: - Properties
 
-    // MARK: NewClipsListPresenter
+    // MARK: ClipsListPresenter
 
-    var view: NewClipsListViewProtocol? {
+    var view: ClipsListViewProtocol? {
         return self.internalView
     }
 

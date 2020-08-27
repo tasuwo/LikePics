@@ -4,7 +4,7 @@
 
 import Domain
 
-protocol TopClipsListViewProtocol: NewClipsListViewProtocol {
+protocol TopClipsListViewProtocol: ClipsListViewProtocol {
     func startLoading()
 
     func endLoading()
@@ -18,7 +18,7 @@ protocol TopClipsListPresenterProtocol: ClipsListPresenterProtocol & AddingClips
     func reload()
 }
 
-class TopClipsListPresenter: NewClipsListPresenter {
+class TopClipsListPresenter: ClipsListPresenter {
     // MARK: - Properties
 
     // MARK: ClipsListPresenterProtocol
@@ -29,9 +29,9 @@ class TopClipsListPresenter: NewClipsListPresenter {
 
     var isEditing: Bool
 
-    // MARK: NewClipsListPresenter
+    // MARK: ClipsListPresenter
 
-    var view: NewClipsListViewProtocol? {
+    var view: ClipsListViewProtocol? {
         return self.internalView
     }
 

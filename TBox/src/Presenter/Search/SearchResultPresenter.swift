@@ -4,7 +4,7 @@
 
 import Domain
 
-protocol SearchResultViewProtocol: NewClipsListViewProtocol {}
+protocol SearchResultViewProtocol: ClipsListViewProtocol {}
 
 protocol SearchResultPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
     func set(view: SearchResultViewProtocol)
@@ -12,7 +12,7 @@ protocol SearchResultPresenterProtocol: ClipsListPresenterProtocol & AddingClips
     func replaceClips(by clips: [Clip])
 }
 
-class SearchResultPresenter: NewClipsListPresenter {
+class SearchResultPresenter: ClipsListPresenter {
     // MARK: - Properties
 
     // MARK: ClipsListPresenterProtocol
@@ -23,9 +23,9 @@ class SearchResultPresenter: NewClipsListPresenter {
 
     var isEditing: Bool
 
-    // MARK: NewClipsListPresenter
+    // MARK: ClipsListPresenter
 
-    var view: NewClipsListViewProtocol? {
+    var view: ClipsListViewProtocol? {
         return self.internalView
     }
 
