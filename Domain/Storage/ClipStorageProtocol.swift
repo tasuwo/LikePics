@@ -38,6 +38,8 @@ public protocol ClipStorageProtocol {
 
     func update(byDeletingClips clipUrls: [URL], fromAlbum album: Album) -> Result<Void, ClipStorageError>
 
+    func update(clipsOfAlbum album: Album, byReplacingWith clips: [Clip]) -> Result<Album, ClipStorageError>
+
     func update(titleOfAlbum album: Album, to title: String) -> Result<Album, ClipStorageError>
 
     // MARK: Delete
