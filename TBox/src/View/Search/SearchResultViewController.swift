@@ -21,6 +21,8 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+
+        self.presenter.set(view: self)
     }
 
     required init?(coder: NSCoder) {
@@ -30,23 +32,29 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
-        }
-
+        self.setupCollectionView()
         self.setupNavigationBar()
-
-        self.presenter.set(view: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.view.backgroundColor = UIColor(named: "background_client")
+        self.updateAppearance()
     }
 
     // MARK: - Methods
+
+    private func updateAppearance() {
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+    }
+
+    // MARK: CollectionView
+
+    private func setupCollectionView() {
+        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
+            layout.delegate = self
+        }
+    }
 
     // MARK: NavigationBar
 

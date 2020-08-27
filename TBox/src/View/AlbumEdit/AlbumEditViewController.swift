@@ -43,17 +43,9 @@ class AlbumEditViewController: UIViewController, ClipsListEditable, ClipsListSyn
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
-        }
-
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
     }
 
     override func viewDidLayoutSubviews() {
@@ -68,6 +60,9 @@ class AlbumEditViewController: UIViewController, ClipsListEditable, ClipsListSyn
     // MARK: - Methods
 
     private func setupCollectionView() {
+        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
+            layout.delegate = self
+        }
         self.collectionView.allowsMultipleSelection = true
     }
 

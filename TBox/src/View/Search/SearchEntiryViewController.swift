@@ -32,8 +32,7 @@ class SearchEntryViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupAppearance()
-
-        self.navigationItem.searchController = self.setupSearchController()
+        self.setupNavigationBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +48,13 @@ class SearchEntryViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "background_client")
     }
 
-    private func setupSearchController() -> UISearchController {
+    // MARK: NavigationBar
+
+    private func setupNavigationBar() {
+        self.navigationItem.searchController = self.makeSearchController()
+    }
+
+    private func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = "クリップを検索する"
         searchController.searchBar.searchBarStyle = .minimal

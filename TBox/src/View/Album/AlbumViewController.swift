@@ -21,6 +21,8 @@ class AlbumViewController: UIViewController, ClipsListPreviewable {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+
+        self.presenter.set(view: self)
     }
 
     required init?(coder: NSCoder) {
@@ -30,16 +32,21 @@ class AlbumViewController: UIViewController, ClipsListPreviewable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
-        }
-
+        self.setupCollectionView()
         self.setupNavigationBar()
-
-        self.presenter.set(view: self)
     }
 
     // MARK: - Methods
+
+    // MARK: CollectionView
+
+    private func setupCollectionView() {
+        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
+            layout.delegate = self
+        }
+    }
+
+    // MARK: NavigationBar
 
     private func setupNavigationBar() {
         self.navigationItem.title = self.presenter.album.title

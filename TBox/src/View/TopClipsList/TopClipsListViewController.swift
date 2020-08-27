@@ -23,6 +23,7 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
 
+        self.presenter.set(view: self)
         self.addBecomeActiveNotification()
     }
 
@@ -37,22 +38,27 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
-        }
-
-        self.presenter.set(view: self)
-        self.presenter.reload()
-
+        self.setupCollectionView()
         self.setupNavigationBar()
+
+        self.presenter.reload()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         self.presenter.reload()
     }
 
     // MARK: - Methods
+
+    // MARK: CollectionView
+
+    private func setupCollectionView() {
+        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
+            layout.delegate = self
+        }
+    }
 
     // MARK: NavigationBar
 
