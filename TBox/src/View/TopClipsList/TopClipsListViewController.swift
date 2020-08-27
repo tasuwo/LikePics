@@ -6,7 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class TopClipsListViewController: UIViewController, ClipsListPreviewable {
+class TopClipsListViewController: UIViewController, ClipsListViewController {
     typealias Factory = ViewControllerFactory
     typealias Presenter = TopClipsListPresenterProxy
 
@@ -40,6 +40,7 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
 
         self.setupCollectionView()
         self.setupNavigationBar()
+        self.setupToolBar()
 
         self.presenter.reload()
     }
@@ -65,22 +66,35 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.updateNavigationBar(for: self.presenter.isEditing)
+    }
 
-        let button = RoundedButton()
-        button.setTitle("編集", for: .normal)
-        button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+    private func updateNavigationBar(for isEditing: Bool) {
+        if isEditing {
+            let button = RoundedButton()
+            button.setTitle("キャンセル", for: .normal)
+            button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
 
-        self.navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(customView: button)
-        ]
+            self.navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(customView: button)
+            ]
+        } else {
+            let button = RoundedButton()
+            button.setTitle("編集", for: .normal)
+            button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+
+            self.navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(customView: button)
+            ]
+        }
     }
 
     @objc func didTapEdit() {
-        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
-        let viewController = self.factory.makeTopClipsListEditViewController(clips: self.presenter.clips,
-                                                                             initialOffset: self.collectionView.contentOffset,
-                                                                             delegate: self)
-        self.present(viewController, animated: false, completion: nil)
+        self.setEditing(true, animated: true)
+    }
+
+    @objc func didTapCancel() {
+        self.setEditing(false, animated: true)
     }
 
     // MARK: Notification
@@ -101,6 +115,50 @@ class TopClipsListViewController: UIViewController, ClipsListPreviewable {
     @objc func didBecomeActive() {
         self.presenter.reload()
     }
+
+    // MARK: ToolBar
+
+    private func setupToolBar() {
+        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
+        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+
+        self.setToolbarItems([addToAlbumItem, flexibleItem, removeItem], animated: false)
+        self.updateToolBar(for: self.presenter.isEditing)
+    }
+
+    private func updateToolBar(for editing: Bool) {
+        self.navigationController?.setToolbarHidden(!editing, animated: false)
+    }
+
+    @objc func didTapAddToAlbum() {
+        self.presenter.addAllToAlbum()
+    }
+
+    @objc func didTapRemove() {
+        let alert = UIAlertController(title: "", message: "選択中のクリップを全て削除しますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            self?.presenter.deleteAll()
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    // MARK: UIViewController (Override)
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+
+        self.presenter.setEditing(editing)
+        self.didSetEditing(editing)
+
+        self.collectionView.allowsMultipleSelection = editing
+
+        self.updateNavigationBar(for: editing)
+        self.updateToolBar(for: editing)
+    }
 }
 
 extension TopClipsListViewController: TopClipsListViewProtocol {
@@ -116,13 +174,46 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         self.indicator.stopAnimating()
     }
 
+    func reload() {
+        self.collectionView.reloadData()
+    }
+
+    func deselectAll() {
+        self.collectionView.indexPathsForSelectedItems?.forEach {
+            self.collectionView.deselectItem(at: $0, animated: false)
+        }
+    }
+
+    func endEditing() {
+        self.setEditing(false, animated: true)
+    }
+
+    func presentPreviewView(for clip: Clip) {
+        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
+        self.present(nextViewController, animated: true, completion: nil)
+    }
+
+    func presentAlbumSelectionView(for clips: [Clip]) {
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
     func showErrorMassage(_ message: String) {
         let alert = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: "OK", style: .default, handler: nil))
     }
+}
 
-    func reload() {
-        self.collectionView.reloadData()
+extension TopClipsListViewController: ClipPreviewPresentingViewController {
+    // MARK: - ClipPreviewPresentingViewController
+
+    var selectedIndexPath: IndexPath? {
+        guard let index = self.presenter.selectedIndices.first else { return nil }
+        return IndexPath(row: index, section: 0)
+    }
+
+    var clips: [Clip] {
+        self.presenter.clips
     }
 }
 
@@ -139,6 +230,10 @@ extension TopClipsListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.collectionView(self, collectionView, didSelectItemAt: indexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        self.collectionView(self, collectionView, didDeselectItemAt: indexPath)
     }
 }
 
@@ -167,19 +262,5 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
-    }
-}
-
-extension TopClipsListViewController: ClipPreviewPresentingViewController {}
-
-extension TopClipsListViewController: ClipsListSynchronizableDelegate {
-    // MARK: - ClipsListSynchronizableDelegate
-
-    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedClipsTo clips: [Clip]) {
-        self.presenter.replaceClips(by: clips)
-    }
-
-    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedContentOffset offset: CGPoint) {
-        self.collectionView.contentOffset = offset
     }
 }

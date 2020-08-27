@@ -4,9 +4,13 @@
 
 import Domain
 
-protocol TopClipsListViewProtocol: ClipsListReloadableViewProtocol {}
+protocol TopClipsListViewProtocol: NewClipsListViewProtocol {
+    func startLoading()
 
-protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
+    func endLoading()
+}
+
+protocol TopClipsListPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
     func set(view: TopClipsListViewProtocol)
 
     func replaceClips(by clips: [Clip])
@@ -14,35 +18,36 @@ protocol TopClipsListPresenterProtocol: ClipsListPreviewablePresenter {
     func reload()
 }
 
-class TopClipsListPresenter: ClipsListReloadablePresenter & ClipsListReloadableContainer & ClipsListPreviewableContainer {
+class TopClipsListPresenter: NewClipsListPresenter {
     // MARK: - Properties
 
-    // MARK: ClipsListPresenter
+    // MARK: ClipsListPresenterProtocol
 
-    var view: ClipsListViewProtocol? {
+    var clips: [Clip]
+
+    var selectedClips: [Clip]
+
+    var isEditing: Bool
+
+    // MARK: NewClipsListPresenter
+
+    var view: NewClipsListViewProtocol? {
         return self.internalView
     }
 
-    var reloadableView: ClipsListReloadableViewProtocol? {
-        return self.internalView
-    }
-
-    let storage: ClipStorageProtocol
-
-    var clips: [Clip] = []
-
-    // MARK: - ClipsListPreviewableContainer
-
-    var selectedClip: Clip?
+    var storage: ClipStorageProtocol
 
     // MARK: Internal
 
-    weak var internalView: TopClipsListViewProtocol?
+    private weak var internalView: TopClipsListViewProtocol?
 
     // MARK: - Lifecycle
 
     public init(storage: ClipStorageProtocol) {
         self.storage = storage
+        self.isEditing = false
+        self.clips = []
+        self.selectedClips = []
     }
 }
 
@@ -53,12 +58,26 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         self.internalView = view
     }
 
+    func updateClips(to clips: [Clip]) {
+        self.clips = clips
+    }
+
     func replaceClips(by clips: [Clip]) {
         self.clips = clips
         self.reload()
     }
 
     func reload() {
-        self.loadAllClips()
+        guard let view = self.internalView else { return }
+
+        view.startLoading()
+        switch self.storage.readAllClips() {
+        case let .success(clips):
+            self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
+            view.reload()
+        case let .failure(error):
+            view.showErrorMassage(Self.resolveErrorMessage(error))
+        }
+        view.endLoading()
     }
 }

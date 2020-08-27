@@ -4,12 +4,6 @@
 
 import Domain
 
-enum ThumbnailLayer {
-    case primary
-    case secondary
-    case tertiary
-}
-
 protocol ClipsListDisplayablePresenter {
     var clips: [Clip] { get }
 

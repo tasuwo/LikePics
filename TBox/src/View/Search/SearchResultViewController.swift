@@ -69,11 +69,11 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
     }
 
     @objc func didTapEdit() {
-        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
-        let viewController = self.factory.makeTopClipsListEditViewController(clips: self.presenter.clips,
-                                                                             initialOffset: self.collectionView.contentOffset,
-                                                                             delegate: self)
-        self.present(viewController, animated: false, completion: nil)
+        // self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
+        // let viewController = self.factory.makeTopClipsListEditViewController(clips: self.presenter.clips,
+        //                                                                      initialOffset: self.collectionView.contentOffset,
+        //                                                                      delegate: self)
+        // self.present(viewController, animated: false, completion: nil)
     }
 }
 
