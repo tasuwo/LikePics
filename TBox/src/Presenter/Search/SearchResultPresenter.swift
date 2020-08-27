@@ -4,32 +4,32 @@
 
 import Domain
 
-protocol SearchResultViewProtocol: ClipsListViewProtocol {
-    func reload()
-}
+protocol SearchResultViewProtocol: NewClipsListViewProtocol {}
 
-protocol SearchResultPresenterProtocol: ClipsListPreviewablePresenter {
+protocol SearchResultPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
     func set(view: SearchResultViewProtocol)
 
     func replaceClips(by clips: [Clip])
 }
 
-class SearchResultPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
+class SearchResultPresenter: NewClipsListPresenter {
     // MARK: - Properties
 
-    // MARK: ClipsListPresenter
-
-    var view: ClipsListViewProtocol? {
-        return self.internalView
-    }
-
-    let storage: ClipStorageProtocol
+    // MARK: ClipsListPresenterProtocol
 
     var clips: [Clip]
 
-    // MARK: ClipsListPreviewableContainer
+    var selectedClips: [Clip]
 
-    var selectedClip: Clip?
+    var isEditing: Bool
+
+    // MARK: NewClipsListPresenter
+
+    var view: NewClipsListViewProtocol? {
+        return self.internalView
+    }
+
+    var storage: ClipStorageProtocol
 
     // MARK: Internal
 
@@ -39,7 +39,9 @@ class SearchResultPresenter: ClipsListPresenter & ClipsListPreviewableContainer 
 
     init(clips: [Clip], storage: ClipStorageProtocol) {
         self.clips = clips
+        self.selectedClips = []
         self.storage = storage
+        self.isEditing = false
     }
 }
 
@@ -48,6 +50,10 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func set(view: SearchResultViewProtocol) {
         self.internalView = view
+    }
+
+    func updateClips(to clips: [Clip]) {
+        self.clips = clips
     }
 
     func replaceClips(by clips: [Clip]) {
