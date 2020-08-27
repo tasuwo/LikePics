@@ -31,7 +31,8 @@ class SearchEntryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "検索"
+        self.setupAppearance()
+
         self.navigationItem.searchController = self.setupSearchController()
     }
 
@@ -42,6 +43,11 @@ class SearchEntryViewController: UIViewController {
     }
 
     // MARK: - Methods
+
+    private func setupAppearance() {
+        self.title = "検索"
+        self.view.backgroundColor = UIColor(named: "background_client")
+    }
 
     private func setupSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
