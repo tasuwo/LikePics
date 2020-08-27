@@ -109,7 +109,7 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
     }
 
     func deleteAll() {
-        switch self.storage.delete(clipsOfUrls: self.selectedClips.map { $0.url }) {
+        switch self.storage.delete(clips: self.selectedClips) {
         case .success:
             // NOP
             break

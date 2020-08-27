@@ -361,13 +361,13 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Delete
 
-    public func delete(clipOfUrl url: URL) -> Result<Clip, ClipStorageError> {
+    public func delete(clip: Clip) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
                 return .failure(.notFound)
             }
             let removeTarget = Clip.make(by: clip)
@@ -396,29 +396,29 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(clipsOfUrls urls: [URL]) -> Result<[Clip], ClipStorageError> {
+    public func delete(clips: [Clip]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            var clips: [ClipObject] = []
-            for url in urls {
-                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+            var clipObjects: [ClipObject] = []
+            for clip in clips {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
                     return .failure(.notFound)
                 }
-                clips.append(clip)
+                clipObjects.append(clip)
             }
-            let removeTargets = clips.map { Clip.make(by: $0) }
+            let removeTargets = clipObjects.map { Clip.make(by: $0) }
 
             // NOTE: Delete only found objects.
-            let clipItems = clips
+            let clipItems = clipObjects
                 .flatMap { $0.items }
                 .map { $0.makeKey() }
                 .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
 
             // NOTE: Delete only found objects.
-            let clippedImages = clips
+            let clippedImages = clipObjects
                 .flatMap { $0.items }
                 .flatMap { [(true, $0), (false, $0)] }
                 .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
@@ -428,7 +428,7 @@ extension ClipStorage: ClipStorageProtocol {
                 try realm.write {
                     realm.delete(clippedImages)
                     realm.delete(clipItems)
-                    realm.delete(clips)
+                    realm.delete(clipObjects)
                 }
                 return .success(removeTargets)
             } catch {

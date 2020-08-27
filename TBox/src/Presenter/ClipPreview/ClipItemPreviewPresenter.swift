@@ -62,7 +62,7 @@ class ClipItemPreviewPresenter {
 
             switch target {
             case .clip:
-                switch self.storage.delete(clipOfUrl: self.item.clipUrl) {
+                switch self.storage.delete(clip: self.clip) {
                 case .success:
                     self.view?.showSucceededMessage()
                     self.view?.closePages()

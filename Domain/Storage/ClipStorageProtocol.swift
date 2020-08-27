@@ -40,9 +40,9 @@ public protocol ClipStorageProtocol {
 
     // MARK: Delete
 
-    func delete(clipOfUrl url: URL) -> Result<Clip, ClipStorageError>
+    func delete(clip: Clip) -> Result<Clip, ClipStorageError>
 
-    func delete(clipsOfUrls urls: [URL]) -> Result<[Clip], ClipStorageError>
+    func delete(clips: [Clip]) -> Result<[Clip], ClipStorageError>
 
     func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
 }
