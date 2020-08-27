@@ -45,6 +45,8 @@ public protocol ClipStorageProtocol {
     func delete(clips: [Clip]) -> Result<[Clip], ClipStorageError>
 
     func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
+
+    func delete(album: Album) -> Result<Album, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

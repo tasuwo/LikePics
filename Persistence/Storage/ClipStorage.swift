@@ -466,4 +466,26 @@ extension ClipStorage: ClipStorageProtocol {
             }
         }
     }
+
+    public func delete(album: Album) -> Result<Album, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
+                return .failure(.notFound)
+            }
+            let removeTarget = Album.make(by: album)
+
+            do {
+                try realm.write {
+                    realm.delete(album)
+                }
+                return .success(removeTarget)
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
 }
