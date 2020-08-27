@@ -4,7 +4,7 @@
 
 import Domain
 
-struct AlbumPresenterProxy {
+class AlbumPresenterProxy {
     private let presenter: AlbumPresenterProtocol
 
     // MARK: - Lifecycle
@@ -18,38 +18,68 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
     // MARK: - AlbumPresenterProtocol
 
     var album: Album {
-        self.presenter.album
+        return self.presenter.album
+    }
+
+    func set(view: AlbumViewProtocol) {
+        self.presenter.set(view: view)
+    }
+
+    func deleteFromAlbum() {
+        self.presenter.deleteFromAlbum()
     }
 
     func replaceAlbum(by album: Album) {
         self.presenter.replaceAlbum(by: album)
     }
 
-    func set(view: AlbumViewProtocol) {
-        self.presenter.set(view: view)
-    }
-}
-
-extension AlbumPresenterProxy: ClipsListPreviewablePresenter {
-    // MARK: - ClipsListDisplayablePresenter
+    // MARK: ClipsListPresenterProtocol
 
     var clips: [Clip] {
         return self.presenter.clips
     }
 
-    var selectedClip: Clip? {
-        return self.presenter.selectedClip
+    var selectedClips: [Clip] {
+        return self.presenter.selectedClips
     }
 
-    var selectedIndex: Int? {
-        return self.presenter.selectedIndex
+    var selectedIndices: [Int] {
+        return self.presenter.selectedIndices
     }
 
-    func select(at index: Int) -> Clip? {
-        return self.presenter.select(at: index)
+    var isEditing: Bool {
+        return self.presenter.isEditing
     }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        return self.presenter.getImageData(for: layer, in: clip)
+        self.presenter.getImageData(for: layer, in: clip)
+    }
+
+    func setEditing(_ editing: Bool) {
+        self.presenter.setEditing(editing)
+    }
+
+    func select(at index: Int) {
+        self.presenter.select(at: index)
+    }
+
+    func deselect(at index: Int) {
+        self.presenter.deselect(at: index)
+    }
+
+    func deleteAll() {
+        self.presenter.deleteAll()
+    }
+
+    func addAllToAlbum() {
+        self.presenter.addAllToAlbum()
+    }
+}
+
+extension AlbumPresenterProxy: AddingClipsToAlbumPresenterDelegate {
+    // MARK: AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        self.presenter.addingClipsToAlbumPresenter(presenter, didSucceededToAdding: isSucceeded)
     }
 }
