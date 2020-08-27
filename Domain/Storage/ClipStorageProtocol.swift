@@ -30,7 +30,7 @@ public protocol ClipStorageProtocol {
 
     // MARK: Update
 
-    func update(clipItemsInClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
+    func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
     func update(byAddingClip clipUrl: URL, toAlbum album: Album) -> Result<Void, ClipStorageError>
 

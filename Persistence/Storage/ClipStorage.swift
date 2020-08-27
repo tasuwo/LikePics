@@ -228,13 +228,13 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Update
 
-    public func update(clipItemsInClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
+    public func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
                 return .failure(.notFound)
             }
 
