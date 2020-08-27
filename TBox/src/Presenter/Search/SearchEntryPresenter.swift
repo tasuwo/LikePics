@@ -30,7 +30,7 @@ class SearchEntryPresenter {
 
         view.startLoading()
         let keywords = text.split(separator: " ").map { String($0) }
-        switch self.storage.searchClip(byKeywords: keywords) {
+        switch self.storage.search(clipsByKeywords: keywords) {
         case let .success(clips):
             view.showReuslt(clips.sorted(by: { $0.registeredDate > $1.registeredDate }))
         case let .failure(error):

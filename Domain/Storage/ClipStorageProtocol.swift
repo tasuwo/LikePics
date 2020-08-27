@@ -18,33 +18,33 @@ public protocol ClipStorageProtocol {
 
     // MARK: Read
 
-    func readClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
+    func read(clipOfUrl url: URL) -> Result<Clip, ClipStorageError>
+
+    func read(imageDataOfUrl url: URL, forClipOfUrl clipUrl: URL) -> Result<Data, ClipStorageError>
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
 
     func readAllAlbums() -> Result<[Album], ClipStorageError>
 
-    func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError>
-
-    func searchClip(byKeywords: [String]) -> Result<[Clip], ClipStorageError>
+    func search(clipsByKeywords: [String]) -> Result<[Clip], ClipStorageError>
 
     // MARK: Update
 
-    func updateItems(inClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
+    func update(clipItemsInClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
-    func add(clip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byAddingClip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError>
 
-    func add(clips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byAddingClips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError>
 
-    func remove(clips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byDeletingClips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 
-    func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError>
+    func delete(clipOfUrl url: URL) -> Result<Clip, ClipStorageError>
 
-    func removeClips(ofUrls urls: [URL]) -> Result<[Clip], ClipStorageError>
+    func delete(clipsOfUrls urls: [URL]) -> Result<[Clip], ClipStorageError>
 
-    func removeClipItem(_ item: ClipItem) -> Result<ClipItem, ClipStorageError>
+    func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

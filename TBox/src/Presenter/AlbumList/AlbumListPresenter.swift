@@ -66,7 +66,7 @@ class AlbumListPresenter {
             return nil
         }
 
-        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
+        switch self.storage.read(imageDataOfUrl: clipItem.thumbnail.url, forClipOfUrl: clip.url) {
         case let .success(data):
             return data
         case let .failure(error):

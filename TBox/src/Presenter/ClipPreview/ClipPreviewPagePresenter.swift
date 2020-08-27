@@ -29,7 +29,7 @@ class ClipPreviewPagePresenter {
     // MARK: - Methods
 
     func reload() {
-        switch self.storage.readClip(ofUrl: self.clipUrl) {
+        switch self.storage.read(clipOfUrl: self.clipUrl) {
         case let .success(clip):
             self.clip = clip
             self.view?.reloadPages()

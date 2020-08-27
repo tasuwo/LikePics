@@ -61,7 +61,7 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
         }()
         guard let clipItem = nullableClipItem else { return nil }
 
-        switch self.storage.getImageData(ofUrl: clipItem.thumbnail.url, forClipUrl: clip.url) {
+        switch self.storage.read(imageDataOfUrl: clipItem.thumbnail.url, forClipOfUrl: clip.url) {
         case let .success(data):
             return data
         case let .failure(error):
@@ -109,7 +109,7 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
     }
 
     func deleteAll() {
-        switch self.storage.removeClips(ofUrls: self.selectedClips.map { $0.url }) {
+        switch self.storage.delete(clipsOfUrls: self.selectedClips.map { $0.url }) {
         case .success:
             // NOP
             break

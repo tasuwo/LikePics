@@ -159,7 +159,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Read
 
-    public func readClip(ofUrl url: URL) -> Result<Clip, ClipStorageError> {
+    public func read(clipOfUrl url: URL) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -170,6 +170,21 @@ extension ClipStorage: ClipStorageProtocol {
             }
 
             return .success(.make(by: clip))
+        }
+    }
+
+    public func read(imageDataOfUrl url: URL, forClipOfUrl clipUrl: URL) -> Result<Data, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            let primaryKey = "\(clipUrl.absoluteString)-\(url.absoluteString)"
+            guard let clippedImage = realm.object(ofType: ClippedImageObject.self, forPrimaryKey: primaryKey) else {
+                return .failure(.notFound)
+            }
+
+            return .success(clippedImage.image)
         }
     }
 
@@ -191,22 +206,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func getImageData(ofUrl url: URL, forClipUrl clipUrl: URL) -> Result<Data, ClipStorageError> {
-        return self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
-                return .failure(.internalError)
-            }
-
-            let primaryKey = "\(clipUrl.absoluteString)-\(url.absoluteString)"
-            guard let clippedImage = realm.object(ofType: ClippedImageObject.self, forPrimaryKey: primaryKey) else {
-                return .failure(.notFound)
-            }
-
-            return .success(clippedImage.image)
-        }
-    }
-
-    public func searchClip(byKeywords keywords: [String]) -> Result<[Clip], ClipStorageError> {
+    public func search(clipsByKeywords keywords: [String]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -228,7 +228,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Update
 
-    public func updateItems(inClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
+    public func update(clipItemsInClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -250,7 +250,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func add(clip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byAddingClip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -280,7 +280,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func add(clips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byAddingClips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -319,7 +319,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func remove(clips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byDeletingClips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -361,7 +361,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Delete
 
-    public func removeClip(ofUrl url: URL) -> Result<Clip, ClipStorageError> {
+    public func delete(clipOfUrl url: URL) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -396,7 +396,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func removeClips(ofUrls urls: [URL]) -> Result<[Clip], ClipStorageError> {
+    public func delete(clipsOfUrls urls: [URL]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -437,15 +437,14 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func removeClipItem(_ item: ClipItem) -> Result<ClipItem, ClipStorageError> {
+    public func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError> {
         // TODO: Update clipItemIndex
-
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            let primaryKey = item.asManagedObject().makeKey()
+            let primaryKey = clipItem.asManagedObject().makeKey()
             guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: primaryKey) else {
                 return .failure(.notFound)
             }
