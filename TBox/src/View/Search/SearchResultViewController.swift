@@ -59,9 +59,6 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-
         let button = RoundedButton()
         button.setTitle("編集", for: .normal)
         button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
