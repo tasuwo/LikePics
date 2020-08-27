@@ -65,7 +65,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func deleteFromAlbum() {
-        switch self.storage.update(byDeletingClips: self.selectedClips.map { $0.url }, fromAlbum: self.album.id) {
+        switch self.storage.update(byDeletingClips: self.selectedClips.map { $0.url }, fromAlbum: self.album) {
         case .success:
             // NOP
             break

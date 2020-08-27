@@ -250,13 +250,13 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byAddingClip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byAddingClip clipUrl: URL, toAlbum album: Album) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
                 return .failure(.notFound)
             }
 
@@ -280,13 +280,13 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byAddingClips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byAddingClips clipUrls: [URL], toAlbum album: Album) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
                 return .failure(.notFound)
             }
 
@@ -319,13 +319,13 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byDeletingClips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError> {
+    public func update(byDeletingClips clipUrls: [URL], fromAlbum album: Album) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
                 return .failure(.notFound)
             }
 

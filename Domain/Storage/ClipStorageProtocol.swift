@@ -32,11 +32,11 @@ public protocol ClipStorageProtocol {
 
     func update(clipItemsInClipOfUrl url: URL, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
-    func update(byAddingClip clipUrl: URL, toAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byAddingClip clipUrl: URL, toAlbum album: Album) -> Result<Void, ClipStorageError>
 
-    func update(byAddingClips clipUrls: [URL], toAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byAddingClips clipUrls: [URL], toAlbum album: Album) -> Result<Void, ClipStorageError>
 
-    func update(byDeletingClips clipUrls: [URL], fromAlbum albumId: String) -> Result<Void, ClipStorageError>
+    func update(byDeletingClips clipUrls: [URL], fromAlbum album: Album) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 
