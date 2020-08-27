@@ -4,10 +4,14 @@
 
 import Domain
 
-protocol SearchResultViewProtocol: ClipsListViewProtocol {}
+protocol SearchResultViewProtocol: ClipsListViewProtocol {
+    func reload()
+}
 
 protocol SearchResultPresenterProtocol: ClipsListPreviewablePresenter {
     func set(view: SearchResultViewProtocol)
+
+    func replaceClips(by clips: [Clip])
 }
 
 class SearchResultPresenter: ClipsListPresenter & ClipsListPreviewableContainer {
@@ -44,5 +48,10 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func set(view: SearchResultViewProtocol) {
         self.internalView = view
+    }
+
+    func replaceClips(by clips: [Clip]) {
+        self.clips = clips
+        self.internalView?.reload()
     }
 }

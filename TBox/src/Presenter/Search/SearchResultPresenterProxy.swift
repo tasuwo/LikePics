@@ -20,6 +20,10 @@ extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
     func set(view: SearchResultViewProtocol) {
         self.presenter.set(view: view)
     }
+
+    func replaceClips(by clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
+    }
 }
 
 extension SearchResultPresenterProxy: ClipsListPreviewablePresenter {

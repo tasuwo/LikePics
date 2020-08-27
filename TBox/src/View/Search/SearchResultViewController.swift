@@ -34,6 +34,8 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
             layout.delegate = self
         }
 
+        self.setupNavigationBar()
+
         self.presenter.set(view: self)
     }
 
@@ -43,10 +45,39 @@ class SearchResultViewController: UIViewController, ClipsListPreviewable {
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.view.backgroundColor = UIColor(named: "background_client")
     }
+
+    // MARK: - Methods
+
+    // MARK: NavigationBar
+
+    private func setupNavigationBar() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+
+        let button = RoundedButton()
+        button.setTitle("編集", for: .normal)
+        button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+
+        self.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(customView: button)
+        ]
+    }
+
+    @objc func didTapEdit() {
+        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
+        let viewController = self.factory.makeTopClipsListEditViewController(clips: self.presenter.clips,
+                                                                             initialOffset: self.collectionView.contentOffset,
+                                                                             delegate: self)
+        self.present(viewController, animated: false, completion: nil)
+    }
 }
 
 extension SearchResultViewController: SearchResultViewProtocol {
     // MARK: - SearchResultViewProtocol
+
+    func reload() {
+        self.collectionView.reloadData()
+    }
 
     func showErrorMassage(_ message: String) {
         print(message)
@@ -98,3 +129,15 @@ extension SearchResultViewController: ClipsCollectionLayoutDelegate {
 }
 
 extension SearchResultViewController: ClipPreviewPresentingViewController {}
+
+extension SearchResultViewController: ClipsListSynchronizableDelegate {
+    // MARK: - ClipsListSynchronizableDelegate
+
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedClipsTo clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
+    }
+
+    func clipsListSynchronizable(_ synchronizable: ClipsListSynchronizable, updatedContentOffset offset: CGPoint) {
+        self.collectionView.contentOffset = offset
+    }
+}
