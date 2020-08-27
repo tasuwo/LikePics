@@ -93,6 +93,6 @@ extension SearchEntryViewController: UISearchBarDelegate {
 
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
-        self.presenter.search(text.split(separator: " ").map { String($0) })
+        self.presenter.search(by: text)
     }
 }
