@@ -51,6 +51,8 @@ class AlbumListViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = "アルバム"
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
+
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     @objc func didTapAdd() {
@@ -58,6 +60,16 @@ class AlbumListViewController: UIViewController {
             self?.presenter.addAlbum(title: title)
         }
         self.present(alert, animated: true, completion: nil)
+    }
+
+    // MARK: UIViewController (Override)
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+
+        self.collectionView.visibleCells
+            .compactMap { $0 as? AlbumListCollectionViewCell }
+            .forEach { $0.visibleDeleteButton = editing }
     }
 }
 
@@ -122,7 +134,12 @@ extension AlbumListViewController: UICollectionViewDataSource {
 
         if let data = self.presenter.getThumbnailImageData(at: indexPath.row), let image = UIImage(data: data) {
             cell.thumbnail = image
+        } else {
+            cell.thumbnail = nil
         }
+
+        cell.deletate = self
+        cell.visibleDeleteButton = self.isEditing
 
         return cell
     }
@@ -142,5 +159,22 @@ extension AlbumListViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .init(top: 16, left: 16, bottom: 16, right: 16)
+    }
+}
+
+extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
+    // MARK: - AlbumListCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: AlbumListCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
+
+        let alert = UIAlertController(title: "", message: "アルバムを削除しますか？", preferredStyle: .alert)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            self?.presenter.deleteAlbum(at: indexPath.row)
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }

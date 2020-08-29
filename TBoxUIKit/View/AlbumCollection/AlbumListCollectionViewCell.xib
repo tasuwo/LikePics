@@ -28,9 +28,23 @@
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xel-8x-dFF">
+                        <rect key="frame" x="8" y="8" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="xel-8x-dFF" secondAttribute="height" multiplier="1:1" id="88K-dh-K2e"/>
+                            <constraint firstAttribute="width" constant="24" id="y0L-JQ-edv"/>
+                        </constraints>
+                        <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <state key="normal" image="minus.circle" catalog="system"/>
+                        <connections>
+                            <action selector="didTapDeleteButton:" destination="DnZ-DB-KiJ" eventType="touchUpInside" id="zpy-Xs-w9x"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rJN-pt-Tym" firstAttribute="width" secondItem="tdO-vJ-i7N" secondAttribute="width" id="0X8-ef-DX2"/>
+                    <constraint firstItem="xel-8x-dFF" firstAttribute="top" secondItem="tdO-vJ-i7N" secondAttribute="top" constant="8" id="Alp-79-4dR"/>
+                    <constraint firstItem="xel-8x-dFF" firstAttribute="leading" secondItem="tdO-vJ-i7N" secondAttribute="leading" constant="8" id="LtE-Zl-ESc"/>
                     <constraint firstItem="rJN-pt-Tym" firstAttribute="top" secondItem="oec-k8-xS0" secondAttribute="bottom" constant="8" id="NQL-Rm-U3r"/>
                     <constraint firstAttribute="trailing" secondItem="oec-k8-xS0" secondAttribute="trailing" id="Yzt-e5-XjU"/>
                     <constraint firstItem="oec-k8-xS0" firstAttribute="top" secondItem="tdO-vJ-i7N" secondAttribute="top" id="axs-RU-btH"/>
@@ -40,10 +54,14 @@
             </collectionViewCellContentView>
             <size key="customSize" width="237" height="255"/>
             <connections>
+                <outlet property="deleteButton" destination="xel-8x-dFF" id="Zwf-Mz-Rxc"/>
                 <outlet property="thumbnailImageView" destination="oec-k8-xS0" id="DvG-aB-3Ce"/>
                 <outlet property="titleLabel" destination="rJN-pt-Tym" id="E7S-s8-Vcg"/>
             </connections>
             <point key="canvasLocation" x="179.71014492753625" y="129.57589285714286"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="minus.circle" catalog="system" width="128" height="121"/>
+    </resources>
 </document>

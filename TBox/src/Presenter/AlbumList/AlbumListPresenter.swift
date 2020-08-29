@@ -58,6 +58,19 @@ class AlbumListPresenter {
         view.endLoading()
     }
 
+    func deleteAlbum(at index: Int) {
+        guard let view = self.view, self.albums.indices.contains(index) else { return }
+        let album = self.albums[index]
+
+        switch self.storage.delete(album: album) {
+        case .success:
+            self.albums.remove(at: index)
+            view.reload()
+        case let .failure(error):
+            view.showErrorMassage(Self.resolveErrorMessage(error))
+        }
+    }
+
     func getThumbnailImageData(at index: Int) -> Data? {
         guard self.albums.indices.contains(index),
             let clip = self.albums[index].clips.first,
