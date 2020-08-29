@@ -44,6 +44,7 @@ class AlbumListViewController: UIViewController {
     // MARK: Navigation Bar
 
     private func setupNavigationBar() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "アルバム"
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
     }

@@ -50,6 +50,9 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
+        self.navigationItem.title = self.presenter.album.title
+
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.updateNavigationBar(for: self.presenter.isEditing)
