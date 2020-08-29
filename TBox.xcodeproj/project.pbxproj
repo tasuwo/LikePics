@@ -19,6 +19,7 @@
 		2C2289E824F7EEEA0026E24A /* ClipsListPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289E724F7EEEA0026E24A /* ClipsListPresenterProtocol.swift */; };
 		2C2289EA24F7EF3D0026E24A /* ClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289E924F7EF3D0026E24A /* ClipsListPresenter.swift */; };
 		2C2289EC24F7F1940026E24A /* ClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289EB24F7F1940026E24A /* ClipsListViewController.swift */; };
+		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
 		2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A224DED48500FEF1BD /* WebImageResolver.swift */; };
 		2C2727A524DED4C600FEF1BD /* WebImageResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */; };
 		2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A724DED57D00FEF1BD /* OnMainThread.swift */; };
@@ -417,6 +418,7 @@
 		2C2289E724F7EEEA0026E24A /* ClipsListPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPresenterProtocol.swift; sourceTree = "<group>"; };
 		2C2289E924F7EF3D0026E24A /* ClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListPresenter.swift; sourceTree = "<group>"; };
 		2C2289EB24F7F1940026E24A /* ClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListViewController.swift; sourceTree = "<group>"; };
+		2C2289ED24FA15750026E24A /* PaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
 		2C2727A224DED48500FEF1BD /* WebImageResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolver.swift; sourceTree = "<group>"; };
 		2C2727A424DED4C600FEF1BD /* WebImageResolverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageResolverError.swift; sourceTree = "<group>"; };
 		2C2727A724DED57D00FEF1BD /* OnMainThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnMainThread.swift; sourceTree = "<group>"; };
@@ -850,6 +852,7 @@
 			isa = PBXGroup;
 			children = (
 				2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */,
+				2C2289ED24FA15750026E24A /* PaddingTextField.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2249,6 +2252,7 @@
 				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
+				2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */,
 				2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */,
 				2C45D40F24EEBF620045B6D3 /* AlbumListCollectionView.swift in Sources */,
 				2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */,

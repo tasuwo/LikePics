@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AlbumViewController" customModule="TBox" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="dkf-s8-beA" id="7fi-nl-vdH"/>
+                <outlet property="tapGestureRecognizer" destination="dAc-1Q-plx" id="rZU-ST-uGG"/>
                 <outlet property="view" destination="zng-ba-s9S" id="nnz-UQ-Fdi"/>
             </connections>
         </placeholder>
@@ -35,6 +36,7 @@
                 </collectionView>
             </subviews>
             <color key="backgroundColor" name="background_client"/>
+            <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="dkf-s8-beA" firstAttribute="leading" secondItem="aXD-hx-j1b" secondAttribute="leading" id="Qev-ac-thD"/>
                 <constraint firstItem="aXD-hx-j1b" firstAttribute="trailing" secondItem="dkf-s8-beA" secondAttribute="trailing" id="UGn-CA-GtW"/>
@@ -42,8 +44,16 @@
                 <constraint firstItem="dkf-s8-beA" firstAttribute="top" secondItem="zng-ba-s9S" secondAttribute="top" id="s2W-yK-lRa"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="aXD-hx-j1b"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="dAc-1Q-plx" appends="YES" id="XBX-H7-QhP"/>
+            </connections>
             <point key="canvasLocation" x="-233" y="155"/>
         </view>
+        <tapGestureRecognizer enabled="NO" id="dAc-1Q-plx">
+            <connections>
+                <action selector="didTapAlbumView:" destination="-1" id="WY2-bu-GGz"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <namedColor name="background_client">

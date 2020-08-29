@@ -21,6 +21,14 @@ public struct Album {
 
     // MARK: - Methods
 
+    public func updatingTitle(to title: String) -> Self {
+        return .init(id: self.id,
+                     title: title,
+                     clips: self.clips,
+                     registeredDate: self.registeredDate,
+                     updatedDate: self.updatedDate)
+    }
+
     public func updatingClips(to clips: [Clip]) -> Self {
         return .init(id: self.id,
                      title: self.title,

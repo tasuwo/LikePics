@@ -36,6 +36,7 @@ class AlbumListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.updateNavigationBar()
         self.presenter.reload()
     }
 
@@ -43,8 +44,11 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Navigation Bar
 
-    private func setupNavigationBar() {
+    private func updateNavigationBar() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
+    private func setupNavigationBar() {
         self.navigationItem.title = "アルバム"
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
     }

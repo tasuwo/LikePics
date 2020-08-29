@@ -14,6 +14,7 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     let presenter: Presenter
 
     @IBOutlet var collectionView: ClipsCollectionView!
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Lifecycle
 
@@ -35,6 +36,12 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
+
+        self.presenter.setup()
+    }
+
+    @IBAction func didTapAlbumView(_ sender: UITapGestureRecognizer) {
+        self.navigationItem.titleView?.endEditing(true)
     }
 
     // MARK: - Methods
@@ -50,32 +57,11 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.navigationItem.title = self.presenter.album.title
-
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
         self.updateNavigationBar(for: self.presenter.isEditing)
     }
 
     private func updateNavigationBar(for isEditing: Bool) {
-        if isEditing {
-            let button = RoundedButton()
-            button.setTitle("キャンセル", for: .normal)
-            button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
-
-            self.navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: button)
-            ]
-        } else {
-            let button = RoundedButton()
-            button.setTitle("編集", for: .normal)
-            button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
-
-            self.navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: button)
-            ]
-        }
+        self.navigationController?.navigationBar.prefersLargeTitles = !isEditing
     }
 
     @objc func didTapEdit() {
@@ -83,6 +69,11 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     }
 
     @objc func didTapCancel() {
+        self.setEditing(false, animated: true)
+    }
+
+    @objc func didTapSave() {
+        self.presenter.updateAlbumTitle()
         self.setEditing(false, animated: true)
     }
 
@@ -132,8 +123,69 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     }
 }
 
+extension AlbumViewController: UITextFieldDelegate {
+    // MARK: - UITextFieldDelegate
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.tapGestureRecognizer.isEnabled = true
+        self.navigationItem.hidesBackButton = true
+        self.presenter.setTitleEditing(true)
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.tapGestureRecognizer.isEnabled = false
+        self.navigationItem.hidesBackButton = false
+        self.presenter.setTitleEditing(false)
+    }
+
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        self.presenter.edit(title: "")
+        return true
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let nsString = textField.text as NSString?
+        if let updatedText = nsString?.replacingCharacters(in: range, with: string) {
+            self.presenter.edit(title: updatedText)
+        }
+        return true
+    }
+}
+
 extension AlbumViewController: AlbumViewProtocol {
     // MARK: - AlbumViewProtocol
+
+    func setNavigationItems(_ items: [AlbumViewNavigationItem]) {
+        defer {
+            self.navigationItem.titleView?.invalidateIntrinsicContentSize()
+        }
+
+        guard !items.isEmpty else {
+            self.navigationItem.setRightBarButtonItems([], animated: false)
+            return
+        }
+
+        let spacingItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.setRightBarButtonItems(items.map { $0.convertToBarButtonItem(for: self) } + [spacingItem], animated: false)
+    }
+
+    func setNavigationTitle(_ title: String, asEditable: Bool) {
+        self.navigationItem.titleView = {
+            guard asEditable else { return nil }
+
+            let textField = AlbumTitleEditTextField()
+
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            let desiredHeight = title.sizeOnLabel(for: textField.font).height + textField.padding.top + textField.padding.bottom
+            textField.heightAnchor.constraint(equalToConstant: desiredHeight).isActive = true
+
+            textField.placeholder = title
+            textField.delegate = self
+
+            return textField
+        }()
+        self.navigationItem.title = self.presenter.album.title
+    }
 
     func reload() {
         self.collectionView.reloadData()
@@ -223,5 +275,65 @@ extension AlbumViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
+    }
+}
+
+private extension AlbumViewNavigationItem {
+    func convertToBarButtonItem(for target: AlbumViewController) -> UIBarButtonItem {
+        switch self {
+        case .cancel:
+            let button = RoundedButton()
+            button.setTitle("キャンセル", for: .normal)
+            button.addTarget(target, action: #selector(target.didTapCancel), for: .touchUpInside)
+            return UIBarButtonItem(customView: button)
+        case .edit:
+            let button = RoundedButton()
+            button.setTitle("編集", for: .normal)
+            button.addTarget(target, action: #selector(target.didTapEdit), for: .touchUpInside)
+            return UIBarButtonItem(customView: button)
+        case .save:
+            let button = RoundedButton()
+            button.setTitle("保存", for: .normal)
+            button.addTarget(target, action: #selector(target.didTapSave), for: .touchUpInside)
+            return UIBarButtonItem(customView: button)
+        }
+    }
+}
+
+private class AlbumTitleEditTextField: PaddingTextField {
+    // MARK: - Lifecycle
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupAppearance()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Methods
+
+    private func setupAppearance() {
+        self.backgroundColor = .systemBackground
+        self.layer.cornerRadius = 8
+        self.padding = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
+        self.clearButtonMode = .always
+    }
+
+    // MARK: - UIView (Overrides)
+
+    override var intrinsicContentSize: CGSize {
+        return .init(width: CGFloat.greatestFiniteMagnitude, height: UIView.noIntrinsicMetric)
+    }
+}
+
+private extension String {
+    func sizeOnLabel(for font: UIFont?) -> CGSize {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = font
+        label.text = self
+        return label.sizeThatFits(.init(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
     }
 }
