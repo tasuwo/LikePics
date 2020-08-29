@@ -122,9 +122,7 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         super.setEditing(editing, animated: animated)
 
         self.presenter.setEditing(editing)
-        self.didSetEditing(editing)
-
-        self.collectionView.allowsMultipleSelection = editing
+        self.updateCollectionView(for: editing)
 
         self.updateNavigationBar(for: editing)
         self.updateToolBar(for: editing)

@@ -18,7 +18,8 @@ protocol ClipsListViewController: UIViewController {
 }
 
 extension ClipsListViewController {
-    func didSetEditing(_ editing: Bool) {
+    func updateCollectionView(for editing: Bool) {
+        self.collectionView.allowsMultipleSelection = editing
         self.collectionView.visibleCells
             .compactMap { $0 as? ClipsCollectionViewCell }
             .forEach { $0.visibleSelectedMark = editing }
