@@ -355,6 +355,7 @@ public class ClipTargetFinderPresenter {
             let clip = Clip(url: clipUrl,
                             description: nil,
                             items: clipItems.compactMap { $0?.item },
+                            tags: [],
                             registeredDate: self.currentDateResolver(),
                             updatedDate: self.currentDateResolver())
             let images = clipItems

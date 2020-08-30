@@ -11,6 +11,14 @@ enum ClipStorageMigrationService {
             Self.migrationToV1(migration)
         } else if oldSchemaVersion < 2 {
             Self.migraitonToV2(migration)
+        } else if oldSchemaVersion < 3 {
+            Self.migraitonToV3(migration)
+        }
+    }
+
+    private static func migraitonToV3(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
+            newObject!["tags"] = List<TagObject>()
         }
     }
 

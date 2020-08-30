@@ -2,11 +2,12 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct Clip {
+public struct Clip: Equatable {
     public let url: URL
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
+    public let tags: [String]
     public let registeredDate: Date
     public let updatedDate: Date
 
@@ -27,10 +28,11 @@ public struct Clip {
 
     // MARK: - Lifecycle
 
-    public init(url: URL, description: String?, items: [ClipItem], registeredDate: Date, updatedDate: Date) {
+    public init(url: URL, description: String?, items: [ClipItem], tags: [String], registeredDate: Date, updatedDate: Date) {
         self.url = url
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
+        self.tags = tags
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }

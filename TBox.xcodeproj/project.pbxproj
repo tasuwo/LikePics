@@ -148,6 +148,8 @@
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */; };
 		2CE22D4B24E2A48C00449210 /* ClipPreviewPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */; };
+		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
+		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
@@ -542,6 +544,8 @@
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageView.swift; sourceTree = "<group>"; };
 		2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewPageView.xib; sourceTree = "<group>"; };
+		2CF5ABB024FB47D10084695F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		2CF5ABB224FB486A0084695F /* TagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagObject.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -767,6 +771,7 @@
 				2C9B1E2924E4236300D420D9 /* ClippedImageObject.swift */,
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
 				2C45D40124EEAD750045B6D3 /* AlbumObject.swift */,
+				2CF5ABB224FB486A0084695F /* TagObject.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1217,6 +1222,7 @@
 				2C99277C24DDC7E600672CA7 /* Clip.swift */,
 				2C8FD62624E02297005887F9 /* ClipItem.swift */,
 				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
+				2CF5ABB024FB47D10084695F /* Tag.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -2278,6 +2284,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
 				2C2727A324DED48500FEF1BD /* WebImageResolver.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
@@ -2369,6 +2376,7 @@
 				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2C9B1E2A24E4236300D420D9 /* ClippedImageObject.swift in Sources */,
+				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 				2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */,

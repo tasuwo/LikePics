@@ -14,6 +14,8 @@ public protocol ClipStorageProtocol {
 
     func create(clip: Clip, withData data: [(URL, Data)], forced: Bool) -> Result<Void, ClipStorageError>
 
+    func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
+
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 
     // MARK: Read
@@ -28,7 +30,13 @@ public protocol ClipStorageProtocol {
 
     func search(clipsByKeywords: [String]) -> Result<[Clip], ClipStorageError>
 
+    func search(clipsByTags tags: [String]) -> Result<[Clip], ClipStorageError>
+
     // MARK: Update
+
+    func update(clipByAddingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError>
+
+    func update(clipByDeletingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError>
 
     func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
@@ -51,6 +59,8 @@ public protocol ClipStorageProtocol {
     func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
 
     func delete(album: Album) -> Result<Album, ClipStorageError>
+
+    func delete(tag: String) -> Result<Tag, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

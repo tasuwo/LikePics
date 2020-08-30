@@ -11,7 +11,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 2,
+                schemaVersion: 3,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )
@@ -130,6 +130,31 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func create(tagWithName name: String) -> Result<Tag, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            if let _ = realm.objects(TagObject.self).filter("name = '\(name)'").first {
+                return .failure(.duplicated)
+            }
+
+            let obj = TagObject()
+            obj.id = UUID().uuidString
+            obj.name = name
+
+            do {
+                try realm.write {
+                    realm.add(obj)
+                }
+                return .success(.make(by: obj))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func create(albumWithTitle title: String) -> Result<Album, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
@@ -226,7 +251,78 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func search(clipsByTags tags: [String]) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            // Ignore not founded tags.
+            let clips = tags
+                .compactMap { realm.objects(TagObject.self).filter("name = '\($0)'").first }
+                .flatMap { $0.clips }
+                .map { Clip.make(by: $0) }
+
+            let result = clips.reduce(into: [Clip]()) { result, clip in
+                guard result.contains(clip) else { return }
+                result.append(clip)
+            }
+
+            return .success(result)
+        }
+    }
+
     // MARK: Update
+
+    public func update(clipByAddingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let tagObj = realm.objects(TagObject.self).filter("name = '\(tag)'").first else {
+                return .failure(.notFound)
+            }
+
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
+                return .failure(.notFound)
+            }
+
+            do {
+                try realm.write {
+                    clipObj.tags.append(tagObj)
+                }
+                return .success(.make(by: clipObj))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
+    public func update(clipByDeletingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
+                return .failure(.notFound)
+            }
+
+            guard let index = clipObj.tags.firstIndex(where: { $0.name == tag }) else {
+                return .failure(.notFound)
+            }
+
+            do {
+                try realm.write {
+                    clipObj.tags.remove(at: index)
+                }
+                return .success(.make(by: clipObj))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
 
     public func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
@@ -536,6 +632,28 @@ extension ClipStorage: ClipStorageProtocol {
             do {
                 try realm.write {
                     realm.delete(album)
+                }
+                return .success(removeTarget)
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
+    public func delete(tag: String) -> Result<Tag, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let tagObj = realm.objects(TagObject.self).filter("name = '\(tag)'").first else {
+                return .failure(.notFound)
+            }
+            let removeTarget = Tag.make(by: tagObj)
+
+            do {
+                try realm.write {
+                    realm.delete(tagObj)
                 }
                 return .success(removeTarget)
             } catch {

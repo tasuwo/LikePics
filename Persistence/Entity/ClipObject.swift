@@ -9,6 +9,7 @@ final class ClipObject: Object {
     @objc dynamic var url: String = ""
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
+    let tags = List<TagObject>()
     @objc dynamic var registeredAt: Date = Date()
     @objc dynamic var updatedAt: Date = Date()
 
@@ -25,6 +26,7 @@ extension Clip: Persistable {
         return .init(url: URL(string: managedObject.url)!,
                      description: managedObject.descriptionText,
                      items: items,
+                     tags: managedObject.tags.map { $0.name },
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
@@ -36,6 +38,9 @@ extension Clip: Persistable {
         self.items.forEach {
             obj.items.append($0.asManagedObject())
         }
+        // self.tags.forEach {
+        //     obj.tags.append($0.asManagedObject())
+        // }
         obj.registeredAt = self.registeredDate
         obj.updatedAt = self.updatedDate
         return obj
