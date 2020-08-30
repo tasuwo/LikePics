@@ -38,9 +38,10 @@ extension Clip: Persistable {
         self.items.forEach {
             obj.items.append($0.asManagedObject())
         }
-        // self.tags.forEach {
-        //     obj.tags.append($0.asManagedObject())
-        // }
+        if self.tags.count > 0 {
+            // TODO: warn log
+            fatalError()
+        }
         obj.registeredAt = self.registeredDate
         obj.updatedAt = self.updatedDate
         return obj
