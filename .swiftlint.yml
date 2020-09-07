@@ -1,5 +1,5 @@
 included:
-  - ../Dakokun
+  - ../TBox
 excluded:
   - Pods
 opt_in_rules:
