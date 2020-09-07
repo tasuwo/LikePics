@@ -8,9 +8,9 @@ final class ClippedImageObject: Object {
     @objc dynamic var key: String = ""
     @objc dynamic var clipUrl: String = ""
     @objc dynamic var imageUrl: String = ""
-    @objc dynamic var image: Data = Data()
-    @objc dynamic var registeredAt: Date = Date()
-    @objc dynamic var updatedAt: Date = Date()
+    @objc dynamic var image = Data()
+    @objc dynamic var registeredAt = Date()
+    @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
         return "key"

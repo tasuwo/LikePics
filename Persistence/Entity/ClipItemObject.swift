@@ -15,8 +15,8 @@ final class ClipItemObject: Object {
     @objc dynamic var largeImageUrl: String = ""
     @objc dynamic var largeImageHeight: Double = 0
     @objc dynamic var largeImageWidth: Double = 0
-    @objc dynamic var registeredAt: Date = Date()
-    @objc dynamic var updatedAt: Date = Date()
+    @objc dynamic var registeredAt = Date()
+    @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
         return "key"

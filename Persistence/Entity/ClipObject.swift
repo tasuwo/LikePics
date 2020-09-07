@@ -10,8 +10,8 @@ final class ClipObject: Object {
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
     let tags = List<TagObject>()
-    @objc dynamic var registeredAt: Date = Date()
-    @objc dynamic var updatedAt: Date = Date()
+    @objc dynamic var registeredAt = Date()
+    @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
         return "url"

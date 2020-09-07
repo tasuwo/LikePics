@@ -9,8 +9,8 @@ final class AlbumObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var title: String = ""
     let clips = List<ClipObject>()
-    @objc dynamic var registeredAt: Date = Date()
-    @objc dynamic var updatedAt: Date = Date()
+    @objc dynamic var registeredAt = Date()
+    @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
         return "id"
