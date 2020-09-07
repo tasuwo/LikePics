@@ -20,47 +20,47 @@ public protocol ClipStorageProtocol {
 
     // MARK: Read
 
-    func read(clipOfUrl url: URL) -> Result<Clip, ClipStorageError>
+    func readClip(having url: URL) -> Result<Clip, ClipStorageError>
 
-    func read(imageDataOfUrl url: URL, forClipOfUrl clipUrl: URL) -> Result<Data, ClipStorageError>
+    func readImageData(having url: URL, forClipHaving clipUrl: URL) -> Result<Data, ClipStorageError>
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
 
     func readAllAlbums() -> Result<[Album], ClipStorageError>
 
-    func search(clipsByKeywords: [String]) -> Result<[Clip], ClipStorageError>
+    func searchClips(byKeywords keywords: [String]) -> Result<[Clip], ClipStorageError>
 
-    func search(clipsByTags tags: [String]) -> Result<[Clip], ClipStorageError>
+    func searchClips(byTags tags: [String]) -> Result<[Clip], ClipStorageError>
 
     // MARK: Update
 
-    func update(clipByAddingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError>
+    func update(_ clip: Clip, byAddingTag tag: String) -> Result<Clip, ClipStorageError>
 
-    func update(clipByDeletingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError>
+    func update(_ clip: Clip, byDeletingTag tag: String) -> Result<Clip, ClipStorageError>
 
-    func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError>
+    func update(_ clip: Clip, byReplacing items: [ClipItem]) -> Result<Clip, ClipStorageError>
 
-    func update(byAddingClip clipUrl: URL, toAlbum album: Album) -> Result<Void, ClipStorageError>
+    func update(_ album: Album, byAddingClipHaving clipUrl: URL) -> Result<Void, ClipStorageError>
 
-    func update(byAddingClips clipUrls: [URL], toAlbum album: Album) -> Result<Void, ClipStorageError>
+    func update(_ album: Album, byAddingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
 
-    func update(byDeletingClips clipUrls: [URL], fromAlbum album: Album) -> Result<Void, ClipStorageError>
+    func update(_ album: Album, byDeletingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
 
-    func update(clipsOfAlbum album: Album, byReplacingWith clips: [Clip]) -> Result<Album, ClipStorageError>
+    func update(_ album: Album, byReplacing clips: [Clip]) -> Result<Album, ClipStorageError>
 
-    func update(titleOfAlbum album: Album, to title: String) -> Result<Album, ClipStorageError>
+    func update(_ album: Album, titleTo title: String) -> Result<Album, ClipStorageError>
 
     // MARK: Delete
 
-    func delete(clip: Clip) -> Result<Clip, ClipStorageError>
+    func delete(_ clip: Clip) -> Result<Clip, ClipStorageError>
 
-    func delete(clips: [Clip]) -> Result<[Clip], ClipStorageError>
+    func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError>
 
-    func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
+    func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
 
-    func delete(album: Album) -> Result<Album, ClipStorageError>
+    func delete(_ album: Album) -> Result<Album, ClipStorageError>
 
-    func delete(tag: String) -> Result<Tag, ClipStorageError>
+    func delete(_ tag: String) -> Result<Tag, ClipStorageError>
 }
 
 extension ClipStorageProtocol {

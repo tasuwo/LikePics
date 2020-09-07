@@ -138,7 +138,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func deleteFromAlbum() {
-        switch self.storage.update(byDeletingClips: self.selectedClips.map { $0.url }, fromAlbum: self.album) {
+        switch self.storage.update(self.album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
         case .success:
             // NOP
             break
@@ -163,7 +163,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func updateAlbumTitle() {
         guard let newTitle = self.editingTitle, !newTitle.isEmpty else { return }
-        switch self.storage.update(titleOfAlbum: self.album, to: newTitle) {
+        switch self.storage.update(self.album, titleTo: newTitle) {
         case .success:
             // NOP
             break

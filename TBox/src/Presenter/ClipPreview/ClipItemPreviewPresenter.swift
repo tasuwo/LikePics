@@ -39,7 +39,7 @@ class ClipItemPreviewPresenter {
     // MARK: - Methods
 
     func loadImageData() -> Data? {
-        switch self.storage.read(imageDataOfUrl: self.item.image.url, forClipOfUrl: self.item.clipUrl) {
+        switch self.storage.readImageData(having: self.item.image.url, forClipHaving: self.item.clipUrl) {
         case let .success(data):
             return data
         case let .failure(error):
@@ -62,7 +62,7 @@ class ClipItemPreviewPresenter {
 
             switch target {
             case .clip:
-                switch self.storage.delete(clip: self.clip) {
+                switch self.storage.delete(self.clip) {
                 case .success:
                     self.view?.showSucceededMessage()
                     self.view?.closePages()
@@ -70,7 +70,7 @@ class ClipItemPreviewPresenter {
                     self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
                 }
             case .item:
-                switch self.storage.delete(clipItem: self.item) {
+                switch self.storage.delete(self.item) {
                 case .success:
                     self.view?.showSucceededMessage()
                     self.view?.reloadPages()

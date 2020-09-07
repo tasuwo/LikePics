@@ -62,7 +62,7 @@ class AlbumListPresenter {
         guard let view = self.view, self.albums.indices.contains(index) else { return }
         let album = self.albums[index]
 
-        switch self.storage.delete(album: album) {
+        switch self.storage.delete(album) {
         case .success:
             self.albums.remove(at: index)
             view.reload()
@@ -79,7 +79,7 @@ class AlbumListPresenter {
             return nil
         }
 
-        switch self.storage.read(imageDataOfUrl: clipItem.thumbnail.url, forClipOfUrl: clip.url) {
+        switch self.storage.readImageData(having: clipItem.thumbnail.url, forClipHaving: clip.url) {
         case let .success(data):
             return data
         case let .failure(error):

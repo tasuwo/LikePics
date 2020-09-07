@@ -206,7 +206,7 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        if !self.isEnabledOverwrite, case .success(_) = self.storage.read(clipOfUrl: self.url) {
+        if !self.isEnabledOverwrite, case .success(_) = self.storage.readClip(having: self.url) {
             self.view?.showConfirmationForOverwrite()
             return
         }

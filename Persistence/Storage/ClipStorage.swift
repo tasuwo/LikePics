@@ -184,7 +184,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Read
 
-    public func read(clipOfUrl url: URL) -> Result<Clip, ClipStorageError> {
+    public func readClip(having url: URL) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -198,7 +198,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func read(imageDataOfUrl url: URL, forClipOfUrl clipUrl: URL) -> Result<Data, ClipStorageError> {
+    public func readImageData(having url: URL, forClipHaving clipUrl: URL) -> Result<Data, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -231,7 +231,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func search(clipsByKeywords keywords: [String]) -> Result<[Clip], ClipStorageError> {
+    public func searchClips(byKeywords keywords: [String]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -251,7 +251,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func search(clipsByTags tags: [String]) -> Result<[Clip], ClipStorageError> {
+    public func searchClips(byTags tags: [String]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -274,7 +274,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Update
 
-    public func update(clipByAddingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError> {
+    public func update(_ clip: Clip, byAddingTag tag: String) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -299,7 +299,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(clipByDeletingTag tag: String, to clip: Clip) -> Result<Clip, ClipStorageError> {
+    public func update(_ clip: Clip, byDeletingTag tag: String) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -324,7 +324,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(clipItemsInClip clip: Clip, to items: [ClipItem]) -> Result<Clip, ClipStorageError> {
+    public func update(_ clip: Clip, byReplacing items: [ClipItem]) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -346,7 +346,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byAddingClip clipUrl: URL, toAlbum album: Album) -> Result<Void, ClipStorageError> {
+    public func update(_ album: Album, byAddingClipHaving clipUrl: URL) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -376,7 +376,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byAddingClips clipUrls: [URL], toAlbum album: Album) -> Result<Void, ClipStorageError> {
+    public func update(_ album: Album, byAddingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -415,7 +415,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(byDeletingClips clipUrls: [URL], fromAlbum album: Album) -> Result<Void, ClipStorageError> {
+    public func update(_ album: Album, byDeletingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -455,7 +455,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(clipsOfAlbum album: Album, byReplacingWith clips: [Clip]) -> Result<Album, ClipStorageError> {
+    public func update(_ album: Album, byReplacing clips: [Clip]) -> Result<Album, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -488,7 +488,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(titleOfAlbum album: Album, to title: String) -> Result<Album, ClipStorageError> {
+    public func update(_ album: Album, titleTo title: String) -> Result<Album, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -512,7 +512,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Delete
 
-    public func delete(clip: Clip) -> Result<Clip, ClipStorageError> {
+    public func delete(_ clip: Clip) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -547,7 +547,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(clips: [Clip]) -> Result<[Clip], ClipStorageError> {
+    public func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -588,7 +588,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(clipItem: ClipItem) -> Result<ClipItem, ClipStorageError> {
+    public func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError> {
         // TODO: Update clipItemIndex
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
@@ -618,7 +618,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(album: Album) -> Result<Album, ClipStorageError> {
+    public func delete(_ album: Album) -> Result<Album, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -640,7 +640,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(tag: String) -> Result<Tag, ClipStorageError> {
+    public func delete(_ tag: String) -> Result<Tag, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
