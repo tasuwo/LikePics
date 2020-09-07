@@ -4,8 +4,8 @@ import PackageDescription
 let package = Package(
     name: "BuildTools",
     dependencies: [
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.44.16"),
-        .package(url: "https://github.com/realm/SwiftLint.git", from: "0.39.2"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.46.2"),
+        .package(url: "https://github.com/realm/SwiftLint.git", from: "0.40.1"),
     ],
     targets: [.target(name: "BuildTools", path: "")]
 )
