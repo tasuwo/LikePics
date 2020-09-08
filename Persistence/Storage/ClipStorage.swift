@@ -264,7 +264,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .map { Clip.make(by: $0) }
 
             let result = clips.reduce(into: [Clip]()) { result, clip in
-                guard result.contains(clip) else { return }
+                guard !result.contains(clip) else { return }
                 result.append(clip)
             }
 
