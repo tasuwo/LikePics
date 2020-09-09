@@ -16,6 +16,10 @@
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
 		2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
+		2C1CEC0A2509624000C95C12 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
+		2C1CEC0B2509624000C95C12 /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C1CEC0F250963EE00C95C12 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
+		2C1CEC10250963EE00C95C12 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C2289E824F7EEEA0026E24A /* ClipsListPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289E724F7EEEA0026E24A /* ClipsListPresenterProtocol.swift */; };
 		2C2289EA24F7EF3D0026E24A /* ClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289E924F7EF3D0026E24A /* ClipsListPresenter.swift */; };
 		2C2289EC24F7F1940026E24A /* ClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289EB24F7F1940026E24A /* ClipsListViewController.swift */; };
@@ -136,6 +140,11 @@
 		2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229524DD9F5F00329251 /* Assets.xcassets */; };
 		2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */; };
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
+		2CB071172509026B0000E7E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB071162509026B0000E7E1 /* AppDelegate.swift */; };
+		2CB071192509026B0000E7E1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB071182509026B0000E7E1 /* SceneDelegate.swift */; };
+		2CB0711E2509026B0000E7E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CB0711C2509026B0000E7E1 /* Main.storyboard */; };
+		2CB071202509026C0000E7E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CB0711F2509026C0000E7E1 /* Assets.xcassets */; };
+		2CB071232509026C0000E7E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CB071212509026C0000E7E1 /* LaunchScreen.storyboard */; };
 		2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */; };
 		2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -152,6 +161,7 @@
 		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
+		2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
 		A23DF61484F1653DE1630077 /* Pods_TBoxTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */; };
@@ -161,6 +171,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2C1CEC0C2509624000C95C12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C8FD62C24E02DCE005887F9;
+			remoteInfo = TBoxUIKit;
+		};
+		2C1CEC11250963EE00C95C12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C99275D24DDC7D300672CA7;
+			remoteInfo = Domain;
+		};
 		2C27D7B724E254A3006B5DA9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
@@ -325,6 +349,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2C1CEC0E2509624000C95C12 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2C1CEC10250963EE00C95C12 /* Domain.framework in Embed Frameworks */,
+				2C1CEC0B2509624000C95C12 /* TBoxUIKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2C27D7B924E254A3006B5DA9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -531,6 +567,13 @@
 		2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA022A324DD9F5F00329251 /* TBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxTests.swift; sourceTree = "<group>"; };
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CB071142509026B0000E7E1 /* TBoxUIKitCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBoxUIKitCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CB071162509026B0000E7E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2CB071182509026B0000E7E1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2CB0711D2509026B0000E7E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2CB0711F2509026C0000E7E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2CB071222509026C0000E7E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2CB071242509026C0000E7E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentationAnimator.swift; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -558,6 +601,8 @@
 		6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debug.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debug.xcconfig"; sourceTree = "<group>"; };
 		71166F63D2D8E937D8DECD09 /* Pods-TBoxUIKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.release.xcconfig"; sourceTree = "<group>"; };
 		76DD982A953CB84789D6B8AF /* Pods_Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitCatalog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B914625607732B7746F8370 /* Pods-TBoxUIKitCatalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitCatalog.debug.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog.debug.xcconfig"; sourceTree = "<group>"; };
 		8D43FADC3C6AAD7535A075A2 /* Pods-TBoxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxTests.release.xcconfig"; path = "Target Support Files/Pods-TBoxTests/Pods-TBoxTests.release.xcconfig"; sourceTree = "<group>"; };
 		9293E9D23B68FA4FEEF868CD /* Pods-TBoxUIKitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitTests.debug.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		972B0E03FC43B4F054139E95 /* Pods-Domain.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.debug.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.debug.xcconfig"; sourceTree = "<group>"; };
@@ -567,6 +612,7 @@
 		BA50072D2BFA30C156464A3B /* Pods-TBoxUIKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitTests.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests.release.xcconfig"; sourceTree = "<group>"; };
 		D6C13F50ED40A4474A0D7CE1 /* Pods-TBoxUIKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.debug.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.debug.xcconfig"; sourceTree = "<group>"; };
 		DB1E5E3D9404A4CE8F2BDC41 /* Pods_DomainTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DomainTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFCC9F004481533F735A7FF8 /* Pods-TBoxUIKitCatalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitCatalog.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog.release.xcconfig"; sourceTree = "<group>"; };
 		E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.debug.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.debug.xcconfig"; sourceTree = "<group>"; };
 		E53A6F720BE737FA1BBEC165 /* Pods-PersistenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.release.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.release.xcconfig"; sourceTree = "<group>"; };
 		F1DB366F4D8BEE3ED57CF37A /* Pods-DomainTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.debug.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -668,6 +714,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2CB071112509026B0000E7E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C1CEC0F250963EE00C95C12 /* Domain.framework in Frameworks */,
+				2C1CEC0A2509624000C95C12 /* TBoxUIKit.framework in Frameworks */,
+				2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CCECE1124DDC0CB00ADFE54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -702,6 +758,7 @@
 				3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */,
 				2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */,
 				4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */,
+				7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1270,6 +1327,7 @@
 				2C6E099324E6DD1A00B541D9 /* TBoxCore */,
 				2C6E09C624E8150400B541D9 /* Common */,
 				2C6E09D324E8150500B541D9 /* CommonTests */,
+				2CB071152509026B0000E7E1 /* TBoxUIKitCatalog */,
 				2CA0228A24DD9F5E00329251 /* Products */,
 				365F1EF69CF3A637940810AE /* Pods */,
 				2665183E622257296D7CF08A /* Frameworks */,
@@ -1291,6 +1349,7 @@
 				2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */,
 				2C6E09C524E8150400B541D9 /* Common.framework */,
 				2C6E09CD24E8150500B541D9 /* CommonTests.xctest */,
+				2CB071142509026B0000E7E1 /* TBoxUIKitCatalog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1312,6 +1371,35 @@
 				2CA022A524DD9F5F00329251 /* Info.plist */,
 			);
 			path = TBoxTests;
+			sourceTree = "<group>";
+		};
+		2CB071152509026B0000E7E1 /* TBoxUIKitCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				2CB07129250902CE0000E7E1 /* resources */,
+				2CB07128250902C20000E7E1 /* ViewControllers */,
+				2CB071162509026B0000E7E1 /* AppDelegate.swift */,
+				2CB071182509026B0000E7E1 /* SceneDelegate.swift */,
+				2CB0711C2509026B0000E7E1 /* Main.storyboard */,
+				2CB071212509026C0000E7E1 /* LaunchScreen.storyboard */,
+				2CB071242509026C0000E7E1 /* Info.plist */,
+			);
+			path = TBoxUIKitCatalog;
+			sourceTree = "<group>";
+		};
+		2CB07128250902C20000E7E1 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2CB07129250902CE0000E7E1 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				2CB0711F2509026C0000E7E1 /* Assets.xcassets */,
+			);
+			path = resources;
 			sourceTree = "<group>";
 		};
 		2CBD406924E158F2003A107C /* Transition */ = {
@@ -1387,6 +1475,8 @@
 				BA50072D2BFA30C156464A3B /* Pods-TBoxUIKitTests.release.xcconfig */,
 				14AA3644D517916EE7969F7C /* Pods-TBoxCore.debug.xcconfig */,
 				3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */,
+				7B914625607732B7746F8370 /* Pods-TBoxUIKitCatalog.debug.xcconfig */,
+				DFCC9F004481533F735A7FF8 /* Pods-TBoxUIKitCatalog.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1650,6 +1740,28 @@
 			productReference = 2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2CB071132509026B0000E7E1 /* TBoxUIKitCatalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CB071272509026C0000E7E1 /* Build configuration list for PBXNativeTarget "TBoxUIKitCatalog" */;
+			buildPhases = (
+				8C0FD7FFA80FCCB8DE960458 /* [CP] Check Pods Manifest.lock */,
+				2CB071102509026B0000E7E1 /* Sources */,
+				2CB071112509026B0000E7E1 /* Frameworks */,
+				2CB071122509026B0000E7E1 /* Resources */,
+				D3688EA81AADD6B462041673 /* [CP] Embed Pods Frameworks */,
+				2C1CEC0E2509624000C95C12 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C1CEC0D2509624000C95C12 /* PBXTargetDependency */,
+				2C1CEC12250963EE00C95C12 /* PBXTargetDependency */,
+			);
+			name = TBoxUIKitCatalog;
+			productName = TBoxUIKitCatalog;
+			productReference = 2CB071142509026B0000E7E1 /* TBoxUIKitCatalog.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2CCECE1324DDC0CB00ADFE54 /* Persistence */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CCECE3024DDC0CB00ADFE54 /* Build configuration list for PBXNativeTarget "Persistence" */;
@@ -1738,6 +1850,9 @@
 						CreatedOnToolsVersion = 11.4.1;
 						TestTargetID = 2CA0228824DD9F5E00329251;
 					};
+					2CB071132509026B0000E7E1 = {
+						CreatedOnToolsVersion = 11.6;
+					};
 					2CCECE1324DDC0CB00ADFE54 = {
 						CreatedOnToolsVersion = 11.4.1;
 						LastSwiftMigration = 1140;
@@ -1774,6 +1889,7 @@
 				2C6E099124E6DD1A00B541D9 /* TBoxCore */,
 				2C6E09C424E8150400B541D9 /* Common */,
 				2C6E09CC24E8150500B541D9 /* CommonTests */,
+				2CB071132509026B0000E7E1 /* TBoxUIKitCatalog */,
 			);
 		};
 /* End PBXProject section */
@@ -1864,6 +1980,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CB071122509026B0000E7E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CB071232509026C0000E7E1 /* LaunchScreen.storyboard in Resources */,
+				2CB071202509026C0000E7E1 /* Assets.xcassets in Resources */,
+				2CB0711E2509026B0000E7E1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2086,6 +2212,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8C0FD7FFA80FCCB8DE960458 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TBoxUIKitCatalog-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		98DB2403190477C8AD44E6DB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2201,6 +2349,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3688EA81AADD6B462041673 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D65302D1DCD08AE5E2B34D43 /* [CP] Check Pods Manifest.lock */ = {
@@ -2375,6 +2540,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2CB071102509026B0000E7E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CB071172509026B0000E7E1 /* AppDelegate.swift in Sources */,
+				2CB071192509026B0000E7E1 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2CCECE1024DDC0CB00ADFE54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2402,6 +2576,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2C1CEC0D2509624000C95C12 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C8FD62C24E02DCE005887F9 /* TBoxUIKit */;
+			targetProxy = 2C1CEC0C2509624000C95C12 /* PBXContainerItemProxy */;
+		};
+		2C1CEC12250963EE00C95C12 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C99275D24DDC7D300672CA7 /* Domain */;
+			targetProxy = 2C1CEC11250963EE00C95C12 /* PBXContainerItemProxy */;
+		};
 		2C27D7B824E254A3006B5DA9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -2544,6 +2728,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				2CA0229824DD9F5F00329251 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2CB0711C2509026B0000E7E1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2CB0711D2509026B0000E7E1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2CB071212509026C0000E7E1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2CB071222509026C0000E7E1 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -3163,6 +3363,44 @@
 			};
 			name = Release;
 		};
+		2CB071252509026C0000E7E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B914625607732B7746F8370 /* Pods-TBoxUIKitCatalog.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TBoxUIKitCatalog/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKitCatalog;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2CB071262509026C0000E7E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFCC9F004481533F735A7FF8 /* Pods-TBoxUIKitCatalog.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TBoxUIKitCatalog/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKitCatalog;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		2CCECE2C24DDC0CB00ADFE54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */;
@@ -3368,6 +3606,15 @@
 			buildConfigurations = (
 				2CA022AC24DD9F5F00329251 /* Debug */,
 				2CA022AD24DD9F5F00329251 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2CB071272509026C0000E7E1 /* Build configuration list for PBXNativeTarget "TBoxUIKitCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CB071252509026C0000E7E1 /* Debug */,
+				2CB071262509026C0000E7E1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

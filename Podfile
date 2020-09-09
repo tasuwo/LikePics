@@ -1,4 +1,4 @@
-# Uncomment the next line to define a global platform for your project
+use_frameworks!
 platform :ios, '13.0'
 
 def test_shared_pods
@@ -7,20 +7,15 @@ def test_shared_pods
 end
 
 target 'Persistence' do
-  use_frameworks!
-
   pod 'RealmSwift', '~> 5.3.3'
 
   target 'PersistenceTests' do
     inherit! :search_paths
     test_shared_pods
   end
-
 end
 
 target 'Domain' do
-  use_frameworks!
-
   pod 'Erik', '~> 5.0.0'
   pod 'PromiseKit', '~> 6.8'
 
@@ -28,37 +23,30 @@ target 'Domain' do
     inherit! :search_paths
     test_shared_pods
   end
-
 end
 
 target 'TBox' do
-  use_frameworks!
-
   target 'TBoxTests' do
     inherit! :search_paths
     test_shared_pods
   end
-
 end
 
 target 'ShareExtension' do
-  use_frameworks!
 end
 
 target 'TBoxUIKit' do
-  use_frameworks!
-
   pod 'Kingfisher', '~> 5.14.1'
 
   target 'TBoxUIKitTests' do
     inherit! :search_paths
     test_shared_pods
   end
-
 end
 
 target 'TBoxCore' do
-  use_frameworks!
-
   pod 'PromiseKit', '~> 6.8'
+end
+
+target 'TBoxUIKitCatalog' do
 end
