@@ -15,7 +15,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Common" id="3Zw-Da-b1k">
+                            <tableViewSection headerTitle="Tag" id="3Zw-Da-b1k">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="x6U-NU-SvG" style="IBUITableViewCellStyleDefault" id="AyU-fq-H1o">
                                         <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
@@ -24,7 +24,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Dummy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="x6U-NU-SvG">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="TagCollectionView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="x6U-NU-SvG">
                                                     <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -33,6 +33,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="90D-Uu-rbL" kind="show" id="vRw-8O-1kZ"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -47,6 +50,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ro7-Us-bRd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-599" y="188"/>
+        </scene>
+        <!--TagCollectionViewController-->
+        <scene sceneID="ax1-Oi-6hS">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TagCollectionViewController" id="90D-Uu-rbL" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Jk3-De-aQk"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BAo-5E-xth" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-17" y="-22"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="QoP-9Z-q0v">
