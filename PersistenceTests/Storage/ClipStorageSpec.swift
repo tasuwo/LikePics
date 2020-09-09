@@ -11,11 +11,11 @@ import RealmSwift
 
 class ClipStorageSpec: QuickSpec {
     func makeClip(url: String,
-                  description: String,
-                  items: [ClipItemObject],
-                  tags: [TagObject],
-                  registeredAt: Date,
-                  updatedAt: Date) -> ClipObject
+                  description: String = "hoge",
+                  items: [ClipItemObject] = [],
+                  tags: [TagObject] = [],
+                  registeredAt: Date = Date(timeIntervalSince1970: 0),
+                  updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
     {
         let obj = ClipObject()
         obj.url = url
@@ -183,7 +183,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("同名のタグが存在する") {
+            context("同名のアルバムが存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj = AlbumObject()
@@ -370,20 +370,14 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
@@ -425,7 +419,7 @@ class ClipStorageSpec: QuickSpec {
         describe("readAllAlbums()") {
             var result: Result<[Album], ClipStorageError>!
 
-            context("Albumが1つも存在しない") {
+            context("アルバムが1つも存在しない") {
                 beforeEach {
                     result = service.readAllAlbums()
                 }
@@ -439,7 +433,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("Albumが複数存在する") {
+            context("アルバムが複数存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = AlbumObject()
@@ -498,20 +492,14 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
@@ -535,20 +523,14 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/hogehoge",
                                                  description: "hoge1",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/poe",
                                                  description: "hoge2",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/hoge",
                                                  description: "hoge3",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
@@ -585,32 +567,22 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/hoge",
                                                  description: "hoge1",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/piyo",
                                                  description: "hoge2",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/fuga",
                                                  description: "hoge3",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         let obj4 = self.makeClip(url: "https://localhost/poe",
                                                  description: "hoge4",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 4000),
                                                  updatedAt: Date(timeIntervalSince1970: 5000))
                         let obj5 = self.makeClip(url: "https://localhost/hogefuga",
                                                  description: "hoge5",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 6000),
                                                  updatedAt: Date(timeIntervalSince1970: 7000))
                         realm.add(obj1)
@@ -659,20 +631,14 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
-                                                 items: [],
-                                                 tags: [],
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
@@ -696,7 +662,6 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "111", name: "hoge")
                                                  ],
@@ -704,7 +669,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "222", name: "fuga")
                                                  ],
@@ -712,7 +676,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "111", name: "hoge"),
                                                      self.makeTag(id: "222", name: "fuga")
@@ -753,7 +716,6 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "111", name: "hoge")
                                                  ],
@@ -761,7 +723,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "222", name: "piyo")
                                                  ],
@@ -769,7 +730,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "333", name: "fuga")
                                                  ],
@@ -777,7 +737,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         let obj4 = self.makeClip(url: "https://localhost/4",
                                                  description: "hoge4",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "444", name: "poe")
                                                  ],
@@ -785,7 +744,6 @@ class ClipStorageSpec: QuickSpec {
                                                  updatedAt: Date(timeIntervalSince1970: 5000))
                         let obj5 = self.makeClip(url: "https://localhost/5",
                                                  description: "hoge5",
-                                                 items: [],
                                                  tags: [
                                                      self.makeTag(id: "111", name: "hoge"),
                                                      self.makeTag(id: "333", name: "fuga"),
@@ -838,12 +796,7 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のタグとクリップが存在する") {
                 beforeEach {
                     try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost",
-                                                description: "hoge",
-                                                items: [],
-                                                tags: [],
-                                                registeredAt: Date(timeIntervalSince1970: 0),
-                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj = self.makeClip(url: "https://localhost")
                         let tagObj = self.makeTag(id: "111", name: "hoge")
                         realm.add(obj)
                         realm.add(tagObj)
@@ -895,12 +848,7 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のタグが存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost",
-                                                description: "hoge",
-                                                items: [],
-                                                tags: [],
-                                                registeredAt: Date(timeIntervalSince1970: 0),
-                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj = self.makeClip(url: "https://localhost")
                         realm.add(obj)
                     }
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
@@ -957,16 +905,12 @@ class ClipStorageSpec: QuickSpec {
                 beforeEach {
                     try! realm.write {
                         let obj = self.makeClip(url: "https://localhost",
-                                                description: "hoge",
-                                                items: [],
                                                 tags: [
                                                     self.makeTag(id: "111", name: "hoge"),
                                                     self.makeTag(id: "222", name: "fuga"),
                                                     self.makeTag(id: "333", name: "piyo"),
 
-                                                ],
-                                                registeredAt: Date(timeIntervalSince1970: 0),
-                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                                                ])
                         realm.add(obj)
                     }
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
@@ -1029,14 +973,10 @@ class ClipStorageSpec: QuickSpec {
                 beforeEach {
                     try! realm.write {
                         let obj = self.makeClip(url: "https://localhost",
-                                                description: "hoge",
-                                                items: [],
                                                 tags: [
                                                     self.makeTag(id: "111", name: "fuga"),
                                                     self.makeTag(id: "222", name: "piyo"),
-                                                ],
-                                                registeredAt: Date(timeIntervalSince1970: 0),
-                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                                                ])
                         realm.add(obj)
                     }
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
@@ -1094,12 +1034,121 @@ class ClipStorageSpec: QuickSpec {
             // TODO:
         }
 
-        describe("update(_:byReplacing:)") {
-            // TODO:
-        }
-
         describe("update(_:titleTo:)") {
-            // TODO:
+            var result: Result<Album, ClipStorageError>!
+
+            context("更新対象のアルバムが存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = AlbumObject()
+                        obj.id = "111"
+                        obj.title = "hogehoge"
+                        obj.registeredAt = Date(timeIntervalSince1970: 0)
+                        obj.updatedAt = Date(timeIntervalSince1970: 1000)
+                        realm.add(obj)
+                    }
+                    result = service.update(Album(id: "111",
+                                                  title: "hogehoge",
+                                                  clips: [],
+                                                  registeredDate: Date(timeIntervalSince1970: 0),
+                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            titleTo: "fugafuga")
+                }
+                it("successが返る") {
+                    switch result! {
+                    case .success:
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("返ってきたアルバムのタイトルが更新されている") {
+                    guard case let .success(album) = result else {
+                        fail("Unexpected failure")
+                        return
+                    }
+                    expect(album.id).to(equal("111"))
+                    expect(album.title).to(equal("fugafuga"))
+                    expect(album.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新日時が更新されている
+                    expect(album.updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+                it("Realm上のアルバムのタイトルも更新されている") {
+                    let obj = realm.object(ofType: AlbumObject.self, forPrimaryKey: "111")
+                    expect(obj?.id).to(equal("111"))
+                    expect(obj?.title).to(equal("fugafuga"))
+                    expect(obj?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新日時が更新されている
+                    expect(obj?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+            }
+
+            context("更新対象のタイトルと同名のアルバムが既に存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = AlbumObject()
+                        obj1.id = "111"
+                        obj1.title = "hogehoge"
+                        obj1.registeredAt = Date(timeIntervalSince1970: 0)
+                        obj1.updatedAt = Date(timeIntervalSince1970: 1000)
+                        let obj2 = AlbumObject()
+                        obj2.id = "222"
+                        obj2.title = "fugafuga"
+                        obj2.registeredAt = Date(timeIntervalSince1970: 0)
+                        obj2.updatedAt = Date(timeIntervalSince1970: 1000)
+                        realm.add(obj1)
+                        realm.add(obj2)
+                    }
+                    result = service.update(Album(id: "111",
+                                                  title: "hogehoge",
+                                                  clips: [],
+                                                  registeredDate: Date(timeIntervalSince1970: 0),
+                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            titleTo: "fugafuga")
+                }
+                it("duplicatedが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected faliure")
+                    case .failure(.duplicated):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm上のアルバムは更新されない") {
+                    let albums = realm.objects(AlbumObject.self).sorted(by: { $0.id < $1.id })
+                    expect(albums[0].id).to(equal("111"))
+                    expect(albums[0].title).to(equal("hogehoge"))
+                    expect(albums[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(albums[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(albums[1].id).to(equal("222"))
+                    expect(albums[1].title).to(equal("fugafuga"))
+                    expect(albums[1].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(albums[1].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                }
+            }
+
+            context("更新対象のアルバムが存在しない") {
+                beforeEach {
+                    result = service.update(Album(id: "111",
+                                                  title: "hogehoge",
+                                                  clips: [],
+                                                  registeredDate: Date(timeIntervalSince1970: 0),
+                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            titleTo: "fugafuga")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
         }
 
         // MARK: Delete
