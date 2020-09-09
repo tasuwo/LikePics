@@ -326,58 +326,6 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func update(_ clip: Clip, byReplacing items: [ClipItem]) -> Result<Clip, ClipStorageError> {
-        return self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
-                return .failure(.internalError)
-            }
-
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
-                return .failure(.notFound)
-            }
-
-            do {
-                try realm.write {
-                    realm.delete(clip.items)
-                    clip.items.append(objectsIn: items.map { $0.asManagedObject() })
-                }
-                return .success(.make(by: clip))
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
-    public func update(_ album: Album, byAddingClipHaving clipUrl: URL) -> Result<Void, ClipStorageError> {
-        self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
-                return .failure(.internalError)
-            }
-
-            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
-                return .failure(.notFound)
-            }
-
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipUrl.absoluteString) else {
-                return .failure(.notFound)
-            }
-
-            guard !album.clips.contains(clip) else {
-                return .failure(.duplicated)
-            }
-
-            do {
-                try realm.write {
-                    album.updatedAt = Date()
-                    album.clips.append(clip)
-                }
-                return .success(())
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
     public func update(_ album: Album, byAddingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
@@ -451,39 +399,6 @@ extension ClipStorage: ClipStorageProtocol {
                     album.clips.remove(atOffsets: IndexSet(indices))
                 }
                 return .success(())
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
-    public func update(_ album: Album, byReplacing clips: [Clip]) -> Result<Album, ClipStorageError> {
-        self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
-                return .failure(.internalError)
-            }
-
-            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
-                return .failure(.notFound)
-            }
-
-            var clipObjects: [ClipObject] = []
-            for clip in clips {
-                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
-                    return .failure(.notFound)
-                }
-                clipObjects.append(clip)
-            }
-
-            do {
-                try realm.write {
-                    album.updatedAt = Date()
-                    album.clips.removeAll()
-                    for clip in clipObjects {
-                        album.clips.append(clip)
-                    }
-                }
-                return .success(Album.make(by: album))
             } catch {
                 return .failure(.internalError)
             }

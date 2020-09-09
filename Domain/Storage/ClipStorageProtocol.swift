@@ -38,15 +38,9 @@ public protocol ClipStorageProtocol {
 
     func update(_ clip: Clip, byDeletingTag tag: String) -> Result<Clip, ClipStorageError>
 
-    func update(_ clip: Clip, byReplacing items: [ClipItem]) -> Result<Clip, ClipStorageError>
-
-    func update(_ album: Album, byAddingClipHaving clipUrl: URL) -> Result<Void, ClipStorageError>
-
     func update(_ album: Album, byAddingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
 
     func update(_ album: Album, byDeletingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
-
-    func update(_ album: Album, byReplacing clips: [Clip]) -> Result<Album, ClipStorageError>
 
     func update(_ album: Album, titleTo title: String) -> Result<Album, ClipStorageError>
 
