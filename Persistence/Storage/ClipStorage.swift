@@ -291,6 +291,7 @@ extension ClipStorage: ClipStorageProtocol {
             do {
                 try realm.write {
                     clipObj.tags.append(tagObj)
+                    clipObj.updatedAt = Date()
                 }
                 return .success(.make(by: clipObj))
             } catch {
@@ -316,6 +317,7 @@ extension ClipStorage: ClipStorageProtocol {
             do {
                 try realm.write {
                     clipObj.tags.remove(at: index)
+                    clipObj.updatedAt = Date()
                 }
                 return .success(.make(by: clipObj))
             } catch {
