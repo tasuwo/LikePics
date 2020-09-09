@@ -217,7 +217,7 @@ class ClipStorageSpec: QuickSpec {
         describe("readClip(having:)") {
             var result: Result<Clip, ClipStorageError>!
 
-            context("対象のClipが存在する") {
+            context("対象のクリップが存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj = self.makeClip(url: "https://localhost",
@@ -287,7 +287,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("対象のClipが存在しない") {
+            context("対象のクリップが存在しない") {
                 beforeEach {
                     result = service.readClip(having: URL(string: "https://localhost")!)
                 }
@@ -351,7 +351,7 @@ class ClipStorageSpec: QuickSpec {
         describe("readAllClips()") {
             var result: Result<[Clip], ClipStorageError>!
 
-            context("Clipが1つも存在しない") {
+            context("クリップが1つも存在しない") {
                 beforeEach {
                     result = service.readAllClips()
                 }
@@ -365,7 +365,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("Clipが複数存在する") {
+            context("クリップが複数存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
@@ -392,7 +392,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.readAllClips()
                 }
-                it("successが返り、全てのClipが取得できる") {
+                it("successが返り、全てのクリップが取得できる") {
                     switch result! {
                     case let .success(v):
                         let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -466,7 +466,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.readAllAlbums()
                 }
-                it("successが返り、全てのClipが取得できる") {
+                it("successが返り、全てのクリップが取得できる") {
                     switch result! {
                     case let .success(v):
                         let albums = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -493,7 +493,7 @@ class ClipStorageSpec: QuickSpec {
         describe("searchClips(byKeywords:)") {
             var result: Result<[Clip], ClipStorageError>!
 
-            context("条件にマッチするClipが1件も存在しない") {
+            context("条件にマッチするクリップが1件も存在しない") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
@@ -530,7 +530,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("1つのキーワードにマッチするClipが複数存在する") {
+            context("1つのキーワードにマッチするクリップが複数存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/hogehoge",
@@ -557,7 +557,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.searchClips(byKeywords: ["hoge"])
                 }
-                it("successが返り、マッチしたClipが返る") {
+                it("successが返り、マッチしたクリップが返る") {
                     switch result! {
                     case let .success(v):
                         let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -621,7 +621,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.searchClips(byKeywords: ["hoge", "fuga"])
                 }
-                it("successが返り、マッチしたClipが返る") {
+                it("successが返り、マッチしたクリップが返る") {
                     switch result! {
                     case let .success(v):
                         let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -654,7 +654,7 @@ class ClipStorageSpec: QuickSpec {
         describe("searchClips(byTags:)") {
             var result: Result<[Clip], ClipStorageError>!
 
-            context("条件にマッチするClipが1件も存在しない") {
+            context("条件にマッチするクリップが1件も存在しない") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
@@ -691,7 +691,7 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
 
-            context("1つのタグにマッチするClipが複数存在する") {
+            context("1つのタグにマッチするクリップが複数存在する") {
                 beforeEach {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
@@ -725,7 +725,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.searchClips(byTags: ["hoge"])
                 }
-                it("successが返り、マッチしたClipが返る") {
+                it("successが返り、マッチしたクリップが返る") {
                     switch result! {
                     case let .success(v):
                         let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -800,7 +800,7 @@ class ClipStorageSpec: QuickSpec {
                     }
                     result = service.searchClips(byTags: ["hoge", "fuga"])
                 }
-                it("successが返り、マッチしたClipが返る") {
+                it("successが返り、マッチしたクリップが返る") {
                     switch result! {
                     case let .success(v):
                         let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
@@ -832,7 +832,275 @@ class ClipStorageSpec: QuickSpec {
 
         // MARK: Update
 
-        // TODO:
+        describe("update(_:byAddingTag:)") {
+            var result: Result<Clip, ClipStorageError>!
+
+            context("追加対象のタグとクリップが存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeClip(url: "https://localhost",
+                                                description: "hoge",
+                                                items: [],
+                                                tags: [],
+                                                registeredAt: Date(timeIntervalSince1970: 0),
+                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        let tagObj = self.makeTag(id: "111", name: "hoge")
+                        realm.add(obj)
+                        realm.add(tagObj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byAddingTag: "hoge")
+                }
+                it("successが返る") {
+                    switch result! {
+                    case .success:
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("返ってきたクリップが更新されている") {
+                    guard case let .success(clip) = result else {
+                        fail("Unexpected failure")
+                        return
+                    }
+                    expect(clip.url).to(equal(URL(string: "https://localhost")))
+                    expect(clip.description).to(equal("hoge"))
+                    expect(clip.items).to(beEmpty())
+                    expect(clip.tags).to(haveCount(1))
+                    expect(clip.tags.first!).to(equal("hoge"))
+                    expect(clip.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+                it("Realm内のクリップが更新されている") {
+                    let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: "https://localhost")
+                    expect(clip?.url).to(equal("https://localhost"))
+                    expect(clip?.descriptionText).to(equal("hoge"))
+                    expect(clip?.items).to(beEmpty())
+                    expect(clip?.tags).to(haveCount(1))
+                    expect(clip?.tags.first!.id).to(equal("111"))
+                    expect(clip?.tags.first!.name).to(equal("hoge"))
+                    expect(clip?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clip?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+            }
+
+            context("追加対象のタグが存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeClip(url: "https://localhost",
+                                                description: "hoge",
+                                                items: [],
+                                                tags: [],
+                                                registeredAt: Date(timeIntervalSince1970: 0),
+                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        realm.add(obj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byAddingTag: "hoge")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+
+            context("追加対象のクリップが存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeTag(id: "111", name: "hoge")
+                        realm.add(obj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byAddingTag: "hoge")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+        }
+
+        describe("update(_:byDeletingTag:)") {
+            var result: Result<Clip, ClipStorageError>!
+
+            context("クリップが削除対象のタグを保持している") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeClip(url: "https://localhost",
+                                                description: "hoge",
+                                                items: [],
+                                                tags: [
+                                                    self.makeTag(id: "111", name: "hoge"),
+                                                    self.makeTag(id: "222", name: "fuga"),
+                                                    self.makeTag(id: "333", name: "piyo"),
+
+                                                ],
+                                                registeredAt: Date(timeIntervalSince1970: 0),
+                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        realm.add(obj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byDeletingTag: "fuga")
+                }
+                it("successが返る") {
+                    switch result! {
+                    case .success:
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("返ってきたクリップが更新されている") {
+                    guard case let .success(clip) = result else {
+                        fail("Unexpected failure")
+                        return
+                    }
+                    expect(clip.url).to(equal(URL(string: "https://localhost")))
+                    expect(clip.description).to(equal("hoge"))
+                    expect(clip.items).to(beEmpty())
+                    expect(clip.tags).to(haveCount(2))
+                    expect(clip.tags).to(equal(["hoge", "piyo"]))
+                    expect(clip.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+                it("Realm内のクリップが更新されている") {
+                    let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: "https://localhost")
+                    expect(clip?.url).to(equal("https://localhost"))
+                    expect(clip?.descriptionText).to(equal("hoge"))
+                    expect(clip?.items).to(beEmpty())
+                    expect(clip?.tags).to(haveCount(2))
+                    expect(clip?.tags[0].id).to(equal("111"))
+                    expect(clip?.tags[0].name).to(equal("hoge"))
+                    expect(clip?.tags[1].id).to(equal("333"))
+                    expect(clip?.tags[1].name).to(equal("piyo"))
+                    expect(clip?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clip?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
+                }
+                it("タグ自体は残っている") {
+                    let tags = realm.objects(TagObject.self).sorted(by: { $0.id < $1.id })
+                    expect(tags).to(haveCount(3))
+                    expect(tags[0].id).to(equal("111"))
+                    expect(tags[0].name).to(equal("hoge"))
+                    expect(tags[1].id).to(equal("222"))
+                    expect(tags[1].name).to(equal("fuga"))
+                    expect(tags[2].id).to(equal("333"))
+                    expect(tags[2].name).to(equal("piyo"))
+                }
+            }
+
+            context("更新対象のクリップが削除対象のタグを持っていない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeClip(url: "https://localhost",
+                                                description: "hoge",
+                                                items: [],
+                                                tags: [
+                                                    self.makeTag(id: "111", name: "fuga"),
+                                                    self.makeTag(id: "222", name: "piyo"),
+                                                ],
+                                                registeredAt: Date(timeIntervalSince1970: 0),
+                                                updatedAt: Date(timeIntervalSince1970: 1000))
+                        realm.add(obj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byDeletingTag: "hoge")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+
+            context("更新対象のクリップが存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj = self.makeTag(id: "111", name: "hoge")
+                        realm.add(obj)
+                    }
+                    result = service.update(Clip(url: URL(string: "https://localhost")!,
+                                                 description: nil,
+                                                 items: [],
+                                                 tags: [],
+                                                 registeredDate: Date(timeIntervalSince1970: 0),
+                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byDeletingTag: "hoge")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+        }
+
+        describe("update(_:byAddingClipsHaving:)") {
+            // TODO:
+        }
+
+        describe("update(_:byDeletingClipsHaving:)") {
+            // TODO:
+        }
+
+        describe("update(_:byReplacing:)") {
+            // TODO:
+        }
+
+        describe("update(_:titleTo:)") {
+            // TODO:
+        }
 
         // MARK: Delete
 
