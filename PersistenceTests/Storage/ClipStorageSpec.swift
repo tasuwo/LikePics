@@ -1027,11 +1027,75 @@ class ClipStorageSpec: QuickSpec {
         }
 
         describe("update(_:byAddingClipsHaving:)") {
-            // TODO:
+            var result: Result<Void, ClipStorageError>!
+
+            context("更新対象のアルバムが存在し追加対象のクリップを保持していない") {
+                // TODO:
+            }
+
+            context("更新対象のアルバムが既に追加対象のクリップを保持している") {
+                // TODO:
+            }
+
+            context("更新対象のアルバムが存在しない") {
+                beforeEach {
+                    result = service.update(Album(id: "111",
+                                                  title: "hogehoge",
+                                                  clips: [],
+                                                  registeredDate: Date(timeIntervalSince1970: 0),
+                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byAddingClipsHaving: [
+                                                URL(string: "https://localhost/1")!,
+                                                URL(string: "https://localhost/2")!
+                                            ])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
         }
 
         describe("update(_:byDeletingClipsHaving:)") {
-            // TODO:
+            var result: Result<Void, ClipStorageError>!
+
+            context("更新対象のアルバムが存在し削除対象のクリップを保持している") {
+                // TODO:
+            }
+
+            context("更新対象のアルバムが削除対象のクリップを保持していない") {
+                // TODO:
+            }
+
+            context("更新対象のアルバムが存在しない") {
+                beforeEach {
+                    result = service.update(Album(id: "111",
+                                                  title: "hogehoge",
+                                                  clips: [],
+                                                  registeredDate: Date(timeIntervalSince1970: 0),
+                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                                            byDeletingClipsHaving: [
+                                                URL(string: "https://localhost/1")!,
+                                                URL(string: "https://localhost/2")!
+                                            ])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
         }
 
         describe("update(_:titleTo:)") {
