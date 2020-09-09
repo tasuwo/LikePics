@@ -411,6 +411,10 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.internalError)
             }
 
+            if let _ = realm.objects(AlbumObject.self).filter("title = '\(title)'").first {
+                return .failure(.duplicated)
+            }
+
             guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: album.id) else {
                 return .failure(.notFound)
             }
