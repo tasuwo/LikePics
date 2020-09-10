@@ -843,6 +843,12 @@ class ClipStorageSpec: QuickSpec {
                     // 更新時刻が更新されている
                     expect(clip?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
                 }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(1))
+                    expect(tags.first?.id).to(equal("111"))
+                    expect(tags.first?.name).to(equal("hoge"))
+                }
             }
 
             context("追加対象のタグが存在しない") {
@@ -868,6 +874,10 @@ class ClipStorageSpec: QuickSpec {
                     case let .failure(error):
                         fail("Unexpected failure: \(error)")
                     }
+                }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(0))
                 }
             }
 
