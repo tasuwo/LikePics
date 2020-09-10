@@ -28,6 +28,4 @@ protocol ClipsListPresenterProtocol {
     func deselect(at index: Int)
 
     func deleteAll()
-
-    func addAllToAlbum()
 }

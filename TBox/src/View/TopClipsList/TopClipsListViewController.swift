@@ -137,7 +137,22 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapAddToAlbum() {
-        self.presenter.addAllToAlbum()
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(.init(title: "アルバムに追加する", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips, delegate: self.presenter)
+            self.present(viewController, animated: true, completion: nil)
+        }))
+
+        alert.addAction(.init(title: "タグを追加する", style: .default, handler: { [weak self] _ in
+            // TODO:
+            print(#function)
+        }))
+
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     @objc
@@ -195,11 +210,6 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
     func presentPreviewView(for clip: Clip) {
         let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
         self.present(nextViewController, animated: true, completion: nil)
-    }
-
-    func presentAlbumSelectionView(for clips: [Clip]) {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
-        self.present(viewController, animated: true, completion: nil)
     }
 
     func showErrorMassage(_ message: String) {

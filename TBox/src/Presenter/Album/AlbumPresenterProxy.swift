@@ -86,10 +86,6 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
     func deleteAll() {
         self.presenter.deleteAll()
     }
-
-    func addAllToAlbum() {
-        self.presenter.addAllToAlbum()
-    }
 }
 
 extension AlbumPresenterProxy: AddingClipsToAlbumPresenterDelegate {

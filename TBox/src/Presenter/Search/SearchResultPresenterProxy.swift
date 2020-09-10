@@ -53,10 +53,6 @@ extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
         self.presenter.deleteAll()
     }
 
-    func addAllToAlbum() {
-        self.presenter.addAllToAlbum()
-    }
-
     func set(view: SearchResultViewProtocol) {
         self.presenter.set(view: view)
     }

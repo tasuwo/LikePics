@@ -94,7 +94,8 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     }
 
     @objc func didTapAddToAlbum() {
-        self.presenter.addAllToAlbum()
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
+        self.present(viewController, animated: true, completion: nil)
     }
 
     @objc func didTapRemove() {
@@ -205,11 +206,6 @@ extension AlbumViewController: AlbumViewProtocol {
     func presentPreviewView(for clip: Clip) {
         let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
         self.present(nextViewController, animated: true, completion: nil)
-    }
-
-    func presentAlbumSelectionView(for clips: [Clip]) {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
-        self.present(viewController, animated: true, completion: nil)
     }
 
     func showErrorMassage(_ message: String) {

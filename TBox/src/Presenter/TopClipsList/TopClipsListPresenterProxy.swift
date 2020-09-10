@@ -66,10 +66,6 @@ extension TopClipsListPresenterProxy: TopClipsListPresenterProtocol {
     func deleteAll() {
         self.presenter.deleteAll()
     }
-
-    func addAllToAlbum() {
-        self.presenter.addAllToAlbum()
-    }
 }
 
 extension TopClipsListPresenterProxy: AddingClipsToAlbumPresenterDelegate {

@@ -13,8 +13,6 @@ protocol ClipsListViewProtocol: AnyObject {
 
     func presentPreviewView(for clip: Clip)
 
-    func presentAlbumSelectionView(for clips: [Clip])
-
     func showErrorMassage(_ message: String)
 }
 
@@ -128,10 +126,6 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
 
         self.view?.reload()
         self.view?.endEditing()
-    }
-
-    func addAllToAlbum() {
-        self.view?.presentAlbumSelectionView(for: self.selectedClips)
     }
 }
 
