@@ -10,6 +10,10 @@ class AlbumListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
+    private lazy var alertContainer = AddingAlert(configuration: .init(title: "新規アルバム",
+                                                                       message: "このアルバムの名前を入力してください",
+                                                                       placeholder: "アルバム名"),
+                                                  baseView: self)
 
     @IBOutlet var collectionView: AlbumListCollectionView!
 
@@ -57,10 +61,16 @@ class AlbumListViewController: UIViewController {
     }
 
     @objc func didTapAdd() {
-        let alert = AddingAlbumAlertContainer.shared.makeAlert { [weak self] title in
-            self?.presenter.addAlbum(title: title)
+        self.alertContainer.present { [weak self] action in
+            switch action {
+            case let .saved(text: text):
+                self?.presenter.addAlbum(title: text)
+
+            default:
+                // NOP
+                break
+            }
         }
-        self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: UIViewController (Override)

@@ -158,7 +158,7 @@
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */; };
-		2CD3DA5F24EEC8720031A065 /* AddingAlbumAlertContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */; };
+		2CD3DA5F24EEC8720031A065 /* AddingAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CE22D4924E2A45A00449210 /* ClipPreviewPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */; };
 		2CE22D4B24E2A48C00449210 /* ClipPreviewPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */; };
@@ -594,7 +594,7 @@
 		2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersistenceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipObject.swift; sourceTree = "<group>"; };
-		2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingAlbumAlertContainer.swift; sourceTree = "<group>"; };
+		2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingAlert.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CE22D4824E2A45A00449210 /* ClipPreviewPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageView.swift; sourceTree = "<group>"; };
 		2CE22D4A24E2A48C00449210 /* ClipPreviewPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewPageView.xib; sourceTree = "<group>"; };
@@ -816,12 +816,12 @@
 			path = Animator;
 			sourceTree = "<group>";
 		};
-		2C29789B24EEF19700FBA531 /* AddingAlbumAlert */ = {
+		2C29789B24EEF19700FBA531 /* AddingAlert */ = {
 			isa = PBXGroup;
 			children = (
-				2CD3DA5E24EEC8720031A065 /* AddingAlbumAlertContainer.swift */,
+				2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */,
 			);
-			path = AddingAlbumAlert;
+			path = AddingAlert;
 			sourceTree = "<group>";
 		};
 		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
@@ -1146,7 +1146,7 @@
 				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */,
 				2C45D40324EEB3F30045B6D3 /* AlbumList */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
-				2C29789B24EEF19700FBA531 /* AddingAlbumAlert */,
+				2C29789B24EEF19700FBA531 /* AddingAlert */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
@@ -2559,7 +2559,7 @@
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */,
 				2C3CCDB624F2C67800FAC660 /* TopClipsListPresenterProxy.swift in Sources */,
-				2CD3DA5F24EEC8720031A065 /* AddingAlbumAlertContainer.swift in Sources */,
+				2CD3DA5F24EEC8720031A065 /* AddingAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

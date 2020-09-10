@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import UIKit
 import TBoxUIKit
+import UIKit
 
 class TagCollectionViewController: UICollectionViewController {
     let tags = [

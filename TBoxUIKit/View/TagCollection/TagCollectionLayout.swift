@@ -73,4 +73,3 @@ public class TagCollectionLayout: UICollectionViewFlowLayout {
         return delegate.collectionView?(collectionView, layout: self, insetForSectionAt: sectionIndex) ?? self.sectionInset
     }
 }
-
