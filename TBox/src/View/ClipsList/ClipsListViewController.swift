@@ -65,15 +65,15 @@ extension ClipsListViewController where Self: UICollectionViewDataSource {
         let clip = self.presenter.clips[indexPath.row]
         cell.primaryImage = {
             guard let data = self.presenter.getImageData(for: .primary, in: clip) else { return nil }
-            return UIImage(data: data)!
+            return UIImage(data: data)
         }()
         cell.secondaryImage = {
             guard let data = self.presenter.getImageData(for: .secondary, in: clip) else { return nil }
-            return UIImage(data: data)!
+            return UIImage(data: data)
         }()
         cell.tertiaryImage = {
             guard let data = self.presenter.getImageData(for: .tertiary, in: clip) else { return nil }
-            return UIImage(data: data)!
+            return UIImage(data: data)
         }()
 
         cell.visibleSelectedMark = self.presenter.isEditing
@@ -92,15 +92,19 @@ extension ClipsListViewController where Self: ClipsCollectionLayoutDelegate {
         switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
         case let (.some(item), .none, .none):
             return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
-        case let (.some(item), .some(_), .none):
+
+        case let (.some(item), .some, .none):
             return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
                 + ClipsCollectionViewCell.secondaryStickingOutMargin
-        case let (.some(item), .some(_), .some(_)):
+
+        case let (.some(item), .some, .some):
             return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
                 + ClipsCollectionViewCell.secondaryStickingOutMargin
                 + ClipsCollectionViewCell.tertiaryStickingOutMargin
+
         case let (.some(item), _, _):
             return width * (CGFloat(item.thumbnail.size.height) / CGFloat(item.thumbnail.size.width))
+
         default:
             return width
         }

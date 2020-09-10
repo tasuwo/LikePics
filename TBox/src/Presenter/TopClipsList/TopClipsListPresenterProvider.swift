@@ -8,11 +8,11 @@ struct TopClipsListPresenterProxy {
     private var presenter: TopClipsListPresenterProtocol
 
     var view: TopClipsListViewProtocol? {
-        set {
-            self.presenter.view = newValue
-        }
         get {
             return self.presenter.view
+        }
+        set {
+            self.presenter.view = newValue
         }
     }
 

@@ -17,16 +17,6 @@ class SearchResultPresenterProxy {
 extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
     // MARK: - SearchResultPresenterProtocol
 
-    func set(view: SearchResultViewProtocol) {
-        self.presenter.set(view: view)
-    }
-
-    func replaceClips(by clips: [Clip]) {
-        self.presenter.replaceClips(by: clips)
-    }
-
-    // MARK: ClipsListPresenterProtocol
-
     var clips: [Clip] {
         return self.presenter.clips
     }
@@ -65,6 +55,14 @@ extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
 
     func addAllToAlbum() {
         self.presenter.addAllToAlbum()
+    }
+
+    func set(view: SearchResultViewProtocol) {
+        self.presenter.set(view: view)
+    }
+
+    func replaceClips(by clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
     }
 }
 
