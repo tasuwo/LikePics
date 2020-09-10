@@ -90,11 +90,13 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         }
     }
 
-    @objc func didTapEdit() {
+    @objc
+    func didTapEdit() {
         self.setEditing(true, animated: true)
     }
 
-    @objc func didTapCancel() {
+    @objc
+    func didTapCancel() {
         self.setEditing(false, animated: true)
     }
 
@@ -113,7 +115,8 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
                                                   object: nil)
     }
 
-    @objc func didBecomeActive() {
+    @objc
+    func didBecomeActive() {
         self.presenter.reload()
     }
 
@@ -132,11 +135,13 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         self.navigationController?.setToolbarHidden(!editing, animated: false)
     }
 
-    @objc func didTapAddToAlbum() {
+    @objc
+    func didTapAddToAlbum() {
         self.presenter.addAllToAlbum()
     }
 
-    @objc func didTapRemove() {
+    @objc
+    func didTapRemove() {
         let alert = UIAlertController(title: "", message: "選択中のクリップを全て削除しますか？", preferredStyle: .alert)
 
         alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
