@@ -103,7 +103,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
     }
 
-    @objc func didTapBack() {
+    @objc
+    func didTapBack() {
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -125,20 +126,24 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.navigationController?.setToolbarHidden(UIDevice.current.orientation.isLandscape, animated: false)
     }
 
-    @objc private func didTapRemove() {
+    @objc
+    private func didTapRemove() {
         self.currentViewController?.didTapRemove()
     }
 
-    @objc private func didTapRefetch() {
+    @objc
+    private func didTapRefetch() {
         let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: self.presenter.clip.url, delegate: self, isOverwrite: true)
         self.present(viewController, animated: true, completion: nil)
     }
 
-    @objc private func didTapOpenWeb() {
+    @objc
+    private func didTapOpenWeb() {
         UIApplication.shared.open(self.presenter.clip.url, options: [:], completionHandler: nil)
     }
 
-    @objc private func didTapAddToAlbum() {
+    @objc
+    private func didTapAddToAlbum() {
         let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
@@ -155,18 +160,21 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.view.addGestureRecognizer(self.tapGestureRecignizer)
     }
 
-    @objc func didPan(_ sender: UIPanGestureRecognizer) {
+    @objc
+    func didPan(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
             self.currentViewController?.pageView.isScrollEnabled = false
             self.transitionController.beginInteractiveTransition()
             self.dismiss(animated: true, completion: nil)
+
         case .ended:
             if self.transitionController.isInteractiveTransitioning {
                 self.currentViewController?.pageView.isScrollEnabled = true
                 self.transitionController.endInteractiveTransition()
                 self.transitionController.didPan(sender: sender)
             }
+
         default:
             if self.transitionController.isInteractiveTransitioning {
                 self.transitionController.didPan(sender: sender)
@@ -174,7 +182,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
-    @objc func didtap(_ sender: UITapGestureRecognizer) {
+    @objc
+    func didtap(_ sender: UITapGestureRecognizer) {
         self.isFullscreen = !self.isFullscreen
     }
 
