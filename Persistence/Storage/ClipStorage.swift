@@ -222,6 +222,15 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func readAllTags() -> Result<[String], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+            return .success(realm.objects(TagObject.self).map { $0.name })
+        }
+    }
+
     public func readAllAlbums() -> Result<[Album], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {

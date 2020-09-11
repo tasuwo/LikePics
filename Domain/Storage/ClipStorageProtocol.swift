@@ -26,6 +26,8 @@ public protocol ClipStorageProtocol {
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
 
+    func readAllTags() -> Result<[String], ClipStorageError>
+
     func readAllAlbums() -> Result<[Album], ClipStorageError>
 
     func searchClips(byKeywords keywords: [String]) -> Result<[Clip], ClipStorageError>

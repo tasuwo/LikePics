@@ -416,6 +416,51 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
+        describe("readAllTags()") {
+            var result: Result<[String], ClipStorageError>!
+
+            context("タグが1つも存在しない") {
+                beforeEach {
+                    result = service.readAllTags()
+                }
+                it("successが返り、結果は空配列となる") {
+                    switch result! {
+                    case let .success(tags):
+                        expect(tags).to(beEmpty())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+
+            context("タグが複数存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = self.makeTag(id: "111", name: "hoge")
+                        let obj2 = self.makeTag(id: "222", name: "fuga")
+                        let obj3 = self.makeTag(id: "333", name: "piyo")
+
+                        realm.add(obj1)
+                        realm.add(obj2)
+                        realm.add(obj3)
+                    }
+                    result = service.readAllTags()
+                }
+                it("successが返り、全てのタグが取得できる") {
+                    switch result! {
+                    case let .success(v):
+                        let tags = v.sorted(by: { $0 < $1 })
+                        expect(tags).to(haveCount(3))
+                        expect(tags[0]).to(equal("fuga"))
+                        expect(tags[1]).to(equal("hoge"))
+                        expect(tags[2]).to(equal("piyo"))
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+        }
+
         describe("readAllAlbums()") {
             var result: Result<[Album], ClipStorageError>!
 
