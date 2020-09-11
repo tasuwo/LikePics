@@ -18,6 +18,10 @@ protocol ViewControllerFactory {
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController
 
+    // MARK: Information
+
+    func makeClipInformationViewController(clip: Clip) -> UIViewController
+
     // MARK: Selection
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
@@ -68,6 +72,12 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
         viewController.delegate = delegate
         return viewController
+    }
+
+    func makeClipInformationViewController(clip: Clip) -> UIViewController {
+        let presenter = ClipInformationViewPresenter(clip: clip)
+        let viewController = ClipInformationViewController(factory: self, presenter: presenter)
+        return UINavigationController(rootViewController: viewController)
     }
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {

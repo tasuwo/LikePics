@@ -9,9 +9,16 @@ import UIKit
 class ClipPreviewPageViewController: UIPageViewController {
     typealias Factory = ViewControllerFactory
 
+    enum TransitionDestination {
+        case back
+        case information
+    }
+
     private let factory: Factory
     private let presenter: ClipPreviewPagePresenter
     private let transitionController: ClipPreviewTransitionControllerProtocol
+
+    private var destination: TransitionDestination?
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecignizer: UITapGestureRecognizer!
@@ -162,23 +169,37 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     @objc
     func didPan(_ sender: UIPanGestureRecognizer) {
-        switch sender.state {
-        case .began:
+        switch (sender.state, self.destination) {
+        case (.began, .back):
             self.currentViewController?.pageView.isScrollEnabled = false
             self.transitionController.beginInteractiveTransition()
             self.dismiss(animated: true, completion: nil)
 
-        case .ended:
+        case (.ended, .back):
             if self.transitionController.isInteractiveTransitioning {
                 self.currentViewController?.pageView.isScrollEnabled = true
                 self.transitionController.endInteractiveTransition()
                 self.transitionController.didPan(sender: sender)
             }
+            self.destination = nil
 
-        default:
+        case (_, .back):
             if self.transitionController.isInteractiveTransitioning {
                 self.transitionController.didPan(sender: sender)
             }
+
+        case (.began, .information):
+            let viewController = self.factory.makeClipInformationViewController(clip: self.presenter.clip)
+            self.present(viewController, animated: true, completion: nil)
+
+        case (.ended, .information):
+            self.destination = nil
+
+        case (_, .information):
+            break
+
+        case (_, .none):
+            break
         }
     }
 
@@ -233,7 +254,12 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
-            return gestureRecognizer.velocity(in: self.view).y > 0
+            if gestureRecognizer.velocity(in: self.view).y > 0 {
+                self.destination = .back
+            } else {
+                self.destination = .information
+            }
+            return true
         }
         return true
     }
