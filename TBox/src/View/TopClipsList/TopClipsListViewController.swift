@@ -146,8 +146,9 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         }))
 
         alert.addAction(.init(title: "タグを追加する", style: .default, handler: { [weak self] _ in
-            // TODO:
-            print(#function)
+            guard let self = self else { return }
+            let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips, delegate: self)
+            self.present(viewController, animated: true, completion: nil)
         }))
 
         alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
@@ -276,5 +277,14 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
+    }
+}
+
+extension TopClipsListViewController: AddingTagToClipsPresenterDelegate {
+    // MARK: - AddingTagToClipsPresenterDelegate
+
+    func addingTagToClipsPresenter(_ presenter: AddingTagToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
+        // TODO: Handling
+        print(isSucceeded)
     }
 }

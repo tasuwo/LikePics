@@ -32,6 +32,10 @@ protocol ViewControllerFactory {
     func makeAlbumListViewController() -> UIViewController
     func makeAlbumViewController(album: Album) -> UIViewController
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController
+
+    // MARK: Tag
+
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagToClipsPresenterDelegate) -> UIViewController
 }
 
 class DependencyContainer {
@@ -103,6 +107,13 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipsStorage)
         presenter.delegate = delegate
         let viewController = AddingClipsToAlbumViewController(factory: self, presenter: presenter)
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagToClipsPresenterDelegate) -> UIViewController {
+        let presenter = AddingTagToClipsPresenter(clips: clips, storage: self.clipsStorage)
+        presenter.delegate = delegate
+        let viewController = AddingTagToClipsViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
 }

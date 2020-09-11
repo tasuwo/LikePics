@@ -35,6 +35,9 @@
 		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitionController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
+		2C38C705250AF33B00F32102 /* AddingTagToClipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C704250AF33B00F32102 /* AddingTagToClipsViewController.swift */; };
+		2C38C708250AF3D100F32102 /* AddingTagToClipsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C707250AF3D100F32102 /* AddingTagToClipsPresenter.swift */; };
+		2C38C70A250AF7DF00F32102 /* AddingTagToClipsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C38C709250AF7DF00F32102 /* AddingTagToClipsViewController.xib */; };
 		2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */; };
 		2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */; };
 		2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */; };
@@ -475,6 +478,9 @@
 		2C2AB06524DEFAF1007E2B18 /* ClipTargetFinderPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetFinderPresenter.swift; sourceTree = "<group>"; };
 		2C2AB06724DF00B0007E2B18 /* ClipTargetFinderViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipTargetFinderViewController.xib; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+		2C38C704250AF33B00F32102 /* AddingTagToClipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTagToClipsViewController.swift; sourceTree = "<group>"; };
+		2C38C707250AF3D100F32102 /* AddingTagToClipsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTagToClipsPresenter.swift; sourceTree = "<group>"; };
+		2C38C709250AF7DF00F32102 /* AddingTagToClipsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingTagToClipsViewController.xib; sourceTree = "<group>"; };
 		2C3ADF5624EEE2FC007C4AA0 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumViewController.xib; sourceTree = "<group>"; };
 		2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenter.swift; sourceTree = "<group>"; };
@@ -853,6 +859,23 @@
 			path = Cotnext;
 			sourceTree = "<group>";
 		};
+		2C38C703250AF31900F32102 /* TagSelection */ = {
+			isa = PBXGroup;
+			children = (
+				2C38C704250AF33B00F32102 /* AddingTagToClipsViewController.swift */,
+				2C38C709250AF7DF00F32102 /* AddingTagToClipsViewController.xib */,
+			);
+			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2C38C706250AF3B900F32102 /* TagSelection */ = {
+			isa = PBXGroup;
+			children = (
+				2C38C707250AF3D100F32102 /* AddingTagToClipsPresenter.swift */,
+			);
+			path = TagSelection;
+			sourceTree = "<group>";
+		};
 		2C3ADF5524EEE2DC007C4AA0 /* Album */ = {
 			isa = PBXGroup;
 			children = (
@@ -1030,6 +1053,7 @@
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
+				2C38C706250AF3B900F32102 /* TagSelection */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -1146,6 +1170,7 @@
 				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */,
 				2C45D40324EEB3F30045B6D3 /* AlbumList */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
+				2C38C703250AF31900F32102 /* TagSelection */,
 				2C29789B24EEF19700FBA531 /* AddingAlert */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
@@ -1995,6 +2020,7 @@
 				2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */,
 				2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
+				2C38C70A250AF7DF00F32102 /* AddingTagToClipsViewController.xib in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2C45D3F824EC317F0045B6D3 /* SearchResultViewController.xib in Resources */,
@@ -2546,6 +2572,7 @@
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
+				2C38C708250AF3D100F32102 /* AddingTagToClipsPresenter.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */,
 				2C2289EC24F7F1940026E24A /* ClipsListViewController.swift in Sources */,
@@ -2554,6 +2581,7 @@
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
+				2C38C705250AF33B00F32102 /* AddingTagToClipsViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
