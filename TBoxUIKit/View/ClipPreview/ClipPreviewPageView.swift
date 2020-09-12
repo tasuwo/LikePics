@@ -30,6 +30,10 @@ public class ClipPreviewPageView: UIView {
         self.scrollView.contentOffset
     }
 
+    public var isMinimumZoomScale: Bool {
+        self.scrollView.zoomScale == self.scrollView.minimumZoomScale
+    }
+
     public var isScrollEnabled: Bool {
         get {
             self.scrollView.isScrollEnabled

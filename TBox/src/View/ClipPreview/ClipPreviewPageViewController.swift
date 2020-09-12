@@ -258,6 +258,7 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
+            guard self.currentViewController?.pageView.isMinimumZoomScale == true else { return false }
             if gestureRecognizer.velocity(in: self.view).y > 0 {
                 self.destination = .back
             } else {
