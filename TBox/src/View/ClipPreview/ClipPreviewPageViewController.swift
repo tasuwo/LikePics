@@ -93,7 +93,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = ""
 
-        self.navigationItem.leftBarButtonItem = .init(title: "Back", style: .plain, target: self, action: #selector(self.didTapBack))
+        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(self.didTapBack))
 
         self.updateNavigationBar()
     }
