@@ -15,20 +15,6 @@ class TopClipsListPresenterProxy {
 }
 
 extension TopClipsListPresenterProxy: TopClipsListPresenterProtocol {
-    // MARK: - TopClipsListPresenterProtocol
-
-    func set(view: TopClipsListViewProtocol) {
-        self.presenter.set(view: view)
-    }
-
-    func replaceClips(by clips: [Clip]) {
-        self.presenter.replaceClips(by: clips)
-    }
-
-    func reload() {
-        self.presenter.reload()
-    }
-
     // MARK: ClipsListPresenterProtocol
 
     var clips: [Clip] {
@@ -65,6 +51,20 @@ extension TopClipsListPresenterProxy: TopClipsListPresenterProtocol {
 
     func deleteAll() {
         self.presenter.deleteAll()
+    }
+
+    // MARK: - TopClipsListPresenterProtocol
+
+    func set(view: TopClipsListViewProtocol) {
+        self.presenter.set(view: view)
+    }
+
+    func replaceClips(by clips: [Clip]) {
+        self.presenter.replaceClips(by: clips)
+    }
+
+    func reload() {
+        self.presenter.reload()
     }
 }
 

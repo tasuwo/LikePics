@@ -27,9 +27,9 @@ protocol ClipsListPresenter: AnyObject {
 
     var storage: ClipStorageProtocol { get }
 
-    func updateClips(to clips: [Clip])
-
     static func resolveErrorMessage(_ error: ClipStorageError) -> String
+
+    func updateClips(to clips: [Clip])
 }
 
 extension ClipsListPresenter {
@@ -51,8 +51,10 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
             switch layer {
             case .primary:
                 return clip.primaryItem
+
             case .secondary:
                 return clip.secondaryItem
+
             case .tertiary:
                 return clip.tertiaryItem
             }
@@ -62,6 +64,7 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
         switch self.storage.readImageData(having: clipItem.thumbnail.url, forClipHaving: clip.url) {
         case let .success(data):
             return data
+
         case let .failure(error):
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
             return nil
@@ -111,6 +114,7 @@ extension ClipsListPresenter where Self: ClipsListPresenterProtocol {
         case .success:
             // NOP
             break
+
         case let .failure(error):
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
         }

@@ -100,10 +100,13 @@ class AlbumPresenter: ClipsListPresenter {
             switch self.editingTarget {
             case .title:
                 return []
+
             case .clip where self.editingTitle?.isEmpty == false:
                 return [.save]
+
             case .clip:
                 return [.cancel]
+
             case .none:
                 return [.edit]
             }
@@ -142,6 +145,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
         case .success:
             // NOP
             break
+
         case let .failure(error):
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
             return
@@ -167,6 +171,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
         case .success:
             // NOP
             break
+
         case let .failure(error):
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
             return

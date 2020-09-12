@@ -80,6 +80,7 @@ opt_in_rules:
 disabled_rules:
   - cyclomatic_complexity
   - nesting
+  - opening_brace
 
 identifier_name:
   excluded:

@@ -20,7 +20,9 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private var destination: TransitionDestination?
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var tapGestureRecignizer: UITapGestureRecognizer!
 
     private var isFullscreen = false {

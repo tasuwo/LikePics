@@ -43,7 +43,7 @@ class TopClipsListPresenter: ClipsListPresenter {
 
     // MARK: - Lifecycle
 
-    public init(storage: ClipStorageProtocol) {
+    init(storage: ClipStorageProtocol) {
         self.storage = storage
         self.isEditing = false
         self.clips = []
@@ -75,6 +75,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         case let .success(clips):
             self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
             view.reload()
+
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }

@@ -20,11 +20,16 @@ class AlbumListPresenter {
 
     // MARK: - Lifecycle
 
-    public init(storage: ClipStorageProtocol) {
+    init(storage: ClipStorageProtocol) {
         self.storage = storage
     }
 
     // MARK: - Methods
+
+    private static func resolveErrorMessage(_ error: Error) -> String {
+        // TODO:
+        return "TODO"
+    }
 
     func reload() {
         guard let view = self.view else { return }
@@ -34,6 +39,7 @@ class AlbumListPresenter {
         case let .success(albums):
             self.albums = albums.sorted(by: { $0.registeredDate > $1.registeredDate })
             view.reload()
+
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }
@@ -52,6 +58,7 @@ class AlbumListPresenter {
         case let .success(album):
             self.albums = (albums + [album]).sorted(by: { $0.registeredDate > $1.registeredDate })
             view.reload()
+
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }
@@ -66,6 +73,7 @@ class AlbumListPresenter {
         case .success:
             self.albums.remove(at: index)
             view.reload()
+
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }
@@ -82,14 +90,10 @@ class AlbumListPresenter {
         switch self.storage.readImageData(having: clipItem.thumbnail.url, forClipHaving: clip.url) {
         case let .success(data):
             return data
+
         case let .failure(error):
             self.view?.showErrorMassage(Self.resolveErrorMessage(error))
             return nil
         }
-    }
-
-    private static func resolveErrorMessage(_ error: Error) -> String {
-        // TODO:
-        return "TODO"
     }
 }

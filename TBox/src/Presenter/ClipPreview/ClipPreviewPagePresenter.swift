@@ -28,18 +28,19 @@ class ClipPreviewPagePresenter {
 
     // MARK: - Methods
 
+    private static func resolveErrorMessage(_ error: Error) -> String {
+        // TODO: Error Handling
+        return "Failed."
+    }
+
     func reload() {
         switch self.storage.readClip(having: self.clipUrl) {
         case let .success(clip):
             self.clip = clip
             self.view?.reloadPages()
+
         case let .failure(error):
             self.view?.showErrorMessage(Self.resolveErrorMessage(error))
         }
-    }
-
-    private static func resolveErrorMessage(_ error: Error) -> String {
-        // TODO: Error Handling
-        return "Failed."
     }
 }

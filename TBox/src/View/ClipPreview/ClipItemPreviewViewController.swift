@@ -70,6 +70,7 @@ extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
             switch target {
             case .item:
                 return .init(title: "表示中の画像を削除", style: .destructive, handler: { _ in completion(.item) })
+
             case .clip:
                 return .init(title: "クリップ全体を削除", style: .destructive, handler: { _ in completion(.clip) })
             }

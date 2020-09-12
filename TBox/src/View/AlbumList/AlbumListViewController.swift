@@ -60,7 +60,8 @@ class AlbumListViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
-    @objc func didTapAdd() {
+    @objc
+    func didTapAdd() {
         self.alertContainer.present { [weak self] action in
             switch action {
             case let .saved(text: text):

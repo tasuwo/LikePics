@@ -32,10 +32,6 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        self.removeBecomeActiveNotification()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -178,6 +174,10 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
         self.updateNavigationBar(for: editing)
         self.updateToolBar(for: editing)
+    }
+
+    deinit {
+        self.removeBecomeActiveNotification()
     }
 }
 

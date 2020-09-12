@@ -21,36 +21,6 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
         return self.presenter.album
     }
 
-    func setup() {
-        self.presenter.setup()
-    }
-
-    func set(view: AlbumViewProtocol) {
-        self.presenter.set(view: view)
-    }
-
-    func deleteFromAlbum() {
-        self.presenter.deleteFromAlbum()
-    }
-
-    func replaceAlbum(by album: Album) {
-        self.presenter.replaceAlbum(by: album)
-    }
-
-    func setTitleEditing(_ editing: Bool) {
-        self.presenter.setTitleEditing(editing)
-    }
-
-    func updateAlbumTitle() {
-        self.presenter.updateAlbumTitle()
-    }
-
-    func edit(title: String) {
-        self.presenter.edit(title: title)
-    }
-
-    // MARK: ClipsListPresenterProtocol
-
     var clips: [Clip] {
         return self.presenter.clips
     }
@@ -85,6 +55,34 @@ extension AlbumPresenterProxy: AlbumPresenterProtocol {
 
     func deleteAll() {
         self.presenter.deleteAll()
+    }
+
+    func setup() {
+        self.presenter.setup()
+    }
+
+    func set(view: AlbumViewProtocol) {
+        self.presenter.set(view: view)
+    }
+
+    func deleteFromAlbum() {
+        self.presenter.deleteFromAlbum()
+    }
+
+    func replaceAlbum(by album: Album) {
+        self.presenter.replaceAlbum(by: album)
+    }
+
+    func setTitleEditing(_ editing: Bool) {
+        self.presenter.setTitleEditing(editing)
+    }
+
+    func updateAlbumTitle() {
+        self.presenter.updateAlbumTitle()
+    }
+
+    func edit(title: String) {
+        self.presenter.edit(title: title)
     }
 }
 

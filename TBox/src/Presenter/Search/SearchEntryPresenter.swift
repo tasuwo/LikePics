@@ -18,11 +18,16 @@ class SearchEntryPresenter {
 
     // MARK: - Lifecycle
 
-    public init(storage: ClipStorageProtocol) {
+    init(storage: ClipStorageProtocol) {
         self.storage = storage
     }
 
     // MARK: - Methods
+
+    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+        // TODO: Error Handling
+        return "問題が発生しました"
+    }
 
     func search(by text: String) {
         guard let view = self.view else { return }
@@ -33,14 +38,10 @@ class SearchEntryPresenter {
         switch self.storage.searchClips(byKeywords: keywords) {
         case let .success(clips):
             view.showReuslt(clips.sorted(by: { $0.registeredDate > $1.registeredDate }))
+
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }
         view.endLoading()
-    }
-
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "問題が発生しました"
     }
 }

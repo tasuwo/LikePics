@@ -14,6 +14,7 @@ protocol ClipsListViewController: UIViewController {
     var factory: Factory { get }
     var presenter: Presenter { get }
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var collectionView: ClipsCollectionView! { get }
 }
 

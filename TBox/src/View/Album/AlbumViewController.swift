@@ -6,6 +6,35 @@ import Domain
 import TBoxUIKit
 import UIKit
 
+private class AlbumTitleEditTextField: PaddingTextField {
+    // MARK: - UIView (Overrides)
+
+    override var intrinsicContentSize: CGSize {
+        return .init(width: CGFloat.greatestFiniteMagnitude, height: UIView.noIntrinsicMetric)
+    }
+
+    // MARK: - Lifecycle
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupAppearance()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Methods
+
+    private func setupAppearance() {
+        self.backgroundColor = .systemBackground
+        self.layer.cornerRadius = 8
+        self.padding = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
+        self.clearButtonMode = .always
+    }
+}
+
 class AlbumViewController: UIViewController, ClipsListViewController {
     typealias Factory = ViewControllerFactory
     typealias Presenter = AlbumPresenterProxy
@@ -65,15 +94,18 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = !isEditing
     }
 
-    @objc func didTapEdit() {
+    @objc
+    func didTapEdit() {
         self.setEditing(true, animated: true)
     }
 
-    @objc func didTapCancel() {
+    @objc
+    func didTapCancel() {
         self.setEditing(false, animated: true)
     }
 
-    @objc func didTapSave() {
+    @objc
+    func didTapSave() {
         self.presenter.updateAlbumTitle()
         self.setEditing(false, animated: true)
     }
@@ -93,12 +125,14 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         self.navigationController?.setToolbarHidden(!editing, animated: false)
     }
 
-    @objc func didTapAddToAlbum() {
+    @objc
+    func didTapAddToAlbum() {
         let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
         self.present(viewController, animated: true, completion: nil)
     }
 
-    @objc func didTapRemove() {
+    @objc
+    func didTapRemove() {
         let alert = UIAlertController(title: "", message: "選択中の画像を削除しますか？", preferredStyle: .alert)
 
         alert.addAction(.init(title: "アルバムから削除", style: .destructive, handler: { [weak self] _ in
@@ -283,46 +317,19 @@ private extension AlbumViewNavigationItem {
             button.setTitle("キャンセル", for: .normal)
             button.addTarget(target, action: #selector(target.didTapCancel), for: .touchUpInside)
             return UIBarButtonItem(customView: button)
+
         case .edit:
             let button = RoundedButton()
             button.setTitle("編集", for: .normal)
             button.addTarget(target, action: #selector(target.didTapEdit), for: .touchUpInside)
             return UIBarButtonItem(customView: button)
+
         case .save:
             let button = RoundedButton()
             button.setTitle("保存", for: .normal)
             button.addTarget(target, action: #selector(target.didTapSave), for: .touchUpInside)
             return UIBarButtonItem(customView: button)
         }
-    }
-}
-
-private class AlbumTitleEditTextField: PaddingTextField {
-    // MARK: - Lifecycle
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupAppearance()
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Methods
-
-    private func setupAppearance() {
-        self.backgroundColor = .systemBackground
-        self.layer.cornerRadius = 8
-        self.padding = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
-        self.clearButtonMode = .always
-    }
-
-    // MARK: - UIView (Overrides)
-
-    override var intrinsicContentSize: CGSize {
-        return .init(width: CGFloat.greatestFiniteMagnitude, height: UIView.noIntrinsicMetric)
     }
 }
 

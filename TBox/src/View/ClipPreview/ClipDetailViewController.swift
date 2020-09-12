@@ -61,7 +61,8 @@ class ClipPreviewViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = .init(customView: infoButton)
     }
 
-    @objc func didTapInfoButton() {
+    @objc
+    func didTapInfoButton() {
         print(#function)
     }
 }
