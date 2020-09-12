@@ -197,7 +197,7 @@ extension WebImageProvidingService.Twitter {
         let newQueryItems: [URLQueryItem] = queryItems
             .compactMap { queryItem in
                 guard queryItem.name == "name" else { return queryItem }
-                return URLQueryItem(name: "name", value: "large")
+                return URLQueryItem(name: "name", value: "orig")
             }
 
         components.queryItems = newQueryItems
