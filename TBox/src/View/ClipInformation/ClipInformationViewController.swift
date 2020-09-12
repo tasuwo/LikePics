@@ -6,16 +6,6 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-protocol ClipInformationViewProtocol: AnyObject {}
-
-class ClipInformationViewPresenter {
-    let clip: Clip
-
-    init(clip: Clip) {
-        self.clip = clip
-    }
-}
-
 class ClipInformationViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
