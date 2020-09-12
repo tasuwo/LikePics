@@ -65,8 +65,8 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bmh-3A-gNn" userLabel="Site Url Label Container">
                                     <rect key="frame" x="0.0" y="379" width="390" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Site Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozz-Bf-ooU">
-                                            <rect key="frame" x="-75" y="15.5" width="390" height="20.5"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Site Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozz-Bf-ooU">
+                                            <rect key="frame" x="0.0" y="15.5" width="390" height="20.5"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -74,7 +74,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="ozz-Bf-ooU" firstAttribute="centerX" secondItem="bmh-3A-gNn" secondAttribute="centerX" id="3pv-uF-aPK"/>
                                         <constraint firstAttribute="bottom" secondItem="ozz-Bf-ooU" secondAttribute="bottom" constant="4" id="Pne-sw-xgp"/>
+                                        <constraint firstItem="ozz-Bf-ooU" firstAttribute="width" secondItem="bmh-3A-gNn" secondAttribute="width" id="b63-f7-NvB"/>
                                         <constraint firstAttribute="height" constant="40" id="xh0-FW-Tnf"/>
                                     </constraints>
                                 </view>
@@ -88,8 +90,8 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gfa-0q-ny1" userLabel="Image Url Label Container">
                                     <rect key="frame" x="0.0" y="449" width="390" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Image Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCH-bV-adn">
-                                            <rect key="frame" x="-75" y="15.5" width="390" height="20.5"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCH-bV-adn">
+                                            <rect key="frame" x="0.0" y="15.5" width="390" height="20.5"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -97,7 +99,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="KCH-bV-adn" firstAttribute="centerX" secondItem="Gfa-0q-ny1" secondAttribute="centerX" id="EhJ-NJ-JPq"/>
                                         <constraint firstAttribute="bottom" secondItem="KCH-bV-adn" secondAttribute="bottom" constant="4" id="FDJ-Oc-FYE"/>
+                                        <constraint firstItem="KCH-bV-adn" firstAttribute="width" secondItem="Gfa-0q-ny1" secondAttribute="width" id="Js3-BI-JZJ"/>
                                         <constraint firstAttribute="height" constant="40" id="tc5-qO-Ehh"/>
                                     </constraints>
                                 </view>
