@@ -48,6 +48,8 @@
 		2C3ADF5E24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift */; };
 		2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib */; };
 		2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6324EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift */; };
+		2C3C25FB250D729600D623C5 /* AlbumCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C25FA250D729600D623C5 /* AlbumCollectionViewController.swift */; };
+		2C3C25FD250D72A900D623C5 /* AlbumCollectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C3C25FC250D72A900D623C5 /* AlbumCollectionViewController.storyboard */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C3CCDB624F2C67800FAC660 /* TopClipsListPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDB524F2C67800FAC660 /* TopClipsListPresenterProxy.swift */; };
@@ -497,6 +499,8 @@
 		2C3ADF5D24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingClipsToAlbumViewController.swift; sourceTree = "<group>"; };
 		2C3ADF6024EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingClipsToAlbumViewController.xib; sourceTree = "<group>"; };
 		2C3ADF6324EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddingClipsToAlbumPresenter.swift; path = ../../../../../../../Documents/AddingClipsToAlbumPresenter.swift; sourceTree = "<group>"; };
+		2C3C25FA250D729600D623C5 /* AlbumCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewController.swift; sourceTree = "<group>"; };
+		2C3C25FC250D72A900D623C5 /* AlbumCollectionViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumCollectionViewController.storyboard; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
 		2C3CCDB524F2C67800FAC660 /* TopClipsListPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListPresenterProxy.swift; sourceTree = "<group>"; };
@@ -1472,6 +1476,8 @@
 			children = (
 				2CB07131250906920000E7E1 /* TagCollectionViewController.swift */,
 				2CB07133250906B30000E7E1 /* TagCollectionViewController.storyboard */,
+				2C3C25FA250D729600D623C5 /* AlbumCollectionViewController.swift */,
+				2C3C25FC250D72A900D623C5 /* AlbumCollectionViewController.storyboard */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -2087,6 +2093,7 @@
 				2CB07134250906B30000E7E1 /* TagCollectionViewController.storyboard in Resources */,
 				2CB071232509026C0000E7E1 /* LaunchScreen.storyboard in Resources */,
 				2CB071202509026C0000E7E1 /* Assets.xcassets in Resources */,
+				2C3C25FD250D72A900D623C5 /* AlbumCollectionViewController.storyboard in Resources */,
 				2CB0711E2509026B0000E7E1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2653,6 +2660,7 @@
 			files = (
 				2CB07132250906920000E7E1 /* TagCollectionViewController.swift in Sources */,
 				2CB071172509026B0000E7E1 /* AppDelegate.swift in Sources */,
+				2C3C25FB250D729600D623C5 /* AlbumCollectionViewController.swift in Sources */,
 				2CB071192509026B0000E7E1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
