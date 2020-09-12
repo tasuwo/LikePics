@@ -15,11 +15,31 @@ public class ClipInformationView: UIView {
         }
     }
 
+    public var siteUrl: String? {
+        get {
+            return self.siteUrlButton.titleLabel?.text
+        }
+        set {
+            self.siteUrlButton.setTitle(newValue, for: .normal)
+        }
+    }
+
+    public var imageUrl: String? {
+        get {
+            return self.imageUrlButton.titleLabel?.text
+        }
+        set {
+            self.imageUrlButton.setTitle(newValue, for: .normal)
+        }
+    }
+
     public weak var delegate: ClipInformationViewDelegate?
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var tagTitleLabel: UILabel!
     @IBOutlet var tagCollectionView: TagCollectionView!
+    @IBOutlet var siteUrlButton: UIButton!
+    @IBOutlet var imageUrlButton: UIButton!
 
     // MARK: - Lifecycle
 
@@ -27,12 +47,14 @@ public class ClipInformationView: UIView {
         super.init(frame: frame)
 
         self.setupFromNib()
+        self.setupAppearance()
     }
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
 
         self.setupFromNib()
+        self.setupAppearance()
     }
 
     // MARK: - Methods
@@ -42,6 +64,11 @@ public class ClipInformationView: UIView {
         self.baseView.frame = self.bounds
         self.addSubview(self.baseView)
         self.sendSubviewToBack(self.baseView)
+    }
+
+    private func setupAppearance() {
+        self.siteUrlButton.titleLabel?.numberOfLines = 0
+        self.imageUrlButton.titleLabel?.numberOfLines = 0
     }
 }
 

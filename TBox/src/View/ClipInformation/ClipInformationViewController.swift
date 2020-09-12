@@ -41,6 +41,9 @@ class ClipInformationViewController: UIViewController {
         super.viewDidLoad()
 
         self.informationView.delegate = self
+        self.informationView.siteUrl = self.presenter.clip.url.absoluteString
+        // TODO:
+        self.informationView.imageUrl = self.presenter.clip.primaryItem?.image.url.absoluteString
         self.informationView.tags = self.presenter.clip.tags
     }
 }

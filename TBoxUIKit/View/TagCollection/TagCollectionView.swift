@@ -7,6 +7,16 @@ import UIKit
 public class TagCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
+    override public var contentSize: CGSize {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+
+    override public var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentSize.height)
+    }
+
     // MARK: - Lifecycle
 
     override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
