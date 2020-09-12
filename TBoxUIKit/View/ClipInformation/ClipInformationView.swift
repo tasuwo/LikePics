@@ -3,10 +3,12 @@
 //
 
 import UIKit
+import WebKit
 
 public protocol ClipInformationViewDelegate: AnyObject {
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String)
-    func clipInformationView(_ view: ClipInformationView, didTapLink linkText: String)
+    func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
+    func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL)
 }
 
 public class ClipInformationView: UIView {
@@ -61,13 +63,13 @@ public class ClipInformationView: UIView {
     }
 
     @IBAction func didTapSiteUrl(_ sender: UIButton) {
-        guard let text = sender.titleLabel?.text else { return }
-        self.delegate?.clipInformationView(self, didTapLink: text)
+        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
+        self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
     @IBAction func didTapImageUrl(_ sender: UIButton) {
-        guard let text = sender.titleLabel?.text else { return }
-        self.delegate?.clipInformationView(self, didTapLink: text)
+        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
+        self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
     // MARK: - Methods
@@ -83,6 +85,9 @@ public class ClipInformationView: UIView {
         // TODO: Localize
         self.siteUrlTitleLabel.text = "サイトのURL"
         self.imageUrlTitleLabel.text = "画像のURL"
+
+        self.siteUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
+        self.imageUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
     }
 }
 
@@ -140,5 +145,41 @@ extension ClipInformationView: UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .init(top: 16, left: 16, bottom: 16, right: 16)
+    }
+}
+
+extension ClipInformationView: UIContextMenuInteractionDelegate {
+    // MARK: - UIContextMenuInteractionDelegate
+
+    public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let button = interaction.view as? UIButton,
+            let text = button.titleLabel?.text,
+            let url = URL(string: text)
+        else {
+            return nil
+        }
+        return UIContextMenuConfiguration(identifier: nil,
+                                          previewProvider: self.makePreviewProvider(for: url),
+                                          actionProvider: self.makeActionProvider(for: url))
+    }
+
+    private func makePreviewProvider(for url: URL) -> (() -> UIViewController) {
+        let viewController = UIViewController()
+
+        let webView = WKWebView(frame: .zero)
+        viewController.view = webView
+        webView.load(URLRequest(url: url))
+
+        return { viewController }
+    }
+
+    private func makeActionProvider(for url: URL) -> UIContextMenuActionProvider {
+        let open = UIAction(title: "Open", image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+            self.delegate?.clipInformationView(self, shouldOpen: url)
+        }
+        let copy = UIAction(title: "Copy", image: UIImage(systemName: "square.on.square.fill")) { action in
+            self.delegate?.clipInformationView(self, shouldCopy: url)
+        }
+        return { _ in UIMenu(title: "", children: [open, copy]) }
     }
 }
