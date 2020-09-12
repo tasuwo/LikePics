@@ -72,7 +72,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0V-T7-SMg">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0V-T7-SMg" customClass="MultilineUIButton" customModule="TBoxUIKit" customModuleProvider="target">
                                             <rect key="frame" x="96" y="0.0" width="294" height="30"/>
                                             <state key="normal" title="Button"/>
                                         </button>
@@ -90,7 +90,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aa-JW-Ipf">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aa-JW-Ipf" customClass="MultilineUIButton" customModule="TBoxUIKit" customModuleProvider="target">
                                             <rect key="frame" x="96" y="0.0" width="294" height="30"/>
                                             <state key="normal" title="Button"/>
                                         </button>
