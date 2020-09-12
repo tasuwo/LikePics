@@ -45,6 +45,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String) {
+        // TODO:
         print(name)
     }
 
@@ -54,5 +55,10 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL) {
         UIPasteboard.general.string = url.absoluteString
+    }
+
+    func clipInformationView(_ view: ClipInformationView, shouldSearch url: URL) {
+        // TODO:
+        print(url)
     }
 }

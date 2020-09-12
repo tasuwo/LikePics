@@ -9,6 +9,7 @@ public protocol ClipInformationViewDelegate: AnyObject {
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String)
     func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL)
+    func clipInformationView(_ view: ClipInformationView, shouldSearch url: URL)
 }
 
 public class ClipInformationView: UIView {
@@ -174,12 +175,16 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
     }
 
     private func makeActionProvider(for url: URL) -> UIContextMenuActionProvider {
+        // TODO: Localize
         let open = UIAction(title: "Open", image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
             self.delegate?.clipInformationView(self, shouldOpen: url)
         }
         let copy = UIAction(title: "Copy", image: UIImage(systemName: "square.on.square.fill")) { action in
             self.delegate?.clipInformationView(self, shouldCopy: url)
         }
-        return { _ in UIMenu(title: "", children: [open, copy]) }
+        let search = UIAction(title: "Search", image: UIImage(systemName: "magnifyingglass")) { action in
+            self.delegate?.clipInformationView(self, shouldSearch: url)
+        }
+        return { _ in UIMenu(title: "", children: [open, copy, search]) }
     }
 }
