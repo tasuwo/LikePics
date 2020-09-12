@@ -29,8 +29,9 @@ class AppRootTabBarController: UITabBarController {
         let albumViewController = self.factory.makeAlbumListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
 
-        topClipsListViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 0)
-        albumViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 1)
+        // TODO: Localize
+        topClipsListViewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        albumViewController.tabBarItem = UITabBarItem(title: "Album", image: UIImage(systemName: "square.stack"), tag: 1)
         searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
 
         self.viewControllers = [
