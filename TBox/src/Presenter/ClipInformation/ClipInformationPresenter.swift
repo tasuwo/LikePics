@@ -6,12 +6,14 @@ import Domain
 
 protocol ClipInformationViewProtocol: AnyObject {}
 
-class ClipInformationViewPresenter {
+class ClipInformationPresenter {
     let clip: Clip
+    let item: ClipItem
 
     // MARK: - Lifecycle
 
-    init(clip: Clip) {
+    init(clip: Clip, item: ClipItem) {
         self.clip = clip
+        self.item = item
     }
 }
