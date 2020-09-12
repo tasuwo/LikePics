@@ -47,4 +47,9 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String) {
         print(name)
     }
+
+    func clipInformationView(_ view: ClipInformationView, didTapLink linkText: String) {
+        guard let link = URL(string: linkText) else { return }
+        UIApplication.shared.open(link, options: [:], completionHandler: nil)
+    }
 }

@@ -4,7 +4,6 @@
 
 import UIKit
 
-@IBDesignable
 public class MultilineUIButton: UIButton {
     override public var intrinsicContentSize: CGSize {
         return self.titleLabel?.intrinsicContentSize ?? .zero

@@ -6,6 +6,7 @@ import UIKit
 
 public protocol ClipInformationViewDelegate: AnyObject {
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String)
+    func clipInformationView(_ view: ClipInformationView, didTapLink linkText: String)
 }
 
 public class ClipInformationView: UIView {
@@ -40,6 +41,8 @@ public class ClipInformationView: UIView {
     @IBOutlet var tagCollectionView: TagCollectionView!
     @IBOutlet var siteUrlButton: UIButton!
     @IBOutlet var imageUrlButton: UIButton!
+    @IBOutlet var siteUrlTitleLabel: UILabel!
+    @IBOutlet var imageUrlTitleLabel: UILabel!
 
     // MARK: - Lifecycle
 
@@ -57,6 +60,16 @@ public class ClipInformationView: UIView {
         self.setupAppearance()
     }
 
+    @IBAction func didTapSiteUrl(_ sender: UIButton) {
+        guard let text = sender.titleLabel?.text else { return }
+        self.delegate?.clipInformationView(self, didTapLink: text)
+    }
+
+    @IBAction func didTapImageUrl(_ sender: UIButton) {
+        guard let text = sender.titleLabel?.text else { return }
+        self.delegate?.clipInformationView(self, didTapLink: text)
+    }
+
     // MARK: - Methods
 
     private func setupFromNib() {
@@ -67,8 +80,9 @@ public class ClipInformationView: UIView {
     }
 
     private func setupAppearance() {
-        self.siteUrlButton.titleLabel?.numberOfLines = 0
-        self.imageUrlButton.titleLabel?.numberOfLines = 0
+        // TODO: Localize
+        self.siteUrlTitleLabel.text = "サイトのURL"
+        self.imageUrlTitleLabel.text = "画像のURL"
     }
 }
 
