@@ -77,7 +77,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipInformationViewController(clip: Clip) -> UIViewController {
         let presenter = ClipInformationViewPresenter(clip: clip)
         let viewController = ClipInformationViewController(factory: self, presenter: presenter)
-        return UINavigationController(rootViewController: viewController)
+        return viewController
     }
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {

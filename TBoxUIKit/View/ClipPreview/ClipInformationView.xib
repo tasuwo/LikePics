@@ -11,6 +11,7 @@
             <connections>
                 <outlet property="baseView" destination="dT8-rF-trS" id="ZCc-6J-XMP"/>
                 <outlet property="tagCollectionView" destination="RyR-D3-QmU" id="2Oe-YB-DQS"/>
+                <outlet property="tagTitleLabel" destination="sGo-JB-55q" id="N99-Cf-FuG"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -18,27 +19,38 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="RyR-D3-QmU" customClass="TagCollectionView" customModule="TBoxUIKit" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="01b-fb-jtG">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="zHY-Nt-kHa"/>
-                        <outlet property="delegate" destination="-1" id="7lI-7N-r7L"/>
-                    </connections>
-                </collectionView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="W2t-xT-TpH">
+                    <rect key="frame" x="16" y="60" width="382" height="802"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="タグ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sGo-JB-55q">
+                            <rect key="frame" x="0.0" y="0.0" width="382" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="28"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="RyR-D3-QmU" customClass="TagCollectionView" customModule="TBoxUIKit" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="33.5" width="382" height="768.5"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="01b-fb-jtG">
+                                <size key="itemSize" width="128" height="128"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="zHY-Nt-kHa"/>
+                                <outlet property="delegate" destination="-1" id="7lI-7N-r7L"/>
+                            </connections>
+                        </collectionView>
+                    </subviews>
+                </stackView>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
-                <constraint firstItem="RyR-D3-QmU" firstAttribute="leading" secondItem="5WW-MI-Snk" secondAttribute="leading" id="8J3-Hl-8yL"/>
-                <constraint firstItem="RyR-D3-QmU" firstAttribute="top" secondItem="5WW-MI-Snk" secondAttribute="top" id="A5t-29-TGG"/>
-                <constraint firstItem="5WW-MI-Snk" firstAttribute="bottom" secondItem="RyR-D3-QmU" secondAttribute="bottom" id="QJ1-YS-0f5"/>
-                <constraint firstItem="5WW-MI-Snk" firstAttribute="trailing" secondItem="RyR-D3-QmU" secondAttribute="trailing" id="Y0R-gf-ak3"/>
+                <constraint firstItem="5WW-MI-Snk" firstAttribute="trailing" secondItem="W2t-xT-TpH" secondAttribute="trailing" constant="16" id="Slw-cx-eCK"/>
+                <constraint firstItem="5WW-MI-Snk" firstAttribute="bottom" secondItem="W2t-xT-TpH" secondAttribute="bottom" id="h7K-on-OWb"/>
+                <constraint firstItem="W2t-xT-TpH" firstAttribute="top" secondItem="5WW-MI-Snk" secondAttribute="top" constant="16" id="jHt-6S-qXT"/>
+                <constraint firstItem="W2t-xT-TpH" firstAttribute="leading" secondItem="5WW-MI-Snk" secondAttribute="leading" constant="16" id="zeZ-Hh-qdf"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="5WW-MI-Snk"/>
             <point key="canvasLocation" x="-74" y="-48"/>

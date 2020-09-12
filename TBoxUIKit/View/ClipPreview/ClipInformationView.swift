@@ -18,6 +18,7 @@ public class ClipInformationView: UIView {
     public weak var delegate: ClipInformationViewDelegate?
 
     @IBOutlet var baseView: UIView!
+    @IBOutlet var tagTitleLabel: UILabel!
     @IBOutlet var tagCollectionView: TagCollectionView!
 
     // MARK: - Lifecycle
