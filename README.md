@@ -16,7 +16,8 @@
   - [x] タグを削除できる
   - [x] タグをタップしてタグにひもづくClip一覧画面に飛べる
 - [ ] Localize
-- [ ] Error handling
+  - [ ] Error handling
+    - [ ] StorageErrorをdisplayableにする
 - [ ] タグ編集をやりやすくする
 - [ ] Preview画面と情報画面を遷移しやすくする
 - [ ] 検索
