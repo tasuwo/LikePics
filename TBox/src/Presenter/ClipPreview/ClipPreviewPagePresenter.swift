@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 
 protocol ClipPreviewPageViewProtocol: AnyObject {
@@ -13,24 +14,25 @@ protocol ClipPreviewPageViewProtocol: AnyObject {
 class ClipPreviewPagePresenter {
     weak var view: ClipPreviewPageViewProtocol?
 
-    private let storage: ClipStorageProtocol
     private let clipUrl: URL
+    private let storage: ClipStorageProtocol
+    private let logger: TBoxLoggable
 
     private(set) var clip: Clip
 
     // MARK: - Lifecycle
 
-    init(clip: Clip, storage: ClipStorageProtocol) {
+    init(clip: Clip, storage: ClipStorageProtocol, logger: TBoxLoggable) {
         self.clip = clip
         self.clipUrl = clip.url
         self.storage = storage
+        self.logger = logger
     }
 
     // MARK: - Methods
 
-    private static func resolveErrorMessage(_ error: Error) -> String {
-        // TODO: Error Handling
-        return "Failed."
+    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
+        return L10n.clipPreviewPageViewErrorAtReadClip + "\n(\(error.makeErrorCode()))"
     }
 
     func reload() {
@@ -40,6 +42,7 @@ class ClipPreviewPagePresenter {
             self.view?.reloadPages()
 
         case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read clip. (code: \(error.rawValue))"))
             self.view?.showErrorMessage(Self.resolveErrorMessage(error))
         }
     }

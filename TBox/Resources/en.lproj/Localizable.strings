@@ -43,6 +43,8 @@
 "tag_list_view_alert_for_delete_message" = "Are you sure you want to delete selected tags?\nThe clips will not be deleted.";
 "tag_list_view_alert_for_delete_action" = "Delete %d Tags";
 
+"clip_preview_page_view_error_at_read_clip" = "Failed to read clip.";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";

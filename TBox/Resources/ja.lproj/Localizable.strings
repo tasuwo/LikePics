@@ -43,6 +43,8 @@
 
 "search_entry_view_error_at_search" = "検索に失敗しました";
 
+"clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";

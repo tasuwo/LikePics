@@ -38,6 +38,8 @@ internal enum L10n {
     internal static let albumListViewErrorAtReadImageData = L10n.tr("Localizable", "album_list_view_error_at_read_image_data")
     /// アルバム
     internal static let albumListViewTitle = L10n.tr("Localizable", "album_list_view_title")
+    /// クリップの読み込みに失敗しました
+    internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// 画像を選択
     internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
     /// キャンセル
