@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
@@ -31,7 +32,23 @@ class TagListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
+
         self.presenter.reload()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
+    // MARK: - Methods
+
+    private func setupAppearance() {
+        self.collectionView.allowsSelection = true
+        self.collectionView.allowsMultipleSelection = false
+        self.title = "タグ"
     }
 }
 
@@ -40,6 +57,10 @@ extension TagListViewController: TagListViewProtocol {
 
     func reload() {
         self.collectionView.reloadData()
+    }
+
+    func showSearchReult(for clips: [Clip], withContext context: SearchContext) {
+        self.show(self.factory.makeSearchResultViewController(context: context, clips: clips), sender: nil)
     }
 
     func showErrorMassage(_ message: String) {
@@ -52,11 +73,15 @@ extension TagListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.presenter.select(at: indexPath.row)
     }
 }
 
@@ -78,6 +103,7 @@ extension TagListViewController: UICollectionViewDataSource {
 
         let target = self.presenter.tags[indexPath.row]
         cell.title = target
+        cell.displayMode = .normal
 
         return cell
     }

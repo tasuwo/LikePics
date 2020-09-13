@@ -33,6 +33,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
@@ -41,13 +42,25 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.updateAppearance()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     // MARK: - Methods
 
-    private func updateAppearance() {
-        self.navigationController?.navigationBar.prefersLargeTitles = false
+    private func setupAppearance() {
+        let title: String = {
+            switch self.presenter.context {
+            case let .album(albumName: name):
+                return name
+
+            case let .keyword(keyword: keyword):
+                return keyword
+
+            case let .tag(tagName: tag):
+                return tag
+            }
+        }()
+        self.title = title
     }
 
     // MARK: CollectionView

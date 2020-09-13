@@ -6,6 +6,7 @@ import Domain
 
 protocol TagListViewProtocol: AnyObject {
     func reload()
+    func showSearchReult(for clips: [Clip], withContext: SearchContext)
     func showErrorMassage(_ message: String)
 }
 
@@ -37,6 +38,19 @@ class TagListPresenter {
 
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))
+        }
+    }
+
+    func select(at index: Int) {
+        guard self.tags.indices.contains(index) else { return }
+        let tagName = self.tags[index]
+
+        switch self.storage.searchClips(byTags: [tagName]) {
+        case let .success(clips):
+            view?.showSearchReult(for: clips, withContext: .tag(tagName: tagName))
+
+        case let .failure(error):
+            view?.showErrorMassage(Self.resolveErrorMessage(error))
         }
     }
 }

@@ -5,6 +5,11 @@
 import UIKit
 
 public class TagCollectionViewCell: UICollectionViewCell {
+    public enum DisplayMode {
+        case normal
+        case checkAtSelect
+    }
+
     public static let preferredHeight: CGFloat = 24 + 4 * 2
 
     public static var nib: UINib {
@@ -17,6 +22,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.titleLabel.text = newValue
+        }
+    }
+
+    public var displayMode: DisplayMode = .checkAtSelect {
+        didSet {
+            self.updateAppearance()
         }
     }
 
@@ -58,15 +69,23 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     func setupAppearance() {
         self.layer.cornerRadius = Self.preferredHeight / 2
-        self.layer.borderWidth = 2
         self.layer.borderColor = UIColor.systemGray3.cgColor
+        self.updateAppearance()
     }
 
     func updateAppearance() {
-        self.iconImage.image = self.isSelected ? UIImage(systemName: "checkmark") : UIImage(systemName: "tag.fill")
-        self.iconImage.tintColor = self.isSelected ? UIColor.white : UIColor.label
-        self.titleLabel.textColor = self.isSelected ? UIColor.white : UIColor.label
-        self.contentView.backgroundColor = self.isSelected ? UIColor.systemGreen : UIColor.systemBackground
-        self.layer.borderWidth = self.isSelected ? 0 : 2
+        if self.isSelected, self.displayMode == .checkAtSelect {
+            self.iconImage.image = UIImage(systemName: "checkmark")
+            self.iconImage.tintColor = UIColor.white
+            self.titleLabel.textColor = UIColor.white
+            self.contentView.backgroundColor = UIColor.systemGreen
+            self.layer.borderWidth = 0
+        } else {
+            self.iconImage.image = UIImage(systemName: "tag.fill")
+            self.iconImage.tintColor = UIColor.label
+            self.titleLabel.textColor = UIColor.label
+            self.contentView.backgroundColor = UIColor.systemBackground
+            self.layer.borderWidth = 2
+        }
     }
 }
