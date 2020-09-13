@@ -5,7 +5,7 @@
 import TBoxUIKit
 import UIKit
 
-class TagCollectionViewController: UICollectionViewController {
+class TagCollectionViewController: UIViewController {
     let tags = [
         "hoge",
         "hogehogehogehoge",
@@ -20,39 +20,71 @@ class TagCollectionViewController: UICollectionViewController {
         "iine!iine!iine!"
     ]
 
+    @IBOutlet weak var collectionView: TagCollectionView!
+
     // MARK: - Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.collectionView.allowsSelection = false
+        self.collectionView.allowsMultipleSelection = false
+    }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
-        self.collectionViewLayout.invalidateLayout()
+        self.collectionView.collectionViewLayout.invalidateLayout()
     }
 
+    @IBAction func didSwitchControl(_ sender: UISegmentedControl) {
+        self.collectionView.indexPathsForSelectedItems?.forEach { indexPath in
+            self.collectionView.deselectItem(at: indexPath, animated: false)
+        }
+        switch sender.selectedSegmentIndex {
+        case 0:
+            self.collectionView.allowsSelection = false
+            self.collectionView.allowsMultipleSelection = false
+        case 1:
+            self.collectionView.allowsSelection = true
+            self.collectionView.allowsMultipleSelection = false
+        case 2:
+            self.collectionView.allowsSelection = false
+            self.collectionView.allowsMultipleSelection = true
+        default:
+            break
+        }
+    }
+}
+
+extension TagCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Selected '\(self.tags[indexPath.row])'")
     }
+}
 
+extension TagCollectionViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.tags.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
