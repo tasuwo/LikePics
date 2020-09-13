@@ -1,0 +1,25 @@
+strings:
+    - inputs:
+        - TBox/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: TBox/Generated/String.swift
+    - inputs:
+        - TBoxCore/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: TBoxCore/Generated/String.swift
+xcassets:
+    - inputs:
+        - TBoxUIKit/Resources/Assets.xcassets
+      outputs:
+        - templateName: swift5
+          output: TBoxUIKit/Generated/AssetCatalog.swift
+          forceProvidesNamespaces: true
+          publicAccess: true
+    - inputs:
+        - TBox/Resources/Assets.xcassets
+      outputs:
+        - templateName: swift5
+          output: TBox/Generated/AssetCatalog.swift
+          forceProvidesNamespaces: true

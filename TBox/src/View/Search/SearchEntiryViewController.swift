@@ -40,7 +40,7 @@ class SearchEntryViewController: UIViewController {
 
     private func setupAppearance() {
         self.title = "検索"
-        self.view.backgroundColor = UIColor(named: "background_client")
+        self.view.backgroundColor = Asset.backgroundClient.color
     }
 
     // MARK: NavigationBar

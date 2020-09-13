@@ -26,6 +26,9 @@ target 'Domain' do
 end
 
 target 'TBox' do
+
+  pod 'SwiftGen', '~> 6.0'
+
   target 'TBoxTests' do
     inherit! :search_paths
     test_shared_pods

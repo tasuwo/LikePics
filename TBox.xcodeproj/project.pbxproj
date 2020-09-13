@@ -109,7 +109,6 @@
 		2C6E09D724E8150500B541D9 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C6E09C724E8150400B541D9 /* Common.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2C6E09DA24E8150500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09DB24E8150500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2C6E09E424E8151A00B541D9 /* String+Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6E09E324E8151A00B541D9 /* String+Localizable.swift */; };
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
@@ -181,6 +180,10 @@
 		2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */; };
 		2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */; };
 		2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */; };
+		2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF6250DEFF7001A02E4 /* String.swift */; };
+		2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */; };
+		2CFC5CFC250DF20A001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */; };
+		2CFC5D00250DF294001A02E4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CFF250DF294001A02E4 /* String.swift */; };
 		2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
@@ -559,7 +562,6 @@
 		2C6E09CD24E8150500B541D9 /* CommonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CommonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6E09D424E8150500B541D9 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C6E09E324E8151A00B541D9 /* String+Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localizable.swift"; sourceTree = "<group>"; };
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
@@ -631,6 +633,10 @@
 		2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
 		2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListPresenter.swift; sourceTree = "<group>"; };
 		2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagListViewController.xib; sourceTree = "<group>"; };
+		2CFC5CF6250DEFF7001A02E4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
+		2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
+		2CFC5CFF250DF294001A02E4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.release.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.release.xcconfig"; sourceTree = "<group>"; };
@@ -1150,11 +1156,12 @@
 		2C6E099324E6DD1A00B541D9 /* TBoxCore */ = {
 			isa = PBXGroup;
 			children = (
+				2CFC5CFE250DF294001A02E4 /* Generated */,
+				2CFC5CFD250DF22A001A02E4 /* Resources */,
 				2C6E099F24E6DD3700B541D9 /* View */,
 				2C6E099E24E6DD3100B541D9 /* Presenter */,
 				2C6E099424E6DD1A00B541D9 /* TBoxCore.h */,
 				2C6E099524E6DD1A00B541D9 /* Info.plist */,
-				2C6E09BE24E8143500B541D9 /* Localizable.strings */,
 			);
 			path = TBoxCore;
 			sourceTree = "<group>";
@@ -1178,7 +1185,6 @@
 		2C6E09C624E8150400B541D9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				2C6E09E224E8150A00B541D9 /* Extension */,
 				2C6E09C724E8150400B541D9 /* Common.h */,
 				2C6E09C824E8150400B541D9 /* Info.plist */,
 			);
@@ -1192,14 +1198,6 @@
 				2C6E09D624E8150500B541D9 /* Info.plist */,
 			);
 			path = CommonTests;
-			sourceTree = "<group>";
-		};
-		2C6E09E224E8150A00B541D9 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				2C6E09E324E8151A00B541D9 /* String+Localizable.swift */,
-			);
-			path = Extension;
 			sourceTree = "<group>";
 		};
 		2C6E09EB24E82BC800B541D9 /* Resources */ = {
@@ -1283,6 +1281,7 @@
 		2C8FD62E24E02DCE005887F9 /* TBoxUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				2CFC5CF8250DF1A9001A02E4 /* Generated */,
 				2C6E09EB24E82BC800B541D9 /* Resources */,
 				2C95EC4924E15DB600D6EEB4 /* Extension */,
 				2C8FD64A24E02DE4005887F9 /* View */,
@@ -1449,6 +1448,7 @@
 		2CA0228B24DD9F5E00329251 /* TBox */ = {
 			isa = PBXGroup;
 			children = (
+				2CFC5CF5250DEFF7001A02E4 /* Generated */,
 				2C810D0124E04A6E00BC0FDF /* Resources */,
 				2C810D0224E04A8100BC0FDF /* src */,
 				2C99278D24DDD60C00672CA7 /* TBox.entitlements */,
@@ -1572,6 +1572,39 @@
 				2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */,
 			);
 			path = TagList;
+			sourceTree = "<group>";
+		};
+		2CFC5CF5250DEFF7001A02E4 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CF6250DEFF7001A02E4 /* String.swift */,
+				2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		2CFC5CF8250DF1A9001A02E4 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		2CFC5CFD250DF22A001A02E4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C6E09BE24E8143500B541D9 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2CFC5CFE250DF294001A02E4 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CFF250DF294001A02E4 /* String.swift */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
@@ -1820,6 +1853,7 @@
 			buildConfigurationList = 2CA022A824DD9F5F00329251 /* Build configuration list for PBXNativeTarget "TBox" */;
 			buildPhases = (
 				45B4A4BC9CC82B7FF2DFE8F3 /* [CP] Check Pods Manifest.lock */,
+				2CFC5CF4250DEDD9001A02E4 /* SwiftGen */,
 				2CA022AE24DD9F6E00329251 /* SwiftFormat */,
 				2CA022AF24DD9F8300329251 /* SwiftLint */,
 				2CA0228524DD9F5E00329251 /* Sources */,
@@ -2177,6 +2211,24 @@
 			shellPath = /bin/sh;
 			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\ncp $SRCROOT/.swiftlint.yml ./\nswift run -c release swiftlint\nrm .swiftlint.yml\n\n\n\n";
 		};
+		2CFC5CF4250DEDD9001A02E4 /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
+		};
 		3F2CF011AAC6842F398F162D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2528,6 +2580,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CFC5D00250DF294001A02E4 /* String.swift in Sources */,
 				2C6E09A224E6DD5A00B541D9 /* ClipTargetFinderPresenter.swift in Sources */,
 				2C6E09A024E6DD4400B541D9 /* ClipTargetFinderViewController.swift in Sources */,
 			);
@@ -2537,7 +2590,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6E09E424E8151A00B541D9 /* String+Localizable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2555,6 +2607,7 @@
 			files = (
 				2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */,
 				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
+				2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */,
 				2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */,
 				2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */,
@@ -2635,6 +2688,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CFC5CFC250DF20A001A02E4 /* AssetCatalog.swift in Sources */,
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */,
 				2C570B5F24E04FBF00A1DC9F /* TopClipsListPresenter.swift in Sources */,
 				2C3ADF5E24EEE6BD007C4AA0 /* AddingClipsToAlbumViewController.swift in Sources */,
@@ -2662,6 +2716,7 @@
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2C3ADF6424EEE70F007C4AA0 /* AddingClipsToAlbumPresenter.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
+				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
 				2C38C705250AF33B00F32102 /* AddingTagsToClipsViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
@@ -3015,7 +3070,6 @@
 		2C6E09E024E8150500B541D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -3035,7 +3089,6 @@
 		2C6E09E124E8150500B541D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;

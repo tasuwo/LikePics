@@ -24,6 +24,7 @@ PODS:
   - Realm/Headers (5.3.3)
   - RealmSwift (5.3.3):
     - Realm (= 5.3.3)
+  - SwiftGen (6.3.0)
 
 DEPENDENCIES:
   - Erik (~> 5.0.0)
@@ -32,6 +33,7 @@ DEPENDENCIES:
   - PromiseKit (~> 6.8)
   - Quick (~> 2.2.0)
   - RealmSwift (~> 5.3.3)
+  - SwiftGen (~> 6.0)
 
 SPEC REPOS:
   trunk:
@@ -43,6 +45,7 @@ SPEC REPOS:
     - Quick
     - Realm
     - RealmSwift
+    - SwiftGen
 
 SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
@@ -53,7 +56,8 @@ SPEC CHECKSUMS:
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
   Realm: 2d57ea355bf8ca2a0964d6bfb38d28d7ff2addf6
   RealmSwift: 0a709536ecea30eea1d3c514f6ade2ed078dee3c
+  SwiftGen: 3d5024a47ea79e408cded20763d7a17d18a4548c
 
-PODFILE CHECKSUM: d7e5f738e22e55d14d48f510aed76a73d502b976
+PODFILE CHECKSUM: 2570254360c409e7bb6a664eeb83dfdbbf764cc5
 
 COCOAPODS: 1.9.3

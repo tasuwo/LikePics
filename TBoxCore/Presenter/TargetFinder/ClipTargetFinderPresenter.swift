@@ -394,13 +394,13 @@ public class ClipTargetFinderPresenter {
     private static func resolveErrorMessage(_ error: PresenterError) -> String {
         switch error {
         case .failedToFindImages:
-            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_find_images", bundle: Bundle(for: Self.self))
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImages
         case .failedToDownlaodImages:
-            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_download_images", bundle: Bundle(for: Self.self))
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
         case .failedToSave:
-            return String(localizedKey: "clip_target_finder_view_error_alert_body_failed_to_save_images", bundle: Bundle(for: Self.self))
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
         case .internalError:
-            return String(localizedKey: "clip_target_finder_view_error_alert_body_internal_error", bundle: Bundle(for: Self.self))
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
         }
     }
 }

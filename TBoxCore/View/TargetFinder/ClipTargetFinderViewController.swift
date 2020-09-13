@@ -56,7 +56,7 @@ public class ClipTargetFinderViewController: UIViewController {
     // MARK: - Methods
 
     private func setupNavigationBar() {
-        self.navigationItem.title = String(localizedKey: "clip_target_finder_view_title", bundle: Bundle(for: Self.self))
+        self.navigationItem.title = L10n.clipTargetFinderViewTitle
 
         let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
         self.navigationItem.setLeftBarButton(itemCancel, animated: false)
@@ -95,11 +95,11 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
 
     func showConfirmationForOverwrite() {
         let alert = UIAlertController(title: "",
-                                      message: String(localizedKey: "clip_target_finder_view_overwrite_alert_body", bundle: Bundle(for: Self.self)),
+                                      message: L10n.clipTargetFinderViewOverwriteAlertBody,
                                       preferredStyle: .alert)
 
         alert.addAction(
-            .init(title: String(localizedKey: "clip_target_finder_view_overwrite_alert_cancel", bundle: Bundle(for: Self.self)),
+            .init(title: L10n.clipTargetFinderViewOverwriteAlertCancel,
                   style: .cancel,
                   handler: { [weak self] _ in
                       guard let self = self else { return }
@@ -108,7 +108,7 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
         )
 
         alert.addAction(
-            .init(title: String(localizedKey: "clip_target_finder_view_overwrite_alert_ok", bundle: Bundle(for: Self.self)),
+            .init(title: L10n.clipTargetFinderViewOverwriteAlertOk,
                   style: .default,
                   handler: { [weak self] _ in
                       self?.presenter.enableOverwrite()
@@ -120,10 +120,10 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     }
 
     func show(errorMessage: String) {
-        let alert = UIAlertController(title: String(localizedKey: "clip_target_finder_view_error_alert_title", bundle: Bundle(for: Self.self)),
+        let alert = UIAlertController(title: L10n.clipTargetFinderViewErrorAlertTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
-        alert.addAction(.init(title: String(localizedKey: "clip_target_finder_view_error_alert_ok", bundle: Bundle(for: Self.self)),
+        alert.addAction(.init(title: L10n.clipTargetFinderViewErrorAlertOk,
                               style: .default,
                               handler: nil))
         self.present(alert, animated: true, completion: nil)
