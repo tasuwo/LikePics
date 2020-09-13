@@ -1725,5 +1725,102 @@ class ClipStorageSpec: QuickSpec {
         // MARK: Delete
 
         // TODO:
+
+        describe("delegeTag(_:)") {
+            var result: Result<String, ClipStorageError>!
+
+            context("削除対象のタグが存在しない") {
+                beforeEach {
+                    result = service.deleteTag("hoge")
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case let .success(tag):
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+            context("削除対象のタグが存在する") {
+                context("削除対象のタグにひもづくクリップが存在しない") {
+                    beforeEach {
+                        try! realm.write {
+                            let tag1 = self.makeTag(id: "111", name: "hoge")
+                            let tag2 = self.makeTag(id: "222", name: "fuga")
+                            let tag3 = self.makeTag(id: "333", name: "piyo")
+                            realm.add(tag1)
+                            realm.add(tag2)
+                            realm.add(tag3)
+                        }
+                        result = service.deleteTag("fuga")
+                    }
+                    it("successが返り、削除対象のタグ名が返ってくる") {
+                        switch result! {
+                        case let .success(tag):
+                            expect(tag).to(equal("fuga"))
+                        case let .failure(error):
+                            fail("Unexpected failure: \(error)")
+                        }
+                    }
+                    it("Realmからタグが削除されている") {
+                        let tags = realm.objects(TagObject.self).sorted(by: { $0.id < $1.id })
+                        expect(tags).to(haveCount(2))
+                        expect(tags[0].id).to(equal("111"))
+                        expect(tags[0].name).to(equal("hoge"))
+                        expect(tags[1].id).to(equal("333"))
+                        expect(tags[1].name).to(equal("piyo"))
+                    }
+                }
+                context("削除対象のタグにひもづくクリップが存在する") {
+                    beforeEach {
+                        try! realm.write {
+                            let obj1 = self.makeClip(url: "https://localhost/1",
+                                                     tags: [
+                                                         self.makeTag(id: "222", name: "fuga"),
+                                                     ],
+                                                     registeredAt: Date(timeIntervalSince1970: 0),
+                                                     updatedAt: Date(timeIntervalSince1970: 1000))
+                            let obj2 = self.makeClip(url: "https://localhost/2",
+                                                     tags: [
+                                                         self.makeTag(id: "111", name: "hoge"),
+                                                         self.makeTag(id: "222", name: "fuga"),
+                                                     ],
+                                                     registeredAt: Date(timeIntervalSince1970: 2000),
+                                                     updatedAt: Date(timeIntervalSince1970: 3000))
+                            realm.add(obj1, update: .modified)
+                            realm.add(obj2, update: .modified)
+                        }
+                        result = service.deleteTag("fuga")
+                    }
+                    it("successが返り、削除対象のタグ名が返ってくる") {
+                        switch result! {
+                        case let .success(tag):
+                            expect(tag).to(equal("fuga"))
+                        case let .failure(error):
+                            fail("Unexpected failure: \(error)")
+                        }
+                    }
+                    it("Realmからタグが削除されている") {
+                        let tags = realm.objects(TagObject.self)
+                        expect(tags).to(haveCount(1))
+                        expect(tags.first?.id).to(equal("111"))
+                        expect(tags.first?.name).to(equal("hoge"))
+                    }
+                    it("紐づいていたClipからタグが削除される") {
+                        let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                        expect(clips).to(haveCount(2))
+                        expect(clips[0].url).to(equal("https://localhost/1"))
+                        expect(clips[0].tags).to(haveCount(0))
+                        expect(clips[1].url).to(equal("https://localhost/2"))
+                        expect(clips[1].tags).to(haveCount(1))
+                        expect(clips[1].tags.first?.id).to(equal("111"))
+                        expect(clips[1].tags.first?.name).to(equal("hoge"))
+                    }
+                }
+            }
+        }
     }
 }

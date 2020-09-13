@@ -608,7 +608,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(_ tag: String) -> Result<Tag, ClipStorageError> {
+    public func deleteTag(_ tag: String) -> Result<String, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
@@ -623,7 +623,7 @@ extension ClipStorage: ClipStorageProtocol {
                 try realm.write {
                     realm.delete(tagObj)
                 }
-                return .success(removeTarget)
+                return .success(removeTarget.name)
             } catch {
                 return .failure(.internalError)
             }

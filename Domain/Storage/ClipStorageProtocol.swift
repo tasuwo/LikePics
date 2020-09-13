@@ -58,7 +58,7 @@ public protocol ClipStorageProtocol {
 
     func delete(_ album: Album) -> Result<Album, ClipStorageError>
 
-    func delete(_ tag: String) -> Result<Tag, ClipStorageError>
+    func deleteTag(_ tag: String) -> Result<String, ClipStorageError>
 }
 
 extension ClipStorageProtocol {
