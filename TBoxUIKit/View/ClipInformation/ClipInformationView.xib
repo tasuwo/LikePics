@@ -12,6 +12,7 @@
                 <outlet property="baseView" destination="dT8-rF-trS" id="ZCc-6J-XMP"/>
                 <outlet property="imageUrlButton" destination="9aa-JW-Ipf" id="f5e-za-bVt"/>
                 <outlet property="imageUrlTitleLabel" destination="KCH-bV-adn" id="vTU-bG-cOn"/>
+                <outlet property="scrollView" destination="Zgj-XF-oX4" id="ljA-SA-oxD"/>
                 <outlet property="siteUrlButton" destination="d0V-T7-SMg" id="9Iq-hu-JE1"/>
                 <outlet property="siteUrlTitleLabel" destination="ozz-Bf-ooU" id="681-Id-yvd"/>
                 <outlet property="tagCollectionView" destination="RyR-D3-QmU" id="2Oe-YB-DQS"/>
@@ -23,7 +24,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zgj-XF-oX4">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zgj-XF-oX4">
                     <rect key="frame" x="0.0" y="84" width="414" height="778"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="W2t-xT-TpH">

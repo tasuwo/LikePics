@@ -46,3 +46,20 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
         return pageView.convert(pageView.imageViewFrame, to: containerView)
     }
 }
+
+extension ClipPreviewViewController: ClipInformationPresentingAnimatorDataSource {
+    // MARK: - ClipInformationPresentingAnimatorDataSource
+
+    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewPageView? {
+        self.view.layoutIfNeeded()
+        return self.pageViewController?.currentViewController?.pageView
+    }
+
+    func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        self.view.layoutIfNeeded()
+        guard let pageView = self.pageViewController?.currentViewController?.pageView else {
+            return .zero
+        }
+        return pageView.convert(pageView.imageViewFrame, to: containerView)
+    }
+}

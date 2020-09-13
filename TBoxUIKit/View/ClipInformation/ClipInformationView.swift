@@ -42,6 +42,14 @@ public class ClipInformationView: UIView {
         }
     }
 
+    public var panGestureRecognizer: UIPanGestureRecognizer {
+        self.scrollView.panGestureRecognizer
+    }
+
+    public var contentOffSet: CGPoint {
+        self.scrollView.contentOffset
+    }
+
     public weak var delegate: ClipInformationViewDelegate?
 
     public weak var dataSource: ClipInformationViewDataSource? {
@@ -58,6 +66,7 @@ public class ClipInformationView: UIView {
     @IBOutlet var imageUrlButton: UIButton!
     @IBOutlet var siteUrlTitleLabel: UILabel!
     @IBOutlet var imageUrlTitleLabel: UILabel!
+    @IBOutlet var scrollView: UIScrollView!
     var imageView: UIImageView!
 
     // MARK: - Lifecycle
@@ -114,15 +123,19 @@ public class ClipInformationView: UIView {
     }
 
     private func updateImageViewFrame() {
-        guard let image = dataSource?.previewImage(self), let dataSource = self.dataSource else {
-            self.imageView.frame = .zero
-            return
+        self.imageView.frame = self.calcInitialFrame()
+    }
+
+    public func calcInitialFrame() -> CGRect {
+        guard let dataSource = self.dataSource, let image = dataSource.previewImage(self) else {
+            return .zero
         }
         let bounds = dataSource.previewPageBounds(self)
         let frame = ClipPreviewPageView.calcDefaultFrame(for: image, onFrame: bounds)
-        self.imageView.frame = .init(origin: .init(x: (self.frame.size.width - frame.width) / 2,
-                                                   y: -frame.height + 80),
-                                     size: frame.size)
+        let rect = CGRect(origin: .init(x: (self.frame.size.width - frame.width) / 2,
+                                        y: -frame.height + self.safeAreaInsets.top + 80),
+                          size: frame.size)
+        return rect
     }
 }
 

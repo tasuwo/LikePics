@@ -13,6 +13,9 @@ class ClipInformationViewController: UIViewController {
     private let presenter: ClipInformationPresenter
     private weak var dataSource: ClipInformationViewDataSource?
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var panGestureRecognizer: UIPanGestureRecognizer!
+
     @IBOutlet var informationView: ClipInformationView!
 
     // MARK: - Lifecycle
@@ -32,11 +35,34 @@ class ClipInformationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupGestureRecognizer()
+
         self.informationView.delegate = self
         self.informationView.dataSource = self.dataSource
         self.informationView.siteUrl = self.presenter.clip.url.absoluteString
         self.informationView.imageUrl = self.presenter.item.image.url.absoluteString
         self.informationView.tags = self.presenter.clip.tags
+    }
+
+    // MARK: - Methods
+
+    // MARK: Gesture Recognizer
+
+    private func setupGestureRecognizer() {
+        self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))
+        self.panGestureRecognizer.delegate = self
+        self.view.addGestureRecognizer(self.panGestureRecognizer)
+    }
+
+    @objc
+    func didPan(_ sender: UIPanGestureRecognizer) {
+        switch sender.state {
+        case .began:
+            self.dismiss(animated: true, completion: nil)
+
+        default:
+            break
+        }
     }
 }
 
@@ -63,5 +89,37 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     func clipInformationView(_ view: ClipInformationView, shouldSearch url: URL) {
         // TODO:
         print(url)
+    }
+}
+
+extension ClipInformationViewController: UIGestureRecognizerDelegate {
+    // MARK: - UIGestureRecognizerDelegate
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
+            guard gestureRecognizer.velocity(in: self.view).y > 0 else { return false }
+            return true
+        }
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if otherGestureRecognizer == self.informationView.panGestureRecognizer {
+            return self.informationView.contentOffSet.y < 0
+        }
+        return false
+    }
+}
+
+extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSource {
+    // MARK: - ClipInformationPresentedAnimatorDataSource
+
+    func animatingInformationView(_ animator: ClipInformationAnimator) -> ClipInformationView? {
+        return self.informationView
+    }
+
+    func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        self.informationView.layoutIfNeeded()
+        return self.informationView.convert(self.informationView.calcInitialFrame(), to: containerView)
     }
 }

@@ -47,7 +47,8 @@ protocol ViewControllerFactory {
 class DependencyContainer {
     private lazy var logger = RootLogger.shared
     private lazy var clipsStorage = ClipStorage()
-    private lazy var transitionController = ClipPreviewTransitioningController()
+    private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
+    private lazy var clipInformationTransitionController = ClipInformationTransitioningController()
 }
 
 extension DependencyContainer: ViewControllerFactory {
@@ -61,10 +62,10 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipsStorage, logger: self.logger)
-        let pageViewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.transitionController)
+        let pageViewController = ClipPreviewPageViewController(factory: self, presenter: presenter, transitionController: self.clipPreviewTransitionController)
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
-        viewController.transitioningDelegate = self.transitionController
+        viewController.transitioningDelegate = self.clipPreviewTransitionController
         viewController.modalPresentationStyle = .fullScreen
 
         return viewController
@@ -80,6 +81,8 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipInformationViewController(clip: Clip, item: ClipItem, dataSource: ClipInformationViewDataSource) -> UIViewController {
         let presenter = ClipInformationPresenter(clip: clip, item: item)
         let viewController = ClipInformationViewController(factory: self, dataSource: dataSource, presenter: presenter)
+        viewController.transitioningDelegate = self.clipInformationTransitionController
+        viewController.modalPresentationStyle = .fullScreen
         return viewController
     }
 
@@ -95,7 +98,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeSearchEntryViewController() -> UIViewController {
         let presenter = SearchEntryPresenter(storage: self.clipsStorage, logger: self.logger)
-        return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.transitionController))
+        return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.clipPreviewTransitionController))
     }
 
     func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {

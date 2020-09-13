@@ -151,6 +151,8 @@
 		2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229524DD9F5F00329251 /* Assets.xcassets */; };
 		2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */; };
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
+		2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */; };
+		2CABB5B0250E5105007B7F88 /* ClipInformationTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AF250E5105007B7F88 /* ClipInformationTransitionController.swift */; };
 		2CB071172509026B0000E7E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB071162509026B0000E7E1 /* AppDelegate.swift */; };
 		2CB071192509026B0000E7E1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB071182509026B0000E7E1 /* SceneDelegate.swift */; };
 		2CB0711E2509026B0000E7E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CB0711C2509026B0000E7E1 /* Main.storyboard */; };
@@ -190,6 +192,10 @@
 		2CFC5D0A250E16EA001A02E4 /* TBoxLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D09250E16EA001A02E4 /* TBoxLoggable.swift */; };
 		2CFC5D0C250E1700001A02E4 /* TBoxLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D0B250E1700001A02E4 /* TBoxLog.swift */; };
 		2CFC5D0F250E17F6001A02E4 /* ErrorCodeSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D0E250E17F6001A02E4 /* ErrorCodeSource.swift */; };
+		2CFC5D13250E38A6001A02E4 /* ClipInformationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D12250E38A6001A02E4 /* ClipInformationAnimator.swift */; };
+		2CFC5D15250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D14250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift */; };
+		2CFC5D18250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D17250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift */; };
+		2CFC5D1A250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */; };
 		2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
@@ -607,6 +613,8 @@
 		2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA022A324DD9F5F00329251 /* TBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxTests.swift; sourceTree = "<group>"; };
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationDismissalAnimator.swift; sourceTree = "<group>"; };
+		2CABB5AF250E5105007B7F88 /* ClipInformationTransitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationTransitionController.swift; sourceTree = "<group>"; };
 		2CB071142509026B0000E7E1 /* TBoxUIKitCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBoxUIKitCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CB071162509026B0000E7E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CB071182509026B0000E7E1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -649,6 +657,10 @@
 		2CFC5D09250E16EA001A02E4 /* TBoxLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLoggable.swift; sourceTree = "<group>"; };
 		2CFC5D0B250E1700001A02E4 /* TBoxLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLog.swift; sourceTree = "<group>"; };
 		2CFC5D0E250E17F6001A02E4 /* ErrorCodeSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorCodeSource.swift; sourceTree = "<group>"; };
+		2CFC5D12250E38A6001A02E4 /* ClipInformationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimator.swift; sourceTree = "<group>"; };
+		2CFC5D14250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentationAnimator.swift; sourceTree = "<group>"; };
+		2CFC5D17250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
+		2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.release.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.release.xcconfig"; sourceTree = "<group>"; };
@@ -1007,6 +1019,7 @@
 		2C447A75250D435E00EAA448 /* ClipInformation */ = {
 			isa = PBXGroup;
 			children = (
+				2CFC5D10250E386D001A02E4 /* Transition */,
 				2C2C9EEC250BC7370020715B /* ClipInformationView.xib */,
 				2C2C9EEE250BC7710020715B /* ClipInformationView.swift */,
 			);
@@ -1647,6 +1660,35 @@
 				2CFC5D0E250E17F6001A02E4 /* ErrorCodeSource.swift */,
 			);
 			path = ErrorCode;
+			sourceTree = "<group>";
+		};
+		2CFC5D10250E386D001A02E4 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5D11250E3875001A02E4 /* Animator */,
+				2CFC5D16250E3917001A02E4 /* DataSource */,
+				2CABB5AF250E5105007B7F88 /* ClipInformationTransitionController.swift */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		2CFC5D11250E3875001A02E4 /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5D12250E38A6001A02E4 /* ClipInformationAnimator.swift */,
+				2CFC5D14250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift */,
+				2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */,
+			);
+			path = Animator;
+			sourceTree = "<group>";
+		};
+		2CFC5D16250E3917001A02E4 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5D17250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift */,
+				2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */,
+			);
+			path = DataSource;
 			sourceTree = "<group>";
 		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
@@ -2654,12 +2696,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */,
+				2CABB5B0250E5105007B7F88 /* ClipInformationTransitionController.swift in Sources */,
 				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
 				2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */,
+				2CFC5D1A250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift in Sources */,
 				2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */,
 				2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */,
+				2CFC5D15250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */,
 				2C1CEC142509664500C95C12 /* TagCollectionLayout.swift in Sources */,
+				2CFC5D13250E38A6001A02E4 /* ClipInformationAnimator.swift in Sources */,
+				2CFC5D18250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift in Sources */,
 				2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */,
 				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
@@ -2670,6 +2717,7 @@
 				2C2C9EEF250BC7710020715B /* ClipInformationView.swift in Sources */,
 				2C45D40F24EEBF620045B6D3 /* AlbumListCollectionView.swift in Sources */,
 				2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */,
+				2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */,
 				2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */,
 				2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */,
 				2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */,
