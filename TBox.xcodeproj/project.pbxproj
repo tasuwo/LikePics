@@ -178,6 +178,9 @@
 		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
+		2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */; };
+		2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */; };
+		2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */; };
 		2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
@@ -625,6 +628,9 @@
 		2CF5ABB224FB486A0084695F /* TagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagObject.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
+		2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
+		2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListPresenter.swift; sourceTree = "<group>"; };
+		2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagListViewController.xib; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.release.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.release.xcconfig"; sourceTree = "<group>"; };
@@ -1095,6 +1101,7 @@
 				2C570B5D24E04FAB00A1DC9F /* TopClipsList */,
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C447A76250D437400EAA448 /* ClipInformation */,
+				2CFC5CEE250DA906001A02E4 /* TagList */,
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
 				2C38C706250AF3B900F32102 /* AddingTagsToClips */,
@@ -1210,11 +1217,12 @@
 				2C1BA03324E08A0E00F96801 /* Root */,
 				2C45D3ED24EACA780045B6D3 /* Search */,
 				2C570B6024E04FEF00A1DC9F /* TopClipsList */,
+				2C45D40324EEB3F30045B6D3 /* AlbumList */,
+				2CFC5CEB250DA8D0001A02E4 /* TagList */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2C2C9EF5250BCE7B0020715B /* ClipInformation */,
 				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */,
 				2C38C703250AF31900F32102 /* AddingTagsToClips */,
-				2C45D40324EEB3F30045B6D3 /* AlbumList */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
 				2C29789B24EEF19700FBA531 /* AddingAlert */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
@@ -1547,6 +1555,23 @@
 				2CF332592507D327007EF072 /* ClipStorageSpec.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		2CFC5CEB250DA8D0001A02E4 /* TagList */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */,
+				2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */,
+			);
+			path = TagList;
+			sourceTree = "<group>";
+		};
+		2CFC5CEE250DA906001A02E4 /* TagList */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */,
+			);
+			path = TagList;
 			sourceTree = "<group>";
 		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
@@ -2070,6 +2095,7 @@
 				2C3ADF6124EEE6DF007C4AA0 /* AddingClipsToAlbumViewController.xib in Resources */,
 				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
+				2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */,
 				2C38C70A250AF7DF00F32102 /* AddingTagsToClipsViewController.xib in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
@@ -2621,10 +2647,12 @@
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2C2289E824F7EEEA0026E24A /* ClipsListPresenterProtocol.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
+				2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */,
 				2C2289EA24F7EF3D0026E24A /* ClipsListPresenter.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
+				2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* AddingTagsToClipsPresenter.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */,
