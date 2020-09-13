@@ -39,7 +39,7 @@ class SearchEntryViewController: UIViewController {
     // MARK: - Methods
 
     private func setupAppearance() {
-        self.title = "検索"
+        self.title = L10n.searchEntryViewTitle
         self.view.backgroundColor = Asset.backgroundClient.color
     }
 
@@ -51,7 +51,7 @@ class SearchEntryViewController: UIViewController {
 
     private func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = "クリップを検索する"
+        searchController.searchBar.placeholder = L10n.searchEntryViewSearchBarPlaceholder
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.delegate = self
         searchController.delegate = self
@@ -71,7 +71,9 @@ extension SearchEntryViewController: SearchEntryViewProtocol {
     }
 
     func showErrorMassage(_ message: String) {
-        print(message)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     func showReuslt(_ clips: [Clip], withContext context: SearchContext) {

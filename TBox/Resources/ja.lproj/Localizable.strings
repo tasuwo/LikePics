@@ -23,6 +23,12 @@
 "album_list_view_alert_for_delete_message" = "アルバム\"%@\"を削除しますか？\n含まれるクリップは削除されません";
 "album_list_view_alert_for_delete_action" = "アルバムを削除";
 
+"search_entry_view_title" = "検索";
+
+"search_entry_view_search_bar_placeholder" = "キーワード";
+
+"search_entry_view_error_at_search" = "検索に失敗しました";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";

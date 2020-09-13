@@ -23,6 +23,12 @@
 "album_list_view_alert_for_delete_message" = "Are you sure you want to delete the album \"%@\"?\nThe clips will not be deleted.";
 "album_list_view_alert_for_delete_action" = "Delete Album";
 
+"search_entry_view_title" = "Search";
+
+"search_entry_view_search_bar_placeholder" = "Keywords";
+
+"search_entry_view_error_at_search" = "Failed to search.";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";

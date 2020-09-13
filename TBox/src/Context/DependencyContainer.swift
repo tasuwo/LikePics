@@ -94,7 +94,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchEntryViewController() -> UIViewController {
-        let presenter = SearchEntryPresenter(storage: self.clipsStorage)
+        let presenter = SearchEntryPresenter(storage: self.clipsStorage, logger: self.logger)
         return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.transitionController))
     }
 

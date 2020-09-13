@@ -46,6 +46,12 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
+    /// 検索に失敗しました
+    internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
+    /// キーワード
+    internal static let searchEntryViewSearchBarPlaceholder = L10n.tr("Localizable", "search_entry_view_search_bar_placeholder")
+    /// 検索
+    internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
