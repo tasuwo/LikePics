@@ -46,11 +46,7 @@ class AlbumListPresenter {
         view.endLoading()
     }
 
-    func addAlbum(title: String?) {
-        guard let title = title else {
-            // TODO: Error Handling
-            return
-        }
+    func addAlbum(title: String) {
         guard let view = self.view else { return }
 
         view.startLoading()
