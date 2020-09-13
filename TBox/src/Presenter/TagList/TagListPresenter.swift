@@ -7,7 +7,7 @@ import Domain
 protocol TagListViewProtocol: AnyObject {
     func reload()
     func showSearchReult(for clips: [Clip], withContext: SearchContext)
-    func showErrorMassage(_ message: String)
+    func showErrorMessage(_ message: String)
     func endEditing()
 }
 
@@ -38,7 +38,19 @@ class TagListPresenter {
             view.reload()
 
         case let .failure(error):
-            view.showErrorMassage(Self.resolveErrorMessage(error))
+            view.showErrorMessage(Self.resolveErrorMessage(error))
+        }
+    }
+
+    func addTag(_ name: String) {
+        guard let view = self.view else { return }
+
+        switch self.storage.create(tagWithName: name) {
+        case .success:
+            self.reload()
+
+        case let .failure(error):
+            view.showErrorMessage(Self.resolveErrorMessage(error))
         }
     }
 
@@ -51,7 +63,7 @@ class TagListPresenter {
             view?.showSearchReult(for: clips, withContext: .tag(tagName: tagName))
 
         case let .failure(error):
-            view?.showErrorMassage(Self.resolveErrorMessage(error))
+            view?.showErrorMessage(Self.resolveErrorMessage(error))
         }
     }
 
@@ -60,7 +72,7 @@ class TagListPresenter {
         tags.forEach { tag in
             switch self.storage.deleteTag(tag) {
             case let .failure(error):
-                self.view?.showErrorMassage(Self.resolveErrorMessage(error))
+                self.view?.showErrorMessage(Self.resolveErrorMessage(error))
 
             default:
                 self.tags.removeAll(where: { $0 == tag })

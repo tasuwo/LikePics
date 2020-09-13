@@ -11,6 +11,10 @@ class TagListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: TagListPresenter
+    private lazy var alertContainer = AddingAlert(configuration: .init(title: "新規タグ",
+                                                                       message: "追加するタグの名前を入力してください",
+                                                                       placeholder: "タグ名"),
+                                                  baseView: self)
 
     @IBOutlet var collectionView: TagCollectionView!
 
@@ -57,15 +61,29 @@ class TagListViewController: UIViewController {
 
     private func updateNavigationBar(for isEditing: Bool) {
         if isEditing {
-            let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
             let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.didTapCancel))
-
-            self.navigationItem.rightBarButtonItem = doneItem
+            let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
             self.navigationItem.leftBarButtonItem = cancelItem
+            self.navigationItem.rightBarButtonItem = doneItem
         } else {
+            let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
             let deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapDelete))
+            self.navigationItem.leftBarButtonItem = addItem
             self.navigationItem.rightBarButtonItem = deleteItem
-            self.navigationItem.leftBarButtonItem = nil
+        }
+    }
+
+    @objc
+    func didTapAdd() {
+        self.alertContainer.present { [weak self] action in
+            switch action {
+            case let .saved(text: tag):
+                self?.presenter.addTag(tag)
+
+            default:
+                // NOP
+                break
+            }
         }
     }
 
@@ -123,7 +141,7 @@ extension TagListViewController: TagListViewProtocol {
         self.show(self.factory.makeSearchResultViewController(context: context, clips: clips), sender: nil)
     }
 
-    func showErrorMassage(_ message: String) {
+    func showErrorMessage(_ message: String) {
         // TODO:
         print(message)
     }
