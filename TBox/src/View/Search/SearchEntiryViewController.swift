@@ -80,8 +80,8 @@ extension SearchEntryViewController: SearchEntryViewProtocol {
         print(message)
     }
 
-    func showReuslt(_ clips: [Clip]) {
-        self.show(self.factory.makeSearchResultViewController(clips: clips), sender: nil)
+    func showReuslt(_ clips: [Clip], withContext context: SearchContext) {
+        self.show(self.factory.makeSearchResultViewController(context: context, clips: clips), sender: nil)
     }
 }
 

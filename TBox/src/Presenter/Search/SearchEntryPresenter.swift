@@ -8,7 +8,7 @@ protocol SearchEntryViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
     func showErrorMassage(_ message: String)
-    func showReuslt(_ clips: [Clip])
+    func showReuslt(_ clips: [Clip], withContext: SearchContext)
 }
 
 class SearchEntryPresenter {
@@ -37,7 +37,7 @@ class SearchEntryPresenter {
         let keywords = text.split(separator: " ").map { String($0) }
         switch self.storage.searchClips(byKeywords: keywords) {
         case let .success(clips):
-            view.showReuslt(clips.sorted(by: { $0.registeredDate > $1.registeredDate }))
+            view.showReuslt(clips.sorted(by: { $0.registeredDate > $1.registeredDate }), withContext: .keyword(keyword: text))
 
         case let .failure(error):
             view.showErrorMassage(Self.resolveErrorMessage(error))

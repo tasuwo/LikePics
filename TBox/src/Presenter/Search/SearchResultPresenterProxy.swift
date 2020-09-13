@@ -33,6 +33,10 @@ extension SearchResultPresenterProxy: SearchResultPresenterProtocol {
         return self.presenter.isEditing
     }
 
+    var context: SearchContext {
+        return self.presenter.context
+    }
+
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
         self.presenter.getImageData(for: layer, in: clip)
     }

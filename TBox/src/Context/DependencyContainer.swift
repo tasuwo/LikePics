@@ -29,7 +29,7 @@ protocol ViewControllerFactory {
     // MARK: Search
 
     func makeSearchEntryViewController() -> UIViewController
-    func makeSearchResultViewController(clips: [Clip]) -> UIViewController
+    func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController
 
     // MARK: Album
 
@@ -96,8 +96,8 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.transitionController))
     }
 
-    func makeSearchResultViewController(clips: [Clip]) -> UIViewController {
-        let presenter = SearchResultPresenter(clips: clips, storage: self.clipsStorage)
+    func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {
+        let presenter = SearchResultPresenter(context: context, clips: clips, storage: self.clipsStorage)
         let proxy = SearchResultPresenterProxy(presenter: presenter)
         return SearchResultViewController(factory: self, presenter: proxy)
     }

@@ -6,7 +6,15 @@ import Domain
 
 protocol SearchResultViewProtocol: ClipsListViewProtocol {}
 
+enum SearchContext {
+    case keyword(keyword: String)
+    case tag(tagName: String)
+    case album(albumName: String)
+}
+
 protocol SearchResultPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
+    var context: SearchContext { get }
+
     func set(view: SearchResultViewProtocol)
 
     func replaceClips(by clips: [Clip])
@@ -14,6 +22,8 @@ protocol SearchResultPresenterProtocol: ClipsListPresenterProtocol & AddingClips
 
 class SearchResultPresenter: ClipsListPresenter {
     // MARK: - Properties
+
+    var context: SearchContext
 
     // MARK: ClipsListPresenterProtocol
 
@@ -37,7 +47,8 @@ class SearchResultPresenter: ClipsListPresenter {
 
     // MARK: - Lifecycle
 
-    init(clips: [Clip], storage: ClipStorageProtocol) {
+    init(context: SearchContext, clips: [Clip], storage: ClipStorageProtocol) {
+        self.context = context
         self.clips = clips
         self.selectedClips = []
         self.storage = storage
