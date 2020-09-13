@@ -6,6 +6,11 @@
   Copyright © 2020 Tasuku Tozawa. All rights reserved.
 */
 
+"app_root_tab_item_home" = "ホーム";
+"app_root_tab_item_album" = "アルバム";
+"app_root_tab_item_tag" = "タグ";
+"app_root_tab_item_search" = "検索";
+
 "clip_target_finder_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";

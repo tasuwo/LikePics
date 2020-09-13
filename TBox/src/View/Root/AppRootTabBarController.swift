@@ -30,11 +30,18 @@ class AppRootTabBarController: UITabBarController {
         let tagListViewController = self.factory.makeTagListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
 
-        // TODO: Localize
-        topClipsListViewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-        albumListViewController.tabBarItem = UITabBarItem(title: "Album", image: UIImage(systemName: "square.stack"), tag: 1)
-        tagListViewController.tabBarItem = UITabBarItem(title: "Tags", image: UIImage(systemName: "tag"), tag: 2)
-        searchEntryViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 3)
+        topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
+                                                             image: UIImage(systemName: "house"),
+                                                             tag: 0)
+        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
+                                                          image: UIImage(systemName: "square.stack"),
+                                                          tag: 1)
+        tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
+                                                        image: UIImage(systemName: "tag"),
+                                                        tag: 2)
+        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
+                                                            image: UIImage(systemName: "magnifyingglass"),
+                                                            tag: 3)
 
         self.viewControllers = [
             topClipsListViewController,
