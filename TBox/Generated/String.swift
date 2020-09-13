@@ -10,8 +10,18 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// アルバムの追加に失敗しました
+    internal static let albumListViewErrorAtAddAlbum = L10n.tr("Localizable", "album_list_view_error_at_add_album")
+    /// アルバムの削除に失敗しました
+    internal static let albumListViewErrorAtDeleteAlbum = L10n.tr("Localizable", "album_list_view_error_at_delete_album")
+    /// アルバムの読み込みに失敗しました
+    internal static let albumListViewErrorAtReadAlbums = L10n.tr("Localizable", "album_list_view_error_at_read_albums")
+    /// 画像の読み込みに失敗しました
+    internal static let albumListViewErrorAtReadImageData = L10n.tr("Localizable", "album_list_view_error_at_read_image_data")
     /// 画像を選択
     internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
+    /// OK
+    internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

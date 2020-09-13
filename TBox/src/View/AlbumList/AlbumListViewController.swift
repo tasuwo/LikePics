@@ -83,17 +83,10 @@ class AlbumListViewController: UIViewController {
 extension AlbumListViewController: AlbumListViewProtocol {
     // MARK: - AlbumListViewProtocol
 
-    func startLoading() {
-        // TODO:
-    }
-
-    func endLoading() {
-        // TODO:
-    }
-
     func showErrorMassage(_ message: String) {
-        // TODO:
-        print(message)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     func reload() {

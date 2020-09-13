@@ -7,3 +7,10 @@
 */
 
 "clip_target_finder_view_title" = "画像を選択";
+
+"album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
+"album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
+"album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
+"album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
+
+"confirm_alert_ok" = "OK";

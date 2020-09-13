@@ -5,3 +5,12 @@
   Created by Tasuku Tozawa on 2020/08/15.
   Copyright © 2020 Tasuku Tozawa. All rights reserved.
 */
+
+"clip_target_finder_view_title" = "Select image.";
+
+"album_list_view_error_at_read_albums" = "Failed to read albums.";
+"album_list_view_error_at_add_album" = "Failed to add album.";
+"album_list_view_error_at_delete_album" = "Failed to delete album.";
+"album_list_view_error_at_read_image_data" = "Failed to read image data.";
+
+"confirm_alert_ok" = "OK";

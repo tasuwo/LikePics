@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import Persistence
 import TBoxCore
@@ -44,6 +45,7 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
+    private lazy var logger = RootLogger.shared
     private lazy var clipsStorage = ClipStorage()
     private lazy var transitionController = ClipPreviewTransitioningController()
 }
@@ -103,7 +105,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumListViewController() -> UIViewController {
-        let presenter = AlbumListPresenter(storage: self.clipsStorage)
+        let presenter = AlbumListPresenter(storage: self.clipsStorage, logger: self.logger)
         let viewController = AlbumListViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
