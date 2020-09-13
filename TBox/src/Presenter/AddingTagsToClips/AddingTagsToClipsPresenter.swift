@@ -29,6 +29,8 @@ class AddingTagsToClipsPresenter {
     init(clips: [Clip], storage: ClipStorageProtocol) {
         self.clips = clips
         self.storage = storage
+
+        // TODO: 選択済みのタグは選択済みにすべきかどうか
     }
 
     // MARK: - Methods
