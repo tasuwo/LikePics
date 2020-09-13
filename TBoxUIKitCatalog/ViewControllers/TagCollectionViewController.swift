@@ -20,6 +20,7 @@ class TagCollectionViewController: UIViewController {
         "iine!iine!iine!"
     ]
 
+    private var currentDisplayMode: TagCollectionViewCell.DisplayMode = .normal
     @IBOutlet var collectionView: TagCollectionView!
 
     // MARK: - Lifecycle
@@ -45,15 +46,20 @@ class TagCollectionViewController: UIViewController {
         case 0:
             self.collectionView.allowsSelection = false
             self.collectionView.allowsMultipleSelection = false
+            self.currentDisplayMode = .normal
         case 1:
             self.collectionView.allowsSelection = true
-            self.collectionView.allowsMultipleSelection = false
-        case 2:
-            self.collectionView.allowsSelection = false
             self.collectionView.allowsMultipleSelection = true
+            self.currentDisplayMode = .checkAtSelect
+        case 2:
+            self.collectionView.allowsSelection = true
+            self.collectionView.allowsMultipleSelection = true
+            self.currentDisplayMode = .deletion
         default:
             break
         }
+
+        self.collectionView.reloadData()
     }
 }
 
@@ -89,6 +95,7 @@ extension TagCollectionViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
         cell.title = self.tags[indexPath.row]
+        cell.displayMode = self.currentDisplayMode
 
         return cell
     }

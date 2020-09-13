@@ -8,6 +8,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
     public enum DisplayMode {
         case normal
         case checkAtSelect
+        case deletion
     }
 
     public static let preferredHeight: CGFloat = 24 + 4 * 2
@@ -74,13 +75,26 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     func updateAppearance() {
-        if self.isSelected, self.displayMode == .checkAtSelect {
+        switch (self.displayMode, self.isSelected) {
+        case (.checkAtSelect, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemGreen
             self.layer.borderWidth = 0
-        } else {
+        case (.deletion, true):
+            self.iconImage.image = UIImage(systemName: "checkmark")
+            self.iconImage.tintColor = UIColor.white
+            self.titleLabel.textColor = UIColor.white
+            self.contentView.backgroundColor = UIColor.systemRed
+            self.layer.borderWidth = 0
+        case (.deletion, false):
+            self.iconImage.image = UIImage(systemName: "minus.circle.fill")
+            self.iconImage.tintColor = .systemRed
+            self.titleLabel.textColor = UIColor.label
+            self.contentView.backgroundColor = UIColor.systemBackground
+            self.layer.borderWidth = 2
+        default:
             self.iconImage.image = UIImage(systemName: "tag.fill")
             self.iconImage.tintColor = UIColor.label
             self.titleLabel.textColor = UIColor.label

@@ -22,9 +22,9 @@
                                     <constraint firstAttribute="height" constant="31" id="X4T-Tu-qak"/>
                                 </constraints>
                                 <segments>
-                                    <segment title="No Selction"/>
-                                    <segment title="Single Selection"/>
-                                    <segment title="Multiple Selection"/>
+                                    <segment title="Normal"/>
+                                    <segment title="Multiple Check"/>
+                                    <segment title="Delete"/>
                                 </segments>
                                 <connections>
                                     <action selector="didSwitchControl:" destination="UX5-vG-cxg" eventType="valueChanged" id="nMg-9S-TGf"/>
