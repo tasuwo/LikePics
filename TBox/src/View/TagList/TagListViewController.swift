@@ -33,6 +33,7 @@ class TagListViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupAppearance()
+        self.updateNavigationBar(for: self.isEditing)
 
         self.presenter.reload()
     }
@@ -41,6 +42,7 @@ class TagListViewController: UIViewController {
         super.viewWillAppear(animated)
 
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.presenter.reload()
     }
 
     // MARK: - Methods
@@ -49,6 +51,64 @@ class TagListViewController: UIViewController {
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
         self.title = "タグ"
+    }
+
+    // MARK: NavigationBar
+
+    private func updateNavigationBar(for isEditing: Bool) {
+        if isEditing {
+            let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
+            let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.didTapCancel))
+
+            self.navigationItem.rightBarButtonItem = doneItem
+            self.navigationItem.leftBarButtonItem = cancelItem
+        } else {
+            let deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapDelete))
+            self.navigationItem.rightBarButtonItem = deleteItem
+            self.navigationItem.leftBarButtonItem = nil
+        }
+    }
+
+    @objc
+    func didTapDone() {
+        let alert = UIAlertController(title: "タグを削除する",
+                                      message: "選択中のタグを全て削除しますか？クリップに紐づいたタグの場合は、クリップからタグが削除されます",
+                                      preferredStyle: .actionSheet)
+
+        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+            guard let indices = self?.collectionView.indexPathsForSelectedItems?.map({ $0.row }) else { return }
+            self?.presenter.delete(at: indices)
+        }))
+        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    func didTapCancel() {
+        self.setEditing(false, animated: true)
+    }
+
+    @objc
+    func didTapDelete() {
+        self.setEditing(true, animated: true)
+    }
+
+    // MARK: UIViewController (Override)
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+
+        self.updateNavigationBar(for: editing)
+
+        self.collectionView
+            .visibleCells
+            .map { $0 as? TagCollectionViewCell }
+            .forEach { $0?.displayMode = editing ? .deletion : .normal }
+        self.collectionView
+            .indexPathsForSelectedItems?
+            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        self.collectionView.allowsMultipleSelection = editing
     }
 }
 
@@ -67,6 +127,10 @@ extension TagListViewController: TagListViewProtocol {
         // TODO:
         print(message)
     }
+
+    func endEditing() {
+        self.setEditing(false, animated: true)
+    }
 }
 
 extension TagListViewController: UICollectionViewDelegate {
@@ -81,6 +145,7 @@ extension TagListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard !self.isEditing else { return }
         self.presenter.select(at: indexPath.row)
     }
 }
@@ -103,7 +168,7 @@ extension TagListViewController: UICollectionViewDataSource {
 
         let target = self.presenter.tags[indexPath.row]
         cell.title = target
-        cell.displayMode = .normal
+        cell.displayMode = self.isEditing ? .deletion : .normal
 
         return cell
     }

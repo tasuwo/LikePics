@@ -8,6 +8,7 @@ protocol TagListViewProtocol: AnyObject {
     func reload()
     func showSearchReult(for clips: [Clip], withContext: SearchContext)
     func showErrorMassage(_ message: String)
+    func endEditing()
 }
 
 class TagListPresenter {
@@ -52,5 +53,20 @@ class TagListPresenter {
         case let .failure(error):
             view?.showErrorMassage(Self.resolveErrorMessage(error))
         }
+    }
+
+    func delete(at indices: [Int]) {
+        let tags = indices.map { self.tags[$0] }
+        tags.forEach { tag in
+            switch self.storage.deleteTag(tag) {
+            case let .failure(error):
+                self.view?.showErrorMassage(Self.resolveErrorMessage(error))
+
+            default:
+                self.tags.removeAll(where: { $0 == tag })
+            }
+        }
+        view?.endEditing()
+        view?.reload()
     }
 }
