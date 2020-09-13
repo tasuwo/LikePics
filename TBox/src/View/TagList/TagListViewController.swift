@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import TBoxUIKit
 import UIKit
@@ -11,18 +12,20 @@ class TagListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: TagListPresenter
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: "新規タグ",
-                                                                       message: "追加するタグの名前を入力してください",
-                                                                       placeholder: "タグ名"),
+    private let logger: TBoxLoggable
+    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                                       placeholder: L10n.tagListViewAlertForAddPlaceholder),
                                                   baseView: self)
 
     @IBOutlet var collectionView: TagCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TagListPresenter) {
+    init(factory: Factory, presenter: TagListPresenter, logger: TBoxLoggable) {
         self.factory = factory
         self.presenter = presenter
+        self.logger = logger
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -53,7 +56,7 @@ class TagListViewController: UIViewController {
     private func setupAppearance() {
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
-        self.title = "タグ"
+        self.title = L10n.tagListViewTitle
     }
 
     // MARK: NavigationBar
@@ -88,15 +91,20 @@ class TagListViewController: UIViewController {
 
     @objc
     func didTapDone() {
-        let alert = UIAlertController(title: "タグを削除する",
-                                      message: "選択中のタグを全て削除しますか？クリップに紐づいたタグの場合は、クリップからタグが削除されます",
+        guard let count = self.collectionView.indexPathsForSelectedItems?.count else {
+            self.logger.write(ConsoleLog(level: .error, message: "Invalid done action occurred."))
+            return
+        }
+
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.tagListViewAlertForDeleteMessage,
                                       preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+        alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction(count), style: .destructive, handler: { [weak self] _ in
             guard let indices = self?.collectionView.indexPathsForSelectedItems?.map({ $0.row }) else { return }
             self?.presenter.delete(at: indices)
         }))
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
@@ -141,8 +149,9 @@ extension TagListViewController: TagListViewProtocol {
     }
 
     func showErrorMessage(_ message: String) {
-        // TODO:
-        print(message)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     func endEditing() {

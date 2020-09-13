@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 
 protocol TagListViewProtocol: AnyObject {
@@ -12,21 +13,46 @@ protocol TagListViewProtocol: AnyObject {
 }
 
 class TagListPresenter {
+    enum FailureContext {
+        case readTag
+        case addTag
+        case searchClip
+        case deleteTag
+    }
+
     private let storage: ClipStorageProtocol
+    private let logger: TBoxLoggable
+
     private(set) var tags: [String] = []
+
     weak var view: TagListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol) {
+    init(storage: ClipStorageProtocol, logger: TBoxLoggable) {
         self.storage = storage
+        self.logger = logger
     }
 
     // MARK: - Methods
 
-    private static func resolveErrorMessage(_ error: Error) -> String {
-        // TODO:
-        return "TODO"
+    private static func resolveErrorMessage(for error: ClipStorageError, at context: FailureContext) -> String {
+        let message: String = {
+            switch context {
+            case .readTag:
+                return L10n.tagListViewErrorAtReadTags
+
+            case .addTag:
+                return L10n.tagListViewErrorAtAddTag
+
+            case .deleteTag:
+                return L10n.tagListViewErrorAtDeleteTag
+
+            case .searchClip:
+                return L10n.tagListViewErrorAtSearchClip
+            }
+        }()
+        return message + "\n(\(error.makeErrorCode()))"
     }
 
     func reload() {
@@ -38,7 +64,8 @@ class TagListPresenter {
             view.reload()
 
         case let .failure(error):
-            view.showErrorMessage(Self.resolveErrorMessage(error))
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read tags. (code: \(error.rawValue))"))
+            view.showErrorMessage(Self.resolveErrorMessage(for: error, at: .readTag))
         }
     }
 
@@ -50,7 +77,8 @@ class TagListPresenter {
             self.reload()
 
         case let .failure(error):
-            view.showErrorMessage(Self.resolveErrorMessage(error))
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag. (code: \(error.rawValue))"))
+            view.showErrorMessage(Self.resolveErrorMessage(for: error, at: .addTag))
         }
     }
 
@@ -63,7 +91,8 @@ class TagListPresenter {
             view?.showSearchReult(for: clips, withContext: .tag(tagName: tagName))
 
         case let .failure(error):
-            view?.showErrorMessage(Self.resolveErrorMessage(error))
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
+            view?.showErrorMessage(Self.resolveErrorMessage(for: error, at: .searchClip))
         }
     }
 
@@ -72,7 +101,8 @@ class TagListPresenter {
         tags.forEach { tag in
             switch self.storage.deleteTag(tag) {
             case let .failure(error):
-                self.view?.showErrorMessage(Self.resolveErrorMessage(error))
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to delete tag. (code: \(error.rawValue))"))
+                self.view?.showErrorMessage(Self.resolveErrorMessage(for: error, at: .deleteTag))
 
             default:
                 self.tags.removeAll(where: { $0 == tag })

@@ -27,6 +27,20 @@
 
 "search_entry_view_search_bar_placeholder" = "キーワード";
 
+"tag_list_view_title" = "タグ";
+
+"tag_list_view_error_at_read_tags" = "タグの読み込みに失敗しました";
+"tag_list_view_error_at_add_tag" = "タグの追加に失敗しました";
+"tag_list_view_error_at_delete_tag" = "タグの削除に失敗しました";
+"tag_list_view_error_at_search_clip" = "クリップの取得に失敗しました";
+
+"tag_list_view_alert_for_add_title" = "新規タグ";
+"tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
+"tag_list_view_alert_for_add_placeholder" = "タグ名";
+
+"tag_list_view_alert_for_delete_message" = "選択中のタグを削除しますか？\n含まれるクリップは削除されません";
+"tag_list_view_alert_for_delete_action" = "%d件のタグを削除";
+
 "search_entry_view_error_at_search" = "検索に失敗しました";
 
 "confirm_alert_ok" = "OK";

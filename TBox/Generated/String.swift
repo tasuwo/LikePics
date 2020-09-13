@@ -52,6 +52,29 @@ internal enum L10n {
     internal static let searchEntryViewSearchBarPlaceholder = L10n.tr("Localizable", "search_entry_view_search_bar_placeholder")
     /// 検索
     internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
+    /// このタグの名前を入力してください
+    internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
+    /// タグ名
+    internal static let tagListViewAlertForAddPlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_add_placeholder")
+    /// 新規タグ
+    internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
+    /// %d件のタグを削除
+    internal static func tagListViewAlertForDeleteAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "tag_list_view_alert_for_delete_action", p1)
+    }
+
+    /// 選択中のタグを削除しますか？\n含まれるクリップは削除されません
+    internal static let tagListViewAlertForDeleteMessage = L10n.tr("Localizable", "tag_list_view_alert_for_delete_message")
+    /// タグの追加に失敗しました
+    internal static let tagListViewErrorAtAddTag = L10n.tr("Localizable", "tag_list_view_error_at_add_tag")
+    /// タグの削除に失敗しました
+    internal static let tagListViewErrorAtDeleteTag = L10n.tr("Localizable", "tag_list_view_error_at_delete_tag")
+    /// タグの読み込みに失敗しました
+    internal static let tagListViewErrorAtReadTags = L10n.tr("Localizable", "tag_list_view_error_at_read_tags")
+    /// クリップの取得に失敗しました
+    internal static let tagListViewErrorAtSearchClip = L10n.tr("Localizable", "tag_list_view_error_at_search_clip")
+    /// タグ
+    internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

@@ -124,8 +124,8 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeTagListViewController() -> UIViewController {
-        let presenter = TagListPresenter(storage: self.clipsStorage)
-        let viewController = TagListViewController(factory: self, presenter: presenter)
+        let presenter = TagListPresenter(storage: self.clipsStorage, logger: self.logger)
+        let viewController = TagListViewController(factory: self, presenter: presenter, logger: self.logger)
         return UINavigationController(rootViewController: viewController)
     }
 
