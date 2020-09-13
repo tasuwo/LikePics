@@ -280,10 +280,10 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension TopClipsListViewController: AddingTagToClipsPresenterDelegate {
-    // MARK: - AddingTagToClipsPresenterDelegate
+extension TopClipsListViewController: AddingTagsToClipsPresenterDelegate {
+    // MARK: - AddingTagsToClipsPresenterDelegate
 
-    func addingTagToClipsPresenter(_ presenter: AddingTagToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
         // TODO: Handling
         print(isSucceeded)
     }

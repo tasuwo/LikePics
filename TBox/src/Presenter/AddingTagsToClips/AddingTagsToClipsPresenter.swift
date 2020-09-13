@@ -4,24 +4,24 @@
 
 import Domain
 
-protocol AddingTagToClipsPresenterDelegate: AnyObject {
-    func addingTagToClipsPresenter(_ presenter: AddingTagToClipsPresenter, didSucceededToAddingTag: Bool)
+protocol AddingTagsToClipsPresenterDelegate: AnyObject {
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag: Bool)
 }
 
-protocol AddingTagToClipsViewProtocol: AnyObject {
+protocol AddingTagsToClipsViewProtocol: AnyObject {
     func reload()
     func closeView(completion: @escaping () -> Void)
     func showErrorMessage(_ message: String)
 }
 
-class AddingTagToClipsPresenter {
+class AddingTagsToClipsPresenter {
     private(set) var tags: [String] = []
 
     private let clips: [Clip]
     private let storage: ClipStorageProtocol
 
-    weak var delegate: AddingTagToClipsPresenterDelegate?
-    weak var view: AddingTagToClipsViewProtocol?
+    weak var delegate: AddingTagsToClipsPresenterDelegate?
+    weak var view: AddingTagsToClipsViewProtocol?
 
     // MARK: - Lifecycle
 
@@ -71,11 +71,11 @@ class AddingTagToClipsPresenter {
         case .success:
             view.closeView { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.addingTagToClipsPresenter(self, didSucceededToAddingTag: true)
+                self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTag: true)
             }
 
         case let .failure(error):
-            self.delegate?.addingTagToClipsPresenter(self, didSucceededToAddingTag: false)
+            self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTag: false)
             view.showErrorMessage(Self.resolveErrorMessage(error))
         }
     }

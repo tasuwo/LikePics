@@ -5,11 +5,11 @@
 import TBoxUIKit
 import UIKit
 
-class AddingTagToClipsViewController: UIViewController {
+class AddingTagsToClipsViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: AddingTagToClipsPresenter
+    private let presenter: AddingTagsToClipsPresenter
     private lazy var alertContainer = AddingAlert(configuration: .init(title: "新規タグ",
                                                                        message: "追加するタグの名前を入力してください",
                                                                        placeholder: "タグ名"),
@@ -19,7 +19,7 @@ class AddingTagToClipsViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AddingTagToClipsPresenter) {
+    init(factory: Factory, presenter: AddingTagsToClipsPresenter) {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -71,8 +71,8 @@ class AddingTagToClipsViewController: UIViewController {
     }
 }
 
-extension AddingTagToClipsViewController: AddingTagToClipsViewProtocol {
-    // MARK: - AddingTagToClipsViewProtocol
+extension AddingTagsToClipsViewController: AddingTagsToClipsViewProtocol {
+    // MARK: - AddingTagsToClipsViewProtocol
 
     func reload() {
         self.collectionView.reloadData()
@@ -88,7 +88,7 @@ extension AddingTagToClipsViewController: AddingTagToClipsViewProtocol {
     }
 }
 
-extension AddingTagToClipsViewController: UICollectionViewDelegate {
+extension AddingTagsToClipsViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -104,7 +104,7 @@ extension AddingTagToClipsViewController: UICollectionViewDelegate {
     }
 }
 
-extension AddingTagToClipsViewController: UICollectionViewDataSource {
+extension AddingTagsToClipsViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -126,7 +126,7 @@ extension AddingTagToClipsViewController: UICollectionViewDataSource {
     }
 }
 
-extension AddingTagToClipsViewController: UICollectionViewDelegateFlowLayout {
+extension AddingTagsToClipsViewController: UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDelegateFlowLayout
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

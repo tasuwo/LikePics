@@ -39,7 +39,7 @@ protocol ViewControllerFactory {
 
     // MARK: Tag
 
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagToClipsPresenterDelegate) -> UIViewController
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate) -> UIViewController
 }
 
 class DependencyContainer {
@@ -120,10 +120,10 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagToClipsPresenterDelegate) -> UIViewController {
-        let presenter = AddingTagToClipsPresenter(clips: clips, storage: self.clipsStorage)
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate) -> UIViewController {
+        let presenter = AddingTagsToClipsPresenter(clips: clips, storage: self.clipsStorage)
         presenter.delegate = delegate
-        let viewController = AddingTagToClipsViewController(factory: self, presenter: presenter)
+        let viewController = AddingTagsToClipsViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
 }
