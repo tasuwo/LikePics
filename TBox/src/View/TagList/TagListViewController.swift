@@ -45,7 +45,6 @@ class TagListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.presenter.reload()
     }
 

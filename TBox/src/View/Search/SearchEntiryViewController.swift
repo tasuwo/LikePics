@@ -36,12 +36,6 @@ class SearchEntryViewController: UIViewController {
         self.setupNavigationBar()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-    }
-
     // MARK: - Methods
 
     private func setupAppearance() {

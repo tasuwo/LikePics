@@ -64,7 +64,6 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         super.viewDidLoad()
 
         self.setupCollectionView()
-        self.setupNavigationBar()
         self.setupToolBar()
 
         self.presenter.setup()
@@ -85,14 +84,6 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     }
 
     // MARK: NavigationBar
-
-    private func setupNavigationBar() {
-        self.updateNavigationBar(for: self.presenter.isEditing)
-    }
-
-    private func updateNavigationBar(for isEditing: Bool) {
-        self.navigationController?.navigationBar.prefersLargeTitles = !isEditing
-    }
 
     @objc
     func didTapEdit() {
@@ -154,7 +145,6 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         self.presenter.setEditing(editing)
         self.updateCollectionView(for: editing)
 
-        self.updateNavigationBar(for: editing)
         self.updateToolBar(for: editing)
     }
 }
