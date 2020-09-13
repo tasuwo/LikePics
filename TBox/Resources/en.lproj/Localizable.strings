@@ -8,9 +8,21 @@
 
 "clip_target_finder_view_title" = "Select image.";
 
+"album_list_view_title" = "Albums";
+
 "album_list_view_error_at_read_albums" = "Failed to read albums.";
 "album_list_view_error_at_add_album" = "Failed to add album.";
 "album_list_view_error_at_delete_album" = "Failed to delete album.";
 "album_list_view_error_at_read_image_data" = "Failed to read image data.";
 
+"album_list_view_alert_for_add_title" = "New Album";
+"album_list_view_alert_for_add_message" = "Enter a name for this album.";
+"album_list_view_alert_for_add_placeholder" = "Title";
+
+"album_list_view_alert_for_delete_title" = "Delete \"%@\"";
+"album_list_view_alert_for_delete_message" = "Are you sure you want to delete the album \"%@\"?\nThe clips will not be deleted.";
+"album_list_view_alert_for_delete_action" = "Delete Album";
+
 "confirm_alert_ok" = "OK";
+"confirm_alert_save" = "Save";
+"confirm_alert_cancel" = "Cancel";

@@ -8,9 +8,21 @@
 
 "clip_target_finder_view_title" = "画像を選択";
 
+"album_list_view_title" = "アルバム";
+
 "album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
 "album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
 "album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
 "album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
 
+"album_list_view_alert_for_add_title" = "新規アルバム";
+"album_list_view_alert_for_add_message" = "このアルバムの名前を入力してください";
+"album_list_view_alert_for_add_placeholder" = "アルバム名";
+
+"album_list_view_alert_for_delete_title" = "\"%@\"を削除";
+"album_list_view_alert_for_delete_message" = "アルバム\"%@\"を削除しますか？\n含まれるクリップは削除されません";
+"album_list_view_alert_for_delete_action" = "アルバムを削除";
+
 "confirm_alert_ok" = "OK";
+"confirm_alert_save" = "保存";
+"confirm_alert_cancel" = "キャンセル";

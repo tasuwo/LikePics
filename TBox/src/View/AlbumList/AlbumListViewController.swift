@@ -10,9 +10,9 @@ class AlbumListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: "新規アルバム",
-                                                                       message: "このアルバムの名前を入力してください",
-                                                                       placeholder: "アルバム名"),
+    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.albumListViewAlertForAddTitle,
+                                                                       message: L10n.albumListViewAlertForAddMessage,
+                                                                       placeholder: L10n.albumListViewAlertForAddPlaceholder),
                                                   baseView: self)
 
     @IBOutlet var collectionView: AlbumListCollectionView!
@@ -49,7 +49,7 @@ class AlbumListViewController: UIViewController {
     // MARK: Navigation Bar
 
     private func setupNavigationBar() {
-        self.navigationItem.title = "アルバム"
+        self.navigationItem.title = L10n.albumListViewTitle
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
 
         self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -167,13 +167,17 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
 
     func didTapDeleteButton(_ cell: AlbumListCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
+        let target = self.presenter.albums[indexPath.row]
 
-        let alert = UIAlertController(title: "", message: "アルバムを削除しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(target.title),
+                                      message: L10n.albumListViewAlertForDeleteMessage(target.title),
+                                      preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+        let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
             self?.presenter.deleteAlbum(at: indexPath.row)
-        }))
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+        }
+        alert.addAction(action)
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
