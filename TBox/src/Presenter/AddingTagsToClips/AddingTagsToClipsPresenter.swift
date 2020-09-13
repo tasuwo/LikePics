@@ -16,6 +16,7 @@ protocol AddingTagsToClipsViewProtocol: AnyObject {
 
 class AddingTagsToClipsPresenter {
     private(set) var tags: [String] = []
+    private(set) var selectedTags: [String] = []
 
     private let clips: [Clip]
     private let storage: ClipStorageProtocol
@@ -62,12 +63,19 @@ class AddingTagsToClipsPresenter {
         }
     }
 
-    func updateClips(byAddingTagAt index: Int) {
-        guard let view = self.view else { return }
-        guard self.tags.indices.contains(index) else { return }
+    func selectTag(at index: Int) {
+        self.selectedTags.append(self.tags[index])
+    }
 
-        let tag = self.tags[index]
-        switch self.storage.update(self.clips, byAddingTags: [tag]) {
+    func deselectTag(at index: Int) {
+        let target = self.tags[index]
+        self.selectedTags.removeAll(where: { $0 == target })
+    }
+
+    func updateClipsByAddingTags() {
+        guard let view = self.view else { return }
+
+        switch self.storage.update(self.clips, byAddingTags: self.selectedTags) {
         case .success:
             view.closeView { [weak self] in
                 guard let self = self else { return }

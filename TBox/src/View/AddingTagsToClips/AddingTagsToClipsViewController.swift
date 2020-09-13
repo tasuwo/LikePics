@@ -52,8 +52,10 @@ class AddingTagsToClipsViewController: UIViewController {
         self.navigationItem.title = "タグを選択"
 
         let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
+        let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.didTapSave))
 
         self.navigationItem.leftBarButtonItem = addItem
+        self.navigationItem.rightBarButtonItem = saveItem
     }
 
     @objc
@@ -68,6 +70,11 @@ class AddingTagsToClipsViewController: UIViewController {
                 break
             }
         }
+    }
+
+    @objc
+    func didTapSave() {
+        self.presenter.updateClipsByAddingTags()
     }
 }
 
@@ -100,7 +107,11 @@ extension AddingTagsToClipsViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.presenter.updateClips(byAddingTagAt: indexPath.row)
+        self.presenter.selectTag(at: indexPath.row)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        self.presenter.deselectTag(at: indexPath.row)
     }
 }
 
@@ -120,7 +131,14 @@ extension AddingTagsToClipsViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
         guard self.presenter.tags.indices.contains(indexPath.row) else { return dequeuedCell }
 
-        cell.title = self.presenter.tags[indexPath.row]
+        let target = self.presenter.tags[indexPath.row]
+        cell.title = target
+
+        let shouldSelect = self.presenter.selectedTags.contains(where: { $0 == target })
+        if shouldSelect {
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
+        cell.isSelected = shouldSelect
 
         return cell
     }

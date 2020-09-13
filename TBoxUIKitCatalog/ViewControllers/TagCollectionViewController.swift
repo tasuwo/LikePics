@@ -20,7 +20,7 @@ class TagCollectionViewController: UIViewController {
         "iine!iine!iine!"
     ]
 
-    @IBOutlet weak var collectionView: TagCollectionView!
+    @IBOutlet var collectionView: TagCollectionView!
 
     // MARK: - Lifecycle
 
