@@ -11,14 +11,16 @@ class ClipInformationViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipInformationPresenter
+    private weak var dataSource: ClipInformationViewDataSource?
 
     @IBOutlet var informationView: ClipInformationView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipInformationPresenter) {
+    init(factory: Factory, dataSource: ClipInformationViewDataSource, presenter: ClipInformationPresenter) {
         self.factory = factory
         self.presenter = presenter
+        self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,6 +33,7 @@ class ClipInformationViewController: UIViewController {
         super.viewDidLoad()
 
         self.informationView.delegate = self
+        self.informationView.dataSource = self.dataSource
         self.informationView.siteUrl = self.presenter.clip.url.absoluteString
         self.informationView.imageUrl = self.presenter.item.image.url.absoluteString
         self.informationView.tags = self.presenter.clip.tags

@@ -21,7 +21,7 @@ protocol ViewControllerFactory {
 
     // MARK: Information
 
-    func makeClipInformationViewController(clip: Clip, item: ClipItem) -> UIViewController
+    func makeClipInformationViewController(clip: Clip, item: ClipItem, dataSource: ClipInformationViewDataSource) -> UIViewController
 
     // MARK: Selection
 
@@ -77,9 +77,9 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipInformationViewController(clip: Clip, item: ClipItem) -> UIViewController {
+    func makeClipInformationViewController(clip: Clip, item: ClipItem, dataSource: ClipInformationViewDataSource) -> UIViewController {
         let presenter = ClipInformationPresenter(clip: clip, item: item)
-        let viewController = ClipInformationViewController(factory: self, presenter: presenter)
+        let viewController = ClipInformationViewController(factory: self, dataSource: dataSource, presenter: presenter)
         return viewController
     }
 

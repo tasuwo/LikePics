@@ -5,6 +5,11 @@
 import UIKit
 import WebKit
 
+public protocol ClipInformationViewDataSource: AnyObject {
+    func previewImage(_ view: ClipInformationView) -> UIImage?
+    func previewPageBounds(_ view: ClipInformationView) -> CGRect
+}
+
 public protocol ClipInformationViewDelegate: AnyObject {
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String)
     func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
@@ -39,6 +44,13 @@ public class ClipInformationView: UIView {
 
     public weak var delegate: ClipInformationViewDelegate?
 
+    public weak var dataSource: ClipInformationViewDataSource? {
+        didSet {
+            self.imageView.image = self.dataSource?.previewImage(self)
+            self.updateImageViewFrame()
+        }
+    }
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var tagTitleLabel: UILabel!
     @IBOutlet var tagCollectionView: TagCollectionView!
@@ -46,6 +58,7 @@ public class ClipInformationView: UIView {
     @IBOutlet var imageUrlButton: UIButton!
     @IBOutlet var siteUrlTitleLabel: UILabel!
     @IBOutlet var imageUrlTitleLabel: UILabel!
+    var imageView: UIImageView!
 
     // MARK: - Lifecycle
 
@@ -61,6 +74,11 @@ public class ClipInformationView: UIView {
 
         self.setupFromNib()
         self.setupAppearance()
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        self.updateImageViewFrame()
     }
 
     @IBAction func didTapSiteUrl(_ sender: UIButton) {
@@ -89,6 +107,22 @@ public class ClipInformationView: UIView {
 
         self.siteUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
         self.imageUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
+
+        self.imageView = UIImageView(frame: .init(origin: .zero, size: .zero))
+        self.imageView.contentMode = .scaleAspectFit
+        self.baseView.addSubview(self.imageView)
+    }
+
+    private func updateImageViewFrame() {
+        guard let image = dataSource?.previewImage(self), let dataSource = self.dataSource else {
+            self.imageView.frame = .zero
+            return
+        }
+        let bounds = dataSource.previewPageBounds(self)
+        let frame = ClipPreviewPageView.calcDefaultFrame(for: image, onFrame: bounds)
+        self.imageView.frame = .init(origin: .init(x: (self.frame.size.width - frame.width) / 2,
+                                                   y: -frame.height + 80),
+                                     size: frame.size)
     }
 }
 

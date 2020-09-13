@@ -193,7 +193,9 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         case (.began, .information):
             guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
-            let viewController = self.factory.makeClipInformationViewController(clip: self.presenter.clip, item: self.presenter.clip.items[index])
+            let viewController = self.factory.makeClipInformationViewController(clip: self.presenter.clip,
+                                                                                item: self.presenter.clip.items[index],
+                                                                                dataSource: self)
             self.present(viewController, animated: true, completion: nil)
 
         case (.ended, .information):
@@ -326,5 +328,19 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
 
     func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewPageView) {
         self.isFullscreen = true
+    }
+}
+
+extension ClipPreviewPageViewController: ClipInformationViewDataSource {
+    // MARK: - ClipInformationViewDataSource
+
+    func previewImage(_ view: ClipInformationView) -> UIImage? {
+        guard let pageView = self.currentViewController?.pageView else { return nil }
+        return pageView.image
+    }
+
+    func previewPageBounds(_ view: ClipInformationView) -> CGRect {
+        guard let pageView = self.currentViewController?.pageView else { return .zero }
+        return pageView.bounds
     }
 }
