@@ -184,6 +184,11 @@
 		2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */; };
 		2CFC5CFC250DF20A001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */; };
 		2CFC5D00250DF294001A02E4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CFF250DF294001A02E4 /* String.swift */; };
+		2CFC5D03250E0CBA001A02E4 /* RootLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D02250E0CBA001A02E4 /* RootLogger.swift */; };
+		2CFC5D06250E1136001A02E4 /* ConsoleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D05250E1136001A02E4 /* ConsoleLog.swift */; };
+		2CFC5D08250E119F001A02E4 /* ConsoleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D07250E119F001A02E4 /* ConsoleLogger.swift */; };
+		2CFC5D0A250E16EA001A02E4 /* TBoxLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D09250E16EA001A02E4 /* TBoxLoggable.swift */; };
+		2CFC5D0C250E1700001A02E4 /* TBoxLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D0B250E1700001A02E4 /* TBoxLog.swift */; };
 		2EB7721A8FA982CFCEC3C98E /* Pods_TBoxUIKitCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
@@ -637,6 +642,11 @@
 		2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		2CFC5CFF250DF294001A02E4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		2CFC5D02250E0CBA001A02E4 /* RootLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootLogger.swift; sourceTree = "<group>"; };
+		2CFC5D05250E1136001A02E4 /* ConsoleLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLog.swift; sourceTree = "<group>"; };
+		2CFC5D07250E119F001A02E4 /* ConsoleLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogger.swift; sourceTree = "<group>"; };
+		2CFC5D09250E16EA001A02E4 /* TBoxLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLoggable.swift; sourceTree = "<group>"; };
+		2CFC5D0B250E1700001A02E4 /* TBoxLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLog.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.release.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.release.xcconfig"; sourceTree = "<group>"; };
@@ -1185,6 +1195,7 @@
 		2C6E09C624E8150400B541D9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2CFC5D01250E0C95001A02E4 /* Logger */,
 				2C6E09C724E8150400B541D9 /* Common.h */,
 				2C6E09C824E8150400B541D9 /* Info.plist */,
 			);
@@ -1607,6 +1618,26 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
+		2CFC5D01250E0C95001A02E4 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5D04250E111D001A02E4 /* Console */,
+				2CFC5D0B250E1700001A02E4 /* TBoxLog.swift */,
+				2CFC5D09250E16EA001A02E4 /* TBoxLoggable.swift */,
+				2CFC5D02250E0CBA001A02E4 /* RootLogger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		2CFC5D04250E111D001A02E4 /* Console */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5D05250E1136001A02E4 /* ConsoleLog.swift */,
+				2CFC5D07250E119F001A02E4 /* ConsoleLogger.swift */,
+			);
+			path = Console;
+			sourceTree = "<group>";
+		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1977,7 +2008,7 @@
 					};
 					2C6E09C424E8150400B541D9 = {
 						CreatedOnToolsVersion = 11.6;
-						LastSwiftMigration = 1160;
+						LastSwiftMigration = 1170;
 					};
 					2C6E09CC24E8150500B541D9 = {
 						CreatedOnToolsVersion = 11.6;
@@ -2590,6 +2621,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CFC5D08250E119F001A02E4 /* ConsoleLogger.swift in Sources */,
+				2CFC5D06250E1136001A02E4 /* ConsoleLog.swift in Sources */,
+				2CFC5D03250E0CBA001A02E4 /* RootLogger.swift in Sources */,
+				2CFC5D0A250E16EA001A02E4 /* TBoxLoggable.swift in Sources */,
+				2CFC5D0C250E1700001A02E4 /* TBoxLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3070,6 +3106,7 @@
 		2C6E09E024E8150500B541D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
@@ -3089,6 +3126,7 @@
 		2C6E09E124E8150500B541D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
