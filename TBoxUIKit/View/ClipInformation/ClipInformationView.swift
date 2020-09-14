@@ -50,6 +50,15 @@ public class ClipInformationView: UIView {
         self.scrollView.contentOffset
     }
 
+    public var isScrollEnabled: Bool {
+        set {
+            self.scrollView.isScrollEnabled = newValue
+        }
+        get {
+            return self.scrollView.isScrollEnabled
+        }
+    }
+
     public weak var delegate: ClipInformationViewDelegate?
 
     public weak var dataSource: ClipInformationViewDataSource? {

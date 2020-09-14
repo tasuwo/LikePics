@@ -11,6 +11,8 @@ class ClipInformationViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipInformationPresenter
+    private let transitionController: ClipInformationTransitioningController
+
     private weak var dataSource: ClipInformationViewDataSource?
 
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -20,9 +22,10 @@ class ClipInformationViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, dataSource: ClipInformationViewDataSource, presenter: ClipInformationPresenter) {
+    init(factory: Factory, dataSource: ClipInformationViewDataSource, presenter: ClipInformationPresenter, transitionController: ClipInformationTransitioningController) {
         self.factory = factory
         self.presenter = presenter
+        self.transitionController = transitionController
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
@@ -58,10 +61,21 @@ class ClipInformationViewController: UIViewController {
     func didPan(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
+            self.informationView.isScrollEnabled = false
+            self.transitionController.beginInteractiveTransition()
             self.dismiss(animated: true, completion: nil)
 
+        case .ended:
+            self.informationView.isScrollEnabled = true
+            if self.transitionController.isInteractiveTransitioning {
+                self.transitionController.endInteractiveTransition()
+                self.transitionController.didPan(sender: sender)
+            }
+
         default:
-            break
+            if self.transitionController.isInteractiveTransitioning {
+                self.transitionController.didPan(sender: sender)
+            }
         }
     }
 }

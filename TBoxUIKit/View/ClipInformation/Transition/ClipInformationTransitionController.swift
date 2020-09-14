@@ -4,11 +4,37 @@
 
 import UIKit
 
-public protocol ClipInformationTransitionControllerProtocol {}
+public protocol ClipInformationTransitionControllerProtocol {
+    var isInteractiveTransitioning: Bool { get }
+    func beginInteractiveTransition()
+    func endInteractiveTransition()
+    func didPan(sender: UIPanGestureRecognizer)
+}
 
-public class ClipInformationTransitioningController: NSObject {}
+public class ClipInformationTransitioningController: NSObject {
+    var isInteractive: Bool = false
+    let interactiveAnimator = ClipInformationInteractiveDismissalAnimator()
+}
 
-extension ClipInformationTransitioningController: ClipInformationTransitionControllerProtocol {}
+extension ClipInformationTransitioningController: ClipInformationTransitionControllerProtocol {
+    // MARK: - ClipInformationTransitionControllerProtocol
+
+    public var isInteractiveTransitioning: Bool {
+        return self.isInteractive
+    }
+
+    public func beginInteractiveTransition() {
+        self.isInteractive = true
+    }
+
+    public func endInteractiveTransition() {
+        self.isInteractive = false
+    }
+
+    public func didPan(sender: UIPanGestureRecognizer) {
+        self.interactiveAnimator.didPan(sender: sender)
+    }
+}
 
 extension ClipInformationTransitioningController: UIViewControllerTransitioningDelegate {
     // MARK: - UIViewControllerTransitioningDelegate
@@ -25,6 +51,7 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     }
 
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return nil
+        guard self.isInteractive else { return nil }
+        return self.interactiveAnimator
     }
 }
