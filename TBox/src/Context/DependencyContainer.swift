@@ -72,7 +72,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController {
-        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage)
+        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage, logger: self.logger)
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
         viewController.delegate = delegate
         return viewController
@@ -120,7 +120,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {
-        let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipsStorage)
+        let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipsStorage, logger: self.logger)
         presenter.delegate = delegate
         let viewController = AddingClipsToAlbumViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)

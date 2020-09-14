@@ -10,6 +10,12 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// アルバムの読み込みに失敗しました
+    internal static let addingClipsToAlbumViewErrorAtReadAlbums = L10n.tr("Localizable", "adding_clips_to_album_view_error_at_read_albums")
+    /// アルバムの更新に失敗しました
+    internal static let addingClipsToAlbumViewErrorAtUpdateAlbum = L10n.tr("Localizable", "adding_clips_to_album_view_error_at_update_album")
+    /// アルバムへ追加
+    internal static let addingClipsToAlbumViewTitle = L10n.tr("Localizable", "adding_clips_to_album_view_title")
     /// このアルバムの名前を入力してください
     internal static let albumListViewAlertForAddMessage = L10n.tr("Localizable", "album_list_view_alert_for_add_message")
     /// アルバム名

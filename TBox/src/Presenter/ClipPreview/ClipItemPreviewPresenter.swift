@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 
 protocol ClipItemPreviewViewProtocol: AnyObject {
@@ -32,28 +33,33 @@ class ClipItemPreviewPresenter {
 
     weak var view: ClipItemPreviewViewProtocol?
     private let storage: ClipStorageProtocol
+    private let logger: TBoxLoggable
 
     // MARK: - Lifecyle
 
-    init(clip: Clip, item: ClipItem, storage: ClipStorageProtocol) {
+    init(clip: Clip, item: ClipItem, storage: ClipStorageProtocol, logger: TBoxLoggable) {
         self.clip = clip
         self.item = item
         self.storage = storage
+        self.logger = logger
     }
 
     // MARK: - Methods
 
     private static func resolveErrorMessage(error: ClipStorageError, context: FailureContext) -> String {
-        switch (error, context) {
-        case (_, .readImage):
-            return L10n.clipItemPreviewViewErrorAtReadImage
+        let message: String = {
+            switch (error, context) {
+            case (_, .readImage):
+                return L10n.clipItemPreviewViewErrorAtReadImage
 
-        case (_, .delete(.clip)):
-            return L10n.clipItemPreviewViewErrorAtDeleteClip
+            case (_, .delete(.clip)):
+                return L10n.clipItemPreviewViewErrorAtDeleteClip
 
-        case (_, .delete(.item)):
-            return L10n.clipItemPreviewViewErrorAtDeleteClipItem
-        }
+            case (_, .delete(.item)):
+                return L10n.clipItemPreviewViewErrorAtDeleteClipItem
+            }
+        }()
+        return message + "\n(\(error.makeErrorCode()))"
     }
 
     func loadImageData() -> Data? {
@@ -62,6 +68,7 @@ class ClipItemPreviewPresenter {
             return data
 
         case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to load image data. (code: \(error.rawValue))"))
             self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .readImage))
             return nil
         }
@@ -87,6 +94,7 @@ class ClipItemPreviewPresenter {
                     self.view?.closePages()
 
                 case let .failure(error):
+                    self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip. (code: \(error.rawValue))"))
                     self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.clip)))
                 }
 
@@ -97,6 +105,7 @@ class ClipItemPreviewPresenter {
                     self.view?.reloadPages()
 
                 case let .failure(error):
+                    self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip item. (code: \(error.rawValue))"))
                     self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.item)))
                 }
             }

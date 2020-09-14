@@ -45,23 +45,15 @@ class AddingClipsToAlbumViewController: UIViewController {
     }
 
     private func setupNavigationBar() {
-        self.navigationItem.title = "アルバムに追加"
+        self.navigationItem.title = L10n.addingClipsToAlbumViewTitle
     }
 }
 
 extension AddingClipsToAlbumViewController: AddingClipsToAlbumViewProtocol {
     // MARK: - AddingClipsToAlbumViewProtocol
 
-    func startLoading() {
-        // TODO:
-    }
-
-    func endLoading() {
-        // TODO:
-    }
-
     func showErrorMassage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
