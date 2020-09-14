@@ -15,11 +15,12 @@
   - [x] タグ一覧画面
   - [x] タグを削除できる
   - [x] タグをタップしてタグにひもづくClip一覧画面に飛べる
-- [ ] Localize
-  - [ ] Error handling
-    - [ ] StorageErrorをdisplayableにする
+- [x] Localize
+  - [x] Error handling
+    - [x] StorageErrorをdisplayableにする
+- [x] Preview画面と情報画面を遷移しやすくする
+  - [ ] Dismissal interactive transition
 - [ ] タグ編集をやりやすくする
-- [ ] Preview画面と情報画面を遷移しやすくする
 - [ ] 検索
   - [ ] アルバムを検索できる
   - [ ] タグを検索できる
