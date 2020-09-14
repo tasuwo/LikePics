@@ -105,7 +105,7 @@ extension ClipInformationViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if otherGestureRecognizer == self.informationView.panGestureRecognizer {
-            return self.informationView.contentOffSet.y < 0
+            return self.informationView.contentOffSet.y <= 0
         }
         return false
     }
