@@ -6,8 +6,6 @@ import Common
 import Domain
 
 protocol SearchEntryViewProtocol: AnyObject {
-    func startLoading()
-    func endLoading()
     func showErrorMassage(_ message: String)
     func showReuslt(_ clips: [Clip], withContext: SearchContext)
 }
@@ -35,7 +33,6 @@ class SearchEntryPresenter {
         guard let view = self.view else { return }
         guard !text.isEmpty else { return }
 
-        view.startLoading()
         let keywords = text.split(separator: " ").map { String($0) }
         switch self.storage.searchClips(byKeywords: keywords) {
         case let .success(clips):
@@ -45,6 +42,5 @@ class SearchEntryPresenter {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to search. (code: \(error.rawValue))"))
             view.showErrorMassage(Self.resolveErrorMessage(error))
         }
-        view.endLoading()
     }
 }
