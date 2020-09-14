@@ -131,11 +131,11 @@ public class ClipInformationView: UIView {
             return .zero
         }
         let bounds = dataSource.previewPageBounds(self)
-        let frame = ClipPreviewPageView.calcDefaultFrame(for: image, onFrame: bounds)
-        let rect = CGRect(origin: .init(x: (self.frame.size.width - frame.width) / 2,
-                                        y: -frame.height + self.safeAreaInsets.top + 80),
-                          size: frame.size)
-        return rect
+        let scale = ClipPreviewPageView.calcScaleToFit(image, on: bounds.size)
+        let resizedImageSize = image.size.scaled(by: scale)
+        return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
+                                    y: -resizedImageSize.height + self.safeAreaInsets.top + 80),
+                      size: resizedImageSize)
     }
 }
 
@@ -233,5 +233,11 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
             self.delegate?.clipInformationView(self, shouldSearch: url)
         }
         return { _ in UIMenu(title: "", children: [open, copy, search]) }
+    }
+}
+
+private extension CGSize {
+    func scaled(by scale: CGFloat) -> Self {
+        return .init(width: self.width * scale, height: self.height * scale)
     }
 }

@@ -17,7 +17,7 @@ public class ClipPreviewPageView: UIView {
             self.imageView.image = newValue
 
             guard let image = self.imageView.image else { return }
-            self.setInitialScale(for: image, on: self.bounds)
+            self.setupScale(image, on: self.bounds.size)
             self.updateConstraints(for: image, on: self.bounds)
         }
     }
@@ -86,7 +86,7 @@ public class ClipPreviewPageView: UIView {
 
     public func shouldRecalculateInitialScale() {
         guard let image = self.imageView.image else { return }
-        self.setInitialScale(for: image, on: self.bounds)
+        self.setupScale(image, on: self.bounds.size)
         self.updateConstraints(for: image, on: self.bounds)
     }
 
@@ -133,22 +133,14 @@ public class ClipPreviewPageView: UIView {
         self.scrollView.zoom(to: nextRect, animated: true)
     }
 
-    public static func calcDefaultFrame(for image: UIImage, onFrame frame: CGRect) -> CGRect {
-        let scale = self.calcInitialScale(for: image, onFrame: frame)
-        let resizedImageSize = image.size.scaled(by: scale)
-        return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
-                                    y: -resizedImageSize.height + 80),
-                      size: resizedImageSize)
-    }
-
-    private static func calcInitialScale(for image: UIImage, onFrame frame: CGRect) -> CGFloat {
-        let widthScale = frame.size.width / image.size.width
-        let heightScale = frame.size.height / image.size.height
+    static func calcScaleToFit(_ image: UIImage, on size: CGSize) -> CGFloat {
+        let widthScale = size.width / image.size.width
+        let heightScale = size.height / image.size.height
         return min(widthScale, heightScale)
     }
 
-    func setInitialScale(for image: UIImage, on frame: CGRect) {
-        let scale = Self.calcInitialScale(for: image, onFrame: frame)
+    func setupScale(_ image: UIImage, on size: CGSize) {
+        let scale = Self.calcScaleToFit(image, on: size)
 
         self.scrollView.minimumZoomScale = scale
         self.scrollView.maximumZoomScale = scale * 3
@@ -187,11 +179,5 @@ extension ClipPreviewPageView: UIScrollViewDelegate {
 
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         self.delegate?.clipPreviewPageViewWillBeginZoom(self)
-    }
-}
-
-private extension CGSize {
-    func scaled(by scale: CGFloat) -> Self {
-        return .init(width: self.width * scale, height: self.height * scale)
     }
 }

@@ -119,7 +119,8 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
     }
 
     func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
-        self.informationView.layoutIfNeeded()
+        // HACK: Update safeAreaInsets immediately.
+        containerView.layoutIfNeeded()
         return self.informationView.convert(self.informationView.calcInitialFrame(), to: containerView)
     }
 }

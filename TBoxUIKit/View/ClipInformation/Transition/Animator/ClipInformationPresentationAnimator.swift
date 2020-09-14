@@ -30,6 +30,9 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             return
         }
 
+        // HACK: Set new frame for updating the view to current orientation.
+        to.view.frame = from.view.frame
+
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
 
