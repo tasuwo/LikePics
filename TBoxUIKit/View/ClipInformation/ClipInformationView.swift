@@ -60,7 +60,6 @@ public class ClipInformationView: UIView {
     }
 
     @IBOutlet var baseView: UIView!
-    @IBOutlet var tagTitleLabel: UILabel!
     @IBOutlet var tagCollectionView: TagCollectionView!
     @IBOutlet var siteUrlButton: UIButton!
     @IBOutlet var imageUrlButton: UIButton!
@@ -173,6 +172,7 @@ extension ClipInformationView: UICollectionViewDataSource {
         guard self.tags.indices.contains(indexPath.row) else { return dequeuedCell }
 
         cell.title = self.tags[indexPath.row]
+        cell.displayMode = .normal
 
         return cell
     }
@@ -184,7 +184,7 @@ extension ClipInformationView: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard self.tags.indices.contains(indexPath.row) else { return .zero }
         let preferredSize = TagCollectionViewCell.preferredSize(for: self.tags[indexPath.row])
-        return CGSize(width: fmin(preferredSize.width, collectionView.frame.width - 16 * 2), height: preferredSize.height)
+        return CGSize(width: fmin(preferredSize.width, collectionView.frame.width), height: preferredSize.height)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -192,7 +192,7 @@ extension ClipInformationView: UICollectionViewDelegateFlowLayout {
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .init(top: 16, left: 16, bottom: 16, right: 16)
+        return .init(top: 16, left: 0, bottom: 16, right: 0)
     }
 }
 
