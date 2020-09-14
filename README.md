@@ -20,10 +20,19 @@
     - [x] StorageErrorをdisplayableにする
 - [x] Preview画面と情報画面を遷移しやすくする
   - [ ] Dismissal interactive transition
+- [ ] 全て選択の実装
+- [ ] 各種画面からタグ追加できる
+  - [ ] ClipInformation
+  - [ ] ClipPreview
+  - [ ] SearchResult
+  - [ ] Album
 - [ ] タグ編集をやりやすくする
+  - [ ] 先にタグを選んでから対象を選択する
 - [ ] 検索
   - [ ] アルバムを検索できる
   - [ ] タグを検索できる
 - [ ] iCloudバックアップ
 - UI
   - [ ] ToolBar を TabBar の上に表示する
+  - [ ] 画像のソート
+  - [ ] 画像の一覧を小さめにする
