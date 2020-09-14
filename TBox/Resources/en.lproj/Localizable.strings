@@ -50,6 +50,16 @@
 
 "clip_preview_page_view_error_at_read_clip" = "Failed to read clip.";
 
+"clip_item_preview_view_alert_for_delete_message" = "If you delete clip, all images in the clip will be deleted.";
+"clip_item_preview_view_alert_for_delete_clip_action" = "Delete Clip";
+"clip_item_preview_view_alert_for_delete_clip_item_action" = "Delete Image";
+
+"clip_item_preview_view_alert_for_successfully_delete_message" = "Successfully deleted.";
+
+"clip_item_preview_view_error_at_read_image" = "Failed to read image.";
+"clip_item_preview_view_error_at_delete_clip" = "Failed to delete clip.";
+"clip_item_preview_view_error_at_delete_clip_item" = "Failed to delete image.";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";

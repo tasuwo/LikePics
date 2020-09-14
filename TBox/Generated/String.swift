@@ -46,6 +46,20 @@ internal enum L10n {
     internal static let appRootTabItemSearch = L10n.tr("Localizable", "app_root_tab_item_search")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// クリップを削除する
+    internal static let clipItemPreviewViewAlertForDeleteClipAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_action")
+    /// 画像を削除する
+    internal static let clipItemPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_item_action")
+    /// クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます
+    internal static let clipItemPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_message")
+    /// 正常に削除しました
+    internal static let clipItemPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_successfully_delete_message")
+    /// クリップの削除に失敗しました
+    internal static let clipItemPreviewViewErrorAtDeleteClip = L10n.tr("Localizable", "clip_item_preview_view_error_at_delete_clip")
+    /// 画像の削除に失敗しました
+    internal static let clipItemPreviewViewErrorAtDeleteClipItem = L10n.tr("Localizable", "clip_item_preview_view_error_at_delete_clip_item")
+    /// 画像の読み込みに失敗しました
+    internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
     /// クリップの読み込みに失敗しました
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// 画像を選択

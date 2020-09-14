@@ -17,6 +17,11 @@ protocol ClipItemPreviewViewProtocol: AnyObject {
 }
 
 class ClipItemPreviewPresenter {
+    enum FailureContext {
+        case readImage
+        case delete(RemoveTarget)
+    }
+
     enum RemoveTarget {
         case clip
         case item
@@ -38,9 +43,17 @@ class ClipItemPreviewPresenter {
 
     // MARK: - Methods
 
-    private static func resolveErrorMessage(error: ClipStorageError) -> String {
-        // TODO: Error Handling
-        return "Failed."
+    private static func resolveErrorMessage(error: ClipStorageError, context: FailureContext) -> String {
+        switch (error, context) {
+        case (_, .readImage):
+            return L10n.clipItemPreviewViewErrorAtReadImage
+
+        case (_, .delete(.clip)):
+            return L10n.clipItemPreviewViewErrorAtDeleteClip
+
+        case (_, .delete(.item)):
+            return L10n.clipItemPreviewViewErrorAtDeleteClipItem
+        }
     }
 
     func loadImageData() -> Data? {
@@ -49,7 +62,7 @@ class ClipItemPreviewPresenter {
             return data
 
         case let .failure(error):
-            self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
+            self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .readImage))
             return nil
         }
     }
@@ -74,7 +87,7 @@ class ClipItemPreviewPresenter {
                     self.view?.closePages()
 
                 case let .failure(error):
-                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
+                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.clip)))
                 }
 
             case .item:
@@ -84,7 +97,7 @@ class ClipItemPreviewPresenter {
                     self.view?.reloadPages()
 
                 case let .failure(error):
-                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error))
+                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.item)))
                 }
             }
         }

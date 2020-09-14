@@ -64,15 +64,15 @@ extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
     // MARK: - ClipItemPreviewViewProtocol
 
     func showConfirmationForDelete(options: [ClipItemPreviewPresenter.RemoveTarget], completion: @escaping (ClipItemPreviewPresenter.RemoveTarget?) -> Void) {
-        let alert = UIAlertController(title: "", message: "削除しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: L10n.clipItemPreviewViewAlertForDeleteMessage, preferredStyle: .alert)
 
         let makeOption = { (target: ClipItemPreviewPresenter.RemoveTarget) -> UIAlertAction in
             switch target {
             case .item:
-                return .init(title: "表示中の画像を削除", style: .destructive, handler: { _ in completion(.item) })
+                return .init(title: L10n.clipItemPreviewViewAlertForDeleteClipItemAction, style: .destructive, handler: { _ in completion(.item) })
 
             case .clip:
-                return .init(title: "クリップ全体を削除", style: .destructive, handler: { _ in completion(.clip) })
+                return .init(title: L10n.clipItemPreviewViewAlertForDeleteClipAction, style: .destructive, handler: { _ in completion(.clip) })
             }
         }
 
@@ -80,7 +80,7 @@ extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
             .map { makeOption($0) }
             .forEach { alert.addAction($0) }
 
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: { _ in
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { _ in
             completion(nil)
         }))
 
@@ -88,14 +88,14 @@ extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
     }
 
     func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
     func showSucceededMessage() {
-        let alert = UIAlertController(title: "", message: "正常に削除しました", preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
+        let alert = UIAlertController(title: nil, message: L10n.clipItemPreviewViewAlertForSuccessfullyDeleteMessage, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
     }
 
     func reloadPages() {
