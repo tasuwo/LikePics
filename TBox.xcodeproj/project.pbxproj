@@ -40,6 +40,7 @@
 		2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
+		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2C38C705250AF33B00F32102 /* AddingTagsToClipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C704250AF33B00F32102 /* AddingTagsToClipsViewController.swift */; };
 		2C38C708250AF3D100F32102 /* AddingTagsToClipsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C707250AF3D100F32102 /* AddingTagsToClipsPresenter.swift */; };
 		2C38C70A250AF7DF00F32102 /* AddingTagsToClipsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C38C709250AF7DF00F32102 /* AddingTagsToClipsViewController.xib */; };
@@ -510,6 +511,7 @@
 		2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationViewController.xib; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
+		2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractivePresentationAnimator.swift; sourceTree = "<group>"; };
 		2C38C704250AF33B00F32102 /* AddingTagsToClipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTagsToClipsViewController.swift; sourceTree = "<group>"; };
 		2C38C707250AF3D100F32102 /* AddingTagsToClipsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTagsToClipsPresenter.swift; sourceTree = "<group>"; };
 		2C38C709250AF7DF00F32102 /* AddingTagsToClipsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddingTagsToClipsViewController.xib; sourceTree = "<group>"; };
@@ -1680,6 +1682,7 @@
 				2CFC5D12250E38A6001A02E4 /* ClipInformationAnimator.swift */,
 				2CFC5D14250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift */,
 				2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */,
+				2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */,
 				2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */,
 			);
 			path = Animator;
@@ -2712,6 +2715,7 @@
 				2CFC5D13250E38A6001A02E4 /* ClipInformationAnimator.swift in Sources */,
 				2CFC5D18250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift in Sources */,
 				2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */,
+				2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */,
 				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitionController.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
