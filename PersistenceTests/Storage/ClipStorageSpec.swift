@@ -8,6 +8,7 @@ import Quick
 import RealmSwift
 
 @testable import Persistence
+@testable import TestHelper
 
 class ClipStorageSpec: QuickSpec {
     func makeClip(url: String,
@@ -904,12 +905,7 @@ class ClipStorageSpec: QuickSpec {
                         let obj = self.makeClip(url: "https://localhost")
                         realm.add(obj)
                     }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!),
                                             byAddingTag: "hoge")
                 }
                 it("notFoundが返る") {
@@ -934,13 +930,7 @@ class ClipStorageSpec: QuickSpec {
                         let obj = self.makeTag(id: "111", name: "hoge")
                         realm.add(obj)
                     }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byAddingTag: "hoge")
+                    result = service.update(Clip.makeDefault(), byAddingTag: "hoge")
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -970,12 +960,9 @@ class ClipStorageSpec: QuickSpec {
                                                 ])
                         realm.add(obj)
                     }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!,
+                                                             registeredDate: Date(timeIntervalSince1970: 0),
+                                                             updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingTag: "fuga")
                 }
                 it("successが返る") {
@@ -1036,12 +1023,9 @@ class ClipStorageSpec: QuickSpec {
                                                 ])
                         realm.add(obj)
                     }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!,
+                                                             registeredDate: Date(timeIntervalSince1970: 0),
+                                                             updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingTag: "hoge")
                 }
                 it("notFoundが返る") {
@@ -1062,12 +1046,7 @@ class ClipStorageSpec: QuickSpec {
                         let obj = self.makeTag(id: "111", name: "hoge")
                         realm.add(obj)
                     }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Clip.makeDefault(),
                                             byDeletingTag: "hoge")
                 }
                 it("notFoundが返る") {
@@ -1103,20 +1082,12 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [],
-                             isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [],
-                             isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byHiding: true)
                 }
@@ -1137,18 +1108,12 @@ class ClipStorageSpec: QuickSpec {
                     let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
                     expect(clips).to(haveCount(2))
                     expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
-                    expect(clips[0].description).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
-                    expect(clips[0].tags).to(haveCount(0))
                     expect(clips[0].isHidden).to(beTrue())
                     expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
                     // 更新時刻が更新されている
                     expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal(URL(string: "https://localhost/3")))
-                    expect(clips[1].description).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
-                    expect(clips[1].tags).to(haveCount(0))
                     expect(clips[1].isHidden).to(beTrue())
                     expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
                     // 更新時刻が更新されている
@@ -1158,26 +1123,17 @@ class ClipStorageSpec: QuickSpec {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].descriptionText).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
-                    expect(clips[0].tags).to(haveCount(0))
                     expect(clips[0].isHidden).to(beTrue())
                     expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                     // 更新時刻が更新されている
                     expect(clips[0].updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal("https://localhost/2"))
-                    expect(clips[1].descriptionText).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
-                    expect(clips[1].tags).to(haveCount(0))
                     expect(clips[1].isHidden).to(beFalse())
                     expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal("https://localhost/3"))
-                    expect(clips[2].descriptionText).to(equal("hoge"))
-                    expect(clips[2].items).to(beEmpty())
-                    expect(clips[2].tags).to(haveCount(0))
                     expect(clips[2].isHidden).to(beTrue())
                     expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     // 更新時刻が更新されている
@@ -1188,24 +1144,9 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のクリップが1つも存在しない") {
                 beforeEach {
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!),
                     ],
                     byHiding: true)
                 }
@@ -1238,24 +1179,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byHiding: true)
                 }
@@ -1273,16 +1205,10 @@ class ClipStorageSpec: QuickSpec {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(2))
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].descriptionText).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
-                    expect(clips[0].tags).to(haveCount(0))
                     expect(clips[0].isHidden).to(beFalse())
                     expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                     expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].url).to(equal("https://localhost/3"))
-                    expect(clips[1].descriptionText).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
-                    expect(clips[1].tags).to(haveCount(0))
                     expect(clips[1].isHidden).to(beFalse())
                     expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
@@ -1317,24 +1243,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byAddingTags: ["hoge", "fuga", "piyo"])
                 }
@@ -1355,8 +1272,6 @@ class ClipStorageSpec: QuickSpec {
                     let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
-                    expect(clips[0].description).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
                     expect(clips[0].tags).to(haveCount(3))
                     expect(clips[0].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
                     expect(clips[0].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
@@ -1366,8 +1281,6 @@ class ClipStorageSpec: QuickSpec {
                     expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal(URL(string: "https://localhost/2")))
-                    expect(clips[1].description).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
                     expect(clips[1].tags).to(haveCount(3))
                     expect(clips[1].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
                     expect(clips[1].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
@@ -1377,8 +1290,6 @@ class ClipStorageSpec: QuickSpec {
                     expect(clips[1].updatedDate).notTo(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal(URL(string: "https://localhost/3")))
-                    expect(clips[2].description).to(equal("hoge"))
-                    expect(clips[2].items).to(beEmpty())
                     expect(clips[2].tags).to(haveCount(3))
                     expect(clips[2].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
                     expect(clips[2].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
@@ -1391,8 +1302,6 @@ class ClipStorageSpec: QuickSpec {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].descriptionText).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
                     expect(clips[0].tags).to(haveCount(3))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
@@ -1405,8 +1314,6 @@ class ClipStorageSpec: QuickSpec {
                     expect(clips[0].updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal("https://localhost/2"))
-                    expect(clips[1].descriptionText).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
                     expect(clips[1].tags).to(haveCount(3))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
@@ -1419,8 +1326,6 @@ class ClipStorageSpec: QuickSpec {
                     expect(clips[1].updatedAt).notTo(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal("https://localhost/3"))
-                    expect(clips[2].descriptionText).to(equal("hoge"))
-                    expect(clips[2].items).to(beEmpty())
                     expect(clips[2].tags).to(haveCount(3))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
@@ -1461,24 +1366,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byAddingTags: ["hoge", "fuga", "piyo"])
                 }
@@ -1496,20 +1392,14 @@ class ClipStorageSpec: QuickSpec {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].descriptionText).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
                     expect(clips[0].tags).to(haveCount(0))
                     expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                     expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].url).to(equal("https://localhost/2"))
-                    expect(clips[1].descriptionText).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
                     expect(clips[1].tags).to(haveCount(0))
                     expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     expect(clips[2].url).to(equal("https://localhost/3"))
-                    expect(clips[2].descriptionText).to(equal("hoge"))
-                    expect(clips[2].items).to(beEmpty())
                     expect(clips[2].tags).to(haveCount(0))
                     expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     expect(clips[2].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
@@ -1542,24 +1432,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byAddingTags: ["hoge", "fuga", "piyo"])
                 }
@@ -1577,20 +1458,14 @@ class ClipStorageSpec: QuickSpec {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].descriptionText).to(equal("hoge"))
-                    expect(clips[0].items).to(beEmpty())
                     expect(clips[0].tags).to(haveCount(0))
                     expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                     expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].url).to(equal("https://localhost/2"))
-                    expect(clips[1].descriptionText).to(equal("hoge"))
-                    expect(clips[1].items).to(beEmpty())
                     expect(clips[1].tags).to(haveCount(0))
                     expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     expect(clips[2].url).to(equal("https://localhost/3"))
-                    expect(clips[2].descriptionText).to(equal("hoge"))
-                    expect(clips[2].items).to(beEmpty())
                     expect(clips[2].tags).to(haveCount(0))
                     expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     expect(clips[2].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
@@ -1616,24 +1491,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byAddingTags: ["hoge", "fuga", "piyo"])
                 }
@@ -1682,24 +1548,15 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag3)
                     }
                     result = service.update([
-                        Clip(url: URL(string: "https://localhost/1")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 0),
-                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip(url: URL(string: "https://localhost/2")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 1000),
-                             updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip(url: URL(string: "https://localhost/3")!,
-                             description: nil,
-                             items: [],
-                             tags: [], isHidden: false,
-                             registeredDate: Date(timeIntervalSince1970: 2000),
-                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
+                                         registeredDate: Date(timeIntervalSince1970: 0),
+                                         updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
+                                         registeredDate: Date(timeIntervalSince1970: 1000),
+                                         updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
+                                         registeredDate: Date(timeIntervalSince1970: 2000),
+                                         updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
                     byAddingTags: ["hoge", "fuga", "piyo"])
                 }
@@ -1755,11 +1612,10 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album(id: "111",
-                                                  title: "hogehoge",
-                                                  clips: [],
-                                                  registeredDate: Date(timeIntervalSince1970: 0),
-                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Album.makeDefault(id: "111",
+                                                              title: "hogehoge",
+                                                              registeredDate: Date(timeIntervalSince1970: 0),
+                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byAddingClipsHaving: [
                                                 URL(string: "https://localhost/1")!,
                                                 URL(string: "https://localhost/2")!
@@ -1791,11 +1647,10 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album(id: "111",
-                                                  title: "hogehoge",
-                                                  clips: [],
-                                                  registeredDate: Date(timeIntervalSince1970: 0),
-                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Album.makeDefault(id: "111",
+                                                              title: "hogehoge",
+                                                              registeredDate: Date(timeIntervalSince1970: 0),
+                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingClipsHaving: [
                                                 URL(string: "https://localhost/1")!,
                                                 URL(string: "https://localhost/2")!
@@ -1827,11 +1682,10 @@ class ClipStorageSpec: QuickSpec {
                         obj.updatedAt = Date(timeIntervalSince1970: 1000)
                         realm.add(obj)
                     }
-                    result = service.update(Album(id: "111",
-                                                  title: "hogehoge",
-                                                  clips: [],
-                                                  registeredDate: Date(timeIntervalSince1970: 0),
-                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Album.makeDefault(id: "111",
+                                                              title: "hogehoge",
+                                                              registeredDate: Date(timeIntervalSince1970: 0),
+                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
                                             titleTo: "fugafuga")
                 }
                 it("successが返る") {
@@ -1879,11 +1733,10 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj1)
                         realm.add(obj2)
                     }
-                    result = service.update(Album(id: "111",
-                                                  title: "hogehoge",
-                                                  clips: [],
-                                                  registeredDate: Date(timeIntervalSince1970: 0),
-                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Album.makeDefault(id: "111",
+                                                              title: "hogehoge",
+                                                              registeredDate: Date(timeIntervalSince1970: 0),
+                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
                                             titleTo: "fugafuga")
                 }
                 it("duplicatedが返る") {
@@ -1911,11 +1764,10 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album(id: "111",
-                                                  title: "hogehoge",
-                                                  clips: [],
-                                                  registeredDate: Date(timeIntervalSince1970: 0),
-                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
+                    result = service.update(Album.makeDefault(id: "111",
+                                                              title: "hogehoge",
+                                                              registeredDate: Date(timeIntervalSince1970: 0),
+                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
                                             titleTo: "fugafuga")
                 }
                 it("notFoundが返る") {
