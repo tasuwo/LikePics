@@ -354,16 +354,20 @@ class ClipStorageSpec: QuickSpec {
         describe("readAllClips()") {
             var result: Result<[Clip], ClipStorageError>!
 
-            context("クリップが1つも存在しない") {
-                beforeEach {
-                    result = service.readAllClips()
-                }
-                it("successが返り、結果は空配列となる") {
-                    switch result! {
-                    case let .success(clips):
-                        expect(clips).to(beEmpty())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
+            [true, false].forEach { containsHiddenItems in
+                context("隠れたクリップを\(containsHiddenItems ? "含んで" : "除いて")全件取得する") {
+                    context("クリップが1つも存在しない") {
+                        beforeEach {
+                            result = service.readAllClips(containsHiddenClips: containsHiddenItems)
+                        }
+                        it("successが返り、結果は空配列となる") {
+                            switch result! {
+                            case let .success(clips):
+                                expect(clips).to(beEmpty())
+                            case let .failure(error):
+                                fail("Unexpected failure: \(error)")
+                            }
+                        }
                     }
                 }
             }
@@ -373,47 +377,87 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = self.makeClip(url: "https://localhost/1",
                                                  description: "hoge1",
+                                                 isHidden: false,
                                                  registeredAt: Date(timeIntervalSince1970: 0),
                                                  updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = self.makeClip(url: "https://localhost/2",
                                                  description: "hoge2",
+                                                 isHidden: true,
                                                  registeredAt: Date(timeIntervalSince1970: 1000),
                                                  updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = self.makeClip(url: "https://localhost/3",
                                                  description: "hoge3",
+                                                 isHidden: false,
                                                  registeredAt: Date(timeIntervalSince1970: 2000),
                                                  updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.readAllClips()
                 }
-                it("successが返り、全てのクリップが取得できる") {
-                    switch result! {
-                    case let .success(v):
-                        let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(clips).to(haveCount(3))
-                        expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
-                        expect(clips[0].description).to(equal("hoge1"))
-                        expect(clips[0].items).to(beEmpty())
-                        expect(clips[0].tags).to(beEmpty())
-                        expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].url).to(equal(URL(string: "https://localhost/2")!))
-                        expect(clips[1].description).to(equal("hoge2"))
-                        expect(clips[1].items).to(beEmpty())
-                        expect(clips[1].tags).to(beEmpty())
-                        expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[2].url).to(equal(URL(string: "https://localhost/3")!))
-                        expect(clips[2].description).to(equal("hoge3"))
-                        expect(clips[2].items).to(beEmpty())
-                        expect(clips[2].tags).to(beEmpty())
-                        expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[2].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
+
+                context("隠れたクリップを含んで全件取得する") {
+                    beforeEach {
+                        result = service.readAllClips(containsHiddenClips: true)
+                    }
+                    it("successが返り、全てのクリップが取得できる") {
+                        switch result! {
+                        case let .success(v):
+                            let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
+                            expect(clips).to(haveCount(3))
+                            expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
+                            expect(clips[0].description).to(equal("hoge1"))
+                            expect(clips[0].items).to(beEmpty())
+                            expect(clips[0].tags).to(beEmpty())
+                            expect(clips[0].isHidden).to(beFalse())
+                            expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                            expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
+                            expect(clips[1].url).to(equal(URL(string: "https://localhost/2")!))
+                            expect(clips[1].description).to(equal("hoge2"))
+                            expect(clips[1].items).to(beEmpty())
+                            expect(clips[1].tags).to(beEmpty())
+                            expect(clips[1].isHidden).to(beTrue())
+                            expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
+                            expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 2000)))
+                            expect(clips[2].url).to(equal(URL(string: "https://localhost/3")!))
+                            expect(clips[2].description).to(equal("hoge3"))
+                            expect(clips[2].items).to(beEmpty())
+                            expect(clips[2].tags).to(beEmpty())
+                            expect(clips[2].isHidden).to(beFalse())
+                            expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
+                            expect(clips[2].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
+                        case let .failure(error):
+                            fail("Unexpected failure: \(error)")
+                        }
+                    }
+                }
+
+                context("隠れたクリップを除いて全件取得する") {
+                    beforeEach {
+                        result = service.readAllClips(containsHiddenClips: false)
+                    }
+                    it("successが返り、隠れたクリップ以外のクリップが全て取得できる") {
+                        switch result! {
+                        case let .success(v):
+                            let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
+                            expect(clips).to(haveCount(2))
+                            expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
+                            expect(clips[0].description).to(equal("hoge1"))
+                            expect(clips[0].items).to(beEmpty())
+                            expect(clips[0].tags).to(beEmpty())
+                            expect(clips[0].isHidden).to(beFalse())
+                            expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                            expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
+                            expect(clips[1].url).to(equal(URL(string: "https://localhost/3")!))
+                            expect(clips[1].description).to(equal("hoge3"))
+                            expect(clips[1].items).to(beEmpty())
+                            expect(clips[1].tags).to(beEmpty())
+                            expect(clips[1].isHidden).to(beFalse())
+                            expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
+                            expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
+                        case let .failure(error):
+                            fail("Unexpected failure: \(error)")
+                        }
                     }
                 }
             }

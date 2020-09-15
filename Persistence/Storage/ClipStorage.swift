@@ -213,12 +213,17 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+    public func readAllClips(containsHiddenClips: Bool) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
-            return .success(realm.objects(ClipObject.self).map { Clip.make(by: $0) })
+
+            if containsHiddenClips {
+                return .success(realm.objects(ClipObject.self).map { Clip.make(by: $0) })
+            } else {
+                return .success(realm.objects(ClipObject.self).filter("isHidden == false").map { Clip.make(by: $0) })
+            }
         }
     }
 

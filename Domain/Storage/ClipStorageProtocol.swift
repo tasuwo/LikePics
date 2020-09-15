@@ -35,7 +35,7 @@ public protocol ClipStorageProtocol {
 
     func readImageData(having url: URL, forClipHaving clipUrl: URL) -> Result<Data, ClipStorageError>
 
-    func readAllClips() -> Result<[Clip], ClipStorageError>
+    func readAllClips(containsHiddenClips: Bool) -> Result<[Clip], ClipStorageError>
 
     func readAllTags() -> Result<[String], ClipStorageError>
 
@@ -77,5 +77,9 @@ public protocol ClipStorageProtocol {
 extension ClipStorageProtocol {
     public func create(clip: Clip, withData data: [(URL, Data)]) -> Result<Void, ClipStorageError> {
         self.create(clip: clip, withData: data, forced: false)
+    }
+
+    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+        return self.readAllClips(containsHiddenClips: false)
     }
 }
