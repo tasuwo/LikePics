@@ -10,6 +10,7 @@
 "app_root_tab_item_album" = "アルバム";
 "app_root_tab_item_tag" = "タグ";
 "app_root_tab_item_search" = "検索";
+"app_root_tab_item_settings" = "設定";
 
 "clip_target_finder_view_title" = "画像を選択";
 

@@ -50,6 +50,8 @@ internal enum L10n {
     internal static let appRootTabItemHome = L10n.tr("Localizable", "app_root_tab_item_home")
     /// 検索
     internal static let appRootTabItemSearch = L10n.tr("Localizable", "app_root_tab_item_search")
+    /// 設定
+    internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
     /// クリップを削除する

@@ -10,6 +10,7 @@
 "app_root_tab_item_album" = "Albums";
 "app_root_tab_item_tag" = "Tags";
 "app_root_tab_item_search" = "Search";
+"app_root_tab_item_settings" = "Settings";
 
 "clip_target_finder_view_title" = "Select image.";
 

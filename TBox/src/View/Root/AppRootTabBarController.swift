@@ -29,6 +29,7 @@ class AppRootTabBarController: UITabBarController {
         let albumListViewController = self.factory.makeAlbumListViewController()
         let tagListViewController = self.factory.makeTagListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
+        let settingsViewController = self.factory.makeSettingsViewController()
 
         topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
                                                              image: UIImage(systemName: "house"),
@@ -42,12 +43,16 @@ class AppRootTabBarController: UITabBarController {
         searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
                                                             image: UIImage(systemName: "magnifyingglass"),
                                                             tag: 3)
+        settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
+                                                         image: UIImage(systemName: "gear"),
+                                                         tag: 4)
 
         self.viewControllers = [
             topClipsListViewController,
             tagListViewController,
             albumListViewController,
-            searchEntryViewController
+            searchEntryViewController,
+            settingsViewController
         ]
     }
 

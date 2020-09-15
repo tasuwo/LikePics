@@ -42,11 +42,16 @@ protocol ViewControllerFactory {
 
     func makeTagListViewController() -> UIViewController
     func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate) -> UIViewController
+
+    // MARK: Settings
+
+    func makeSettingsViewController() -> UIViewController
 }
 
 class DependencyContainer {
     private lazy var logger = RootLogger.shared
     private lazy var clipsStorage = ClipStorage()
+    private lazy var userSettingsStorage = UserSettingStorage()
     private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
     private lazy var clipInformationTransitionController = ClipInformationTransitioningController()
 }
@@ -140,5 +145,18 @@ extension DependencyContainer: ViewControllerFactory {
         presenter.delegate = delegate
         let viewController = AddingTagsToClipsViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeSettingsViewController() -> UIViewController {
+        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
+
+        // swiftlint:disable:next force_cast
+        let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
+
+        let presenter = SettingsPresenter(storage: self.userSettingsStorage)
+        viewController.factory = self
+        viewController.presenter = presenter
+
+        return viewController
     }
 }

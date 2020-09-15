@@ -184,6 +184,11 @@
 		2CF4657D2511046A00DF78E6 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CF4657E2511046F00DF78E6 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
 		2CF465822511096700DF78E6 /* AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */; };
+		2CF465842511115000DF78E6 /* UserSettingStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465832511115000DF78E6 /* UserSettingStorageProtocol.swift */; };
+		2CF46586251111BC00DF78E6 /* UserSettingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF46585251111BC00DF78E6 /* UserSettingStorage.swift */; };
+		2CF46589251112EF00DF78E6 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */; };
+		2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658A2511134300DF78E6 /* SettingsViewController.swift */; };
+		2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */; };
 		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
 		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
@@ -663,6 +668,11 @@
 		2CF465722511045B00DF78E6 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
 		2CF465732511045B00DF78E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
+		2CF465832511115000DF78E6 /* UserSettingStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingStorageProtocol.swift; sourceTree = "<group>"; };
+		2CF46585251111BC00DF78E6 /* UserSettingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingStorage.swift; sourceTree = "<group>"; };
+		2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
+		2CF4658A2511134300DF78E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		2CF5ABB024FB47D10084695F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		2CF5ABB224FB486A0084695F /* TagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagObject.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
@@ -1170,6 +1180,7 @@
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
 				2C38C706250AF3B900F32102 /* AddingTagsToClips */,
+				2CF4658C2511192F00DF78E6 /* Settings */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -1284,6 +1295,7 @@
 				2C38C703250AF31900F32102 /* AddingTagsToClips */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
 				2C29789B24EEF19700FBA531 /* AddingAlert */,
+				2CF46587251112D900DF78E6 /* Settings */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
@@ -1398,6 +1410,7 @@
 			children = (
 				2C69CF3B24E43AAA0008C7AA /* Migration */,
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
+				2CF46585251111BC00DF78E6 /* UserSettingStorage.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -1440,6 +1453,7 @@
 			isa = PBXGroup;
 			children = (
 				2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */,
+				2CF465832511115000DF78E6 /* UserSettingStorageProtocol.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -1644,6 +1658,23 @@
 				2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */,
 			);
 			path = Structs;
+			sourceTree = "<group>";
+		};
+		2CF46587251112D900DF78E6 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */,
+				2CF4658A2511134300DF78E6 /* SettingsViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		2CF4658C2511192F00DF78E6 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		2CFC5CEB250DA8D0001A02E4 /* TagList */ = {
@@ -2315,6 +2346,7 @@
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2C45D3F824EC317F0045B6D3 /* SearchResultViewController.xib in Resources */,
+				2CF46589251112EF00DF78E6 /* SettingsViewController.storyboard in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
 				2C570B6424E0503800A1DC9F /* TopClipsListViewController.xib in Resources */,
 			);
@@ -2872,6 +2904,7 @@
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */,
 				2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */,
+				2CF465842511115000DF78E6 /* UserSettingStorageProtocol.swift in Sources */,
 				2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */,
 				2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */,
 				2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */,
@@ -2927,10 +2960,12 @@
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */,
+				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* AddingTagsToClipsPresenter.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C570B6224E04FFA00A1DC9F /* TopClipsListViewController.swift in Sources */,
 				2C2289EC24F7F1940026E24A /* ClipsListViewController.swift in Sources */,
+				2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */,
 				2C3CCDBA24F2CF6E00FAC660 /* SearchResultPresenterProxy.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
@@ -2979,6 +3014,7 @@
 				2C9B1E2A24E4236300D420D9 /* ClippedImageObject.swift in Sources */,
 				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
+				2CF46586251111BC00DF78E6 /* UserSettingStorage.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 				2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */,
 			);
