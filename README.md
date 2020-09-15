@@ -19,7 +19,7 @@
   - [x] Error handling
     - [x] StorageErrorをdisplayableにする
 - [x] Preview画面と情報画面を遷移しやすくする
-  - [ ] Dismissal interactive transition
+  - [x] Dismissal interactive transition
 - [ ] 全て選択の実装
 - [ ] 各種画面からタグ追加できる
   - [ ] ClipInformation
