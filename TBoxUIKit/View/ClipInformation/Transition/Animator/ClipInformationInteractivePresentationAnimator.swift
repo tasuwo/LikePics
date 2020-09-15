@@ -15,7 +15,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private static let startingAlpha: CGFloat = 1.0
     private static let finalAlpha: CGFloat = 0
 
-    private static let cancelAnimateDuration: Double = 0.5
+    private static let cancelAnimateDuration: Double = 0.25
     private static let endAnimateDuration: Double = 0.25
 
     private var innerContext: InnerContext?
@@ -43,7 +43,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
         let finalImageFrame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         let translation = sender.translation(in: from.view)
-        let verticalDelta = translation.y < 0 ? 0 : translation.y
+        let verticalDelta = translation.y > 0 ? 0 : translation.y
         let progress = Self.calcProgress(in: from.view, verticalDelta: verticalDelta)
         let nextMidY = Self.calcNextMidY(in: from.view, fromFrame: initialImageFrame, toFrame: finalImageFrame, verticalDelta: verticalDelta)
 
@@ -145,8 +145,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     private static func calcNextMidY(in view: UIView, fromFrame: CGRect, toFrame: CGRect, verticalDelta: CGFloat) -> CGFloat {
         let percent = self.calcProgress(in: view, verticalDelta: verticalDelta)
-        let range = toFrame.midY - fromFrame.midY
-        return fromFrame.midY + (percent * range)
+        let range = fromFrame.midY - toFrame.midY
+        return fromFrame.midY - (percent * range)
     }
 
     private static func calcAlpha(in view: UIView, verticalDelta: CGFloat) -> CGFloat {

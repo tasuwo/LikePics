@@ -16,7 +16,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let factory: Factory
     private let presenter: ClipPreviewPagePresenter
-    private let transitionController: ClipPreviewTransitionControllerProtocol
+    private let previewTransitionController: ClipPreviewTransitionControllerProtocol
+    private let informationTransitionController: ClipInformationTransitionControllerProtocol
 
     private var destination: TransitionDestination?
 
@@ -52,10 +53,16 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: ClipPreviewPagePresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory,
+         presenter: ClipPreviewPagePresenter,
+         previewTransitionController: ClipPreviewTransitionControllerProtocol,
+         informationTransitionController: ClipInformationTransitioningController)
+    {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
+        self.previewTransitionController = previewTransitionController
+        self.informationTransitionController = informationTransitionController
+
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             UIPageViewController.OptionsKey.interPageSpacing: 40
         ])
@@ -175,34 +182,41 @@ class ClipPreviewPageViewController: UIPageViewController {
         switch (sender.state, self.destination) {
         case (.began, .back):
             self.currentViewController?.pageView.isScrollEnabled = false
-            self.transitionController.beginInteractiveTransition()
+            self.previewTransitionController.beginInteractiveTransition()
             self.dismiss(animated: true, completion: nil)
 
         case (.ended, .back):
-            if self.transitionController.isInteractiveTransitioning {
+            if self.previewTransitionController.isInteractiveTransitioning {
                 self.currentViewController?.pageView.isScrollEnabled = true
-                self.transitionController.endInteractiveTransition()
-                self.transitionController.didPan(sender: sender)
+                self.previewTransitionController.endInteractiveTransition()
+                self.previewTransitionController.didPan(sender: sender)
             }
             self.destination = nil
 
         case (_, .back):
-            if self.transitionController.isInteractiveTransitioning {
-                self.transitionController.didPan(sender: sender)
+            if self.previewTransitionController.isInteractiveTransitioning {
+                self.previewTransitionController.didPan(sender: sender)
             }
 
         case (.began, .information):
             guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
+            self.informationTransitionController.beginInteractiveTransition(.present)
             let viewController = self.factory.makeClipInformationViewController(clip: self.presenter.clip,
                                                                                 item: self.presenter.clip.items[index],
                                                                                 dataSource: self)
             self.present(viewController, animated: true, completion: nil)
 
         case (.ended, .information):
+            if self.informationTransitionController.isInteractiveTransitioning {
+                self.informationTransitionController.endInteractiveTransition()
+                self.informationTransitionController.didPan(sender: sender)
+            }
             self.destination = nil
 
         case (_, .information):
-            break
+            if self.informationTransitionController.isInteractiveTransitioning {
+                self.informationTransitionController.didPan(sender: sender)
+            }
 
         case (_, .none):
             break

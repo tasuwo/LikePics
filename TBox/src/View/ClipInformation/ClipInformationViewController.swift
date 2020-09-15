@@ -62,7 +62,7 @@ class ClipInformationViewController: UIViewController {
         switch sender.state {
         case .began:
             self.informationView.isScrollEnabled = false
-            self.transitionController.beginInteractiveTransition()
+            self.transitionController.beginInteractiveTransition(.dismiss)
             self.dismiss(animated: true, completion: nil)
 
         case .ended:

@@ -4,16 +4,23 @@
 
 import UIKit
 
+public enum ClipInformationTransitioningType {
+    case dismiss
+    case present
+}
+
 public protocol ClipInformationTransitionControllerProtocol {
     var isInteractiveTransitioning: Bool { get }
-    func beginInteractiveTransition()
+    func beginInteractiveTransition(_ type: ClipInformationTransitioningType)
     func endInteractiveTransition()
     func didPan(sender: UIPanGestureRecognizer)
 }
 
 public class ClipInformationTransitioningController: NSObject {
     var isInteractive: Bool = false
-    let interactiveAnimator = ClipInformationInteractiveDismissalAnimator()
+    var currentInteractiveTransitionType: ClipInformationTransitioningType?
+    let presentationInteractiveAnimator = ClipInformationInteractivePresentationAnimator()
+    let dismissalInteractiveAnimator = ClipInformationInteractiveDismissalAnimator()
 }
 
 extension ClipInformationTransitioningController: ClipInformationTransitionControllerProtocol {
@@ -23,7 +30,9 @@ extension ClipInformationTransitioningController: ClipInformationTransitionContr
         return self.isInteractive
     }
 
-    public func beginInteractiveTransition() {
+    public func beginInteractiveTransition(_ type: ClipInformationTransitioningType) {
+        self.currentInteractiveTransitionType = nil
+        self.currentInteractiveTransitionType = type
         self.isInteractive = true
     }
 
@@ -32,7 +41,14 @@ extension ClipInformationTransitioningController: ClipInformationTransitionContr
     }
 
     public func didPan(sender: UIPanGestureRecognizer) {
-        self.interactiveAnimator.didPan(sender: sender)
+        switch self.currentInteractiveTransitionType {
+        case .present:
+            self.presentationInteractiveAnimator.didPan(sender: sender)
+        case .dismiss:
+            self.dismissalInteractiveAnimator.didPan(sender: sender)
+        case .none:
+            break
+        }
     }
 }
 
@@ -50,8 +66,13 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
         return ClipInformationDismissalAnimator()
     }
 
+    public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        guard self.isInteractive else { return nil }
+        return self.presentationInteractiveAnimator
+    }
+
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         guard self.isInteractive else { return nil }
-        return self.interactiveAnimator
+        return self.dismissalInteractiveAnimator
     }
 }
