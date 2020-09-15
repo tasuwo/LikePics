@@ -356,6 +356,7 @@ public class ClipTargetFinderPresenter {
                             description: nil,
                             items: clipItems.compactMap { $0?.item },
                             tags: [],
+                            isHidden: false,
                             registeredDate: self.currentDateResolver(),
                             updatedDate: self.currentDateResolver())
             let images = clipItems

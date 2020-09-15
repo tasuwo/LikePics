@@ -8,6 +8,7 @@ public struct Clip: Equatable {
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
     public let tags: [String]
+    public let isHidden: Bool
     public let registeredDate: Date
     public let updatedDate: Date
 
@@ -28,11 +29,12 @@ public struct Clip: Equatable {
 
     // MARK: - Lifecycle
 
-    public init(url: URL, description: String?, items: [ClipItem], tags: [String], registeredDate: Date, updatedDate: Date) {
+    public init(url: URL, description: String?, items: [ClipItem], tags: [String], isHidden: Bool, registeredDate: Date, updatedDate: Date) {
         self.url = url
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
         self.tags = tags
+        self.isHidden = isHidden
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }

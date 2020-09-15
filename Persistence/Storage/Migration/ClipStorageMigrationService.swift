@@ -13,6 +13,14 @@ enum ClipStorageMigrationService {
             Self.migraitonToV2(migration)
         } else if oldSchemaVersion < 3 {
             Self.migraitonToV3(migration)
+        } else if oldSchemaVersion < 4 {
+            Self.migraitonToV4(migration)
+        }
+    }
+
+    private static func migraitonToV4(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
+            newObject!["isHidden"] = false
         }
     }
 

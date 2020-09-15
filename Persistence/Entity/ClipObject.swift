@@ -10,6 +10,7 @@ final class ClipObject: Object {
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
     let tags = List<TagObject>()
+    @objc dynamic var isHidden: Bool = false
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()
 
@@ -27,6 +28,7 @@ extension Clip: Persistable {
                      description: managedObject.descriptionText,
                      items: items,
                      tags: managedObject.tags.map { $0.name },
+                     isHidden: managedObject.isHidden,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
@@ -42,6 +44,7 @@ extension Clip: Persistable {
             // TODO: warn log
             fatalError()
         }
+        obj.isHidden = self.isHidden
         obj.registeredAt = self.registeredDate
         obj.updatedAt = self.updatedDate
         return obj
