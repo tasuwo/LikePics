@@ -24,6 +24,7 @@ PODS:
   - Realm/Headers (5.3.3)
   - RealmSwift (5.3.3):
     - Realm (= 5.3.3)
+  - Sourcery (1.0.0)
   - SwiftGen (6.3.0)
 
 DEPENDENCIES:
@@ -33,6 +34,7 @@ DEPENDENCIES:
   - PromiseKit (~> 6.8)
   - Quick (~> 2.2.0)
   - RealmSwift (~> 5.3.3)
+  - Sourcery (~> 1.0)
   - SwiftGen (~> 6.0)
 
 SPEC REPOS:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - Quick
     - Realm
     - RealmSwift
+    - Sourcery
     - SwiftGen
 
 SPEC CHECKSUMS:
@@ -56,8 +59,9 @@ SPEC CHECKSUMS:
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
   Realm: 2d57ea355bf8ca2a0964d6bfb38d28d7ff2addf6
   RealmSwift: 0a709536ecea30eea1d3c514f6ade2ed078dee3c
+  Sourcery: 928a146ea9b777fa64b0c6ce915c4128b4488cff
   SwiftGen: 3d5024a47ea79e408cded20763d7a17d18a4548c
 
-PODFILE CHECKSUM: 2570254360c409e7bb6a664eeb83dfdbbf764cc5
+PODFILE CHECKSUM: 8c70e53273a86a4ed833c1c6ae0b5eb35e7d251d
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0.beta.2

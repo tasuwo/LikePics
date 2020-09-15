@@ -28,6 +28,7 @@ end
 target 'TBox' do
 
   pod 'SwiftGen', '~> 6.0'
+  pod 'Sourcery', '~> 1.0'
 
   target 'TBoxTests' do
     inherit! :search_paths

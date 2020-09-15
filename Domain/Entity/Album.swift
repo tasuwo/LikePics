@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+// sourcery: AutoDefaultValue
 public struct Album {
     public let id: String
     public let title: String

@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+// sourcery: AutoDefaultValue
 public struct Clip: Equatable {
     public let url: URL
     public let description: String?

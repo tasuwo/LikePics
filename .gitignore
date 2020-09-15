@@ -33,3 +33,5 @@ Pods/*
 
 !lib_InternalSwiftSyntaxParser.dylib
 
+templates/*
+!templates/.gitkeep

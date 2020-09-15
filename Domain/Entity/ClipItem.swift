@@ -2,7 +2,9 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+// sourcery: AutoDefaultValue
 public struct ClipItem: Equatable {
+    // sourcery: AutoDefaultValue
     public struct Image: Equatable {
         public let url: URL
         public let size: ImageSize

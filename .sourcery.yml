@@ -1,0 +1,12 @@
+sources:
+    - ./Domain
+    - ./Persistence
+    - ./TBoxUIKit
+templates:
+    - ./templates
+exclude:
+    - ./Pods
+output:
+    ./TestHelper/Mocks/Structs/
+args:
+    testable_import: Domain,Persistence,TBoxUIKit

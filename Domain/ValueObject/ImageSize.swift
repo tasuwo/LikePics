@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+// sourcery: AutoDefaultValue
 public struct ImageSize: Equatable {
     public static let zero = ImageSize(height: 0, width: 0)
 
