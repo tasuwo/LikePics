@@ -191,6 +191,7 @@
 		2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */; };
 		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
 		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
+		2CF9E0DF2511699D00223848 /* WeakContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF9E0DE2511699D00223848 /* WeakContainer.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
 		2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */; };
@@ -675,6 +676,7 @@
 		2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		2CF5ABB024FB47D10084695F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		2CF5ABB224FB486A0084695F /* TagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagObject.swift; sourceTree = "<group>"; };
+		2CF9E0DE2511699D00223848 /* WeakContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakContainer.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
 		2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
@@ -1259,6 +1261,7 @@
 				2CFC5D01250E0C95001A02E4 /* Logger */,
 				2C6E09C724E8150400B541D9 /* Common.h */,
 				2C6E09C824E8150400B541D9 /* Info.plist */,
+				2CF9E0DE2511699D00223848 /* WeakContainer.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2828,6 +2831,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CF9E0DF2511699D00223848 /* WeakContainer.swift in Sources */,
 				2CFC5D08250E119F001A02E4 /* ConsoleLogger.swift in Sources */,
 				2CFC5D06250E1136001A02E4 /* ConsoleLog.swift in Sources */,
 				2CFC5D0F250E17F6001A02E4 /* ErrorCodeSource.swift in Sources */,
