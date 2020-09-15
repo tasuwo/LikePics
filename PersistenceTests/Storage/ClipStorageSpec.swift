@@ -14,6 +14,7 @@ class ClipStorageSpec: QuickSpec {
                   description: String = "hoge",
                   items: [ClipItemObject] = [],
                   tags: [TagObject] = [],
+                  isHidden: Bool = false,
                   registeredAt: Date = Date(timeIntervalSince1970: 0),
                   updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
     {
@@ -26,6 +27,7 @@ class ClipStorageSpec: QuickSpec {
         tags.forEach {
             obj.tags.append($0)
         }
+        obj.isHidden = isHidden
         obj.registeredAt = registeredAt
         obj.updatedAt = updatedAt
         return obj
@@ -849,7 +851,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byAddingTag: "hoge")
@@ -905,7 +907,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byAddingTag: "hoge")
@@ -935,7 +937,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byAddingTag: "hoge")
@@ -971,7 +973,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingTag: "fuga")
@@ -1037,7 +1039,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingTag: "hoge")
@@ -1063,7 +1065,7 @@ class ClipStorageSpec: QuickSpec {
                     result = service.update(Clip(url: URL(string: "https://localhost")!,
                                                  description: nil,
                                                  items: [],
-                                                 tags: [],
+                                                 tags: [], isHidden: false,
                                                  registeredDate: Date(timeIntervalSince1970: 0),
                                                  updatedDate: Date(timeIntervalSince1970: 1000)),
                                             byDeletingTag: "hoge")
@@ -1077,6 +1079,213 @@ class ClipStorageSpec: QuickSpec {
                     case let .failure(error):
                         fail("Unexpected failure: \(error)")
                     }
+                }
+            }
+        }
+
+        describe("update(_:byHiding:)") {
+            var result: Result<[Clip], ClipStorageError>!
+
+            context("追加対象のクリップが存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = self.makeClip(url: "https://localhost/1",
+                                                 registeredAt: Date(timeIntervalSince1970: 0),
+                                                 updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = self.makeClip(url: "https://localhost/2",
+                                                 registeredAt: Date(timeIntervalSince1970: 1000),
+                                                 updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = self.makeClip(url: "https://localhost/3",
+                                                 registeredAt: Date(timeIntervalSince1970: 2000),
+                                                 updatedAt: Date(timeIntervalSince1970: 3000))
+                        realm.add(obj1)
+                        realm.add(obj2)
+                        realm.add(obj3)
+                    }
+                    result = service.update([
+                        Clip(url: URL(string: "https://localhost/1")!,
+                             description: nil,
+                             items: [],
+                             tags: [],
+                             isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 0),
+                             updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip(url: URL(string: "https://localhost/3")!,
+                             description: nil,
+                             items: [],
+                             tags: [],
+                             isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 2000),
+                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                    ],
+                    byHiding: true)
+                }
+
+                it("successが返る") {
+                    switch result! {
+                    case .success:
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("返ってきたクリップが更新されている") {
+                    guard case let .success(v) = result else {
+                        fail("Unexpected failure")
+                        return
+                    }
+                    let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
+                    expect(clips).to(haveCount(2))
+                    expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
+                    expect(clips[0].description).to(equal("hoge"))
+                    expect(clips[0].items).to(beEmpty())
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].isHidden).to(beTrue())
+                    expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
+
+                    expect(clips[1].url).to(equal(URL(string: "https://localhost/3")))
+                    expect(clips[1].description).to(equal("hoge"))
+                    expect(clips[1].items).to(beEmpty())
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].isHidden).to(beTrue())
+                    expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
+                    // 更新時刻が更新されている
+                    expect(clips[1].updatedDate).notTo(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("Realm内のクリップが更新されている") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(3))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].descriptionText).to(equal("hoge"))
+                    expect(clips[0].items).to(beEmpty())
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].isHidden).to(beTrue())
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clips[0].updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
+
+                    expect(clips[1].url).to(equal("https://localhost/2"))
+                    expect(clips[1].descriptionText).to(equal("hoge"))
+                    expect(clips[1].items).to(beEmpty())
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].isHidden).to(beFalse())
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
+
+                    expect(clips[2].url).to(equal("https://localhost/3"))
+                    expect(clips[2].descriptionText).to(equal("hoge"))
+                    expect(clips[2].items).to(beEmpty())
+                    expect(clips[2].tags).to(haveCount(0))
+                    expect(clips[2].isHidden).to(beTrue())
+                    expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    // 更新時刻が更新されている
+                    expect(clips[2].updatedAt).notTo(equal(Date(timeIntervalSince1970: 3000)))
+                }
+            }
+
+            context("追加対象のクリップが1つも存在しない") {
+                beforeEach {
+                    result = service.update([
+                        Clip(url: URL(string: "https://localhost/1")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 0),
+                             updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip(url: URL(string: "https://localhost/2")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 1000),
+                             updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip(url: URL(string: "https://localhost/3")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 2000),
+                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                    ],
+                    byHiding: true)
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内にクリップが追加されない") {
+                    let clips = realm.objects(ClipObject.self)
+                    expect(clips).to(beEmpty())
+                }
+            }
+
+            context("追加対象のクリップが一部存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = self.makeClip(url: "https://localhost/1",
+                                                 registeredAt: Date(timeIntervalSince1970: 0),
+                                                 updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj3 = self.makeClip(url: "https://localhost/3",
+                                                 registeredAt: Date(timeIntervalSince1970: 2000),
+                                                 updatedAt: Date(timeIntervalSince1970: 3000))
+                        realm.add(obj1)
+                        realm.add(obj3)
+                    }
+                    result = service.update([
+                        Clip(url: URL(string: "https://localhost/1")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 0),
+                             updatedDate: Date(timeIntervalSince1970: 1000)),
+                        Clip(url: URL(string: "https://localhost/2")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 1000),
+                             updatedDate: Date(timeIntervalSince1970: 2000)),
+                        Clip(url: URL(string: "https://localhost/3")!,
+                             description: nil,
+                             items: [],
+                             tags: [], isHidden: false,
+                             registeredDate: Date(timeIntervalSince1970: 2000),
+                             updatedDate: Date(timeIntervalSince1970: 3000)),
+                    ],
+                    byHiding: true)
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内のクリップが更新されない") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(2))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].descriptionText).to(equal("hoge"))
+                    expect(clips[0].items).to(beEmpty())
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].isHidden).to(beFalse())
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].url).to(equal("https://localhost/3"))
+                    expect(clips[1].descriptionText).to(equal("hoge"))
+                    expect(clips[1].items).to(beEmpty())
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].isHidden).to(beFalse())
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
                 }
             }
         }
@@ -1111,19 +1320,19 @@ class ClipStorageSpec: QuickSpec {
                         Clip(url: URL(string: "https://localhost/1")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 0),
                              updatedDate: Date(timeIntervalSince1970: 1000)),
                         Clip(url: URL(string: "https://localhost/2")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 1000),
                              updatedDate: Date(timeIntervalSince1970: 2000)),
                         Clip(url: URL(string: "https://localhost/3")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 2000),
                              updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
@@ -1255,19 +1464,19 @@ class ClipStorageSpec: QuickSpec {
                         Clip(url: URL(string: "https://localhost/1")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 0),
                              updatedDate: Date(timeIntervalSince1970: 1000)),
                         Clip(url: URL(string: "https://localhost/2")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 1000),
                              updatedDate: Date(timeIntervalSince1970: 2000)),
                         Clip(url: URL(string: "https://localhost/3")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 2000),
                              updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
@@ -1336,19 +1545,19 @@ class ClipStorageSpec: QuickSpec {
                         Clip(url: URL(string: "https://localhost/1")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 0),
                              updatedDate: Date(timeIntervalSince1970: 1000)),
                         Clip(url: URL(string: "https://localhost/2")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 1000),
                              updatedDate: Date(timeIntervalSince1970: 2000)),
                         Clip(url: URL(string: "https://localhost/3")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 2000),
                              updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
@@ -1410,19 +1619,19 @@ class ClipStorageSpec: QuickSpec {
                         Clip(url: URL(string: "https://localhost/1")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 0),
                              updatedDate: Date(timeIntervalSince1970: 1000)),
                         Clip(url: URL(string: "https://localhost/2")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 1000),
                              updatedDate: Date(timeIntervalSince1970: 2000)),
                         Clip(url: URL(string: "https://localhost/3")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 2000),
                              updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],
@@ -1476,19 +1685,19 @@ class ClipStorageSpec: QuickSpec {
                         Clip(url: URL(string: "https://localhost/1")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 0),
                              updatedDate: Date(timeIntervalSince1970: 1000)),
                         Clip(url: URL(string: "https://localhost/2")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 1000),
                              updatedDate: Date(timeIntervalSince1970: 2000)),
                         Clip(url: URL(string: "https://localhost/3")!,
                              description: nil,
                              items: [],
-                             tags: [],
+                             tags: [], isHidden: false,
                              registeredDate: Date(timeIntervalSince1970: 2000),
                              updatedDate: Date(timeIntervalSince1970: 3000)),
                     ],

@@ -335,6 +335,34 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func update(_ clips: [Clip], byHiding isHidden: Bool) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            var clipObjs: [ClipObject] = []
+            for clip in clips {
+                guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
+                    return .failure(.notFound)
+                }
+                clipObjs.append(clipObj)
+            }
+
+            do {
+                try realm.write {
+                    for clipObj in clipObjs {
+                        clipObj.isHidden = isHidden
+                        clipObj.updatedAt = Date()
+                    }
+                }
+                return .success(clipObjs.map { Clip.make(by: $0) })
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func update(_ clips: [Clip], byAddingTags tags: [String]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
