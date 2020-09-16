@@ -60,9 +60,8 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController {
-        let presenter = TopClipsListPresenter(storage: self.clipsStorage)
-        let proxy = TopClipsListPresenterProxy(presenter: presenter)
-        return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: proxy))
+        let presenter = TopClipsListPresenter(clipsList: ClipsList(storage: self.clipsStorage, logger: self.logger))
+        return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: presenter))
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {

@@ -4,81 +4,117 @@
 
 import Domain
 
-protocol TopClipsListViewProtocol: ClipsListViewProtocol {
-    func startLoading()
-
-    func endLoading()
+protocol TopClipsListViewProtocol: AnyObject {
+    func reloadList()
+    func deselectAll()
+    func setEditing(_ editing: Bool)
+    func presentPreviewView(for clip: Clip)
+    func showErrorMessage(_ message: String)
 }
 
-protocol TopClipsListPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
-    func set(view: TopClipsListViewProtocol)
+class TopClipsListPresenter {
+    private var clipsList: ClipsListProviding
 
-    func replaceClips(by clips: [Clip])
-
-    func reload()
-}
-
-class TopClipsListPresenter: ClipsListPresenter {
-    // MARK: - Properties
-
-    // MARK: ClipsListPresenterProtocol
-
-    var clips: [Clip]
-
-    var selectedClips: [Clip]
-
-    var isEditing: Bool
-
-    // MARK: ClipsListPresenter
-
-    var view: ClipsListViewProtocol? {
-        return self.internalView
-    }
-
-    var storage: ClipStorageProtocol
-
-    // MARK: Internal
-
-    private weak var internalView: TopClipsListViewProtocol?
+    weak var view: TopClipsListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol) {
-        self.storage = storage
-        self.isEditing = false
-        self.clips = []
-        self.selectedClips = []
+    init(clipsList: ClipsListProviding) {
+        self.clipsList = clipsList
+        self.clipsList.set(delegate: self)
     }
 }
 
-extension TopClipsListPresenter: TopClipsListPresenterProtocol {
-    // MARK: - TopClipsListPresenterProtocol
+extension TopClipsListPresenter: ClipsListProvidingDelegate {
+    // MARK: - ClipsListProvidingDelegate
 
-    func set(view: TopClipsListViewProtocol) {
-        self.internalView = view
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateClipsTo clips: [Clip]) {
+        self.view?.reloadList()
     }
 
-    func updateClips(to clips: [Clip]) {
-        self.clips = clips
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateEditingStateTo isEditing: Bool) {
+        self.view?.setEditing(isEditing)
     }
 
-    func replaceClips(by clips: [Clip]) {
-        self.clips = clips
-        self.reload()
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateSelectedIndices indices: [Int]) {
+        // TODO:
+        if indices.isEmpty {
+            self.view?.deselectAll()
+        }
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, didTapClip clip: Clip, at index: Int) {
+        self.view?.presentPreviewView(for: clip)
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToReadClipsWith error: ClipStorageError) {
+        // TODO:
+        self.view?.showErrorMessage("")
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToDeleteClipsWith error: ClipStorageError) {
+        // TODO:
+        self.view?.showErrorMessage("")
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToGetImageDataWith error: ClipStorageError) {
+        // TODO:
+        self.view?.showErrorMessage("")
+    }
+}
+
+extension TopClipsListPresenter: ClipsListPresenterProtocol {
+    // MARK: - ClipsListPresenterProtocol
+
+    var clips: [Clip] {
+        self.clipsList.clips
+    }
+
+    var selectedClips: [Clip] {
+        self.clipsList.selectedClips
+    }
+
+    var selectedIndices: [Int] {
+        self.clipsList.selectedIndices
+    }
+
+    var isEditing: Bool {
+        self.clipsList.isEditing
+    }
+
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
+        return self.clipsList.getImageData(for: layer, in: clip)
     }
 
     func reload() {
-        guard let view = self.internalView else { return }
+        self.clipsList.reload()
+    }
 
-        view.startLoading()
-        switch self.storage.readAllClips() {
-        case let .success(clips):
-            self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
-            view.reload()
+    func setEditing(_ editing: Bool) {
+        self.clipsList.setEditing(editing)
+    }
 
-        case let .failure(error):
-            view.showErrorMassage(Self.resolveErrorMessage(error))
-        }
-        view.endLoading()
+    func select(at index: Int) {
+        self.clipsList.select(at: index)
+    }
+
+    func deselect(at index: Int) {
+        self.clipsList.deselect(at: index)
+    }
+
+    func deleteAll() {
+        self.clipsList.deleteSelectedClips()
+    }
+}
+
+extension TopClipsListPresenter: AddingClipsToAlbumPresenterDelegate {
+    // MARK: - AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        // guard isSucceeded else { return }
+
+        // self.selectedClips = []
+        // self.view?.deselectAll()
+        // self.view?.endEditing()
     }
 }

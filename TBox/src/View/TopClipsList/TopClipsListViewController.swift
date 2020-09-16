@@ -8,22 +8,21 @@ import UIKit
 
 class TopClipsListViewController: UIViewController, ClipsListViewController {
     typealias Factory = ViewControllerFactory
-    typealias Presenter = TopClipsListPresenterProxy
+    typealias Presenter = TopClipsListPresenter
 
     let factory: Factory
     let presenter: Presenter
 
-    @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TopClipsListPresenterProxy) {
+    init(factory: Factory, presenter: TopClipsListPresenter) {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
 
-        self.presenter.set(view: self)
+        self.presenter.view = self
         self.addBecomeActiveNotification()
     }
 
@@ -184,17 +183,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 extension TopClipsListViewController: TopClipsListViewProtocol {
     // MARK: - TopClipsListViewProtocol
 
-    func startLoading() {
-        self.indicator.startAnimating()
-        self.indicator.isHidden = false
-    }
-
-    func endLoading() {
-        self.indicator.isHidden = true
-        self.indicator.stopAnimating()
-    }
-
-    func reload() {
+    func reloadList() {
         self.collectionView.reloadData()
     }
 
@@ -204,8 +193,9 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         }
     }
 
-    func endEditing() {
-        self.setEditing(false, animated: true)
+    func setEditing(_ editing: Bool) {
+        guard self.isEditing != editing else { return }
+        self.setEditing(editing, animated: true)
     }
 
     func presentPreviewView(for clip: Clip) {
@@ -213,9 +203,9 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         self.present(nextViewController, animated: true, completion: nil)
     }
 
-    func showErrorMassage(_ message: String) {
-        let alert = UIAlertController(title: "エラー", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
+    func showErrorMessage(_ message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
     }
 }
 
