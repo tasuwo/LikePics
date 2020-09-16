@@ -7,11 +7,11 @@ import Domain
 protocol SettingsViewProtocol: AnyObject {}
 
 class SettingsPresenter {
-    private let storage: UserSettingStorageProtocol
+    private let storage: UserSettingsStorageProtocol
 
     var shouldShowHiddenItems: Bool {
         get {
-            self.storage.fetchShowHiddenItems()
+            self.storage.fetch().showHiddenItems
         }
         set {
             self.storage.set(showHiddenItems: newValue)
@@ -22,7 +22,7 @@ class SettingsPresenter {
 
     // MARK: - Lifecycle
 
-    init(storage: UserSettingStorageProtocol) {
+    init(storage: UserSettingsStorageProtocol) {
         self.storage = storage
     }
 }
