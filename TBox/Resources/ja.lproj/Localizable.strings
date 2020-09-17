@@ -14,68 +14,53 @@
 
 "top_clips_list_view_right_bar_item_for_cancel_title" = "キャンセル";
 "top_clips_list_view_right_bar_item_for_select_title" = "選択";
-
 "top_clips_list_view_error_at_read_clips" = "クリップの読み込みに失敗しました";
 "top_clips_list_view_error_at_delete_clips" = "クリップの削除に失敗しました";
 "top_clips_list_view_error_at_get_image_data" = "画像の読み込みに失敗しました";
-
 "top_clips_list_view_alert_for_add_to_album" = "アルバムに追加する";
 "top_clips_list_view_alert_for_add_tag" = "タグを追加する";
-
 "top_clips_list_view_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
 "top_clips_list_view_alert_for_delete_action" = "%d件のクリップを削除";
-
 "clip_target_finder_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";
-
 "album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
 "album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
 "album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
 "album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
-
 "album_list_view_alert_for_add_title" = "新規アルバム";
 "album_list_view_alert_for_add_message" = "このアルバムの名前を入力してください";
 "album_list_view_alert_for_add_placeholder" = "アルバム名";
-
 "album_list_view_alert_for_delete_title" = "\"%@\"を削除";
 "album_list_view_alert_for_delete_message" = "アルバム\"%@\"を削除しますか？\n含まれるクリップは削除されません";
 "album_list_view_alert_for_delete_action" = "アルバムを削除";
 
 "search_entry_view_title" = "検索";
-
 "search_entry_view_search_bar_placeholder" = "キーワード";
+"search_entry_view_error_at_search" = "検索に失敗しました";
 
 "tag_list_view_title" = "タグ";
-
 "tag_list_view_error_at_read_tags" = "タグの読み込みに失敗しました";
 "tag_list_view_error_at_add_tag" = "タグの追加に失敗しました";
 "tag_list_view_error_at_delete_tag" = "タグの削除に失敗しました";
 "tag_list_view_error_at_search_clip" = "クリップの取得に失敗しました";
-
 "tag_list_view_alert_for_add_title" = "新規タグ";
 "tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
 "tag_list_view_alert_for_add_placeholder" = "タグ名";
-
 "tag_list_view_alert_for_delete_message" = "選択中のタグを削除しますか？\n含まれるクリップは削除されません";
 "tag_list_view_alert_for_delete_action" = "%d件のタグを削除";
-
-"search_entry_view_error_at_search" = "検索に失敗しました";
 
 "clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
 
 "clip_item_preview_view_alert_for_delete_message" = "クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます";
 "clip_item_preview_view_alert_for_delete_clip_action" = "クリップを削除する";
 "clip_item_preview_view_alert_for_delete_clip_item_action" = "画像を削除する";
-
 "clip_item_preview_view_alert_for_successfully_delete_message" = "正常に削除しました";
-
 "clip_item_preview_view_error_at_read_image" = "画像の読み込みに失敗しました";
 "clip_item_preview_view_error_at_delete_clip" = "クリップの削除に失敗しました";
 "clip_item_preview_view_error_at_delete_clip_item" = "画像の削除に失敗しました";
 
 "adding_clips_to_album_view_title" = "アルバムへ追加";
-
 "adding_clips_to_album_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
 "adding_clips_to_album_view_error_at_update_album" = "アルバムの更新に失敗しました";
 
