@@ -6,9 +6,17 @@ import Common
 import Domain
 
 struct ClipsList {
-    private(set) var clips: [Clip] {
+    private var internalClips: [Clip] {
         didSet {
             self.delegate?.clipsListProviding(self, didUpdateClipsTo: self.clips)
+        }
+    }
+
+    var clips: [Clip] {
+        if visibleHiddenClips {
+            return self.internalClips
+        } else {
+            return self.internalClips.filter { !$0.isHidden }
         }
     }
 
@@ -26,7 +34,13 @@ struct ClipsList {
 
     var selectedIndices: [Int] {
         return self.selectedClips.compactMap { selectedClip in
-            self.clips.firstIndex(where: { $0.url == selectedClip.url })
+            self.internalClips.firstIndex(where: { $0.url == selectedClip.url })
+        }
+    }
+
+    var visibleHiddenClips: Bool {
+        didSet {
+            self.delegate?.clipsListProviding(self, didUpdateClipsTo: self.clips)
         }
     }
 
@@ -37,8 +51,9 @@ struct ClipsList {
 
     // MARK: - Lifecycle
 
-    init(clips: [Clip], storage: ClipStorageProtocol, logger: TBoxLoggable) {
-        self.clips = clips
+    init(clips: [Clip], visibleHiddenClips: Bool, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+        self.internalClips = clips
+        self.visibleHiddenClips = visibleHiddenClips
         self.storage = storage
         self.logger = logger
     }
@@ -79,7 +94,7 @@ extension ClipsList: ClipsListProtocol {
     mutating func loadAll() {
         switch self.storage.readAllClips() {
         case let .success(clips):
-            self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
+            self.internalClips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
 
         case let .failure(error):
             self.delegate?.clipsListProviding(self, failedToReadClipsWith: error)
@@ -94,8 +109,8 @@ extension ClipsList: ClipsListProtocol {
     }
 
     mutating func select(at index: Int) {
-        guard self.clips.indices.contains(index) else { return }
-        let clip = self.clips[index]
+        guard self.internalClips.indices.contains(index) else { return }
+        let clip = self.internalClips[index]
 
         if self.isEditing {
             guard !self.selectedClips.contains(where: { $0.url == clip.url }) else {
@@ -109,8 +124,8 @@ extension ClipsList: ClipsListProtocol {
     }
 
     mutating func deselect(at index: Int) {
-        guard self.clips.indices.contains(index) else { return }
-        let clip = self.clips[index]
+        guard self.internalClips.indices.contains(index) else { return }
+        let clip = self.internalClips[index]
 
         if self.isEditing {
             guard let index = self.selectedClips.firstIndex(where: { $0.url == clip.url }) else {
@@ -128,11 +143,11 @@ extension ClipsList: ClipsListProtocol {
             return
         }
 
-        let newClips: [Clip] = self.clips.compactMap { clip in
+        let newClips: [Clip] = self.internalClips.compactMap { clip in
             if self.selectedClips.contains(where: { clip.url == $0.url }) { return nil }
             return clip
         }
-        self.clips = newClips
+        self.internalClips = newClips
 
         self.selectedClips = []
 
@@ -150,11 +165,11 @@ extension ClipsList: ClipsListProtocol {
             return
         }
 
-        let newClips: [Clip] = self.clips.compactMap { clip in
+        let newClips: [Clip] = self.internalClips.compactMap { clip in
             if self.selectedClips.contains(where: { clip.url == $0.url }) { return nil }
             return clip
         }
-        self.clips = newClips
+        self.internalClips = newClips
 
         self.selectedClips = []
 

@@ -9,6 +9,7 @@ protocol ClipsListProtocol {
     var selectedClips: [Clip] { get }
     var selectedIndices: [Int] { get }
     var isEditing: Bool { get }
+    var visibleHiddenClips: Bool { get set }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
     mutating func set(delegate: ClipsListDelegate)

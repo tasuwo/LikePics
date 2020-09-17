@@ -60,7 +60,11 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController {
-        let presenter = TopClipsListPresenter(clipsList: ClipsList(clips: [], storage: self.clipsStorage, logger: self.logger))
+        let clipsList = ClipsList(clips: [],
+                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
+                                  storage: self.clipsStorage,
+                                  logger: self.logger)
+        let presenter = TopClipsListPresenter(clipsList: clipsList, settingsStorage: self.userSettingsStorage)
         return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: presenter))
     }
 
@@ -109,8 +113,11 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {
-        let presenter = SearchResultPresenter(context: context,
-                                              clipsList: ClipsList(clips: clips, storage: self.clipsStorage, logger: self.logger))
+        let clipsList = ClipsList(clips: clips,
+                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
+                                  storage: self.clipsStorage,
+                                  logger: self.logger)
+        let presenter = SearchResultPresenter(context: context, clipsList: clipsList)
         return SearchResultViewController(factory: self, presenter: presenter)
     }
 
@@ -121,9 +128,11 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumViewController(album: Album) -> UIViewController {
-        let presenter = AlbumPresenter(album: album,
-                                       clipsList: ClipsList(clips: album.clips, storage: self.clipsStorage, logger: self.logger),
-                                       storage: self.clipsStorage)
+        let clipsList = ClipsList(clips: album.clips,
+                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
+                                  storage: self.clipsStorage,
+                                  logger: self.logger)
+        let presenter = AlbumPresenter(album: album, clipsList: clipsList, storage: self.clipsStorage)
         return AlbumViewController(factory: self, presenter: presenter)
     }
 

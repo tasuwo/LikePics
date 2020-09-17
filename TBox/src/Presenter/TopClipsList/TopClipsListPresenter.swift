@@ -13,14 +13,15 @@ protocol TopClipsListViewProtocol: AnyObject {
 }
 
 class TopClipsListPresenter {
+    private let settingsStorage: UserSettingsStorageProtocol
     private var clipsList: ClipsListProtocol
-
     weak var view: TopClipsListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(clipsList: ClipsListProtocol) {
+    init(clipsList: ClipsListProtocol, settingsStorage: UserSettingsStorageProtocol) {
         self.clipsList = clipsList
+        self.settingsStorage = settingsStorage
         self.clipsList.set(delegate: self)
     }
 
@@ -100,5 +101,12 @@ extension TopClipsListPresenter: ClipsListPresenterProtocol {
 
     func deleteAll() {
         self.clipsList.deleteSelectedClips()
+    }
+}
+
+extension TopClipsListPresenter: UserSettingsObserver {
+    // MARK: - UserSettingsObserver
+
+    func onUpdated(to: UserSettings) {
     }
 }
