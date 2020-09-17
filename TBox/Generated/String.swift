@@ -72,6 +72,25 @@ internal enum L10n {
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// 画像を選択
     internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
+    /// タグを追加する
+    internal static let clipsListAlertForAddTag = L10n.tr("Localizable", "clips_list_alert_for_add_tag")
+    /// アルバムに追加する
+    internal static let clipsListAlertForAddToAlbum = L10n.tr("Localizable", "clips_list_alert_for_add_to_album")
+    /// %d件のクリップを削除
+    internal static func clipsListAlertForDeleteAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_delete_action", p1)
+    }
+
+    /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
+    internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
+    /// クリップの削除に失敗しました
+    internal static let clipsListErrorAtDeleteClips = L10n.tr("Localizable", "clips_list_error_at_delete_clips")
+    /// 画像の読み込みに失敗しました
+    internal static let clipsListErrorAtGetImageData = L10n.tr("Localizable", "clips_list_error_at_get_image_data")
+    /// クリップの読み込みに失敗しました
+    internal static let clipsListErrorAtReadClips = L10n.tr("Localizable", "clips_list_error_at_read_clips")
+    /// 選択
+    internal static let clipsListRightBarItemForSelectTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_title")
     /// キャンセル
     internal static let confirmAlertCancel = L10n.tr("Localizable", "confirm_alert_cancel")
     /// OK
@@ -107,27 +126,6 @@ internal enum L10n {
     internal static let tagListViewErrorAtSearchClip = L10n.tr("Localizable", "tag_list_view_error_at_search_clip")
     /// タグ
     internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
-    /// タグを追加する
-    internal static let topClipsListViewAlertForAddTag = L10n.tr("Localizable", "top_clips_list_view_alert_for_add_tag")
-    /// アルバムに追加する
-    internal static let topClipsListViewAlertForAddToAlbum = L10n.tr("Localizable", "top_clips_list_view_alert_for_add_to_album")
-    /// %d件のクリップを削除
-    internal static func topClipsListViewAlertForDeleteAction(_ p1: Int) -> String {
-        return L10n.tr("Localizable", "top_clips_list_view_alert_for_delete_action", p1)
-    }
-
-    /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
-    internal static let topClipsListViewAlertForDeleteMessage = L10n.tr("Localizable", "top_clips_list_view_alert_for_delete_message")
-    /// クリップの削除に失敗しました
-    internal static let topClipsListViewErrorAtDeleteClips = L10n.tr("Localizable", "top_clips_list_view_error_at_delete_clips")
-    /// 画像の読み込みに失敗しました
-    internal static let topClipsListViewErrorAtGetImageData = L10n.tr("Localizable", "top_clips_list_view_error_at_get_image_data")
-    /// クリップの読み込みに失敗しました
-    internal static let topClipsListViewErrorAtReadClips = L10n.tr("Localizable", "top_clips_list_view_error_at_read_clips")
-    /// キャンセル
-    internal static let topClipsListViewRightBarItemForCancelTitle = L10n.tr("Localizable", "top_clips_list_view_right_bar_item_for_cancel_title")
-    /// 選択
-    internal static let topClipsListViewRightBarItemForSelectTitle = L10n.tr("Localizable", "top_clips_list_view_right_bar_item_for_select_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

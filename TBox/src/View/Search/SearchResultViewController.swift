@@ -76,7 +76,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     private func updateNavigationBar(for isEditing: Bool) {
         if isEditing {
             let button = RoundedButton()
-            button.setTitle("キャンセル", for: .normal)
+            button.setTitle(L10n.confirmAlertCancel, for: .normal)
             button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -84,7 +84,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
             ]
         } else {
             let button = RoundedButton()
-            button.setTitle("編集", for: .normal)
+            button.setTitle(L10n.clipsListRightBarItemForSelectTitle, for: .normal)
             button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -126,12 +126,15 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapRemove() {
-        let alert = UIAlertController(title: "", message: "選択中のクリップを全て削除しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForDeleteMessage,
+                                      preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+        let title = L10n.clipsListAlertForDeleteAction(self.presenter.selectedClips.count)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
             self?.presenter.deleteAll()
         }))
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }

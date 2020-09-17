@@ -68,7 +68,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     private func updateNavigationBar(for isEditing: Bool) {
         if isEditing {
             let button = RoundedButton()
-            button.setTitle(L10n.topClipsListViewRightBarItemForCancelTitle, for: .normal)
+            button.setTitle(L10n.confirmAlertCancel, for: .normal)
             button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -76,7 +76,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
             ]
         } else {
             let button = RoundedButton()
-            button.setTitle(L10n.topClipsListViewRightBarItemForSelectTitle, for: .normal)
+            button.setTitle(L10n.clipsListRightBarItemForSelectTitle, for: .normal)
             button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -134,13 +134,13 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     func didTapAddToAlbum() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: L10n.topClipsListViewAlertForAddToAlbum, style: .default, handler: { [weak self] _ in
+        alert.addAction(.init(title: L10n.clipsListAlertForAddToAlbum, style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips, delegate: self)
             self.present(viewController, animated: true, completion: nil)
         }))
 
-        alert.addAction(.init(title: L10n.topClipsListViewAlertForAddTag, style: .default, handler: { [weak self] _ in
+        alert.addAction(.init(title: L10n.clipsListAlertForAddTag, style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips, delegate: self)
             self.present(viewController, animated: true, completion: nil)
@@ -153,10 +153,12 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapRemove() {
-        let alert = UIAlertController(title: nil, message: L10n.topClipsListViewAlertForDeleteMessage, preferredStyle: .alert)
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForDeleteMessage,
+                                      preferredStyle: .actionSheet)
 
-        let deleteActionTitle = L10n.topClipsListViewAlertForDeleteAction(self.presenter.selectedClips.count)
-        alert.addAction(.init(title: deleteActionTitle, style: .destructive, handler: { [weak self] _ in
+        let title = L10n.clipsListAlertForDeleteAction(self.presenter.selectedClips.count)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
             self?.presenter.deleteAll()
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
