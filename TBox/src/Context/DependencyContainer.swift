@@ -60,7 +60,7 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController {
-        let presenter = TopClipsListPresenter(clipsList: ClipsList(storage: self.clipsStorage, logger: self.logger))
+        let presenter = TopClipsListPresenter(clipsList: ClipsList(clips: [], storage: self.clipsStorage, logger: self.logger))
         return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: presenter))
     }
 
@@ -109,9 +109,9 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {
-        let presenter = SearchResultPresenter(context: context, clips: clips, storage: self.clipsStorage)
-        let proxy = SearchResultPresenterProxy(presenter: presenter)
-        return SearchResultViewController(factory: self, presenter: proxy)
+        let presenter = SearchResultPresenter(context: context,
+                                              clipsList: ClipsList(clips: clips, storage: self.clipsStorage, logger: self.logger))
+        return SearchResultViewController(factory: self, presenter: presenter)
     }
 
     func makeAlbumListViewController() -> UIViewController {

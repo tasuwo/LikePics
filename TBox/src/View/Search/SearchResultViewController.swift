@@ -8,7 +8,7 @@ import UIKit
 
 class SearchResultViewController: UIViewController, ClipsListViewController {
     typealias Factory = ViewControllerFactory
-    typealias Presenter = SearchResultPresenterProxy
+    typealias Presenter = SearchResultPresenter
 
     let factory: Factory
     let presenter: Presenter
@@ -17,12 +17,12 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: SearchResultPresenterProxy) {
+    init(factory: Factory, presenter: SearchResultPresenter) {
         self.factory = factory
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
 
-        self.presenter.set(view: self)
+        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -120,7 +120,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapAddToAlbum() {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self.presenter)
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -152,18 +152,16 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 extension SearchResultViewController: SearchResultViewProtocol {
     // MARK: - SearchResultViewProtocol
 
-    func reload() {
+    func reloadList() {
         self.collectionView.reloadData()
     }
 
-    func deselectAll() {
-        self.collectionView.indexPathsForSelectedItems?.forEach {
-            self.collectionView.deselectItem(at: $0, animated: false)
-        }
+    func applySelection(at indices: [Int]) {
+        self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
     }
 
-    func endEditing() {
-        self.setEditing(false, animated: true)
+    func applyEditing(_ editing: Bool) {
+        self.setEditing(editing, animated: true)
     }
 
     func presentPreviewView(for clip: Clip) {
@@ -171,8 +169,9 @@ extension SearchResultViewController: SearchResultViewProtocol {
         self.present(nextViewController, animated: true, completion: nil)
     }
 
-    func showErrorMassage(_ message: String) {
-        print(message)
+    func showErrorMessage(_ message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
     }
 }
 
@@ -234,5 +233,14 @@ extension SearchResultViewController: ClipsCollectionLayoutDelegate {
 
     func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
+    }
+}
+
+extension SearchResultViewController: AddingClipsToAlbumPresenterDelegate {
+    // MARK: - AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        guard isSucceeded else { return }
+        self.presenter.setEditing(false)
     }
 }

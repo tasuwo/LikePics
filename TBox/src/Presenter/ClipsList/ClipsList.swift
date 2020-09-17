@@ -6,7 +6,7 @@ import Common
 import Domain
 
 struct ClipsList {
-    private(set) var clips: [Clip] = [] {
+    private(set) var clips: [Clip] {
         didSet {
             self.delegate?.clipsListProviding(self, didUpdateClipsTo: self.clips)
         }
@@ -37,7 +37,8 @@ struct ClipsList {
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(clips: [Clip], storage: ClipStorageProtocol, logger: TBoxLoggable) {
+        self.clips = clips
         self.storage = storage
         self.logger = logger
     }
