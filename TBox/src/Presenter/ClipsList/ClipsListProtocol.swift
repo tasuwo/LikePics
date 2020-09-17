@@ -19,4 +19,6 @@ protocol ClipsListProtocol {
     mutating func deselect(at index: Int)
     mutating func deleteSelectedClips()
     mutating func removeSelectedClips(from album: Album)
+    mutating func hidesAll()
+    mutating func unhidesAll()
 }

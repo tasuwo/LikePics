@@ -80,6 +80,6 @@ extension ClipStorageProtocol {
     }
 
     public func readAllClips() -> Result<[Clip], ClipStorageError> {
-        return self.readAllClips(containsHiddenClips: false)
+        return self.readAllClips(containsHiddenClips: true)
     }
 }

@@ -117,7 +117,9 @@ extension DependencyContainer: ViewControllerFactory {
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
                                   storage: self.clipsStorage,
                                   logger: self.logger)
-        let presenter = SearchResultPresenter(context: context, clipsList: clipsList)
+        let presenter = SearchResultPresenter(context: context,
+                                              clipsList: clipsList,
+                                              settingsStorage: self.userSettingsStorage)
         return SearchResultViewController(factory: self, presenter: presenter)
     }
 
@@ -132,7 +134,9 @@ extension DependencyContainer: ViewControllerFactory {
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
                                   storage: self.clipsStorage,
                                   logger: self.logger)
-        let presenter = AlbumPresenter(album: album, clipsList: clipsList, storage: self.clipsStorage)
+        let presenter = AlbumPresenter(album: album,
+                                       clipsList: clipsList,
+                                       settingsStorage: self.userSettingsStorage)
         return AlbumViewController(factory: self, presenter: presenter)
     }
 

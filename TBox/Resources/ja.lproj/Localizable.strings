@@ -20,6 +20,8 @@
 "clips_list_alert_for_add_tag" = "タグを追加する";
 "clips_list_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
 "clips_list_alert_for_delete_action" = "%d件のクリップを削除";
+"clips_list_alert_for_hide_message" = "選択したクリップは、設定が有効な間は全ての場所から隠されます";
+"clips_list_alert_for_hide_action" = "%d件のクリップを隠す";
 
 "clip_target_finder_view_title" = "画像を選択";
 

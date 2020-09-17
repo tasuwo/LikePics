@@ -14,21 +14,19 @@ protocol AlbumViewProtocol: AnyObject {
 
 class AlbumPresenter {
     private var clipsList: ClipsListProtocol
-
     weak var view: AlbumViewProtocol?
-
-    private let storage: ClipStorageProtocol
-
+    private let settingsStorage: UserSettingsStorageProtocol
     private(set) var album: Album
 
     // MARK: - Lifecycle
 
-    init(album: Album, clipsList: ClipsListProtocol, storage: ClipStorageProtocol) {
+    init(album: Album, clipsList: ClipsListProtocol, settingsStorage: UserSettingsStorageProtocol) {
         self.album = album
         self.clipsList = clipsList
-        self.storage = storage
+        self.settingsStorage = settingsStorage
 
         self.clipsList.set(delegate: self)
+        self.settingsStorage.add(observer: self)
     }
 
     // MARK: - Methods
@@ -36,37 +34,63 @@ class AlbumPresenter {
     func removeFromAlbum() {
         self.clipsList.removeSelectedClips(from: self.album)
     }
+
+    func hidesAll() {
+        self.clipsList.hidesAll()
+    }
+
+    func unhidesAll() {
+        self.clipsList.unhidesAll()
+    }
+
+    deinit {
+        self.settingsStorage.remove(observer: self)
+    }
 }
 
 extension AlbumPresenter: ClipsListDelegate {
     // MARK: - ClipsListDelegate
 
     func clipsListProviding(_ list: ClipsListProtocol, didUpdateClipsTo clips: [Clip]) {
-        self.view?.reloadList()
+        DispatchQueue.main.async {
+            self.view?.reloadList()
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, didUpdateSelectedIndicesTo indices: [Int]) {
-        self.view?.applySelection(at: indices)
+        DispatchQueue.main.async {
+            self.view?.applySelection(at: indices)
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, didUpdateEditingStateTo isEditing: Bool) {
-        self.view?.applyEditing(isEditing)
+        DispatchQueue.main.async {
+            self.view?.applyEditing(isEditing)
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, didTapClip clip: Clip, at index: Int) {
-        self.view?.presentPreviewView(for: clip)
+        DispatchQueue.main.async {
+            self.view?.presentPreviewView(for: clip)
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, failedToReadClipsWith error: ClipStorageError) {
-        self.view?.showErrorMessage("\(L10n.clipsListErrorAtReadClips)\n(\(error.makeErrorCode())")
+        DispatchQueue.main.async {
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtReadClips)\n(\(error.makeErrorCode())")
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, failedToDeleteClipsWith error: ClipStorageError) {
-        self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
+        DispatchQueue.main.async {
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
+        }
     }
 
     func clipsListProviding(_ list: ClipsListProtocol, failedToGetImageDataWith error: ClipStorageError) {
-        self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+        DispatchQueue.main.async {
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+        }
     }
 }
 
@@ -107,5 +131,13 @@ extension AlbumPresenter: ClipsListPresenterProtocol {
 
     func deleteAll() {
         self.clipsList.deleteSelectedClips()
+    }
+}
+
+extension AlbumPresenter: UserSettingsObserver {
+    // MARK: - UserSettingsObserver
+
+    func onUpdated(to settings: UserSettings) {
+        self.clipsList.visibleHiddenClips = settings.showHiddenItems
     }
 }

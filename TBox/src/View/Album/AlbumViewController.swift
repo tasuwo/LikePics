@@ -97,8 +97,10 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
         let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+        let hideItem = UIBarButtonItem(image: UIImage(systemName: "eye.slash"), style: .plain, target: self, action: #selector(self.didTapHide))
+        let unhideItem = UIBarButtonItem(image: UIImage(systemName: "eye"), style: .plain, target: self, action: #selector(self.didTapUnhide))
 
-        self.setToolbarItems([addToAlbumItem, flexibleItem, removeItem], animated: false)
+        self.setToolbarItems([addToAlbumItem, flexibleItem, hideItem, flexibleItem, unhideItem, flexibleItem, removeItem], animated: false)
         self.updateToolBar(for: self.presenter.isEditing)
     }
 
@@ -114,7 +116,9 @@ class AlbumViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapRemove() {
-        let alert = UIAlertController(title: "", message: "選択中の画像を削除しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil,
+                                      message: "選択中の画像を削除しますか？",
+                                      preferredStyle: .actionSheet)
 
         alert.addAction(.init(title: "アルバムから削除", style: .destructive, handler: { [weak self] _ in
             self?.presenter.removeFromAlbum()
@@ -125,6 +129,26 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    func didTapHide() {
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForHideMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipsListAlertForHideAction(self.presenter.selectedClips.count)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.presenter.hidesAll()
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    func didTapUnhide() {
+        self.presenter.unhidesAll()
     }
 
     // MARK: UIViewController (Override)

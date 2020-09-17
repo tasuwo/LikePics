@@ -83,6 +83,13 @@ internal enum L10n {
 
     /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
     internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
+    /// %d件のクリップを隠す
+    internal static func clipsListAlertForHideAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_hide_action", p1)
+    }
+
+    /// 選択したクリップは、設定が有効な間は全ての場所から隠されます
+    internal static let clipsListAlertForHideMessage = L10n.tr("Localizable", "clips_list_alert_for_hide_message")
     /// クリップの削除に失敗しました
     internal static let clipsListErrorAtDeleteClips = L10n.tr("Localizable", "clips_list_error_at_delete_clips")
     /// 画像の読み込みに失敗しました

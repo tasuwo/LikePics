@@ -121,8 +121,10 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
         let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
+        let hideItem = UIBarButtonItem(image: UIImage(systemName: "eye.slash"), style: .plain, target: self, action: #selector(self.didTapHide))
+        let unhideItem = UIBarButtonItem(image: UIImage(systemName: "eye"), style: .plain, target: self, action: #selector(self.didTapUnhide))
 
-        self.setToolbarItems([addToAlbumItem, flexibleItem, removeItem], animated: false)
+        self.setToolbarItems([addToAlbumItem, flexibleItem, hideItem, flexibleItem, unhideItem, flexibleItem, removeItem], animated: false)
         self.updateToolBar(for: self.presenter.isEditing)
     }
 
@@ -164,6 +166,26 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    func didTapHide() {
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForHideMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipsListAlertForHideAction(self.presenter.selectedClips.count)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.presenter.hidesAll()
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    func didTapUnhide() {
+        self.presenter.unhidesAll()
     }
 
     // MARK: UIViewController (Override)

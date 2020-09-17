@@ -150,17 +150,11 @@ extension ClipsList: ClipsListProtocol {
         self.internalClips = newClips
 
         self.selectedClips = []
-
         self.isEditing = false
     }
 
     mutating func removeSelectedClips(from album: Album) {
-        switch self.storage.update(album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
-        case .success:
-            // NOP
-            break
-
-        case let .failure(error):
+        if case let .failure(error) = self.storage.update(album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
             self.delegate?.clipsListProviding(self, failedToDeleteClipsWith: error)
             return
         }
@@ -172,7 +166,50 @@ extension ClipsList: ClipsListProtocol {
         self.internalClips = newClips
 
         self.selectedClips = []
+        self.isEditing = false
+    }
 
+    mutating func hidesAll() {
+        let newClips: [Clip]
+        switch self.storage.update(self.selectedClips, byHiding: true) {
+        case let .success(clips):
+            newClips = self.internalClips.map { clip in
+                if let updatedClip = clips.first(where: { clip.url == $0.url }) {
+                    return updatedClip
+                }
+                return clip
+            }
+
+        case let .failure(error):
+            self.delegate?.clipsListProviding(self, failedToDeleteClipsWith: error)
+            return
+        }
+
+        self.internalClips = newClips
+
+        self.selectedClips = []
+        self.isEditing = false
+    }
+
+    mutating func unhidesAll() {
+        let newClips: [Clip]
+        switch self.storage.update(self.selectedClips, byHiding: false) {
+        case let .success(clips):
+            newClips = self.internalClips.map { clip in
+                if let updatedClip = clips.first(where: { clip.url == $0.url }) {
+                    return updatedClip
+                }
+                return clip
+            }
+
+        case let .failure(error):
+            self.delegate?.clipsListProviding(self, failedToDeleteClipsWith: error)
+            return
+        }
+
+        self.internalClips = newClips
+
+        self.selectedClips = []
         self.isEditing = false
     }
 }
