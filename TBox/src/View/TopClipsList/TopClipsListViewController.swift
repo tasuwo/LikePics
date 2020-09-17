@@ -68,7 +68,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     private func updateNavigationBar(for isEditing: Bool) {
         if isEditing {
             let button = RoundedButton()
-            button.setTitle("キャンセル", for: .normal)
+            button.setTitle(L10n.topClipsListViewRightBarItemForCancelTitle, for: .normal)
             button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -76,7 +76,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
             ]
         } else {
             let button = RoundedButton()
-            button.setTitle("編集", for: .normal)
+            button.setTitle(L10n.topClipsListViewRightBarItemForSelectTitle, for: .normal)
             button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
@@ -87,12 +87,12 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapEdit() {
-        self.setEditing(true, animated: true)
+        self.presenter.setEditing(true)
     }
 
     @objc
     func didTapCancel() {
-        self.setEditing(false, animated: true)
+        self.presenter.setEditing(false)
     }
 
     // MARK: Notification
@@ -134,31 +134,32 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     func didTapAddToAlbum() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: "アルバムに追加する", style: .default, handler: { [weak self] _ in
+        alert.addAction(.init(title: L10n.topClipsListViewAlertForAddToAlbum, style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips, delegate: self.presenter)
+            let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips, delegate: self)
             self.present(viewController, animated: true, completion: nil)
         }))
 
-        alert.addAction(.init(title: "タグを追加する", style: .default, handler: { [weak self] _ in
+        alert.addAction(.init(title: L10n.topClipsListViewAlertForAddTag, style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips, delegate: self)
             self.present(viewController, animated: true, completion: nil)
         }))
 
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
 
     @objc
     func didTapRemove() {
-        let alert = UIAlertController(title: "", message: "選択中のクリップを全て削除しますか？", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: L10n.topClipsListViewAlertForDeleteMessage, preferredStyle: .alert)
 
-        alert.addAction(.init(title: "削除", style: .destructive, handler: { [weak self] _ in
+        let deleteActionTitle = L10n.topClipsListViewAlertForDeleteAction(self.presenter.selectedClips.count)
+        alert.addAction(.init(title: deleteActionTitle, style: .destructive, handler: { [weak self] _ in
             self?.presenter.deleteAll()
         }))
-        alert.addAction(.init(title: "キャンセル", style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
@@ -168,7 +169,6 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.presenter.setEditing(editing)
         self.updateCollectionView(for: editing)
 
         self.updateNavigationBar(for: editing)
@@ -187,14 +187,11 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         self.collectionView.reloadData()
     }
 
-    func deselectAll() {
-        self.collectionView.indexPathsForSelectedItems?.forEach {
-            self.collectionView.deselectItem(at: $0, animated: false)
-        }
+    func applySelection(at indices: [Int]) {
+        self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
     }
 
-    func setEditing(_ editing: Bool) {
-        guard self.isEditing != editing else { return }
+    func applyEditing(_ editing: Bool) {
         self.setEditing(editing, animated: true)
     }
 
@@ -270,11 +267,20 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
+extension TopClipsListViewController: AddingClipsToAlbumPresenterDelegate {
+    // MARK: - AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        guard isSucceeded else { return }
+        self.presenter.setEditing(false)
+    }
+}
+
 extension TopClipsListViewController: AddingTagsToClipsPresenterDelegate {
     // MARK: - AddingTagsToClipsPresenterDelegate
 
     func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
-        // TODO: Handling
-        print(isSucceeded)
+        guard isSucceeded else { return }
+        self.presenter.setEditing(false)
     }
 }

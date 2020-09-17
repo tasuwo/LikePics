@@ -12,6 +12,19 @@
 "app_root_tab_item_search" = "検索";
 "app_root_tab_item_settings" = "設定";
 
+"top_clips_list_view_right_bar_item_for_cancel_title" = "キャンセル";
+"top_clips_list_view_right_bar_item_for_select_title" = "選択";
+
+"top_clips_list_view_error_at_read_clips" = "クリップの読み込みに失敗しました";
+"top_clips_list_view_error_at_delete_clips" = "クリップの削除に失敗しました";
+"top_clips_list_view_error_at_get_image_data" = "画像の読み込みに失敗しました";
+
+"top_clips_list_view_alert_for_add_to_album" = "アルバムに追加する";
+"top_clips_list_view_alert_for_add_tag" = "タグを追加する";
+
+"top_clips_list_view_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
+"top_clips_list_view_alert_for_delete_action" = "%d件のクリップを削除";
+
 "clip_target_finder_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";

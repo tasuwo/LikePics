@@ -6,8 +6,8 @@ import Domain
 
 protocol TopClipsListViewProtocol: AnyObject {
     func reloadList()
-    func deselectAll()
-    func setEditing(_ editing: Bool)
+    func applySelection(at indices: [Int])
+    func applyEditing(_ editing: Bool)
     func presentPreviewView(for clip: Clip)
     func showErrorMessage(_ message: String)
 }
@@ -32,15 +32,12 @@ extension TopClipsListPresenter: ClipsListProvidingDelegate {
         self.view?.reloadList()
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, didUpdateEditingStateTo isEditing: Bool) {
-        self.view?.setEditing(isEditing)
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateSelectedIndicesTo indices: [Int]) {
+        self.view?.applySelection(at: indices)
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, didUpdateSelectedIndices indices: [Int]) {
-        // TODO:
-        if indices.isEmpty {
-            self.view?.deselectAll()
-        }
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateEditingStateTo isEditing: Bool) {
+        self.view?.applyEditing(isEditing)
     }
 
     func clipsListProviding(_ provider: ClipsListProviding, didTapClip clip: Clip, at index: Int) {
@@ -48,18 +45,15 @@ extension TopClipsListPresenter: ClipsListProvidingDelegate {
     }
 
     func clipsListProviding(_ provider: ClipsListProviding, failedToReadClipsWith error: ClipStorageError) {
-        // TODO:
-        self.view?.showErrorMessage("")
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtReadClips)\n(\(error.makeErrorCode())")
     }
 
     func clipsListProviding(_ provider: ClipsListProviding, failedToDeleteClipsWith error: ClipStorageError) {
-        // TODO:
-        self.view?.showErrorMessage("")
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtDeleteClips)\n(\(error.makeErrorCode())")
     }
 
     func clipsListProviding(_ provider: ClipsListProviding, failedToGetImageDataWith error: ClipStorageError) {
-        // TODO:
-        self.view?.showErrorMessage("")
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtGetImageData)\n(\(error.makeErrorCode())")
     }
 }
 
@@ -104,17 +98,5 @@ extension TopClipsListPresenter: ClipsListPresenterProtocol {
 
     func deleteAll() {
         self.clipsList.deleteSelectedClips()
-    }
-}
-
-extension TopClipsListPresenter: AddingClipsToAlbumPresenterDelegate {
-    // MARK: - AddingClipsToAlbumPresenterDelegate
-
-    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
-        // guard isSucceeded else { return }
-
-        // self.selectedClips = []
-        // self.view?.deselectAll()
-        // self.view?.endEditing()
     }
 }
