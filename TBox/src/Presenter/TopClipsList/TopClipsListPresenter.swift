@@ -23,6 +23,12 @@ class TopClipsListPresenter {
         self.clipsList = clipsList
         self.clipsList.set(delegate: self)
     }
+
+    // MARK: - Methods
+
+    func reload() {
+        self.clipsList.loadAll()
+    }
 }
 
 extension TopClipsListPresenter: ClipsListProvidingDelegate {
@@ -78,10 +84,6 @@ extension TopClipsListPresenter: ClipsListPresenterProtocol {
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
         return self.clipsList.getImageData(for: layer, in: clip)
-    }
-
-    func reload() {
-        self.clipsList.reload()
     }
 
     func setEditing(_ editing: Bool) {

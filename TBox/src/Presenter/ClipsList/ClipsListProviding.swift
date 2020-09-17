@@ -12,7 +12,7 @@ protocol ClipsListProviding {
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
     mutating func set(delegate: ClipsListProvidingDelegate)
-    mutating func reload()
+    mutating func loadAll()
     mutating func setEditing(_ isEditing: Bool)
     mutating func select(at index: Int)
     mutating func deselect(at index: Int)

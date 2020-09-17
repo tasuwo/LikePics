@@ -75,7 +75,7 @@ extension ClipsList: ClipsListProviding {
         self.delegate = delegate
     }
 
-    mutating func reload() {
+    mutating func loadAll() {
         switch self.storage.readAllClips() {
         case let .success(clips):
             self.clips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
