@@ -30,7 +30,7 @@ struct ClipsList {
         }
     }
 
-    weak var delegate: ClipsListProvidingDelegate?
+    weak var delegate: ClipsListDelegate?
 
     private let storage: ClipStorageProtocol
     private let logger: TBoxLoggable
@@ -44,7 +44,7 @@ struct ClipsList {
     }
 }
 
-extension ClipsList: ClipsListProviding {
+extension ClipsList: ClipsListProtocol {
     // MARK: - ClipsListProviding
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
@@ -72,7 +72,7 @@ extension ClipsList: ClipsListProviding {
         }
     }
 
-    mutating func set(delegate: ClipsListProvidingDelegate) {
+    mutating func set(delegate: ClipsListDelegate) {
         self.delegate = delegate
     }
 

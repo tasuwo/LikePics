@@ -13,13 +13,13 @@ protocol TopClipsListViewProtocol: AnyObject {
 }
 
 class TopClipsListPresenter {
-    private var clipsList: ClipsListProviding
+    private var clipsList: ClipsListProtocol
 
     weak var view: TopClipsListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(clipsList: ClipsListProviding) {
+    init(clipsList: ClipsListProtocol) {
         self.clipsList = clipsList
         self.clipsList.set(delegate: self)
     }
@@ -31,34 +31,34 @@ class TopClipsListPresenter {
     }
 }
 
-extension TopClipsListPresenter: ClipsListProvidingDelegate {
-    // MARK: - ClipsListProvidingDelegate
+extension TopClipsListPresenter: ClipsListDelegate {
+    // MARK: - ClipsListDelegate
 
-    func clipsListProviding(_ provider: ClipsListProviding, didUpdateClipsTo clips: [Clip]) {
+    func clipsListProviding(_ list: ClipsListProtocol, didUpdateClipsTo clips: [Clip]) {
         self.view?.reloadList()
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, didUpdateSelectedIndicesTo indices: [Int]) {
+    func clipsListProviding(_ list: ClipsListProtocol, didUpdateSelectedIndicesTo indices: [Int]) {
         self.view?.applySelection(at: indices)
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, didUpdateEditingStateTo isEditing: Bool) {
+    func clipsListProviding(_ list: ClipsListProtocol, didUpdateEditingStateTo isEditing: Bool) {
         self.view?.applyEditing(isEditing)
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, didTapClip clip: Clip, at index: Int) {
+    func clipsListProviding(_ list: ClipsListProtocol, didTapClip clip: Clip, at index: Int) {
         self.view?.presentPreviewView(for: clip)
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, failedToReadClipsWith error: ClipStorageError) {
+    func clipsListProviding(_ list: ClipsListProtocol, failedToReadClipsWith error: ClipStorageError) {
         self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtReadClips)\n(\(error.makeErrorCode())")
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, failedToDeleteClipsWith error: ClipStorageError) {
+    func clipsListProviding(_ list: ClipsListProtocol, failedToDeleteClipsWith error: ClipStorageError) {
         self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtDeleteClips)\n(\(error.makeErrorCode())")
     }
 
-    func clipsListProviding(_ provider: ClipsListProviding, failedToGetImageDataWith error: ClipStorageError) {
+    func clipsListProviding(_ list: ClipsListProtocol, failedToGetImageDataWith error: ClipStorageError) {
         self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtGetImageData)\n(\(error.makeErrorCode())")
     }
 }

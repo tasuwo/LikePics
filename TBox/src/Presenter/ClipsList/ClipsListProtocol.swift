@@ -4,14 +4,14 @@
 
 import Domain
 
-protocol ClipsListProviding {
+protocol ClipsListProtocol {
     var clips: [Clip] { get }
     var selectedClips: [Clip] { get }
     var selectedIndices: [Int] { get }
     var isEditing: Bool { get }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
-    mutating func set(delegate: ClipsListProvidingDelegate)
+    mutating func set(delegate: ClipsListDelegate)
     mutating func loadAll()
     mutating func setEditing(_ isEditing: Bool)
     mutating func select(at index: Int)
