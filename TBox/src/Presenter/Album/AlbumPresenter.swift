@@ -4,192 +4,108 @@
 
 import Domain
 
-enum AlbumViewNavigationItem {
-    case cancel
-    case edit
-    case save
+protocol AlbumViewProtocol: AnyObject {
+    func reloadList()
+    func applySelection(at indices: [Int])
+    func applyEditing(_ editing: Bool)
+    func presentPreviewView(for clip: Clip)
+    func showErrorMessage(_ message: String)
 }
 
-protocol AlbumViewProtocol: ClipsListViewProtocol {
-    func setNavigationItems(_ items: [AlbumViewNavigationItem])
+class AlbumPresenter {
+    private var clipsList: ClipsListProviding
 
-    func setNavigationTitle(_ title: String, asEditable: Bool)
-}
+    weak var view: AlbumViewProtocol?
 
-protocol AlbumPresenterProtocol: ClipsListPresenterProtocol & AddingClipsToAlbumPresenterDelegate {
-    var album: Album { get }
+    private let storage: ClipStorageProtocol
 
-    func setup()
-
-    func set(view: AlbumViewProtocol)
-
-    func deleteFromAlbum()
-
-    func updateAlbumTitle()
-
-    func replaceAlbum(by album: Album)
-
-    func setTitleEditing(_ editing: Bool)
-
-    func edit(title: String)
-}
-
-class AlbumPresenter: ClipsListPresenter {
-    enum EditTarget {
-        case clip
-        case title
-    }
-
-    // MARK: - Properties
-
-    // MARK: ClipsListPresenter
-
-    var view: ClipsListViewProtocol? {
-        return self.internalView
-    }
-
-    var clips: [Clip] {
-        return self.album.clips
-    }
-
-    var selectedClips: [Clip]
-
-    var isEditing: Bool {
-        get {
-            return self.editingTarget != nil
-        }
-        set {
-            // NOP
-        }
-    }
-
-    var storage: ClipStorageProtocol
-
-    // MARK: AlbumPresenterProtocol
-
-    var album: Album
-
-    // MARK: Internal
-
-    private weak var internalView: AlbumViewProtocol?
-
-    private var editingTarget: EditTarget? {
-        didSet {
-            self.updateNavigationItem()
-        }
-    }
-
-    private var editingTitle: String? {
-        didSet {
-            self.updateNavigationItem()
-        }
-    }
+    private(set) var album: Album
 
     // MARK: - Lifecycle
 
-    init(album: Album, storage: ClipStorageProtocol) {
+    init(album: Album, clipsList: ClipsListProviding, storage: ClipStorageProtocol) {
         self.album = album
+        self.clipsList = clipsList
         self.storage = storage
-        self.selectedClips = []
+
+        self.clipsList.set(delegate: self)
     }
 
     // MARK: - Methods
 
-    private func updateNavigationItem() {
-        let items: [AlbumViewNavigationItem] = {
-            switch self.editingTarget {
-            case .title:
-                return []
-
-            case .clip where self.editingTitle?.isEmpty == false:
-                return [.save]
-
-            case .clip:
-                return [.cancel]
-
-            case .none:
-                return [.edit]
-            }
-        }()
-        self.internalView?.setNavigationItems(items)
+    func removeFromAlbum() {
+        self.clipsList.removeSelectedClips(from: self.album)
     }
 }
 
-extension AlbumPresenter: AlbumPresenterProtocol {
-    // MARK: - AlbumPresenterProtocol
+extension AlbumPresenter: ClipsListProvidingDelegate {
+    // MARK: - ClipsListProvidingDelegate
 
-    func updateClips(to clips: [Clip]) {
-        self.album = self.album.updatingClips(to: clips)
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateClipsTo clips: [Clip]) {
+        self.view?.reloadList()
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateSelectedIndicesTo indices: [Int]) {
+        self.view?.applySelection(at: indices)
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, didUpdateEditingStateTo isEditing: Bool) {
+        self.view?.applyEditing(isEditing)
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, didTapClip clip: Clip, at index: Int) {
+        self.view?.presentPreviewView(for: clip)
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToReadClipsWith error: ClipStorageError) {
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtReadClips)\n(\(error.makeErrorCode())")
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToDeleteClipsWith error: ClipStorageError) {
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtDeleteClips)\n(\(error.makeErrorCode())")
+    }
+
+    func clipsListProviding(_ provider: ClipsListProviding, failedToGetImageDataWith error: ClipStorageError) {
+        self.view?.showErrorMessage("\(L10n.topClipsListViewErrorAtGetImageData)\n(\(error.makeErrorCode())")
+    }
+}
+
+extension AlbumPresenter: ClipsListPresenterProtocol {
+    // MARK: - ClipsListPresenterProtocol
+
+    var clips: [Clip] {
+        self.clipsList.clips
+    }
+
+    var selectedClips: [Clip] {
+        self.clipsList.selectedClips
+    }
+
+    var selectedIndices: [Int] {
+        self.clipsList.selectedIndices
+    }
+
+    var isEditing: Bool {
+        self.clipsList.isEditing
+    }
+
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
+        return self.clipsList.getImageData(for: layer, in: clip)
     }
 
     func setEditing(_ editing: Bool) {
-        if self.isEditing != editing {
-            self.editingTitle = nil
-            self.selectedClips = []
-            self.view?.deselectAll()
-        }
-        self.editingTarget = editing ? .clip : nil
-        self.internalView?.setNavigationTitle(self.album.title, asEditable: self.isEditing)
+        self.clipsList.setEditing(editing)
     }
 
-    func setup() {
-        self.setEditing(false)
+    func select(at index: Int) {
+        self.clipsList.select(at: index)
     }
 
-    func set(view: AlbumViewProtocol) {
-        self.internalView = view
+    func deselect(at index: Int) {
+        self.clipsList.deselect(at: index)
     }
 
-    func deleteFromAlbum() {
-        switch self.storage.update(self.album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
-        case .success:
-            // NOP
-            break
-
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-            return
-        }
-
-        let newClips: [Clip] = self.album.clips.compactMap { clip in
-            if self.selectedClips.contains(where: { clip.url == $0.url }) { return nil }
-            return clip
-        }
-        self.album = self.album.updatingClips(to: newClips)
-
-        self.selectedClips = []
-        self.internalView?.deselectAll()
-
-        self.internalView?.reload()
-
-        self.internalView?.endEditing()
-    }
-
-    func updateAlbumTitle() {
-        guard let newTitle = self.editingTitle, !newTitle.isEmpty else { return }
-        switch self.storage.update(self.album, titleTo: newTitle) {
-        case .success:
-            // NOP
-            break
-
-        case let .failure(error):
-            self.view?.showErrorMassage(Self.resolveErrorMessage(error))
-            return
-        }
-        self.album = self.album.updatingTitle(to: newTitle)
-    }
-
-    func replaceAlbum(by album: Album) {
-        self.album = album
-        self.internalView?.reload()
-    }
-
-    func setTitleEditing(_ editing: Bool) {
-        guard self.isEditing else { return }
-        self.editingTarget = editing ? .title : .clip
-    }
-
-    func edit(title: String) {
-        self.editingTitle = title
+    func deleteAll() {
+        self.clipsList.deleteSelectedClips()
     }
 }

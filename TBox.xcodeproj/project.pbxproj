@@ -54,7 +54,6 @@
 		2C3C25FD250D72A900D623C5 /* AlbumCollectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C3C25FC250D72A900D623C5 /* AlbumCollectionViewController.storyboard */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
-		2C3CCDBC24F2D35C00FAC660 /* AlbumPresenterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBB24F2D35C00FAC660 /* AlbumPresenterProxy.swift */; };
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
 		2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */; };
 		2C3D649D2512E17F009C0749 /* ClipsListProvidingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D649C2512E17F009C0749 /* ClipsListProvidingDelegate.swift */; };
@@ -548,7 +547,6 @@
 		2C3C25FC250D72A900D623C5 /* AlbumCollectionViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumCollectionViewController.storyboard; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
-		2C3CCDBB24F2D35C00FAC660 /* AlbumPresenterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenterProxy.swift; sourceTree = "<group>"; };
 		2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift"; sourceTree = "<group>"; };
 		2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		2C3D649C2512E17F009C0749 /* ClipsListProvidingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListProvidingDelegate.swift; sourceTree = "<group>"; };
@@ -1000,7 +998,6 @@
 			isa = PBXGroup;
 			children = (
 				2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */,
-				2C3CCDBB24F2D35C00FAC660 /* AlbumPresenterProxy.swift */,
 			);
 			path = Album;
 			sourceTree = "<group>";
@@ -2967,7 +2964,6 @@
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
 				2C45D40824EEBE020045B6D3 /* AlbumListPresenter.swift in Sources */,
 				2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
-				2C3CCDBC24F2D35C00FAC660 /* AlbumPresenterProxy.swift in Sources */,
 				2C45D3F624EC2FD00045B6D3 /* SearchResultPresenter.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2C3D64A02512E48B009C0749 /* UICollectionView+bind.swift in Sources */,

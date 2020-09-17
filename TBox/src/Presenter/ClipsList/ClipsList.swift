@@ -138,4 +138,26 @@ extension ClipsList: ClipsListProviding {
 
         self.isEditing = false
     }
+
+    mutating func removeSelectedClips(from album: Album) {
+        switch self.storage.update(album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
+        case .success:
+            // NOP
+            break
+
+        case let .failure(error):
+            self.delegate?.clipsListProviding(self, failedToDeleteClipsWith: error)
+            return
+        }
+
+        let newClips: [Clip] = self.clips.compactMap { clip in
+            if self.selectedClips.contains(where: { clip.url == $0.url }) { return nil }
+            return clip
+        }
+        self.clips = newClips
+
+        self.selectedClips = []
+
+        self.isEditing = false
+    }
 }

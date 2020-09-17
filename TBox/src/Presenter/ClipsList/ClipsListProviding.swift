@@ -17,4 +17,5 @@ protocol ClipsListProviding {
     mutating func select(at index: Int)
     mutating func deselect(at index: Int)
     mutating func deleteSelectedClips()
+    mutating func removeSelectedClips(from album: Album)
 }

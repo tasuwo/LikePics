@@ -121,9 +121,10 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumViewController(album: Album) -> UIViewController {
-        let presenter = AlbumPresenter(album: album, storage: self.clipsStorage)
-        let proxy = AlbumPresenterProxy(presenter: presenter)
-        return AlbumViewController(factory: self, presenter: proxy)
+        let presenter = AlbumPresenter(album: album,
+                                       clipsList: ClipsList(clips: album.clips, storage: self.clipsStorage, logger: self.logger),
+                                       storage: self.clipsStorage)
+        return AlbumViewController(factory: self, presenter: presenter)
     }
 
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {

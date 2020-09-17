@@ -95,12 +95,12 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
     @objc
     func didTapEdit() {
-        self.setEditing(true, animated: true)
+        self.presenter.setEditing(true)
     }
 
     @objc
     func didTapCancel() {
-        self.setEditing(false, animated: true)
+        self.presenter.setEditing(false)
     }
 
     // MARK: ToolBar
@@ -141,7 +141,6 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.presenter.setEditing(editing)
         self.updateCollectionView(for: editing)
 
         self.updateNavigationBar(for: editing)
