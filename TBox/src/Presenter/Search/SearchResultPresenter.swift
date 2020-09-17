@@ -16,6 +16,19 @@ enum SearchContext {
     case keyword(keyword: String)
     case tag(tagName: String)
     case album(albumName: String)
+
+    var title: String {
+        switch self {
+        case let .album(albumName: name):
+            return name
+
+        case let .keyword(keyword: keyword):
+            return keyword
+
+        case let .tag(tagName: tag):
+            return tag
+        }
+    }
 }
 
 class SearchResultPresenter {

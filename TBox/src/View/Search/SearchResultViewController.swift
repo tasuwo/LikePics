@@ -42,19 +42,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     // MARK: - Methods
 
     private func setupAppearance() {
-        let title: String = {
-            switch self.presenter.context {
-            case let .album(albumName: name):
-                return name
-
-            case let .keyword(keyword: keyword):
-                return keyword
-
-            case let .tag(tagName: tag):
-                return tag
-            }
-        }()
-        self.title = title
+        self.title = self.presenter.context.title
     }
 
     // MARK: CollectionView
