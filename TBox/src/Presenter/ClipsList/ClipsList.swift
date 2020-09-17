@@ -34,11 +34,16 @@ struct ClipsList {
 
     var selectedIndices: [Int] {
         return self.selectedClips.compactMap { selectedClip in
-            self.internalClips.firstIndex(where: { $0.url == selectedClip.url })
+            self.clips.firstIndex(where: { $0.url == selectedClip.url })
         }
     }
 
     var visibleHiddenClips: Bool {
+        willSet {
+            guard self.isEditing else { return }
+            self.selectedClips = []
+            self.isEditing = false
+        }
         didSet {
             self.delegate?.clipsListProviding(self, didUpdateClipsTo: self.clips)
         }
@@ -109,8 +114,8 @@ extension ClipsList: ClipsListProtocol {
     }
 
     mutating func select(at index: Int) {
-        guard self.internalClips.indices.contains(index) else { return }
-        let clip = self.internalClips[index]
+        guard self.clips.indices.contains(index) else { return }
+        let clip = self.clips[index]
 
         if self.isEditing {
             guard !self.selectedClips.contains(where: { $0.url == clip.url }) else {
@@ -123,9 +128,14 @@ extension ClipsList: ClipsListProtocol {
         }
     }
 
+    mutating func selectAll() {
+        guard self.isEditing else { return }
+        self.selectedClips = self.clips
+    }
+
     mutating func deselect(at index: Int) {
-        guard self.internalClips.indices.contains(index) else { return }
-        let clip = self.internalClips[index]
+        guard self.clips.indices.contains(index) else { return }
+        let clip = self.clips[index]
 
         if self.isEditing {
             guard let index = self.selectedClips.firstIndex(where: { $0.url == clip.url }) else {
@@ -135,6 +145,11 @@ extension ClipsList: ClipsListProtocol {
         } else {
             self.selectedClips = []
         }
+    }
+
+    mutating func deselectAll() {
+        guard self.isEditing else { return }
+        self.selectedClips = []
     }
 
     mutating func deleteSelectedClips() {

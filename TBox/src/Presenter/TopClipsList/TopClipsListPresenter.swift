@@ -41,6 +41,14 @@ class TopClipsListPresenter {
         self.clipsList.unhidesAll()
     }
 
+    func selectAll() {
+        self.clipsList.selectAll()
+    }
+
+    func deselectAll() {
+        self.clipsList.deselectAll()
+    }
+
     deinit {
         self.settingsStorage.remove(observer: self)
     }

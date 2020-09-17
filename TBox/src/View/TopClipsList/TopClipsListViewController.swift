@@ -67,12 +67,20 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
     private func updateNavigationBar(for isEditing: Bool) {
         if isEditing {
-            let button = RoundedButton()
-            button.setTitle(L10n.confirmAlertCancel, for: .normal)
-            button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
+            let cancelButton = RoundedButton()
+            cancelButton.setTitle(L10n.confirmAlertCancel, for: .normal)
+            cancelButton.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
+
+            let selectAllButton = RoundedButton()
+            selectAllButton.setTitle(L10n.clipsListRightBarItemForSelectAllTitle, for: .normal)
+            selectAllButton.setTitle(L10n.clipsListRightBarItemForDeselectAllTitle, for: .selected)
+            selectAllButton.addTarget(self, action: #selector(self.didTapSelectAll), for: .touchUpInside)
 
             self.navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: button)
+                UIBarButtonItem(customView: cancelButton)
+            ]
+            self.navigationItem.leftBarButtonItems = [
+                UIBarButtonItem(customView: selectAllButton)
             ]
         } else {
             let button = RoundedButton()
@@ -82,6 +90,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
             self.navigationItem.rightBarButtonItems = [
                 UIBarButtonItem(customView: button)
             ]
+            self.navigationItem.leftBarButtonItems = []
         }
     }
 
@@ -93,6 +102,16 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     @objc
     func didTapCancel() {
         self.presenter.setEditing(false)
+    }
+
+    @objc
+    func didTapSelectAll(sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        if sender.isSelected {
+            self.presenter.selectAll()
+        } else {
+            self.presenter.deselectAll()
+        }
     }
 
     // MARK: Notification

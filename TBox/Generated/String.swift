@@ -96,6 +96,10 @@ internal enum L10n {
     internal static let clipsListErrorAtGetImageData = L10n.tr("Localizable", "clips_list_error_at_get_image_data")
     /// クリップの読み込みに失敗しました
     internal static let clipsListErrorAtReadClips = L10n.tr("Localizable", "clips_list_error_at_read_clips")
+    /// 全て選択解除
+    internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
+    /// 全て選択
+    internal static let clipsListRightBarItemForSelectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_all_title")
     /// 選択
     internal static let clipsListRightBarItemForSelectTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_title")
     /// キャンセル
