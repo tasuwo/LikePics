@@ -22,9 +22,9 @@
     - [x] StorageErrorをdisplayableにする
 - [x] Preview画面と情報画面を遷移しやすくする
   - [x] Dismissal interactive transition
-- [ ] Hiddenアイテムの実装
-  - [ ] 設定画面から表示のOn/Offができる
-  - [ ] Hiddenアイテムでフィルタできる
+- [x] Hiddenアイテムの実装
+  - [x] 設定画面から表示のOn/Offができる
+  - [x] Hiddenアイテムでフィルタできる
 - [ ] 検索結果/アルバムに対する全て選択の実装
 - [ ] 各種画面からタグ追加できる
   - [ ] ClipInformation
