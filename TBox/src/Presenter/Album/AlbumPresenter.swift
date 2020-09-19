@@ -149,3 +149,5 @@ extension AlbumPresenter: UserSettingsObserver {
         self.clipsList.visibleHiddenClips = settings.showHiddenItems
     }
 }
+
+extension AlbumPresenter: ClipsListNavigationPresenterDataSource {}

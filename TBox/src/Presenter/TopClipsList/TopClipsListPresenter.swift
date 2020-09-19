@@ -147,3 +147,5 @@ extension TopClipsListPresenter: UserSettingsObserver {
         self.clipsList.visibleHiddenClips = settings.showHiddenItems
     }
 }
+
+extension TopClipsListPresenter: ClipsListNavigationPresenterDataSource {}

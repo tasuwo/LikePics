@@ -12,15 +12,16 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
     let factory: Factory
     let presenter: Presenter
-    let navigationItemManager = ClipsListNavigationItemManager()
+    let navigationItemsProvider: ClipsListNavigationItemsProvider
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TopClipsListPresenter) {
+    init(factory: Factory, presenter: TopClipsListPresenter, navigationItemsProvider: ClipsListNavigationItemsProvider) {
         self.factory = factory
         self.presenter = presenter
+        self.navigationItemsProvider = navigationItemsProvider
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -63,9 +64,8 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationItemManager.delegate = self
-        self.navigationItemManager.dataSource = self.presenter
-        self.navigationItemManager.navigationItem = self.navigationItem
+        self.navigationItemsProvider.delegate = self
+        self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
     // MARK: Notification
@@ -168,7 +168,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
 
         self.updateCollectionView(for: editing)
 
-        self.navigationItemManager.setEditing(editing, animated: animated)
+        self.navigationItemsProvider.setEditing(editing, animated: animated)
         self.updateToolBar(for: editing)
     }
 
@@ -186,7 +186,7 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
 
     func applySelection(at indices: [Int]) {
         self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
-        self.navigationItemManager.onUpdateSelection()
+        self.navigationItemsProvider.onUpdateSelection()
     }
 
     func applyEditing(_ editing: Bool) {
@@ -265,22 +265,22 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension TopClipsListViewController: ClipsListNavigationItemManagerDelegate {
-    // MARK: - ClipsListNavigationItemManagerDelegate
+extension TopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
+    // MARK: - ClipsListNavigationItemsProviderDelegate
 
-    func didTapEditButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.setEditing(true)
     }
 
-    func didTapCancelButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.setEditing(false)
     }
 
-    func didTapSelectAllButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.selectAll()
     }
 
-    func didTapDeselectAllButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.deselectAll()
     }
 }
@@ -300,17 +300,5 @@ extension TopClipsListViewController: AddingTagsToClipsPresenterDelegate {
     func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
         guard isSucceeded else { return }
         self.presenter.setEditing(false)
-    }
-}
-
-extension TopClipsListPresenter: ClipsListNavigationItemManagerDataSource {
-    // MARK: - ClipsListNavigationItemManagerDataSource
-
-    func clipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
-        return self.clips.count
-    }
-
-    func selectedClipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
-        return self.selectedClips.count
     }
 }

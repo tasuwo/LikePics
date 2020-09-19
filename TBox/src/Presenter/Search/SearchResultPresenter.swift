@@ -164,3 +164,5 @@ extension SearchResultPresenter: UserSettingsObserver {
         self.clipsList.visibleHiddenClips = settings.showHiddenItems
     }
 }
+
+extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {}

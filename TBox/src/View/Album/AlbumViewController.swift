@@ -12,16 +12,17 @@ class AlbumViewController: UIViewController, ClipsListViewController {
 
     let factory: Factory
     let presenter: Presenter
-    let navigationItemManager = ClipsListNavigationItemManager()
+    let navigationItemsProvider: ClipsListNavigationItemsProvider
 
     @IBOutlet var collectionView: ClipsCollectionView!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AlbumPresenter) {
+    init(factory: Factory, presenter: AlbumPresenter, navigationItemsProvider: ClipsListNavigationItemsProvider) {
         self.factory = factory
         self.presenter = presenter
+        self.navigationItemsProvider = navigationItemsProvider
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -59,9 +60,8 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationItemManager.delegate = self
-        self.navigationItemManager.dataSource = self.presenter
-        self.navigationItemManager.navigationItem = self.navigationItem
+        self.navigationItemsProvider.delegate = self
+        self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
     // MARK: ToolBar
@@ -131,7 +131,7 @@ class AlbumViewController: UIViewController, ClipsListViewController {
 
         self.updateCollectionView(for: editing)
 
-        self.navigationItemManager.setEditing(editing, animated: animated)
+        self.navigationItemsProvider.setEditing(editing, animated: animated)
         self.updateToolBar(for: editing)
     }
 }
@@ -145,7 +145,7 @@ extension AlbumViewController: AlbumViewProtocol {
 
     func applySelection(at indices: [Int]) {
         self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
-        self.navigationItemManager.onUpdateSelection()
+        self.navigationItemsProvider.onUpdateSelection()
     }
 
     func applyEditing(_ editing: Bool) {
@@ -224,22 +224,22 @@ extension AlbumViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension AlbumViewController: ClipsListNavigationItemManagerDelegate {
-    // MARK: - ClipsListNavigationItemManagerDelegate
+extension AlbumViewController: ClipsListNavigationItemsProviderDelegate {
+    // MARK: - ClipsListNavigationItemsProviderDelegate
 
-    func didTapEditButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.setEditing(true)
     }
 
-    func didTapCancelButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.setEditing(false)
     }
 
-    func didTapSelectAllButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.selectAll()
     }
 
-    func didTapDeselectAllButton(_ manager: ClipsListNavigationItemManager) {
+    func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.deselectAll()
     }
 }
@@ -250,17 +250,5 @@ extension AlbumViewController: AddingClipsToAlbumPresenterDelegate {
     func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
         guard isSucceeded else { return }
         self.presenter.setEditing(false)
-    }
-}
-
-extension AlbumPresenter: ClipsListNavigationItemManagerDataSource {
-    // MARK: - ClipsListNavigationItemManagerDataSource
-
-    func clipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
-        return self.clips.count
-    }
-
-    func selectedClipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
-        return self.selectedClips.count
     }
 }

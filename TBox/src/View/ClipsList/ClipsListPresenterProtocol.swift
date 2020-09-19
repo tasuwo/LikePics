@@ -29,3 +29,15 @@ protocol ClipsListPresenterProtocol {
 
     func deleteAll()
 }
+
+extension ClipsListPresenterProtocol where Self: ClipsListNavigationPresenterDataSource {
+    // MARK: - ClipsListNavigationPresenterDataSource
+
+    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.clips.count
+    }
+
+    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.selectedClips.count
+    }
+}

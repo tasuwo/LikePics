@@ -65,7 +65,15 @@ extension DependencyContainer: ViewControllerFactory {
                                   storage: self.clipsStorage,
                                   logger: self.logger)
         let presenter = TopClipsListPresenter(clipsList: clipsList, settingsStorage: self.userSettingsStorage)
-        return UINavigationController(rootViewController: TopClipsListViewController(factory: self, presenter: presenter))
+
+        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+
+        let viewController = TopClipsListViewController(factory: self,
+                                                        presenter: presenter,
+                                                        navigationItemsProvider: navigationItemsProvider)
+
+        return UINavigationController(rootViewController: viewController)
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
@@ -117,10 +125,17 @@ extension DependencyContainer: ViewControllerFactory {
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
                                   storage: self.clipsStorage,
                                   logger: self.logger)
+
         let presenter = SearchResultPresenter(context: context,
                                               clipsList: clipsList,
                                               settingsStorage: self.userSettingsStorage)
-        return SearchResultViewController(factory: self, presenter: presenter)
+
+        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+
+        return SearchResultViewController(factory: self,
+                                          presenter: presenter,
+                                          navigationItemsProvider: navigationItemsProvider)
     }
 
     func makeAlbumListViewController() -> UIViewController {
@@ -137,7 +152,13 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = AlbumPresenter(album: album,
                                        clipsList: clipsList,
                                        settingsStorage: self.userSettingsStorage)
-        return AlbumViewController(factory: self, presenter: presenter)
+
+        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+
+        return AlbumViewController(factory: self,
+                                   presenter: presenter,
+                                   navigationItemsProvider: navigationItemsProvider)
     }
 
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {
