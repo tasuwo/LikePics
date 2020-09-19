@@ -65,6 +65,10 @@ class ClipsListToolBarItemsPresenter {
         self.toolBar?.set([
             .add,
             .spacer,
+            .hide,
+            .spacer,
+            .unhide,
+            .spacer,
             self.target == .album ? .removeFromAlbum : .delete
         ])
     }
