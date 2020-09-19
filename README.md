@@ -27,22 +27,22 @@
   - [x] Hiddenアイテムでフィルタできる
 - [x] 検索結果/アルバムに対する全て選択の実装
   - [x] NavigationItem Presenter
-- [ ] 各種画面からタグ追加できる
-  - [ ] ClipInformation
-  - [ ] ClipPreview
-  - [ ] SearchResult
-  - [ ] Album
+- [x] 各種画面からタグ追加できる
+  - [x] ClipInformation
+  - [x] SearchResult
+  - [x] Album
+- [ ] Previewから各種編集操作が行える
+- [ ] Share時にタグやアルバムを選択できる
+- [ ] 画像をエクスポートできる
+- [ ] iCloudバックアップできる
 - [ ] 各種画面でソートできる
   - [ ] 追加の新しい順
   - [ ] 追加の古い順
   - [ ] 更新の新しい順
   - [ ] 更新の古い順
-- [ ] Share時にタグやアルバムを選択できる
 - [ ] 検索
   - [ ] アルバムを検索できる
   - [ ] タグを検索できる
-- [ ] iCloudバックアップできる
-- [ ] 画像をエクスポートできる
 
 ### Optional
 
