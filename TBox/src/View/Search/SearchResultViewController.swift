@@ -12,6 +12,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
     let factory: Factory
     let presenter: Presenter
+    let navigationItemManager = ClipsListNavigationItemManager()
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
@@ -58,37 +59,9 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.updateNavigationBar(for: self.presenter.isEditing)
-    }
-
-    private func updateNavigationBar(for isEditing: Bool) {
-        if isEditing {
-            let button = RoundedButton()
-            button.setTitle(L10n.confirmAlertCancel, for: .normal)
-            button.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
-
-            self.navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: button)
-            ]
-        } else {
-            let button = RoundedButton()
-            button.setTitle(L10n.clipsListRightBarItemForSelectTitle, for: .normal)
-            button.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
-
-            self.navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: button)
-            ]
-        }
-    }
-
-    @objc
-    func didTapEdit() {
-        self.presenter.setEditing(true)
-    }
-
-    @objc
-    func didTapCancel() {
-        self.presenter.setEditing(false)
+        self.navigationItemManager.delegate = self
+        self.navigationItemManager.dataSource = self.presenter
+        self.navigationItemManager.navigationItem = self.navigationItem
     }
 
     // MARK: ToolBar
@@ -156,7 +129,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 
         self.updateCollectionView(for: editing)
 
-        self.updateNavigationBar(for: editing)
+        self.navigationItemManager.setEditing(editing, animated: animated)
         self.updateToolBar(for: editing)
     }
 }
@@ -170,6 +143,7 @@ extension SearchResultViewController: SearchResultViewProtocol {
 
     func applySelection(at indices: [Int]) {
         self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
+        self.navigationItemManager.onUpdateSelection()
     }
 
     func applyEditing(_ editing: Bool) {
@@ -248,11 +222,43 @@ extension SearchResultViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
+extension SearchResultViewController: ClipsListNavigationItemManagerDelegate {
+    // MARK: - ClipsListNavigationItemManagerDelegate
+
+    func didTapEditButton(_ manager: ClipsListNavigationItemManager) {
+        self.presenter.setEditing(true)
+    }
+
+    func didTapCancelButton(_ manager: ClipsListNavigationItemManager) {
+        self.presenter.setEditing(false)
+    }
+
+    func didTapSelectAllButton(_ manager: ClipsListNavigationItemManager) {
+        self.presenter.selectAll()
+    }
+
+    func didTapDeselectAllButton(_ manager: ClipsListNavigationItemManager) {
+        self.presenter.deselectAll()
+    }
+}
+
 extension SearchResultViewController: AddingClipsToAlbumPresenterDelegate {
     // MARK: - AddingClipsToAlbumPresenterDelegate
 
     func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
         guard isSucceeded else { return }
         self.presenter.setEditing(false)
+    }
+}
+
+extension SearchResultPresenter: ClipsListNavigationItemManagerDataSource {
+    // MARK: - ClipsListNavigationItemManagerDataSource
+
+    func clipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
+        return self.clips.count
+    }
+
+    func selectedClipsCount(_ manager: ClipsListNavigationItemManager) -> Int {
+        return self.selectedClips.count
     }
 }
