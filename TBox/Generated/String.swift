@@ -81,6 +81,12 @@ internal enum L10n {
         return L10n.tr("Localizable", "clips_list_alert_for_delete_action", p1)
     }
 
+    /// 削除
+    internal static let clipsListAlertForDeleteInAlbumActionDelete = L10n.tr("Localizable", "clips_list_alert_for_delete_in_album_action_delete")
+    /// アルバムから削除
+    internal static let clipsListAlertForDeleteInAlbumActionRemoveFromAlbum = L10n.tr("Localizable", "clips_list_alert_for_delete_in_album_action_remove_from_album")
+    /// これらのクリップを削除、あるいはアルバムから削除しますか？
+    internal static let clipsListAlertForDeleteInAlbumMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_in_album_message")
     /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
     internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
     /// %d件のクリップを隠す

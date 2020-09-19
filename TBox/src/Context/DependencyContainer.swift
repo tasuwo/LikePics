@@ -69,9 +69,13 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
+        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .top, dataSource: presenter)
+        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+
         let viewController = TopClipsListViewController(factory: self,
                                                         presenter: presenter,
-                                                        navigationItemsProvider: navigationItemsProvider)
+                                                        navigationItemsProvider: navigationItemsProvider,
+                                                        toolBarItemsProvider: toolBarItemsProvider)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -133,9 +137,13 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
+        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .searchResult, dataSource: presenter)
+        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+
         return SearchResultViewController(factory: self,
                                           presenter: presenter,
-                                          navigationItemsProvider: navigationItemsProvider)
+                                          navigationItemsProvider: navigationItemsProvider,
+                                          toolBarItemsProvider: toolBarItemsProvider)
     }
 
     func makeAlbumListViewController() -> UIViewController {
@@ -156,9 +164,13 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
+        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .album, dataSource: presenter)
+        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+
         return AlbumViewController(factory: self,
                                    presenter: presenter,
-                                   navigationItemsProvider: navigationItemsProvider)
+                                   navigationItemsProvider: navigationItemsProvider,
+                                   toolBarItemsProvider: toolBarItemsProvider)
     }
 
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {

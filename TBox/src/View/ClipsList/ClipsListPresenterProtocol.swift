@@ -41,3 +41,11 @@ extension ClipsListPresenterProtocol where Self: ClipsListNavigationPresenterDat
         return self.selectedClips.count
     }
 }
+
+extension ClipsListPresenterProtocol where Self: ClipsListToolBarItemsPresenterDataSouce {
+    // MARK: - ClipsListToolBarItemsPresenterDataSouce
+
+    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {
+        return self.selectedClips.count
+    }
+}

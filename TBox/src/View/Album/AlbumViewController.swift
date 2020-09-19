@@ -13,16 +13,23 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     let factory: Factory
     let presenter: Presenter
     let navigationItemsProvider: ClipsListNavigationItemsProvider
+    let toolBarItemsProvider: ClipsListToolBarItemsProvider
 
     @IBOutlet var collectionView: ClipsCollectionView!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AlbumPresenter, navigationItemsProvider: ClipsListNavigationItemsProvider) {
+    init(factory: Factory,
+         presenter: AlbumPresenter,
+         navigationItemsProvider: ClipsListNavigationItemsProvider,
+         toolBarItemsProvider: ClipsListToolBarItemsProvider)
+    {
         self.factory = factory
         self.presenter = presenter
         self.navigationItemsProvider = navigationItemsProvider
+        self.toolBarItemsProvider = toolBarItemsProvider
+
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -67,61 +74,9 @@ class AlbumViewController: UIViewController, ClipsListViewController {
     // MARK: ToolBar
 
     private func setupToolBar() {
-        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
-        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
-        let hideItem = UIBarButtonItem(image: UIImage(systemName: "eye.slash"), style: .plain, target: self, action: #selector(self.didTapHide))
-        let unhideItem = UIBarButtonItem(image: UIImage(systemName: "eye"), style: .plain, target: self, action: #selector(self.didTapUnhide))
-
-        self.setToolbarItems([addToAlbumItem, flexibleItem, hideItem, flexibleItem, unhideItem, flexibleItem, removeItem], animated: false)
-        self.updateToolBar(for: self.presenter.isEditing)
-    }
-
-    private func updateToolBar(for editing: Bool) {
-        self.navigationController?.setToolbarHidden(!editing, animated: false)
-    }
-
-    @objc
-    func didTapAddToAlbum() {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: clips, delegate: self)
-        self.present(viewController, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapRemove() {
-        let alert = UIAlertController(title: nil,
-                                      message: "選択中の画像を削除しますか？",
-                                      preferredStyle: .actionSheet)
-
-        alert.addAction(.init(title: "アルバムから削除", style: .destructive, handler: { [weak self] _ in
-            self?.presenter.removeFromAlbum()
-        }))
-        alert.addAction(.init(title: "完全に削除", style: .destructive, handler: { [weak self] _ in
-            self?.presenter.deleteAll()
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapHide() {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForHideMessage,
-                                      preferredStyle: .actionSheet)
-
-        let title = L10n.clipsListAlertForHideAction(self.presenter.selectedClips.count)
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.presenter.hidesAll()
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapUnhide() {
-        self.presenter.unhidesAll()
+        self.toolBarItemsProvider.alertPresentable = self
+        self.toolBarItemsProvider.delegate = self
+        self.toolBarItemsProvider.viewController = self
     }
 
     // MARK: UIViewController (Override)
@@ -132,7 +87,7 @@ class AlbumViewController: UIViewController, ClipsListViewController {
         self.updateCollectionView(for: editing)
 
         self.navigationItemsProvider.setEditing(editing, animated: animated)
-        self.updateToolBar(for: editing)
+        self.toolBarItemsProvider.setEditing(editing, animated: animated)
     }
 }
 
@@ -224,6 +179,8 @@ extension AlbumViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
+extension AlbumViewController: ClipsListAlertPresentable {}
+
 extension AlbumViewController: ClipsListNavigationItemsProviderDelegate {
     // MARK: - ClipsListNavigationItemsProviderDelegate
 
@@ -244,10 +201,51 @@ extension AlbumViewController: ClipsListNavigationItemsProviderDelegate {
     }
 }
 
+extension AlbumViewController: ClipsListToolBarItemsProviderDelegate {
+    // MARK: - ClipsListToolBarItemsProviderDelegate
+
+    func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips,
+                                                                               delegate: self)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips,
+                                                                            delegate: self)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldRemoveFromAlbum(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.removeFromAlbum()
+    }
+
+    func shouldDelete(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.deleteAll()
+    }
+
+    func shouldHide(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.hidesAll()
+    }
+
+    func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.unhidesAll()
+    }
+}
+
 extension AlbumViewController: AddingClipsToAlbumPresenterDelegate {
     // MARK: - AddingClipsToAlbumPresenterDelegate
 
     func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        guard isSucceeded else { return }
+        self.presenter.setEditing(false)
+    }
+}
+
+extension AlbumViewController: AddingTagsToClipsPresenterDelegate {
+    // MARK: - AddingTagsToClipsPresenterDelegate
+
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
         guard isSucceeded else { return }
         self.presenter.setEditing(false)
     }

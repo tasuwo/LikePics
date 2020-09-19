@@ -13,15 +13,22 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
     let factory: Factory
     let presenter: Presenter
     let navigationItemsProvider: ClipsListNavigationItemsProvider
+    let toolBarItemsProvider: ClipsListToolBarItemsProvider
 
     @IBOutlet var collectionView: ClipsCollectionView!
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TopClipsListPresenter, navigationItemsProvider: ClipsListNavigationItemsProvider) {
+    init(factory: Factory,
+         presenter: TopClipsListPresenter,
+         navigationItemsProvider: ClipsListNavigationItemsProvider,
+         toolBarItemsProvider: ClipsListToolBarItemsProvider)
+    {
         self.factory = factory
         self.presenter = presenter
         self.navigationItemsProvider = navigationItemsProvider
+        self.toolBarItemsProvider = toolBarItemsProvider
+
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -68,6 +75,14 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
+    // MARK: ToolBar
+
+    private func setupToolBar() {
+        self.toolBarItemsProvider.alertPresentable = self
+        self.toolBarItemsProvider.delegate = self
+        self.toolBarItemsProvider.viewController = self
+    }
+
     // MARK: Notification
 
     private func addBecomeActiveNotification() {
@@ -88,79 +103,6 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         self.presenter.reload()
     }
 
-    // MARK: ToolBar
-
-    private func setupToolBar() {
-        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
-        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
-        let hideItem = UIBarButtonItem(image: UIImage(systemName: "eye.slash"), style: .plain, target: self, action: #selector(self.didTapHide))
-        let unhideItem = UIBarButtonItem(image: UIImage(systemName: "eye"), style: .plain, target: self, action: #selector(self.didTapUnhide))
-
-        self.setToolbarItems([addToAlbumItem, flexibleItem, hideItem, flexibleItem, unhideItem, flexibleItem, removeItem], animated: false)
-        self.updateToolBar(for: self.presenter.isEditing)
-    }
-
-    private func updateToolBar(for editing: Bool) {
-        self.navigationController?.setToolbarHidden(!editing, animated: false)
-    }
-
-    @objc
-    func didTapAddToAlbum() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-        alert.addAction(.init(title: L10n.clipsListAlertForAddToAlbum, style: .default, handler: { [weak self] _ in
-            guard let self = self else { return }
-            let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips, delegate: self)
-            self.present(viewController, animated: true, completion: nil)
-        }))
-
-        alert.addAction(.init(title: L10n.clipsListAlertForAddTag, style: .default, handler: { [weak self] _ in
-            guard let self = self else { return }
-            let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips, delegate: self)
-            self.present(viewController, animated: true, completion: nil)
-        }))
-
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapRemove() {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForDeleteMessage,
-                                      preferredStyle: .actionSheet)
-
-        let title = L10n.clipsListAlertForDeleteAction(self.presenter.selectedClips.count)
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.presenter.deleteAll()
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapHide() {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForHideMessage,
-                                      preferredStyle: .actionSheet)
-
-        let title = L10n.clipsListAlertForHideAction(self.presenter.selectedClips.count)
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.presenter.hidesAll()
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapUnhide() {
-        self.presenter.unhidesAll()
-    }
-
     // MARK: UIViewController (Override)
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -169,7 +111,7 @@ class TopClipsListViewController: UIViewController, ClipsListViewController {
         self.updateCollectionView(for: editing)
 
         self.navigationItemsProvider.setEditing(editing, animated: animated)
-        self.updateToolBar(for: editing)
+        self.toolBarItemsProvider.setEditing(editing, animated: animated)
     }
 
     deinit {
@@ -265,6 +207,8 @@ extension TopClipsListViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
+extension TopClipsListViewController: ClipsListAlertPresentable {}
+
 extension TopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
     // MARK: - ClipsListNavigationItemsProviderDelegate
 
@@ -282,6 +226,38 @@ extension TopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
 
     func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.deselectAll()
+    }
+}
+
+extension TopClipsListViewController: ClipsListToolBarItemsProviderDelegate {
+    // MARK: - ClipsListToolBarItemsProviderDelegate
+
+    func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips,
+                                                                               delegate: self)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips,
+                                                                            delegate: self)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldRemoveFromAlbum(_ provider: ClipsListToolBarItemsProvider) {
+        // NOP
+    }
+
+    func shouldDelete(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.deleteAll()
+    }
+
+    func shouldHide(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.hidesAll()
+    }
+
+    func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
+        self.presenter.unhidesAll()
     }
 }
 

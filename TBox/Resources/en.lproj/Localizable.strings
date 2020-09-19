@@ -22,6 +22,9 @@
 "clips_list_alert_for_add_tag" = "Add Tags";
 "clips_list_alert_for_delete_message" = "If you delete clip, all images in the clip will be deleted.";
 "clips_list_alert_for_delete_action" = "Delete %d Clips";
+"clips_list_alert_for_delete_in_album_message" = "Do you want to delete these clips or remove them from this album?";
+"clips_list_alert_for_delete_in_album_action_remove_from_album" = "Remove from Album";
+"clips_list_alert_for_delete_in_album_action_delete" = "Delete";
 "clips_list_alert_for_hide_message" = "Theses clips will be hidden from all places while setting is enabled";
 "clips_list_alert_for_hide_action" = "Hide %d Photos";
 

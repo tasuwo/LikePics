@@ -149,3 +149,4 @@ extension TopClipsListPresenter: UserSettingsObserver {
 }
 
 extension TopClipsListPresenter: ClipsListNavigationPresenterDataSource {}
+extension TopClipsListPresenter: ClipsListToolBarItemsPresenterDataSouce {}

@@ -151,3 +151,4 @@ extension AlbumPresenter: UserSettingsObserver {
 }
 
 extension AlbumPresenter: ClipsListNavigationPresenterDataSource {}
+extension AlbumPresenter: ClipsListToolBarItemsPresenterDataSouce {}

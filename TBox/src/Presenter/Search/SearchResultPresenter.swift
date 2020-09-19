@@ -166,3 +166,4 @@ extension SearchResultPresenter: UserSettingsObserver {
 }
 
 extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {}
+extension SearchResultPresenter: ClipsListToolBarItemsPresenterDataSouce {}
