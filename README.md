@@ -25,7 +25,8 @@
 - [x] Hiddenアイテムの実装
   - [x] 設定画面から表示のOn/Offができる
   - [x] Hiddenアイテムでフィルタできる
-- [ ] 検索結果/アルバムに対する全て選択の実装
+- [x] 検索結果/アルバムに対する全て選択の実装
+  - [x] NavigationItem Presenter
 - [ ] 各種画面からタグ追加できる
   - [ ] ClipInformation
   - [ ] ClipPreview
