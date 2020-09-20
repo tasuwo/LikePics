@@ -7,6 +7,8 @@ protocol ClipsListToolBarItemsPresenterDataSouce: AnyObject {
 }
 
 protocol ClipsListToolBar: AnyObject {
+    func showToolBar()
+    func hideToolBar()
     func set(_ items: [ClipsListToolBarItemsPresenter.Item])
 }
 
@@ -62,6 +64,12 @@ class ClipsListToolBarItemsPresenter {
     // MARK: Privates
 
     private func updateItems() {
+        if self.isEditing {
+            self.toolBar?.showToolBar()
+        } else {
+            self.toolBar?.hideToolBar()
+        }
+
         self.toolBar?.set([
             .add,
             .spacer,

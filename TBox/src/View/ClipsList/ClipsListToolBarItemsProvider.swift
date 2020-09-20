@@ -5,6 +5,9 @@
 import UIKit
 
 protocol ClipsListToolBarItemsProviderDelegate: AnyObject {
+    func clipsListToolBarItemsProvider(_ provider: ClipsListToolBarItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem])
+    func shouldHideToolBar(_ provider: ClipsListToolBarItemsProvider)
+    func shouldShowToolBar(_ provider: ClipsListToolBarItemsProvider)
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider)
     func shouldAddTags(_ provider: ClipsListToolBarItemsProvider)
     func shouldDelete(_ provider: ClipsListToolBarItemsProvider)
@@ -28,10 +31,7 @@ class ClipsListToolBarItemsProvider {
     private var unhideItem: UIBarButtonItem!
 
     weak var alertPresentable: ClipsListAlertPresentable?
-    weak var delegate: ClipsListToolBarItemsProviderDelegate?
-
-    // TODO: protocol を切る
-    weak var viewController: UIViewController? {
+    weak var delegate: ClipsListToolBarItemsProviderDelegate? {
         didSet {
             self.presenter.toolBar = self
         }
@@ -69,7 +69,6 @@ class ClipsListToolBarItemsProvider {
     // MARK: - Methods
 
     func setEditing(_ editing: Bool, animated: Bool) {
-        self.viewController?.navigationController?.setToolbarHidden(!editing, animated: animated)
         self.presenter.setEditing(editing, animated: animated)
     }
 
@@ -151,7 +150,29 @@ class ClipsListToolBarItemsProvider {
 extension ClipsListToolBarItemsProvider: ClipsListToolBar {
     // MARK: - ClipsListToolBar
 
+    func showToolBar() {
+        self.delegate?.shouldShowToolBar(self)
+    }
+
+    func hideToolBar() {
+        self.delegate?.shouldHideToolBar(self)
+    }
+
     func set(_ items: [ClipsListToolBarItemsPresenter.Item]) {
-        self.viewController?.setToolbarItems(items.map { self.resolveBarButtonItem(for: $0) }, animated: true)
+        self.delegate?.clipsListToolBarItemsProvider(self, shouldSetToolBarItems: items.map { self.resolveBarButtonItem(for: $0) })
+    }
+}
+
+extension ClipsListToolBarItemsProviderDelegate where Self: UIViewController {
+    func clipsListToolBarItemsProvider(_ provider: ClipsListToolBarItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem]) {
+        self.setToolbarItems(items, animated: true)
+    }
+
+    func shouldHideToolBar(_ provider: ClipsListToolBarItemsProvider) {
+        self.navigationController?.setToolbarHidden(true, animated: true)
+    }
+
+    func shouldShowToolBar(_ provider: ClipsListToolBarItemsProvider) {
+        self.navigationController?.setToolbarHidden(false, animated: true)
     }
 }

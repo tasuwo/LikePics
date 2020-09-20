@@ -76,7 +76,6 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     private func setupToolBar() {
         self.toolBarItemsProvider.alertPresentable = self
         self.toolBarItemsProvider.delegate = self
-        self.toolBarItemsProvider.viewController = self
     }
 
     // MARK: UIViewController (Override)
