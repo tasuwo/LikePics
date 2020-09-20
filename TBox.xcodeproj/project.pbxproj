@@ -39,6 +39,8 @@
 		2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */; };
 		2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35066B251780EC009248C6 /* WebImageNameResolver.swift */; };
 		2C35068725178125009248C6 /* WebImageNameResolverSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */; };
+		2C3506B525178FD5009248C6 /* ImageExtensionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3506B425178FD5009248C6 /* ImageExtensionResolver.swift */; };
+		2C3506C82517911B009248C6 /* ImageExtensionResolverSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3506C72517911B009248C6 /* ImageExtensionResolverSpec.swift */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
 		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
@@ -540,6 +542,8 @@
 		2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationViewController.xib; sourceTree = "<group>"; };
 		2C35066B251780EC009248C6 /* WebImageNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageNameResolver.swift; sourceTree = "<group>"; };
 		2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageNameResolverSpec.swift; sourceTree = "<group>"; };
+		2C3506B425178FD5009248C6 /* ImageExtensionResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensionResolver.swift; sourceTree = "<group>"; };
+		2C3506C72517911B009248C6 /* ImageExtensionResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensionResolverSpec.swift; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractivePresentationAnimator.swift; sourceTree = "<group>"; };
@@ -990,6 +994,22 @@
 				2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */,
 			);
 			path = WebImageNameResolver;
+			sourceTree = "<group>";
+		};
+		2C3506B325178FB4009248C6 /* ImageExtensionResolver */ = {
+			isa = PBXGroup;
+			children = (
+				2C3506B425178FD5009248C6 /* ImageExtensionResolver.swift */,
+			);
+			path = ImageExtensionResolver;
+			sourceTree = "<group>";
+		};
+		2C3506C62517910B009248C6 /* ImageExtensionResolver */ = {
+			isa = PBXGroup;
+			children = (
+				2C3506C72517911B009248C6 /* ImageExtensionResolverSpec.swift */,
+			);
+			path = ImageExtensionResolver;
 			sourceTree = "<group>";
 		};
 		2C35C13024E4DE1400871C87 /* Cotnext */ = {
@@ -1471,6 +1491,7 @@
 		2C99275F24DDC7D300672CA7 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2C3506B325178FB4009248C6 /* ImageExtensionResolver */,
 				2C2727A624DED57100FEF1BD /* Extensions */,
 				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
 				2C35066A251780D7009248C6 /* WebImageNameResolver */,
@@ -1486,6 +1507,7 @@
 		2C99276C24DDC7D400672CA7 /* DomainTests */ = {
 			isa = PBXGroup;
 			children = (
+				2C3506C62517910B009248C6 /* ImageExtensionResolver */,
 				2C35067D2517810C009248C6 /* WebImageNameResolver */,
 				2C99276F24DDC7D400672CA7 /* Info.plist */,
 			);
@@ -2965,6 +2987,7 @@
 				2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */,
 				2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */,
 				2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */,
+				2C3506B525178FD5009248C6 /* ImageExtensionResolver.swift in Sources */,
 				2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */,
 				2C2727A524DED4C600FEF1BD /* WebImageResolverError.swift in Sources */,
 				2C55D11824DF9D2600A43B8D /* WebImageProvidingService.swift in Sources */,
@@ -2979,6 +3002,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C3506C82517911B009248C6 /* ImageExtensionResolverSpec.swift in Sources */,
 				2C35068725178125009248C6 /* WebImageNameResolverSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
