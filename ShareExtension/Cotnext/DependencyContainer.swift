@@ -12,8 +12,8 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    private lazy var clipsStorage = ClipStorage()
-    private lazy var webImageResolver = WebImageResolver()
+    private lazy var storage = ClipStorage()
+    private lazy var finder = WebImageUrlFinder()
     private lazy var currentDateResolver = { Date() }
 }
 
@@ -21,14 +21,14 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController {
-        let presenter = ShareNavigationRootPresenter(storage: self.clipsStorage)
+        let presenter = ShareNavigationRootPresenter(storage: self.storage)
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
         let presenter = ClipTargetFinderPresenter(url: url,
-                                                  storage: self.clipsStorage,
-                                                  resolver: self.webImageResolver,
+                                                  storage: self.storage,
+                                                  finder: self.finder,
                                                   currentDateResovler: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }

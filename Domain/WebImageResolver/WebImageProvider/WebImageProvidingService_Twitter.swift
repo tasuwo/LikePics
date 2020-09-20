@@ -64,7 +64,7 @@ extension WebImageProvidingService {
                 }
             }
 
-            var webImageProvderError: WebImageResolverError {
+            var webImageProvderError: WebImageUrlFinderError {
                 switch self {
                 case .timeout:
                     return .timeout

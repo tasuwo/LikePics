@@ -11,13 +11,12 @@ public struct WebImageUrlSet {
     public let highQuality: URL
 }
 
-public protocol WebImageResolverProtocol {
+public protocol WebImageUrlFinderProtocol {
     var webView: WKWebView { get }
-
-    func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageResolverError>) -> Void)
+    func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void)
 }
 
-public class WebImageResolver {
+public class WebImageUrlFinder {
     private static let maxRetryCount = 5
     private static let delayAtRetry: DispatchTimeInterval = .milliseconds(200)
 
@@ -40,18 +39,18 @@ public class WebImageResolver {
     private func openPage(url: URL) -> Promise<Document> {
         return Promise { [weak self] seal in
             guard let self = self else {
-                seal.resolve(.rejected(WebImageResolverError.internalError))
+                seal.resolve(.rejected(WebImageUrlFinderError.internalError))
                 return
             }
 
             let handler: DocumentCompletionHandler = { document, error in
                 if let error = error {
-                    seal.resolve(.rejected(WebImageResolverError.networkError(error)))
+                    seal.resolve(.rejected(WebImageUrlFinderError.networkError(error)))
                     return
                 }
 
                 guard let document = document else {
-                    seal.resolve(.rejected(WebImageResolverError.internalError))
+                    seal.resolve(.rejected(WebImageUrlFinderError.internalError))
                     return
                 }
 
@@ -68,17 +67,17 @@ public class WebImageResolver {
         return Promise { seal in
             self.browser.currentContent { document, error in
                 if let error = error {
-                    seal.resolve(.rejected(WebImageResolverError.networkError(error)))
+                    seal.resolve(.rejected(WebImageUrlFinderError.networkError(error)))
                     return
                 }
 
                 guard let document = document else {
-                    seal.resolve(.rejected(WebImageResolverError.internalError))
+                    seal.resolve(.rejected(WebImageUrlFinderError.internalError))
                     return
                 }
 
                 guard fulfilled(document) else {
-                    seal.resolve(.rejected(WebImageResolverError.timeout))
+                    seal.resolve(.rejected(WebImageUrlFinderError.timeout))
                     return
                 }
 
@@ -88,10 +87,10 @@ public class WebImageResolver {
     }
 }
 
-extension WebImageResolver: WebImageResolverProtocol {
-    // MARK: - WebImageResolverProtocol
+extension WebImageUrlFinder: WebImageUrlFinderProtocol {
+    // MARK: - WebImageUrlFinderProtocol
 
-    public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageResolverError>) -> Void) {
+    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) {
         var preprocessedStep: Promise<Document>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = firstly {
@@ -123,7 +122,7 @@ extension WebImageResolver: WebImageResolverProtocol {
                 }
             completion(.success(imageUrls))
         }.catch { error in
-            guard let error = error as? WebImageResolverError else {
+            guard let error = error as? WebImageUrlFinderError else {
                 completion(.failure(.internalError))
                 return
             }

@@ -35,7 +35,7 @@ typealias SaveData = (clip: Clip, images: [ImageData])
 
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
-        case failedToFindImages(WebImageResolverError)
+        case failedToFindImages(WebImageUrlFinderError)
         case failedToDownlaodImages
         case failedToSave(ClipStorageError)
         case internalError
@@ -64,15 +64,15 @@ public class ClipTargetFinderPresenter {
 
     private let url: URL
     private let storage: ClipStorageProtocol
-    private let resolver: WebImageResolverProtocol
+    private let finder: WebImageUrlFinderProtocol
     private let currentDateResolver: () -> Date
 
     // MARK: - Lifecycle
 
-    public init(url: URL, storage: ClipStorageProtocol, resolver: WebImageResolverProtocol, currentDateResovler: @escaping () -> Date, isEnabledOverwrite: Bool = false) {
+    public init(url: URL, storage: ClipStorageProtocol, finder: WebImageUrlFinderProtocol, currentDateResovler: @escaping () -> Date, isEnabledOverwrite: Bool = false) {
         self.url = url
         self.storage = storage
-        self.resolver = resolver
+        self.finder = finder
         self.currentDateResolver = currentDateResovler
         self.isEnabledOverwrite = isEnabledOverwrite
     }
@@ -81,8 +81,8 @@ public class ClipTargetFinderPresenter {
 
     func attachWebView(to view: UIView) {
         // HACK: Add WebView to view hierarchy for loading page.
-        view.addSubview(self.resolver.webView)
-        self.resolver.webView.isHidden = true
+        view.addSubview(self.finder.webView)
+        self.finder.webView.isHidden = true
     }
 
     func enableOverwrite() {
@@ -165,7 +165,7 @@ public class ClipTargetFinderPresenter {
 
     private func resolveWebImages(ofUrl url: URL) -> Promise<[WebImageUrlSet]> {
         return Promise<[WebImageUrlSet]> { seal in
-            self.resolver.resolveWebImages(inUrl: url) { result in
+            self.finder.findImageUrls(inWebSiteAt: url) { result in
                 switch result {
                 case let .success(urls):
                     seal.resolve(.fulfilled(urls))
