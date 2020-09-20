@@ -27,13 +27,13 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
     func notifySavedImagesSuccessfully()
 }
 
-public class ClipTargetFinderPresenter {
-    typealias SelectedWebImage = (index: Int, displayModel: DisplayedWebImage)
-    typealias LoadedWebImage = (image: SelectedWebImage, data: ImageData)
-    typealias ImageData = (quality: ImageQuality, url: URL, uiImage: UIImage)
-    typealias LoadedClipItem = (item: ClipItem, high: ImageData, low: ImageData)
-    typealias SaveData = (clip: Clip, images: [ImageData])
+typealias SelectedWebImage = (index: Int, displayModel: FetchedWebImage)
+typealias LoadedWebImage = (image: SelectedWebImage, data: ImageData)
+typealias ImageData = (quality: ImageQuality, url: URL, uiImage: UIImage)
+typealias LoadedClipItem = (item: ClipItem, high: ImageData, low: ImageData)
+typealias SaveData = (clip: Clip, images: [ImageData])
 
+public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
         case failedToFindImages
         case failedToDownlaodImages
@@ -41,124 +41,7 @@ public class ClipTargetFinderPresenter {
         case internalError
     }
 
-    enum ImageQuality {
-        case low
-        case high
-    }
-
-    struct DisplayedWebImage {
-        let lowQualityImageUrl: URL
-        let highQualityImageUrl: URL
-        let highQualityImageSize: CGSize
-        let lowQualityImageSize: CGSize
-
-        var isValid: Bool {
-            return self.highQualityImageSize.height != 0
-                && self.highQualityImageSize.width != 0
-                && self.lowQualityImageSize.height != 0
-                && self.lowQualityImageSize.width != 0
-        }
-
-        init(webImage: WebImage, highQualityImageSize: CGSize, lowQualityImageSize: CGSize) {
-            self.lowQualityImageUrl = webImage.lowQuality
-            self.highQualityImageUrl = webImage.highQuality
-            self.lowQualityImageSize = lowQualityImageSize
-            self.highQualityImageSize = highQualityImageSize
-        }
-
-        func imageUrl(for quality: ImageQuality) -> URL {
-            switch quality {
-            case .low:
-                return self.lowQualityImageUrl
-            case .high:
-                return self.highQualityImageUrl
-            }
-        }
-
-        func imageSize(for quality: ImageQuality) -> CGSize {
-            switch quality {
-            case .low:
-                return self.lowQualityImageSize
-            case .high:
-                return self.highQualityImageSize
-            }
-        }
-    }
-
-    struct ComposingClipItem {
-        let thumbnailImageUrl: URL?
-        let thumbnailSize: ImageSize?
-        let thumbnailImage: UIImage?
-        let largeImageUrl: URL?
-        let largeImageSize: ImageSize?
-        let largeImage: UIImage?
-
-        init(imageUrl: URL, imageSize: CGSize, imageData: UIImage, quality: ImageQuality) {
-            switch quality {
-            case .low:
-                self.thumbnailImageUrl = imageUrl
-                self.thumbnailSize = ImageSize(height: Double(imageSize.height),
-                                               width: Double(imageSize.width))
-                self.thumbnailImage = imageData
-                self.largeImageUrl = nil
-                self.largeImageSize = nil
-                self.largeImage = nil
-            case .high:
-                self.largeImageUrl = imageUrl
-                self.largeImageSize = ImageSize(height: Double(imageSize.height),
-                                                width: Double(imageSize.width))
-                self.largeImage = imageData
-                self.thumbnailImageUrl = nil
-                self.thumbnailSize = nil
-                self.thumbnailImage = nil
-            }
-        }
-
-        init(item: ComposingClipItem, imageUrl: URL, imageSize: CGSize, imageData: UIImage, quality: ImageQuality) {
-            switch quality {
-            case .low:
-                self.thumbnailImageUrl = imageUrl
-                self.thumbnailSize = ImageSize(height: Double(imageSize.height),
-                                               width: Double(imageSize.width))
-                self.thumbnailImage = imageData
-                self.largeImageUrl = item.largeImageUrl
-                self.largeImageSize = item.largeImageSize
-                self.largeImage = item.largeImage
-            case .high:
-                self.largeImageUrl = imageUrl
-                self.largeImageSize = ImageSize(height: Double(imageSize.height),
-                                                width: Double(imageSize.width))
-                self.largeImage = imageData
-                self.thumbnailImageUrl = item.thumbnailImageUrl
-                self.thumbnailSize = item.thumbnailSize
-                self.thumbnailImage = item.thumbnailImage
-            }
-        }
-
-        func toLoadedClipItem(at index: Int, inClip url: URL, currentDate: Date) -> LoadedClipItem? {
-            guard let thumbnailImageUrl = self.thumbnailImageUrl,
-                let thumbnailSize = self.thumbnailSize,
-                let largeImageUrl = self.largeImageUrl,
-                let largeImageSize = self.largeImageSize,
-                let thumbnailImage = self.thumbnailImage,
-                let largeImage = self.largeImage
-            else {
-                return nil
-            }
-
-            let item = ClipItem(clipUrl: url,
-                                clipIndex: index,
-                                thumbnail: .init(url: thumbnailImageUrl,
-                                                 size: thumbnailSize),
-                                image: .init(url: largeImageUrl,
-                                             size: largeImageSize),
-                                registeredDate: currentDate,
-                                updatedDate: currentDate)
-            return (item, (.low, thumbnailImageUrl, thumbnailImage), (.high, largeImageUrl, largeImage))
-        }
-    }
-
-    private(set) var webImages: [DisplayedWebImage] = [] {
+    private(set) var webImages: [FetchedWebImage] = [] {
         didSet {
             self.selectedIndices = []
             self.view?.resetSelection()
@@ -197,6 +80,7 @@ public class ClipTargetFinderPresenter {
     // MARK: - Methods
 
     func attachWebView(to view: UIView) {
+        // HACK: Add WebView to view hierarchy for loading page.
         view.addSubview(self.resolver.webView)
         self.resolver.webView.isHidden = true
     }
@@ -215,10 +99,10 @@ public class ClipTargetFinderPresenter {
 
         firstly {
             self.resolveWebImages(ofUrl: self.url)
-        }.then(on: self.imageLoadQueue) { (webImages: [WebImage]) in
+        }.then(on: self.imageLoadQueue) { (webImages: [WebImageUrlSet]) in
             self.resolveSize(ofWebImages: webImages)
-        }.done(on: .main) { [weak self] (displayedWebImages: [DisplayedWebImage]) in
-            self?.webImages = displayedWebImages
+        }.done(on: .main) { [weak self] (fetchedWebImages: [FetchedWebImage]) in
+            self?.webImages = fetchedWebImages
             self?.view?.endLoading()
             self?.view?.reloadList()
         }.catch(on: .main) { [weak self] error in
@@ -279,8 +163,8 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Load Images
 
-    private func resolveWebImages(ofUrl url: URL) -> Promise<[WebImage]> {
-        return Promise<[WebImage]> { seal in
+    private func resolveWebImages(ofUrl url: URL) -> Promise<[WebImageUrlSet]> {
+        return Promise<[WebImageUrlSet]> { seal in
             self.resolver.resolveWebImages(inUrl: url) { result in
                 switch result {
                 case let .success(urls):
@@ -292,12 +176,12 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private func resolveSize(ofWebImages webImages: [WebImage]) -> Promise<[DisplayedWebImage]> {
-        return Promise<[DisplayedWebImage]> { seal in
+    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> Promise<[FetchedWebImage]> {
+        return Promise<[FetchedWebImage]> { seal in
             let validWebImages = webImages
-                .map { DisplayedWebImage(webImage: $0,
-                                         highQualityImageSize: self.calcImageSize(ofUrl: $0.highQuality),
-                                         lowQualityImageSize: self.calcImageSize(ofUrl: $0.lowQuality)) }
+                .map { FetchedWebImage(webImage: $0,
+                                       highQualityImageSize: self.calcImageSize(ofUrl: $0.highQuality),
+                                       lowQualityImageSize: self.calcImageSize(ofUrl: $0.lowQuality)) }
                 .filter { $0.isValid }
             seal.resolve(.fulfilled(validWebImages))
         }

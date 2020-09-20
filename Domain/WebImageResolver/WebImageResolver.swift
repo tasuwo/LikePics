@@ -6,7 +6,7 @@ import Erik
 import PromiseKit
 import WebKit
 
-public struct WebImage {
+public struct WebImageUrlSet {
     public let lowQuality: URL
     public let highQuality: URL
 }
@@ -14,7 +14,7 @@ public struct WebImage {
 public protocol WebImageResolverProtocol {
     var webView: WKWebView { get }
 
-    func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImage], WebImageResolverError>) -> Void)
+    func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageResolverError>) -> Void)
 }
 
 public class WebImageResolver {
@@ -91,7 +91,7 @@ public class WebImageResolver {
 extension WebImageResolver: WebImageResolverProtocol {
     // MARK: - WebImageResolverProtocol
 
-    public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImage], WebImageResolverError>) -> Void) {
+    public func resolveWebImages(inUrl url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageResolverError>) -> Void) {
         var preprocessedStep: Promise<Document>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = firstly {
@@ -110,16 +110,16 @@ extension WebImageResolver: WebImageResolverProtocol {
                 self.checkCurrentContent(fulfilled: { $0.querySelectorAll("img").count > 0 })
             }
         }.done { document in
-            let imageUrls: [WebImage] = document
+            let imageUrls: [WebImageUrlSet] = document
                 .querySelectorAll("img")
                 .compactMap { $0["src"] }
                 .compactMap { URL(string: $0) }
                 .map {
                     guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                        return WebImage(lowQuality: $0, highQuality: $0)
+                        return WebImageUrlSet(lowQuality: $0, highQuality: $0)
                     }
-                    return WebImage(lowQuality: provider.resolveLowQualityImageUrl(of: $0),
-                                    highQuality: provider.resolveHighQualityImageUrl(of: $0))
+                    return WebImageUrlSet(lowQuality: provider.resolveLowQualityImageUrl(of: $0),
+                                          highQuality: provider.resolveHighQualityImageUrl(of: $0))
                 }
             completion(.success(imageUrls))
         }.catch { error in
