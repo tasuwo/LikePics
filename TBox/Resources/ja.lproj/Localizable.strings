@@ -49,6 +49,7 @@
 "tag_list_view_title" = "タグ";
 "tag_list_view_error_at_read_tags" = "タグの読み込みに失敗しました";
 "tag_list_view_error_at_add_tag" = "タグの追加に失敗しました";
+"tag_list_view_error_at_add_tags_to_clip" = "クリップへのタグの追加に失敗しました";
 "tag_list_view_error_at_delete_tag" = "タグの削除に失敗しました";
 "tag_list_view_error_at_search_clip" = "クリップの取得に失敗しました";
 "tag_list_view_alert_for_add_title" = "新規タグ";

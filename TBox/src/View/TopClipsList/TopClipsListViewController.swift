@@ -272,8 +272,9 @@ extension TopClipsListViewController: AddingClipsToAlbumPresenterDelegate {
 extension TopClipsListViewController: AddingTagsToClipsPresenterDelegate {
     // MARK: - AddingTagsToClipsPresenterDelegate
 
-    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag isSucceeded: Bool) {
-        guard isSucceeded else { return }
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTagsTo clip: Clip?) {
+        guard let clip = clip, let index = self.presenter.clips.firstIndex(where: { $0.url == clip.url }) else { return }
+        self.presenter.reload(at: index)
         self.presenter.setEditing(false)
     }
 }

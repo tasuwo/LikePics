@@ -5,7 +5,7 @@
 import Domain
 
 protocol AddingTagsToClipsPresenterDelegate: AnyObject {
-    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTag: Bool)
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTagsTo clip: Clip?)
 }
 
 protocol AddingTagsToClipsViewProtocol: AnyObject {
@@ -15,6 +15,12 @@ protocol AddingTagsToClipsViewProtocol: AnyObject {
 }
 
 class AddingTagsToClipsPresenter {
+    enum FailureContext {
+        case reload
+        case addTag
+        case addTagsToClip
+    }
+
     private(set) var tags: [String] = []
     private(set) var selectedTags: [String] = []
 
@@ -35,9 +41,20 @@ class AddingTagsToClipsPresenter {
 
     // MARK: - Methods
 
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        // TODO:
-        return "Error"
+    private static func resolveErrorMessage(error: ClipStorageError, context: FailureContext) -> String {
+        let message: String = {
+            switch context {
+            case .reload:
+                return L10n.tagListViewErrorAtReadTags
+
+            case .addTag:
+                return L10n.tagListViewErrorAtAddTag
+
+            case .addTagsToClip:
+                return L10n.tagListViewErrorAtAddTagsToClip
+            }
+        }()
+        return message + "\n(\(error.makeErrorCode()))"
     }
 
     func reload() {
@@ -49,7 +66,7 @@ class AddingTagsToClipsPresenter {
             view.reload()
 
         case let .failure(error):
-            view.showErrorMessage(Self.resolveErrorMessage(error))
+            view.showErrorMessage(Self.resolveErrorMessage(error: error, context: .reload))
         }
     }
 
@@ -61,7 +78,7 @@ class AddingTagsToClipsPresenter {
             self.reload()
 
         case let .failure(error):
-            view.showErrorMessage(Self.resolveErrorMessage(error))
+            view.showErrorMessage(Self.resolveErrorMessage(error: error, context: .addTag))
         }
     }
 
@@ -78,15 +95,15 @@ class AddingTagsToClipsPresenter {
         guard let view = self.view else { return }
 
         switch self.storage.update(self.clips, byAddingTags: self.selectedTags) {
-        case .success:
+        case let .success(clips):
             view.closeView { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTag: true)
+                self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTagsTo: clips.first)
             }
 
         case let .failure(error):
-            self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTag: false)
-            view.showErrorMessage(Self.resolveErrorMessage(error))
+            self.delegate?.addingTagsToClipsPresenter(self, didSucceededToAddingTagsTo: nil)
+            view.showErrorMessage(Self.resolveErrorMessage(error: error, context: .addTagsToClip))
         }
     }
 }

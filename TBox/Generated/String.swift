@@ -143,6 +143,8 @@ internal enum L10n {
     internal static let tagListViewAlertForDeleteMessage = L10n.tr("Localizable", "tag_list_view_alert_for_delete_message")
     /// タグの追加に失敗しました
     internal static let tagListViewErrorAtAddTag = L10n.tr("Localizable", "tag_list_view_error_at_add_tag")
+    /// クリップへのタグの追加に失敗しました
+    internal static let tagListViewErrorAtAddTagsToClip = L10n.tr("Localizable", "tag_list_view_error_at_add_tags_to_clip")
     /// タグの削除に失敗しました
     internal static let tagListViewErrorAtDeleteTag = L10n.tr("Localizable", "tag_list_view_error_at_delete_tag")
     /// タグの読み込みに失敗しました

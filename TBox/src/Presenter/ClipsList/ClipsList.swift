@@ -109,6 +109,21 @@ extension ClipsList: ClipsListProtocol {
         }
     }
 
+    mutating func reload(at index: Int) {
+        guard self.clips.indices.contains(index), let internalIndex = self.internalClips.firstIndex(of: self.clips[index]) else {
+            self.logger.write(ConsoleLog(level: .error, message: "Unabled to reload clip at \(index). Out of range."))
+            return
+        }
+
+        switch self.storage.readClip(having: self.clips[index].url) {
+        case let .success(clip):
+            self.internalClips[internalIndex] = clip
+
+        case let .failure(error):
+            self.delegate?.clipsListProviding(self, failedToReadClipsWith: error)
+        }
+    }
+
     mutating func setEditing(_ editing: Bool) {
         if self.isEditing != editing {
             self.selectedClips = []

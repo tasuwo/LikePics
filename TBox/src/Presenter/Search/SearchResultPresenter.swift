@@ -66,6 +66,10 @@ class SearchResultPresenter {
         self.clipsList.deselectAll()
     }
 
+    func reload(at index: Int) {
+        self.clipsList.reload(at: index)
+    }
+
     deinit {
         self.settingsStorage.remove(observer: self)
     }

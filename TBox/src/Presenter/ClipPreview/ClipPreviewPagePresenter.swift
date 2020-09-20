@@ -90,6 +90,10 @@ class ClipPreviewPagePresenter {
             self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .deleteClipItem))
         }
     }
+
+    func onUpdatedClip(byUpdatingTags tags: [String]) {
+        self.clip = self.clip.updating(tags: tags)
+    }
 }
 
 extension ClipPreviewPagePresenter: ClipPreviewPageBarButtonItemsPresenterDataSource {

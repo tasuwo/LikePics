@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxCore
 import TBoxUIKit
 import UIKit
@@ -338,14 +339,12 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        // TODO: 成功したらモデルを更新する
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: self)
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        // TODO: 成功したらモデルを更新する
-        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: nil)
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: self)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -362,5 +361,22 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ClipPreviewPageViewController: AddingClipsToAlbumPresenterDelegate {
+    // MARK: - AddingClipsToAlbumPresenterDelegate
+
+    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
+        // NOP
+    }
+}
+
+extension ClipPreviewPageViewController: AddingTagsToClipsPresenterDelegate {
+    // MARK: - AddingTagsToClipsPresenterDelegate
+
+    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTagsTo clip: Clip?) {
+        guard let clip = clip else { return }
+        self.presenter.onUpdatedClip(byUpdatingTags: clip.tags)
     }
 }

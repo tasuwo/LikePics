@@ -42,6 +42,16 @@ public struct Clip: Equatable {
 
     // MARK: - Methods
 
+    public func updating(tags: [String]) -> Self {
+        return .init(url: self.url,
+                     description: self.description,
+                     items: self.items,
+                     tags: tags,
+                     isHidden: self.isHidden,
+                     registeredDate: self.registeredDate,
+                     updatedDate: self.updatedDate)
+    }
+
     public func removedItem(at index: Int) -> Self {
         let newItems = self.items.enumerated()
             .filter { $0.offset != index }

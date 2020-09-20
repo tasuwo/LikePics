@@ -14,6 +14,7 @@ protocol ClipsListProtocol {
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
     mutating func set(delegate: ClipsListDelegate)
     mutating func loadAll()
+    mutating func reload(at index: Int)
     mutating func setEditing(_ isEditing: Bool)
     mutating func select(at index: Int)
     mutating func selectAll()
