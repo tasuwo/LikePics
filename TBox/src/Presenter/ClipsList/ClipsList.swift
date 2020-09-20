@@ -97,6 +97,9 @@ extension ClipsList: ClipsListProtocol {
     }
 
     mutating func loadAll() {
+        if !self.selectedClips.isEmpty {
+            self.selectedClips = []
+        }
         switch self.storage.readAllClips() {
         case let .success(clips):
             self.internalClips = clips.sorted(by: { $0.registeredDate > $1.registeredDate })
