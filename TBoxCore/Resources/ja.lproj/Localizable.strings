@@ -12,6 +12,7 @@
 "clip_target_finder_view_overwrite_alert_cancel" = "キャンセル";
 "clip_target_finder_view_error_alert_title" = "エラー";
 "clip_target_finder_view_error_alert_ok" = "OK";
+"clip_target_finder_view_error_alert_body_failed_to_find_images_timeout" = "タイムアウトしました。保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。通信環境の良い場所で再度お試しください";
 "clip_target_finder_view_error_alert_body_failed_to_find_images" = "保存可能な画像が見つからなかったため、クリップできません";
 "clip_target_finder_view_error_alert_body_failed_to_download_images" = "画像のダウンロードに失敗しました。時間をおいて再度お試しください";
 "clip_target_finder_view_error_alert_body_failed_to_save_images" = "画像の保存に失敗しました。クリップをやり直してください";

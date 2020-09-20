@@ -35,7 +35,7 @@ typealias SaveData = (clip: Clip, images: [ImageData])
 
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
-        case failedToFindImages
+        case failedToFindImages(WebImageResolverError)
         case failedToDownlaodImages
         case failedToSave(ClipStorageError)
         case internalError
@@ -169,8 +169,8 @@ public class ClipTargetFinderPresenter {
                 switch result {
                 case let .success(urls):
                     seal.resolve(.fulfilled(urls))
-                case .failure:
-                    seal.resolve(.rejected(PresenterError.failedToFindImages))
+                case let .failure(error):
+                    seal.resolve(.rejected(PresenterError.failedToFindImages(error)))
                 }
             }
         }
@@ -278,8 +278,12 @@ public class ClipTargetFinderPresenter {
 
     private static func resolveErrorMessage(_ error: PresenterError) -> String {
         switch error {
-        case .failedToFindImages:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImages
+        case .failedToFindImages(.internalError):
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+        case .failedToFindImages(.networkError(_)):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
+        case .failedToFindImages(.timeout):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
         case .failedToDownlaodImages:
             return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
         case .failedToSave:

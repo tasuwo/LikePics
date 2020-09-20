@@ -14,6 +14,8 @@ internal enum L10n {
     internal static let clipTargetFinderViewErrorAlertBodyFailedToDownloadImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_download_images")
     /// 保存可能な画像が見つからなかったため、クリップできません
     internal static let clipTargetFinderViewErrorAlertBodyFailedToFindImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_find_images")
+    /// タイムアウトしました。保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。通信環境の良い場所で再度お試しください
+    internal static let clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_find_images_timeout")
     /// 画像の保存に失敗しました。クリップをやり直してください
     internal static let clipTargetFinderViewErrorAlertBodyFailedToSaveImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_save_images")
     /// 問題が発生しました。クリップをやり直してください
