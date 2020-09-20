@@ -37,6 +37,8 @@
 		2C2C9EEF250BC7710020715B /* ClipInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEE250BC7710020715B /* ClipInformationView.swift */; };
 		2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */; };
 		2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */; };
+		2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35066B251780EC009248C6 /* WebImageNameResolver.swift */; };
+		2C35068725178125009248C6 /* WebImageNameResolverSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
 		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
@@ -136,7 +138,6 @@
 		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
 		2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* ClipStorage.swift */; };
 		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
-		2C99276E24DDC7D400672CA7 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99276D24DDC7D400672CA7 /* DomainTests.swift */; };
 		2C99277024DDC7D400672CA7 /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C99276024DDC7D300672CA7 /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2C99277324DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -537,6 +538,8 @@
 		2C2C9EEE250BC7710020715B /* ClipInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationView.swift; sourceTree = "<group>"; };
 		2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewController.swift; sourceTree = "<group>"; };
 		2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationViewController.xib; sourceTree = "<group>"; };
+		2C35066B251780EC009248C6 /* WebImageNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageNameResolver.swift; sourceTree = "<group>"; };
+		2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageNameResolverSpec.swift; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractivePresentationAnimator.swift; sourceTree = "<group>"; };
@@ -626,7 +629,6 @@
 		2C99276024DDC7D300672CA7 /* Domain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Domain.h; sourceTree = "<group>"; };
 		2C99276124DDC7D300672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C99276624DDC7D400672CA7 /* DomainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C99276D24DDC7D400672CA7 /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
 		2C99276F24DDC7D400672CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C99277C24DDC7E600672CA7 /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageProtocol.swift; sourceTree = "<group>"; };
@@ -972,6 +974,22 @@
 				2CF5ABB224FB486A0084695F /* TagObject.swift */,
 			);
 			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C35066A251780D7009248C6 /* WebImageNameResolver */ = {
+			isa = PBXGroup;
+			children = (
+				2C35066B251780EC009248C6 /* WebImageNameResolver.swift */,
+			);
+			path = WebImageNameResolver;
+			sourceTree = "<group>";
+		};
+		2C35067D2517810C009248C6 /* WebImageNameResolver */ = {
+			isa = PBXGroup;
+			children = (
+				2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */,
+			);
+			path = WebImageNameResolver;
 			sourceTree = "<group>";
 		};
 		2C35C13024E4DE1400871C87 /* Cotnext */ = {
@@ -1455,6 +1473,7 @@
 			children = (
 				2C2727A624DED57100FEF1BD /* Extensions */,
 				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
+				2C35066A251780D7009248C6 /* WebImageNameResolver */,
 				2C99278424DDCAA100672CA7 /* Storage */,
 				2C8AF8A324E3EE4200CB0642 /* ValueObject */,
 				2C99277B24DDC7DA00672CA7 /* Entity */,
@@ -1467,7 +1486,7 @@
 		2C99276C24DDC7D400672CA7 /* DomainTests */ = {
 			isa = PBXGroup;
 			children = (
-				2C99276D24DDC7D400672CA7 /* DomainTests.swift */,
+				2C35067D2517810C009248C6 /* WebImageNameResolver */,
 				2C99276F24DDC7D400672CA7 /* Info.plist */,
 			);
 			path = DomainTests;
@@ -2238,6 +2257,7 @@
 					};
 					2C99276524DDC7D400672CA7 = {
 						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1200;
 						TestTargetID = 2CA0228824DD9F5E00329251;
 					};
 					2C99279124DDD65E00672CA7 = {
@@ -2939,6 +2959,7 @@
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */,
+				2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */,
 				2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */,
 				2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */,
 				2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */,
@@ -2958,7 +2979,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C99276E24DDC7D400672CA7 /* DomainTests.swift in Sources */,
+				2C35068725178125009248C6 /* WebImageNameResolverSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3588,6 +3609,7 @@
 			baseConfigurationReference = F1DB366F4D8BEE3ED57CF37A /* Pods-DomainTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = DomainTests/Info.plist;
@@ -3598,6 +3620,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.DomainTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
@@ -3609,6 +3632,7 @@
 			baseConfigurationReference = 12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = DomainTests/Info.plist;
