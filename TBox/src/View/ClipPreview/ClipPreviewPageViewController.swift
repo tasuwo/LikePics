@@ -16,6 +16,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let factory: Factory
     private let presenter: ClipPreviewPagePresenter
+    private let barItemsProvider: ClipPreviewPageBarButtonItemsProvider
     private let previewTransitionController: ClipPreviewTransitionControllerProtocol
     private let informationTransitionController: ClipInformationTransitionControllerProtocol
 
@@ -55,11 +56,13 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     init(factory: Factory,
          presenter: ClipPreviewPagePresenter,
+         barItemsProvider: ClipPreviewPageBarButtonItemsProvider,
          previewTransitionController: ClipPreviewTransitionControllerProtocol,
          informationTransitionController: ClipInformationTransitioningController)
     {
         self.factory = factory
         self.presenter = presenter
+        self.barItemsProvider = barItemsProvider
         self.previewTransitionController = previewTransitionController
         self.informationTransitionController = informationTransitionController
 
@@ -81,8 +84,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.delegate = self
         self.dataSource = self
 
-        self.setupNavigationBar()
-        self.setupToolBar()
+        self.setupAppearance()
+        self.setupBar()
         self.setupGestureRecognizer()
 
         self.presenter.reload()
@@ -91,78 +94,20 @@ class ClipPreviewPageViewController: UIPageViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
-        self.updateNavigationBar()
-        self.updateToolbarAppearance()
+        self.barItemsProvider.onUpdateOrientation()
     }
 
     // MARK: - Methods
 
-    // MARK: Navigation Bar
-
-    private func setupNavigationBar() {
+    private func setupAppearance() {
         self.navigationItem.title = ""
-
-        let image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(self.didTapBack))
-
-        self.updateNavigationBar()
     }
 
-    private func updateNavigationBar() {
-        let rightBarButtonItems: [UIBarButtonItem]
-        if UIDevice.current.orientation.isLandscape {
-            let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
-            let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
-            rightBarButtonItems = [removeItem, reloadItem]
-        } else {
-            rightBarButtonItems = []
-        }
-        self.navigationItem.rightBarButtonItems = rightBarButtonItems
-    }
+    // MARK: Bar
 
-    @objc
-    func didTapBack() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    // MARK: Tool Bar
-
-    private func setupToolBar() {
-        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let reloadItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.didTapRefetch))
-        let removeItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapRemove))
-        let openWebItem = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(self.didTapOpenWeb))
-        let addToAlbumItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAddToAlbum))
-
-        self.setToolbarItems([reloadItem, flexibleItem, openWebItem, flexibleItem, addToAlbumItem, flexibleItem, removeItem], animated: false)
-
-        self.updateToolbarAppearance()
-    }
-
-    private func updateToolbarAppearance() {
-        self.navigationController?.setToolbarHidden(UIDevice.current.orientation.isLandscape, animated: false)
-    }
-
-    @objc
-    private func didTapRemove() {
-        self.currentViewController?.didTapRemove()
-    }
-
-    @objc
-    private func didTapRefetch() {
-        let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: self.presenter.clip.url, delegate: self, isOverwrite: true)
-        self.present(viewController, animated: true, completion: nil)
-    }
-
-    @objc
-    private func didTapOpenWeb() {
-        UIApplication.shared.open(self.presenter.clip.url, options: [:], completionHandler: nil)
-    }
-
-    @objc
-    private func didTapAddToAlbum() {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
-        self.present(viewController, animated: true, completion: nil)
+    private func setupBar() {
+        self.barItemsProvider.alertPresentable = self
+        self.barItemsProvider.delegate = self
     }
 
     // MARK: Gesture Recognizer
@@ -238,9 +183,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func makeViewController(at index: Int) -> UIViewController? {
         guard self.presenter.clip.items.indices.contains(index) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip,
-                                                              item: self.presenter.clip.items[index],
-                                                              delegate: self)
+        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip, item: self.presenter.clip.items[index])
     }
 }
 
@@ -307,20 +250,17 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
                 viewController.pageView.delegate = self
             })
         }
+        self.barItemsProvider.onUpdateClip()
+    }
+
+    func closePages() {
+        self.dismiss(animated: true, completion: nil)
     }
 
     func showErrorMessage(_ message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
-    }
-}
-
-extension ClipPreviewPageViewController: ClipItemPreviewViewControllerDelegate {
-    // MARK: - ClipItemPreviewViewControllerDelegate
-
-    func reloadPages(_ viewController: ClipItemPreviewViewController) {
-        self.presenter.reload()
     }
 }
 
@@ -356,5 +296,71 @@ extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     func previewPageBounds(_ view: ClipInformationView) -> CGRect {
         guard let pageView = self.currentViewController?.pageView else { return .zero }
         return pageView.bounds
+    }
+}
+
+extension ClipPreviewPageViewController: ClipItemPreviewAlertPresentable {}
+
+extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDelegate {
+    // MARK: - ClipPreviewPageBarButtonItemsProviderDelegate
+
+    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem]) {
+        self.setToolbarItems(items, animated: true)
+    }
+
+    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetLeftBarButtonItems items: [UIBarButtonItem]) {
+        self.navigationItem.leftBarButtonItems = items
+    }
+
+    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetRightBarButtonItems items: [UIBarButtonItem]) {
+        self.navigationItem.rightBarButtonItems = items
+    }
+
+    func shouldHideToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        self.navigationController?.setToolbarHidden(true, animated: false)
+    }
+
+    func shouldShowToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        self.navigationController?.setToolbarHidden(false, animated: false)
+    }
+
+    func shouldDeleteClip(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        self.presenter.deleteClip()
+    }
+
+    func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        guard let item = self.currentViewController?.clipItem,
+            let index = self.presenter.clip.items.firstIndex(where: { $0.clipIndex == item.clipIndex })
+        else {
+            return
+        }
+        self.presenter.deleteClipItem(at: index)
+    }
+
+    func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        // TODO: 成功したらモデルを更新する
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        // TODO: 成功したらモデルを更新する
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: nil)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldRefetchClip(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: self.presenter.clip.url,
+                                                                                 delegate: self,
+                                                                                 isOverwrite: true)
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        UIApplication.shared.open(self.presenter.clip.url, options: [:], completionHandler: nil)
+    }
+
+    func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

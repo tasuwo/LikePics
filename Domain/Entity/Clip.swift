@@ -39,4 +39,19 @@ public struct Clip: Equatable {
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }
+
+    // MARK: - Methods
+
+    public func removedItem(at index: Int) -> Self {
+        let newItems = self.items.enumerated()
+            .filter { $0.offset != index }
+            .map { $0.element }
+        return .init(url: self.url,
+                     description: self.description,
+                     items: newItems,
+                     tags: self.tags,
+                     isHidden: self.isHidden,
+                     registeredDate: self.registeredDate,
+                     updatedDate: self.updatedDate)
+    }
 }

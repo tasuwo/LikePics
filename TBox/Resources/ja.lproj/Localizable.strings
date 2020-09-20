@@ -60,9 +60,13 @@
 "clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
 
 "clip_item_preview_view_alert_for_delete_message" = "クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます";
+"clip_item_preview_view_alert_for_add_to_album" = "アルバムに追加する";
+"clip_item_preview_view_alert_for_add_tag" = "タグを追加する";
 "clip_item_preview_view_alert_for_delete_clip_action" = "クリップを削除する";
 "clip_item_preview_view_alert_for_delete_clip_item_action" = "画像を削除する";
 "clip_item_preview_view_alert_for_successfully_delete_message" = "正常に削除しました";
+"clip_item_preview_view_alert_for_hide_message" = "このクリップは、設定が有効な間は全ての場所から隠されます";
+"clip_item_preview_view_alert_for_hide_action" = "隠す";
 "clip_item_preview_view_error_at_read_image" = "画像の読み込みに失敗しました";
 "clip_item_preview_view_error_at_delete_clip" = "クリップの削除に失敗しました";
 "clip_item_preview_view_error_at_delete_clip_item" = "画像の削除に失敗しました";

@@ -54,12 +54,20 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// タグを追加する
+    internal static let clipItemPreviewViewAlertForAddTag = L10n.tr("Localizable", "clip_item_preview_view_alert_for_add_tag")
+    /// アルバムに追加する
+    internal static let clipItemPreviewViewAlertForAddToAlbum = L10n.tr("Localizable", "clip_item_preview_view_alert_for_add_to_album")
     /// クリップを削除する
     internal static let clipItemPreviewViewAlertForDeleteClipAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_action")
     /// 画像を削除する
     internal static let clipItemPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_item_action")
     /// クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます
     internal static let clipItemPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_message")
+    /// 隠す
+    internal static let clipItemPreviewViewAlertForHideAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_action")
+    /// このクリップは、設定が有効な間は全ての場所から隠されます
+    internal static let clipItemPreviewViewAlertForHideMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_message")
     /// 正常に削除しました
     internal static let clipItemPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_successfully_delete_message")
     /// クリップの削除に失敗しました

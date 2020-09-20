@@ -17,7 +17,7 @@ protocol ViewControllerFactory {
     // MARK: Preview
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController
 
     // MARK: Information
 
@@ -41,7 +41,7 @@ protocol ViewControllerFactory {
     // MARK: Tag
 
     func makeTagListViewController() -> UIViewController
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate) -> UIViewController
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate?) -> UIViewController
 
     // MARK: Settings
 
@@ -82,8 +82,13 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
         let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipsStorage, logger: self.logger)
+
+        let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
+        let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
+
         let pageViewController = ClipPreviewPageViewController(factory: self,
                                                                presenter: presenter,
+                                                               barItemsProvider: barItemsProvider,
                                                                previewTransitionController: self.clipPreviewTransitionController,
                                                                informationTransitionController: self.clipInformationTransitionController)
 
@@ -94,10 +99,9 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem, delegate: ClipItemPreviewViewControllerDelegate) -> ClipItemPreviewViewController {
+    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController {
         let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage, logger: self.logger)
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
-        viewController.delegate = delegate
         return viewController
     }
 
@@ -186,7 +190,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate) -> UIViewController {
+    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate?) -> UIViewController {
         let presenter = AddingTagsToClipsPresenter(clips: clips, storage: self.clipsStorage)
         presenter.delegate = delegate
         let viewController = AddingTagsToClipsViewController(factory: self, presenter: presenter)

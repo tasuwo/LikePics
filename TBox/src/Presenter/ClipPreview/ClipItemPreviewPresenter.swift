@@ -6,26 +6,12 @@ import Common
 import Domain
 
 protocol ClipItemPreviewViewProtocol: AnyObject {
-    func showConfirmationForDelete(options: [ClipItemPreviewPresenter.RemoveTarget], completion: @escaping (ClipItemPreviewPresenter.RemoveTarget?) -> Void)
-
     func showErrorMessage(_ message: String)
-
-    func showSucceededMessage()
-
-    func reloadPages()
-
-    func closePages()
 }
 
 class ClipItemPreviewPresenter {
     enum FailureContext {
         case readImage
-        case delete(RemoveTarget)
-    }
-
-    enum RemoveTarget {
-        case clip
-        case item
     }
 
     let clip: Clip
@@ -48,15 +34,9 @@ class ClipItemPreviewPresenter {
 
     private static func resolveErrorMessage(error: ClipStorageError, context: FailureContext) -> String {
         let message: String = {
-            switch (error, context) {
-            case (_, .readImage):
+            switch context {
+            case .readImage:
                 return L10n.clipItemPreviewViewErrorAtReadImage
-
-            case (_, .delete(.clip)):
-                return L10n.clipItemPreviewViewErrorAtDeleteClip
-
-            case (_, .delete(.item)):
-                return L10n.clipItemPreviewViewErrorAtDeleteClipItem
             }
         }()
         return message + "\n(\(error.makeErrorCode()))"
@@ -71,44 +51,6 @@ class ClipItemPreviewPresenter {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to load image data. (code: \(error.rawValue))"))
             self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .readImage))
             return nil
-        }
-    }
-
-    func didTapRemove() {
-        let options: [RemoveTarget] = {
-            if self.clip.items.count > 1 {
-                return [.item, .clip]
-            } else {
-                return [.clip]
-            }
-        }()
-
-        self.view?.showConfirmationForDelete(options: options) { [weak self] target in
-            guard let self = self, let target = target else { return }
-
-            switch target {
-            case .clip:
-                switch self.storage.delete(self.clip) {
-                case .success:
-                    self.view?.showSucceededMessage()
-                    self.view?.closePages()
-
-                case let .failure(error):
-                    self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip. (code: \(error.rawValue))"))
-                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.clip)))
-                }
-
-            case .item:
-                switch self.storage.delete(self.item) {
-                case .success:
-                    self.view?.showSucceededMessage()
-                    self.view?.reloadPages()
-
-                case let .failure(error):
-                    self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip item. (code: \(error.rawValue))"))
-                    self.view?.showErrorMessage(Self.resolveErrorMessage(error: error, context: .delete(.item)))
-                }
-            }
         }
     }
 }
