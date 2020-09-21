@@ -11,7 +11,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 4,
+                schemaVersion: 5,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )
@@ -28,41 +28,43 @@ public class ClipStorage {
         }
     }
 
+    private let imageStorage: ImageStorageProtocol
+
     private let configuration: Realm.Configuration
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.queue")
 
     // MARK: - Lifecycle
 
-    public init(realmConfiguration: Realm.Configuration) {
+    public init(realmConfiguration: Realm.Configuration, imageStorage: ImageStorageProtocol) throws {
         self.configuration = realmConfiguration
+        self.imageStorage = imageStorage
     }
 
-    public convenience init() {
-        self.init(realmConfiguration: StorageConfiguration.makeConfiguration())
-    }
-
-    // MARK: - Methods
-
-    private static func makeClippedImage(_ imageUrl: URL, clipUrl: URL, data: Data) -> ClippedImageObject {
-        let object = ClippedImageObject()
-        object.clipUrl = clipUrl.absoluteString
-        object.imageUrl = imageUrl.absoluteString
-        object.image = data
-        object.key = object.makeKey()
-        return object
+    public convenience init() throws {
+        try self.init(realmConfiguration: StorageConfiguration.makeConfiguration(), imageStorage: ImageStorage())
     }
 }
 
 extension ClipStorage: ClipStorageProtocol {
     // MARK: - ClipStorageProtocol
 
-    public func create(clip: Clip, withData data: [(URL, Data)], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard data.count == Set(data.map { $0.0 }).count else {
+            // Check parameters
+
+            guard data.count == Set(data.map { $0.fileName }).count else {
+                return .failure(.invalidParameter)
+            }
+
+            let containsFilesFor = { (item: ClipItem) in
+                return data.contains(where: { $0.fileName == item.imageFileName })
+                    && data.contains(where: { $0.fileName == item.thumbnailFileName })
+            }
+            guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
                 return .failure(.invalidParameter)
             }
 
@@ -77,22 +79,12 @@ extension ClipStorage: ClipStorageProtocol {
                 }
             }
 
-            let duplicatedClippedImages = data
-                .map { $0.0 }
-                .map { ClippedImageObject.makeKey(byUrl: $0, clipUrl: clip.url) }
-                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
-            if !forced, !duplicatedClippedImages.isEmpty {
-                return .failure(.duplicated)
-            }
-
             // Prepare new objects
 
             let newClip = clip.asManagedObject()
             if let oldClip = duplicatedClip {
                 newClip.registeredAt = oldClip.registeredAt
             }
-            let newClippedImages = data
-                .map { Self.makeClippedImage($0.0, clipUrl: clip.url, data: $0.1) }
 
             // Check remove targets
 
@@ -102,11 +94,6 @@ extension ClipStorage: ClipStorageProtocol {
                     .filter { oldItem in !newClip.items.contains(where: { $0.makeKey() == oldItem.makeKey() }) }
             }
 
-            let shouldDeleteImages = shouldDeleteClipItems
-                .flatMap { [(true, $0), (false, $0)] }
-                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
-                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
-
             // Delete
 
             let updatePolicy: Realm.UpdatePolicy = forced ? .modified : .error
@@ -115,14 +102,14 @@ extension ClipStorage: ClipStorageProtocol {
                     shouldDeleteClipItems.forEach { item in
                         realm.delete(item)
                     }
-                    shouldDeleteImages.forEach { image in
-                        realm.delete(image)
-                    }
                     realm.add(newClip, update: updatePolicy)
-                    newClippedImages.forEach { image in
-                        realm.add(image, update: updatePolicy)
-                    }
                 }
+
+                try? self.imageStorage.deleteAll(inClip: clip.url)
+                try data.forEach { value in
+                    try self.imageStorage.save(value.image, asName: value.fileName, inClip: clip.url)
+                }
+
                 return .success(())
             } catch {
                 return .failure(.internalError)
@@ -198,18 +185,27 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func readImageData(having url: URL, forClipHaving clipUrl: URL) -> Result<Data, ClipStorageError> {
+    public func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError> {
         return self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
+            do {
+                return .success(try self.imageStorage.readImage(named: item.imageFileName, inClip: item.clipUrl))
+            } catch ImageStorageError.notFound {
+                return .failure(.notFound)
+            } catch {
                 return .failure(.internalError)
             }
+        }
+    }
 
-            let primaryKey = "\(clipUrl.absoluteString)-\(url.absoluteString)"
-            guard let clippedImage = realm.object(ofType: ClippedImageObject.self, forPrimaryKey: primaryKey) else {
+    public func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                return .success(try self.imageStorage.readImage(named: item.thumbnailFileName, inClip: item.clipUrl))
+            } catch ImageStorageError.notFound {
                 return .failure(.notFound)
+            } catch {
+                return .failure(.internalError)
             }
-
-            return .success(clippedImage.image)
         }
     }
 
@@ -513,41 +509,6 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Delete
 
-    public func delete(_ clip: Clip) -> Result<Clip, ClipStorageError> {
-        return self.queue.sync {
-            guard let realm = try? Realm(configuration: self.configuration) else {
-                return .failure(.internalError)
-            }
-
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
-                return .failure(.notFound)
-            }
-            let removeTarget = Clip.make(by: clip)
-
-            // NOTE: Delete only found objects.
-            let clipItems = clip.items
-                .map { $0.makeKey() }
-                .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
-
-            // NOTE: Delete only found objects.
-            let clippedImages = clip.items
-                .flatMap { [(true, $0), (false, $0)] }
-                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
-                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
-
-            do {
-                try realm.write {
-                    realm.delete(clippedImages)
-                    realm.delete(clipItems)
-                    realm.delete(clip)
-                }
-                return .success(removeTarget)
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
     public func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
@@ -569,16 +530,15 @@ extension ClipStorage: ClipStorageProtocol {
                 .map { $0.makeKey() }
                 .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
 
-            // NOTE: Delete only found objects.
-            let clippedImages = clipObjects
+            clips
                 .flatMap { $0.items }
-                .flatMap { [(true, $0), (false, $0)] }
-                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
-                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
+                .forEach { clipItem in
+                    try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClip: clipItem.clipUrl)
+                    try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClip: clipItem.clipUrl)
+                }
 
             do {
                 try realm.write {
-                    realm.delete(clippedImages)
                     realm.delete(clipItems)
                     realm.delete(clipObjects)
                 }
@@ -602,14 +562,11 @@ extension ClipStorage: ClipStorageProtocol {
             }
             let removeTarget = ClipItem.make(by: item)
 
-            // NOTE: Delete only found objects.
-            let clippedImages = [(true, item), (false, item)]
-                .map { ClippedImageObject.makeImageKey(ofItem: $0.1, forThumbnail: $0.0) }
-                .compactMap { realm.object(ofType: ClippedImageObject.self, forPrimaryKey: $0) }
+            try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClip: clipItem.clipUrl)
+            try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClip: clipItem.clipUrl)
 
             do {
                 try realm.write {
-                    realm.delete(clippedImages)
                     realm.delete(item)
                 }
                 return .success(removeTarget)

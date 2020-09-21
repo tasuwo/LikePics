@@ -8,14 +8,27 @@ import RealmSwift
 enum ClipStorageMigrationService {
     static let migrationBlock: MigrationBlock = { migration, oldSchemaVersion in
         if oldSchemaVersion < 1 {
-            Self.migrationToV1(migration)
+            fatalError("Unsupported schema version")
         } else if oldSchemaVersion < 2 {
             Self.migraitonToV2(migration)
         } else if oldSchemaVersion < 3 {
             Self.migraitonToV3(migration)
         } else if oldSchemaVersion < 4 {
             Self.migraitonToV4(migration)
+        } else if oldSchemaVersion < 5 {
+            Self.migraitonToV5(migration)
         }
+    }
+
+    private static func migraitonToV5(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+            newObject!["thumbnailUrl"] = oldObject!["thumbnailImageUrl"]
+            newObject!["imageUrl"] = oldObject!["largeImageUrl"]
+
+            newObject!["thumbnailFileName"] = "\(UUID().uuidString).jpeg"
+            newObject!["imageFileName"] = "\(UUID().uuidString).jpeg"
+        }
+        migration.deleteData(forType: "ClippedImageObject")
     }
 
     private static func migraitonToV4(_ migration: Migration) {
@@ -45,45 +58,20 @@ enum ClipStorageMigrationService {
             newObject!["updatedAt"] = Date()
         }
     }
+}
 
-    private static func migrationToV1(_ migration: Migration) {
-        migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
-            let clipUrl = oldObject!["url"] as! String
+/**
+ * Legacy schema
+ */
+final class ClippedImageObject: Object {
+    @objc dynamic var key: String = ""
+    @objc dynamic var clipUrl: String = ""
+    @objc dynamic var imageUrl: String = ""
+    @objc dynamic var image = Data()
+    @objc dynamic var registeredAt = Date()
+    @objc dynamic var updatedAt = Date()
 
-            newObject!["descriptionText"] = nil
-
-            let webImages = oldObject!["webImages"] as! List<MigrationObject>
-            webImages.enumerated().forEach { index, webImage in
-                let largeImageUrlString = webImage["url"] as! String
-                let largeImageData = webImage["image"] as! Data
-
-                // ClippedImage for large image
-
-                let clippedLargeImage = ClippedImageObject()
-                clippedLargeImage.clipUrl = clipUrl
-                clippedLargeImage.imageUrl = largeImageUrlString
-                clippedLargeImage.image = largeImageData
-                clippedLargeImage.key = clippedLargeImage.makeKey()
-                migration.create(ClippedImageObject.className(), value: clippedLargeImage)
-
-                let largeImageSize = UIImage(data: largeImageData)!.size
-
-                let clipItem = ClipItemObject()
-                clipItem.clipUrl = clipUrl
-                clipItem.clipIndex = index
-                clipItem.thumbnailImageUrl = largeImageUrlString
-                clipItem.thumbnailHeight = Double(largeImageSize.height)
-                clipItem.thumbnailWidth = Double(largeImageSize.width)
-                clipItem.largeImageUrl = largeImageUrlString
-                clipItem.largeImageHeight = Double(largeImageSize.height)
-                clipItem.largeImageWidth = Double(largeImageSize.width)
-                clipItem.key = clipItem.makeKey()
-
-                let createdClipItem = migration.create(ClipItemObject.className(), value: clipItem)
-
-                (newObject!["items"]! as! List<MigrationObject>).append(createdClipItem)
-            }
-        }
-        migration.deleteData(forType: "WebImageObject")
+    override static func primaryKey() -> String? {
+        return "key"
     }
 }

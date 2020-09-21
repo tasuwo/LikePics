@@ -49,30 +49,24 @@ extension ClipItem {
     static func makeDefault(
         clipUrl: URL = URL(string: "https://xxx.xxxx.xx")!,
         clipIndex: Int = 0,
-        thumbnail: ClipItem.Image = ClipItem.Image.makeDefault(),
-        image: ClipItem.Image = ClipItem.Image.makeDefault(),
+        thumbnailFileName: String = "",
+        thumbnailUrl: URL? = nil,
+        thumbnailSize: ImageSize = ImageSize.makeDefault(),
+        imageFileName: String = "",
+        imageUrl: URL = URL(string: "https://xxx.xxxx.xx")!,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
             clipUrl: clipUrl,
             clipIndex: clipIndex,
-            thumbnail: thumbnail,
-            image: image,
+            thumbnailFileName: thumbnailFileName,
+            thumbnailUrl: thumbnailUrl,
+            thumbnailSize: thumbnailSize,
+            imageFileName: imageFileName,
+            imageUrl: imageUrl,
             registeredDate: registeredDate,
             updatedDate: updatedDate
-        )
-    }
-}
-
-extension ClipItem.Image {
-    static func makeDefault(
-        url: URL = URL(string: "https://xxx.xxxx.xx")!,
-        size: ImageSize = ImageSize.makeDefault()
-    ) -> Self {
-        return .init(
-            url: url,
-            size: size
         )
     }
 }

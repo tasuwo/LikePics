@@ -12,7 +12,8 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    private lazy var storage = ClipStorage()
+    // TODO: Error Handling
+    private lazy var storage = try! ClipStorage()
     private lazy var finder = WebImageUrlFinder()
     private lazy var currentDateResolver = { Date() }
 }

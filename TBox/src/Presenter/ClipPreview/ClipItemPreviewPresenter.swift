@@ -43,7 +43,7 @@ class ClipItemPreviewPresenter {
     }
 
     func loadImageData() -> Data? {
-        switch self.storage.readImageData(having: self.item.image.url, forClipHaving: self.item.clipUrl) {
+        switch self.storage.readImageData(of: self.item) {
         case let .success(data):
             return data
 

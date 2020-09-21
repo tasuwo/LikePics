@@ -68,7 +68,7 @@ class ClipPreviewPagePresenter {
     }
 
     func deleteClip() {
-        switch self.storage.delete(self.clip) {
+        switch self.storage.delete([self.clip]) {
         case .success:
             self.view?.closePages()
 

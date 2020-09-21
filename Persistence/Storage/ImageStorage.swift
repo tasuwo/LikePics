@@ -10,6 +10,7 @@ public enum ImageStorageError: Error {
 public protocol ImageStorageProtocol {
     func save(_ image: Data, asName fileName: String, inClip url: URL) throws
     func delete(fileName: String, inClip url: URL) throws
+    func deleteAll(inClip url: URL) throws
     func readImage(named name: String, inClip url: URL) throws -> Data
 }
 
@@ -106,6 +107,16 @@ extension ImageStorage: ImageStorageProtocol {
         if try self.fileManager.contentsOfDirectory(atPath: clipDirectoryUrl.path).isEmpty {
             try self.fileManager.removeItem(at: clipDirectoryUrl)
         }
+    }
+
+    func deleteAll(inClip url: URL) throws {
+        let clipDirectoryUrl = self.resolveClipDirectoryUrl(for: url)
+
+        guard self.fileManager.fileExists(atPath: clipDirectoryUrl.path) else {
+            throw ImageStorageError.notFound
+        }
+
+        try self.fileManager.removeItem(at: clipDirectoryUrl)
     }
 
     func readImage(named name: String, inClip url: URL) throws -> Data {

@@ -36,24 +36,22 @@ class ClipStorageSpec: QuickSpec {
 
     func makeClipItem(clipUrl: String,
                       clipIndex: Int,
-                      thumbnailImageUrl: String,
+                      thumbnailFileName: String,
                       thumbnailHeight: Double,
                       thumbnailWidth: Double,
-                      largeImageUrl: String,
-                      largeImageHeight: Double,
-                      largeImageWidth: Double,
+                      imageFileName: String,
+                      imageUrl: String,
                       registeredAt: Date,
                       updatedAt: Date) -> ClipItemObject
     {
         let obj = ClipItemObject()
         obj.clipUrl = clipUrl
         obj.clipIndex = clipIndex
-        obj.thumbnailImageUrl = thumbnailImageUrl
+        obj.thumbnailFileName = thumbnailFileName
         obj.thumbnailHeight = thumbnailHeight
         obj.thumbnailWidth = thumbnailWidth
-        obj.largeImageUrl = largeImageUrl
-        obj.largeImageHeight = largeImageHeight
-        obj.largeImageWidth = largeImageWidth
+        obj.imageFileName = imageFileName
+        obj.imageUrl = imageUrl
         obj.registeredAt = registeredAt
         obj.updatedAt = updatedAt
         obj.key = obj.makeKey()
@@ -67,20 +65,27 @@ class ClipStorageSpec: QuickSpec {
         return obj
     }
 
-    func makeClippedImage(clipUrl: String,
-                          imageUrl: String,
-                          image: Data,
-                          registeredAt: Date,
-                          updatedAt: Date) -> ClippedImageObject
-    {
-        let obj = ClippedImageObject()
-        obj.clipUrl = clipUrl
-        obj.imageUrl = imageUrl
-        obj.image = image
-        obj.registeredAt = registeredAt
-        obj.updatedAt = updatedAt
-        obj.key = obj.makeKey()
-        return obj
+    class ImageStorageMock: ImageStorageProtocol {
+        var saveCallCount = 0
+        var saveHandler: ((Data, String, URL) throws -> Void)?
+        func save(_ image: Data, asName fileName: String, inClip url: URL) throws {
+            self.saveCallCount += 1
+            try self.saveHandler?(image, fileName, url)
+        }
+
+        var deleteCallCount = 0
+        var deleteHandler: ((String, URL) throws -> Void)?
+        func delete(fileName: String, inClip url: URL) throws {
+            self.deleteCallCount += 1
+            try self.deleteHandler?(fileName, url)
+        }
+
+        var readImageCallCount = 0
+        var readImageHandler: ((String, URL) throws -> Data)?
+        func readImage(named name: String, inClip url: URL) throws -> Data {
+            self.readImageCallCount += 1
+            return try self.readImageHandler?(name, url) ?? Data()
+        }
     }
 
     override func spec() {
@@ -88,9 +93,11 @@ class ClipStorageSpec: QuickSpec {
         let realm = try! Realm(configuration: configuration)
 
         var service: ClipStorage!
+        var imageStorage: ImageStorageMock!
 
         beforeSuite {
-            service = ClipStorage(realmConfiguration: configuration)
+            imageStorage = ImageStorageMock()
+            service = try! ClipStorage(realmConfiguration: configuration, imageStorage: imageStorage)
         }
 
         beforeEach {
@@ -228,22 +235,20 @@ class ClipStorageSpec: QuickSpec {
                                                 items: [
                                                     self.makeClipItem(clipUrl: "https://localhost/1",
                                                                       clipIndex: 1,
-                                                                      thumbnailImageUrl: "https://localhost/image/thumb/1",
+                                                                      thumbnailFileName: "fuga1.png",
                                                                       thumbnailHeight: 100,
                                                                       thumbnailWidth: 200,
-                                                                      largeImageUrl: "https://localhost/image/large/1",
-                                                                      largeImageHeight: 300,
-                                                                      largeImageWidth: 400,
+                                                                      imageFileName: "hoge1.png",
+                                                                      imageUrl: "https://localhost/image/large/1",
                                                                       registeredAt: Date(timeIntervalSince1970: 0),
                                                                       updatedAt: Date(timeIntervalSince1970: 1000)),
                                                     self.makeClipItem(clipUrl: "https://localhost/2",
                                                                       clipIndex: 2,
-                                                                      thumbnailImageUrl: "https://localhost/image/thumb/2",
+                                                                      thumbnailFileName: "fuga2.png",
                                                                       thumbnailHeight: 500,
                                                                       thumbnailWidth: 600,
-                                                                      largeImageUrl: "https://localhost/image/large/2",
-                                                                      largeImageHeight: 700,
-                                                                      largeImageWidth: 800,
+                                                                      imageFileName: "hoge2.png",
+                                                                      imageUrl: "https://localhost/image/large/2",
                                                                       registeredAt: Date(timeIntervalSince1970: 0),
                                                                       updatedAt: Date(timeIntervalSince1970: 1000))
                                                 ],
@@ -265,18 +270,17 @@ class ClipStorageSpec: QuickSpec {
                         expect(clip.items).to(haveCount(2))
                         expect(clip.items[0].clipUrl).to(equal(URL(string: "https://localhost/1")!))
                         expect(clip.items[0].clipIndex).to(equal(1))
-                        expect(clip.items[0].thumbnail.url).to(equal(URL(string: "https://localhost/image/thumb/1")!))
-                        expect(clip.items[0].thumbnail.size).to(equal(.init(height: 100, width: 200)))
-                        expect(clip.items[0].image.url).to(equal(URL(string: "https://localhost/image/large/1")!))
-                        expect(clip.items[0].image.size).to(equal(.init(height: 300, width: 400)))
+                        expect(clip.items[0].thumbnailFileName).to(equal("fuga1.png"))
+                        expect(clip.items[0].thumbnailSize).to(equal(.init(height: 100, width: 200)))
+                        expect(clip.items[0].imageFileName).to(equal("hoge1.png"))
+                        expect(clip.items[0].imageUrl).to(equal(URL(string: "https://localhost/image/large/1")!))
                         expect(clip.items[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
                         expect(clip.items[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
                         expect(clip.items[1].clipUrl).to(equal(URL(string: "https://localhost/2")!))
                         expect(clip.items[1].clipIndex).to(equal(2))
-                        expect(clip.items[1].thumbnail.url).to(equal(URL(string: "https://localhost/image/thumb/2")!))
-                        expect(clip.items[1].thumbnail.size).to(equal(.init(height: 500, width: 600)))
-                        expect(clip.items[1].image.url).to(equal(URL(string: "https://localhost/image/large/2")!))
-                        expect(clip.items[1].image.size).to(equal(.init(height: 700, width: 800)))
+                        expect(clip.items[1].thumbnailSize).to(equal(.init(height: 500, width: 600)))
+                        expect(clip.items[1].imageFileName).to(equal("hoge2.png"))
+                        expect(clip.items[1].imageUrl).to(equal(URL(string: "https://localhost/image/large/2")!))
                         expect(clip.items[1].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
                         expect(clip.items[1].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
                         expect(clip.tags).to(haveCount(2))
@@ -307,21 +311,18 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("readImageData(having:forClipHaving:)") {
+        describe("readImageData(of:)") {
             var result: Result<Data, ClipStorageError>!
 
             context("対象の画像データが存在する") {
                 beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClippedImage(clipUrl: "https://localhost/2",
-                                                        imageUrl: "https://localhost/1",
-                                                        image: Data(base64Encoded: "hogehoge")!,
-                                                        registeredAt: Date(timeIntervalSince1970: 0),
-                                                        updatedAt: Date(timeIntervalSince1970: 1000))
-                        realm.add(obj)
+                    imageStorage.readImageHandler = { name, clipUrl in
+                        expect(name).to(equal("hoge.png"))
+                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        return Data(base64Encoded: "hogehoge")!
                     }
-                    result = service.readImageData(having: URL(string: "https://localhost/1")!,
-                                                   forClipHaving: URL(string: "https://localhost/2")!)
+                    result = service.readImageData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                                                                    imageFileName: "hoge.png"))
                 }
                 it("successが返る") {
                     switch result! {
@@ -335,8 +336,59 @@ class ClipStorageSpec: QuickSpec {
 
             context("対象の画像データが存在しない") {
                 beforeEach {
-                    result = service.readImageData(having: URL(string: "https://localhost/1")!,
-                                                   forClipHaving: URL(string: "https://localhost/2")!)
+                    imageStorage.readImageHandler = { name, clipUrl in
+                        expect(name).to(equal("hoge.png"))
+                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        throw ImageStorageError.notFound
+                    }
+                    result = service.readImageData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                                                                    imageFileName: "hoge.png"))
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+        }
+
+        describe("readThumbnailImageData(of:)") {
+            var result: Result<Data, ClipStorageError>!
+
+            context("対象の画像データが存在する") {
+                beforeEach {
+                    imageStorage.readImageHandler = { name, clipUrl in
+                        expect(name).to(equal("hoge.png"))
+                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        return Data(base64Encoded: "hogehoge")!
+                    }
+                    result = service.readThumbnailData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                                                                        thumbnailFileName: "hoge.png"))
+                }
+                it("successが返る") {
+                    switch result! {
+                    case let .success(data):
+                        expect(data).to(equal(Data(base64Encoded: "hogehoge")!))
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+            }
+
+            context("対象の画像データが存在しない") {
+                beforeEach {
+                    imageStorage.readImageHandler = { name, clipUrl in
+                        expect(name).to(equal("hoge.png"))
+                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        throw ImageStorageError.notFound
+                    }
+                    result = service.readThumbnailData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                                                                        thumbnailFileName: "hoge.png"))
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1840,7 +1892,7 @@ class ClipStorageSpec: QuickSpec {
                 }
                 it("notFoundが返る") {
                     switch result! {
-                    case let .success(tag):
+                    case .success:
                         fail("Unexpected success")
                     case .failure(.notFound):
                         expect(true).to(beTrue())

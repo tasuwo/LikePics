@@ -4,31 +4,35 @@
 
 // sourcery: AutoDefaultValue
 public struct ClipItem: Equatable {
-    // sourcery: AutoDefaultValue
-    public struct Image: Equatable {
-        public let url: URL
-        public let size: ImageSize
-
-        public init(url: URL, size: ImageSize) {
-            self.url = url
-            self.size = size
-        }
-    }
-
     public let clipUrl: URL
     public let clipIndex: Int
-    public let thumbnail: Image
-    public let image: Image
+    public let thumbnailFileName: String
+    public let thumbnailUrl: URL?
+    public let thumbnailSize: ImageSize
+    public let imageFileName: String
+    public let imageUrl: URL
     public let registeredDate: Date
     public let updatedDate: Date
 
     // MARK: - Lifecycle
 
-    public init(clipUrl: URL, clipIndex: Int, thumbnail: Image, image: Image, registeredDate: Date, updatedDate: Date) {
+    public init(clipUrl: URL,
+                clipIndex: Int,
+                thumbnailFileName: String,
+                thumbnailUrl: URL?,
+                thumbnailSize: ImageSize,
+                imageFileName: String,
+                imageUrl: URL,
+                registeredDate: Date,
+                updatedDate: Date)
+    {
         self.clipUrl = clipUrl
         self.clipIndex = clipIndex
-        self.thumbnail = thumbnail
-        self.image = image
+        self.thumbnailUrl = thumbnailUrl
+        self.thumbnailFileName = thumbnailFileName
+        self.thumbnailSize = thumbnailSize
+        self.imageFileName = imageFileName
+        self.imageUrl = imageUrl
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }

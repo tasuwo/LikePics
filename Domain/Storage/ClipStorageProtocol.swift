@@ -23,7 +23,7 @@ extension ClipStorageError: ErrorCodeSource {
 public protocol ClipStorageProtocol {
     // MARK: Create
 
-    func create(clip: Clip, withData data: [(URL, Data)], forced: Bool) -> Result<Void, ClipStorageError>
+    func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError>
 
     func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
 
@@ -33,7 +33,9 @@ public protocol ClipStorageProtocol {
 
     func readClip(having url: URL) -> Result<Clip, ClipStorageError>
 
-    func readImageData(having url: URL, forClipHaving clipUrl: URL) -> Result<Data, ClipStorageError>
+    func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError>
+
+    func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError>
 
     func readAllClips(containsHiddenClips: Bool) -> Result<[Clip], ClipStorageError>
 
@@ -63,8 +65,6 @@ public protocol ClipStorageProtocol {
 
     // MARK: Delete
 
-    func delete(_ clip: Clip) -> Result<Clip, ClipStorageError>
-
     func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError>
 
     func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
@@ -75,7 +75,7 @@ public protocol ClipStorageProtocol {
 }
 
 extension ClipStorageProtocol {
-    public func create(clip: Clip, withData data: [(URL, Data)]) -> Result<Void, ClipStorageError> {
+    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
         self.create(clip: clip, withData: data, forced: false)
     }
 

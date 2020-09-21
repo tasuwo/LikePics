@@ -50,7 +50,8 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private lazy var logger = RootLogger.shared
-    private lazy var clipsStorage = ClipStorage()
+    // TODO: Error Handling
+    private lazy var clipsStorage = try! ClipStorage()
     private lazy var userSettingsStorage = UserSettingsStorage()
     private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
     private lazy var clipInformationTransitionController = ClipInformationTransitioningController()

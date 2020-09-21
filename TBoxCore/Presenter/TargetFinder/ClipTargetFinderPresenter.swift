@@ -270,6 +270,7 @@ public class ClipTargetFinderPresenter {
                     ClipItem(clipUrl: self.url,
                              clipIndex: dataSet.index,
                              thumbnailFileName: dataSet.thumbnailFileName,
+                             thumbnailUrl: dataSet.thumbnailUrl,
                              thumbnailSize: ImageSize(height: dataSet.imageHeight,
                                                       width: dataSet.imageWidth),
                              imageFileName: dataSet.originalImageFileName,
@@ -294,15 +295,13 @@ public class ClipTargetFinderPresenter {
                     ]
                 }
 
-            // TODO:
-            // switch self.storage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
-            // case .success:
-            //     seal.resolve(.fulfilled(()))
-            //     break
+            switch self.storage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
+            case .success:
+                seal.resolve(.fulfilled(()))
 
-            // case let .failure(error):
-            //     seal.resolve(.rejected(PresenterError.failedToSave(error)))
-            // }
+            case let .failure(error):
+                seal.resolve(.rejected(PresenterError.failedToSave(error)))
+            }
         }
     }
 

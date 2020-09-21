@@ -54,7 +54,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
             return selectedCell.convert(selectedCell.bounds, to: containerView)
         }
         let item = viewController.clips[selectedIndexPath.row].items[index]
-        let imageSize = item.thumbnail.size
+        let imageSize = item.thumbnailSize
 
         let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
                                            on: selectedCell.bounds)
