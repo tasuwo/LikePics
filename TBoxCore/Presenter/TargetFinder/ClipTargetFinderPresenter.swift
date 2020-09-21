@@ -264,36 +264,15 @@ public class ClipTargetFinderPresenter {
             }
 
             let currentDate = self.currentDateResolver()
+            let items = target.map { ClipItem(clipUrl: self.url, dataSet: $0, currentDate: currentDate) }
+            let clip = Clip(url: self.url, clipItems: items, currentDate: currentDate)
 
-            let items = target
-                .map { dataSet in
-                    ClipItem(clipUrl: self.url,
-                             clipIndex: dataSet.index,
-                             thumbnailFileName: dataSet.thumbnailFileName,
-                             thumbnailUrl: dataSet.thumbnailUrl,
-                             thumbnailSize: ImageSize(height: dataSet.imageHeight,
-                                                      width: dataSet.imageWidth),
-                             imageFileName: dataSet.originalImageFileName,
-                             imageUrl: dataSet.originalImageUrl,
-                             registeredDate: currentDate,
-                             updatedDate: currentDate)
-                }
-
-            let clip = Clip(url: self.url,
-                            description: nil,
-                            items: items,
-                            tags: [],
-                            isHidden: false,
-                            registeredDate: currentDate,
-                            updatedDate: currentDate)
-
-            let data = target
-                .flatMap { dataSet in
-                    [
-                        (dataSet.originalImageFileName, dataSet.originalImageData),
-                        (dataSet.thumbnailFileName, dataSet.thumbnailData),
-                    ]
-                }
+            let data = target.flatMap {
+                [
+                    ($0.originalImageFileName, $0.originalImageData),
+                    ($0.thumbnailFileName, $0.thumbnailData),
+                ]
+            }
 
             switch self.storage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
             case .success:
@@ -322,5 +301,31 @@ public class ClipTargetFinderPresenter {
         case .internalError:
             return L10n.clipTargetFinderViewErrorAlertBodyInternalError
         }
+    }
+}
+
+extension ClipItem {
+    init(clipUrl: URL, dataSet: ImageDataSet, currentDate: Date) {
+        self.init(clipUrl: clipUrl,
+                  clipIndex: dataSet.index,
+                  thumbnailFileName: dataSet.thumbnailFileName,
+                  thumbnailUrl: dataSet.thumbnailUrl,
+                  thumbnailSize: ImageSize(height: dataSet.imageHeight, width: dataSet.imageWidth),
+                  imageFileName: dataSet.originalImageFileName,
+                  imageUrl: dataSet.originalImageUrl,
+                  registeredDate: currentDate,
+                  updatedDate: currentDate)
+    }
+}
+
+extension Clip {
+    init(url: URL, clipItems: [ClipItem], currentDate: Date) {
+        self.init(url: url,
+                  description: nil,
+                  items: clipItems,
+                  tags: [],
+                  isHidden: false,
+                  registeredDate: currentDate,
+                  updatedDate: currentDate)
     }
 }
