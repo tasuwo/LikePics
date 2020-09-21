@@ -9,4 +9,5 @@
 --self insert
 --stripunusedargs closure-only
 --wrapcollections beforefirst
+--exclude Pods
 

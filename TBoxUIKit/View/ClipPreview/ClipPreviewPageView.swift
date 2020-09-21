@@ -53,6 +53,7 @@ public class ClipPreviewPageView: UIView {
 
     public weak var delegate: ClipPreviewPageViewDelegate?
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var doubleTapGestureRecognizer: UITapGestureRecognizer!
 
     @IBOutlet var baseView: UIView!
@@ -84,6 +85,12 @@ public class ClipPreviewPageView: UIView {
 
     // MARK: - Methods
 
+    static func calcScaleToFit(_ image: UIImage, on size: CGSize) -> CGFloat {
+        let widthScale = size.width / image.size.width
+        let heightScale = size.height / image.size.height
+        return min(widthScale, heightScale)
+    }
+
     public func shouldRecalculateInitialScale() {
         guard let image = self.imageView.image else { return }
         self.setupScale(image, on: self.bounds.size)
@@ -110,7 +117,8 @@ public class ClipPreviewPageView: UIView {
         self.addGestureRecognizer(self.doubleTapGestureRecognizer)
     }
 
-    @objc private func didDoubleTap(_ sender: UITapGestureRecognizer) {
+    @objc
+    private func didDoubleTap(_ sender: UITapGestureRecognizer) {
         let point = sender.location(in: self.imageView)
         guard self.imageView.bounds.contains(point), let image = self.imageView.image else { return }
 
@@ -131,12 +139,6 @@ public class ClipPreviewPageView: UIView {
         let nextRect = CGRect(origin: nextPoint, size: .init(width: width, height: height))
 
         self.scrollView.zoom(to: nextRect, animated: true)
-    }
-
-    static func calcScaleToFit(_ image: UIImage, on size: CGSize) -> CGFloat {
-        let widthScale = size.width / image.size.width
-        let heightScale = size.height / image.size.height
-        return min(widthScale, heightScale)
     }
 
     func setupScale(_ image: UIImage, on size: CGSize) {

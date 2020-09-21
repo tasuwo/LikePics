@@ -104,29 +104,32 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
             }
         }
 
-        preprocessedStep.then { document in
-            attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry) {
-                self.checkCurrentContent(fulfilled: { $0.querySelectorAll("img").count > 0 })
-            }
-        }.done { document in
-            let imageUrls: [WebImageUrlSet] = document
-                .querySelectorAll("img")
-                .compactMap { $0["src"] }
-                .compactMap { URL(string: $0) }
-                .map {
-                    guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                        return WebImageUrlSet(url: $0, lowQualityUrl: nil)
-                    }
-                    return WebImageUrlSet(url: provider.resolveHighQualityImageUrl(of: $0) ?? $0,
-                                          lowQualityUrl: provider.resolveLowQualityImageUrl(of: $0))
+        preprocessedStep
+            .then { _ in
+                attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry) {
+                    self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
                 }
-            completion(.success(imageUrls))
-        }.catch { error in
-            guard let error = error as? WebImageUrlFinderError else {
-                completion(.failure(.internalError))
-                return
             }
-            completion(.failure(error))
-        }
+            .done { document in
+                let imageUrls: [WebImageUrlSet] = document
+                    .querySelectorAll("img")
+                    .compactMap { $0["src"] }
+                    .compactMap { URL(string: $0) }
+                    .map {
+                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
+                            return WebImageUrlSet(url: $0, lowQualityUrl: nil)
+                        }
+                        return WebImageUrlSet(url: provider.resolveHighQualityImageUrl(of: $0) ?? $0,
+                                              lowQualityUrl: provider.resolveLowQualityImageUrl(of: $0))
+                    }
+                completion(.success(imageUrls))
+            }
+            .catch { error in
+                guard let error = error as? WebImageUrlFinderError else {
+                    completion(.failure(.internalError))
+                    return
+                }
+                completion(.failure(error))
+            }
     }
 }

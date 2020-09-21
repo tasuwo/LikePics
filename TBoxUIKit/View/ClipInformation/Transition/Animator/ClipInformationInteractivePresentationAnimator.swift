@@ -20,6 +20,29 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     private var innerContext: InnerContext?
 
+    // MARK: - Methods
+
+    // MARK: Calculation
+
+    private static func calcProgress(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let maximumDelta = view.bounds.height * 2 / 3
+        return min(abs(verticalDelta) / maximumDelta, 1.0)
+    }
+
+    private static func calcNextMidY(in view: UIView, fromFrame: CGRect, toFrame: CGRect, verticalDelta: CGFloat) -> CGFloat {
+        let percent = self.calcProgress(in: view, verticalDelta: verticalDelta)
+        let range = fromFrame.midY - toFrame.midY
+        return fromFrame.midY - (percent * range)
+    }
+
+    private static func calcAlpha(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let percentAlpha = self.calcProgress(in: view, verticalDelta: verticalDelta)
+        let alphaRange = Self.startingAlpha - Self.finalAlpha
+        return Self.startingAlpha - (percentAlpha * alphaRange)
+    }
+
+    // MARK: Internal
+
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else { return }
         let transitionContext = innerContext.transitionContext
@@ -134,25 +157,6 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         )
 
         CATransaction.commit()
-    }
-
-    // MARK: Calculation
-
-    private static func calcProgress(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
-        let maximumDelta = view.bounds.height * 2 / 3
-        return min(abs(verticalDelta) / maximumDelta, 1.0)
-    }
-
-    private static func calcNextMidY(in view: UIView, fromFrame: CGRect, toFrame: CGRect, verticalDelta: CGFloat) -> CGFloat {
-        let percent = self.calcProgress(in: view, verticalDelta: verticalDelta)
-        let range = fromFrame.midY - toFrame.midY
-        return fromFrame.midY - (percent * range)
-    }
-
-    private static func calcAlpha(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
-        let percentAlpha = self.calcProgress(in: view, verticalDelta: verticalDelta)
-        let alphaRange = Self.startingAlpha - Self.finalAlpha
-        return Self.startingAlpha - (percentAlpha * alphaRange)
     }
 }
 

@@ -10,6 +10,9 @@ public protocol ClipsCollectionLayoutDelegate: AnyObject {
 }
 
 public class ClipCollectionLayout: UICollectionViewLayout {
+    private static let cellPadding: CGFloat = 10
+    private static let defaultContentHeight: CGFloat = 180
+
     public weak var delegate: ClipsCollectionLayoutDelegate?
 
     private var numberOfColumns: Int {
@@ -19,20 +22,20 @@ public class ClipCollectionLayout: UICollectionViewLayout {
         switch collectionView.traitCollection.horizontalSizeClass {
         case .compact:
             return 2
+
         case .regular:
             return 4
+
         case .unspecified:
             return 2
+
         @unknown default:
             return 2
         }
     }
 
-    private static let cellPadding: CGFloat = 10
-
     private var cache: [UICollectionViewLayoutAttributes] = []
 
-    private static let defaultContentHeight: CGFloat = 180
     private var contentWidth: CGFloat {
         guard let collectionView = self.collectionView else {
             return 0

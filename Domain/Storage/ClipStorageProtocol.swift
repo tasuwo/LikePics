@@ -11,15 +11,6 @@ public enum ClipStorageError: Int, Error {
     case internalError
 }
 
-extension ClipStorageError: ErrorCodeSource {
-    public var factors: [ErrorCodeFactor] {
-        return [
-            .string("CSE"),
-            .number(self.rawValue)
-        ]
-    }
-}
-
 public protocol ClipStorageProtocol {
     // MARK: Create
 
@@ -81,5 +72,14 @@ extension ClipStorageProtocol {
 
     public func readAllClips() -> Result<[Clip], ClipStorageError> {
         return self.readAllClips(containsHiddenClips: true)
+    }
+}
+
+extension ClipStorageError: ErrorCodeSource {
+    public var factors: [ErrorCodeFactor] {
+        return [
+            .string("CSE"),
+            .number(self.rawValue)
+        ]
     }
 }

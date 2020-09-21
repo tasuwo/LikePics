@@ -48,7 +48,7 @@ public class ClipTargetFinderPresenter {
     private(set) var selectedIndices: [Int] = [] {
         didSet {
             DispatchQueue.main.async {
-                self.view?.updateDoneButton(isEnabled: self.selectedIndices.count > 0)
+                self.view?.updateDoneButton(isEnabled: !self.selectedIndices.isEmpty)
             }
         }
     }
@@ -84,6 +84,32 @@ public class ClipTargetFinderPresenter {
 
     // MARK: - Methods
 
+    // MARK: Util
+
+    private static func resolveErrorMessage(_ error: PresenterError) -> String {
+        switch error {
+        case .failedToFindImages(.internalError):
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+
+        case .failedToFindImages(.networkError):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
+
+        case .failedToFindImages(.timeout):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
+
+        case .failedToDownlaodImages:
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
+
+        case .failedToSave:
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
+
+        case .internalError:
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+        }
+    }
+
+    // MARK: Internal
+
     func attachWebView(to view: UIView) {
         // HACK: Add WebView to view hierarchy for loading page.
         view.addSubview(self.finder.webView)
@@ -95,7 +121,7 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        if !self.isEnabledOverwrite, case .success(_) = self.storage.readClip(having: self.url) {
+        if !self.isEnabledOverwrite, case .success = self.storage.readClip(having: self.url) {
             self.view?.showConfirmationForOverwrite()
             return
         }
@@ -104,13 +130,16 @@ public class ClipTargetFinderPresenter {
 
         firstly {
             self.resolveWebImages(ofUrl: self.url)
-        }.then(on: self.imageLoadQueue) { (webImages: [WebImageUrlSet]) in
+        }
+        .then(on: self.imageLoadQueue) { (webImages: [WebImageUrlSet]) in
             self.resolveSize(ofWebImages: webImages)
-        }.done(on: .main) { [weak self] (fetchedWebImages: [DisplayableImageMeta]) in
+        }
+        .done(on: .main) { [weak self] (fetchedWebImages: [DisplayableImageMeta]) in
             self?.imageMetas = fetchedWebImages
             self?.view?.endLoading()
             self?.view?.reloadList()
-        }.catch(on: .main) { [weak self] error in
+        }
+        .catch(on: .main) { [weak self] error in
             let error: PresenterError = {
                 guard let error = error as? PresenterError else { return .internalError }
                 return error
@@ -127,15 +156,19 @@ public class ClipTargetFinderPresenter {
             .map { ($0.offset, self.imageMetas[$0.element]) }
 
         firstly {
-            when(fulfilled: Self.fetchImageData(for: selections, using: self.urlSession))
-        }.then(on: self.imageLoadQueue) { (results: [OrderedImageData]) in
-            Self.buildSaveData(forClip: self.url, from: results)
-        }.then(on: self.imageLoadQueue) { (saveData: [ImageDataSet]) in
+            when(fulfilled: self.fetchImageData(for: selections, using: self.urlSession))
+        }
+        .then(on: self.imageLoadQueue) { (results: [OrderedImageData]) in
+            self.buildSaveData(forClip: self.url, from: results)
+        }
+        .then(on: self.imageLoadQueue) { (saveData: [ImageDataSet]) in
             self.save(target: saveData)
-        }.done { [weak self] _ in
+        }
+        .done { [weak self] _ in
             self?.view?.endLoading()
             self?.view?.notifySavedImagesSuccessfully()
-        }.catch(on: .main) { [weak self] error in
+        }
+        .catch(on: .main) { [weak self] error in
             let error: PresenterError = {
                 guard let error = error as? PresenterError else { return .internalError }
                 return error
@@ -174,6 +207,7 @@ public class ClipTargetFinderPresenter {
                 switch result {
                 case let .success(urls):
                     seal.resolve(.fulfilled(urls))
+
                 case let .failure(error):
                     seal.resolve(.rejected(PresenterError.failedToFindImages(error)))
                 }
@@ -192,7 +226,7 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Save Images
 
-    private static func fetchImageData(for metas: [OrderedImageMeta], using session: URLSession) -> [Promise<OrderedImageData>] {
+    private func fetchImageData(for metas: [OrderedImageMeta], using session: URLSession) -> [Promise<OrderedImageData>] {
         return metas
             .flatMap { meta -> [(OrderedImageMeta, ImageQuality)] in
                 [(meta, .original), (meta, .thumbnail)]
@@ -211,6 +245,7 @@ public class ClipTargetFinderPresenter {
                                              imageWidth: Double(orderedMeta.meta.imageSize.width))
                         }
                         .map { (orderedMeta.index, $0) }
+
                 case .thumbnail:
                     guard let imageUrl = orderedMeta.meta.thumbImageUrl else { return nil }
                     return session.dataTask(.promise, with: imageUrl)
@@ -227,7 +262,7 @@ public class ClipTargetFinderPresenter {
             }
     }
 
-    private static func buildSaveData(forClip clipUrl: URL, from images: [OrderedImageData]) -> Promise<[ImageDataSet]> {
+    private func buildSaveData(forClip clipUrl: URL, from images: [OrderedImageData]) -> Promise<[ImageDataSet]> {
         return Promise<[ImageDataSet]> { seal in
             do {
                 let imageDataSets = try images
@@ -270,7 +305,7 @@ public class ClipTargetFinderPresenter {
             let data = target.flatMap {
                 [
                     ($0.originalImageFileName, $0.originalImageData),
-                    ($0.thumbnailFileName, $0.thumbnailData),
+                    ($0.thumbnailFileName, $0.thumbnailData)
                 ]
             }
 
@@ -281,25 +316,6 @@ public class ClipTargetFinderPresenter {
             case let .failure(error):
                 seal.resolve(.rejected(PresenterError.failedToSave(error)))
             }
-        }
-    }
-
-    // MARK: Util
-
-    private static func resolveErrorMessage(_ error: PresenterError) -> String {
-        switch error {
-        case .failedToFindImages(.internalError):
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
-        case .failedToFindImages(.networkError(_)):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-        case .failedToFindImages(.timeout):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-        case .failedToDownlaodImages:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
-        case .failedToSave:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
-        case .internalError:
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
         }
     }
 }

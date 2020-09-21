@@ -13,6 +13,7 @@ struct ComposingFetchedImageDataSet {
         case .original:
             self.original = data
             self.thumbnail = nil
+
         case .thumbnail:
             self.original = nil
             self.thumbnail = data
@@ -30,6 +31,7 @@ struct ComposingFetchedImageDataSet {
         switch data.quality {
         case .original:
             return ComposingFetchedImageDataSet(original: data, thumbnail: self.thumbnail)
+
         case .thumbnail:
             return ComposingFetchedImageDataSet(original: self.original, thumbnail: data)
         }

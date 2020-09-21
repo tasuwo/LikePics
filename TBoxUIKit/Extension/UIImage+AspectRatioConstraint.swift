@@ -21,12 +21,8 @@ extension UIImageView {
     }
 
     public func removeAspectRatioConstraint() {
-        for constraint in self.constraints {
-            if (constraint.firstItem as? UIImageView) == self,
-                (constraint.secondItem as? UIImageView) == self
-            {
-                removeConstraint(constraint)
-            }
+        for constraint in self.constraints where (constraint.firstItem as? UIImageView) == self && (constraint.secondItem as? UIImageView) == self {
+            removeConstraint(constraint)
         }
     }
 }

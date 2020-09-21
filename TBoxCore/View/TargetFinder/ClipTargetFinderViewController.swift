@@ -67,11 +67,13 @@ public class ClipTargetFinderViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 
-    @objc private func cancelAction() {
+    @objc
+    private func cancelAction() {
         self.delegate?.didCancel(self)
     }
 
-    @objc private func saveAction() {
+    @objc
+    private func saveAction() {
         self.presenter.saveSelectedImages()
     }
 }

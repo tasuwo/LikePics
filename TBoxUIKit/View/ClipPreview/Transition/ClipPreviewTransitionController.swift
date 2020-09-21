@@ -67,8 +67,10 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
         switch operation {
         case .push:
             return ClipPreviewPresentationAnimator()
+
         case .pop:
             return ClipPreviewDismissalAnimator()
+
         default:
             return nil
         }

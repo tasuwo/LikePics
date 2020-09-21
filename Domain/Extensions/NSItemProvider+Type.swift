@@ -28,7 +28,7 @@ extension NSItemProvider {
             completion(.failure(.invalidType))
             return
         }
-        self.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, error in
+        self.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, _ in
             guard let url = item as? URL else {
                 completion(.failure(.invalidType))
                 return
@@ -42,7 +42,7 @@ extension NSItemProvider {
             completion(.failure(.invalidType))
             return
         }
-        self.loadItem(forTypeIdentifier: kUTTypeText as String, options: nil) { item, error in
+        self.loadItem(forTypeIdentifier: kUTTypeText as String, options: nil) { item, _ in
             guard let text = item as? String else {
                 completion(.failure(.invalidType))
                 return
@@ -53,7 +53,7 @@ extension NSItemProvider {
 
     public func resolveImage(completion: @escaping (Result<UIImage, NSItemProviderResolutionError>) -> Void) {
         if self.isImage {
-            self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { item, error in
+            self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { item, _ in
                 guard let imageUrl = item as? URL else {
                     completion(.failure(.invalidType))
                     return
@@ -65,7 +65,7 @@ extension NSItemProvider {
                 completion(.success(image))
             }
         } else if self.isUrl {
-            self.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, error in
+            self.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, _ in
                 guard let url = item as? URL else {
                     completion(.failure(.invalidType))
                     return

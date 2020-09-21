@@ -49,18 +49,18 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var deleteButton: UIButton!
 
-    // MARK: - Lifecycle
-
-    override public func awakeFromNib() {
-        super.awakeFromNib()
-        self.setupAppearance()
-    }
+    // MARK: - IBActions
 
     @IBAction func didTapDeleteButton(_ sender: Any) {
         self.deletate?.didTapDeleteButton(self)
     }
 
     // MARK: - Methods
+
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+        self.setupAppearance()
+    }
 
     func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10

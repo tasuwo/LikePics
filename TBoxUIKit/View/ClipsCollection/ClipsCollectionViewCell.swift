@@ -79,21 +79,6 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @IBOutlet public var primaryImageView: UIImageView!
-    @IBOutlet public var secondaryImageView: UIImageView!
-    @IBOutlet public var tertiaryImageView: UIImageView!
-
-    @IBOutlet var primaryImageShadowView: UIView!
-    @IBOutlet var secondaryImageShadowView: UIView!
-    @IBOutlet var tertiaryImageShadowView: UIView!
-
-    @IBOutlet var secondaryImageOverlayView: UIView!
-    @IBOutlet var tertiaryImageOverlayView: UIView!
-
-    @IBOutlet var imagesContainerView: UIView!
-
-    @IBOutlet var overallOverlayView: UIView!
-
     private var imageViews: [UIImageView] {
         return [
             self.primaryImageView,
@@ -118,7 +103,48 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         ]
     }
 
-    // MARK: - Lifecycle
+    @IBOutlet public var primaryImageView: UIImageView!
+    @IBOutlet public var secondaryImageView: UIImageView!
+    @IBOutlet public var tertiaryImageView: UIImageView!
+
+    @IBOutlet var primaryImageShadowView: UIView!
+    @IBOutlet var secondaryImageShadowView: UIView!
+    @IBOutlet var tertiaryImageShadowView: UIView!
+
+    @IBOutlet var secondaryImageOverlayView: UIView!
+    @IBOutlet var tertiaryImageOverlayView: UIView!
+
+    @IBOutlet var imagesContainerView: UIView!
+
+    @IBOutlet var overallOverlayView: UIView!
+
+    // MARK: - Methods
+
+    static func setupAppearance(imageView: UIImageView) {
+        imageView.layer.cornerRadius = Self.cornerRadius
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+    }
+
+    static func setupAppearance(shadowView: UIView, interfaceStyle: UIUserInterfaceStyle, onImage: Bool = false) {
+        shadowView.layer.cornerRadius = Self.cornerRadius
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity(for: interfaceStyle)
+        shadowView.layer.shadowRadius = 8
+        shadowView.layer.shadowOffset = .init(width: 0, height: 8)
+        shadowView.clipsToBounds = false
+        shadowView.layer.masksToBounds = false
+    }
+
+    private static func shadowOpacity(for userInterfaceStyle: UIUserInterfaceStyle) -> Float {
+        switch userInterfaceStyle {
+        case .dark:
+            return 0.9
+
+        default:
+            return 0.5
+        }
+    }
 
     override public func awakeFromNib() {
         super.awakeFromNib()
@@ -133,24 +159,6 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    // MARK: - Methods
-
-    static func setupAppearance(imageView: UIImageView) {
-        imageView.layer.cornerRadius = Self.cornerRadius
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-    }
-
-    static func setupAppearance(shadowView: UIView, onImage: Bool = false, interfaceStyle: UIUserInterfaceStyle) {
-        shadowView.layer.cornerRadius = Self.cornerRadius
-        shadowView.layer.shadowColor = UIColor.black.cgColor
-        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity(for: interfaceStyle)
-        shadowView.layer.shadowRadius = 8
-        shadowView.layer.shadowOffset = .init(width: 0, height: 8)
-        shadowView.clipsToBounds = false
-        shadowView.layer.masksToBounds = false
-    }
-
     private func setupAppearance() {
         self.imageViews.forEach {
             $0.isHidden = true
@@ -159,7 +167,7 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
 
         self.imageShadowViews.forEach {
             $0.isHidden = true
-            Self.setupAppearance(shadowView: $0, onImage: true, interfaceStyle: self.traitCollection.userInterfaceStyle)
+            Self.setupAppearance(shadowView: $0, interfaceStyle: self.traitCollection.userInterfaceStyle, onImage: true)
         }
 
         self.overlayViews.forEach {
@@ -177,15 +185,6 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
         self.layer.masksToBounds = false
 
         self.updateOverallOverlayView()
-    }
-
-    private static func shadowOpacity(for userInterfaceStyle: UIUserInterfaceStyle) -> Float {
-        switch userInterfaceStyle {
-        case .dark:
-            return 0.9
-        default:
-            return 0.5
-        }
     }
 
     private func updateOverallOverlayView() {

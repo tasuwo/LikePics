@@ -38,6 +38,7 @@ extension ClipItem: Persistable {
             thumbnailUrl = nil
         }
 
+        // swiftlint:disable:next force_unwrapping
         return ClipItem(clipUrl: URL(string: managedObject.clipUrl)!,
                         clipIndex: managedObject.clipIndex,
                         thumbnailFileName: managedObject.thumbnailFileName,
@@ -45,6 +46,7 @@ extension ClipItem: Persistable {
                         thumbnailSize: ImageSize(height: managedObject.thumbnailHeight,
                                                  width: managedObject.thumbnailWidth),
                         imageFileName: managedObject.imageFileName,
+                        // swiftlint:disable:next force_unwrapping
                         imageUrl: URL(string: managedObject.imageUrl)!,
                         registeredDate: managedObject.registeredAt,
                         updatedDate: managedObject.updatedAt)

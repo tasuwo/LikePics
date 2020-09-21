@@ -24,6 +24,7 @@ extension Clip: Persistable {
 
     static func make(by managedObject: ClipObject) -> Clip {
         let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
+        // swiftlint:disable:next force_unwrapping
         return .init(url: URL(string: managedObject.url)!,
                      description: managedObject.descriptionText,
                      items: items,
@@ -40,9 +41,8 @@ extension Clip: Persistable {
         self.items.forEach {
             obj.items.append($0.asManagedObject())
         }
-        if self.tags.count > 0 {
-            // TODO: warn log
-            fatalError()
+        if !self.tags.isEmpty {
+            fatalError("Unsupported to generate managed object for clips containing tag")
         }
         obj.isHidden = self.isHidden
         obj.registeredAt = self.registeredDate

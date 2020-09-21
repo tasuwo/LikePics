@@ -5,6 +5,8 @@
 import Domain
 import RealmSwift
 
+// swiftlint:disable contains_over_filter_is_empty first_where
+
 public class ClipStorage {
     public enum StorageConfiguration {
         static let realmFileName = "clips.realm"
@@ -123,7 +125,7 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.internalError)
             }
 
-            if let _ = realm.objects(TagObject.self).filter("name = '\(name)'").first {
+            if !realm.objects(TagObject.self).filter("name = '\(name)'").isEmpty {
                 return .failure(.duplicated)
             }
 
@@ -148,7 +150,7 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.internalError)
             }
 
-            if let _ = realm.objects(AlbumObject.self).filter("title = '\(title)'").first {
+            if !realm.objects(AlbumObject.self).filter("title = '\(title)'").isEmpty {
                 return .failure(.duplicated)
             }
 

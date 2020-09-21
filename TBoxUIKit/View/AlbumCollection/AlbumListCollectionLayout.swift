@@ -20,6 +20,7 @@ public class AlbumListCollectionLayout: UICollectionViewFlowLayout {
             switch currentAttributes.representedElementCategory {
             case .cell:
                 return self.layoutAttributesForItem(at: currentAttributes.indexPath) ?? currentAttributes
+
             default:
                 return currentAttributes
             }

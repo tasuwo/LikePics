@@ -44,8 +44,10 @@ extension ClipInformationTransitioningController: ClipInformationTransitionContr
         switch self.currentInteractiveTransitionType {
         case .present:
             self.presentationInteractiveAnimator.didPan(sender: sender)
+
         case .dismiss:
             self.dismissalInteractiveAnimator.didPan(sender: sender)
+
         case .none:
             break
         }

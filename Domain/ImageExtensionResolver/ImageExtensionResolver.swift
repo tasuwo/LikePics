@@ -11,7 +11,7 @@ public enum ImageExtensionResolver {
         "image/gif": "gif",
         "image/jpeg": "jpeg",
         "image/png": "png",
-        "image/tiff": "tiff",
+        "image/tiff": "tiff"
     ]
 
     public static func resolveFileExtension(forMimeType mimeType: String) -> String? {

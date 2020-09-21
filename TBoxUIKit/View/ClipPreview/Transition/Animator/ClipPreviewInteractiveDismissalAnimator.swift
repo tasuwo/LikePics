@@ -28,6 +28,31 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     // MARK: - Methods
 
+    // MARK: Calculation
+
+    private static func calcScale(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let maximumDelta = view.bounds.height * 2 / 3
+        let percentScale = min(abs(verticalDelta) / maximumDelta, 1.0)
+        let scaleRange = Self.startingImageScale - Self.finalImageScale
+        return Self.startingImageScale - (percentScale * scaleRange)
+    }
+
+    private static func calcAlpha(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let maximumDelta = view.bounds.height * 2 / 3
+        let percentAlpha = min(abs(verticalDelta) / maximumDelta, 1.0)
+        let alphaRange = Self.startingAlpha - Self.finalAlpha
+        return Self.startingAlpha - (percentAlpha * alphaRange)
+    }
+
+    private static func calcCornerRadius(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
+        let maximumDelta = view.bounds.height / 2
+        let percentCornerRadius = min(abs(verticalDelta) / maximumDelta, 1.0)
+        let cornerRadiusRange = Self.startingCornerRadius - Self.finalCornerRadius
+        return Self.startingCornerRadius - (percentCornerRadius * cornerRadiusRange)
+    }
+
+    // MARK: Internal
+
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else { return }
         let transitionContext = innerContext.transitionContext
@@ -158,29 +183,6 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         )
 
         CATransaction.commit()
-    }
-
-    // MARK: Calculation
-
-    private static func calcScale(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
-        let maximumDelta = view.bounds.height * 2 / 3
-        let percentScale = min(abs(verticalDelta) / maximumDelta, 1.0)
-        let scaleRange = Self.startingImageScale - Self.finalImageScale
-        return Self.startingImageScale - (percentScale * scaleRange)
-    }
-
-    private static func calcAlpha(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
-        let maximumDelta = view.bounds.height * 2 / 3
-        let percentAlpha = min(abs(verticalDelta) / maximumDelta, 1.0)
-        let alphaRange = Self.startingAlpha - Self.finalAlpha
-        return Self.startingAlpha - (percentAlpha * alphaRange)
-    }
-
-    private static func calcCornerRadius(in view: UIView, verticalDelta: CGFloat) -> CGFloat {
-        let maximumDelta = view.bounds.height / 2
-        let percentCornerRadius = min(abs(verticalDelta) / maximumDelta, 1.0)
-        let cornerRadiusRange = Self.startingCornerRadius - Self.finalCornerRadius
-        return Self.startingCornerRadius - (percentCornerRadius * cornerRadiusRange)
     }
 }
 

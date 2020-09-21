@@ -46,8 +46,10 @@ extension WebImageProvidingService {
                 switch self {
                 case let .timeout(context, _):
                     return context
+
                 case let .networkError(context, _, _):
                     return context
+
                 case let .internalError(context, _):
                     return context
                 }
@@ -57,8 +59,10 @@ extension WebImageProvidingService {
                 switch self {
                 case let .timeout(_, document):
                     return document
+
                 case let .networkError(_, document, _):
                     return document
+
                 case let .internalError(_, document):
                     return document
                 }
@@ -68,8 +72,10 @@ extension WebImageProvidingService {
                 switch self {
                 case .timeout:
                     return .timeout
+
                 case let .networkError(_, _, error):
                     return .networkError(error)
+
                 case .internalError:
                     return .internalError
                 }
@@ -104,11 +110,10 @@ extension WebImageProvidingService {
                     currentContext = currentContext.foundSensitiveContentsAlert()
 
                     let sensitiveContentRevealButton = document.querySelectorAll("span")
-                        .filter {
+                        .first(where: {
                             guard let innerHtml = $0.innerHTML else { return false }
                             return innerHtml == "表示" || innerHtml == "View"
-                        }
-                        .first
+                        })
                     guard let button = sensitiveContentRevealButton else {
                         seal.resolve(.rejected(RecoverableError.timeout(currentContext, document)))
                         return

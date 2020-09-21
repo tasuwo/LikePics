@@ -15,7 +15,7 @@ public protocol ImageStorageProtocol {
 }
 
 class ImageStorage {
-    public enum StorageConfiguration {
+    enum StorageConfiguration {
         static var directoryName: String = "TBoxImages"
 
         static var defaultTargetUrl: URL {
@@ -44,6 +44,18 @@ class ImageStorage {
 
     // MARK: Private
 
+    /**
+     * See: https://www.quora.com/What-are-illegal-characters-in-filename-in-ios
+     */
+    private static func resolveDirectoryName(forClip url: URL) -> String {
+        return url.absoluteString
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: ";", with: "_")
+            .replacingOccurrences(of: ":", with: "_")
+            .replacingOccurrences(of: "|", with: "_")
+            .replacingOccurrences(of: " ", with: "_")
+    }
+
     private func setDirectoryAttributes(_ attributes: [FileAttributeKey: Any]) throws {
         try self.fileManager.setAttributes(attributes, ofItemAtPath: self.baseUrl.path)
     }
@@ -59,18 +71,6 @@ class ImageStorage {
 
     private func resolveImageFileUrl(fileName: String, clipUrl url: URL) -> URL {
         return self.resolveClipDirectoryUrl(for: url).appendingPathComponent(fileName, isDirectory: false)
-    }
-
-    /**
-     * See: https://www.quora.com/What-are-illegal-characters-in-filename-in-ios
-     */
-    private static func resolveDirectoryName(forClip url: URL) -> String {
-        return url.absoluteString
-            .replacingOccurrences(of: "/", with: "_")
-            .replacingOccurrences(of: ";", with: "_")
-            .replacingOccurrences(of: ":", with: "_")
-            .replacingOccurrences(of: "|", with: "_")
-            .replacingOccurrences(of: " ", with: "_")
     }
 }
 

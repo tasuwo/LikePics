@@ -7,7 +7,9 @@ import UIKit
 class SettingsViewController: UITableViewController {
     typealias Factory = ViewControllerFactory
 
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var factory: Factory!
+    // swiftlint:disable:next implicitly_unwrapped_optional
     var presenter: SettingsPresenter!
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!

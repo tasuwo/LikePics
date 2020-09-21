@@ -29,7 +29,9 @@ struct DisplayableImageMeta {
         let targetUrl = imageUrlSet.lowQualityUrl ?? imageUrlSet.url
         if let imageSource = CGImageSourceCreateWithURL(targetUrl as CFURL, nil) {
             if let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary? {
+                // swiftlint:disable:next force_cast
                 let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as! CGFloat
+                // swiftlint:disable:next force_cast
                 let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as! CGFloat
                 return .init(width: pixelWidth, height: pixelHeight)
             }

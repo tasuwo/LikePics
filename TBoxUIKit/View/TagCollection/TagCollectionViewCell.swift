@@ -41,7 +41,16 @@ public class TagCollectionViewCell: UICollectionViewCell {
     @IBOutlet var iconImage: UIImageView!
     @IBOutlet var titleLabel: UILabel!
 
-    // MARK: - Lifecycle
+    // MARK: - Methods
+
+    public static func preferredSize(for text: String) -> CGSize {
+        let label = UILabel()
+        label.text = text
+        label.font = .systemFont(ofSize: 14)
+        label.sizeToFit()
+        return CGSize(width: label.frame.width + 8 + 16 + 4 + 8,
+                      height: Self.preferredHeight)
+    }
 
     override public func awakeFromNib() {
         super.awakeFromNib()
@@ -55,17 +64,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
         if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             self.layer.borderColor = UIColor.systemGray3.cgColor
         }
-    }
-
-    // MARK: - Methods
-
-    public static func preferredSize(for text: String) -> CGSize {
-        let label = UILabel()
-        label.text = text
-        label.font = .systemFont(ofSize: 14)
-        label.sizeToFit()
-        return CGSize(width: label.frame.width + 8 + 16 + 4 + 8,
-                      height: Self.preferredHeight)
     }
 
     func setupAppearance() {
@@ -82,18 +80,21 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemGreen
             self.layer.borderWidth = 0
+
         case (.deletion, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemRed
             self.layer.borderWidth = 0
+
         case (.deletion, false):
             self.iconImage.image = UIImage(systemName: "minus.circle.fill")
             self.iconImage.tintColor = .systemRed
             self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 2
+
         default:
             self.iconImage.image = UIImage(systemName: "tag.fill")
             self.iconImage.tintColor = UIColor.label

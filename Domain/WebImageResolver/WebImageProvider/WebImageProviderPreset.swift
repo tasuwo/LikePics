@@ -10,6 +10,7 @@ public enum WebImageProviderPreset: CaseIterable {
         switch self {
         case .twitter:
             return WebImageProvidingService.Twitter.self
+
         case .pixiv:
             return WebImageProvidingService.Pixiv.self
         }

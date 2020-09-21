@@ -39,9 +39,9 @@ extension WebImageProvidingService {
         }
 
         public static func modifyRequest(_ request: URLRequest) -> URLRequest {
-            var r = request
-            r.setValue("http://www.pixiv.net/", forHTTPHeaderField: "Referer")
-            return r
+            var req = request
+            req.setValue("http://www.pixiv.net/", forHTTPHeaderField: "Referer")
+            return req
         }
     }
 }

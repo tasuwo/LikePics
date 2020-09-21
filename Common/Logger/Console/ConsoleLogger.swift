@@ -48,10 +48,13 @@ private extension ConsoleLog.Level {
         switch self {
         case .debug:
             return .debug
+
         case .info:
             return .info
+
         case .error:
             return .error
+
         case .critical:
             return .fault
         }

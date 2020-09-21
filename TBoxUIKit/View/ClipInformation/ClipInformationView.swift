@@ -51,11 +51,11 @@ public class ClipInformationView: UIView {
     }
 
     public var isScrollEnabled: Bool {
-        set {
-            self.scrollView.isScrollEnabled = newValue
-        }
         get {
             return self.scrollView.isScrollEnabled
+        }
+        set {
+            self.scrollView.isScrollEnabled = newValue
         }
     }
 
@@ -68,6 +68,10 @@ public class ClipInformationView: UIView {
         }
     }
 
+    // swiftlint:disable implicitly_unwrapped_optional superfluous_disable_command
+    var imageView: UIImageView!
+    // swiftlint:enable implicitly_unwrapped_optional superfluous_disable_command
+
     @IBOutlet var baseView: UIView!
     @IBOutlet var tagCollectionView: TagCollectionView!
     @IBOutlet var siteUrlButton: UIButton!
@@ -75,7 +79,6 @@ public class ClipInformationView: UIView {
     @IBOutlet var siteUrlTitleLabel: UILabel!
     @IBOutlet var imageUrlTitleLabel: UILabel!
     @IBOutlet var scrollView: UIScrollView!
-    var imageView: UIImageView!
 
     // MARK: - Lifecycle
 
@@ -93,11 +96,6 @@ public class ClipInformationView: UIView {
         self.setupAppearance()
     }
 
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        self.updateImageViewFrame()
-    }
-
     @IBAction func didTapSiteUrl(_ sender: UIButton) {
         guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
         self.delegate?.clipInformationView(self, shouldOpen: url)
@@ -106,6 +104,11 @@ public class ClipInformationView: UIView {
     @IBAction func didTapImageUrl(_ sender: UIButton) {
         guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
         self.delegate?.clipInformationView(self, shouldOpen: url)
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        self.updateImageViewFrame()
     }
 
     // MARK: - Methods
@@ -232,13 +235,13 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
 
     private func makeActionProvider(for url: URL) -> UIContextMenuActionProvider {
         // TODO: Localize
-        let open = UIAction(title: "Open", image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+        let open = UIAction(title: "Open", image: UIImage(systemName: "square.and.arrow.up.fill")) { _ in
             self.delegate?.clipInformationView(self, shouldOpen: url)
         }
-        let copy = UIAction(title: "Copy", image: UIImage(systemName: "square.on.square.fill")) { action in
+        let copy = UIAction(title: "Copy", image: UIImage(systemName: "square.on.square.fill")) { _ in
             self.delegate?.clipInformationView(self, shouldCopy: url)
         }
-        let search = UIAction(title: "Search", image: UIImage(systemName: "magnifyingglass")) { action in
+        let search = UIAction(title: "Search", image: UIImage(systemName: "magnifyingglass")) { _ in
             self.delegate?.clipInformationView(self, shouldSearch: url)
         }
         return { _ in UIMenu(title: "", children: [open, copy, search]) }

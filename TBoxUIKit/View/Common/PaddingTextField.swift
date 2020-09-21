@@ -4,8 +4,9 @@
 
 import UIKit
 
-@IBDesignable open class PaddingTextField: UITextField {
-    @IBInspectable open var padding: UIEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 0)
+@IBDesignable
+open class PaddingTextField: UITextField {
+    open var padding: UIEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 0)
 
     // MARK: - UITextField (Override)
 
