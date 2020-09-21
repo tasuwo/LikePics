@@ -169,11 +169,9 @@ extension WebImageProvidingService.Twitter {
         return handle(document, Context())
     }
 
-    public static func resolveLowQualityImageUrl(of url: URL) -> URL {
-        guard var components = URLComponents(string: url.absoluteString),
-            let queryItems = components.queryItems
-        else {
-            return url
+    public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
+        guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
+            return nil
         }
 
         let newQueryItems: [URLQueryItem] = queryItems
@@ -184,14 +182,12 @@ extension WebImageProvidingService.Twitter {
 
         components.queryItems = newQueryItems
 
-        return components.url ?? url
+        return components.url
     }
 
-    public static func resolveHighQualityImageUrl(of url: URL) -> URL {
-        guard var components = URLComponents(string: url.absoluteString),
-            let queryItems = components.queryItems
-        else {
-            return url
+    public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
+        guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
+            return nil
         }
 
         let newQueryItems: [URLQueryItem] = queryItems
@@ -202,7 +198,7 @@ extension WebImageProvidingService.Twitter {
 
         components.queryItems = newQueryItems
 
-        return components.url ?? url
+        return components.url
     }
 
     public static func shouldModifyRequest(for url: URL) -> Bool {

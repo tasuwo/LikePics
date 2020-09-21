@@ -3,6 +3,6 @@
 //
 
 enum ImageQuality {
-    case low
-    case high
+    case thumbnail
+    case original
 }

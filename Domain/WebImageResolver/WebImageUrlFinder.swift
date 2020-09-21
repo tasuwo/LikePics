@@ -7,8 +7,8 @@ import PromiseKit
 import WebKit
 
 public struct WebImageUrlSet {
-    public let lowQuality: URL
-    public let highQuality: URL
+    public let url: URL
+    public let lowQualityUrl: URL?
 }
 
 public protocol WebImageUrlFinderProtocol {
@@ -115,10 +115,10 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                 .compactMap { URL(string: $0) }
                 .map {
                     guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                        return WebImageUrlSet(lowQuality: $0, highQuality: $0)
+                        return WebImageUrlSet(url: $0, lowQualityUrl: nil)
                     }
-                    return WebImageUrlSet(lowQuality: provider.resolveLowQualityImageUrl(of: $0),
-                                          highQuality: provider.resolveHighQualityImageUrl(of: $0))
+                    return WebImageUrlSet(url: provider.resolveHighQualityImageUrl(of: $0) ?? $0,
+                                          lowQualityUrl: provider.resolveLowQualityImageUrl(of: $0))
                 }
             completion(.success(imageUrls))
         }.catch { error in

@@ -14,9 +14,9 @@ public protocol WebImageProvider {
 
     static func preprocess(_ browser: Erik, document: Document) -> Promise<Document>
 
-    static func resolveLowQualityImageUrl(of url: URL) -> URL
+    static func resolveLowQualityImageUrl(of url: URL) -> URL?
 
-    static func resolveHighQualityImageUrl(of url: URL) -> URL
+    static func resolveHighQualityImageUrl(of url: URL) -> URL?
 
     static func shouldModifyRequest(for url: URL) -> Bool
 

@@ -26,12 +26,12 @@ extension WebImageProvidingService {
             return Promise { $0.resolve(.fulfilled(document)) }
         }
 
-        public static func resolveLowQualityImageUrl(of url: URL) -> URL {
-            return url
+        public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
+            return nil
         }
 
-        public static func resolveHighQualityImageUrl(of url: URL) -> URL {
-            return url
+        public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
+            return nil
         }
 
         public static func shouldModifyRequest(for url: URL) -> Bool {
