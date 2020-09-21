@@ -7,7 +7,7 @@ def test_shared_pods
 end
 
 target 'Persistence' do
-  pod 'RealmSwift', '~> 5.3.3'
+  pod 'RealmSwift', '~> 5.4.2'
 
   target 'PersistenceTests' do
     inherit! :search_paths
@@ -40,7 +40,7 @@ target 'ShareExtension' do
 end
 
 target 'TBoxUIKit' do
-  pod 'Kingfisher', '~> 5.14.1'
+  pod 'Kingfisher', '~> 5.15.3'
 
   target 'TBoxUIKitTests' do
     inherit! :search_paths
@@ -54,3 +54,12 @@ end
 
 target 'TBoxUIKitCatalog' do
 end
+
+# post_install do |pi|
+#     pi.pods_project.targets.each do |t|
+#       t.build_configurations.each do |config|
+#         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+#       end
+#     end
+# end
+

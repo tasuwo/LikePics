@@ -2292,7 +2292,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Tasuku Tozawa";
 				TargetAttributes = {
 					2C6E099124E6DD1A00B541D9 = {
@@ -3575,7 +3575,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9293E9D23B68FA4FEEF868CD /* Pods-TBoxUIKitTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3595,7 +3595,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BA50072D2BFA30C156464A3B /* Pods-TBoxUIKitTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3680,7 +3680,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F1DB366F4D8BEE3ED57CF37A /* Pods-DomainTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
@@ -3703,7 +3703,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
@@ -3792,6 +3792,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -3853,6 +3854,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -3885,7 +3887,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -3907,7 +3909,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04B00148182685E95C21EF58 /* Pods-TBox.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -3929,7 +3931,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D67630A6835BB2971C86FDA /* Pods-TBoxTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
@@ -3952,7 +3954,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8D43FADC3C6AAD7535A075A2 /* Pods-TBoxTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RY2377PP7S;
