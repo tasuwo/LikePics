@@ -15,6 +15,7 @@
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
 		2C0596CB251992C5008F11F5 /* AddingClipsToAlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596CA251992C5008F11F5 /* AddingClipsToAlbumPresenter.swift */; };
+		2C0597072519BA91008F11F5 /* ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0597062519BA91008F11F5 /* ProtocolMocks.swift */; };
 		2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */; };
 		2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */; };
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
@@ -530,6 +531,7 @@
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsProvider.swift; sourceTree = "<group>"; };
 		2C0596CA251992C5008F11F5 /* AddingClipsToAlbumPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddingClipsToAlbumPresenter.swift; sourceTree = "<group>"; };
+		2C0597062519BA91008F11F5 /* ProtocolMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewViewController.swift; sourceTree = "<group>"; };
 		2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewPresenter.swift; sourceTree = "<group>"; };
 		2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemPreviewViewController.xib; sourceTree = "<group>"; };
@@ -920,6 +922,14 @@
 				7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2C0596DD2519AEF8008F11F5 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				2C0597062519BA91008F11F5 /* ProtocolMocks.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		2C1BA03324E08A0E00F96801 /* Root */ = {
@@ -1769,17 +1779,18 @@
 		2CF4657F2511048800DF78E6 /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				2CF465802511048F00DF78E6 /* Structs */,
+				2C0596DD2519AEF8008F11F5 /* Protocol */,
+				2CF465802511048F00DF78E6 /* Struct */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
 		};
-		2CF465802511048F00DF78E6 /* Structs */ = {
+		2CF465802511048F00DF78E6 /* Struct */ = {
 			isa = PBXGroup;
 			children = (
 				2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */,
 			);
-			path = Structs;
+			path = Struct;
 			sourceTree = "<group>";
 		};
 		2CF46587251112D900DF78E6 /* Settings */ = {
@@ -2164,6 +2175,7 @@
 			buildPhases = (
 				45B4A4BC9CC82B7FF2DFE8F3 /* [CP] Check Pods Manifest.lock */,
 				2CF4656A251102E000DF78E6 /* Sourcery */,
+				2C0596DC2519A710008F11F5 /* mockolo */,
 				2CFC5CF4250DEDD9001A02E4 /* SwiftGen */,
 				2CA022AE24DD9F6E00329251 /* SwiftFormat */,
 				2CA022AF24DD9F8300329251 /* SwiftLint */,
@@ -2521,6 +2533,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2C0596DC2519A710008F11F5 /* mockolo */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = mockolo;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n./mockolo \\\n    --sourcedirs ../Persistence ../TBoxUIKit ../Common \\\n    --destination ../TestHelper/Mocks/Protocol/ProtocolMocks.swift \\\n    --testable-imports Persistence TBoxUIKit Common\n";
+		};
 		2CA022AE24DD9F6E00329251 /* SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2537,7 +2567,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\nswift run -c release swiftformat --config $PROJECT_DIR/.swiftformat \"$SRCROOT\"\n\n\n";
+			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\nswift run -c release swiftformat --config $PROJECT_DIR/.swiftformat \"$SRCROOT\"\n";
 		};
 		2CA022AF24DD9F8300329251 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2555,7 +2585,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\ncp $SRCROOT/.swiftlint.yml ./\nswift run -c release swiftlint\nrm .swiftlint.yml\n\n\n\n";
+			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\ncp $SRCROOT/.swiftlint.yml ./\nswift run -c release swiftlint\nrm .swiftlint.yml\n";
 		};
 		2CF4656A251102E000DF78E6 /* Sourcery */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3179,6 +3209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CF465822511096700DF78E6 /* AutoDefaultValue.generated.swift in Sources */,
+				2C0597072519BA91008F11F5 /* ProtocolMocks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

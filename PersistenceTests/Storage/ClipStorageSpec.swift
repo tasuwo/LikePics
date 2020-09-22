@@ -86,6 +86,13 @@ class ClipStorageSpec: QuickSpec {
             self.readImageCallCount += 1
             return try self.readImageHandler?(name, url) ?? Data()
         }
+
+        var deleteAllCallCount = 0
+        var deleteAllHandler: ((URL) throws -> Void)?
+        func deleteAll(inClip url: URL) throws {
+            self.deleteCallCount += 1
+            try self.deleteAllHandler?(url)
+        }
     }
 
     override func spec() {
