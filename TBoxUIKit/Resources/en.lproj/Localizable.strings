@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/09/22.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+"clip_information_view_site_url_title" = "Site URL";
+"clip_information_view_image_url_title" = "Image URL";
+"clip_information_view_context_menu_open" = "Open";
+"clip_information_view_context_menu_copy" = "Copy";

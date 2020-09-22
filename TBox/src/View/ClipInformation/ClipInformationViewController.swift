@@ -99,11 +99,6 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL) {
         UIPasteboard.general.string = url.absoluteString
     }
-
-    func clipInformationView(_ view: ClipInformationView, shouldSearch url: URL) {
-        // TODO:
-        print(url)
-    }
 }
 
 extension ClipInformationViewController: UIGestureRecognizerDelegate {

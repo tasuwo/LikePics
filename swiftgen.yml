@@ -9,6 +9,11 @@ strings:
       outputs:
         - templateName: structured-swift5
           output: TBoxCore/Generated/String.swift
+    - inputs:
+        - TBoxUIKit/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: TBoxUIKit/Generated/String.swift
 xcassets:
     - inputs:
         - TBoxUIKit/Resources/Assets.xcassets

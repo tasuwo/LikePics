@@ -72,6 +72,9 @@
 "clip_item_preview_view_error_at_delete_clip" = "Failed to delete clip.";
 "clip_item_preview_view_error_at_delete_clip_item" = "Failed to delete image.";
 
+"clip_information_view_site_url_label" = "Site URL";
+"clip_information_view_image_url_label" = "Image URL";
+
 "adding_clips_to_album_view_title" = "Add to Album";
 "adding_clips_to_album_view_error_at_read_albums" = "Failed to read album.";
 "adding_clips_to_album_view_error_at_update_album" = "Failed to update album.";
