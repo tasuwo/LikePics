@@ -173,6 +173,20 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Read
 
+    public func observeClip(having url: URL) -> Result<ClipQuery, ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+                return .failure(.notFound)
+            }
+
+            return .success(RealmClipQuery(object: clip))
+        }
+    }
+
     public func readClip(having url: URL) -> Result<Clip, ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {

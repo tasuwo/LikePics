@@ -22,6 +22,8 @@ public protocol ClipStorageProtocol {
 
     // MARK: Read
 
+    func observeClip(having url: URL) -> Result<ClipQuery, ClipStorageError>
+
     func readClip(having url: URL) -> Result<Clip, ClipStorageError>
 
     func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError>
