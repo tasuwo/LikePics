@@ -3360,6 +3360,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14AA3644D517916EE7969F7C /* Pods-TBoxCore.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -3378,6 +3379,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3389,6 +3391,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -3407,6 +3410,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3417,6 +3421,7 @@
 		2C6E09DD24E8150500B541D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -3447,6 +3452,7 @@
 		2C6E09DE24E8150500B541D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -3517,6 +3523,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D6C13F50ED40A4474A0D7CE1 /* Pods-TBoxUIKit.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -3535,6 +3542,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3546,6 +3554,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71166F63D2D8E937D8DECD09 /* Pods-TBoxUIKit.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -3564,6 +3573,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3615,6 +3625,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 972B0E03FC43B4F054139E95 /* Pods-Domain.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -3648,6 +3659,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F57E45EA2B66B864981288F0 /* Pods-Domain.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -4015,6 +4027,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -4048,6 +4061,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
