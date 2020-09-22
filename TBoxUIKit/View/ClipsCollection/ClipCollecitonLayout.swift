@@ -48,13 +48,6 @@ public class ClipCollectionLayout: UICollectionViewLayout {
 
     // MARK: - UICollectionViewLayout
 
-    override public func prepare() {
-        self.resetAttributes()
-        self.setupAttributes()
-    }
-
-    // MARK: - UICollectionViewLayout
-
     override public var collectionViewContentSize: CGSize {
         return CGSize(width: self.contentWidth, height: self.contentHeight)
     }
@@ -65,6 +58,13 @@ public class ClipCollectionLayout: UICollectionViewLayout {
 
     override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return self.cache[indexPath.item]
+    }
+
+    // MARK: - UICollectionViewLayout
+
+    override public func prepare() {
+        self.resetAttributes()
+        self.setupAttributes()
     }
 
     // MARK: - Privates

@@ -4,6 +4,8 @@
 
 import UIKit
 
+// swiftlint:disable function_parameter_count
+
 class ClipPreviewInteractiveDismissalAnimator: NSObject {
     struct InnerContext {
         let transitionContext: UIViewControllerContextTransitioning

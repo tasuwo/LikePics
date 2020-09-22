@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             self.window = window
         } catch {
-            RootLogger.shared.write(ConsoleLog.init(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
             fatalError("Unable to launch app.")
         }
     }
