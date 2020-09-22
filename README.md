@@ -45,6 +45,7 @@
 - [ ] たまにPreviewからListViewへ戻るのに失敗する
 - [ ] View hierarchy にのってないのにアラートが出る場合がある
 - [ ] action sheet や context menu 表示時の警告をなくす
+- [ ] SafeAreaのない端末でTransitionがバグる問題を改善する
 
 ### Refactor
 
