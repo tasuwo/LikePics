@@ -6,20 +6,30 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
+import Persistence
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    let dependencyContainer = DependencyContainer()
+    var dependencyContainer: DependencyContainer?
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = AppRootTabBarController(factory: self.dependencyContainer)
-        window.makeKeyAndVisible()
+        do {
+            let container = try DependencyContainer()
+            self.dependencyContainer = container
 
-        self.window = window
+            let window = UIWindow(windowScene: windowScene)
+            window.rootViewController = AppRootTabBarController(factory: container)
+            window.makeKeyAndVisible()
+
+            self.window = window
+        } catch {
+            RootLogger.shared.write(ConsoleLog.init(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
+            fatalError("Unable to launch app.")
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -49,12 +49,15 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
+    private let clipStorage: ClipStorage
     private lazy var logger = RootLogger.shared
-    // TODO: Error Handling
-    private lazy var clipsStorage = try! ClipStorage()
     private lazy var userSettingsStorage = UserSettingsStorage()
     private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
     private lazy var clipInformationTransitionController = ClipInformationTransitioningController()
+
+    init() throws {
+        self.clipStorage = try ClipStorage()
+    }
 }
 
 extension DependencyContainer: ViewControllerFactory {
@@ -63,7 +66,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeTopClipsListViewController() -> UIViewController {
         let clipsList = ClipsList(clips: [],
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipsStorage,
+                                  storage: self.clipStorage,
                                   logger: self.logger)
         let presenter = TopClipsListPresenter(clipsList: clipsList, settingsStorage: self.userSettingsStorage)
 
@@ -82,7 +85,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(clip: Clip) -> UIViewController {
-        let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipsStorage, logger: self.logger)
+        let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipStorage, logger: self.logger)
 
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
         let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
@@ -101,7 +104,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController {
-        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipsStorage, logger: self.logger)
+        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipStorage, logger: self.logger)
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
         return viewController
     }
@@ -116,7 +119,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
-                                                  storage: self.clipsStorage,
+                                                  storage: self.clipStorage,
                                                   finder: WebImageUrlFinder(),
                                                   currentDateResovler: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
@@ -125,14 +128,14 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchEntryViewController() -> UIViewController {
-        let presenter = SearchEntryPresenter(storage: self.clipsStorage, logger: self.logger)
+        let presenter = SearchEntryPresenter(storage: self.clipStorage, logger: self.logger)
         return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.clipPreviewTransitionController))
     }
 
     func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {
         let clipsList = ClipsList(clips: clips,
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipsStorage,
+                                  storage: self.clipStorage,
                                   logger: self.logger)
 
         let presenter = SearchResultPresenter(context: context,
@@ -152,7 +155,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumListViewController() -> UIViewController {
-        let presenter = AlbumListPresenter(storage: self.clipsStorage, logger: self.logger)
+        let presenter = AlbumListPresenter(storage: self.clipStorage, logger: self.logger)
         let viewController = AlbumListViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
@@ -160,7 +163,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeAlbumViewController(album: Album) -> UIViewController {
         let clipsList = ClipsList(clips: album.clips,
                                   visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipsStorage,
+                                  storage: self.clipStorage,
                                   logger: self.logger)
         let presenter = AlbumPresenter(album: album,
                                        clipsList: clipsList,
@@ -179,20 +182,20 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {
-        let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipsStorage, logger: self.logger)
+        let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipStorage, logger: self.logger)
         presenter.delegate = delegate
         let viewController = AddingClipsToAlbumViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
 
     func makeTagListViewController() -> UIViewController {
-        let presenter = TagListPresenter(storage: self.clipsStorage, logger: self.logger)
+        let presenter = TagListPresenter(storage: self.clipStorage, logger: self.logger)
         let viewController = TagListViewController(factory: self, presenter: presenter, logger: self.logger)
         return UINavigationController(rootViewController: viewController)
     }
 
     func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate?) -> UIViewController {
-        let presenter = AddingTagsToClipsPresenter(clips: clips, storage: self.clipsStorage)
+        let presenter = AddingTagsToClipsPresenter(clips: clips, storage: self.clipStorage)
         presenter.delegate = delegate
         let viewController = AddingTagsToClipsViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
