@@ -41,6 +41,7 @@
 ### Bug
 
 - [ ] たまにPreviewからListViewへ戻るのに失敗する
+- [ ] View hierarchy にのってないのにアラートが出る場合がある
 
 ### Refactor
 
