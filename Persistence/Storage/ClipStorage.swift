@@ -23,7 +23,7 @@ public class ClipStorage {
             {
                 configuration.fileURL = directory.appendingPathComponent(self.realmFileName)
             } else {
-                // TODO: Error handling
+                fatalError("Unable to resolve realm file url.")
             }
 
             return configuration
