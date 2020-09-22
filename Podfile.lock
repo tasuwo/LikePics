@@ -19,11 +19,11 @@ PODS:
   - PromiseKit/UIKit (6.13.1):
     - PromiseKit/CorePromise
   - Quick (2.2.1)
-  - Realm (5.4.2):
-    - Realm/Headers (= 5.4.2)
-  - Realm/Headers (5.4.2)
-  - RealmSwift (5.4.2):
-    - Realm (= 5.4.2)
+  - Realm (5.4.3):
+    - Realm/Headers (= 5.4.3)
+  - Realm/Headers (5.4.3)
+  - RealmSwift (5.4.3):
+    - Realm (= 5.4.3)
   - Sourcery (1.0.0)
   - SwiftGen (6.3.0)
 
@@ -33,7 +33,7 @@ DEPENDENCIES:
   - Nimble (~> 8.0.5)
   - PromiseKit (~> 6.8)
   - Quick (~> 2.2.0)
-  - RealmSwift (~> 5.4.2)
+  - RealmSwift (~> 5.4.3)
   - Sourcery (~> 1.0)
   - SwiftGen (~> 6.0)
 
@@ -57,11 +57,11 @@ SPEC CHECKSUMS:
   Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
   PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
-  Realm: ced868eb0254f8d33a21c06981355e5aa33bc005
-  RealmSwift: aedc4363150f3c61f91ae0537ed116d2d080a4dd
+  Realm: e3d5fcc50fd79ddf87a2d86301f6edbf57531f84
+  RealmSwift: db608068eccc54bce47928e8118bde13c120c307
   Sourcery: 928a146ea9b777fa64b0c6ce915c4128b4488cff
   SwiftGen: 3d5024a47ea79e408cded20763d7a17d18a4548c
 
-PODFILE CHECKSUM: 4843717ee822b67fa50d568b62164344749d22c3
+PODFILE CHECKSUM: 17385a38c118df29feec42c472aa1cd0ed79dbb0
 
-COCOAPODS: 1.10.0.beta.2
+COCOAPODS: 1.10.0.rc.1
