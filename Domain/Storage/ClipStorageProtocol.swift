@@ -11,6 +11,14 @@ public enum ClipStorageError: Int, Error {
     case internalError
 }
 
+public protocol ClipQueryServiceProtocol {
+    func queryClip(having url: URL) -> Result<ClipQuery, ClipStorageError>
+    func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
+    func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError>
+    func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError>
+    func queryAllTags() -> Result<TagListQuery, ClipStorageError>
+}
+
 public protocol ClipStorageProtocol {
     // MARK: Create
 
@@ -21,8 +29,6 @@ public protocol ClipStorageProtocol {
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 
     // MARK: Read
-
-    func observeClip(having url: URL) -> Result<ClipQuery, ClipStorageError>
 
     func readClip(having url: URL) -> Result<Clip, ClipStorageError>
 

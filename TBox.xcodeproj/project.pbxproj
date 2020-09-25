@@ -208,6 +208,7 @@
 		2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */; };
 		2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B7F251E512F00BEE210 /* TagListQuery.swift */; };
 		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
+		2CD25B9C251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */; };
 		2CD3DA5F24EEC8720031A065 /* AddingAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CDA49D32516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */; };
@@ -735,6 +736,7 @@
 		2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmAlbumListQuery.swift; sourceTree = "<group>"; };
 		2CD25B7F251E512F00BEE210 /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
 		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
+		2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipStorage+ClipQueryServiceProtocol.swift"; sourceTree = "<group>"; };
 		2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingAlert.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsPresenter.swift; sourceTree = "<group>"; };
@@ -1590,6 +1592,7 @@
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
 				2CB2257725187236002CB04C /* ImageStorage.swift */,
+				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -3263,6 +3266,7 @@
 				2CD25B48251E4C6B00BEE210 /* RealmClipItemQuery.swift in Sources */,
 				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
 				2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */,
+				2CD25B9C251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */,
 				2CB2257825187236002CB04C /* ImageStorage.swift in Sources */,
