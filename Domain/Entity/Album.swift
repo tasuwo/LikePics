@@ -38,3 +38,15 @@ public struct Album {
                      updatedDate: self.updatedDate)
     }
 }
+
+extension Album: Hashable {
+    // MARK: - Hashable
+
+    public static func == (lhs: Album, rhs: Album) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
