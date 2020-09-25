@@ -6,20 +6,20 @@ import Combine
 import Domain
 import RealmSwift
 
-class RealmClipQuery {
+class RealmAlbumQuery {
     private var token: NotificationToken?
-    private let object: ClipObject
-    private var subject: CurrentValueSubject<Clip, Error>
+    private let object: AlbumObject
+    private var subject: CurrentValueSubject<Album, Error>
 
     // MARK: - Lifecycle
 
-    init(object: ClipObject) {
+    init(object: AlbumObject) {
         self.object = object
-        self.subject = .init(Clip.make(by: object))
-        self.token = self.object.observe { [weak self] (change: ObjectChange<ClipObject>) in
+        self.subject = .init(Album.make(by: object))
+        self.token = self.object.observe { [weak self] (change: ObjectChange<AlbumObject>) in
             switch change {
             case let .change(object, _):
-                self?.subject.send(Clip.make(by: object))
+                self?.subject.send(Album.make(by: object))
 
             case .deleted:
                 self?.subject.send(completion: .finished)
@@ -35,10 +35,10 @@ class RealmClipQuery {
     }
 }
 
-extension RealmClipQuery: ClipQuery {
-    // MARK: - ClipQuery
+extension RealmAlbumQuery: AlbumQuery {
+    // MARK: - AlbumQuery
 
-    var clip: CurrentValueSubject<Clip, Error> {
+    var album: CurrentValueSubject<Album, Error> {
         return self.subject
     }
 }

@@ -6,20 +6,20 @@ import Combine
 import Domain
 import RealmSwift
 
-class RealmClipQuery {
+class RealmTagQuery {
     private var token: NotificationToken?
-    private let object: ClipObject
-    private var subject: CurrentValueSubject<Clip, Error>
+    private let object: TagObject
+    private var subject: CurrentValueSubject<Tag, Error>
 
     // MARK: - Lifecycle
 
-    init(object: ClipObject) {
+    init(object: TagObject) {
         self.object = object
-        self.subject = .init(Clip.make(by: object))
-        self.token = self.object.observe { [weak self] (change: ObjectChange<ClipObject>) in
+        self.subject = .init(Tag.make(by: object))
+        self.token = self.object.observe { [weak self] (change: ObjectChange<TagObject>) in
             switch change {
             case let .change(object, _):
-                self?.subject.send(Clip.make(by: object))
+                self?.subject.send(Tag.make(by: object))
 
             case .deleted:
                 self?.subject.send(completion: .finished)
@@ -35,10 +35,10 @@ class RealmClipQuery {
     }
 }
 
-extension RealmClipQuery: ClipQuery {
-    // MARK: - ClipQuery
+extension RealmTagQuery: TagQuery {
+    // MARK: - TagQuery
 
-    var clip: CurrentValueSubject<Clip, Error> {
+    var tag: CurrentValueSubject<Tag, Error> {
         return self.subject
     }
 }

@@ -4,6 +4,6 @@
 
 import Combine
 
-public protocol ClipQuery {
-    var clip: CurrentValueSubject<Clip, Error> { get }
+public protocol TagQuery {
+    var tag: CurrentValueSubject<Tag, Error> { get }
 }
