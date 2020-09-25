@@ -155,7 +155,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumListViewController() -> UIViewController {
-        let presenter = AlbumListPresenter(storage: self.clipStorage, logger: self.logger)
+        let presenter = AlbumListPresenter(storage: self.clipStorage, queryService: self.clipStorage, logger: self.logger)
         let viewController = AlbumListViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }

@@ -2,11 +2,16 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
 class AlbumListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+
+    enum Section {
+        case main
+    }
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
@@ -14,6 +19,7 @@ class AlbumListViewController: UIViewController {
                                                                        message: L10n.albumListViewAlertForAddMessage,
                                                                        placeholder: L10n.albumListViewAlertForAddPlaceholder),
                                                   baseView: self)
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
 
     @IBOutlet var collectionView: AlbumListCollectionView!
 
@@ -36,15 +42,34 @@ class AlbumListViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupNavigationBar()
-    }
+        self.configureDataSouce()
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.presenter.reload()
+        self.presenter.setup()
     }
 
     // MARK: - Methods
+
+    // MARK: Collection View
+
+    private func configureDataSouce() {
+        self.dataSource = .init(collectionView: self.collectionView) { collectionView, indexPath, album -> UICollectionViewCell? in
+            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
+            guard let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
+
+            cell.title = album.title
+
+            if let data = self.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
+                cell.thumbnail = image
+            } else {
+                cell.thumbnail = nil
+            }
+
+            cell.deletate = self
+            cell.visibleDeleteButton = self.isEditing
+
+            return cell
+        }
+    }
 
     // MARK: Navigation Bar
 
@@ -83,14 +108,17 @@ class AlbumListViewController: UIViewController {
 extension AlbumListViewController: AlbumListViewProtocol {
     // MARK: - AlbumListViewProtocol
 
+    func apply(_ albums: [Album]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(albums)
+        self.dataSource.apply(snapshot)
+    }
+
     func showErrorMassage(_ message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
-    }
-
-    func reload() {
-        self.collectionView.reloadData()
     }
 }
 
@@ -106,42 +134,12 @@ extension AlbumListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard self.presenter.albums.indices.contains(indexPath.row) else { return }
-        let album = self.presenter.albums[indexPath.row]
+        guard let album = self.dataSource.itemIdentifier(for: indexPath) else {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            return
+        }
         let viewController = self.factory.makeAlbumViewController(album: album)
         self.navigationController?.pushViewController(viewController, animated: true)
-    }
-}
-
-extension AlbumListViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.presenter.albums.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
-        guard self.presenter.albums.indices.contains(indexPath.row) else { return cell }
-
-        let album = self.presenter.albums[indexPath.row]
-        cell.title = album.title
-
-        if let data = self.presenter.getThumbnailImageData(at: indexPath.row), let image = UIImage(data: data) {
-            cell.thumbnail = image
-        } else {
-            cell.thumbnail = nil
-        }
-
-        cell.deletate = self
-        cell.visibleDeleteButton = self.isEditing
-
-        return cell
     }
 }
 
@@ -166,15 +164,18 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     // MARK: - AlbumListCollectionViewCellDelegate
 
     func didTapDeleteButton(_ cell: AlbumListCollectionViewCell) {
-        guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-        let target = self.presenter.albums[indexPath.row]
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let album = self.dataSource.itemIdentifier(for: indexPath)
+        else {
+            return
+        }
 
-        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(target.title),
-                                      message: L10n.albumListViewAlertForDeleteMessage(target.title),
+        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(album.title),
+                                      message: L10n.albumListViewAlertForDeleteMessage(album.title),
                                       preferredStyle: .actionSheet)
 
         let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
-            self?.presenter.deleteAlbum(at: indexPath.row)
+            self?.presenter.deleteAlbum(album)
         }
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
