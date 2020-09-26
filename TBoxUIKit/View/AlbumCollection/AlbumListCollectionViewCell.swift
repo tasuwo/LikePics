@@ -9,9 +9,6 @@ public protocol AlbumListCollectionViewCellDelegate: AnyObject {
 }
 
 public class AlbumListCollectionViewCell: UICollectionViewCell {
-    public static let preferredWidth: CGFloat = 180
-    public static let preferredHeight: CGFloat = 230
-
     public static var nib: UINib {
         return UINib(nibName: "AlbumListCollectionViewCell", bundle: Bundle(for: Self.self))
     }

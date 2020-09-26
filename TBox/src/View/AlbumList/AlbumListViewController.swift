@@ -19,9 +19,10 @@ class AlbumListViewController: UIViewController {
                                                                        message: L10n.albumListViewAlertForAddMessage,
                                                                        placeholder: L10n.albumListViewAlertForAddPlaceholder),
                                                   baseView: self)
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
-
-    @IBOutlet var collectionView: AlbumListCollectionView!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var collectionView: AlbumListCollectionView!
 
     // MARK: - Lifecycle
 
@@ -42,7 +43,7 @@ class AlbumListViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupNavigationBar()
-        self.configureDataSouce()
+        self.setupCollectionView()
 
         self.presenter.setup()
     }
@@ -50,6 +51,15 @@ class AlbumListViewController: UIViewController {
     // MARK: - Methods
 
     // MARK: Collection View
+
+    private func setupCollectionView() {
+        self.collectionView = AlbumListCollectionView(frame: self.view.bounds, collectionViewLayout: self.createLayout())
+        self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.view.addSubview(collectionView)
+        self.collectionView.delegate = self
+        self.configureDataSouce()
+    }
 
     private func configureDataSouce() {
         self.dataSource = .init(collectionView: self.collectionView) { collectionView, indexPath, album -> UICollectionViewCell? in
@@ -71,6 +81,37 @@ class AlbumListViewController: UIViewController {
         }
     }
 
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
+            let itemWidth: NSCollectionLayoutDimension = {
+                switch environment.traitCollection.horizontalSizeClass {
+                case .compact:
+                    return .fractionalWidth(0.5)
+
+                case .regular, .unspecified:
+                    return .fractionalWidth(0.33)
+
+                @unknown default:
+                    return .fractionalWidth(0.33)
+                }
+            }()
+            let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth,
+                                                  heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .fractionalWidth(itemWidth.dimension * 4 / 3))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+
+            return section
+        }
+
+        return layout
+    }
+
     // MARK: Navigation Bar
 
     private func setupNavigationBar() {
@@ -83,14 +124,8 @@ class AlbumListViewController: UIViewController {
     @objc
     func didTapAdd() {
         self.alertContainer.present { [weak self] action in
-            switch action {
-            case let .saved(text: text):
-                self?.presenter.addAlbum(title: text)
-
-            default:
-                // NOP
-                break
-            }
+            guard case let .saved(text: text) = action else { return }
+            self?.presenter.addAlbum(title: text)
         }
     }
 
@@ -140,23 +175,6 @@ extension AlbumListViewController: UICollectionViewDelegate {
         }
         let viewController = self.factory.makeAlbumViewController(album: album)
         self.navigationController?.pushViewController(viewController, animated: true)
-    }
-}
-
-extension AlbumListViewController: UICollectionViewDelegateFlowLayout {
-    // MARK: - UICollectionViewDelegateFlowLayout
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: AlbumListCollectionViewCell.preferredWidth,
-                      height: AlbumListCollectionViewCell.preferredHeight)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .init(top: 16, left: 16, bottom: 16, right: 16)
     }
 }
 

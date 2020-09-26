@@ -12,13 +12,6 @@ protocol AlbumListViewProtocol: AnyObject {
 }
 
 class AlbumListPresenter {
-    enum FailureContext {
-        case readAlbums
-        case addAlbum
-        case deleteAlbum
-        case readImage
-    }
-
     private var cancellable: AnyCancellable?
     private var albumListQuery: AlbumListQuery? {
         didSet {
@@ -43,26 +36,11 @@ class AlbumListPresenter {
         self.logger = logger
     }
 
-    // MARK: - Methods
-
-    private static func resolveErrorMessage(for error: ClipStorageError, at context: FailureContext) -> String {
-        let message: String = {
-            switch context {
-            case .readAlbums:
-                return L10n.albumListViewErrorAtReadAlbums
-
-            case .addAlbum:
-                return L10n.albumListViewErrorAtAddAlbum
-
-            case .deleteAlbum:
-                return L10n.albumListViewErrorAtDeleteAlbum
-
-            case .readImage:
-                return L10n.albumListViewErrorAtReadImageData
-            }
-        }()
-        return message + "\n(\(error.makeErrorCode()))"
+    deinit {
+        self.cancellable?.cancel()
     }
+
+    // MARK: - Methods
 
     func setup() {
         switch self.queryService.queryAllAlbums() {
@@ -71,21 +49,21 @@ class AlbumListPresenter {
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            self.view?.showErrorMassage(Self.resolveErrorMessage(for: error, at: .readImage))
+            self.view?.showErrorMassage("\(L10n.albumListViewErrorAtReadAlbums)\n(\(error.makeErrorCode())")
         }
     }
 
     func addAlbum(title: String) {
         if case let .failure(error) = self.storage.create(albumWithTitle: title) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add album. (code: \(error.rawValue))"))
-            self.view?.showErrorMassage(Self.resolveErrorMessage(for: error, at: .addAlbum))
+            self.view?.showErrorMassage("\(L10n.albumListViewErrorAtAddAlbum)\n(\(error.makeErrorCode())")
         }
     }
 
     func deleteAlbum(_ album: Album) {
         if case let .failure(error) = self.storage.delete(album) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete album. (code: \(error.rawValue))"))
-            self.view?.showErrorMassage(Self.resolveErrorMessage(for: error, at: .deleteAlbum))
+            self.view?.showErrorMassage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
         }
     }
 
@@ -100,7 +78,7 @@ class AlbumListPresenter {
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMassage(Self.resolveErrorMessage(for: error, at: .readImage))
+            self.view?.showErrorMassage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
             return nil
         }
     }
