@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 
@@ -27,7 +28,7 @@ public class UserSettingsStorage {
     }
 
     private func fetchShowHiddenItemsNonAtomically() -> Bool {
-        return self.userDefaults.bool(forKey: Key.showHiddenItems.rawValue)
+        return self.userDefaults.userSettingsShowHiddenItems
     }
 
     private func fetchUserSettingsNonAtomically() -> UserSettings {
@@ -41,8 +42,20 @@ public class UserSettingsStorage {
     }
 }
 
+extension UserDefaults {
+    @objc dynamic var userSettingsShowHiddenItems: Bool {
+        return self.bool(forKey: UserSettingsStorage.Key.showHiddenItems.rawValue)
+    }
+}
+
 extension UserSettingsStorage: UserSettingsStorageProtocol {
     // MARK: - UserSettingsStorageProtocol
+
+    public var showHiddenItems: AnyPublisher<Bool, Never> {
+        return self.userDefaults
+            .publisher(for: \.userSettingsShowHiddenItems)
+            .eraseToAnyPublisher()
+    }
 
     public func add(observer: UserSettingsObserver) {
         self.queue.sync {
