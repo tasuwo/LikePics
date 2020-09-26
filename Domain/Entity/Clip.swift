@@ -69,10 +69,6 @@ public struct Clip: Equatable {
 extension Clip: Hashable {
     // MARK: - Hashable
 
-    public static func == (lhs: Clip, rhs: Clip) -> Bool {
-        return lhs.url == rhs.url
-    }
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.url)
     }

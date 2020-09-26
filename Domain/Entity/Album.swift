@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Album {
+public struct Album: Equatable {
     public let id: String
     public let title: String
     public let clips: [Clip]
@@ -41,10 +41,6 @@ public struct Album {
 
 extension Album: Hashable {
     // MARK: - Hashable
-
-    public static func == (lhs: Album, rhs: Album) -> Bool {
-        return lhs.id == rhs.id
-    }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)

@@ -41,11 +41,6 @@ public struct ClipItem: Equatable {
 extension ClipItem: Hashable {
     // MARK: - Hashable
 
-    public static func == (lhs: ClipItem, rhs: ClipItem) -> Bool {
-        return lhs.clipUrl == rhs.clipUrl
-            && lhs.imageUrl == rhs.imageUrl
-    }
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.clipUrl)
         hasher.combine(self.imageUrl)

@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Tag {
+public struct Tag: Equatable {
     public let id: String
     public let name: String
 
@@ -17,10 +17,6 @@ public struct Tag {
 
 extension Tag: Hashable {
     // MARK: - Hashable
-
-    public static func == (lhs: Tag, rhs: Tag) -> Bool {
-        return lhs.id == rhs.id
-    }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
