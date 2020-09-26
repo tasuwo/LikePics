@@ -14,19 +14,12 @@ protocol TagListViewProtocol: AnyObject {
 }
 
 class TagListPresenter {
-    private var cancellable: AnyCancellable?
-    private var tagListQuery: TagListQuery? {
-        didSet {
-            self.cancellable = self.tagListQuery?.tags
-                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] tagQueries in
-                    self?.view?.apply(tagQueries.map({ $0.tag.value }))
-                })
-        }
-    }
-
     private let storage: ClipStorageProtocol
     private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
+
+    private var cancellable: AnyCancellable?
+    private var tagListQuery: TagListQuery?
 
     weak var view: TagListViewProtocol?
 
@@ -44,6 +37,10 @@ class TagListPresenter {
         switch self.queryService.queryAllTags() {
         case let .success(query):
             self.tagListQuery = query
+            self.cancellable = query.tags
+                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] tagQueries in
+                    self?.view?.apply(tagQueries.map({ $0.tag.value }))
+                })
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read tags. (code: \(error.rawValue))"))
