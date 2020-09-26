@@ -600,22 +600,27 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func deleteTag(_ tag: String) -> Result<String, ClipStorageError> {
+    public func delete(_ tags: [Tag]) -> Result<[Tag], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let tagObj = realm.objects(TagObject.self).filter("name = '\(tag)'").first else {
-                return .failure(.notFound)
+            let filter = tags.reduce(into: "") { result, tag in
+                let predicate = "name = '\(tag.name)'"
+                if result.isEmpty {
+                    result = predicate
+                } else {
+                    result += "OR \(predicate)"
+                }
             }
-            let removeTarget = Tag.make(by: tagObj)
+            let tagObjs = realm.objects(TagObject.self).filter(filter)
 
             do {
                 try realm.write {
-                    realm.delete(tagObj)
+                    realm.delete(tagObjs)
                 }
-                return .success(removeTarget.name)
+                return .success(Array(tagObjs.map({ Tag.make(by: $0) })))
             } catch {
                 return .failure(.internalError)
             }

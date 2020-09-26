@@ -36,10 +36,6 @@ class AlbumListPresenter {
         self.logger = logger
     }
 
-    deinit {
-        self.cancellable?.cancel()
-    }
-
     // MARK: - Methods
 
     func setup() {
@@ -81,5 +77,9 @@ class AlbumListPresenter {
             self.view?.showErrorMassage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
             return nil
         }
+    }
+
+    deinit {
+        self.cancellable?.cancel()
     }
 }

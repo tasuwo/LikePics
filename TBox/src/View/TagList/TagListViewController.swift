@@ -10,6 +10,10 @@ import UIKit
 class TagListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
+    enum Section {
+        case main
+    }
+
     private let factory: Factory
     private let presenter: TagListPresenter
     private let logger: TBoxLoggable
@@ -17,8 +21,10 @@ class TagListViewController: UIViewController {
                                                                        message: L10n.tagListViewAlertForAddMessage,
                                                                        placeholder: L10n.tagListViewAlertForAddPlaceholder),
                                                   baseView: self)
-
-    @IBOutlet var collectionView: TagCollectionView!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var collectionView: TagCollectionView!
 
     // MARK: - Lifecycle
 
@@ -39,24 +45,42 @@ class TagListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupCollecitonView()
         self.setupAppearance()
         self.updateNavigationBar(for: self.isEditing)
 
-        self.presenter.reload()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.presenter.reload()
+        self.presenter.setup()
     }
 
     // MARK: - Methods
 
     private func setupAppearance() {
+        self.title = L10n.tagListViewTitle
+    }
+
+    // MARK: Collection View
+
+    private func setupCollecitonView() {
+        self.collectionView = TagCollectionView(frame: self.view.bounds, collectionViewLayout: TagCollectionLayout())
+        self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.view.addSubview(self.collectionView)
+        self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
-        self.title = L10n.tagListViewTitle
+        self.configureDataSouce()
+    }
+
+    private func configureDataSouce() {
+        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, tag -> UICollectionViewCell? in
+            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
+            guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
+
+            cell.title = tag.name
+            cell.displayMode = self?.isEditing == true ? .deletion : .normal
+
+            return cell
+        }
     }
 
     // MARK: NavigationBar
@@ -78,14 +102,8 @@ class TagListViewController: UIViewController {
     @objc
     func didTapAdd() {
         self.alertContainer.present { [weak self] action in
-            switch action {
-            case let .saved(text: tag):
-                self?.presenter.addTag(tag)
-
-            default:
-                // NOP
-                break
-            }
+            guard case let .saved(text: tag) = action else { return }
+            self?.presenter.addTag(tag)
         }
     }
 
@@ -101,8 +119,8 @@ class TagListViewController: UIViewController {
                                       preferredStyle: .actionSheet)
 
         alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction(count), style: .destructive, handler: { [weak self] _ in
-            guard let indices = self?.collectionView.indexPathsForSelectedItems?.map({ $0.row }) else { return }
-            self?.presenter.delete(at: indices)
+            guard let self = self, let indices = self.collectionView.indexPathsForSelectedItems else { return }
+            self.presenter.delete(indices.compactMap({ self.dataSource.itemIdentifier(for: $0) }))
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
@@ -140,8 +158,11 @@ class TagListViewController: UIViewController {
 extension TagListViewController: TagListViewProtocol {
     // MARK: - TagListViewProtocol
 
-    func reload() {
-        self.collectionView.reloadData()
+    func apply(_ tags: [Tag]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(tags)
+        self.dataSource.apply(snapshot)
     }
 
     func showSearchReult(for clips: [Clip], withContext context: SearchContext) {
@@ -171,32 +192,13 @@ extension TagListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !self.isEditing else { return }
-        self.presenter.select(at: indexPath.row)
-    }
-}
-
-extension TagListViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.presenter.tags.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
-        guard self.presenter.tags.indices.contains(indexPath.row) else { return dequeuedCell }
-
-        let target = self.presenter.tags[indexPath.row]
-        cell.title = target
-        cell.displayMode = self.isEditing ? .deletion : .normal
-
-        return cell
+        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            return
+        }
+        if !self.isEditing {
+            self.presenter.select(tag)
+        }
     }
 }
 
@@ -204,8 +206,8 @@ extension TagListViewController: UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDelegateFlowLayout
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard self.presenter.tags.indices.contains(indexPath.row) else { return .zero }
-        let preferredSize = TagCollectionViewCell.preferredSize(for: self.presenter.tags[indexPath.row])
+        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else { return .zero }
+        let preferredSize = TagCollectionViewCell.preferredSize(for: tag.name)
         return CGSize(width: fmin(preferredSize.width, collectionView.frame.width - 16 * 2), height: preferredSize.height)
     }
 

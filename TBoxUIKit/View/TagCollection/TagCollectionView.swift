@@ -43,6 +43,5 @@ public class TagCollectionView: UICollectionView {
     private func setupAppearance() {
         self.allowsSelection = true
         self.allowsMultipleSelection = true
-        self.collectionViewLayout = TagCollectionLayout()
     }
 }
