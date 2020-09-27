@@ -5,7 +5,6 @@
 import UIKit
 
 public protocol ClipsCollectionLayoutDelegate: AnyObject {
-    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
@@ -75,36 +74,26 @@ public class ClipCollectionLayout: UICollectionViewLayout {
     }
 
     private func setupAttributes() {
-        guard self.cache.isEmpty, let collectionView = self.collectionView else { return }
+        guard cache.isEmpty == true,
+            let collectionView = collectionView,
+            collectionView.numberOfSections > 0
+        else {
+            return
+        }
 
         let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
         let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth }
 
-        let headerViewHeight = self.setupHeaderAttributes()
         setupCellAttributes(collectionView: collectionView,
                             columnWidth: columnWidth,
-                            xOffset: xOffset,
-                            headerViewHeight: headerViewHeight)
-    }
-
-    private func setupHeaderAttributes() -> CGFloat {
-        guard let collectionView = collectionView else { return 0 }
-        let indexPath = IndexPath(item: 0, section: 0)
-        let headerViewAttribute = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, with: indexPath)
-        let headerViewHeight = self.delegate?.collectionView(collectionView, heightForHeaderAtIndexPath: indexPath) ?? 0
-        headerViewAttribute.frame = .init(origin: .zero, size: .init(width: collectionView.bounds.size.width, height: headerViewHeight))
-        self.cache.append(headerViewAttribute)
-        self.contentHeight = max(contentHeight, headerViewAttribute.frame.maxY)
-
-        return headerViewHeight
+                            xOffset: xOffset)
     }
 
     private func setupCellAttributes(collectionView: UICollectionView,
                                      columnWidth: CGFloat,
-                                     xOffset: [CGFloat],
-                                     headerViewHeight: CGFloat)
+                                     xOffset: [CGFloat])
     {
-        var yOffset = [CGFloat].init(repeating: headerViewHeight, count: self.numberOfColumns)
+        var yOffset = [CGFloat].init(repeating: 0, count: self.numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {
             let indexPath = IndexPath(item: $0, section: 0)
