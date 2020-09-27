@@ -64,7 +64,8 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController? {
-        guard let presenter = NewTopClipsListPresenter(storage: self.clipStorage,
+        guard let presenter = NewTopClipsListPresenter(clipStorage: self.clipStorage,
+                                                       settingStorage: self.userSettingsStorage,
                                                        queryService: self.clipStorage,
                                                        logger: self.logger)
         else {

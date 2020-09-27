@@ -31,12 +31,13 @@ protocol NewTopClipsListPresenterProtocol {
 }
 
 class NewTopClipsListPresenter {
-    private let storage: ClipStorageProtocol
+    private let clipStorage: ClipStorageProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
     private var clipsQuery: ClipListQuery
-    private var cancellable: AnyCancellable?
+    private var storage = Set<AnyCancellable>()
 
     private(set) var clips: [Clip] = [] {
         didSet {
@@ -68,8 +69,13 @@ class NewTopClipsListPresenter {
 
     // MARK: - Lifecycle
 
-    init?(storage: ClipStorageProtocol, queryService: ClipQueryServiceProtocol, logger: TBoxLoggable) {
-        self.storage = storage
+    init?(clipStorage: ClipStorageProtocol,
+          settingStorage: UserSettingsStorageProtocol,
+          queryService: ClipQueryServiceProtocol,
+          logger: TBoxLoggable)
+    {
+        self.clipStorage = clipStorage
+        self.settingStorage = settingStorage
         self.queryService = queryService
         self.logger = logger
 
@@ -102,7 +108,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
         }()
         guard let clipItem = nullableClipItem else { return nil }
 
-        switch self.storage.readThumbnailData(of: clipItem) {
+        switch self.clipStorage.readThumbnailData(of: clipItem) {
         case let .success(data):
             return data
 
@@ -115,24 +121,29 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
 
     func setup(with view: NewTopClipsListViewProtocol) {
         self.view = view
-        self.cancellable = self.clipsQuery.clips
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    self?.logger.write(ConsoleLog(level: .error, message: "Unexpected finished observing at top clips view."))
-
-                case let .failure(error):
-                    self?.logger.write(ConsoleLog(level: .error, message: "Unexpected error occurred at top clips view. (error: \(error.localizedDescription))"))
-                }
-            }, receiveValue: { [weak self] clips in
+        self.clipsQuery.clips
+            .catch { _ -> AnyPublisher<[Clip], Never> in
+                return Just([Clip]()).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+            .combineLatest(self.settingStorage.showHiddenItems)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TopClipsView."))
+            }, receiveValue: { [weak self] clips, showHiddenItems in
                 guard let self = self else { return }
-                self.clips = clips
 
-                let newClips = Set(clips.map { $0.identity })
+                self.clips = clips
+                    .filter({ clip in
+                        guard showHiddenItems else { return !clip.isHidden }
+                        return true
+                    })
+
+                let newClips = Set(self.clips.map { $0.identity })
                 if !self.selections.isSubset(of: newClips) {
                     self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
                 }
             })
+            .store(in: &self.storage)
     }
 
     func setEditing(_ editing: Bool) {
@@ -163,7 +174,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
     }
 
     func deleteSelectedClips() {
-        if case let .failure(error) = self.storage.delete(self.selectedClips) {
+        if case let .failure(error) = self.clipStorage.delete(self.selectedClips) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -172,7 +183,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
     }
 
     func hideSelectedClips() {
-        if case let .failure(error) = self.storage.update(self.selectedClips, byHiding: true) {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -181,7 +192,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
     }
 
     func unhideSelectedClips() {
-        if case let .failure(error) = self.storage.update(self.selectedClips, byHiding: false) {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
