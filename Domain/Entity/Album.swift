@@ -39,10 +39,12 @@ public struct Album: Equatable {
     }
 }
 
-extension Album: Hashable {
-    // MARK: - Hashable
+extension Album: Identifiable {
+    public typealias Identity = String
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
+    public var identity: String {
+        return self.id
     }
 }
+
+extension Album: Hashable {}

@@ -15,10 +15,12 @@ public struct Tag: Equatable {
     }
 }
 
-extension Tag: Hashable {
-    // MARK: - Hashable
+extension Tag: Identifiable {
+    public typealias Identity = String
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
+    public var identity: String {
+        return self.id
     }
 }
+
+extension Tag: Hashable {}

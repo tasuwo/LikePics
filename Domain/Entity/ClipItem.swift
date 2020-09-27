@@ -38,11 +38,12 @@ public struct ClipItem: Equatable {
     }
 }
 
-extension ClipItem: Hashable {
-    // MARK: - Hashable
+extension ClipItem: Identifiable {
+    public typealias Identity = String
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.clipUrl)
-        hasher.combine(self.imageUrl)
+    public var identity: String {
+        return "\(self.clipUrl.absoluteString)-\(self.imageUrl.absoluteString)"
     }
 }
+
+extension ClipItem: Hashable {}

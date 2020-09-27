@@ -66,10 +66,12 @@ public struct Clip: Equatable {
     }
 }
 
-extension Clip: Hashable {
-    // MARK: - Hashable
+extension Clip: Identifiable {
+    public typealias Identity = URL
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.url)
+    public var identity: URL {
+        return self.url
     }
 }
+
+extension Clip: Hashable {}
