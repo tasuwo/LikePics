@@ -137,6 +137,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
                         guard showHiddenItems else { return !clip.isHidden }
                         return true
                     })
+                    .sorted(by: { $0.registeredDate > $1.registeredDate })
 
                 let newClips = Set(self.clips.map { $0.identity })
                 if !self.selections.isSubset(of: newClips) {
