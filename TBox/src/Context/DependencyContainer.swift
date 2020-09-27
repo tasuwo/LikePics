@@ -64,11 +64,9 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController {
-        let clipsList = ClipsList(clips: [],
-                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipStorage,
-                                  logger: self.logger)
-        let presenter = TopClipsListPresenter(clipsList: clipsList, settingsStorage: self.userSettingsStorage)
+        let presenter = NewTopClipsListPresenter(storage: self.clipStorage,
+                                                 queryService: self.clipStorage,
+                                                 logger: self.logger)
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
@@ -76,10 +74,10 @@ extension DependencyContainer: ViewControllerFactory {
         let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .top, dataSource: presenter)
         let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
 
-        let viewController = TopClipsListViewController(factory: self,
-                                                        presenter: presenter,
-                                                        navigationItemsProvider: navigationItemsProvider,
-                                                        toolBarItemsProvider: toolBarItemsProvider)
+        let viewController = NewTopClipsListViewController(factory: self,
+                                                           presenter: presenter,
+                                                           navigationItemsProvider: navigationItemsProvider,
+                                                           toolBarItemsProvider: toolBarItemsProvider)
 
         return UINavigationController(rootViewController: viewController)
     }

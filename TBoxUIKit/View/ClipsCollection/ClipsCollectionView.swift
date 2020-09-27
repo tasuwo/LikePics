@@ -31,7 +31,6 @@ public class ClipsCollectionView: UICollectionView {
     }
 
     private func setupAppearance() {
-        self.collectionViewLayout = ClipCollectionLayout()
         self.allowsSelection = true
         self.allowsMultipleSelection = false
     }

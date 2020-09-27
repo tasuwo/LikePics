@@ -20,6 +20,8 @@
 		2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */; };
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
 		2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */; };
+		2C1604F42520438400A39E58 /* NewTopClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* NewTopClipsListPresenter.swift */; };
+		2C1604FE2520448500A39E58 /* NewTopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604FD2520448500A39E58 /* NewTopClipsListViewController.swift */; };
 		2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16050725207C6A00A39E58 /* Identifiable.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
 		2C1CEC0A2509624000C95C12 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
@@ -556,6 +558,8 @@
 		2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimator.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
+		2C1604F32520438300A39E58 /* NewTopClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTopClipsListPresenter.swift; sourceTree = "<group>"; };
+		2C1604FD2520448500A39E58 /* NewTopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTopClipsListViewController.swift; sourceTree = "<group>"; };
 		2C16050725207C6A00A39E58 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
 		2C1CEC132509664500C95C12 /* TagCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionLayout.swift; sourceTree = "<group>"; };
@@ -1365,6 +1369,7 @@
 			isa = PBXGroup;
 			children = (
 				2C570B5E24E04FBF00A1DC9F /* TopClipsListPresenter.swift */,
+				2C1604F32520438300A39E58 /* NewTopClipsListPresenter.swift */,
 			);
 			path = TopClipsList;
 			sourceTree = "<group>";
@@ -1374,6 +1379,7 @@
 			children = (
 				2C570B6124E04FFA00A1DC9F /* TopClipsListViewController.swift */,
 				2C570B6324E0503800A1DC9F /* TopClipsListViewController.xib */,
+				2C1604FD2520448500A39E58 /* NewTopClipsListViewController.swift */,
 			);
 			path = TopClipsList;
 			sourceTree = "<group>";
@@ -3223,11 +3229,13 @@
 				2C2289EC24F7F1940026E24A /* ClipsListViewController.swift in Sources */,
 				2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */,
 				2C0596CB251992C5008F11F5 /* AddingClipsToAlbumPresenter.swift in Sources */,
+				2C1604FE2520448500A39E58 /* NewTopClipsListViewController.swift in Sources */,
 				2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */,
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2CDA49DD2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
+				2C1604F42520438400A39E58 /* NewTopClipsListPresenter.swift in Sources */,
 				2C38C705250AF33B00F32102 /* AddingTagsToClipsViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
