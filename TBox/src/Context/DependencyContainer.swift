@@ -12,7 +12,7 @@ import UIKit
 protocol ViewControllerFactory {
     // MARK: Top
 
-    func makeTopClipsListViewController() -> UIViewController
+    func makeTopClipsListViewController() -> UIViewController?
 
     // MARK: Preview
 
@@ -63,10 +63,13 @@ class DependencyContainer {
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeTopClipsListViewController() -> UIViewController {
-        let presenter = NewTopClipsListPresenter(storage: self.clipStorage,
-                                                 queryService: self.clipStorage,
-                                                 logger: self.logger)
+    func makeTopClipsListViewController() -> UIViewController? {
+        guard let presenter = NewTopClipsListPresenter(storage: self.clipStorage,
+                                                       queryService: self.clipStorage,
+                                                       logger: self.logger)
+        else {
+            return nil
+        }
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)

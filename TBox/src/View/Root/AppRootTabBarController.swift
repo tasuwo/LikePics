@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import TBoxUIKit
 import UIKit
 
@@ -25,7 +26,10 @@ class AppRootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let topClipsListViewController = self.factory.makeTopClipsListViewController()
+        guard let topClipsListViewController = self.factory.makeTopClipsListViewController() else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipsListView."))
+            return
+        }
         let albumListViewController = self.factory.makeAlbumListViewController()
         let tagListViewController = self.factory.makeTagListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()

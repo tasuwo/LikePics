@@ -35,8 +35,8 @@ class NewTopClipsListPresenter {
     private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
+    private var clipsQuery: ClipListQuery
     private var cancellable: AnyCancellable?
-    private var clipsQuery: ClipListQuery?
 
     private(set) var clips: [Clip] = [] {
         didSet {
@@ -68,10 +68,19 @@ class NewTopClipsListPresenter {
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, queryService: ClipQueryServiceProtocol, logger: TBoxLoggable) {
+    init?(storage: ClipStorageProtocol, queryService: ClipQueryServiceProtocol, logger: TBoxLoggable) {
         self.storage = storage
         self.queryService = queryService
         self.logger = logger
+
+        switch queryService.queryAllClips() {
+        case let .success(query):
+            self.clipsQuery = query
+
+        case let .failure(error):
+            logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
+            return nil
+        }
     }
 }
 
@@ -106,33 +115,24 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
 
     func setup(with view: NewTopClipsListViewProtocol) {
         self.view = view
+        self.cancellable = self.clipsQuery.clips
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    self?.logger.write(ConsoleLog(level: .error, message: "Unexpected finished observing at top clips view."))
 
-        switch self.queryService.queryAllClips() {
-        case let .success(query):
-            self.clipsQuery = query
-            self.cancellable = query.clips
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        self?.logger.write(ConsoleLog(level: .error, message: "Unexpected finished observing at top clips view."))
+                case let .failure(error):
+                    self?.logger.write(ConsoleLog(level: .error, message: "Unexpected error occurred at top clips view. (error: \(error.localizedDescription))"))
+                }
+            }, receiveValue: { [weak self] clips in
+                guard let self = self else { return }
+                self.clips = clips
 
-                    case let .failure(error):
-                        self?.logger.write(ConsoleLog(level: .error, message: "Unexpected error occurred at top clips view. (error: \(error.localizedDescription))"))
-                    }
-                }, receiveValue: { [weak self] clips in
-                    guard let self = self else { return }
-                    self.clips = clips
-
-                    let newClips = Set(clips.map { $0.identity })
-                    if !self.selections.isSubset(of: newClips) {
-                        self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
-                    }
-                })
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtReadClips)\n(\(error.makeErrorCode())")
-        }
+                let newClips = Set(clips.map { $0.identity })
+                if !self.selections.isSubset(of: newClips) {
+                    self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
+                }
+            })
     }
 
     func setEditing(_ editing: Bool) {
