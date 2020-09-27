@@ -49,6 +49,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             targetImageView.isHidden = false
             selectedImageView.isHidden = false
             selectedCell.alpha = 1
+            from.view.alpha = 1.0
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }

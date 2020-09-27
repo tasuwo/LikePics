@@ -255,7 +255,10 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
     }
 
     func closePages() {
-        self.dismiss(animated: true, completion: nil)
+        self.previewTransitionController.beginDeletionTransition()
+        self.dismiss(animated: true, completion: { [weak self] in
+            self?.previewTransitionController.endDeletionTransition()
+        })
     }
 
     func showErrorMessage(_ message: String) {

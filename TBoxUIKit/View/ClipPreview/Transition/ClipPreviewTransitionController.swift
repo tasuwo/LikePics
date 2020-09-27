@@ -8,11 +8,14 @@ public protocol ClipPreviewTransitionControllerProtocol {
     var isInteractiveTransitioning: Bool { get }
     func beginInteractiveTransition()
     func endInteractiveTransition()
+    func beginDeletionTransition()
+    func endDeletionTransition()
     func didPan(sender: UIPanGestureRecognizer)
 }
 
 public class ClipPreviewTransitioningController: NSObject {
     var isInteractive: Bool = false
+    var isDeletion: Bool = false
     let interactiveAnimator = ClipPreviewInteractiveDismissalAnimator()
 }
 
@@ -31,6 +34,14 @@ extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerPro
         self.isInteractive = false
     }
 
+    public func beginDeletionTransition() {
+        self.isDeletion = true
+    }
+
+    public func endDeletionTransition() {
+        self.isDeletion = false
+    }
+
     public func didPan(sender: UIPanGestureRecognizer) {
         self.interactiveAnimator.didPan(sender: sender)
     }
@@ -47,6 +58,7 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     }
 
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard !self.isDeletion else { return nil }
         return ClipPreviewDismissalAnimator()
     }
 
@@ -69,6 +81,7 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
             return ClipPreviewPresentationAnimator()
 
         case .pop:
+            guard !self.isDeletion else { return nil }
             return ClipPreviewDismissalAnimator()
 
         default:
