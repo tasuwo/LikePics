@@ -16,7 +16,7 @@ protocol ViewControllerFactory {
 
     // MARK: Preview
 
-    func makeClipPreviewViewController(clip: Clip) -> UIViewController
+    func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
     func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController
 
     // MARK: Information
@@ -82,8 +82,14 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewViewController(clip: Clip) -> UIViewController {
-        let presenter = ClipPreviewPagePresenter(clip: clip, storage: self.clipStorage, logger: self.logger)
+    func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController? {
+        guard let presenter = ClipPreviewPagePresenter(clipId: clipId,
+                                                       storage: self.clipStorage,
+                                                       queryService: self.clipStorage,
+                                                       logger: self.logger)
+        else {
+            return nil
+        }
 
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
         let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)

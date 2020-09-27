@@ -107,8 +107,8 @@ extension SearchResultViewController: SearchResultViewProtocol {
     }
 
     func presentPreviewView(for clip: Clip) {
-        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
-        self.present(nextViewController, animated: true, completion: nil)
+        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clip.identity) else { return }
+        self.present(viewController, animated: true, completion: nil)
     }
 
     func showErrorMessage(_ message: String) {

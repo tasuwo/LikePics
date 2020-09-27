@@ -9,7 +9,7 @@ import Domain
 protocol NewTopClipsListViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
-    func presentPreview(for clip: Clip)
+    func presentPreview(forClipId clipId: Clip.Identity)
     func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
 }
@@ -109,8 +109,18 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
 
         switch self.queryService.queryAllClips() {
         case let .success(query):
+            self.clipsQuery = query
             self.cancellable = query.clips
-                .sink(receiveCompletion: { _ in }, receiveValue: { clips in
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        self?.logger.write(ConsoleLog(level: .error, message: "Unexpected finished observing at top clips view."))
+
+                    case let .failure(error):
+                        self?.logger.write(ConsoleLog(level: .error, message: "Unexpected error occurred at top clips view. (error: \(error.localizedDescription))"))
+                    }
+                }, receiveValue: { [weak self] clips in
+                    guard let self = self else { return }
                     self.clips = clips
 
                     let newClips = Set(clips.map { $0.identity })
@@ -134,8 +144,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
             self.selections.insert(clipId)
         } else {
             self.selections = Set([clipId])
-            // TODO:
-            self.view?.presentPreview(for: self.selectedClips.first(where: { $0.identity == clipId })!)
+            self.view?.presentPreview(forClipId: clipId)
         }
     }
 

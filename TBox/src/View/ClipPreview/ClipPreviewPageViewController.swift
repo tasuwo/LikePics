@@ -89,7 +89,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.setupBar()
         self.setupGestureRecognizer()
 
-        self.presenter.reload()
+        self.presenter.setup()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -270,7 +270,6 @@ extension ClipPreviewPageViewController: ClipTargetFinderDelegate {
 
     func didFinish(_ viewController: ClipTargetFinderViewController) {
         viewController.dismiss(animated: true, completion: nil)
-        self.presenter.reload()
     }
 
     func didCancel(_ viewController: ClipTargetFinderViewController) {
@@ -339,12 +338,12 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: self)
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: self)
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -361,22 +360,5 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         self.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension ClipPreviewPageViewController: AddingClipsToAlbumPresenterDelegate {
-    // MARK: - AddingClipsToAlbumPresenterDelegate
-
-    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
-        // NOP
-    }
-}
-
-extension ClipPreviewPageViewController: AddingTagsToClipsPresenterDelegate {
-    // MARK: - AddingTagsToClipsPresenterDelegate
-
-    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTagsTo clip: Clip?) {
-        guard let clip = clip else { return }
-        self.presenter.onUpdatedClip(byUpdatingTags: clip.tags)
     }
 }

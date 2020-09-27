@@ -148,9 +148,9 @@ extension NewTopClipsListViewController: NewTopClipsListViewProtocol {
         self.navigationItemsProvider.onUpdateSelection()
     }
 
-    func presentPreview(for clip: Clip) {
-        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
-        self.present(nextViewController, animated: true, completion: nil)
+    func presentPreview(forClipId clipId: Clip.Identity) {
+        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else { return }
+        self.present(viewController, animated: true, completion: nil)
     }
 
     func setEditing(_ editing: Bool) {
