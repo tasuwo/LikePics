@@ -70,8 +70,8 @@ class AppRootTabBarController: UITabBarController {
             return
         }
 
-        guard viewController is TopClipsListViewController
-            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is TopClipsListViewController }) ?? false
+        guard viewController is NewTopClipsListViewController
+            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is NewTopClipsListViewController }) ?? false
         else {
             self.tabBar.isHidden = false
             return

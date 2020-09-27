@@ -25,6 +25,13 @@ public class ClipsCollectionView: UICollectionView {
 
     // MARK: - Methods
 
+    public func setEditing(_ editing: Bool, animated: Bool) {
+        self.visibleCells
+            .compactMap { $0 as? ClipsCollectionViewCell }
+            .forEach { $0.visibleSelectedMark = editing }
+        self.allowsMultipleSelection = editing
+    }
+
     private func registerCell() {
         self.register(ClipsCollectionViewCell.nib,
                       forCellWithReuseIdentifier: Self.cellIdentifier)

@@ -122,11 +122,7 @@ class NewTopClipsListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.collectionView.visibleCells
-            .compactMap { $0 as? ClipsCollectionViewCell }
-            .forEach { $0.visibleSelectedMark = editing }
-        self.collectionView.allowsMultipleSelection = editing
-
+        self.collectionView.setEditing(editing, animated: animated)
         self.navigationItemsProvider.setEditing(editing, animated: animated)
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
     }
@@ -140,6 +136,25 @@ extension NewTopClipsListViewController: NewTopClipsListViewProtocol {
         snapshot.appendSections([.main])
         snapshot.appendItems(clips)
         self.dataSource.apply(snapshot)
+
+        self.navigationItemsProvider.onUpdateSelection()
+    }
+
+    func apply(selection: Set<Clip>) {
+        let indexPaths = selection
+            .compactMap { self.dataSource.indexPath(for: $0) }
+        self.collectionView.applySelection(at: indexPaths)
+
+        self.navigationItemsProvider.onUpdateSelection()
+    }
+
+    func presentPreview(for clip: Clip) {
+        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
+        self.present(nextViewController, animated: true, completion: nil)
+    }
+
+    func setEditing(_ editing: Bool) {
+        self.setEditing(editing, animated: true)
     }
 
     func showErrorMessage(_ message: String) {
@@ -173,9 +188,13 @@ extension NewTopClipsListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !self.isEditing, let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        let nextViewController = self.factory.makeClipPreviewViewController(clip: clip)
-        self.present(nextViewController, animated: true, completion: nil)
+        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.presenter.select(clipId: clip.identity)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.presenter.deselect(clipId: clip.identity)
     }
 }
 
@@ -205,10 +224,6 @@ extension NewTopClipsListViewController: ClipsCollectionLayoutDelegate {
             return width
         }
     }
-
-    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
-        return .zero
-    }
 }
 
 extension NewTopClipsListViewController: ClipsListAlertPresentable {}
@@ -217,20 +232,19 @@ extension NewTopClipsListViewController: ClipsListNavigationItemsProviderDelegat
     // MARK: - ClipsListNavigationItemsProviderDelegate
 
     func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
-        self.setEditing(true, animated: true)
+        self.presenter.setEditing(true)
     }
 
     func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider) {
-        self.setEditing(false, animated: true)
+        self.presenter.setEditing(false)
     }
 
     func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider) {
-        self.collectionView.selectAll(self)
+        self.presenter.selectAll()
     }
 
     func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
-        guard let indexPaths = self.collectionView.indexPathsForSelectedItems else { return }
-        indexPaths.forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        self.presenter.deselectAll()
     }
 }
 
@@ -254,14 +268,14 @@ extension NewTopClipsListViewController: ClipsListToolBarItemsProviderDelegate {
     }
 
     func shouldDelete(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.delete(self.selectedClips)
+        self.presenter.deleteSelectedClips()
     }
 
     func shouldHide(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.hide(self.selectedClips)
+        self.presenter.hideSelectedClips()
     }
 
     func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.unhide(self.selectedClips)
+        self.presenter.unhideSelectedClips()
     }
 }

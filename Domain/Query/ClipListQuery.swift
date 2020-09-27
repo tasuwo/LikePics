@@ -5,5 +5,5 @@
 import Combine
 
 public protocol ClipListQuery {
-    var clips: CurrentValueSubject<[ClipQuery], Error> { get }
+    var clips: CurrentValueSubject<[Clip], Error> { get }
 }
