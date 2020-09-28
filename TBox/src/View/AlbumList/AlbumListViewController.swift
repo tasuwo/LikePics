@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import TBoxUIKit
 import UIKit
@@ -173,7 +174,10 @@ extension AlbumListViewController: UICollectionViewDelegate {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
-        let viewController = self.factory.makeAlbumViewController(album: album)
+        guard let viewController = self.factory.makeAlbumViewController(albumId: album.identity) else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open AlbumViewController"))
+            return
+        }
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

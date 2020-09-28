@@ -30,12 +30,12 @@ protocol ViewControllerFactory {
     // MARK: Search
 
     func makeSearchEntryViewController() -> UIViewController
-    func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController
+    func makeSearchResultViewController(context: SearchContext) -> UIViewController?
 
     // MARK: Album
 
     func makeAlbumListViewController() -> UIViewController
-    func makeAlbumViewController(album: Album) -> UIViewController
+    func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController
 
     // MARK: Tag
@@ -140,15 +140,15 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.clipPreviewTransitionController))
     }
 
-    func makeSearchResultViewController(context: SearchContext, clips: [Clip]) -> UIViewController {
-        let clipsList = ClipsList(clips: clips,
-                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipStorage,
-                                  logger: self.logger)
-
-        let presenter = SearchResultPresenter(context: context,
-                                              clipsList: clipsList,
-                                              settingsStorage: self.userSettingsStorage)
+    func makeSearchResultViewController(context: SearchContext) -> UIViewController? {
+        guard let presenter = SearchResultPresenter(context: context,
+                                                    clipStorage: self.clipStorage,
+                                                    settingStorage: self.userSettingsStorage,
+                                                    queryService: self.clipStorage,
+                                                    logger: self.logger)
+        else {
+            return nil
+        }
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
@@ -168,14 +168,15 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAlbumViewController(album: Album) -> UIViewController {
-        let clipsList = ClipsList(clips: album.clips,
-                                  visibleHiddenClips: self.userSettingsStorage.fetch().showHiddenItems,
-                                  storage: self.clipStorage,
-                                  logger: self.logger)
-        let presenter = AlbumPresenter(album: album,
-                                       clipsList: clipsList,
-                                       settingsStorage: self.userSettingsStorage)
+    func makeAlbumViewController(albumId: Album.Identity) -> UIViewController? {
+        guard let presenter = AlbumPresenter(albumId: albumId,
+                                             clipStorage: self.clipStorage,
+                                             settingStorage: self.userSettingsStorage,
+                                             queryService: self.clipStorage,
+                                             logger: self.logger)
+        else {
+            return nil
+        }
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)

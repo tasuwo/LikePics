@@ -6,21 +6,32 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class SearchResultViewController: UIViewController, ClipsListViewController {
+class SearchResultViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Presenter = SearchResultPresenter
+
+    enum Section {
+        case main
+    }
 
     let factory: Factory
-    let presenter: Presenter
+    let presenter: SearchResultPresenterProtocol
     let navigationItemsProvider: ClipsListNavigationItemsProvider
     let toolBarItemsProvider: ClipsListToolBarItemsProvider
 
-    @IBOutlet var collectionView: ClipsCollectionView!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    internal var collectionView: ClipsCollectionView!
+
+    var selectedClips: [Clip] {
+        return self.collectionView.indexPathsForSelectedItems?
+            .compactMap { self.dataSource.itemIdentifier(for: $0) } ?? []
+    }
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: SearchResultPresenter,
+         presenter: SearchResultPresenterProtocol,
          navigationItemsProvider: ClipsListNavigationItemsProvider,
          toolBarItemsProvider: ClipsListToolBarItemsProvider)
     {
@@ -30,8 +41,6 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
         self.toolBarItemsProvider = toolBarItemsProvider
 
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -46,6 +55,8 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
+
+        self.presenter.setup(with: self)
     }
 
     // MARK: - Methods
@@ -57,8 +68,40 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     // MARK: CollectionView
 
     private func setupCollectionView() {
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
+        let layout = ClipCollectionLayout()
+        layout.delegate = self
+
+        self.collectionView = ClipsCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
+        self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.collectionView.delegate = self
+
+        self.view.addSubview(collectionView)
+
+        self.configureDataSouce()
+    }
+
+    private func configureDataSouce() {
+        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, clip -> UICollectionViewCell? in
+            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
+            guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
+
+            cell.primaryImage = {
+                guard let data = self?.presenter.getImageData(for: .primary, in: clip) else { return nil }
+                return UIImage(data: data)
+            }()
+            cell.secondaryImage = {
+                guard let data = self?.presenter.getImageData(for: .secondary, in: clip) else { return nil }
+                return UIImage(data: data)
+            }()
+            cell.tertiaryImage = {
+                guard let data = self?.presenter.getImageData(for: .tertiary, in: clip) else { return nil }
+                return UIImage(data: data)
+            }()
+
+            cell.visibleSelectedMark = self?.isEditing ?? false
+
+            return cell
         }
     }
 
@@ -83,8 +126,7 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.updateCollectionView(for: editing)
-
+        self.collectionView.setEditing(editing, animated: animated)
         self.navigationItemsProvider.setEditing(editing, animated: animated)
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
     }
@@ -93,27 +135,36 @@ class SearchResultViewController: UIViewController, ClipsListViewController {
 extension SearchResultViewController: SearchResultViewProtocol {
     // MARK: - SearchResultViewProtocol
 
-    func reloadList() {
-        self.collectionView.reloadData()
-    }
+    func apply(_ clips: [Clip]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(clips)
+        self.dataSource.apply(snapshot)
 
-    func applySelection(at indices: [Int]) {
-        self.collectionView.applySelection(at: indices.map { IndexPath(row: $0, section: 0) })
         self.navigationItemsProvider.onUpdateSelection()
     }
 
-    func applyEditing(_ editing: Bool) {
-        self.setEditing(editing, animated: true)
+    func apply(selection: Set<Clip>) {
+        let indexPaths = selection
+            .compactMap { self.dataSource.indexPath(for: $0) }
+        self.collectionView.applySelection(at: indexPaths)
+
+        self.navigationItemsProvider.onUpdateSelection()
     }
 
-    func presentPreviewView(for clip: Clip) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clip.identity) else { return }
+    func presentPreview(forClipId clipId: Clip.Identity) {
+        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
+    func setEditing(_ editing: Bool) {
+        self.setEditing(editing, animated: true)
+    }
+
     func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -121,8 +172,7 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var selectedIndexPath: IndexPath? {
-        guard let index = self.presenter.selectedIndices.first else { return nil }
-        return IndexPath(row: index, section: 0)
+        return self.collectionView.indexPathsForSelectedItems?.first
     }
 
     var clips: [Clip] {
@@ -134,47 +184,49 @@ extension SearchResultViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return self.collectionView(self, collectionView, shouldSelectItemAt: indexPath)
+        return true
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return self.collectionView(self, collectionView, shouldSelectItemAt: indexPath)
+        return true
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.collectionView(self, collectionView, didSelectItemAt: indexPath)
+        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.presenter.select(clipId: clip.identity)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        self.collectionView(self, collectionView, didDeselectItemAt: indexPath)
-    }
-}
-
-extension SearchResultViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return self.numberOfSections(self, in: collectionView)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.collectionView(self, collectionView, numberOfItemsInSection: section)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return self.collectionView(self, collectionView, cellForItemAt: indexPath)
+        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.presenter.deselect(clipId: clip.identity)
     }
 }
 
 extension SearchResultViewController: ClipsCollectionLayoutDelegate {
-    // MARK: - ClipsLayoutDelegate
+    // MARK: - ClipsCollectionLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        return self.collectionView(self, collectionView, photoHeightForWidth: width, atIndexPath: indexPath)
-    }
+        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return .zero }
 
-    func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
-        return self.collectionView(self, collectionView, heightForHeaderAtIndexPath: indexPath)
+        switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
+        case let (.some(item), .none, .none):
+            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+
+        case let (.some(item), .some, .none):
+            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+                + ClipsCollectionViewCell.secondaryStickingOutMargin
+
+        case let (.some(item), .some, .some):
+            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+                + ClipsCollectionViewCell.secondaryStickingOutMargin
+                + ClipsCollectionViewCell.tertiaryStickingOutMargin
+
+        case let (.some(item), _, _):
+            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+
+        default:
+            return width
+        }
     }
 }
 
@@ -204,14 +256,14 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
     // MARK: - ClipsListToolBarItemsProviderDelegate
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.presenter.selectedClips,
-                                                                               delegate: self)
+        guard !self.selectedClips.isEmpty else { return }
+        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.selectedClips, delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
-        let viewController = self.factory.makeAddingTagToClipViewController(clips: self.presenter.selectedClips,
-                                                                            delegate: self)
+        guard !self.selectedClips.isEmpty else { return }
+        let viewController = self.factory.makeAddingTagToClipViewController(clips: self.selectedClips, delegate: nil)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -220,33 +272,14 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
     }
 
     func shouldDelete(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.deleteAll()
+        self.presenter.deleteSelectedClips()
     }
 
     func shouldHide(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.hidesAll()
+        self.presenter.hideSelectedClips()
     }
 
     func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
-        self.presenter.unhidesAll()
-    }
-}
-
-extension SearchResultViewController: AddingClipsToAlbumPresenterDelegate {
-    // MARK: - AddingClipsToAlbumPresenterDelegate
-
-    func addingClipsToAlbumPresenter(_ presenter: AddingClipsToAlbumPresenter, didSucceededToAdding isSucceeded: Bool) {
-        guard isSucceeded else { return }
-        self.presenter.setEditing(false)
-    }
-}
-
-extension SearchResultViewController: AddingTagsToClipsPresenterDelegate {
-    // MARK: - AddingTagsToClipsPresenterDelegate
-
-    func addingTagsToClipsPresenter(_ presenter: AddingTagsToClipsPresenter, didSucceededToAddingTagsTo clip: Clip?) {
-        guard let clip = clip, let index = self.presenter.clips.firstIndex(where: { $0.url == clip.url }) else { return }
-        self.presenter.reload(at: index)
-        self.presenter.setEditing(false)
+        self.presenter.unhideSelectedClips()
     }
 }

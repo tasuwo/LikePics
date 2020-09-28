@@ -2,157 +2,238 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
+import Common
 import Domain
 
 protocol AlbumViewProtocol: AnyObject {
-    func reloadList()
-    func applySelection(at indices: [Int])
-    func applyEditing(_ editing: Bool)
-    func presentPreviewView(for clip: Clip)
+    func apply(_ clips: [Clip])
+    func apply(selection: Set<Clip>)
+    func presentPreview(forClipId clipId: Clip.Identity)
+    func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
 }
 
+protocol AlbumPresenterProtocol {
+    var album: Album { get }
+    var clips: [Clip] { get }
+
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
+
+    func setup(with view: AlbumViewProtocol)
+    func setEditing(_ editing: Bool)
+    func select(clipId: Clip.Identity)
+    func deselect(clipId: Clip.Identity)
+    func selectAll()
+    func deselectAll()
+    func deleteSelectedClips()
+    func hideSelectedClips()
+    func unhideSelectedClips()
+    func removeSelectedClipsFromAlbum()
+}
+
 class AlbumPresenter {
-    private var clipsList: ClipsListProtocol
-    weak var view: AlbumViewProtocol?
-    private let settingsStorage: UserSettingsStorageProtocol
+    private let clipStorage: ClipStorageProtocol
+    private let settingStorage: UserSettingsStorageProtocol
+    private let queryService: ClipQueryServiceProtocol
+    private let logger: TBoxLoggable
+
+    private var albumQuery: AlbumQuery
+    private var storage = Set<AnyCancellable>()
+
     private(set) var album: Album
+
+    private(set) var clips: [Clip] = [] {
+        didSet {
+            self.view?.apply(clips)
+        }
+    }
+
+    private var selectedClips: [Clip] {
+        return self.selections
+            .compactMap { selection in
+                return self.clips.first(where: { selection == $0.identity })
+            }
+    }
+
+    private var selections: Set<Clip.Identity> = .init() {
+        didSet {
+            self.view?.apply(selection: Set(self.selectedClips))
+        }
+    }
+
+    private var isEditing: Bool = false {
+        didSet {
+            self.selections = []
+            self.view?.setEditing(self.isEditing)
+        }
+    }
+
+    private weak var view: AlbumViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(album: Album, clipsList: ClipsListProtocol, settingsStorage: UserSettingsStorageProtocol) {
-        self.album = album
-        self.clipsList = clipsList
-        self.settingsStorage = settingsStorage
+    init?(albumId: Album.Identity,
+          clipStorage: ClipStorageProtocol,
+          settingStorage: UserSettingsStorageProtocol,
+          queryService: ClipQueryServiceProtocol,
+          logger: TBoxLoggable)
+    {
+        self.clipStorage = clipStorage
+        self.settingStorage = settingStorage
+        self.queryService = queryService
+        self.logger = logger
 
-        self.clipsList.set(delegate: self)
-        self.settingsStorage.add(observer: self)
-    }
+        switch queryService.queryAlbum(having: albumId) {
+        case let .success(query):
+            self.albumQuery = query
+            self.album = query.album.value
 
-    // MARK: - Methods
-
-    func removeFromAlbum() {
-        self.clipsList.removeSelectedClips(from: self.album)
-    }
-
-    func hidesAll() {
-        self.clipsList.hidesAll()
-    }
-
-    func unhidesAll() {
-        self.clipsList.unhidesAll()
-    }
-
-    func selectAll() {
-        self.clipsList.selectAll()
-    }
-
-    func deselectAll() {
-        self.clipsList.deselectAll()
-    }
-
-    func reload(at index: Int) {
-        self.clipsList.reload(at: index)
-    }
-
-    deinit {
-        self.settingsStorage.remove(observer: self)
-    }
-}
-
-extension AlbumPresenter: ClipsListDelegate {
-    // MARK: - ClipsListDelegate
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateClipsTo clips: [Clip]) {
-        DispatchQueue.main.async {
-            self.view?.reloadList()
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateSelectedIndicesTo indices: [Int]) {
-        DispatchQueue.main.async {
-            self.view?.applySelection(at: indices)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateEditingStateTo isEditing: Bool) {
-        DispatchQueue.main.async {
-            self.view?.applyEditing(isEditing)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didTapClip clip: Clip, at index: Int) {
-        DispatchQueue.main.async {
-            self.view?.presentPreviewView(for: clip)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToReadClipsWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtReadClips)\n(\(error.makeErrorCode())")
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToDeleteClipsWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToGetImageDataWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+        case let .failure(error):
+            logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
+            return nil
         }
     }
 }
 
-extension AlbumPresenter: ClipsListPresenterProtocol {
-    // MARK: - ClipsListPresenterProtocol
-
-    var clips: [Clip] {
-        self.clipsList.clips
-    }
-
-    var selectedClips: [Clip] {
-        self.clipsList.selectedClips
-    }
-
-    var selectedIndices: [Int] {
-        self.clipsList.selectedIndices
-    }
-
-    var isEditing: Bool {
-        self.clipsList.isEditing
-    }
+extension AlbumPresenter: AlbumPresenterProtocol {
+    // MARK: - AlbumPresenterProtocol
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        return self.clipsList.getImageData(for: layer, in: clip)
+        let nullableClipItem: ClipItem? = {
+            switch layer {
+            case .primary:
+                return clip.primaryItem
+
+            case .secondary:
+                return clip.secondaryItem
+
+            case .tertiary:
+                return clip.tertiaryItem
+            }
+        }()
+        guard let clipItem = nullableClipItem else { return nil }
+
+        switch self.clipStorage.readThumbnailData(of: clipItem) {
+        case let .success(data):
+            return data
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+            return nil
+        }
+    }
+
+    func setup(with view: AlbumViewProtocol) {
+        self.view = view
+        self.albumQuery.album
+            .assertNoFailure() // TODO:
+            .eraseToAnyPublisher()
+            .combineLatest(self.settingStorage.showHiddenItems)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TopClipsView."))
+            }, receiveValue: { [weak self] album, showHiddenItems in
+                guard let self = self else { return }
+
+                self.album = album
+
+                self.clips = album
+                    .clips
+                    .filter({ clip in
+                        guard showHiddenItems else { return !clip.isHidden }
+                        return true
+                    })
+                    .sorted(by: { $0.registeredDate > $1.registeredDate })
+
+                let newClips = Set(self.clips.map { $0.identity })
+                if !self.selections.isSubset(of: newClips) {
+                    self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
+                }
+            })
+            .store(in: &self.storage)
     }
 
     func setEditing(_ editing: Bool) {
-        self.clipsList.setEditing(editing)
+        self.isEditing = editing
     }
 
-    func select(at index: Int) {
-        self.clipsList.select(at: index)
+    func select(clipId: Clip.Identity) {
+        if self.isEditing {
+            self.selections.insert(clipId)
+        } else {
+            self.selections = Set([clipId])
+            self.view?.presentPreview(forClipId: clipId)
+        }
     }
 
-    func deselect(at index: Int) {
-        self.clipsList.deselect(at: index)
+    func selectAll() {
+        guard self.isEditing else { return }
+        self.selections = Set(self.clips.map { $0.identity })
     }
 
-    func deleteAll() {
-        self.clipsList.deleteSelectedClips()
+    func deselect(clipId: Clip.Identity) {
+        guard self.selections.contains(clipId) else { return }
+        self.selections.remove(clipId)
+    }
+
+    func deselectAll() {
+        self.selections = []
+    }
+
+    func deleteSelectedClips() {
+        if case let .failure(error) = self.clipStorage.delete(self.selectedClips) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func hideSelectedClips() {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func unhideSelectedClips() {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func removeSelectedClipsFromAlbum() {
+        if case let .failure(error) = self.clipStorage.update(self.album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
     }
 }
 
-extension AlbumPresenter: UserSettingsObserver {
-    // MARK: - UserSettingsObserver
+extension AlbumPresenter: ClipsListNavigationPresenterDataSource {
+    // MARK: - ClipsListNavigationPresenterDataSource
 
-    func onUpdated(to settings: UserSettings) {
-        self.clipsList.visibleHiddenClips = settings.showHiddenItems
+    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.clips.count
+    }
+
+    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.selections.count
     }
 }
 
-extension AlbumPresenter: ClipsListNavigationPresenterDataSource {}
-extension AlbumPresenter: ClipsListToolBarItemsPresenterDataSouce {}
+extension AlbumPresenter: ClipsListToolBarItemsPresenterDataSouce {
+    // MARK: - ClipsListToolBarItemsPresenterDataSouce
+
+    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {
+        return self.selections.count
+    }
+}

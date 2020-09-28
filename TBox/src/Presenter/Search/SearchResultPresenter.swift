@@ -2,172 +2,255 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
+import Common
 import Domain
 
 protocol SearchResultViewProtocol: AnyObject {
-    func reloadList()
-    func applySelection(at indices: [Int])
-    func applyEditing(_ editing: Bool)
-    func presentPreviewView(for clip: Clip)
+    func apply(_ clips: [Clip])
+    func apply(selection: Set<Clip>)
+    func presentPreview(forClipId clipId: Clip.Identity)
+    func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
 }
 
 enum SearchContext {
-    case keyword(keyword: String)
-    case tag(tagName: String)
-    case album(albumName: String)
+    case keywords([String])
+    case tag(Tag)
 
     var title: String {
         switch self {
-        case let .album(albumName: name):
-            return name
+        case let .keywords(value):
+            return value.joined(separator: ", ")
 
-        case let .keyword(keyword: keyword):
-            return keyword
-
-        case let .tag(tagName: tag):
-            return tag
+        case let .tag(value):
+            return value.name
         }
     }
+}
+
+protocol SearchResultPresenterProtocol {
+    var clips: [Clip] { get }
+    var context: SearchContext { get }
+
+    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
+
+    func setup(with view: SearchResultViewProtocol)
+    func setEditing(_ editing: Bool)
+    func select(clipId: Clip.Identity)
+    func deselect(clipId: Clip.Identity)
+    func selectAll()
+    func deselectAll()
+    func deleteSelectedClips()
+    func hideSelectedClips()
+    func unhideSelectedClips()
 }
 
 class SearchResultPresenter {
+    private let clipStorage: ClipStorageProtocol
+    private let settingStorage: UserSettingsStorageProtocol
+    private let queryService: ClipQueryServiceProtocol
+    private let logger: TBoxLoggable
+
+    private var clipsQuery: ClipListQuery
+    private var storage = Set<AnyCancellable>()
+
     let context: SearchContext
-    private let settingsStorage: UserSettingsStorageProtocol
-    private var clipsList: ClipsListProtocol
-    weak var view: SearchResultViewProtocol?
+
+    private(set) var clips: [Clip] = [] {
+        didSet {
+            self.view?.apply(clips)
+        }
+    }
+
+    private var selectedClips: [Clip] {
+        return self.selections
+            .compactMap { selection in
+                return self.clips.first(where: { selection == $0.identity })
+            }
+    }
+
+    private var selections: Set<Clip.Identity> = .init() {
+        didSet {
+            self.view?.apply(selection: Set(self.selectedClips))
+        }
+    }
+
+    private var isEditing: Bool = false {
+        didSet {
+            self.selections = []
+            self.view?.setEditing(self.isEditing)
+        }
+    }
+
+    private weak var view: SearchResultViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(context: SearchContext, clipsList: ClipsListProtocol, settingsStorage: UserSettingsStorageProtocol) {
+    init?(context: SearchContext,
+          clipStorage: ClipStorageProtocol,
+          settingStorage: UserSettingsStorageProtocol,
+          queryService: ClipQueryServiceProtocol,
+          logger: TBoxLoggable)
+    {
         self.context = context
-        self.clipsList = clipsList
-        self.settingsStorage = settingsStorage
+        self.clipStorage = clipStorage
+        self.settingStorage = settingStorage
+        self.queryService = queryService
+        self.logger = logger
 
-        self.clipsList.set(delegate: self)
-        self.settingsStorage.add(observer: self)
-    }
+        switch context {
+        case let .keywords(values):
+            switch queryService.queryClips(matchingKeywords: values) {
+            case let .success(query):
+                self.clipsQuery = query
 
-    // MARK: - Methods
+            case let .failure(error):
+                logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
+                return nil
+            }
 
-    func hidesAll() {
-        self.clipsList.hidesAll()
-    }
+        case let .tag(value):
+            switch queryService.queryClips(tagged: value) {
+            case let .success(query):
+                self.clipsQuery = query
 
-    func unhidesAll() {
-        self.clipsList.unhidesAll()
-    }
-
-    func selectAll() {
-        self.clipsList.selectAll()
-    }
-
-    func deselectAll() {
-        self.clipsList.deselectAll()
-    }
-
-    func reload(at index: Int) {
-        self.clipsList.reload(at: index)
-    }
-
-    deinit {
-        self.settingsStorage.remove(observer: self)
-    }
-}
-
-extension SearchResultPresenter: ClipsListDelegate {
-    // MARK: - ClipsListDelegate
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateClipsTo clips: [Clip]) {
-        DispatchQueue.main.async {
-            self.view?.reloadList()
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateSelectedIndicesTo indices: [Int]) {
-        DispatchQueue.main.async {
-            self.view?.applySelection(at: indices)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didUpdateEditingStateTo isEditing: Bool) {
-        DispatchQueue.main.async {
-            self.view?.applyEditing(isEditing)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, didTapClip clip: Clip, at index: Int) {
-        DispatchQueue.main.async {
-            self.view?.presentPreviewView(for: clip)
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToReadClipsWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtReadClips)\n(\(error.makeErrorCode())")
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToDeleteClipsWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
-        }
-    }
-
-    func clipsListProviding(_ list: ClipsListProtocol, failedToGetImageDataWith error: ClipStorageError) {
-        DispatchQueue.main.async {
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+            case let .failure(error):
+                logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
+                return nil
+            }
         }
     }
 }
 
-extension SearchResultPresenter: ClipsListPresenterProtocol {
-    // MARK: - ClipsListPresenterProtocol
-
-    var clips: [Clip] {
-        self.clipsList.clips
-    }
-
-    var selectedClips: [Clip] {
-        self.clipsList.selectedClips
-    }
-
-    var selectedIndices: [Int] {
-        self.clipsList.selectedIndices
-    }
-
-    var isEditing: Bool {
-        self.clipsList.isEditing
-    }
+extension SearchResultPresenter: SearchResultPresenterProtocol {
+    // MARK: - SearchResultPresenterProtocol
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        return self.clipsList.getImageData(for: layer, in: clip)
+        let nullableClipItem: ClipItem? = {
+            switch layer {
+            case .primary:
+                return clip.primaryItem
+
+            case .secondary:
+                return clip.secondaryItem
+
+            case .tertiary:
+                return clip.tertiaryItem
+            }
+        }()
+        guard let clipItem = nullableClipItem else { return nil }
+
+        switch self.clipStorage.readThumbnailData(of: clipItem) {
+        case let .success(data):
+            return data
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+            return nil
+        }
+    }
+
+    func setup(with view: SearchResultViewProtocol) {
+        self.view = view
+        self.clipsQuery.clips
+            .catch { _ -> AnyPublisher<[Clip], Never> in
+                return Just([Clip]()).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+            .combineLatest(self.settingStorage.showHiddenItems)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TopClipsView."))
+            }, receiveValue: { [weak self] clips, showHiddenItems in
+                guard let self = self else { return }
+
+                self.clips = clips
+                    .filter({ clip in
+                        guard showHiddenItems else { return !clip.isHidden }
+                        return true
+                    })
+                    .sorted(by: { $0.registeredDate > $1.registeredDate })
+
+                let newClips = Set(self.clips.map { $0.identity })
+                if !self.selections.isSubset(of: newClips) {
+                    self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
+                }
+            })
+            .store(in: &self.storage)
     }
 
     func setEditing(_ editing: Bool) {
-        self.clipsList.setEditing(editing)
+        self.isEditing = editing
     }
 
-    func select(at index: Int) {
-        self.clipsList.select(at: index)
+    func select(clipId: Clip.Identity) {
+        if self.isEditing {
+            self.selections.insert(clipId)
+        } else {
+            self.selections = Set([clipId])
+            self.view?.presentPreview(forClipId: clipId)
+        }
     }
 
-    func deselect(at index: Int) {
-        self.clipsList.deselect(at: index)
+    func selectAll() {
+        guard self.isEditing else { return }
+        self.selections = Set(self.clips.map { $0.identity })
     }
 
-    func deleteAll() {
-        self.clipsList.deleteSelectedClips()
+    func deselect(clipId: Clip.Identity) {
+        guard self.selections.contains(clipId) else { return }
+        self.selections.remove(clipId)
+    }
+
+    func deselectAll() {
+        self.selections = []
+    }
+
+    func deleteSelectedClips() {
+        if case let .failure(error) = self.clipStorage.delete(self.selectedClips) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func hideSelectedClips() {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func unhideSelectedClips() {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
     }
 }
 
-extension SearchResultPresenter: UserSettingsObserver {
-    // MARK: - UserSettingsObserver
+extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {
+    // MARK: - ClipsListNavigationPresenterDataSource
 
-    func onUpdated(to settings: UserSettings) {
-        self.clipsList.visibleHiddenClips = settings.showHiddenItems
+    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.clips.count
+    }
+
+    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+        return self.selections.count
     }
 }
 
-extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {}
-extension SearchResultPresenter: ClipsListToolBarItemsPresenterDataSouce {}
+extension SearchResultPresenter: ClipsListToolBarItemsPresenterDataSouce {
+    // MARK: - ClipsListToolBarItemsPresenterDataSouce
+
+    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {
+        return self.selections.count
+    }
+}

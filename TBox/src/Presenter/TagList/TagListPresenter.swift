@@ -8,7 +8,7 @@ import Domain
 
 protocol TagListViewProtocol: AnyObject {
     func apply(_ tags: [Tag])
-    func showSearchReult(for clips: [Clip], withContext: SearchContext)
+    func search(with context: SearchContext)
     func showErrorMessage(_ message: String)
     func endEditing()
 }
@@ -56,14 +56,7 @@ class TagListPresenter {
     }
 
     func select(_ tag: Tag) {
-        switch self.storage.searchClips(byTags: [tag.name]) {
-        case let .success(clips):
-            self.view?.showSearchReult(for: clips, withContext: .tag(tagName: tag.name))
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtSearchClip)\n\(error.makeErrorCode())")
-        }
+        self.view?.search(with: .tag(tag))
     }
 
     func delete(_ tags: [Tag]) {

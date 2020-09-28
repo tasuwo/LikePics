@@ -6,17 +6,17 @@ import Combine
 import Domain
 import RealmSwift
 
-class RealmClipsResultQuery {
+class RealmLinkingClipsQuery {
     private var token: NotificationToken?
-    private let results: Results<ClipObject>
+    private let results: LinkingObjects<ClipObject>
     private var subject: CurrentValueSubject<[Clip], Error>
 
     // MARK: - Lifecycle
 
-    init(results: Results<ClipObject>) {
+    init(results: LinkingObjects<ClipObject>) {
         self.results = results
         self.subject = .init(results.map({ Clip.make(by: $0) }))
-        self.token = self.results.observe { [weak self] (change: RealmCollectionChange<Results<ClipObject>>) in
+        self.token = self.results.observe { [weak self] (change: RealmCollectionChange<LinkingObjects<ClipObject>>) in
             switch change {
             case let .initial(results):
                 self?.subject.send(results.map({ Clip.make(by: $0) }))
@@ -35,7 +35,7 @@ class RealmClipsResultQuery {
     }
 }
 
-extension RealmClipsResultQuery: ClipListQuery {
+extension RealmLinkingClipsQuery: ClipListQuery {
     // MARK: - ClipListQuery
 
     var clips: CurrentValueSubject<[Clip], Error> {

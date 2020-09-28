@@ -6,6 +6,12 @@ import Combine
 import Common
 import Domain
 
+enum ThumbnailLayer {
+    case primary
+    case secondary
+    case tertiary
+}
+
 protocol NewTopClipsListViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)

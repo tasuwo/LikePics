@@ -165,8 +165,12 @@ extension TagListViewController: TagListViewProtocol {
         self.dataSource.apply(snapshot)
     }
 
-    func showSearchReult(for clips: [Clip], withContext context: SearchContext) {
-        self.show(self.factory.makeSearchResultViewController(context: context, clips: clips), sender: nil)
+    func search(with context: SearchContext) {
+        guard let viewController = self.factory.makeSearchResultViewController(context: context) else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
+            return
+        }
+        self.show(viewController, sender: nil)
     }
 
     func showErrorMessage(_ message: String) {

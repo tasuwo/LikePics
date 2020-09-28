@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import TBoxUIKit
 import UIKit
@@ -68,8 +69,12 @@ extension SearchEntryViewController: SearchEntryViewProtocol {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func showReuslt(_ clips: [Clip], withContext context: SearchContext) {
-        self.show(self.factory.makeSearchResultViewController(context: context, clips: clips), sender: nil)
+    func search(with context: SearchContext) {
+        guard let viewController = self.factory.makeSearchResultViewController(context: context) else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
+            return
+        }
+        self.show(viewController, sender: nil)
     }
 }
 

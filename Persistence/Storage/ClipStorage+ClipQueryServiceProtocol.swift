@@ -8,12 +8,12 @@ import RealmSwift
 extension ClipStorage: ClipQueryServiceProtocol {
     // MARK: - ClipQueryServiceProtocol
 
-    public func queryClip(having url: URL) -> Result<ClipQuery, ClipStorageError> {
+    public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }
 
-        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: url.absoluteString) else {
+        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: id.absoluteString) else {
             return .failure(.notFound)
         }
 
@@ -24,7 +24,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }
-        return .success(RealmClipListQuery(results: realm.objects(ClipObject.self)))
+        return .success(RealmClipsResultQuery(results: realm.objects(ClipObject.self)))
     }
 
     public func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError> {
@@ -42,7 +42,31 @@ extension ClipStorage: ClipQueryServiceProtocol {
         }
         let results = realm.objects(ClipObject.self).filter(filter)
 
-        return .success(RealmClipListQuery(results: results))
+        return .success(RealmClipsResultQuery(results: results))
+    }
+
+    public func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else {
+            return .failure(.internalError)
+        }
+
+        guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) else {
+            return .failure(.notFound)
+        }
+
+        return .success(RealmLinkingClipsQuery(results: tagObj.clips))
+    }
+
+    public func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else {
+            return .failure(.internalError)
+        }
+
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id) else {
+            return .failure(.notFound)
+        }
+
+        return .success(RealmAlbumQuery(object: album))
     }
 
     public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
