@@ -64,10 +64,10 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController? {
-        guard let presenter = NewTopClipsListPresenter(clipStorage: self.clipStorage,
-                                                       settingStorage: self.userSettingsStorage,
-                                                       queryService: self.clipStorage,
-                                                       logger: self.logger)
+        guard let presenter = TopClipsListPresenter(clipStorage: self.clipStorage,
+                                                    settingStorage: self.userSettingsStorage,
+                                                    queryService: self.clipStorage,
+                                                    logger: self.logger)
         else {
             return nil
         }
@@ -78,11 +78,11 @@ extension DependencyContainer: ViewControllerFactory {
         let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .top, dataSource: presenter)
         let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
 
-        let viewController = NewTopClipsListViewController(factory: self,
-                                                           presenter: presenter,
-                                                           clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
-                                                           navigationItemsProvider: navigationItemsProvider,
-                                                           toolBarItemsProvider: toolBarItemsProvider)
+        let viewController = TopClipsListViewController(factory: self,
+                                                        presenter: presenter,
+                                                        clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
+                                                        navigationItemsProvider: navigationItemsProvider,
+                                                        toolBarItemsProvider: toolBarItemsProvider)
 
         return UINavigationController(rootViewController: viewController)
     }

@@ -12,7 +12,7 @@ enum ThumbnailLayer {
     case tertiary
 }
 
-protocol NewTopClipsListViewProtocol: AnyObject {
+protocol TopClipsListViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
     func presentPreview(forClipId clipId: Clip.Identity)
@@ -20,12 +20,12 @@ protocol NewTopClipsListViewProtocol: AnyObject {
     func showErrorMessage(_ message: String)
 }
 
-protocol NewTopClipsListPresenterProtocol {
+protocol TopClipsListPresenterProtocol {
     var clips: [Clip] { get }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
 
-    func setup(with view: NewTopClipsListViewProtocol)
+    func setup(with view: TopClipsListViewProtocol)
     func setEditing(_ editing: Bool)
     func select(clipId: Clip.Identity)
     func deselect(clipId: Clip.Identity)
@@ -36,7 +36,7 @@ protocol NewTopClipsListPresenterProtocol {
     func unhideSelectedClips()
 }
 
-class NewTopClipsListPresenter {
+class TopClipsListPresenter {
     private let clipStorage: ClipStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let queryService: ClipQueryServiceProtocol
@@ -71,7 +71,7 @@ class NewTopClipsListPresenter {
         }
     }
 
-    private weak var view: NewTopClipsListViewProtocol?
+    private weak var view: TopClipsListViewProtocol?
 
     // MARK: - Lifecycle
 
@@ -96,8 +96,8 @@ class NewTopClipsListPresenter {
     }
 }
 
-extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
-    // MARK: - NewTopClipsListPresenterProtocol
+extension TopClipsListPresenter: TopClipsListPresenterProtocol {
+    // MARK: - TopClipsListPresenterProtocol
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
         let nullableClipItem: ClipItem? = {
@@ -125,7 +125,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
         }
     }
 
-    func setup(with view: NewTopClipsListViewProtocol) {
+    func setup(with view: TopClipsListViewProtocol) {
         self.view = view
         self.clipsQuery.clips
             .catch { _ -> AnyPublisher<[Clip], Never> in
@@ -208,7 +208,7 @@ extension NewTopClipsListPresenter: NewTopClipsListPresenterProtocol {
     }
 }
 
-extension NewTopClipsListPresenter: ClipsListNavigationPresenterDataSource {
+extension TopClipsListPresenter: ClipsListNavigationPresenterDataSource {
     // MARK: - ClipsListNavigationPresenterDataSource
 
     func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
@@ -220,7 +220,7 @@ extension NewTopClipsListPresenter: ClipsListNavigationPresenterDataSource {
     }
 }
 
-extension NewTopClipsListPresenter: ClipsListToolBarItemsPresenterDataSouce {
+extension TopClipsListPresenter: ClipsListToolBarItemsPresenterDataSouce {
     // MARK: - ClipsListToolBarItemsPresenterDataSouce
 
     func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {

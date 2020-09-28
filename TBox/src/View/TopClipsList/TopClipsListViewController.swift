@@ -7,7 +7,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class NewTopClipsListViewController: UIViewController {
+class TopClipsListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     enum Section {
@@ -15,7 +15,7 @@ class NewTopClipsListViewController: UIViewController {
     }
 
     private let factory: Factory
-    private let presenter: NewTopClipsListPresenterProtocol
+    private let presenter: TopClipsListPresenterProtocol
     private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
     private let navigationItemsProvider: ClipsListNavigationItemsProvider
     private let toolBarItemsProvider: ClipsListToolBarItemsProvider
@@ -33,7 +33,7 @@ class NewTopClipsListViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: NewTopClipsListPresenterProtocol,
+         presenter: TopClipsListPresenterProtocol,
          clipsListCollectionViewProvider: ClipsListCollectionViewProvider,
          navigationItemsProvider: ClipsListNavigationItemsProvider,
          toolBarItemsProvider: ClipsListToolBarItemsProvider)
@@ -111,8 +111,8 @@ class NewTopClipsListViewController: UIViewController {
     }
 }
 
-extension NewTopClipsListViewController: NewTopClipsListViewProtocol {
-    // MARK: - NewTopClipsListViewProtocol
+extension TopClipsListViewController: TopClipsListViewProtocol {
+    // MARK: - TopClipsListViewProtocol
 
     func apply(_ clips: [Clip]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
@@ -147,7 +147,7 @@ extension NewTopClipsListViewController: NewTopClipsListViewProtocol {
     }
 }
 
-extension NewTopClipsListViewController: ClipPreviewPresentingViewController {
+extension TopClipsListViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var selectedIndexPath: IndexPath? {
@@ -159,7 +159,7 @@ extension NewTopClipsListViewController: ClipPreviewPresentingViewController {
     }
 }
 
-extension NewTopClipsListViewController: ClipsListCollectionViewProviderDataSource {
+extension TopClipsListViewController: ClipsListCollectionViewProviderDataSource {
     // MARK: - ClipsListCollectionViewProviderDataSource
 
     func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool {
@@ -175,7 +175,7 @@ extension NewTopClipsListViewController: ClipsListCollectionViewProviderDataSour
     }
 }
 
-extension NewTopClipsListViewController: ClipsListCollectionViewProviderDelegate {
+extension TopClipsListViewController: ClipsListCollectionViewProviderDelegate {
     // MARK: - ClipsListCollectionViewProviderDelegate
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelectClip clipId: Clip.Identity) {
@@ -187,9 +187,9 @@ extension NewTopClipsListViewController: ClipsListCollectionViewProviderDelegate
     }
 }
 
-extension NewTopClipsListViewController: ClipsListAlertPresentable {}
+extension TopClipsListViewController: ClipsListAlertPresentable {}
 
-extension NewTopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
+extension TopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
     // MARK: - ClipsListNavigationItemsProviderDelegate
 
     func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
@@ -209,7 +209,7 @@ extension NewTopClipsListViewController: ClipsListNavigationItemsProviderDelegat
     }
 }
 
-extension NewTopClipsListViewController: ClipsListToolBarItemsProviderDelegate {
+extension TopClipsListViewController: ClipsListToolBarItemsProviderDelegate {
     // MARK: - ClipsListToolBarItemsProviderDelegate
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
