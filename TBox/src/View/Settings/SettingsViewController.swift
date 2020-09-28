@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import UIKit
 
 class SettingsViewController: UITableViewController {
@@ -11,6 +12,7 @@ class SettingsViewController: UITableViewController {
     var factory: Factory!
     // swiftlint:disable:next implicitly_unwrapped_optional
     var presenter: SettingsPresenter!
+    var cancellableBag: Set<AnyCancellable> = .init()
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!
 
@@ -19,12 +21,14 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.showHiddenItemsSwitch.isOn = self.presenter.shouldShowHiddenItems
+        self.presenter.shouldShowHiddenItems
+            .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: - IBActions
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {
-        self.presenter.shouldShowHiddenItems = sender.isOn
+        self.presenter.set(showHiddenItems: sender.isOn)
     }
 }

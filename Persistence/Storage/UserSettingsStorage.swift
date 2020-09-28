@@ -13,7 +13,6 @@ public class UserSettingsStorage {
 
     private let userDefaults = UserDefaults.standard
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Persistence.UserSettingStorage")
-    private var observers: [WeakContainer<UserSettingsObserver>] = []
 
     // MARK: - Lifecycle
 
@@ -24,21 +23,10 @@ public class UserSettingsStorage {
     private func setShowHiddenItemsNonAtomically(_ showHiddenItems: Bool) {
         guard self.fetchShowHiddenItemsNonAtomically() != showHiddenItems else { return }
         self.userDefaults.set(showHiddenItems, forKey: Key.showHiddenItems.rawValue)
-        self.notify(self.fetchUserSettingsNonAtomically())
     }
 
     private func fetchShowHiddenItemsNonAtomically() -> Bool {
         return self.userDefaults.userSettingsShowHiddenItems
-    }
-
-    private func fetchUserSettingsNonAtomically() -> UserSettings {
-        return UserSettings(showHiddenItems: self.fetchShowHiddenItemsNonAtomically())
-    }
-
-    private func notify(_ settings: UserSettings) {
-        DispatchQueue.global().async {
-            self.observers.forEach { $0.value?.onUpdated(to: settings) }
-        }
     }
 }
 
@@ -57,24 +45,7 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
             .eraseToAnyPublisher()
     }
 
-    public func add(observer: UserSettingsObserver) {
-        self.queue.sync {
-            self.observers.append(WeakContainer(value: observer))
-        }
-    }
-
-    public func remove(observer: UserSettingsObserver) {
-        self.queue.sync {
-            self.observers.removeAll(where: { $0.value === observer })
-            self.observers.removeAll(where: { $0.value == nil })
-        }
-    }
-
     public func set(showHiddenItems: Bool) {
         self.queue.sync { self.setShowHiddenItemsNonAtomically(showHiddenItems) }
-    }
-
-    public func fetch() -> UserSettings {
-        return self.queue.sync { return self.fetchUserSettingsNonAtomically() }
     }
 }
