@@ -33,9 +33,9 @@
   - [x] Album
 - [x] Previewから各種編集操作が行える
 - [x] 画像をDBではなくファイルシステム上に保存する
-- [ ] Reactive!!
+- [x] Reactive!!
   - [x] RealmとCombineとDiffableDataSourceを利用したリアクティブな画面を作る
-  - [ ] queryServiceは除去して、Clip群を表示する画面は共通化する
+  - [x] queryServiceは除去して、Clip群を表示する画面は共通化する
 - [ ] クリップ単体の編集
   - [ ] クリップからタグを削除できる
   - [ ] Infoからタグ追加ができる
