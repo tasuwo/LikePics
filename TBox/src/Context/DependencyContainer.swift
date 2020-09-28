@@ -80,6 +80,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewController = NewTopClipsListViewController(factory: self,
                                                            presenter: presenter,
+                                                           clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                                            navigationItemsProvider: navigationItemsProvider,
                                                            toolBarItemsProvider: toolBarItemsProvider)
 
@@ -158,6 +159,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         return SearchResultViewController(factory: self,
                                           presenter: presenter,
+                                          clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider)
     }
@@ -186,6 +188,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         return AlbumViewController(factory: self,
                                    presenter: presenter,
+                                   clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider)
     }

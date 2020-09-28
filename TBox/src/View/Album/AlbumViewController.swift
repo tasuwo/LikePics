@@ -13,10 +13,11 @@ class AlbumViewController: UIViewController {
         case main
     }
 
-    let factory: Factory
-    let presenter: AlbumPresenterProtocol
-    let navigationItemsProvider: ClipsListNavigationItemsProvider
-    let toolBarItemsProvider: ClipsListToolBarItemsProvider
+    private let factory: Factory
+    private let presenter: AlbumPresenterProtocol
+    private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
+    private let navigationItemsProvider: ClipsListNavigationItemsProvider
+    private let toolBarItemsProvider: ClipsListToolBarItemsProvider
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
@@ -33,11 +34,13 @@ class AlbumViewController: UIViewController {
 
     init(factory: Factory,
          presenter: AlbumPresenterProtocol,
+         clipsListCollectionViewProvider: ClipsListCollectionViewProvider,
          navigationItemsProvider: ClipsListNavigationItemsProvider,
          toolBarItemsProvider: ClipsListToolBarItemsProvider)
     {
         self.factory = factory
         self.presenter = presenter
+        self.clipsListCollectionViewProvider = clipsListCollectionViewProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
 
@@ -68,41 +71,21 @@ class AlbumViewController: UIViewController {
     // MARK: CollectionView
 
     private func setupCollectionView() {
+        self.clipsListCollectionViewProvider.delegate = self
+        self.clipsListCollectionViewProvider.dataSource = self
+
         let layout = ClipCollectionLayout()
-        layout.delegate = self
+        layout.delegate = self.clipsListCollectionViewProvider
 
         self.collectionView = ClipsCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
-        self.collectionView.delegate = self
+        self.collectionView.delegate = self.clipsListCollectionViewProvider
 
         self.view.addSubview(collectionView)
 
-        self.configureDataSouce()
-    }
-
-    private func configureDataSouce() {
-        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, clip -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
-            guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
-
-            cell.primaryImage = {
-                guard let data = self?.presenter.getImageData(for: .primary, in: clip) else { return nil }
-                return UIImage(data: data)
-            }()
-            cell.secondaryImage = {
-                guard let data = self?.presenter.getImageData(for: .secondary, in: clip) else { return nil }
-                return UIImage(data: data)
-            }()
-            cell.tertiaryImage = {
-                guard let data = self?.presenter.getImageData(for: .tertiary, in: clip) else { return nil }
-                return UIImage(data: data)
-            }()
-
-            cell.visibleSelectedMark = self?.isEditing ?? false
-
-            return cell
-        }
+        self.dataSource = .init(collectionView: self.collectionView,
+                                cellProvider: self.clipsListCollectionViewProvider.provideCell(collectionView:indexPath:clip:))
     }
 
     // MARK: NavigationBar
@@ -180,53 +163,31 @@ extension AlbumViewController: ClipPreviewPresentingViewController {
     }
 }
 
-extension AlbumViewController: UICollectionViewDelegate {
-    // MARK: - UICollectionViewDelegate
+extension AlbumViewController: ClipsListCollectionViewProviderDataSource {
+    // MARK: - ClipsListCollectionViewProviderDataSource
 
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+    func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool {
+        return self.isEditing
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageDataAt layer: ThumbnailLayer, in clip: Clip) -> Data? {
+        return self.presenter.getImageData(for: layer, in: clip)
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.presenter.select(clipId: clip.identity)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.presenter.deselect(clipId: clip.identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip? {
+        return self.dataSource.itemIdentifier(for: indexPath)
     }
 }
 
-extension AlbumViewController: ClipsCollectionLayoutDelegate {
-    // MARK: - ClipsCollectionLayoutDelegate
+extension AlbumViewController: ClipsListCollectionViewProviderDelegate {
+    // MARK: - ClipsListCollectionViewProviderDelegate
 
-    func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return .zero }
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelectClip clipId: Clip.Identity) {
+        self.presenter.select(clipId: clipId)
+    }
 
-        switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
-        case let (.some(item), .none, .none):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
-
-        case let (.some(item), .some, .none):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
-                + ClipsCollectionViewCell.secondaryStickingOutMargin
-
-        case let (.some(item), .some, .some):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
-                + ClipsCollectionViewCell.secondaryStickingOutMargin
-                + ClipsCollectionViewCell.tertiaryStickingOutMargin
-
-        case let (.some(item), _, _):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
-
-        default:
-            return width
-        }
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselectClip clipId: Clip.Identity) {
+        self.presenter.deselect(clipId: clipId)
     }
 }
 
