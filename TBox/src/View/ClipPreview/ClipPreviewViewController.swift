@@ -28,9 +28,9 @@ class ClipPreviewViewController: UINavigationController {
 extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
-    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView? {
+    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         self.view.layoutIfNeeded()
-        return self.pageViewController?.currentViewController?.pageView
+        return self.pageViewController?.currentViewController?.previewView
     }
 
     func currentIndex(_ animator: ClipPreviewAnimator) -> Int? {
@@ -40,7 +40,7 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
         self.view.layoutIfNeeded()
-        guard let pageView = self.pageViewController?.currentViewController?.pageView else {
+        guard let pageView = self.pageViewController?.currentViewController?.previewView else {
             return .zero
         }
         return pageView.convert(pageView.imageViewFrame, to: containerView)
@@ -50,14 +50,14 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
 extension ClipPreviewViewController: ClipInformationPresentingAnimatorDataSource {
     // MARK: - ClipInformationPresentingAnimatorDataSource
 
-    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewPageView? {
+    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
         self.view.layoutIfNeeded()
-        return self.pageViewController?.currentViewController?.pageView
+        return self.pageViewController?.currentViewController?.previewView
     }
 
     func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
         self.view.layoutIfNeeded()
-        guard let pageView = self.pageViewController?.currentViewController?.pageView else {
+        guard let pageView = self.pageViewController?.currentViewController?.previewView else {
             return .zero
         }
         return pageView.convert(pageView.imageViewFrame, to: containerView)

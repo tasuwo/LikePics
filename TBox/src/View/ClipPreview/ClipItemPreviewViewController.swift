@@ -16,7 +16,7 @@ class ClipItemPreviewViewController: UIViewController {
         self.presenter.item
     }
 
-    @IBOutlet var pageView: ClipPreviewPageView!
+    @IBOutlet var previewView: ClipPreviewView!
 
     // MARK: - Lifecycle
 
@@ -37,14 +37,14 @@ class ClipItemPreviewViewController: UIViewController {
         super.viewDidLoad()
 
         if let data = self.presenter.loadImageData() {
-            self.pageView.image = UIImage(data: data)
+            self.previewView.image = UIImage(data: data)
         }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.pageView.shouldRecalculateInitialScale()
+        self.previewView.shouldRecalculateInitialScale()
     }
 }
 

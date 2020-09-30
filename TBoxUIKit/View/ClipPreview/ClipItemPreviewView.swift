@@ -5,10 +5,10 @@
 import UIKit
 
 public protocol ClipPreviewPageViewDelegate: AnyObject {
-    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewPageView)
+    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView)
 }
 
-public class ClipPreviewPageView: UIView {
+public class ClipPreviewView: UIView {
     public var image: UIImage? {
         get {
             self.imageView.image
@@ -98,7 +98,7 @@ public class ClipPreviewPageView: UIView {
     }
 
     private func setupFromNib() {
-        Bundle(for: type(of: self)).loadNibNamed("ClipPreviewPageView", owner: self, options: nil)
+        Bundle(for: type(of: self)).loadNibNamed("ClipPreviewView", owner: self, options: nil)
         self.baseView.frame = self.bounds
         self.addSubview(self.baseView)
         self.sendSubviewToBack(self.baseView)
@@ -167,7 +167,7 @@ public class ClipPreviewPageView: UIView {
     }
 }
 
-extension ClipPreviewPageView: UIScrollViewDelegate {
+extension ClipPreviewView: UIScrollViewDelegate {
     // MARK: - UIScrollViewDelegate
 
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {

@@ -5,7 +5,7 @@
 import UIKit
 
 public protocol ClipInformationPresentingAnimatorDataSource {
-    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewPageView?
+    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView?
 
     func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect
 }

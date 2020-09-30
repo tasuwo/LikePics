@@ -127,13 +127,13 @@ class ClipPreviewPageViewController: UIPageViewController {
     func didPan(_ sender: UIPanGestureRecognizer) {
         switch (sender.state, self.destination) {
         case (.began, .back):
-            self.currentViewController?.pageView.isScrollEnabled = false
+            self.currentViewController?.previewView.isScrollEnabled = false
             self.previewTransitionController.beginInteractiveTransition()
             self.dismiss(animated: true, completion: nil)
 
         case (.ended, .back):
             if self.previewTransitionController.isInteractiveTransitioning {
-                self.currentViewController?.pageView.isScrollEnabled = true
+                self.currentViewController?.previewView.isScrollEnabled = true
                 self.previewTransitionController.endInteractiveTransition()
                 self.previewTransitionController.didPan(sender: sender)
             }
@@ -194,8 +194,8 @@ extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed, let viewController = self.currentViewController else { return }
 
-        self.tapGestureRecignizer.require(toFail: viewController.pageView.zoomGestureRecognizer)
-        viewController.pageView.delegate = self
+        self.tapGestureRecignizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        viewController.previewView.delegate = self
     }
 }
 
@@ -218,7 +218,7 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
-            guard self.currentViewController?.pageView.isMinimumZoomScale == true else { return false }
+            guard self.currentViewController?.previewView.isMinimumZoomScale == true else { return false }
             if gestureRecognizer.velocity(in: self.view).y > 0 {
                 self.destination = .back
             } else {
@@ -230,8 +230,8 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if otherGestureRecognizer == self.currentViewController?.pageView.panGestureRecognizer {
-            if self.currentViewController?.pageView.contentOffset.y == 0 {
+        if otherGestureRecognizer == self.currentViewController?.previewView.panGestureRecognizer {
+            if self.currentViewController?.previewView.contentOffset.y == 0 {
                 return true
             }
         }
@@ -247,8 +247,8 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
             self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
                 guard let self = self, completed, let viewController = self.currentViewController else { return }
 
-                self.tapGestureRecignizer.require(toFail: viewController.pageView.zoomGestureRecognizer)
-                viewController.pageView.delegate = self
+                self.tapGestureRecignizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+                viewController.previewView.delegate = self
             })
         }
         self.barItemsProvider.onUpdateClip()
@@ -283,7 +283,7 @@ extension ClipPreviewPageViewController: ClipTargetFinderDelegate {
 extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     // MARK: - ClipPreviewPageViewDelegate
 
-    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewPageView) {
+    func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView) {
         self.isFullscreen = true
     }
 }
@@ -292,12 +292,12 @@ extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     // MARK: - ClipInformationViewDataSource
 
     func previewImage(_ view: ClipInformationView) -> UIImage? {
-        guard let pageView = self.currentViewController?.pageView else { return nil }
+        guard let pageView = self.currentViewController?.previewView else { return nil }
         return pageView.image
     }
 
     func previewPageBounds(_ view: ClipInformationView) -> CGRect {
-        guard let pageView = self.currentViewController?.pageView else { return .zero }
+        guard let pageView = self.currentViewController?.previewView else { return .zero }
         return pageView.bounds
     }
 }

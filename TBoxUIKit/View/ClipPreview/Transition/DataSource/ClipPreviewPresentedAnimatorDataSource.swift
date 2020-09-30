@@ -5,7 +5,7 @@
 import UIKit
 
 public protocol ClipPreviewPresentedAnimatorDataSource {
-    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewPageView?
+    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView?
 
     func currentIndex(_ animator: ClipPreviewAnimator) -> Int?
 

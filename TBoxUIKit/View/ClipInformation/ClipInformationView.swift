@@ -140,7 +140,7 @@ public class ClipInformationView: UIView {
             return .zero
         }
         let bounds = dataSource.previewPageBounds(self)
-        let scale = ClipPreviewPageView.calcScaleToFit(image, on: bounds.size)
+        let scale = ClipPreviewView.calcScaleToFit(image, on: bounds.size)
         let resizedImageSize = image.size.scaled(by: scale)
         return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
                                     y: -resizedImageSize.height + self.safeAreaInsets.top + 80),
