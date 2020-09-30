@@ -45,7 +45,7 @@ class TagListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupCollecitonView()
+        self.setupCollectionView()
         self.setupAppearance()
         self.updateNavigationBar(for: self.isEditing)
 
@@ -60,27 +60,17 @@ class TagListViewController: UIViewController {
 
     // MARK: Collection View
 
-    private func setupCollecitonView() {
-        self.collectionView = TagCollectionView(frame: self.view.bounds, collectionViewLayout: TagCollectionLayout())
+    private func setupCollectionView() {
+        self.collectionView = TagCollectionView(frame: self.view.bounds,
+                                                collectionViewLayout: TagCollectionView.createLayout())
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
         self.view.addSubview(self.collectionView)
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
-        self.configureDataSouce()
-    }
-
-    private func configureDataSouce() {
-        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, tag -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
-            guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
-
-            cell.title = tag.name
-            cell.displayMode = self?.isEditing == true ? .deletion : .normal
-
-            return cell
-        }
+        self.dataSource = .init(collectionView: self.collectionView,
+                                cellProvider: TagCollectionView.cellProvider(dataSource: self))
     }
 
     // MARK: NavigationBar
@@ -184,6 +174,10 @@ extension TagListViewController: TagListViewProtocol {
     }
 }
 
+extension TagListViewController: TagCollectionViewDataSource {
+    // MARK: - TagCollectionViewDataSource
+}
+
 extension TagListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
@@ -203,23 +197,5 @@ extension TagListViewController: UICollectionViewDelegate {
         if !self.isEditing {
             self.presenter.select(tag)
         }
-    }
-}
-
-extension TagListViewController: UICollectionViewDelegateFlowLayout {
-    // MARK: - UICollectionViewDelegateFlowLayout
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else { return .zero }
-        let preferredSize = TagCollectionViewCell.preferredSize(for: tag.name)
-        return CGSize(width: fmin(preferredSize.width, collectionView.frame.width - 16 * 2), height: preferredSize.height)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .init(top: 16, left: 16, bottom: 16, right: 16)
     }
 }

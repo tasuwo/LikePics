@@ -3,6 +3,7 @@
 ///
 
 @testable import Common
+import Domain
 @testable import Persistence
 import RealmSwift
 @testable import TBoxUIKit
