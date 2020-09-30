@@ -47,12 +47,11 @@ protocol SearchResultPresenterProtocol {
 }
 
 class SearchResultPresenter {
+    private var query: ClipListQuery
     private let clipStorage: ClipStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
-    private var clipsQuery: ClipListQuery
     private var storage = Set<AnyCancellable>()
 
     let context: SearchContext
@@ -87,39 +86,17 @@ class SearchResultPresenter {
 
     // MARK: - Lifecycle
 
-    init?(context: SearchContext,
-          clipStorage: ClipStorageProtocol,
-          settingStorage: UserSettingsStorageProtocol,
-          queryService: ClipQueryServiceProtocol,
-          logger: TBoxLoggable)
+    init(context: SearchContext,
+         query: ClipListQuery,
+         clipStorage: ClipStorageProtocol,
+         settingStorage: UserSettingsStorageProtocol,
+         logger: TBoxLoggable)
     {
         self.context = context
+        self.query = query
         self.clipStorage = clipStorage
         self.settingStorage = settingStorage
-        self.queryService = queryService
         self.logger = logger
-
-        switch context {
-        case let .keywords(values):
-            switch queryService.queryClips(matchingKeywords: values) {
-            case let .success(query):
-                self.clipsQuery = query
-
-            case let .failure(error):
-                logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
-                return nil
-            }
-
-        case let .tag(value):
-            switch queryService.queryClips(tagged: value) {
-            case let .success(query):
-                self.clipsQuery = query
-
-            case let .failure(error):
-                logger.write(ConsoleLog(level: .error, message: "Failed to search clips. (code: \(error.rawValue))"))
-                return nil
-            }
-        }
     }
 }
 
@@ -154,7 +131,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func setup(with view: SearchResultViewProtocol) {
         self.view = view
-        self.clipsQuery.clips
+        self.query.clips
             .catch { _ -> AnyPublisher<[Clip], Never> in
                 return Just([Clip]()).eraseToAnyPublisher()
             }

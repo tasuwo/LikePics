@@ -37,12 +37,11 @@ protocol TopClipsListPresenterProtocol {
 }
 
 class TopClipsListPresenter {
+    private let query: ClipListQuery
     private let clipStorage: ClipStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
-    private var clipsQuery: ClipListQuery
     private var storage = Set<AnyCancellable>()
 
     private(set) var clips: [Clip] = [] {
@@ -75,24 +74,15 @@ class TopClipsListPresenter {
 
     // MARK: - Lifecycle
 
-    init?(clipStorage: ClipStorageProtocol,
-          settingStorage: UserSettingsStorageProtocol,
-          queryService: ClipQueryServiceProtocol,
-          logger: TBoxLoggable)
+    init(query: ClipListQuery,
+         clipStorage: ClipStorageProtocol,
+         settingStorage: UserSettingsStorageProtocol,
+         logger: TBoxLoggable)
     {
+        self.query = query
         self.clipStorage = clipStorage
         self.settingStorage = settingStorage
-        self.queryService = queryService
         self.logger = logger
-
-        switch queryService.queryAllClips() {
-        case let .success(query):
-            self.clipsQuery = query
-
-        case let .failure(error):
-            logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            return nil
-        }
     }
 }
 
@@ -127,7 +117,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
 
     func setup(with view: TopClipsListViewProtocol) {
         self.view = view
-        self.clipsQuery.clips
+        self.query.clips
             .catch { _ -> AnyPublisher<[Clip], Never> in
                 return Just([Clip]()).eraseToAnyPublisher()
             }

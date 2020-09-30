@@ -33,12 +33,11 @@ protocol AlbumPresenterProtocol {
 }
 
 class AlbumPresenter {
+    private let query: AlbumQuery
     private let clipStorage: ClipStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
-    private var albumQuery: AlbumQuery
     private var storage = Set<AnyCancellable>()
 
     private(set) var album: Album
@@ -73,26 +72,16 @@ class AlbumPresenter {
 
     // MARK: - Lifecycle
 
-    init?(albumId: Album.Identity,
-          clipStorage: ClipStorageProtocol,
-          settingStorage: UserSettingsStorageProtocol,
-          queryService: ClipQueryServiceProtocol,
-          logger: TBoxLoggable)
+    init(query: AlbumQuery,
+         clipStorage: ClipStorageProtocol,
+         settingStorage: UserSettingsStorageProtocol,
+         logger: TBoxLoggable)
     {
+        self.query = query
+        self.album = query.album.value
         self.clipStorage = clipStorage
         self.settingStorage = settingStorage
-        self.queryService = queryService
         self.logger = logger
-
-        switch queryService.queryAlbum(having: albumId) {
-        case let .success(query):
-            self.albumQuery = query
-            self.album = query.album.value
-
-        case let .failure(error):
-            logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            return nil
-        }
     }
 }
 
@@ -127,7 +116,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func setup(with view: AlbumViewProtocol) {
         self.view = view
-        self.albumQuery.album
+        self.query.album
             .assertNoFailure() // TODO:
             .eraseToAnyPublisher()
             .combineLatest(self.settingStorage.showHiddenItems)

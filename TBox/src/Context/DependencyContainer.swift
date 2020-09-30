@@ -64,13 +64,22 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipsListViewController() -> UIViewController? {
-        guard let presenter = TopClipsListPresenter(clipStorage: self.clipStorage,
-                                                    settingStorage: self.userSettingsStorage,
-                                                    queryService: self.clipStorage,
-                                                    logger: self.logger)
-        else {
+        let query: ClipListQuery
+        switch self.clipStorage.queryAllClips() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open TopClipsListView. (\(error.rawValue))
+            """))
             return nil
         }
+
+        let presenter = TopClipsListPresenter(query: query,
+                                              clipStorage: self.clipStorage,
+                                              settingStorage: self.userSettingsStorage,
+                                              logger: self.logger)
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
@@ -88,13 +97,21 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController? {
-        guard let presenter = ClipPreviewPagePresenter(clipId: clipId,
-                                                       storage: self.clipStorage,
-                                                       queryService: self.clipStorage,
-                                                       logger: self.logger)
-        else {
+        let query: ClipQuery
+        switch self.clipStorage.queryClip(having: clipId) {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipPreviewView for clip having clip id \(clipId). (\(error.rawValue))
+            """))
             return nil
         }
+
+        let presenter = ClipPreviewPagePresenter(query: query,
+                                                 storage: self.clipStorage,
+                                                 logger: self.logger)
 
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
         let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
@@ -142,14 +159,38 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchResultViewController(context: SearchContext) -> UIViewController? {
-        guard let presenter = SearchResultPresenter(context: context,
-                                                    clipStorage: self.clipStorage,
-                                                    settingStorage: self.userSettingsStorage,
-                                                    queryService: self.clipStorage,
-                                                    logger: self.logger)
-        else {
-            return nil
+        let query: ClipListQuery
+        switch context {
+        case let .keywords(values):
+            switch self.clipStorage.queryClips(matchingKeywords: values) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to open SearchResultView for keywords \(values). (\(error.rawValue))
+                """))
+                return nil
+            }
+
+        case let .tag(value):
+            switch self.clipStorage.queryClips(tagged: value) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to open SearchResultView for tag \(value). (\(error.rawValue))
+                """))
+                return nil
+            }
         }
+
+        let presenter = SearchResultPresenter(context: context,
+                                              query: query,
+                                              clipStorage: self.clipStorage,
+                                              settingStorage: self.userSettingsStorage,
+                                              logger: self.logger)
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
@@ -171,14 +212,22 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController? {
-        guard let presenter = AlbumPresenter(albumId: albumId,
-                                             clipStorage: self.clipStorage,
-                                             settingStorage: self.userSettingsStorage,
-                                             queryService: self.clipStorage,
-                                             logger: self.logger)
-        else {
+        let query: AlbumQuery
+        switch self.clipStorage.queryAlbum(having: albumId) {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open AlbumView for album having id \(albumId). (\(error.rawValue))
+            """))
             return nil
         }
+
+        let presenter = AlbumPresenter(query: query,
+                                       clipStorage: self.clipStorage,
+                                       settingStorage: self.userSettingsStorage,
+                                       logger: self.logger)
 
         let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)

@@ -13,12 +13,10 @@ protocol ClipPreviewPageViewProtocol: AnyObject {
 }
 
 class ClipPreviewPagePresenter {
-    private let clipId: Clip.Identity
+    private let query: ClipQuery
     private let storage: ClipStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
-    private var clipQuery: ClipQuery
     private var cancellable: AnyCancellable?
 
     private(set) var clip: Clip {
@@ -31,31 +29,17 @@ class ClipPreviewPagePresenter {
 
     // MARK: - Lifecycle
 
-    init?(clipId: Clip.Identity,
-          storage: ClipStorageProtocol,
-          queryService: ClipQueryServiceProtocol,
-          logger: TBoxLoggable)
-    {
-        self.clipId = clipId
+    init(query: ClipQuery, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+        self.query = query
+        self.clip = query.clip.value
         self.storage = storage
-        self.queryService = queryService
         self.logger = logger
-
-        switch queryService.queryClip(having: clipId) {
-        case let .success(query):
-            self.clipQuery = query
-            self.clip = query.clip.value
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read clip for preview page. (code: \(error.rawValue))"))
-            return nil
-        }
     }
 
     // MARK: - Methods
 
     func setup() {
-        self.cancellable = self.clipQuery
+        self.cancellable = self.query
             .clip
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
