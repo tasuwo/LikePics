@@ -17,7 +17,7 @@ protocol ViewControllerFactory {
     // MARK: Preview
 
     func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController
+    func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController?
 
     // MARK: Information
 
@@ -129,9 +129,26 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(clip: Clip, item: ClipItem) -> ClipItemPreviewViewController {
-        let presenter = ClipItemPreviewPresenter(clip: clip, item: item, storage: self.clipStorage, logger: self.logger)
+    func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
+        let query: ClipQuery
+        switch self.clipStorage.queryClip(having: clipId) {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipItemPreviewView for clip having clip id \(clipId), item id \(itemId). (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = ClipItemPreviewPresenter(query: query,
+                                                 itemId: itemId,
+                                                 storage: self.clipStorage,
+                                                 logger: self.logger)
+
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
+
         return viewController
     }
 

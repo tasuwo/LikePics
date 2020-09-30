@@ -62,9 +62,9 @@ class ClipPreviewPagePresenter {
         }
     }
 
-    func deleteClipItem(at index: Int) {
-        guard self.clip.items.indices.contains(index) else { return }
-        if case let .failure(error) = self.storage.delete(self.clip.items[index]) {
+    func deleteClipItem(having itemId: ClipItem.Identity) {
+        guard let item = self.clip.items.first(where: { $0.identity == itemId }) else { return }
+        if case let .failure(error) = self.storage.delete(item) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip item. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtDeleteClipItem)\n\(error.makeErrorCode())")
         }

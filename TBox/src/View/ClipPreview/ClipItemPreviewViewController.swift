@@ -12,8 +12,8 @@ class ClipItemPreviewViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipItemPreviewPresenter
 
-    var clipItem: ClipItem {
-        self.presenter.item
+    var itemId: ClipItem.Identity {
+        return self.presenter.itemId
     }
 
     @IBOutlet var previewView: ClipPreviewView!
@@ -36,8 +36,15 @@ class ClipItemPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let data = self.presenter.loadImageData() {
+        if let data = self.presenter.readThumbnailImageData() {
             self.previewView.image = UIImage(data: data)
+        }
+        DispatchQueue.global().async { [weak self] in
+            if let data = self?.presenter.readImageData() {
+                DispatchQueue.main.async {
+                    self?.previewView.image = UIImage(data: data)
+                }
+            }
         }
     }
 

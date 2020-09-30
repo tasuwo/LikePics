@@ -26,7 +26,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
     // swiftlint:disable:next implicitly_unwrapped_optional
-    private var tapGestureRecignizer: UITapGestureRecognizer!
+    private var tapGestureRecognizer: UITapGestureRecognizer!
 
     private var isFullscreen = false {
         didSet {
@@ -118,9 +118,9 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.panGestureRecognizer.delegate = self
         self.view.addGestureRecognizer(self.panGestureRecognizer)
 
-        self.tapGestureRecignizer = UITapGestureRecognizer(target: self, action: #selector(self.didtap(_:)))
-        self.tapGestureRecignizer.numberOfTapsRequired = 1
-        self.view.addGestureRecognizer(self.tapGestureRecignizer)
+        self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTap(_:)))
+        self.tapGestureRecognizer.numberOfTapsRequired = 1
+        self.view.addGestureRecognizer(self.tapGestureRecognizer)
     }
 
     @objc
@@ -170,7 +170,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     @objc
-    func didtap(_ sender: UITapGestureRecognizer) {
+    func didTap(_ sender: UITapGestureRecognizer) {
         self.isFullscreen = !self.isFullscreen
     }
 
@@ -178,13 +178,13 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
-        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0 == viewController.clipItem }) else { return nil }
+        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
         return currentIndex
     }
 
     private func makeViewController(at index: Int) -> UIViewController? {
         guard self.presenter.clip.items.indices.contains(index) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(clip: self.presenter.clip, item: self.presenter.clip.items[index])
+        return self.factory.makeClipItemPreviewViewController(clipId: self.presenter.clip.identity, itemId: self.presenter.clip.items[index].identity)
     }
 }
 
@@ -194,7 +194,7 @@ extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed, let viewController = self.currentViewController else { return }
 
-        self.tapGestureRecignizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
     }
 }
@@ -247,7 +247,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
             self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
                 guard let self = self, completed, let viewController = self.currentViewController else { return }
 
-                self.tapGestureRecignizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+                self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
                 viewController.previewView.delegate = self
             })
         }
@@ -332,12 +332,8 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        guard let item = self.currentViewController?.clipItem,
-            let index = self.presenter.clip.items.firstIndex(where: { $0.clipIndex == item.clipIndex })
-        else {
-            return
-        }
-        self.presenter.deleteClipItem(at: index)
+        guard let clipId = self.currentViewController?.itemId else { return }
+        self.presenter.deleteClipItem(having: clipId)
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
