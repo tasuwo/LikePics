@@ -302,7 +302,9 @@ extension ClipStorage: ClipStorageProtocol {
 
             do {
                 try realm.write {
-                    clipObj.tags.append(tagObj)
+                    if !clipObj.tags.contains(tagObj) {
+                        clipObj.tags.append(tagObj)
+                    }
                     clipObj.updatedAt = Date()
                 }
                 return .success(.make(by: clipObj))
@@ -392,7 +394,9 @@ extension ClipStorage: ClipStorageProtocol {
                 try realm.write {
                     for clipObj in clipObjs {
                         for tagObj in tagObjs {
-                            clipObj.tags.append(tagObj)
+                            if !clipObj.tags.contains(tagObj) {
+                                clipObj.tags.append(tagObj)
+                            }
                         }
                         clipObj.updatedAt = Date()
                     }
@@ -433,7 +437,9 @@ extension ClipStorage: ClipStorageProtocol {
                     album.updatedAt = Date()
 
                     for clip in clips {
-                        album.clips.append(clip)
+                        if !album.clips.contains(clip) {
+                            album.clips.append(clip)
+                        }
                     }
                 }
                 return .success(())
