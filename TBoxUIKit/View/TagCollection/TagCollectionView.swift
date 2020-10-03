@@ -42,29 +42,25 @@ public class TagCollectionView: UICollectionView {
         }
     }
 
-    public static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { section, _ -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                                  heightDimension: .fractionalHeight(1.0))
+    public static func createLayoutSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
+                                              heightDimension: .fractionalHeight(1.0))
 
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: .fixed(8), bottom: nil)
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: .fixed(8), bottom: nil)
 
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .absolute(32))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(16),
-                                                              top: .fixed(8),
-                                                              trailing: .fixed(16),
-                                                              bottom: nil)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .absolute(32))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(16),
+                                                          top: .fixed(8),
+                                                          trailing: .fixed(16),
+                                                          bottom: nil)
 
-            let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0)
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0)
 
-            return section
-        }
-
-        return layout
+        return section
     }
 
     private func registerCell() {

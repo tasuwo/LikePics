@@ -62,7 +62,7 @@ class TagListViewController: UIViewController {
 
     private func setupCollectionView() {
         self.collectionView = TagCollectionView(frame: self.view.bounds,
-                                                collectionViewLayout: TagCollectionView.createLayout())
+                                                collectionViewLayout: self.createLayout())
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
         self.view.addSubview(self.collectionView)
@@ -71,6 +71,13 @@ class TagListViewController: UIViewController {
         self.collectionView.allowsMultipleSelection = false
         self.dataSource = .init(collectionView: self.collectionView,
                                 cellProvider: TagCollectionView.cellProvider(dataSource: self))
+    }
+
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
+            return TagCollectionView.createLayoutSection()
+        }
+        return layout
     }
 
     // MARK: NavigationBar

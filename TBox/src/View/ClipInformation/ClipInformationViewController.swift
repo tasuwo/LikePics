@@ -42,9 +42,7 @@ class ClipInformationViewController: UIViewController {
 
         self.informationView.delegate = self
         self.informationView.dataSource = self.dataSource
-        self.informationView.siteUrl = self.presenter.clip.url.absoluteString
-        self.informationView.imageUrl = self.presenter.item.imageUrl.absoluteString
-        self.informationView.tags = self.presenter.clip.tags
+        self.informationView.info = .init(clip: self.presenter.clip, item: self.presenter.item)
     }
 
     // MARK: - Methods

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,12 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClipInformationView" customModule="TBoxUIKit" customModuleProvider="target">
             <connections>
                 <outlet property="baseView" destination="dT8-rF-trS" id="ZCc-6J-XMP"/>
-                <outlet property="imageUrlButton" destination="9aa-JW-Ipf" id="f5e-za-bVt"/>
-                <outlet property="imageUrlTitleLabel" destination="KCH-bV-adn" id="vTU-bG-cOn"/>
-                <outlet property="scrollView" destination="Zgj-XF-oX4" id="ljA-SA-oxD"/>
-                <outlet property="siteUrlButton" destination="d0V-T7-SMg" id="9Iq-hu-JE1"/>
-                <outlet property="siteUrlTitleLabel" destination="ozz-Bf-ooU" id="681-Id-yvd"/>
-                <outlet property="tagCollectionView" destination="RyR-D3-QmU" id="2Oe-YB-DQS"/>
+                <outlet property="collectionView" destination="rCS-VG-Qzi" id="mqI-Qt-Kjo"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -24,116 +20,25 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zgj-XF-oX4">
-                    <rect key="frame" x="0.0" y="84" width="414" height="778"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="W2t-xT-TpH">
-                            <rect key="frame" x="12" y="12" width="390" height="525.5"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZj-hP-WYs" userLabel="Spacer">
-                                    <rect key="frame" x="0.0" y="0.0" width="390" height="40"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="xu9-tH-aHw"/>
-                                    </constraints>
-                                </view>
-                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="300" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="RyR-D3-QmU" customClass="TagCollectionView" customModule="TBoxUIKit" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="40" width="390" height="300"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="01b-fb-jtG">
-                                        <size key="itemSize" width="128" height="128"/>
-                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    </collectionViewFlowLayout>
-                                    <connections>
-                                        <outlet property="dataSource" destination="-1" id="zHY-Nt-kHa"/>
-                                        <outlet property="delegate" destination="-1" id="7lI-7N-r7L"/>
-                                    </connections>
-                                </collectionView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y0D-tl-vzk" userLabel="Spacer">
-                                    <rect key="frame" x="0.0" y="340" width="390" height="12"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="12" id="9cU-eU-ZsU"/>
-                                    </constraints>
-                                </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="情報" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K2J-W5-azd">
-                                    <rect key="frame" x="0.0" y="352" width="390" height="33.5"/>
-                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="28"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bmh-3A-gNn" userLabel="Site Url Label Container">
-                                    <rect key="frame" x="0.0" y="385.5" width="390" height="40"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Site Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozz-Bf-ooU">
-                                            <rect key="frame" x="0.0" y="15.5" width="390" height="20.5"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstItem="ozz-Bf-ooU" firstAttribute="centerX" secondItem="bmh-3A-gNn" secondAttribute="centerX" id="3pv-uF-aPK"/>
-                                        <constraint firstAttribute="bottom" secondItem="ozz-Bf-ooU" secondAttribute="bottom" constant="4" id="Pne-sw-xgp"/>
-                                        <constraint firstItem="ozz-Bf-ooU" firstAttribute="width" secondItem="bmh-3A-gNn" secondAttribute="width" id="b63-f7-NvB"/>
-                                        <constraint firstAttribute="height" constant="40" id="xh0-FW-Tnf"/>
-                                    </constraints>
-                                </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0V-T7-SMg" customClass="MultilineUIButton" customModule="TBoxUIKit" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="425.5" width="390" height="30"/>
-                                    <connections>
-                                        <action selector="didTapSiteUrl:" destination="-1" eventType="touchUpInside" id="y15-ZF-Liy"/>
-                                    </connections>
-                                </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gfa-0q-ny1" userLabel="Image Url Label Container">
-                                    <rect key="frame" x="0.0" y="455.5" width="390" height="40"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image Url" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCH-bV-adn">
-                                            <rect key="frame" x="0.0" y="15.5" width="390" height="20.5"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstItem="KCH-bV-adn" firstAttribute="centerX" secondItem="Gfa-0q-ny1" secondAttribute="centerX" id="EhJ-NJ-JPq"/>
-                                        <constraint firstAttribute="bottom" secondItem="KCH-bV-adn" secondAttribute="bottom" constant="4" id="FDJ-Oc-FYE"/>
-                                        <constraint firstItem="KCH-bV-adn" firstAttribute="width" secondItem="Gfa-0q-ny1" secondAttribute="width" id="Js3-BI-JZJ"/>
-                                        <constraint firstAttribute="height" constant="40" id="tc5-qO-Ehh"/>
-                                    </constraints>
-                                </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aa-JW-Ipf" customClass="MultilineUIButton" customModule="TBoxUIKit" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="495.5" width="390" height="30"/>
-                                    <connections>
-                                        <action selector="didTapImageUrl:" destination="-1" eventType="touchUpInside" id="MRi-bC-pcu"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                        </stackView>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="W2t-xT-TpH" firstAttribute="bottom" secondItem="Wvy-d8-3SY" secondAttribute="bottom" constant="12" id="2QP-cw-mIU"/>
-                        <constraint firstItem="W2t-xT-TpH" firstAttribute="trailing" secondItem="Wvy-d8-3SY" secondAttribute="trailing" constant="-12" id="OvD-Wh-a4N"/>
-                        <constraint firstItem="Wvy-d8-3SY" firstAttribute="top" secondItem="W2t-xT-TpH" secondAttribute="top" constant="-12" id="WVg-vs-gdo"/>
-                        <constraint firstItem="Wvy-d8-3SY" firstAttribute="leading" secondItem="W2t-xT-TpH" secondAttribute="leading" constant="-12" id="dtX-Vk-PuX"/>
-                        <constraint firstItem="W2t-xT-TpH" firstAttribute="width" secondItem="uTW-cc-o0Z" secondAttribute="width" constant="-24" id="nqD-R0-VAX"/>
-                    </constraints>
-                    <viewLayoutGuide key="contentLayoutGuide" id="Wvy-d8-3SY"/>
-                    <viewLayoutGuide key="frameLayoutGuide" id="uTW-cc-o0Z"/>
-                </scrollView>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rCS-VG-Qzi">
+                    <rect key="frame" x="0.0" y="124" width="414" height="772"/>
+                    <color key="backgroundColor" name="background"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="UQq-Dx-TI4">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="5WW-MI-Snk"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="Zgj-XF-oX4" firstAttribute="top" secondItem="5WW-MI-Snk" secondAttribute="top" constant="40" id="2C6-CZ-PZQ"/>
-                <constraint firstItem="Zgj-XF-oX4" firstAttribute="leading" secondItem="5WW-MI-Snk" secondAttribute="leading" id="7Ct-Gf-qqS"/>
-                <constraint firstItem="5WW-MI-Snk" firstAttribute="trailing" secondItem="Zgj-XF-oX4" secondAttribute="trailing" id="7HD-0p-vKZ"/>
-                <constraint firstItem="5WW-MI-Snk" firstAttribute="bottom" secondItem="Zgj-XF-oX4" secondAttribute="bottom" id="CQC-ar-iFG"/>
+                <constraint firstItem="rCS-VG-Qzi" firstAttribute="top" secondItem="5WW-MI-Snk" secondAttribute="top" constant="80" id="DcG-nW-dkN"/>
+                <constraint firstAttribute="bottom" secondItem="rCS-VG-Qzi" secondAttribute="bottom" id="FnE-HW-uwZ"/>
+                <constraint firstItem="5WW-MI-Snk" firstAttribute="trailing" secondItem="rCS-VG-Qzi" secondAttribute="trailing" id="dSV-y8-71U"/>
+                <constraint firstItem="rCS-VG-Qzi" firstAttribute="leading" secondItem="5WW-MI-Snk" secondAttribute="leading" id="qSj-Q3-ycf"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="5WW-MI-Snk"/>
             <point key="canvasLocation" x="-74" y="-48"/>
         </view>
     </objects>

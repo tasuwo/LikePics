@@ -2,59 +2,35 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 import WebKit
 
-public protocol ClipInformationViewDataSource: AnyObject {
-    func previewImage(_ view: ClipInformationView) -> UIImage?
-    func previewPageBounds(_ view: ClipInformationView) -> CGRect
-}
-
-public protocol ClipInformationViewDelegate: AnyObject {
-    func clipInformationView(_ view: ClipInformationView, didSelectTag name: String)
-    func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
-    func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL)
-}
-
 public class ClipInformationView: UIView {
-    public var tags: [String] = [] {
+    public typealias Factory = ClipInformationLayoutFactory
+
+    public var info: Factory.Information? {
         didSet {
-            self.tagCollectionView.reloadData()
-        }
-    }
-
-    public var siteUrl: String? {
-        get {
-            return self.siteUrlButton.titleLabel?.text
-        }
-        set {
-            self.siteUrlButton.setTitle(newValue, for: .normal)
-        }
-    }
-
-    public var imageUrl: String? {
-        get {
-            return self.imageUrlButton.titleLabel?.text
-        }
-        set {
-            self.imageUrlButton.setTitle(newValue, for: .normal)
+            guard let info = self.info else { return }
+            let snapshot = Factory.makeSnapshot(for: info)
+            self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
         }
     }
 
     public var panGestureRecognizer: UIPanGestureRecognizer {
-        self.scrollView.panGestureRecognizer
+        self.collectionView.panGestureRecognizer
     }
 
     public var contentOffSet: CGPoint {
-        self.scrollView.contentOffset
+        self.collectionView.contentOffset
     }
 
     public var isScrollEnabled: Bool {
         get {
-            return self.scrollView.isScrollEnabled
+            return self.collectionView.isScrollEnabled
         }
         set {
-            self.scrollView.isScrollEnabled = newValue
+            self.collectionView.isScrollEnabled = newValue
         }
     }
 
@@ -69,15 +45,11 @@ public class ClipInformationView: UIView {
 
     // swiftlint:disable implicitly_unwrapped_optional superfluous_disable_command
     var imageView: UIImageView!
+    private var collectionViewDataSource: Factory.DataSource!
     // swiftlint:enable implicitly_unwrapped_optional superfluous_disable_command
 
     @IBOutlet var baseView: UIView!
-    @IBOutlet var tagCollectionView: TagCollectionView!
-    @IBOutlet var siteUrlButton: UIButton!
-    @IBOutlet var imageUrlButton: UIButton!
-    @IBOutlet var siteUrlTitleLabel: UILabel!
-    @IBOutlet var imageUrlTitleLabel: UILabel!
-    @IBOutlet var scrollView: UIScrollView!
+    @IBOutlet var collectionView: UICollectionView!
 
     // MARK: - Lifecycle
 
@@ -86,6 +58,7 @@ public class ClipInformationView: UIView {
 
         self.setupFromNib()
         self.setupAppearance()
+        self.setupCollectionView()
     }
 
     public required init?(coder: NSCoder) {
@@ -93,7 +66,12 @@ public class ClipInformationView: UIView {
 
         self.setupFromNib()
         self.setupAppearance()
+        self.setupCollectionView()
     }
+
+    // MARK: - Methods
+
+    // MARK: - IBActions
 
     @IBAction func didTapSiteUrl(_ sender: UIButton) {
         guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
@@ -120,16 +98,21 @@ public class ClipInformationView: UIView {
     }
 
     private func setupAppearance() {
-        self.siteUrlTitleLabel.text = L10n.clipInformationViewSiteUrlTitle
-        self.imageUrlTitleLabel.text = L10n.clipInformationViewImageUrlTitle
-
-        self.siteUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
-        self.imageUrlButton.addInteraction(UIContextMenuInteraction(delegate: self))
-
         self.imageView = UIImageView(frame: .init(origin: .zero, size: .zero))
         self.imageView.contentMode = .scaleAspectFit
         self.baseView.addSubview(self.imageView)
     }
+
+    // MARK: Collection View
+
+    private func setupCollectionView() {
+        self.collectionView.collectionViewLayout = Factory.createLayout()
+        Factory.registerCells(to: self.collectionView)
+        self.collectionView.delegate = self
+        self.collectionViewDataSource = Factory.makeDataSource(for: self.collectionView)
+    }
+
+    // MARK: Image View
 
     private func updateImageViewFrame() {
         self.imageView.frame = self.calcInitialFrame()
@@ -160,49 +143,14 @@ extension ClipInformationView: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard self.tags.indices.contains(indexPath.row) else { return }
-        self.delegate?.clipInformationView(self, didSelectTag: self.tags[indexPath.row])
-    }
-}
+        guard let item = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+        switch item {
+        case let .tag(value):
+            self.delegate?.clipInformationView(self, didSelectTag: value.name)
 
-extension ClipInformationView: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.tags.count
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
-        guard self.tags.indices.contains(indexPath.row) else { return dequeuedCell }
-
-        cell.title = self.tags[indexPath.row]
-        cell.displayMode = .normal
-
-        return cell
-    }
-}
-
-extension ClipInformationView: UICollectionViewDelegateFlowLayout {
-    // MARK: - UICollectionViewDelegateFlowLayout
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard self.tags.indices.contains(indexPath.row) else { return .zero }
-        let preferredSize = TagCollectionViewCell.preferredSize(for: self.tags[indexPath.row])
-        return CGSize(width: fmin(preferredSize.width, collectionView.frame.width), height: preferredSize.height)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return .init(top: 16, left: 0, bottom: 16, right: 0)
+        case .row:
+            break
+        }
     }
 }
 

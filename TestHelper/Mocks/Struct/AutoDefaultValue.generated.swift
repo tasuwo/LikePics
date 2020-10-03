@@ -28,7 +28,7 @@ extension Clip {
         url: URL = URL(string: "https://xxx.xxxx.xx")!,
         description: String? = nil,
         items: [ClipItem] = [],
-        tags: [String] = [],
+        tags: [Tag] = [],
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)

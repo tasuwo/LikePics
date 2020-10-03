@@ -8,7 +8,7 @@ public struct Clip: Equatable {
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
-    public let tags: [String]
+    public let tags: [Tag]
     public let isHidden: Bool
     public let registeredDate: Date
     public let updatedDate: Date
@@ -30,7 +30,7 @@ public struct Clip: Equatable {
 
     // MARK: - Lifecycle
 
-    public init(url: URL, description: String?, items: [ClipItem], tags: [String], isHidden: Bool, registeredDate: Date, updatedDate: Date) {
+    public init(url: URL, description: String?, items: [ClipItem], tags: [Tag], isHidden: Bool, registeredDate: Date, updatedDate: Date) {
         self.url = url
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
@@ -42,7 +42,7 @@ public struct Clip: Equatable {
 
     // MARK: - Methods
 
-    public func updating(tags: [String]) -> Self {
+    public func updating(tags: [Tag]) -> Self {
         return .init(url: self.url,
                      description: self.description,
                      items: self.items,

@@ -28,7 +28,7 @@ extension Clip: Persistable {
         return .init(url: URL(string: managedObject.url)!,
                      description: managedObject.descriptionText,
                      items: items,
-                     tags: managedObject.tags.map { $0.name },
+                     tags: managedObject.tags.map { Tag.make(by: $0) },
                      isHidden: managedObject.isHidden,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
