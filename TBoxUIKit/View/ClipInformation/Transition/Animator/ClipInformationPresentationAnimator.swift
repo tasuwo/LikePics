@@ -50,6 +50,7 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
         CATransaction.setCompletionBlock {
             targetInformationView.imageView.isHidden = false
             selectedImageView.isHidden = false
+            from.view.alpha = 1.0
             animatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }

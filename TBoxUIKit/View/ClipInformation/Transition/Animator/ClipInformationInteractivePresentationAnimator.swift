@@ -180,9 +180,12 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
             return
         }
 
-        let initialImageFrame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+        // HACK: Set new frame for updating the view to current orientation.
+        to.view.frame = from.view.frame
 
         containerView.insertSubview(to.view, belowSubview: from.view)
+
+        let initialImageFrame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
 
         let animatingView = UIView()
         animatingView.frame = initialImageFrame
