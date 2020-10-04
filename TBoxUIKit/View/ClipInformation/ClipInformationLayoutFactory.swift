@@ -201,7 +201,26 @@ public enum ClipInformationLayoutFactory {
     static func makeDataSource(for collectionView: UICollectionView,
                                configureUrlLink: @escaping (UIButton) -> Void) -> DataSource
     {
-        let tagCellProvider: DataSource.CellProvider = { collectionView, indexPath, item -> UICollectionViewCell? in
+        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
+            switch Section(rawValue: indexPath.section) {
+            case .clipTag:
+                return self.tagCellProvider()(collectionView, indexPath, item)
+
+            case .clipInformation, .clipItemInformation:
+                return self.infoCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
+
+            case .none:
+                return nil
+            }
+        }
+
+        dataSource.supplementaryViewProvider = self.headerProvider()
+
+        return dataSource
+    }
+
+    private static func tagCellProvider() -> DataSource.CellProvider {
+        return { collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
 
@@ -212,8 +231,10 @@ public enum ClipInformationLayoutFactory {
 
             return cell
         }
+    }
 
-        let infoCellProvider: DataSource.CellProvider = { collectionView, indexPath, item -> UICollectionViewCell? in
+    private static func infoCellProvider(configureUrlLink: @escaping (UIButton) -> Void) -> DataSource.CellProvider {
+        return { collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
             guard let cell = dequeuedCell as? ClipInformationCell else { return dequeuedCell }
@@ -240,21 +261,10 @@ public enum ClipInformationLayoutFactory {
 
             return cell
         }
+    }
 
-        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
-            switch Section(rawValue: indexPath.section) {
-            case .clipTag:
-                return tagCellProvider(collectionView, indexPath, item)
-
-            case .clipInformation, .clipItemInformation:
-                return infoCellProvider(collectionView, indexPath, item)
-
-            case .none:
-                return nil
-            }
-        }
-
-        let headerProvider: UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
+    private static func headerProvider() -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
+        return { collectionView, kind, indexPath -> UICollectionReusableView? in
             let identifier: String
             switch ElementKind(rawValue: kind) {
             case .layoutHeader:
@@ -293,10 +303,6 @@ public enum ClipInformationLayoutFactory {
 
             return header
         }
-
-        dataSource.supplementaryViewProvider = headerProvider
-
-        return dataSource
     }
 
     // MARK: Snapshot
