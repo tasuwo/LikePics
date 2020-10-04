@@ -114,9 +114,18 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipInformationView(_ view: ClipInformationView, didSelectTag name: String) {
-        // TODO:
-        print(name)
+    func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag) {
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipInformationViewAlertForDeleteTagMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipInformationViewAlertForDeleteTagAction
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.presenter.removeTagFromClip(tag)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL) {

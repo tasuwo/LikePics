@@ -72,6 +72,9 @@
 "clip_item_preview_view_error_at_delete_clip" = "クリップの削除に失敗しました";
 "clip_item_preview_view_error_at_delete_clip_item" = "画像の削除に失敗しました";
 
+"clip_information_view_alert_for_delete_tag_message" = "このタグを削除しますか？\nクリップ及び画像は削除されません";
+"clip_information_view_alert_for_delete_tag_action" = "削除";
+
 "adding_clips_to_album_view_title" = "アルバムへ追加";
 "adding_clips_to_album_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
 "adding_clips_to_album_view_error_at_update_album" = "アルバムの更新に失敗しました";

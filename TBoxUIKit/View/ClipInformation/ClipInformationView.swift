@@ -148,7 +148,7 @@ extension ClipInformationView: UICollectionViewDelegate {
         guard let item = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
         switch item {
         case let .tag(value):
-            self.delegate?.clipInformationView(self, didSelectTag: value.name)
+            self.delegate?.clipInformationView(self, didSelectTag: value)
 
         case .row, .empty:
             break

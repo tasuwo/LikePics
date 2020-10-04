@@ -68,4 +68,11 @@ class ClipInformationPresenter {
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
     }
+
+    func removeTagFromClip(_ tag: Tag) {
+        if case let .failure(error) = self.storage.update([self.clip], byDeletingTags: [tag]) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
 }
