@@ -5,7 +5,6 @@
 import UIKit
 
 public protocol ClipInformationSectionHeaderDelegate: AnyObject {
-    func didTapTrash(_ header: ClipInformationSectionHeader)
     func didTapAdd(_ header: ClipInformationSectionHeader)
 }
 
@@ -34,26 +33,12 @@ public class ClipInformationSectionHeader: UICollectionReusableView {
         }
     }
 
-    public var visibleDeleteButton: Bool {
-        get {
-            !self.deleteButtonContainer.isHidden
-        }
-        set {
-            self.deleteButtonContainer.isHidden = !newValue
-        }
-    }
-
     weak var delegate: ClipInformationSectionHeaderDelegate?
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var addButtonContainer: UIView!
-    @IBOutlet var deleteButtonContainer: UIView!
 
     // MARK: - IBAction
-
-    @IBAction func didTapTrash(_ sender: UIButton) {
-        self.delegate?.didTapTrash(self)
-    }
 
     @IBAction func didTapAdd(_ sender: UIButton) {
         self.delegate?.didTapAdd(self)
@@ -72,6 +57,5 @@ public class ClipInformationSectionHeader: UICollectionReusableView {
         self.titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 
         self.visibleAddButton = false
-        self.visibleDeleteButton = false
     }
 }

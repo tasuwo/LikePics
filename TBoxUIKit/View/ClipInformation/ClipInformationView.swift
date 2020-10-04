@@ -205,10 +205,6 @@ extension ClipInformationView: ClipInformationSectionHeaderDelegate {
         }
         self.delegate?.didTapAddTagButton(self)
     }
-
-    public func didTapTrash(_ header: ClipInformationSectionHeader) {
-        print(#function)
-    }
 }
 
 private extension CGSize {

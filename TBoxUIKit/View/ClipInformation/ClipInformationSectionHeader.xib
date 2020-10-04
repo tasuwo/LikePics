@@ -23,13 +23,13 @@
                             <rect key="frame" x="20" y="10" width="384" height="50.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rKO-Gf-mTz" userLabel="Title">
-                                    <rect key="frame" x="0.0" y="0.0" width="280" height="50.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="332" height="50.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S5j-MH-BVH" userLabel="Container">
-                                    <rect key="frame" x="288" y="0.0" width="44" height="50.5"/>
+                                    <rect key="frame" x="340" y="0.0" width="44" height="50.5"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6SJ-GK-y0S" userLabel="Add">
                                             <rect key="frame" x="0.0" y="3.5" width="44" height="44"/>
@@ -50,30 +50,6 @@
                                         <constraint firstAttribute="width" secondItem="6SJ-GK-y0S" secondAttribute="width" id="1wa-qg-8r2"/>
                                         <constraint firstItem="6SJ-GK-y0S" firstAttribute="centerX" secondItem="S5j-MH-BVH" secondAttribute="centerX" id="3VD-MV-ph0"/>
                                         <constraint firstItem="6SJ-GK-y0S" firstAttribute="centerY" secondItem="S5j-MH-BVH" secondAttribute="centerY" id="loR-Qj-GkO"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YRm-Or-AeD" userLabel="Container">
-                                    <rect key="frame" x="340" y="0.0" width="44" height="50.5"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIb-zg-Bmt" userLabel="Delete">
-                                            <rect key="frame" x="0.0" y="3.5" width="44" height="44"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="GIb-zg-Bmt" secondAttribute="height" multiplier="1:1" id="erI-7b-vNp"/>
-                                                <constraint firstAttribute="width" constant="44" id="pCs-vB-2ge"/>
-                                            </constraints>
-                                            <state key="normal">
-                                                <imageReference key="image" image="trash" catalog="system" symbolScale="large"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="didTapTrash:" destination="Zxc-QE-eUY" eventType="touchUpInside" id="kro-KV-nOX"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstItem="GIb-zg-Bmt" firstAttribute="centerX" secondItem="YRm-Or-AeD" secondAttribute="centerX" id="7Sx-jB-jdc"/>
-                                        <constraint firstAttribute="width" secondItem="GIb-zg-Bmt" secondAttribute="width" id="FFy-ou-zFi"/>
-                                        <constraint firstItem="GIb-zg-Bmt" firstAttribute="centerY" secondItem="YRm-Or-AeD" secondAttribute="centerY" id="gOL-wZ-kHY"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -107,7 +83,6 @@
             </constraints>
             <connections>
                 <outlet property="addButtonContainer" destination="S5j-MH-BVH" id="3ui-us-Kxt"/>
-                <outlet property="deleteButtonContainer" destination="YRm-Or-AeD" id="ZRV-OK-Ty8"/>
                 <outlet property="titleLabel" destination="rKO-Gf-mTz" id="mij-Ak-Xq8"/>
             </connections>
             <point key="canvasLocation" x="-704.34782608695662" y="-16.40625"/>
@@ -115,7 +90,6 @@
     </objects>
     <resources>
         <image name="plus" catalog="system" width="128" height="113"/>
-        <image name="trash" catalog="system" width="121" height="128"/>
         <systemColor name="separatorColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

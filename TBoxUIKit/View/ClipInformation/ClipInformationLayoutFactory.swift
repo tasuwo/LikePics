@@ -229,6 +229,7 @@ public enum ClipInformationLayoutFactory {
             guard case let .tag(tag) = item else { return cell }
 
             cell.title = tag.name
+            cell.displayMode = .normal
 
             return cell
         }
