@@ -62,6 +62,12 @@ class TopClipsListViewController: UIViewController {
         self.presenter.setup(with: self)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.presenter.viewDidAppear()
+    }
+
     // MARK: - Methods
 
     // MARK: CollectionView
@@ -131,8 +137,12 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         self.navigationItemsProvider.onUpdateSelection()
     }
 
-    func presentPreview(forClipId clipId: Clip.Identity) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else { return }
+    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void) {
+        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
+            availability(false)
+            return
+        }
+        availability(true)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -150,12 +160,13 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
 extension TopClipsListViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
-    var selectedIndexPath: IndexPath? {
-        return self.collectionView.indexPathsForSelectedItems?.first
+    var previewingClip: Clip? {
+        return self.presenter.previewingClip
     }
 
-    var clips: [Clip] {
-        return self.presenter.clips
+    var previewingIndexPath: IndexPath? {
+        guard let clip = self.previewingClip else { return nil }
+        return self.dataSource.indexPath(for: clip)
     }
 }
 

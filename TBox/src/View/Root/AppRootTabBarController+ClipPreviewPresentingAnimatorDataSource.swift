@@ -47,14 +47,12 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
 
         guard
             let viewController = self.resolvePresentingViewController(),
-            let selectedIndexPath = viewController.selectedIndexPath,
-            viewController.clips.indices.contains(selectedIndexPath.row),
-            viewController.clips[selectedIndexPath.row].items.indices.contains(index)
+            let clip = viewController.previewingClip,
+            clip.items.indices.contains(index)
         else {
             return selectedCell.convert(selectedCell.bounds, to: containerView)
         }
-        let item = viewController.clips[selectedIndexPath.row].items[index]
-        let imageSize = item.thumbnailSize
+        let imageSize = clip.items[index].thumbnailSize
 
         let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
                                            on: selectedCell.bounds)
@@ -71,19 +69,18 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         viewController.view.layoutIfNeeded()
         viewController.collectionView.layoutIfNeeded()
 
-        guard let selectedIndexPath = viewController.selectedIndexPath else {
+        guard let indexPath = viewController.previewingIndexPath else {
             return nil
         }
 
-        if !viewController.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
-            viewController.collectionView.scrollToItem(at: selectedIndexPath, at: .centeredVertically, animated: false)
+        if !viewController.collectionView.indexPathsForVisibleItems.contains(indexPath) {
+            viewController.collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
             viewController.collectionView.reloadItems(at: viewController.collectionView.indexPathsForVisibleItems)
-
             viewController.view.layoutIfNeeded()
             viewController.collectionView.layoutIfNeeded()
         }
 
-        guard let selectedCell = viewController.collectionView.cellForItem(at: selectedIndexPath) as? ClipsCollectionViewCell else {
+        guard let selectedCell = viewController.collectionView.cellForItem(at: indexPath) as? ClipsCollectionViewCell else {
             return nil
         }
 

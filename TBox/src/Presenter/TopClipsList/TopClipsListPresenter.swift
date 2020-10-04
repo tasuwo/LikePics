@@ -15,13 +15,16 @@ enum ThumbnailLayer {
 protocol TopClipsListViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
-    func presentPreview(forClipId clipId: Clip.Identity)
+    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
 }
 
 protocol TopClipsListPresenterProtocol {
     var clips: [Clip] { get }
+    var previewingClip: Clip? { get }
+
+    func viewDidAppear()
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
 
@@ -49,6 +52,13 @@ class TopClipsListPresenter {
         didSet {
             self.view?.apply(clips)
         }
+    }
+
+    private var previewingClipId: Clip.Identity?
+
+    var previewingClip: Clip? {
+        guard let id = self.previewingClipId else { return nil }
+        return self.clips.first(where: { $0.identity == id })
     }
 
     private var selectedClips: [Clip] {
@@ -89,6 +99,10 @@ class TopClipsListPresenter {
 
 extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     // MARK: - TopClipsListPresenterProtocol
+
+    func viewDidAppear() {
+        self.previewingClipId = nil
+    }
 
     func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
         let nullableClipItem: ClipItem? = {
@@ -151,7 +165,10 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
             self.selections.insert(clipId)
         } else {
             self.selections = Set([clipId])
-            self.view?.presentPreview(forClipId: clipId)
+            self.view?.presentPreview(forClipId: clipId) { [weak self] isAvailable in
+                guard isAvailable else { return }
+                self?.previewingClipId = clipId
+            }
         }
     }
 

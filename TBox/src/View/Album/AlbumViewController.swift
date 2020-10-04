@@ -62,6 +62,12 @@ class AlbumViewController: UIViewController {
         self.presenter.setup(with: self)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.presenter.viewDidAppear()
+    }
+
     @IBAction func didTapAlbumView(_ sender: UITapGestureRecognizer) {
         self.navigationItem.titleView?.endEditing(true)
     }
@@ -135,8 +141,12 @@ extension AlbumViewController: AlbumViewProtocol {
         self.navigationItemsProvider.onUpdateSelection()
     }
 
-    func presentPreview(forClipId clipId: Clip.Identity) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else { return }
+    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isSucceeded: Bool) -> Void) {
+        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
+            availability(false)
+            return
+        }
+        availability(true)
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -154,12 +164,13 @@ extension AlbumViewController: AlbumViewProtocol {
 extension AlbumViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
-    var selectedIndexPath: IndexPath? {
-        return self.collectionView.indexPathsForSelectedItems?.first
+    var previewingClip: Clip? {
+        return self.presenter.previewingClip
     }
 
-    var clips: [Clip] {
-        self.presenter.clips
+    var previewingIndexPath: IndexPath? {
+        guard let clip = self.previewingClip else { return nil }
+        return self.dataSource.indexPath(for: clip)
     }
 }
 
