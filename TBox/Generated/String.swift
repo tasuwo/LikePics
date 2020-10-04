@@ -54,10 +54,6 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
-    /// 画像のURL
-    internal static let clipInformationViewImageUrlLabel = L10n.tr("Localizable", "clip_information_view_image_url_label")
-    /// サイトのURL
-    internal static let clipInformationViewSiteUrlLabel = L10n.tr("Localizable", "clip_information_view_site_url_label")
     /// タグを追加する
     internal static let clipItemPreviewViewAlertForAddTag = L10n.tr("Localizable", "clip_item_preview_view_alert_for_add_tag")
     /// アルバムに追加する

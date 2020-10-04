@@ -289,13 +289,13 @@ public enum ClipInformationLayoutFactory {
 
             switch Section(rawValue: indexPath.section) {
             case .clipTag:
-                header.title = "このクリップのタグ"
+                header.title = L10n.clipInformationViewSectionLabelTag
 
             case .clipInformation:
-                header.title = "このクリップの情報"
+                header.title = L10n.clipInformationViewSectionLabelClip
 
             case .clipItemInformation:
-                header.title = "この画像の情報"
+                header.title = L10n.clipInformationViewSectionLabelClipItem
 
             case .none:
                 return nil
@@ -303,6 +303,14 @@ public enum ClipInformationLayoutFactory {
 
             return header
         }
+    }
+
+    private static func format(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.locale = Locale.current
+        return formatter.string(from: date)
     }
 
     // MARK: Snapshot
@@ -323,23 +331,25 @@ public enum ClipInformationLayoutFactory {
     private static func createCells(for clip: Clip) -> [Item] {
         return [
             Item.Cell(id: UUID().uuidString,
-                      title: "サイトのURL",
+                      title: L10n.clipInformationViewLabelClipUrl,
                       rightLabel: nil,
                       bottomLabel: clip.url.absoluteString,
                       visibleSeparator: false),
             Item.Cell(id: UUID().uuidString,
-                      title: "このクリップを隠す",
-                      rightLabel: clip.isHidden ? "はい" : "いいえ",
+                      title: L10n.clipInformationViewLabelClipHide,
+                      rightLabel: clip.isHidden
+                          ? L10n.clipInformationViewAccessoryClipHideYes
+                          : L10n.clipInformationViewAccessoryClipHideNo,
                       bottomLabel: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
-                      title: "登録日",
-                      rightLabel: "\(clip.registeredDate)",
+                      title: L10n.clipInformationViewLabelClipRegisteredDate,
+                      rightLabel: self.format(clip.registeredDate),
                       bottomLabel: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
-                      title: "更新日",
-                      rightLabel: "\(clip.updatedDate)",
+                      title: L10n.clipInformationViewLabelClipUpdatedDate,
+                      rightLabel: self.format(clip.updatedDate),
                       bottomLabel: nil,
                       visibleSeparator: true)
         ].map { .row($0) }
@@ -348,18 +358,18 @@ public enum ClipInformationLayoutFactory {
     private static func createCells(for clipItem: ClipItem) -> [Item] {
         return [
             Item.Cell(id: UUID().uuidString,
-                      title: "画像のURL",
+                      title: L10n.clipInformationViewLabelClipItemUrl,
                       rightLabel: nil,
                       bottomLabel: clipItem.imageUrl.absoluteString,
                       visibleSeparator: false),
             Item.Cell(id: UUID().uuidString,
-                      title: "登録日",
-                      rightLabel: "\(clipItem.registeredDate)",
+                      title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+                      rightLabel: self.format(clipItem.registeredDate),
                       bottomLabel: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
-                      title: "更新日",
-                      rightLabel: "\(clipItem.updatedDate)",
+                      title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+                      rightLabel: self.format(clipItem.updatedDate),
                       bottomLabel: nil,
                       visibleSeparator: true)
         ].map { .row($0) }

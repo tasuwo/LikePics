@@ -10,3 +10,19 @@
 "clip_information_view_image_url_title" = "Image URL";
 "clip_information_view_context_menu_open" = "Open";
 "clip_information_view_context_menu_copy" = "Copy";
+
+"clip_information_view_section_label_tag" = "Tags";
+"clip_information_view_section_label_clip" = "This Clip Info";
+"clip_information_view_section_label_clip_item" = "This Image Info";
+
+"clip_information_view_label_clip_url" = "Web Site URL";
+"clip_information_view_label_clip_hide" = "Hidden";
+"clip_information_view_accessory_clip_hide_yes" = "Yes";
+"clip_information_view_accessory_clip_hide_no" = "No";
+"clip_information_view_label_clip_registered_date" = "Created";
+"clip_information_view_label_clip_updated_date" = "Modified";
+
+"clip_information_view_label_clip_item_url" = "Image URL";
+"clip_information_view_label_clip_item_registered_date" = "Created";
+"clip_information_view_label_clip_item_updated_date" = "Modified";
+

@@ -10,3 +10,19 @@
 "clip_information_view_image_url_title" = "画像のURL";
 "clip_information_view_context_menu_open" = "開く";
 "clip_information_view_context_menu_copy" = "コピー";
+
+"clip_information_view_section_label_tag" = "このクリップのタグ";
+"clip_information_view_section_label_clip" = "このクリップの情報";
+"clip_information_view_section_label_clip_item" = "この画像の情報";
+
+"clip_information_view_label_clip_url" = "サイトのURL";
+"clip_information_view_label_clip_hide" = "このクリップを隠す";
+"clip_information_view_accessory_clip_hide_yes" = "はい";
+"clip_information_view_accessory_clip_hide_no" = "いいえ";
+"clip_information_view_label_clip_registered_date" = "登録日";
+"clip_information_view_label_clip_updated_date" = "更新日";
+
+"clip_information_view_label_clip_item_url" = "サイトのURL";
+"clip_information_view_label_clip_item_registered_date" = "登録日";
+"clip_information_view_label_clip_item_updated_date" = "更新日";
+
