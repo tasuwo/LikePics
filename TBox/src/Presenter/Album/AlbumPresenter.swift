@@ -30,6 +30,7 @@ protocol AlbumPresenterProtocol {
     func hideSelectedClips()
     func unhideSelectedClips()
     func removeSelectedClipsFromAlbum()
+    func addTagsToSelectedClips(_ tags: [Tag])
 }
 
 class AlbumPresenter {
@@ -200,6 +201,15 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     func removeSelectedClipsFromAlbum() {
         if case let .failure(error) = self.clipStorage.update(self.album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func addTagsToSelectedClips(_ tags: [Tag]) {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tags) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
         self.selections = []

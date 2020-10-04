@@ -342,7 +342,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        let viewController = self.factory.makeAddingTagToClipViewController(clips: [self.presenter.clip], delegate: nil)
+        guard let viewController = self.factory.makeTagSelectionViewController(delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -359,5 +359,13 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
+    // MARK: - TagSelectionPresenterDelegate
+
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
+        self.presenter.addTagsToClip(tags)
     }
 }

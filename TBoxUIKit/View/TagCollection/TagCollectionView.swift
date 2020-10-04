@@ -6,7 +6,7 @@ import Domain
 import UIKit
 
 public protocol TagCollectionViewDataSource: AnyObject {
-    var isEditing: Bool { get }
+    func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode
 }
 
 public class TagCollectionView: UICollectionView {
@@ -36,7 +36,7 @@ public class TagCollectionView: UICollectionView {
             guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
             cell.title = tag.name
-            cell.displayMode = dataSource.isEditing ? .deletion : .normal
+            cell.displayMode = dataSource.displayMode(collectionView)
 
             return cell
         }

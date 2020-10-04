@@ -224,7 +224,7 @@ extension AlbumViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        let viewController = self.factory.makeAddingTagToClipViewController(clips: self.selectedClips, delegate: nil)
+        guard let viewController = self.factory.makeTagSelectionViewController(delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -242,5 +242,13 @@ extension AlbumViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
         self.presenter.unhideSelectedClips()
+    }
+}
+
+extension AlbumViewController: TagSelectionPresenterDelegate {
+    // MARK: - TagSelectionPresenterDelegate
+
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
+        self.presenter.addTagsToSelectedClips(tags)
     }
 }

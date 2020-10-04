@@ -44,6 +44,7 @@ protocol SearchResultPresenterProtocol {
     func deleteSelectedClips()
     func hideSelectedClips()
     func unhideSelectedClips()
+    func addTagsToSelectedClips(_ tags: [Tag])
 }
 
 class SearchResultPresenter {
@@ -195,7 +196,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func hideSelectedClips() {
         if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
         self.selections = []
@@ -204,7 +205,16 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func unhideSelectedClips() {
         if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+        self.selections = []
+        self.isEditing = false
+    }
+
+    func addTagsToSelectedClips(_ tags: [Tag]) {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tags) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
         self.selections = []

@@ -69,6 +69,13 @@ class ClipPreviewPagePresenter {
             self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtDeleteClipItem)\n\(error.makeErrorCode())")
         }
     }
+
+    func addTagsToClip(_ tags: [Tag]) {
+        if case let .failure(error) = self.storage.update([self.clip], byAddingTags: tags) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
 }
 
 extension ClipPreviewPagePresenter: ClipPreviewPageBarButtonItemsPresenterDataSource {

@@ -41,7 +41,7 @@ protocol ViewControllerFactory {
     // MARK: Tag
 
     func makeTagListViewController() -> UIViewController
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate?) -> UIViewController
+    func makeTagSelectionViewController(delegate: TagSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Settings
 
@@ -272,10 +272,24 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAddingTagToClipViewController(clips: [Clip], delegate: AddingTagsToClipsPresenterDelegate?) -> UIViewController {
-        let presenter = AddingTagsToClipsPresenter(clips: clips, storage: self.clipStorage)
+    func makeTagSelectionViewController(delegate: TagSelectionPresenterDelegate) -> UIViewController? {
+        let query: TagListQuery
+        switch self.clipStorage.queryAllTags() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open TagSelectionView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = TagSelectionPresenter(query: query,
+                                              storage: self.clipStorage,
+                                              logger: self.logger)
         presenter.delegate = delegate
-        let viewController = AddingTagsToClipsViewController(factory: self, presenter: presenter)
+        let viewController = TagSelectionViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
 

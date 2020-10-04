@@ -183,6 +183,10 @@ extension TagListViewController: TagListViewProtocol {
 
 extension TagListViewController: TagCollectionViewDataSource {
     // MARK: - TagCollectionViewDataSource
+
+    func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
+        return self.isEditing ? .deletion : .normal
+    }
 }
 
 extension TagListViewController: UICollectionViewDelegate {
