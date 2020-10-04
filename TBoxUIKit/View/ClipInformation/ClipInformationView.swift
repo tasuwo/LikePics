@@ -103,7 +103,8 @@ public class ClipInformationView: UIView {
                 guard let self = self else { return }
                 button.addTarget(self, action: #selector(self.didTapUrl(_:)), for: .touchUpInside)
                 button.addInteraction(UIContextMenuInteraction(delegate: self))
-            }
+            },
+            delegate: self
         )
     }
 
@@ -188,6 +189,25 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
             self.delegate?.clipInformationView(self, shouldCopy: url)
         }
         return { _ in UIMenu(title: "", children: [open, copy]) }
+    }
+}
+
+extension ClipInformationView: ClipInformationSectionHeaderDelegate {
+    // MARK: - ClipInformationSectionHeaderDelegate
+
+    public func didTapAdd(_ header: ClipInformationSectionHeader) {
+        guard let identifier = header.identifier,
+            let number = Int(identifier),
+            let section = Factory.Section(rawValue: number),
+            case .clipTag = section
+        else {
+            return
+        }
+        self.delegate?.didTapAddTagButton(self)
+    }
+
+    public func didTapTrash(_ header: ClipInformationSectionHeader) {
+        print(#function)
     }
 }
 

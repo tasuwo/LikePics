@@ -146,10 +146,11 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         case (.began, .information):
             guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
+            let nullableViewController = self.factory.makeClipInformationViewController(clipId: self.presenter.clip.identity,
+                                                                                        itemId: self.presenter.clip.items[index].identity,
+                                                                                        dataSource: self)
+            guard let viewController = nullableViewController else { return }
             self.informationTransitionController.beginInteractiveTransition(.present)
-            let viewController = self.factory.makeClipInformationViewController(clip: self.presenter.clip,
-                                                                                item: self.presenter.clip.items[index],
-                                                                                dataSource: self)
             self.present(viewController, animated: true, completion: nil)
 
         case (.ended, .information):

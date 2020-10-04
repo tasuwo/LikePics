@@ -21,7 +21,7 @@ protocol ViewControllerFactory {
 
     // MARK: Information
 
-    func makeClipInformationViewController(clip: Clip, item: ClipItem, dataSource: ClipInformationViewDataSource) -> UIViewController
+    func makeClipInformationViewController(clipId: Clip.Identity, itemId: ClipItem.Identity, dataSource: ClipInformationViewDataSource) -> UIViewController?
 
     // MARK: Selection
 
@@ -152,8 +152,24 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipInformationViewController(clip: Clip, item: ClipItem, dataSource: ClipInformationViewDataSource) -> UIViewController {
-        let presenter = ClipInformationPresenter(clip: clip, item: item)
+    func makeClipInformationViewController(clipId: Clip.Identity, itemId: ClipItem.Identity, dataSource: ClipInformationViewDataSource) -> UIViewController? {
+        let query: ClipQuery
+        switch self.clipStorage.queryClip(having: clipId) {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipInformationPresenter for clip having clip id \(clipId), item id \(itemId). (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = ClipInformationPresenter(query: query,
+                                                 itemId: itemId,
+                                                 storage: self.clipStorage,
+                                                 logger: self.logger)
+
         let viewController = ClipInformationViewController(factory: self, dataSource: dataSource, presenter: presenter, transitionController: self.clipInformationTransitionController)
         viewController.transitioningDelegate = self.clipInformationTransitionController
         viewController.modalPresentationStyle = .fullScreen

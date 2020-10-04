@@ -199,7 +199,8 @@ public enum ClipInformationLayoutFactory {
     // MARK: DataSource
 
     static func makeDataSource(for collectionView: UICollectionView,
-                               configureUrlLink: @escaping (UIButton) -> Void) -> DataSource
+                               configureUrlLink: @escaping (UIButton) -> Void,
+                               delegate: ClipInformationSectionHeaderDelegate?) -> DataSource
     {
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
@@ -214,7 +215,7 @@ public enum ClipInformationLayoutFactory {
             }
         }
 
-        dataSource.supplementaryViewProvider = self.headerProvider()
+        dataSource.supplementaryViewProvider = self.headerProvider(delegate: delegate)
 
         return dataSource
     }
@@ -263,7 +264,7 @@ public enum ClipInformationLayoutFactory {
         }
     }
 
-    private static func headerProvider() -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
+    private static func headerProvider(delegate: ClipInformationSectionHeaderDelegate?) -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
         return { collectionView, kind, indexPath -> UICollectionReusableView? in
             let identifier: String
             switch ElementKind(rawValue: kind) {
@@ -287,15 +288,23 @@ public enum ClipInformationLayoutFactory {
                 return nil
             }
 
+            header.delegate = delegate
+
             switch Section(rawValue: indexPath.section) {
             case .clipTag:
+                header.identifier = "\(Section.clipTag.rawValue)"
                 header.title = L10n.clipInformationViewSectionLabelTag
+                header.visibleAddButton = true
 
             case .clipInformation:
+                header.identifier = "\(Section.clipInformation.rawValue)"
                 header.title = L10n.clipInformationViewSectionLabelClip
+                header.visibleAddButton = false
 
             case .clipItemInformation:
+                header.identifier = "\(Section.clipItemInformation.rawValue)"
                 header.title = L10n.clipInformationViewSectionLabelClipItem
+                header.visibleAddButton = false
 
             case .none:
                 return nil

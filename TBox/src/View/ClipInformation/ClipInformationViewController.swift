@@ -12,6 +12,10 @@ class ClipInformationViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipInformationPresenter
     private let transitionController: ClipInformationTransitioningController
+    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                                       placeholder: L10n.tagListViewAlertForAddPlaceholder),
+                                                  baseView: self)
 
     private weak var dataSource: ClipInformationViewDataSource?
 
@@ -28,6 +32,8 @@ class ClipInformationViewController: UIViewController {
         self.transitionController = transitionController
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
+
+        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -42,7 +48,8 @@ class ClipInformationViewController: UIViewController {
 
         self.informationView.delegate = self
         self.informationView.dataSource = self.dataSource
-        self.informationView.info = .init(clip: self.presenter.clip, item: self.presenter.item)
+
+        self.presenter.setup()
     }
 
     // MARK: - Methods
@@ -80,10 +87,32 @@ class ClipInformationViewController: UIViewController {
 
 extension ClipInformationViewController: ClipInformationViewProtocol {
     // MARK: - ClipInformationViewProtocol
+
+    func reload() {
+        guard let item = self.presenter.clip.items.first(where: { $0.identity == self.presenter.itemId }) else {
+            return
+        }
+        self.informationView.info = .init(clip: self.presenter.clip, item: item)
+    }
+
+    func close() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    func showErrorMessage(_ message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
+
+    func didTapAddTagButton(_ view: ClipInformationView) {
+        guard let viewController = self.factory.makeTagSelectionViewController(delegate: self) else { return }
+        self.present(viewController, animated: true, completion: nil)
+    }
 
     func clipInformationView(_ view: ClipInformationView, didSelectTag name: String) {
         // TODO:
@@ -96,6 +125,14 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL) {
         UIPasteboard.general.string = url.absoluteString
+    }
+}
+
+extension ClipInformationViewController: TagSelectionPresenterDelegate {
+    // MARK: - TagSelectionPresenterDelegate
+
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
+        self.presenter.addTagsToClip(tags)
     }
 }
 
