@@ -71,20 +71,6 @@ public class ClipInformationView: UIView {
         self.setupCollectionView()
     }
 
-    // MARK: - Methods
-
-    // MARK: - IBActions
-
-    @IBAction func didTapSiteUrl(_ sender: UIButton) {
-        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
-        self.delegate?.clipInformationView(self, shouldOpen: url)
-    }
-
-    @IBAction func didTapImageUrl(_ sender: UIButton) {
-        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
-        self.delegate?.clipInformationView(self, shouldOpen: url)
-    }
-
     override public func layoutSubviews() {
         super.layoutSubviews()
         self.updateImageViewFrame()
@@ -111,7 +97,20 @@ public class ClipInformationView: UIView {
         self.collectionView.collectionViewLayout = Factory.createLayout()
         Factory.registerCells(to: self.collectionView)
         self.collectionView.delegate = self
-        self.collectionViewDataSource = Factory.makeDataSource(for: self.collectionView)
+        self.collectionViewDataSource = Factory.makeDataSource(
+            for: self.collectionView,
+            configureUrlLink: { [weak self] button in
+                guard let self = self else { return }
+                button.addTarget(self, action: #selector(self.didTapUrl(_:)), for: .touchUpInside)
+                button.addInteraction(UIContextMenuInteraction(delegate: self))
+            }
+        )
+    }
+
+    @objc
+    func didTapUrl(_ sender: UIButton) {
+        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
+        self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
     // MARK: Image View

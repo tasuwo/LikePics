@@ -47,19 +47,17 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V93-mg-gzO" userLabel="Container">
                                         <rect key="frame" x="0.0" y="28.5" width="340" height="25.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accessory" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MEg-Xg-W5F">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="yaM-qR-hUI">
                                                 <rect key="frame" x="0.0" y="0.0" width="340" height="25.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" systemColor="secondaryLabelColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="MEg-Xg-W5F" secondAttribute="bottom" id="CgI-Cx-DIg"/>
-                                            <constraint firstItem="MEg-Xg-W5F" firstAttribute="leading" secondItem="V93-mg-gzO" secondAttribute="leading" id="HGp-W2-2s0"/>
-                                            <constraint firstItem="MEg-Xg-W5F" firstAttribute="top" secondItem="V93-mg-gzO" secondAttribute="top" id="JtJ-vz-gQ9"/>
-                                            <constraint firstAttribute="trailing" secondItem="MEg-Xg-W5F" secondAttribute="trailing" id="ytq-DS-IkM"/>
+                                            <constraint firstItem="yaM-qR-hUI" firstAttribute="top" secondItem="V93-mg-gzO" secondAttribute="top" id="7hO-V5-gwJ"/>
+                                            <constraint firstAttribute="bottom" secondItem="yaM-qR-hUI" secondAttribute="bottom" id="LVx-FR-Z8b"/>
+                                            <constraint firstItem="yaM-qR-hUI" firstAttribute="leading" secondItem="V93-mg-gzO" secondAttribute="leading" id="MWj-5U-CG2"/>
+                                            <constraint firstAttribute="trailing" secondItem="yaM-qR-hUI" secondAttribute="trailing" id="lmX-GF-cXh"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -94,7 +92,7 @@
             </collectionViewCellContentView>
             <size key="customSize" width="380" height="74"/>
             <connections>
-                <outlet property="bottomAccessoryLabel" destination="MEg-Xg-W5F" id="fxP-Ly-BfI"/>
+                <outlet property="bottomAccessoryButton" destination="yaM-qR-hUI" id="14N-a9-aYM"/>
                 <outlet property="bottomAccessoryView" destination="V93-mg-gzO" id="Y4h-8J-hiq"/>
                 <outlet property="rightAccessoryLabel" destination="ikk-Fz-cDB" id="zF7-Od-OEM"/>
                 <outlet property="separator" destination="7D5-Ab-yu5" id="f3A-NJ-AMu"/>

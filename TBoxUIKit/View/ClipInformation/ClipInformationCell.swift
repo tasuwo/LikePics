@@ -38,7 +38,7 @@ public class ClipInformationCell: UICollectionViewCell {
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var rightAccessoryLabel: UILabel!
-    @IBOutlet var bottomAccessoryLabel: UILabel!
+    @IBOutlet var bottomAccessoryButton: UIButton!
     @IBOutlet var bottomAccessoryView: UIView!
     @IBOutlet var separator: UIView!
 
@@ -58,7 +58,7 @@ public class ClipInformationCell: UICollectionViewCell {
         [
             self.titleLabel,
             self.rightAccessoryLabel,
-            self.bottomAccessoryLabel
+            self.bottomAccessoryButton.titleLabel
         ].forEach {
             $0?.adjustsFontForContentSizeCategory = true
             $0?.font = UIFont.preferredFont(forTextStyle: .body)

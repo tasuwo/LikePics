@@ -198,7 +198,9 @@ public enum ClipInformationLayoutFactory {
 
     // MARK: DataSource
 
-    static func makeDataSource(for collectionView: UICollectionView) -> DataSource {
+    static func makeDataSource(for collectionView: UICollectionView,
+                               configureUrlLink: @escaping (UIButton) -> Void) -> DataSource
+    {
         let tagCellProvider: DataSource.CellProvider = { collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
@@ -228,7 +230,8 @@ public enum ClipInformationLayoutFactory {
 
             if let bottomTitle = info.bottomLabel {
                 cell.visibleBottomAccessoryView = true
-                cell.bottomAccessoryLabel.text = bottomTitle
+                cell.bottomAccessoryButton.setTitle(bottomTitle, for: .normal)
+                configureUrlLink(cell.bottomAccessoryButton)
             } else {
                 cell.visibleBottomAccessoryView = false
             }
