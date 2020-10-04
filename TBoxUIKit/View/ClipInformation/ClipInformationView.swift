@@ -150,7 +150,7 @@ extension ClipInformationView: UICollectionViewDelegate {
         case let .tag(value):
             self.delegate?.clipInformationView(self, didSelectTag: value.name)
 
-        case .row:
+        case .row, .empty:
             break
         }
     }

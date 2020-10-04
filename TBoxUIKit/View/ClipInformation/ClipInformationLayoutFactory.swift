@@ -40,6 +40,7 @@ public enum ClipInformationLayoutFactory {
     enum ItemType {
         case tag
         case row
+        case empty
 
         var identifier: String {
             switch self {
@@ -48,6 +49,9 @@ public enum ClipInformationLayoutFactory {
 
             case .row:
                 return "item-row"
+
+            case .empty:
+                return "item-empty"
             }
         }
 
@@ -58,6 +62,9 @@ public enum ClipInformationLayoutFactory {
 
             case .row:
                 return ClipInformationCell.self
+
+            case .empty:
+                return EmptyCell.self
             }
         }
     }
@@ -73,6 +80,7 @@ public enum ClipInformationLayoutFactory {
 
         case tag(Tag)
         case row(Cell)
+        case empty
 
         var type: ItemType {
             switch self {
@@ -81,6 +89,9 @@ public enum ClipInformationLayoutFactory {
 
             case .row:
                 return .row
+
+            case .empty:
+                return .empty
             }
         }
     }
@@ -112,6 +123,8 @@ public enum ClipInformationLayoutFactory {
                                 forCellWithReuseIdentifier: ItemType.tag.identifier)
         collectionView.register(ClipInformationCell.nib,
                                 forCellWithReuseIdentifier: ItemType.row.identifier)
+        collectionView.register(EmptyCell.nib,
+                                forCellWithReuseIdentifier: ItemType.empty.identifier)
     }
 
     // MARK: Layout
@@ -120,10 +133,10 @@ public enum ClipInformationLayoutFactory {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
             case .clipTag:
-                return self.createTagCreateLayoutSection()
+                return self.createTagsLayoutSection()
 
             case .clipInformation, .clipItemInformation:
-                return self.createListCreateLayoutSection()
+                return self.createRowsLayoutSection()
 
             case .none:
                 return nil
@@ -148,7 +161,7 @@ public enum ClipInformationLayoutFactory {
         return layout
     }
 
-    private static func createTagCreateLayoutSection() -> NSCollectionLayoutSection {
+    private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
         let section = TagCollectionView.createLayoutSection()
 
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -169,7 +182,7 @@ public enum ClipInformationLayoutFactory {
         return section
     }
 
-    private static func createListCreateLayoutSection() -> NSCollectionLayoutSection {
+    private static func createRowsLayoutSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
                                               heightDimension: .estimated(44))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -205,10 +218,10 @@ public enum ClipInformationLayoutFactory {
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
             case .clipTag:
-                return self.tagCellProvider()(collectionView, indexPath, item)
+                return self.tagsSectionCellProvider()(collectionView, indexPath, item)
 
             case .clipInformation, .clipItemInformation:
-                return self.infoCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
+                return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
 
             case .none:
                 return nil
@@ -220,22 +233,32 @@ public enum ClipInformationLayoutFactory {
         return dataSource
     }
 
-    private static func tagCellProvider() -> DataSource.CellProvider {
+    private static func tagsSectionCellProvider() -> DataSource.CellProvider {
         return { collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
 
-            guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
-            guard case let .tag(tag) = item else { return cell }
+            switch item.type {
+            case .empty:
+                guard let cell = dequeuedCell as? EmptyCell else { return dequeuedCell }
+                guard case .empty = item else { return cell }
+                cell.message = L10n.clipInformationViewLabelEmpty
+                return cell
 
-            cell.title = tag.name
-            cell.displayMode = .normal
+            case .tag:
+                guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
+                guard case let .tag(tag) = item else { return cell }
+                cell.title = tag.name
+                cell.displayMode = .normal
+                return cell
 
-            return cell
+            default:
+                return nil
+            }
         }
     }
 
-    private static func infoCellProvider(configureUrlLink: @escaping (UIButton) -> Void) -> DataSource.CellProvider {
+    private static func infoSectionCellProvider(configureUrlLink: @escaping (UIButton) -> Void) -> DataSource.CellProvider {
         return { collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
@@ -330,7 +353,11 @@ public enum ClipInformationLayoutFactory {
         snapshot.appendSections([.clipItemInformation])
         snapshot.appendItems(self.createCells(for: info.item))
         snapshot.appendSections([.clipTag])
-        snapshot.appendItems(info.clip.tags.map { .tag($0) })
+        if info.clip.tags.isEmpty {
+            snapshot.appendItems([.empty])
+        } else {
+            snapshot.appendItems(info.clip.tags.map { .tag($0) })
+        }
         snapshot.appendSections([.clipInformation])
         snapshot.appendItems(self.createCells(for: info.clip))
         return snapshot
