@@ -19,6 +19,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private static let endAnimateDuration: Double = 0.25
 
     private var innerContext: InnerContext?
+    private var shouldEndImmediately: Bool = false
 
     // MARK: - Methods
 
@@ -44,7 +45,13 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     // MARK: Internal
 
     func didPan(sender: UIPanGestureRecognizer) {
-        guard let innerContext = self.innerContext else { return }
+        guard let innerContext = self.innerContext else {
+            if sender.state == .ended {
+                self.shouldEndImmediately = true
+            }
+            return
+        }
+
         let transitionContext = innerContext.transitionContext
         let containerView = transitionContext.containerView
         let initialImageFrame = innerContext.initialImageFrame
@@ -198,11 +205,24 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
 
-        self.innerContext = .init(
+        let innerContext = InnerContext(
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingView: animatingView,
             animatingImageView: animatingImageView
         )
+
+        if self.shouldEndImmediately {
+            self.shouldEndImmediately = false
+            let finalImageFrame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+            self.startEndAnimation(finalImageFrame: finalImageFrame,
+                                   hideViews: [from.view],
+                                   presentViews: [to.view],
+                                   hiddenViews: [targetInformationView.imageView, selectedImageView],
+                                   innerContext: innerContext)
+            return
+        }
+
+        self.innerContext = innerContext
     }
 }

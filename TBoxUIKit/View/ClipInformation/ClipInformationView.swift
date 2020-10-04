@@ -13,7 +13,9 @@ public class ClipInformationView: UIView {
         didSet {
             guard let info = self.info else { return }
             let snapshot = Factory.makeSnapshot(for: info)
-            self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
+            DispatchQueue.global(qos: .background).async {
+                self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
+            }
         }
     }
 
