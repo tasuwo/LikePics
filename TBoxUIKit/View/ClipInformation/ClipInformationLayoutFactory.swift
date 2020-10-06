@@ -64,7 +64,7 @@ public enum ClipInformationLayoutFactory {
                 return ClipInformationCell.self
 
             case .empty:
-                return EmptyCell.self
+                return TagCollectionEmptyCell.self
             }
         }
     }
@@ -123,7 +123,7 @@ public enum ClipInformationLayoutFactory {
                                 forCellWithReuseIdentifier: ItemType.tag.identifier)
         collectionView.register(ClipInformationCell.nib,
                                 forCellWithReuseIdentifier: ItemType.row.identifier)
-        collectionView.register(EmptyCell.nib,
+        collectionView.register(TagCollectionEmptyCell.nib,
                                 forCellWithReuseIdentifier: ItemType.empty.identifier)
     }
 
@@ -240,7 +240,7 @@ public enum ClipInformationLayoutFactory {
 
             switch item.type {
             case .empty:
-                guard let cell = dequeuedCell as? EmptyCell else { return dequeuedCell }
+                guard let cell = dequeuedCell as? TagCollectionEmptyCell else { return dequeuedCell }
                 guard case .empty = item else { return cell }
                 cell.message = L10n.clipInformationViewLabelEmpty
                 return cell

@@ -33,7 +33,6 @@
 		2C1CEC0B2509624000C95C12 /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C1CEC0F250963EE00C95C12 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C1CEC10250963EE00C95C12 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2C1CEC142509664500C95C12 /* TagCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CEC132509664500C95C12 /* TagCollectionLayout.swift */; };
 		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
 		2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236D72251A10D000AB5EDD /* ClipQuery.swift */; };
 		2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */; };
@@ -190,8 +189,8 @@
 		2CB3CB342515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */; };
 		2CB3CB3E2515EFF900BE06E5 /* ClipsListAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */; };
 		2CB3CB482515F29C00BE06E5 /* ClipsListToolBarItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB472515F29C00BE06E5 /* ClipsListToolBarItemsPresenter.swift */; };
-		2CB62570252A1119001C3368 /* EmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB6256F252A1119001C3368 /* EmptyCell.swift */; };
-		2CB6257A252A1126001C3368 /* EmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB62579252A1126001C3368 /* EmptyCell.xib */; };
+		2CB62570252A1119001C3368 /* TagCollectionEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */; };
+		2CB6257A252A1126001C3368 /* TagCollectionEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */; };
 		2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */; };
 		2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */; };
 		2CC0EB4C2518AAFF006D6DB4 /* TestImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */; };
@@ -570,7 +569,6 @@
 		2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
 		2C16050725207C6A00A39E58 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
-		2C1CEC132509664500C95C12 /* TagCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionLayout.swift; sourceTree = "<group>"; };
 		2C2289ED24FA15750026E24A /* PaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
 		2C236D72251A10D000AB5EDD /* ClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQuery.swift; sourceTree = "<group>"; };
 		2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmClipQuery.swift; sourceTree = "<group>"; };
@@ -723,8 +721,8 @@
 		2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListToolBarItemsProvider.swift; sourceTree = "<group>"; };
 		2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListAlertPresentable.swift; sourceTree = "<group>"; };
 		2CB3CB472515F29C00BE06E5 /* ClipsListToolBarItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListToolBarItemsPresenter.swift; sourceTree = "<group>"; };
-		2CB6256F252A1119001C3368 /* EmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
-		2CB62579252A1126001C3368 /* EmptyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyCell.xib; sourceTree = "<group>"; };
+		2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionEmptyCell.swift; sourceTree = "<group>"; };
+		2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionEmptyCell.xib; sourceTree = "<group>"; };
 		2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageSpec.swift; sourceTree = "<group>"; };
 		2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TestImage.png; sourceTree = "<group>"; };
 		2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1783,9 +1781,8 @@
 				2CB0712B250904E90000E7E1 /* TagCollectionView.swift */,
 				2CB0712D250905290000E7E1 /* TagCollectionViewCell.swift */,
 				2CB0712F2509053D0000E7E1 /* TagCollectionViewCell.xib */,
-				2C1CEC132509664500C95C12 /* TagCollectionLayout.swift */,
-				2CB6256F252A1119001C3368 /* EmptyCell.swift */,
-				2CB62579252A1126001C3368 /* EmptyCell.xib */,
+				2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */,
+				2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */,
 			);
 			path = TagCollection;
 			sourceTree = "<group>";
@@ -2518,7 +2515,7 @@
 				2C2C9EED250BC7370020715B /* ClipInformationView.xib in Resources */,
 				2CB071302509053D0000E7E1 /* TagCollectionViewCell.xib in Resources */,
 				2CE22D4B24E2A48C00449210 /* ClipPreviewView.xib in Resources */,
-				2CB6257A252A1126001C3368 /* EmptyCell.xib in Resources */,
+				2CB6257A252A1126001C3368 /* TagCollectionEmptyCell.xib in Resources */,
 				2C05969A25198C90008F11F5 /* Localizable.strings in Resources */,
 				2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */,
 				2C8FD65024E02E15005887F9 /* ClipSelectionCollectionViewCell.xib in Resources */,
@@ -3107,7 +3104,6 @@
 				2CFC5D15250E38C7001A02E4 /* ClipInformationPresentationAnimator.swift in Sources */,
 				2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */,
 				2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */,
-				2C1CEC142509664500C95C12 /* TagCollectionLayout.swift in Sources */,
 				2CFC5D13250E38A6001A02E4 /* ClipInformationAnimator.swift in Sources */,
 				2CFC5D18250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift in Sources */,
 				2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */,
@@ -3127,7 +3123,7 @@
 				2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */,
 				2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */,
 				2C570B6D24E067D200A1DC9F /* ClipsCollectionViewCell.swift in Sources */,
-				2CB62570252A1119001C3368 /* EmptyCell.swift in Sources */,
+				2CB62570252A1119001C3368 /* TagCollectionEmptyCell.swift in Sources */,
 				2C8B305E252834D200A0A151 /* ClipInformationViewDelegate.swift in Sources */,
 				2C0F9B152528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift in Sources */,
 				2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */,

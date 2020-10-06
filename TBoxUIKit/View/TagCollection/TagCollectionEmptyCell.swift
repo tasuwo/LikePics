@@ -4,9 +4,9 @@
 
 import UIKit
 
-public class EmptyCell: UICollectionViewCell {
+public class TagCollectionEmptyCell: UICollectionViewCell {
     public static var nib: UINib {
-        return UINib(nibName: "EmptyCell", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "TagCollectionEmptyCell", bundle: Bundle(for: Self.self))
     }
 
     public var message: String? {
