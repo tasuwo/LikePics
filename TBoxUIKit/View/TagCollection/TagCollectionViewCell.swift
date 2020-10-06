@@ -26,13 +26,13 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     public var displayMode: DisplayMode = .checkAtSelect {
         didSet {
-            self.updateAppearance()
+            self.updateForDisplayMode()
         }
     }
 
     override public var isSelected: Bool {
         didSet {
-            self.updateAppearance()
+            self.updateForDisplayMode()
         }
     }
 
@@ -47,6 +47,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
         self.setupAppearance()
     }
 
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.updateRadius()
+    }
+
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -56,12 +62,24 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     func setupAppearance() {
+        let font = UIFont.preferredFont(forTextStyle: .body)
+        self.titleLabel.font = font
         self.layer.cornerCurve = .continuous
-        self.layer.borderColor = UIColor.systemGray3.cgColor
-        self.updateAppearance()
+
+        self.updateRadius()
+        self.updateColors()
+        self.updateForDisplayMode()
     }
 
-    func updateAppearance() {
+    func updateRadius() {
+        self.layer.cornerRadius = self.bounds.size.height / 2
+    }
+
+    func updateColors() {
+        self.layer.borderColor = UIColor.systemGray3.cgColor
+    }
+
+    func updateForDisplayMode() {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
