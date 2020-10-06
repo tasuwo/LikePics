@@ -75,7 +75,13 @@ class TagListViewController: UIViewController {
 
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
-            return TagCollectionView.createLayoutSection()
+            let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
+                                                                 top: nil,
+                                                                 trailing: nil,
+                                                                 bottom: .fixed(4))
+            let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
+            return section
         }
         return layout
     }

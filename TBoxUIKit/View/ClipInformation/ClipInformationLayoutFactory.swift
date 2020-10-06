@@ -162,7 +162,13 @@ public enum ClipInformationLayoutFactory {
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let section = TagCollectionView.createLayoutSection()
+        let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
+                                                             top: nil,
+                                                             trailing: nil,
+                                                             bottom: .fixed(4))
+        let groupContentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0)
+        let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing,
+                                                            groupContentInsets: groupContentInsets)
 
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                 heightDimension: .estimated(44))
@@ -171,7 +177,7 @@ public enum ClipInformationLayoutFactory {
                                                                         alignment: .top)
         section.boundarySupplementaryItems = [sectionHeader]
 
-        section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 0, bottom: 4, trailing: 0)
 
         let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(
             elementKind: ElementKind.sectionBackground.rawValue
