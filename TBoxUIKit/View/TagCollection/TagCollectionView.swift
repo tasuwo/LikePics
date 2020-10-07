@@ -50,9 +50,9 @@ public class TagCollectionView: UICollectionView {
                                               heightDimension: .estimated(32))
 
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .flexible(0),
+        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(0),
                                                          top: nil,
-                                                         trailing: .flexible(Self.interItemSpacing),
+                                                         trailing: .fixed(Self.interItemSpacing),
                                                          bottom: nil)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),

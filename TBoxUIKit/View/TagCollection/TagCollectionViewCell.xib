@@ -29,7 +29,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
                         <rect key="frame" x="32" y="14" width="35.5" height="17"/>
                         <constraints>
-                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="120" id="JeL-3r-GbZ"/>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
