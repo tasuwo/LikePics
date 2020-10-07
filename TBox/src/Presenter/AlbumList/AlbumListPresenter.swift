@@ -8,42 +8,65 @@ import Domain
 
 protocol AlbumListViewProtocol: AnyObject {
     func apply(_ albums: [Album])
+    func reload()
     func showErrorMessage(_ message: String)
 }
 
 class AlbumListPresenter {
+    private let query: AlbumListQuery
     private let storage: ClipStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
-    private var cancellable: AnyCancellable?
-    private var albumListQuery: AlbumListQuery?
+    private var cancellableBag = Set<AnyCancellable>()
+    private var showHiddenItems: Bool = false {
+        didSet {
+            if oldValue != self.showHiddenItems {
+                self.view?.reload()
+            }
+        }
+    }
+
+    private(set) var albums: [Album] = [] {
+        didSet {
+            self.view?.apply(self.albums)
+        }
+    }
 
     weak var view: AlbumListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, queryService: ClipQueryServiceProtocol, logger: TBoxLoggable) {
+    init(query: AlbumListQuery,
+         storage: ClipStorageProtocol,
+         settingStorage: UserSettingsStorageProtocol,
+         logger: TBoxLoggable)
+    {
+        self.query = query
         self.storage = storage
-        self.queryService = queryService
+        self.settingStorage = settingStorage
         self.logger = logger
     }
 
     // MARK: - Methods
 
     func setup() {
-        switch self.queryService.queryAllAlbums() {
-        case let .success(query):
-            self.albumListQuery = query
-            self.cancellable = query.albums
-                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] albumQueries in
-                    self?.view?.apply(albumQueries.map({ $0.album.value }))
-                })
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadAlbums)\n(\(error.makeErrorCode())")
-        }
+        self.query
+            .albums
+            .catch { _ -> AnyPublisher<[Album], Never> in
+                return Just([Album]()).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+            .combineLatest(self.settingStorage.showHiddenItems)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at AlbumListView."))
+            }, receiveValue: { [weak self] albums, showHiddenItems in
+                guard let self = self else { return }
+                self.albums = albums
+                    .sorted(by: { $0.registeredDate > $1.registeredDate })
+                self.showHiddenItems = showHiddenItems
+            })
+            .store(in: &self.cancellableBag)
     }
 
     func addAlbum(title: String) {
@@ -61,9 +84,14 @@ class AlbumListPresenter {
     }
 
     func readThumbnailImageData(for album: Album) -> Data? {
-        guard let clip = album.clips.first, let clipItem = clip.items.first else {
-            return nil
-        }
+        let thumbnailTarget: ClipItem? = {
+            if self.showHiddenItems {
+                return album.clips.first?.items.first
+            } else {
+                return album.clips.first(where: { !$0.isHidden })?.items.first
+            }
+        }()
+        guard let clipItem = thumbnailTarget else { return nil }
 
         switch self.storage.readThumbnailData(of: clipItem) {
         case let .success(data):
@@ -74,9 +102,5 @@ class AlbumListPresenter {
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
             return nil
         }
-    }
-
-    deinit {
-        self.cancellable?.cancel()
     }
 }

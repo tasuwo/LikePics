@@ -151,6 +151,10 @@ extension AlbumListViewController: AlbumListViewProtocol {
         self.dataSource.apply(snapshot)
     }
 
+    func reload() {
+        self.collectionView.reloadData()
+    }
+
     func showErrorMessage(_ message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))

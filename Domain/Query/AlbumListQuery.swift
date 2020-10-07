@@ -5,5 +5,5 @@
 import Combine
 
 public protocol AlbumListQuery {
-    var albums: CurrentValueSubject<[AlbumQuery], Error> { get }
+    var albums: CurrentValueSubject<[Album], Error> { get }
 }

@@ -36,7 +36,11 @@ class AppRootTabBarController: UITabBarController {
             return
         }
 
-        let albumListViewController = self.factory.makeAlbumListViewController()
+        guard let albumListViewController = self.factory.makeAlbumListViewController() else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize AlbumListViewController."))
+            return
+        }
+
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
         let settingsViewController = self.factory.makeSettingsViewController()
 

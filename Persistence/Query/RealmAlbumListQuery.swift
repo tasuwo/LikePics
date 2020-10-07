@@ -9,20 +9,20 @@ import RealmSwift
 class RealmAlbumListQuery {
     private var token: NotificationToken?
     private let results: Results<AlbumObject>
-    private var subject: CurrentValueSubject<[AlbumQuery], Error>
+    private var subject: CurrentValueSubject<[Album], Error>
 
     // MARK: - Lifecycle
 
     init(results: Results<AlbumObject>) {
         self.results = results
-        self.subject = .init(results.map({ RealmAlbumQuery(object: $0) }))
+        self.subject = .init(results.map({ .make(by: $0) }))
         self.token = self.results.observe { [weak self] (change: RealmCollectionChange<Results<AlbumObject>>) in
             switch change {
             case let .initial(results):
-                self?.subject.send(results.map({ RealmAlbumQuery(object: $0) }))
+                self?.subject.send(results.map({ .make(by: $0) }))
 
             case let .update(results, deletions: _, insertions: _, modifications: _):
-                self?.subject.send(results.map({ RealmAlbumQuery(object: $0) }))
+                self?.subject.send(results.map({ .make(by: $0) }))
 
             case let .error(error):
                 self?.subject.send(completion: .failure(error))
@@ -38,7 +38,7 @@ class RealmAlbumListQuery {
 extension RealmAlbumListQuery: AlbumListQuery {
     // MARK: - AlbumListQuery
 
-    var albums: CurrentValueSubject<[AlbumQuery], Error> {
+    var albums: CurrentValueSubject<[Album], Error> {
         return self.subject
     }
 }

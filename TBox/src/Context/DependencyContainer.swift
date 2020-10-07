@@ -34,7 +34,7 @@ protocol ViewControllerFactory {
 
     // MARK: Album
 
-    func makeAlbumListViewController() -> UIViewController
+    func makeAlbumListViewController() -> UIViewController?
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?
     func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController
 
@@ -238,8 +238,24 @@ extension DependencyContainer: ViewControllerFactory {
                                           toolBarItemsProvider: toolBarItemsProvider)
     }
 
-    func makeAlbumListViewController() -> UIViewController {
-        let presenter = AlbumListPresenter(storage: self.clipStorage, queryService: self.clipStorage, logger: self.logger)
+    func makeAlbumListViewController() -> UIViewController? {
+        let query: AlbumListQuery
+        switch self.clipStorage.queryAllAlbums() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open AlbumListView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = AlbumListPresenter(query: query,
+                                           storage: self.clipStorage,
+                                           settingStorage: self.userSettingsStorage,
+                                           logger: self.logger)
+
         let viewController = AlbumListViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
