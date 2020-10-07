@@ -74,6 +74,15 @@ class TagListPresenter {
         self.view?.endEditing()
     }
 
+    func updateTag(having id: Tag.Identity, nameTo name: String) {
+        if case let .failure(error) = self.storage.updateTag(having: id, nameTo: name) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to rename tag. (code: \(error.rawValue))"))
+            // TODO:
+            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtDeleteTag)\n\(error.makeErrorCode())")
+            return
+        }
+    }
+
     func performQuery(_ query: String) {
         self.searchQuery.send(query)
     }

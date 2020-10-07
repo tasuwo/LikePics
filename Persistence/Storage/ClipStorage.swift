@@ -585,6 +585,27 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Tag, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id) else {
+                return .failure(.notFound)
+            }
+
+            do {
+                try realm.write {
+                    tag.name = name
+                }
+                return .success(Tag.make(by: tag))
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     // MARK: Delete
 
     public func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError> {

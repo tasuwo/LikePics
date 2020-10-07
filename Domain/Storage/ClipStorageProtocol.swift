@@ -68,6 +68,8 @@ public protocol ClipStorageProtocol {
 
     func update(_ album: Album, titleTo title: String) -> Result<Album, ClipStorageError>
 
+    func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Tag, ClipStorageError>
+
     // MARK: Delete
 
     func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError>

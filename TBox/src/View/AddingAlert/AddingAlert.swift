@@ -35,7 +35,7 @@ class AddingAlert: NSObject {
 
     // MARK: - Methods
 
-    func present(completion: @escaping (Action) -> Void) {
+    func present(withText text: String? = nil, completion: @escaping (Action) -> Void) {
         let alert = UIAlertController(title: self.configuration.title,
                                       message: self.configuration.message,
                                       preferredStyle: .alert)
@@ -59,6 +59,7 @@ class AddingAlert: NSObject {
         alert.addTextField { [weak self] textField in
             textField.placeholder = self?.configuration.placeholder ?? ""
             textField.delegate = self
+            textField.text = text
         }
 
         self.currentAlert = alert

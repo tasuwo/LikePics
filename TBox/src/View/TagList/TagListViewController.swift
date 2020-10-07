@@ -17,10 +17,16 @@ class TagListViewController: UIViewController {
     private let factory: Factory
     private let presenter: TagListPresenter
     private let logger: TBoxLoggable
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                                       placeholder: L10n.tagListViewAlertForAddPlaceholder),
-                                                  baseView: self)
+    private lazy var addAlertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                                                                          message: L10n.tagListViewAlertForAddMessage,
+                                                                          placeholder: L10n.tagListViewAlertForAddPlaceholder),
+                                                     baseView: self)
+
+    // TODO: Localize
+    private lazy var updateAlertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                                                                             message: L10n.tagListViewAlertForAddMessage,
+                                                                             placeholder: L10n.tagListViewAlertForAddPlaceholder),
+                                                        baseView: self)
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     @IBOutlet var collectionView: TagCollectionView!
@@ -104,7 +110,7 @@ class TagListViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.alertContainer.present { [weak self] action in
+        self.addAlertContainer.present { [weak self] action in
             guard case let .saved(text: tag) = action else { return }
             self?.presenter.addTag(tag)
         }
@@ -220,6 +226,31 @@ extension TagListViewController: UICollectionViewDelegate {
         }
         if !self.isEditing {
             self.presenter.select(tag)
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
+    }
+
+    private func makeActionProvider(for tag: Tag) -> UIContextMenuActionProvider {
+        // TODO: Localize
+
+        let copy = UIAction(title: "コピー", image: UIImage(systemName: "square.on.square.fill")) { _ in
+            UIPasteboard.general.string = tag.name
+        }
+        let delete = UIAction(title: "削除", image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
+            self?.presenter.delete([tag])
+        }
+        let update = UIAction(title: "更新", image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+            self?.updateAlertContainer.present(withText: tag.name) { action in
+                guard case let .saved(text: name) = action else { return }
+                self?.presenter.updateTag(having: tag.identity, nameTo: name)
+            }
+        }
+        return { (elements: [UIMenuElement]) in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [copy, delete, update])
         }
     }
 }
