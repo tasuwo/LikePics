@@ -14,38 +14,44 @@ protocol TagListViewProtocol: AnyObject {
 }
 
 class TagListPresenter {
+    private let query: TagListQuery
     private let storage: ClipStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellable: AnyCancellable?
-    private var tagListQuery: TagListQuery?
+
+    private let searchQuery: CurrentValueSubject<String, Error> = .init("")
+    private var searchStorage: SearchableTagsStorage = .init()
+    private var cancellableBag = Set<AnyCancellable>()
 
     weak var view: TagListViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, queryService: ClipQueryServiceProtocol, logger: TBoxLoggable) {
+    init(query: TagListQuery, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+        self.query = query
         self.storage = storage
-        self.queryService = queryService
         self.logger = logger
     }
 
     // MARK: - Methods
 
     func setup() {
-        switch self.queryService.queryAllTags() {
-        case let .success(query):
-            self.tagListQuery = query
-            self.cancellable = query.tags
-                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] tags in
-                    self?.view?.apply(tags)
-                })
+        self.query
+            .tags
+            .combineLatest(self.searchQuery)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TagSelectionView."))
+            }, receiveValue: { [weak self] tags, searchQuery in
+                guard let self = self else { return }
 
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read tags. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtReadTags)\n\(error.makeErrorCode())")
-        }
+                self.searchStorage.updateCache(tags)
+                let tags = self.searchStorage.resolveTags(byQuery: searchQuery)
+                    .sorted(by: { $0.name < $1.name })
+
+                self.view?.apply(tags)
+            })
+            .store(in: &self.cancellableBag)
     }
 
     func addTag(_ name: String) {
@@ -66,5 +72,9 @@ class TagListPresenter {
             return
         }
         self.view?.endEditing()
+    }
+
+    func performQuery(_ query: String) {
+        self.searchQuery.send(query)
     }
 }

@@ -196,6 +196,7 @@
 		2CC0EB4C2518AAFF006D6DB4 /* TestImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */; };
 		2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */; };
 		2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */; };
+		2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -729,6 +730,7 @@
 		2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentationAnimator.swift; sourceTree = "<group>"; };
 		2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSelectionViewController.xib; sourceTree = "<group>"; };
+		2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableTagsStorage.swift; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
 		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1616,6 +1618,7 @@
 		2C99275F24DDC7D300672CA7 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2CCB8C97252E07560062A25A /* Search */,
 				2C3506B325178FB4009248C6 /* ImageExtensionResolver */,
 				2C2727A624DED57100FEF1BD /* Extensions */,
 				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
@@ -1808,6 +1811,14 @@
 				2CE22D4724E2A0D600449210 /* DataSource */,
 			);
 			path = Transition;
+			sourceTree = "<group>";
+		};
+		2CCB8C97252E07560062A25A /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
@@ -3155,6 +3166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */,
 				2CD25AE4251E454500BEE210 /* ClipListQuery.swift in Sources */,
 				2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,

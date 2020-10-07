@@ -30,8 +30,13 @@ class AppRootTabBarController: UITabBarController {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipsListView."))
             return
         }
+
+        guard let tagListViewController = self.factory.makeTagListViewController() else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize TagListViewController."))
+            return
+        }
+
         let albumListViewController = self.factory.makeAlbumListViewController()
-        let tagListViewController = self.factory.makeTagListViewController()
         let searchEntryViewController = self.factory.makeSearchEntryViewController()
         let settingsViewController = self.factory.makeSettingsViewController()
 

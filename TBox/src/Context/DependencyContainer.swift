@@ -40,7 +40,7 @@ protocol ViewControllerFactory {
 
     // MARK: Tag
 
-    func makeTagListViewController() -> UIViewController
+    func makeTagListViewController() -> UIViewController?
     func makeTagSelectionViewController(delegate: TagSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Settings
@@ -282,9 +282,24 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeTagListViewController() -> UIViewController {
-        let presenter = TagListPresenter(storage: self.clipStorage, queryService: self.clipStorage, logger: self.logger)
+    func makeTagListViewController() -> UIViewController? {
+        let query: TagListQuery
+        switch self.clipStorage.queryAllTags() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open TagSelectionView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = TagListPresenter(query: query,
+                                         storage: self.clipStorage,
+                                         logger: self.logger)
         let viewController = TagListViewController(factory: self, presenter: presenter, logger: self.logger)
+
         return UINavigationController(rootViewController: viewController)
     }
 

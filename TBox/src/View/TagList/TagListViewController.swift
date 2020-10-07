@@ -23,8 +23,8 @@ class TagListViewController: UIViewController {
                                                   baseView: self)
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var collectionView: TagCollectionView!
+    @IBOutlet var collectionView: TagCollectionView!
+    @IBOutlet var searchBar: UISearchBar!
 
     // MARK: - Lifecycle
 
@@ -48,6 +48,7 @@ class TagListViewController: UIViewController {
         self.setupCollectionView()
         self.setupAppearance()
         self.updateNavigationBar(for: self.isEditing)
+        self.setupSearchBar()
 
         self.presenter.setup()
     }
@@ -61,8 +62,7 @@ class TagListViewController: UIViewController {
     // MARK: Collection View
 
     private func setupCollectionView() {
-        self.collectionView = TagCollectionView(frame: self.view.bounds,
-                                                collectionViewLayout: self.createLayout())
+        self.collectionView.collectionViewLayout = self.createLayout()
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
         self.view.addSubview(self.collectionView)
@@ -140,6 +140,13 @@ class TagListViewController: UIViewController {
         self.setEditing(true, animated: true)
     }
 
+    // MARK: SearchBar
+
+    func setupSearchBar() {
+        self.searchBar.showsCancelButton = true
+        self.searchBar.delegate = self
+    }
+
     // MARK: UIViewController (Override)
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -214,5 +221,32 @@ extension TagListViewController: UICollectionViewDelegate {
         if !self.isEditing {
             self.presenter.select(tag)
         }
+    }
+}
+
+extension TagListViewController: UISearchBarDelegate {
+    // MARK: - UISearchBarDelegate
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        RunLoop.main.perform { [weak self] in
+            guard let text = self?.searchBar.text else { return }
+            self?.presenter.performQuery(text)
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            guard let text = self?.searchBar.text else { return }
+            self?.presenter.performQuery(text)
+        }
+        return true
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
     }
 }
