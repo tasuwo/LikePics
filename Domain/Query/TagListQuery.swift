@@ -5,5 +5,5 @@
 import Combine
 
 public protocol TagListQuery {
-    var tags: CurrentValueSubject<[TagQuery], Error> { get }
+    var tags: CurrentValueSubject<[Tag], Error> { get }
 }

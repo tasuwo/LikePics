@@ -38,8 +38,8 @@ class TagListPresenter {
         case let .success(query):
             self.tagListQuery = query
             self.cancellable = query.tags
-                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] tagQueries in
-                    self?.view?.apply(tagQueries.map({ $0.tag.value }))
+                .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] tags in
+                    self?.view?.apply(tags)
                 })
 
         case let .failure(error):

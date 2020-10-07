@@ -9,20 +9,20 @@ import RealmSwift
 class RealmTagListQuery {
     private var token: NotificationToken?
     private let results: Results<TagObject>
-    private var subject: CurrentValueSubject<[TagQuery], Error>
+    private var subject: CurrentValueSubject<[Tag], Error>
 
     // MARK: - Lifecycle
 
     init(results: Results<TagObject>) {
         self.results = results
-        self.subject = .init(results.map({ RealmTagQuery(object: $0) }))
+        self.subject = .init(results.map({ .make(by: $0) }))
         self.token = self.results.observe { [weak self] (change: RealmCollectionChange<Results<TagObject>>) in
             switch change {
             case let .initial(results):
-                self?.subject.send(results.map({ RealmTagQuery(object: $0) }))
+                self?.subject.send(results.map({ .make(by: $0) }))
 
             case let .update(results, deletions: _, insertions: _, modifications: _):
-                self?.subject.send(results.map({ RealmTagQuery(object: $0) }))
+                self?.subject.send(results.map({ .make(by: $0) }))
 
             case let .error(error):
                 self?.subject.send(completion: .failure(error))
@@ -38,7 +38,7 @@ class RealmTagListQuery {
 extension RealmTagListQuery: TagListQuery {
     // MARK: - TagListQuery
 
-    var tags: CurrentValueSubject<[TagQuery], Error> {
+    var tags: CurrentValueSubject<[Tag], Error> {
         return self.subject
     }
 }

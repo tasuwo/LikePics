@@ -195,6 +195,7 @@
 		2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */; };
 		2CC0EB4C2518AAFF006D6DB4 /* TestImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */; };
 		2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */; };
+		2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -727,6 +728,7 @@
 		2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TestImage.png; sourceTree = "<group>"; };
 		2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentationAnimator.swift; sourceTree = "<group>"; };
+		2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSelectionViewController.xib; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
 		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1140,6 +1142,7 @@
 			isa = PBXGroup;
 			children = (
 				2C38C704250AF33B00F32102 /* TagSelectionViewController.swift */,
+				2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */,
 			);
 			path = TagSelection;
 			sourceTree = "<group>";
@@ -2564,6 +2567,7 @@
 				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
 				2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */,
+				2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2CF46589251112EF00DF78E6 /* SettingsViewController.storyboard in Resources */,
