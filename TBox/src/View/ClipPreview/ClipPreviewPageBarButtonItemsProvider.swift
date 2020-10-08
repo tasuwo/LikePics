@@ -17,23 +17,39 @@ protocol ClipPreviewPageBarButtonItemsProviderDelegate: AnyObject {
     func shouldRefetchClip(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider)
+    func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider)
 }
 
 class ClipPreviewPageBarButtonItemsProvider {
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var flexibleItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var reloadItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var deleteClipItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var deleteOnlyImageOrClipImage: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var openWebItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var addItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var backItem: UIBarButtonItem!
+    private lazy var flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+                                                    target: nil,
+                                                    action: nil)
+    private lazy var reloadItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
+                                                  style: .plain,
+                                                  target: self,
+                                                  action: #selector(self.didTapRefetch))
+    private lazy var deleteClipItem = UIBarButtonItem(barButtonSystemItem: .trash,
+                                                      target: self,
+                                                      action: #selector(self.didTapDeleteClip))
+    private lazy var deleteOnlyImageOrClipImage = UIBarButtonItem(barButtonSystemItem: .trash,
+                                                                  target: self,
+                                                                  action: #selector(self.didTapDeleteOnlyImageOrClip))
+    private lazy var openWebItem = UIBarButtonItem(image: UIImage(systemName: "globe"),
+                                                   style: .plain,
+                                                   target: self,
+                                                   action: #selector(self.didTapOpenWeb))
+    private lazy var addItem = UIBarButtonItem(barButtonSystemItem: .add,
+                                               target: self,
+                                               action: #selector(self.didTapAdd))
+    private lazy var backItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left",
+                                                               withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
+                                                style: .plain,
+                                                target: self,
+                                                action: #selector(self.didTapBack))
+    private lazy var infoItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"),
+                                                style: .plain,
+                                                target: self,
+                                                action: #selector(self.didTapInfo))
 
     private let presenter: ClipPreviewPageBarButtonItemsPresenter
 
@@ -48,38 +64,6 @@ class ClipPreviewPageBarButtonItemsProvider {
 
     init(presenter: ClipPreviewPageBarButtonItemsPresenter) {
         self.presenter = presenter
-
-        self.flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-                                            target: nil,
-                                            action: nil)
-
-        self.reloadItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(self.didTapRefetch))
-
-        self.deleteClipItem = UIBarButtonItem(barButtonSystemItem: .trash,
-                                              target: self,
-                                              action: #selector(self.didTapDeleteClip))
-
-        self.deleteOnlyImageOrClipImage = UIBarButtonItem(barButtonSystemItem: .trash,
-                                                          target: self,
-                                                          action: #selector(self.didTapDeleteOnlyImageOrClip))
-
-        self.openWebItem = UIBarButtonItem(image: UIImage(systemName: "globe"),
-                                           style: .plain,
-                                           target: self,
-                                           action: #selector(self.didTapOpenWeb))
-
-        self.addItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                       target: self,
-                                       action: #selector(self.didTapAdd))
-
-        self.backItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left",
-                                                       withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
-                                        style: .plain,
-                                        target: self,
-                                        action: #selector(self.didTapBack))
     }
 
     // MARK: - Methods
@@ -148,6 +132,11 @@ class ClipPreviewPageBarButtonItemsProvider {
         self.delegate?.shouldBack(self)
     }
 
+    @objc
+    private func didTapInfo() {
+        self.delegate?.shouldPresentInfo(self)
+    }
+
     private func resolveBarButtonItem(for item: ClipPreviewPageBarButtonItemsPresenter.Item) -> UIBarButtonItem {
         switch item {
         case .spacer:
@@ -170,6 +159,9 @@ class ClipPreviewPageBarButtonItemsProvider {
 
         case .back:
             return self.backItem
+
+        case .info:
+            return self.infoItem
         }
     }
 }

@@ -27,6 +27,7 @@ class ClipPreviewPageBarButtonItemsPresenter {
         case openWeb
         case add
         case back
+        case info
     }
 
     weak var dataSource: ClipPreviewPageBarButtonItemsPresenterDataSource?
@@ -79,7 +80,7 @@ class ClipPreviewPageBarButtonItemsPresenter {
             ])
             self.toolBar?.show()
             self.navigationBar?.setLeftBarItems([.back])
-            self.navigationBar?.setRightBarItems([])
+            self.navigationBar?.setRightBarItems([.info])
         }
     }
 }

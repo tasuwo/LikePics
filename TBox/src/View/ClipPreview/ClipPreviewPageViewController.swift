@@ -361,6 +361,15 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         self.dismiss(animated: true, completion: nil)
     }
+
+    func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
+        let nullableViewController = self.factory.makeClipInformationViewController(clipId: self.presenter.clip.identity,
+                                                                                    itemId: self.presenter.clip.items[index].identity,
+                                                                                    dataSource: self)
+        guard let viewController = nullableViewController else { return }
+        self.present(viewController, animated: true, completion: nil)
+    }
 }
 
 extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
