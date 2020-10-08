@@ -14,6 +14,7 @@ public enum ClipStorageError: Int, Error {
 public protocol ClipQueryServiceProtocol {
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
+    func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError>
     func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError>
     func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError>
     func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError>

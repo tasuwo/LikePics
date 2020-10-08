@@ -27,6 +27,14 @@ extension ClipStorage: ClipQueryServiceProtocol {
         return .success(RealmClipsResultQuery(results: realm.objects(ClipObject.self)))
     }
 
+    public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else {
+            return .failure(.internalError)
+        }
+        let results = realm.objects(ClipObject.self).filter("tags.@count == 0")
+        return .success(RealmClipsResultQuery(results: results))
+    }
+
     public func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)

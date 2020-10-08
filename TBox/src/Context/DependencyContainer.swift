@@ -217,6 +217,18 @@ extension DependencyContainer: ViewControllerFactory {
                 """))
                 return nil
             }
+
+        case .uncategorized:
+            switch self.clipStorage.queryUncategorizedClips() {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to open SearchResultView for uncategorized clips. (\(error.rawValue))
+                """))
+                return nil
+            }
         }
 
         let presenter = SearchResultPresenter(context: context,

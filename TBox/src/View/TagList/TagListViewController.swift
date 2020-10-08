@@ -378,6 +378,10 @@ extension TagListViewController: UncategorizedCellDelegate {
     // MARK: - UncategorizedCellDelegate
 
     func didTap(_ cell: UncategorizedCell) {
-        print(#function)
+        guard let viewController = self.factory.makeSearchResultViewController(context: .uncategorized) else {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
+            return
+        }
+        self.show(viewController, sender: nil)
     }
 }

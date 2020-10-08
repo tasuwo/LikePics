@@ -17,6 +17,7 @@ protocol SearchResultViewProtocol: AnyObject {
 enum SearchContext {
     case keywords([String])
     case tag(Tag)
+    case uncategorized
 
     var title: String {
         switch self {
@@ -25,6 +26,10 @@ enum SearchContext {
 
         case let .tag(value):
             return value.name
+
+        case .uncategorized:
+            // TODO: Localize
+            return "未分類"
         }
     }
 }
