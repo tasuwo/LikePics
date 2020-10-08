@@ -97,6 +97,7 @@ class AlbumViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
+        self.title = self.presenter.album.title
         self.navigationItemsProvider.delegate = self
         self.navigationItemsProvider.navigationItem = self.navigationItem
     }
