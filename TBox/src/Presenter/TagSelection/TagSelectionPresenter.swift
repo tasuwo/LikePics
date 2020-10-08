@@ -8,6 +8,7 @@ import Domain
 
 protocol TagSelectionViewProtocol: AnyObject {
     func apply(_ tags: [Tag])
+    func apply(selection: Set<Tag>)
     func showErrorMessage(_ message: String)
     func close()
 }
@@ -25,17 +26,36 @@ class TagSelectionPresenter {
     private var searchStorage: SearchableTagsStorage = .init()
     private var cancellableBag = Set<AnyCancellable>()
 
+    private(set) var tags: [Tag] = [] {
+        didSet {
+            self.view?.apply(self.tags)
+            self.view?.apply(selection: Set(self.selectedTags))
+        }
+    }
+
+    private var selectedTags: [Tag] {
+        return self.selections
+            .compactMap { selection in
+                return self.tags.first(where: { selection == $0.identity })
+            }
+    }
+
+    private var selections: Set<Tag.Identity> {
+        didSet {
+            self.view?.apply(selection: Set(self.selectedTags))
+        }
+    }
+
     weak var delegate: TagSelectionPresenterDelegate?
     weak var view: TagSelectionViewProtocol?
 
     // MARK: - Lifecycle
 
-    init(query: TagListQuery, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(query: TagListQuery, selectedTags: [Tag.Identity], storage: ClipStorageProtocol, logger: TBoxLoggable) {
         self.query = query
         self.storage = storage
         self.logger = logger
-
-        // TODO: 選択済みのタグは選択済みにすべきかどうか
+        self.selections = Set(selectedTags)
     }
 
     // MARK: - Methods
@@ -53,7 +73,7 @@ class TagSelectionPresenter {
                 let tags = self.searchStorage.resolveTags(byQuery: searchQuery)
                     .sorted(by: { $0.name < $1.name })
 
-                self.view?.apply(tags)
+                self.tags = tags
             })
             .store(in: &self.cancellableBag)
     }
@@ -68,6 +88,15 @@ class TagSelectionPresenter {
     func select(_ tags: [Tag]) {
         self.delegate?.tagSelectionPresenter(self, didSelectTags: tags)
         self.view?.close()
+    }
+
+    func select(tagId: Tag.Identity) {
+        self.selections.insert(tagId)
+    }
+
+    func deselect(tagId: Tag.Identity) {
+        guard self.selections.contains(tagId) else { return }
+        self.selections.remove(tagId)
     }
 
     func performQuery(_ query: String) {

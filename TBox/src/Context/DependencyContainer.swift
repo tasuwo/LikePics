@@ -41,7 +41,7 @@ protocol ViewControllerFactory {
     // MARK: Tag
 
     func makeTagListViewController() -> UIViewController?
-    func makeTagSelectionViewController(delegate: TagSelectionPresenterDelegate) -> UIViewController?
+    func makeTagSelectionViewController(selectedTags: [Tag.Identity], delegate: TagSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Settings
 
@@ -319,7 +319,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeTagSelectionViewController(delegate: TagSelectionPresenterDelegate) -> UIViewController? {
+    func makeTagSelectionViewController(selectedTags: [Tag.Identity], delegate: TagSelectionPresenterDelegate) -> UIViewController? {
         let query: TagListQuery
         switch self.clipStorage.queryAllTags() {
         case let .success(result):
@@ -333,6 +333,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = TagSelectionPresenter(query: query,
+                                              selectedTags: selectedTags,
                                               storage: self.clipStorage,
                                               logger: self.logger)
         presenter.delegate = delegate

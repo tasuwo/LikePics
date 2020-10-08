@@ -233,7 +233,7 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        guard let viewController = self.factory.makeTagSelectionViewController(delegate: self) else { return }
+        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 

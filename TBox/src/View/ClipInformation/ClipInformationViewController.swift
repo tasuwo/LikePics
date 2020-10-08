@@ -129,7 +129,9 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func didTapAddTagButton(_ view: ClipInformationView) {
-        guard let viewController = self.factory.makeTagSelectionViewController(delegate: self) else { return }
+        let tags = self.presenter.clip.tags.map { $0.identity }
+        let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, delegate: self)
+        guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 

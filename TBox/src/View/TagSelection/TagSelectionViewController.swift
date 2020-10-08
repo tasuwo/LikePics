@@ -126,6 +126,12 @@ extension TagSelectionViewController: TagSelectionViewProtocol {
         self.dataSource.apply(snapshot)
     }
 
+    func apply(selection: Set<Tag>) {
+        let indexPaths = selection
+            .compactMap { self.dataSource.indexPath(for: $0) }
+        self.collectionView.applySelection(at: indexPaths)
+    }
+
     func showErrorMessage(_ message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
@@ -157,11 +163,13 @@ extension TagSelectionViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // NOP
+        guard let tagId = self.dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        self.presenter.select(tagId: tagId)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        // NOP
+        guard let tagId = self.dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        self.presenter.deselect(tagId: tagId)
     }
 }
 
