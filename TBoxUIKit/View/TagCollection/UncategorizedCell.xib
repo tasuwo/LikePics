@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="iSx-1D-29o" customClass="UncategorizedCell" customModule="TBoxUIKit" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="499" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="AvR-6d-cDV">
+                <rect key="frame" x="0.0" y="0.0" width="499" height="50"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNI-rI-kJb">
+                        <rect key="frame" x="0.0" y="8" width="499" height="42"/>
+                        <state key="normal" title="Button"/>
+                        <connections>
+                            <action selector="didTap:" destination="iSx-1D-29o" eventType="touchUpInside" id="Mb2-k1-70v"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="iNI-rI-kJb" secondAttribute="bottom" id="AUD-cH-QoP"/>
+                    <constraint firstItem="iNI-rI-kJb" firstAttribute="leading" secondItem="AvR-6d-cDV" secondAttribute="leading" id="TLw-8M-JEu"/>
+                    <constraint firstItem="iNI-rI-kJb" firstAttribute="top" secondItem="AvR-6d-cDV" secondAttribute="top" constant="8" id="UuI-cw-Ens"/>
+                    <constraint firstAttribute="trailing" secondItem="iNI-rI-kJb" secondAttribute="trailing" id="lTN-CK-wML"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <size key="customSize" width="499" height="50"/>
+            <connections>
+                <outlet property="button" destination="iNI-rI-kJb" id="HiP-bW-GvQ"/>
+            </connections>
+            <point key="canvasLocation" x="-628.26086956521749" y="144.64285714285714"/>
+        </collectionViewCell>
+    </objects>
+</document>

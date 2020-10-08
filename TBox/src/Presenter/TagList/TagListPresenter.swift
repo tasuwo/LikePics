@@ -7,7 +7,7 @@ import Common
 import Domain
 
 protocol TagListViewProtocol: AnyObject {
-    func apply(_ tags: [Tag])
+    func apply(_ tags: [Tag], isFiltered: Bool)
     func search(with context: SearchContext)
     func showErrorMessage(_ message: String)
     func endEditing()
@@ -49,7 +49,7 @@ class TagListPresenter {
                 let tags = self.searchStorage.resolveTags(byQuery: searchQuery)
                     .sorted(by: { $0.name < $1.name })
 
-                self.view?.apply(tags)
+                self.view?.apply(tags, isFiltered: !searchQuery.isEmpty)
             })
             .store(in: &self.cancellableBag)
     }

@@ -19,7 +19,12 @@ public struct SearchableTagsStorage {
 
     // MARK: - Methods
 
-    // MARK: Public
+    private static func transformToSearchableText(text: String) -> String? {
+        return text
+            .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
+            .applyingTransform(.hiraganaToKatakana, reverse: false)?
+            .lowercased()
+    }
 
     public mutating func updateCache(_ tags: [Tag]) {
         self.cache = tags.map { (tag: $0, comparableName: Self.transformToSearchableText(text: $0.name) ?? $0.name) }.lazy
@@ -39,14 +44,5 @@ public struct SearchableTagsStorage {
         return self.cache
             .filter { $0.comparableName.contains(comparableFilterQuery) }
             .map { $0.tag }
-    }
-
-    // MARK: Privates
-
-    private static func transformToSearchableText(text: String) -> String? {
-        return text
-            .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
-            .applyingTransform(.hiraganaToKatakana, reverse: false)?
-            .lowercased()
     }
 }

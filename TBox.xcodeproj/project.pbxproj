@@ -125,6 +125,8 @@
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
+		2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */; };
+		2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C82CCC224DE5FED001E2F02 /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
@@ -658,6 +660,8 @@
 		2C6E09D424E8150500B541D9 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncategorizedCell.swift; sourceTree = "<group>"; };
+		2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncategorizedCell.xib; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
 		2C86CC4F24E12E2D0091A89E /* ClipPreviewPagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPagePresenter.swift; sourceTree = "<group>"; };
@@ -1789,6 +1793,8 @@
 				2CB0712F2509053D0000E7E1 /* TagCollectionViewCell.xib */,
 				2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */,
 				2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */,
+				2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */,
+				2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */,
 			);
 			path = TagCollection;
 			sourceTree = "<group>";
@@ -2536,6 +2542,7 @@
 				2C570B6F24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib in Resources */,
 				2C8FD64F24E02E10005887F9 /* ClipSelectionCollectionViewHeader.xib in Resources */,
 				2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */,
+				2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3111,6 +3118,7 @@
 			files = (
 				2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */,
 				2CABB5B0250E5105007B7F88 /* ClipInformationTransitionController.swift in Sources */,
+				2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */,
 				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
 				2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */,
 				2CFC5D1A250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift in Sources */,

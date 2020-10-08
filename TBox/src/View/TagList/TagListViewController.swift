@@ -10,9 +10,17 @@ import UIKit
 class TagListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
-    enum Section {
+    enum Section: Int {
+        case uncategorized
         case main
     }
+
+    enum Item: Hashable {
+        case uncategorized
+        case tag(Tag)
+    }
+
+    private static let uncategorizedCellIdentifier = "uncategorized"
 
     private let factory: Factory
     private let presenter: TagListPresenter
@@ -28,7 +36,7 @@ class TagListViewController: UIViewController {
                              placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
     )
     // swiftlint:disable:next implicitly_unwrapped_optional
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     @IBOutlet var collectionView: TagCollectionView!
     @IBOutlet var searchBar: UISearchBar!
 
@@ -75,21 +83,66 @@ class TagListViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
+
+        self.collectionView.register(UncategorizedCell.nib,
+                                     forCellWithReuseIdentifier: Self.uncategorizedCellIdentifier)
+
         self.dataSource = .init(collectionView: self.collectionView,
-                                cellProvider: TagCollectionView.cellProvider(dataSource: self))
+                                cellProvider: self.cellProvider())
     }
 
     private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
-            let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
-                                                                 top: nil,
-                                                                 trailing: nil,
-                                                                 bottom: .fixed(4))
-            let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
-            return section
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
+            switch Section(rawValue: sectionIndex) {
+            case .uncategorized:
+                return self.createUncategorizedLayoutSection()
+
+            case .main:
+                return self.createTagsLayoutSection()
+
+            case .none:
+                return nil
+            }
         }
         return layout
+    }
+
+    private func createUncategorizedLayoutSection() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0),
+                                                            heightDimension: .fractionalHeight(1.0)))
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(40))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14)
+
+        return NSCollectionLayoutSection(group: group)
+    }
+
+    private func createTagsLayoutSection() -> NSCollectionLayoutSection {
+        let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
+                                                             top: nil,
+                                                             trailing: nil,
+                                                             bottom: .fixed(4))
+        let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
+        return section
+    }
+
+    private func cellProvider() -> (UICollectionView, IndexPath, Item) -> UICollectionViewCell? {
+        return { [weak self] collectionView, indexPath, item -> UICollectionViewCell? in
+            guard let self = self else { return nil }
+            switch item {
+            case let .tag(tag):
+                return TagCollectionView.cellProvider(dataSource: self)(collectionView, indexPath, tag)
+
+            case .uncategorized:
+                let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: Self.uncategorizedCellIdentifier, for: indexPath)
+                guard let cell = dequeuedCell as? UncategorizedCell else { return dequeuedCell }
+                cell.delegate = self
+                return cell
+            }
+        }
     }
 
     // MARK: NavigationBar
@@ -135,7 +188,12 @@ class TagListViewController: UIViewController {
 
         alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction(count), style: .destructive, handler: { [weak self] _ in
             guard let self = self, let indices = self.collectionView.indexPathsForSelectedItems else { return }
-            self.presenter.delete(indices.compactMap({ self.dataSource.itemIdentifier(for: $0) }))
+            let selectedTags = indices
+                .compactMap { (index: IndexPath) -> Item? in self.dataSource.itemIdentifier(for: index) }
+                .compactMap { (item: Item) -> Tag? in
+                    if case let .tag(tag) = item { return tag } else { return nil }
+                }
+            self.presenter.delete(selectedTags)
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
@@ -180,10 +238,12 @@ class TagListViewController: UIViewController {
 extension TagListViewController: TagListViewProtocol {
     // MARK: - TagListViewProtocol
 
-    func apply(_ tags: [Tag]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+    func apply(_ tags: [Tag], isFiltered: Bool) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.uncategorized])
+        snapshot.appendItems(isFiltered ? [] : [.uncategorized])
         snapshot.appendSections([.main])
-        snapshot.appendItems(tags)
+        snapshot.appendItems(tags.map { .tag($0) })
         self.dataSource.apply(snapshot)
     }
 
@@ -226,18 +286,28 @@ extension TagListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else {
-            collectionView.deselectItem(at: indexPath, animated: true)
-            return
-        }
-        if !self.isEditing {
-            self.presenter.select(tag)
+        switch self.dataSource.itemIdentifier(for: indexPath) {
+        case let .tag(tag):
+            if !self.isEditing {
+                self.presenter.select(tag)
+            }
+
+        case .uncategorized:
+            print(#function)
+
+        case .none:
+            break
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let tag = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
+        switch self.dataSource.itemIdentifier(for: indexPath) {
+        case let .tag(tag):
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
+
+        default:
+            return nil
+        }
     }
 
     private func makeActionProvider(for tag: Tag) -> UIContextMenuActionProvider {
@@ -301,5 +371,13 @@ extension TagListViewController: UISearchBarDelegate {
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.searchBar.resignFirstResponder()
+    }
+}
+
+extension TagListViewController: UncategorizedCellDelegate {
+    // MARK: - UncategorizedCellDelegate
+
+    func didTap(_ cell: UncategorizedCell) {
+        print(#function)
     }
 }
