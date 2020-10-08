@@ -9,21 +9,13 @@ import UIKit
 
 protocol ClipTargetFinderViewProtocol: AnyObject {
     func startLoading()
-
     func endLoading()
-
     func reloadList()
-
     func showConfirmationForOverwrite()
-
     func show(errorMessage: String)
-
     func updateSelectionOrder(at index: Int, to order: Int)
-
     func updateDoneButton(isEnabled: Bool)
-
     func resetSelection()
-
     func notifySavedImagesSuccessfully()
 }
 
@@ -33,7 +25,7 @@ typealias OrderedImageData = (index: Int, data: FetchedImageData)
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
         case failedToFindImages(WebImageUrlFinderError)
-        case failedToDownlaodImages
+        case failedToDownloadImages
         case failedToSave(ClipStorageError)
         case internalError
     }
@@ -97,7 +89,7 @@ public class ClipTargetFinderPresenter {
         case .failedToFindImages(.timeout):
             return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
 
-        case .failedToDownlaodImages:
+        case .failedToDownloadImages:
             return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
 
         case .failedToSave:
@@ -275,7 +267,7 @@ public class ClipTargetFinderPresenter {
                     }
                     .map {
                         guard let original = $0.value.original else {
-                            throw PresenterError.failedToDownlaodImages
+                            throw PresenterError.failedToDownloadImages
                         }
                         return FetchedImageDataSet(index: $0.key,
                                                    imageHeight: original.imageHeight,
