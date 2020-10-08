@@ -180,7 +180,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
                                                   storage: self.clipStorage,
                                                   finder: WebImageUrlFinder(),
-                                                  currentDateResovler: { Date() },
+                                                  currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
         let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
         return UINavigationController(rootViewController: viewController)

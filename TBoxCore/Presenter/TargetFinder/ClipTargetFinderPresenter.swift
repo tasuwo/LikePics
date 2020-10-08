@@ -62,14 +62,14 @@ public class ClipTargetFinderPresenter {
     public init(url: URL,
                 storage: ClipStorageProtocol,
                 finder: WebImageUrlFinderProtocol,
-                currentDateResovler: @escaping () -> Date,
+                currentDateResolver: @escaping () -> Date,
                 isEnabledOverwrite: Bool = false,
                 urlSession: URLSession = URLSession.shared)
     {
         self.url = url
         self.storage = storage
         self.finder = finder
-        self.currentDateResolver = currentDateResovler
+        self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
         self.urlSession = urlSession
     }
@@ -116,6 +116,11 @@ public class ClipTargetFinderPresenter {
         if !self.isEnabledOverwrite, case .success = self.storage.readClip(having: self.url) {
             self.view?.showConfirmationForOverwrite()
             return
+        }
+
+        if !self.imageMetas.isEmpty {
+            self.imageMetas = []
+            self.view?.reloadList()
         }
 
         self.view?.startLoading()

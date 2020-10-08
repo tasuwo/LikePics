@@ -30,7 +30,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipTargetFinderPresenter(url: url,
                                                   storage: self.storage,
                                                   finder: self.finder,
-                                                  currentDateResovler: currentDateResolver)
+                                                  currentDateResolver: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }
 }

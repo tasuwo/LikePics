@@ -16,6 +16,9 @@ public protocol ClipTargetFinderDelegate: AnyObject {
 public class ClipTargetFinderViewController: UIViewController {
     private let presenter: ClipTargetFinderPresenter
 
+    private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAction))
+    private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(reloadAction))
+
     private weak var delegate: ClipTargetFinderDelegate?
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
@@ -46,10 +49,6 @@ public class ClipTargetFinderViewController: UIViewController {
         }
 
         self.setupNavigationBar()
-    }
-
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         self.presenter.findImages()
     }
 
@@ -58,23 +57,23 @@ public class ClipTargetFinderViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.clipTargetFinderViewTitle
 
-        let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
-        self.navigationItem.setLeftBarButton(itemCancel, animated: false)
+        [self.itemReload, self.itemDone].forEach {
+            $0.setTitleTextAttributes([.foregroundColor: UIColor.lightGray], for: .disabled)
+            $0.isEnabled = false
+        }
 
-        let itemDone = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAction))
-        self.navigationItem.setRightBarButton(itemDone, animated: false)
-
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-    }
-
-    @objc
-    private func cancelAction() {
-        self.delegate?.didCancel(self)
+        self.navigationItem.setLeftBarButton(self.itemReload, animated: true)
+        self.navigationItem.setRightBarButton(self.itemDone, animated: true)
     }
 
     @objc
     private func saveAction() {
         self.presenter.saveSelectedImages()
+    }
+
+    @objc
+    private func reloadAction() {
+        self.presenter.findImages()
     }
 }
 
@@ -84,11 +83,13 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     func startLoading() {
         self.indicator.startAnimating()
         self.indicator.isHidden = false
+        self.itemReload.isEnabled = false
     }
 
     func endLoading() {
         self.indicator.isHidden = true
         self.indicator.stopAnimating()
+        self.itemReload.isEnabled = true
     }
 
     func reloadList() {
@@ -137,7 +138,7 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     }
 
     func updateDoneButton(isEnabled: Bool) {
-        self.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
+        self.itemDone.isEnabled = isEnabled
     }
 
     func resetSelection() {
