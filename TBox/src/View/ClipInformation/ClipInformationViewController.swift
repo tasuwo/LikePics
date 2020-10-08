@@ -18,9 +18,14 @@ class ClipInformationViewController: UIViewController {
                                                   baseView: self)
 
     private weak var dataSource: ClipInformationViewDataSource?
+    private var shouldHideStatusBar: Bool = false
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
+
+    override var prefersStatusBarHidden: Bool {
+        return self.shouldHideStatusBar
+    }
 
     @IBOutlet var informationView: ClipInformationView!
 
@@ -50,6 +55,20 @@ class ClipInformationViewController: UIViewController {
         self.informationView.dataSource = self.dataSource
 
         self.presenter.setup()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.shouldHideStatusBar = true
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.shouldHideStatusBar = false
+        self.setNeedsStatusBarAppearanceUpdate()
     }
 
     // MARK: - Methods
