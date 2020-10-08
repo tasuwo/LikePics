@@ -112,7 +112,7 @@ class TagSelectionViewController: UIViewController {
 
     private func setupSearchBar() {
         self.searchBar.delegate = self
-        self.searchBar.showsCancelButton = true
+        self.searchBar.showsCancelButton = false
     }
 }
 
@@ -189,6 +189,14 @@ extension TagSelectionViewController: UISearchBarDelegate {
             self?.presenter.performQuery(text)
         }
         return true
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(false, animated: true)
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

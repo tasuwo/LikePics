@@ -149,8 +149,8 @@ class TagListViewController: UIViewController {
     // MARK: SearchBar
 
     func setupSearchBar() {
-        self.searchBar.showsCancelButton = true
         self.searchBar.delegate = self
+        self.searchBar.showsCancelButton = false
     }
 
     // MARK: UIViewController (Override)
@@ -271,6 +271,14 @@ extension TagListViewController: UISearchBarDelegate {
             self?.presenter.performQuery(text)
         }
         return true
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(false, animated: true)
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
