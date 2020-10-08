@@ -97,8 +97,6 @@ class AlbumViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationItemsProvider.delegate = self
         self.navigationItemsProvider.navigationItem = self.navigationItem
     }
