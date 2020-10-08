@@ -17,16 +17,16 @@ class TagListViewController: UIViewController {
     private let factory: Factory
     private let presenter: TagListPresenter
     private let logger: TBoxLoggable
-    private lazy var addAlertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                                                                          message: L10n.tagListViewAlertForAddMessage,
-                                                                          placeholder: L10n.tagListViewAlertForAddPlaceholder),
-                                                     baseView: self)
-
-    // TODO: Localize
-    private lazy var updateAlertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                                                                             message: L10n.tagListViewAlertForAddMessage,
-                                                                             placeholder: L10n.tagListViewAlertForAddPlaceholder),
-                                                        baseView: self)
+    private lazy var addAlertContainer = AddingAlert(
+        configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                             message: L10n.tagListViewAlertForAddMessage,
+                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+    )
+    private lazy var updateAlertContainer = AddingAlert(
+        configuration: .init(title: L10n.tagListViewAlertForUpdateTitle,
+                             message: L10n.tagListViewAlertForUpdateMessage,
+                             placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
+    )
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     @IBOutlet var collectionView: TagCollectionView!
@@ -110,10 +110,16 @@ class TagListViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.addAlertContainer.present { [weak self] action in
-            guard case let .saved(text: tag) = action else { return }
-            self?.presenter.addTag(tag)
-        }
+        self.addAlertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: tag) = action else { return }
+                self?.presenter.addTag(tag)
+            }
+        )
     }
 
     @objc
@@ -235,19 +241,27 @@ extension TagListViewController: UICollectionViewDelegate {
     }
 
     private func makeActionProvider(for tag: Tag) -> UIContextMenuActionProvider {
-        // TODO: Localize
-
-        let copy = UIAction(title: "コピー", image: UIImage(systemName: "square.on.square.fill")) { _ in
+        let copy = UIAction(title: L10n.tagListViewContextMenuActionCopy,
+                            image: UIImage(systemName: "square.on.square.fill")) { _ in
             UIPasteboard.general.string = tag.name
         }
-        let delete = UIAction(title: "削除", image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
+        let delete = UIAction(title: L10n.tagListViewContextMenuActionDelete,
+                              image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
             self?.presenter.delete([tag])
         }
-        let update = UIAction(title: "更新", image: UIImage(systemName: "text.cursor")) { [weak self] _ in
-            self?.updateAlertContainer.present(withText: tag.name) { action in
-                guard case let .saved(text: name) = action else { return }
-                self?.presenter.updateTag(having: tag.identity, nameTo: name)
-            }
+        let update = UIAction(title: L10n.tagListViewContextMenuActionUpdate,
+                              image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateAlertContainer.present(
+                withText: tag.name,
+                on: self,
+                validator: {
+                    $0 != tag.name && $0?.isEmpty != true
+                }, completion: { action in
+                    guard case let .saved(text: name) = action else { return }
+                    self.presenter.updateTag(having: tag.identity, nameTo: name)
+                }
+            )
         }
         return { (elements: [UIMenuElement]) in
             return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [copy, delete, update])

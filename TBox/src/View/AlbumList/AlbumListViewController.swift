@@ -16,10 +16,11 @@ class AlbumListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.albumListViewAlertForAddTitle,
-                                                                       message: L10n.albumListViewAlertForAddMessage,
-                                                                       placeholder: L10n.albumListViewAlertForAddPlaceholder),
-                                                  baseView: self)
+    private lazy var alertContainer = AddingAlert(
+        configuration: .init(title: L10n.albumListViewAlertForAddTitle,
+                             message: L10n.albumListViewAlertForAddMessage,
+                             placeholder: L10n.albumListViewAlertForAddPlaceholder)
+    )
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -124,10 +125,16 @@ class AlbumListViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.alertContainer.present { [weak self] action in
-            guard case let .saved(text: text) = action else { return }
-            self?.presenter.addAlbum(title: text)
-        }
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.presenter.addAlbum(title: text)
+            }
+        )
     }
 
     // MARK: UIViewController (Override)

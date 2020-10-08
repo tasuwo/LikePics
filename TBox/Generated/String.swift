@@ -10,6 +10,10 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// キャンセル
+    internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
+    /// 保存
+    internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
     /// アルバムの読み込みに失敗しました
     internal static let addingClipsToAlbumViewErrorAtReadAlbums = L10n.tr("Localizable", "adding_clips_to_album_view_error_at_read_albums")
     /// アルバムの更新に失敗しました
@@ -145,6 +149,18 @@ internal enum L10n {
 
     /// 選択中のタグを削除しますか？\n含まれるクリップは削除されません
     internal static let tagListViewAlertForDeleteMessage = L10n.tr("Localizable", "tag_list_view_alert_for_delete_message")
+    /// このタグの新しい名前を入力してください
+    internal static let tagListViewAlertForUpdateMessage = L10n.tr("Localizable", "tag_list_view_alert_for_update_message")
+    /// タグ名
+    internal static let tagListViewAlertForUpdatePlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_update_placeholder")
+    /// タグ名の変更
+    internal static let tagListViewAlertForUpdateTitle = L10n.tr("Localizable", "tag_list_view_alert_for_update_title")
+    /// コピー
+    internal static let tagListViewContextMenuActionCopy = L10n.tr("Localizable", "tag_list_view_context_menu_action_copy")
+    /// 削除
+    internal static let tagListViewContextMenuActionDelete = L10n.tr("Localizable", "tag_list_view_context_menu_action_delete")
+    /// 名前の変更
+    internal static let tagListViewContextMenuActionUpdate = L10n.tr("Localizable", "tag_list_view_context_menu_action_update")
     /// タグの追加に失敗しました
     internal static let tagListViewErrorAtAddTag = L10n.tr("Localizable", "tag_list_view_error_at_add_tag")
     /// クリップへのタグの追加に失敗しました

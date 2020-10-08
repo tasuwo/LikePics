@@ -5,6 +5,8 @@
 import UIKit
 
 class AddingAlert: NSObject {
+    typealias Validator = (String?) -> Bool
+
     enum Action {
         case saved(text: String)
         case cancelled
@@ -17,31 +19,58 @@ class AddingAlert: NSObject {
         let placeholder: String
     }
 
+    class Context {
+        weak var alert: UIAlertController?
+        weak var saveAction: UIAlertAction?
+        let validator: Validator?
+
+        var text: String? {
+            return self.alert?.textFields?.first?.text
+        }
+
+        var isTextValid: Bool {
+            guard let validator = self.validator else { return true }
+            return validator(self.text)
+        }
+
+        init(alert: UIAlertController, saveAction: UIAlertAction, validator: Validator?) {
+            self.alert = alert
+            self.saveAction = saveAction
+            self.validator = validator
+        }
+
+        func performValidation() {
+            guard let validator = self.validator else { return }
+            self.saveAction?.isEnabled = validator(self.text)
+        }
+    }
+
     var isPresenting: Bool {
-        self.currentAlert != nil
+        self.context != nil
     }
 
     private let configuration: Configuration
-    private weak var baseView: UIViewController?
-    private weak var currentAlert: UIAlertController?
-    private weak var currentSaveAction: UIAlertAction?
+    private var context: Context?
 
     // MARK: - Lifecycle
 
-    init(configuration: Configuration, baseView: UIViewController) {
+    init(configuration: Configuration) {
         self.configuration = configuration
-        self.baseView = baseView
     }
 
     // MARK: - Methods
 
-    func present(withText text: String? = nil, completion: @escaping (Action) -> Void) {
+    func present(withText text: String?,
+                 on baseView: UIViewController,
+                 validator: Validator? = nil,
+                 completion: @escaping (Action) -> Void)
+    {
         let alert = UIAlertController(title: self.configuration.title,
                                       message: self.configuration.message,
                                       preferredStyle: .alert)
 
-        let saveAction = UIAlertAction(title: "保存", style: .default) { [weak self] _ in
-            guard let text = self?.currentAlert?.textFields?.first?.text else {
+        let saveAction = UIAlertAction(title: L10n.addingAlertActionSave, style: .default) { [weak self] _ in
+            guard let text = self?.context?.text else {
                 completion(.error)
                 return
             }
@@ -49,7 +78,7 @@ class AddingAlert: NSObject {
         }
         saveAction.isEnabled = false
 
-        let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: { _ in
+        let cancelAction = UIAlertAction(title: L10n.addingAlertActionCancel, style: .cancel, handler: { _ in
             completion(.cancelled)
         })
 
@@ -59,22 +88,35 @@ class AddingAlert: NSObject {
         alert.addTextField { [weak self] textField in
             textField.placeholder = self?.configuration.placeholder ?? ""
             textField.delegate = self
+            textField.addTarget(self, action: #selector(AddingAlert.textFieldDidChange), for: .editingChanged)
             textField.text = text
         }
 
-        self.currentAlert = alert
-        self.currentSaveAction = saveAction
+        self.context = .init(alert: alert, saveAction: saveAction, validator: validator)
+        self.context?.performValidation()
 
-        self.baseView?.present(alert, animated: true, completion: nil)
+        baseView.present(alert, animated: true, completion: nil)
+    }
+
+    @objc
+    private func textFieldDidChange() {
+        RunLoop.main.perform { [weak self] in
+            self?.context?.performValidation()
+        }
     }
 }
 
 extension AddingAlert: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return self.context?.isTextValid ?? true
+    }
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let text = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-        self.currentSaveAction?.isEnabled = text?.count ?? 0 > 0
+        RunLoop.main.perform { [weak self] in
+            self?.context?.performValidation()
+        }
         return true
     }
 }

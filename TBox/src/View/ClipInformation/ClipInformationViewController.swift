@@ -12,10 +12,11 @@ class ClipInformationViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipInformationPresenter
     private let transitionController: ClipInformationTransitioningController
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                                       placeholder: L10n.tagListViewAlertForAddPlaceholder),
-                                                  baseView: self)
+    private lazy var alertContainer = AddingAlert(
+        configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                             message: L10n.tagListViewAlertForAddMessage,
+                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+    )
 
     private weak var dataSource: ClipInformationViewDataSource?
     private var shouldHideStatusBar: Bool = false

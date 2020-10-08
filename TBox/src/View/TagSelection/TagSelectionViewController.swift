@@ -15,10 +15,11 @@ class TagSelectionViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: TagSelectionPresenter
-    private lazy var alertContainer = AddingAlert(configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                                       placeholder: L10n.tagListViewAlertForAddPlaceholder),
-                                                  baseView: self)
+    private lazy var alertContainer = AddingAlert(
+        configuration: .init(title: L10n.tagListViewAlertForAddTitle,
+                             message: L10n.tagListViewAlertForAddMessage,
+                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+    )
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
@@ -94,10 +95,16 @@ class TagSelectionViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.alertContainer.present { [weak self] action in
-            guard case let .saved(text: tag) = action else { return }
-            self?.presenter.addTag(tag)
-        }
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: tag) = action else { return }
+                self?.presenter.addTag(tag)
+            }
+        )
     }
 
     @objc

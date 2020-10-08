@@ -47,6 +47,9 @@
 "search_entry_view_error_at_search" = "Failed to search.";
 
 "tag_list_view_title" = "Tags";
+"tag_list_view_context_menu_action_copy" = "Copy";
+"tag_list_view_context_menu_action_delete" = "Delete";
+"tag_list_view_context_menu_action_update" = "Rename";
 "tag_list_view_error_at_read_tags" = "Failed to read tags.";
 "tag_list_view_error_at_add_tag" = "Failed to add tag.";
 "tag_list_view_error_at_add_tags_to_clip" = "Failed to add tags to a clip.";
@@ -55,6 +58,9 @@
 "tag_list_view_alert_for_add_title" = "New Tag";
 "tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
 "tag_list_view_alert_for_add_placeholder" = "Name";
+"tag_list_view_alert_for_update_title" = "Rename Tag";
+"tag_list_view_alert_for_update_message" = "Enter a new name for this tag.";
+"tag_list_view_alert_for_update_placeholder" = "Name";
 "tag_list_view_alert_for_delete_message" = "Are you sure you want to delete selected tags?\nThe clips will not be deleted.";
 "tag_list_view_alert_for_delete_action" = "Delete %d Tags";
 
@@ -78,6 +84,9 @@
 "adding_clips_to_album_view_title" = "Add to Album";
 "adding_clips_to_album_view_error_at_read_albums" = "Failed to read album.";
 "adding_clips_to_album_view_error_at_update_album" = "Failed to update album.";
+
+"adding_alert_action_save" = "Save";
+"adding_alert_action_cancel" = "Cancel";
 
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
