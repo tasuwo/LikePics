@@ -12,14 +12,12 @@ class SearchEntryViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: SearchEntryPresenter
-    private let transitionController: ClipPreviewTransitionControllerProtocol
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: SearchEntryPresenter, transitionController: ClipPreviewTransitionControllerProtocol) {
+    init(factory: Factory, presenter: SearchEntryPresenter) {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self

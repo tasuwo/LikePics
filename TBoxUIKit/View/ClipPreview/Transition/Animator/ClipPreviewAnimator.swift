@@ -4,4 +4,9 @@
 
 import UIKit
 
+protocol ClipPreviewAnimatorDelegate: AnyObject {
+    func didFailToPresent(_ animator: ClipPreviewAnimator)
+    func didFailToDismiss(_ animator: ClipPreviewAnimator)
+}
+
 public protocol ClipPreviewAnimator {}

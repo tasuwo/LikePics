@@ -28,6 +28,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     private var innerContext: InnerContext?
 
+    weak var delegate: ClipPreviewAnimatorDelegate?
+
     // MARK: - Methods
 
     // MARK: Calculation
@@ -235,5 +237,10 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             animatingView: animatingView,
             animatingImageView: animatingImageView
         )
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        guard transitionCompleted == false else { return }
+        self.delegate?.didFailToDismiss(self)
     }
 }

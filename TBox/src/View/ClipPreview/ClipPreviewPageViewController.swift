@@ -22,6 +22,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let informationTransitionController: ClipInformationTransitionControllerProtocol
 
     private var destination: TransitionDestination?
+    private var internalDismissalMode: ClipPreviewDismissalMode = .custom(interactive: false)
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
@@ -102,6 +103,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func setupAppearance() {
         self.navigationItem.title = ""
+        self.modalTransitionStyle = .crossDissolve
     }
 
     // MARK: Bar
@@ -128,19 +130,19 @@ class ClipPreviewPageViewController: UIPageViewController {
         switch (sender.state, self.destination) {
         case (.began, .back):
             self.currentViewController?.previewView.isScrollEnabled = false
-            self.previewTransitionController.beginInteractiveTransition()
+            self.internalDismissalMode = .custom(interactive: true)
             self.dismiss(animated: true, completion: nil)
 
         case (.ended, .back):
-            if self.previewTransitionController.isInteractiveTransitioning {
+            if case .custom(interactive: true) = self.internalDismissalMode {
                 self.currentViewController?.previewView.isScrollEnabled = true
-                self.previewTransitionController.endInteractiveTransition()
+                self.internalDismissalMode = .custom(interactive: false)
                 self.previewTransitionController.didPan(sender: sender)
             }
             self.destination = nil
 
         case (_, .back):
-            if self.previewTransitionController.isInteractiveTransitioning {
+            if case .custom(interactive: true) = self.internalDismissalMode {
                 self.previewTransitionController.didPan(sender: sender)
             }
 
@@ -256,10 +258,8 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
     }
 
     func closePages() {
-        self.previewTransitionController.beginDeletionTransition()
-        self.dismiss(animated: true, completion: { [weak self] in
-            self?.previewTransitionController.endDeletionTransition()
-        })
+        self.internalDismissalMode = .custom(interactive: false)
+        self.dismiss(animated: true, completion: nil)
     }
 
     func showErrorMessage(_ message: String) {
@@ -379,5 +379,26 @@ extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
         self.presenter.addTagsToClip(tags)
+    }
+}
+
+extension ClipPreviewPageViewController: ClipPreviewTransitioningControllerDataSource {
+    // MARK: - ClipPreviewTransitioningControllerDataSource
+
+    var dismissalMode: ClipPreviewDismissalMode {
+        return self.internalDismissalMode
+    }
+}
+
+extension ClipPreviewPageViewController: ClipPreviewTransitioningControllerDelegate {
+    // MARK: - ClipPreviewTransitioningControllerDelegate
+
+    func didFailToPresent(_ controller: ClipPreviewTransitioningController) {
+        // NOP
+    }
+
+    func didFailToDismiss(_ controller: ClipPreviewTransitioningController) {
+        self.internalDismissalMode = .default
+        self.dismiss(animated: true, completion: nil)
     }
 }

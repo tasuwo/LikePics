@@ -4,7 +4,9 @@
 
 import UIKit
 
-class ClipPreviewDismissalAnimator: NSObject {}
+class ClipPreviewDismissalAnimator: NSObject {
+    weak var delegate: ClipPreviewAnimatorDelegate?
+}
 
 extension ClipPreviewDismissalAnimator: ClipPreviewAnimator {}
 
@@ -78,5 +80,10 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         }
 
         CATransaction.commit()
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        guard transitionCompleted == false else { return }
+        self.delegate?.didFailToDismiss(self)
     }
 }

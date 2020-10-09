@@ -121,6 +121,8 @@ extension DependencyContainer: ViewControllerFactory {
                                                                barItemsProvider: barItemsProvider,
                                                                previewTransitionController: self.clipPreviewTransitionController,
                                                                informationTransitionController: self.clipInformationTransitionController)
+        self.clipPreviewTransitionController.delegate = pageViewController
+        self.clipPreviewTransitionController.dataSource = pageViewController
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
         viewController.transitioningDelegate = self.clipPreviewTransitionController
@@ -170,7 +172,10 @@ extension DependencyContainer: ViewControllerFactory {
                                                  storage: self.clipStorage,
                                                  logger: self.logger)
 
-        let viewController = ClipInformationViewController(factory: self, dataSource: dataSource, presenter: presenter, transitionController: self.clipInformationTransitionController)
+        let viewController = ClipInformationViewController(factory: self,
+                                                           dataSource: dataSource,
+                                                           presenter: presenter,
+                                                           transitionController: self.clipInformationTransitionController)
         viewController.transitioningDelegate = self.clipInformationTransitionController
         viewController.modalPresentationStyle = .fullScreen
         return viewController
@@ -188,7 +193,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeSearchEntryViewController() -> UIViewController {
         let presenter = SearchEntryPresenter(storage: self.clipStorage, logger: self.logger)
-        return UINavigationController(rootViewController: SearchEntryViewController(factory: self, presenter: presenter, transitionController: self.clipPreviewTransitionController))
+        let viewController = SearchEntryViewController(factory: self, presenter: presenter)
+        return UINavigationController(rootViewController: viewController)
     }
 
     func makeSearchResultViewController(context: SearchContext) -> UIViewController? {
