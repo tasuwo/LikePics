@@ -37,7 +37,7 @@ protocol TopClipsListPresenterProtocol {
     func deleteSelectedClips()
     func hideSelectedClips()
     func unhideSelectedClips()
-    func addTagsToSelectedClips(_ tags: [Tag])
+    func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>)
 }
 
 class TopClipsListPresenter {
@@ -213,8 +213,8 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         self.isEditing = false
     }
 
-    func addTagsToSelectedClips(_ tags: [Tag]) {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tags) {
+    func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
+        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tagIds) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

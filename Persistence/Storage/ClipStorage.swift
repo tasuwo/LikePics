@@ -443,6 +443,41 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func update(_ clips: [Clip], byAddingTags tagIds: Set<Tag.Identity>) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            let tagObjs = tagIds
+                .compactMap { realm.object(ofType: TagObject.self, forPrimaryKey: $0) }
+
+            var clipObjs: [ClipObject] = []
+            for clip in clips {
+                guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
+                    return .failure(.notFound)
+                }
+                clipObjs.append(clipObj)
+            }
+
+            do {
+                try realm.write {
+                    for clipObj in clipObjs {
+                        for tagObj in tagObjs {
+                            if !clipObj.tags.contains(tagObj) {
+                                clipObj.tags.append(tagObj)
+                            }
+                        }
+                        clipObj.updatedAt = Date()
+                    }
+                }
+                return .success(clipObjs.map { Clip.make(by: $0) })
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func update(_ clips: [Clip], byDeletingTags tags: [Tag]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {

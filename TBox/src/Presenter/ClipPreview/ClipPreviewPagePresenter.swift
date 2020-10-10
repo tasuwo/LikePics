@@ -70,8 +70,8 @@ class ClipPreviewPagePresenter {
         }
     }
 
-    func addTagsToClip(_ tags: [Tag]) {
-        if case let .failure(error) = self.storage.update([self.clip], byAddingTags: tags) {
+    func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
+        if case let .failure(error) = self.storage.update([self.clip], byAddingTags: tagIds) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

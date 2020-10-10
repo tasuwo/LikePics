@@ -14,7 +14,7 @@ protocol TagSelectionViewProtocol: AnyObject {
 }
 
 protocol TagSelectionPresenterDelegate: AnyObject {
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag])
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagIds tagIds: Set<Tag.Identity>)
 }
 
 class TagSelectionPresenter {
@@ -85,8 +85,8 @@ class TagSelectionPresenter {
         }
     }
 
-    func select(_ tags: [Tag]) {
-        self.delegate?.tagSelectionPresenter(self, didSelectTags: tags)
+    func performSelection() {
+        self.delegate?.tagSelectionPresenter(self, didSelectTagIds: self.selections)
         self.view?.close()
     }
 

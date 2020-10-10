@@ -109,10 +109,7 @@ class TagSelectionViewController: UIViewController {
 
     @objc
     func didTapSave() {
-        let nullableTags = self.collectionView.indexPathsForSelectedItems?
-            .compactMap { self.dataSource.itemIdentifier(for: $0) }
-        guard let tags = nullableTags else { return }
-        self.presenter.select(tags)
+        self.presenter.performSelection()
     }
 
     // MARK: SearchBar

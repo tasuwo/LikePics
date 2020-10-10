@@ -59,6 +59,8 @@ public protocol ClipStorageProtocol {
 
     func update(_ clips: [Clip], byAddingTags tags: [String]) -> Result<[Clip], ClipStorageError>
 
+    func update(_ clips: [Clip], byAddingTags tagIds: Set<Tag.Identity>) -> Result<[Clip], ClipStorageError>
+
     func update(_ clips: [Clip], byAddingTags tags: [Tag]) -> Result<[Clip], ClipStorageError>
 
     func update(_ clips: [Clip], byDeletingTags: [Tag]) -> Result<[Clip], ClipStorageError>

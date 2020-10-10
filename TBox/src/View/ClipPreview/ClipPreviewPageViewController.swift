@@ -383,7 +383,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
-        self.presenter.addTagsToClip(tags)
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagIds tagIds: Set<Tag.Identity>) {
+        self.presenter.addTagsToClip(tagIds)
     }
 }
