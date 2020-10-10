@@ -221,7 +221,7 @@
 		2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B7F251E512F00BEE210 /* TagListQuery.swift */; };
 		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
 		2CD25B9C251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */; };
-		2CD3DA5F24EEC8720031A065 /* AddingAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */; };
+		2CD3DA5F24EEC8720031A065 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA5E24EEC8720031A065 /* TextEditAlert.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CDA49D32516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */; };
 		2CDA49DD2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49DC2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift */; };
@@ -761,7 +761,7 @@
 		2CD25B7F251E512F00BEE210 /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
 		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
 		2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipStorage+ClipQueryServiceProtocol.swift"; sourceTree = "<group>"; };
-		2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingAlert.swift; sourceTree = "<group>"; };
+		2CD3DA5E24EEC8720031A065 /* TextEditAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlert.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsPresenter.swift; sourceTree = "<group>"; };
 		2CDA49DC2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewAlertPresentable.swift; sourceTree = "<group>"; };
@@ -1088,12 +1088,12 @@
 			path = Animator;
 			sourceTree = "<group>";
 		};
-		2C29789B24EEF19700FBA531 /* AddingAlert */ = {
+		2C29789B24EEF19700FBA531 /* TextEditAlert */ = {
 			isa = PBXGroup;
 			children = (
-				2CD3DA5E24EEC8720031A065 /* AddingAlert.swift */,
+				2CD3DA5E24EEC8720031A065 /* TextEditAlert.swift */,
 			);
-			path = AddingAlert;
+			path = TextEditAlert;
 			sourceTree = "<group>";
 		};
 		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
@@ -1546,7 +1546,7 @@
 				2C3ADF5F24EEE6C5007C4AA0 /* AddingClipsToAlbum */,
 				2C38C703250AF31900F32102 /* TagSelection */,
 				2C3ADF5524EEE2DC007C4AA0 /* Album */,
-				2C29789B24EEF19700FBA531 /* AddingAlert */,
+				2C29789B24EEF19700FBA531 /* TextEditAlert */,
 				2CF46587251112D900DF78E6 /* Settings */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
@@ -3309,7 +3309,7 @@
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
-				2CD3DA5F24EEC8720031A065 /* AddingAlert.swift in Sources */,
+				2CD3DA5F24EEC8720031A065 /* TextEditAlert.swift in Sources */,
 				2C447A78250D438F00EAA448 /* ClipInformationPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

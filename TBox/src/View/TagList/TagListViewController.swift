@@ -25,12 +25,12 @@ class TagListViewController: UIViewController {
     private let factory: Factory
     private let presenter: TagListPresenter
     private let logger: TBoxLoggable
-    private lazy var addAlertContainer = AddingAlert(
+    private lazy var addAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
                              placeholder: L10n.tagListViewAlertForAddPlaceholder)
     )
-    private lazy var updateAlertContainer = AddingAlert(
+    private lazy var updateAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForUpdateTitle,
                              message: L10n.tagListViewAlertForUpdateMessage,
                              placeholder: L10n.tagListViewAlertForUpdatePlaceholder)

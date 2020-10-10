@@ -4,7 +4,7 @@
 
 import UIKit
 
-class AddingAlert: NSObject {
+class TextEditAlert: NSObject {
     typealias Validator = (String?) -> Bool
 
     enum Action {
@@ -88,7 +88,7 @@ class AddingAlert: NSObject {
         alert.addTextField { [weak self] textField in
             textField.placeholder = self?.configuration.placeholder ?? ""
             textField.delegate = self
-            textField.addTarget(self, action: #selector(AddingAlert.textFieldDidChange), for: .editingChanged)
+            textField.addTarget(self, action: #selector(TextEditAlert.textFieldDidChange), for: .editingChanged)
             textField.text = text
         }
 
@@ -106,7 +106,7 @@ class AddingAlert: NSObject {
     }
 }
 
-extension AddingAlert: UITextFieldDelegate {
+extension TextEditAlert: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

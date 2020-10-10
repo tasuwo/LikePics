@@ -16,7 +16,7 @@ class AlbumListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
-    private lazy var alertContainer = AddingAlert(
+    private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)

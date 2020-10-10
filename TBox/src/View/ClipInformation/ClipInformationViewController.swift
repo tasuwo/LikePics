@@ -12,7 +12,7 @@ class ClipInformationViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipInformationPresenter
     private let transitioningController: ClipInformationTransitioningControllerProtocol
-    private lazy var alertContainer = AddingAlert(
+    private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
                              placeholder: L10n.tagListViewAlertForAddPlaceholder)
