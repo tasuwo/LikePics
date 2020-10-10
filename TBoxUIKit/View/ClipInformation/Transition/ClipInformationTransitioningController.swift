@@ -12,88 +12,52 @@ public enum ClipInformationTransitionMode {
     static let initialValue: Self = .custom(interactive: false)
 }
 
-public protocol ClipInformationPresenting: UIViewController {
-    func didFailToPresent(_ controller: ClipInformationTransitioningController)
-}
-
-public protocol ClipInformationPresented: UIViewController {
-    func didFailToDismiss(_ controller: ClipInformationTransitioningController)
-}
-
 public protocol ClipInformationTransitioningControllerProtocol: UIViewControllerTransitioningDelegate {
     var isInteractive: Bool { get }
-    func set(presenting: ClipInformationPresenting)
-    func set(presented: ClipInformationPresented)
     func beginTransition(_ mode: ClipInformationTransitionMode)
-    func endTransition()
     func didPanForPresentation(sender: UIPanGestureRecognizer)
     func didPanForDismissal(sender: UIPanGestureRecognizer)
 }
 
 public class ClipInformationTransitioningController: NSObject {
-    lazy var presentationInteractiveAnimator: ClipInformationInteractivePresentationAnimator = {
-        let animator = ClipInformationInteractivePresentationAnimator()
-        animator.delegate = self
-        return animator
-    }()
+    private var presentationInteractiveAnimator: ClipInformationInteractivePresentationAnimator?
+    private var dismissalInteractiveAnimator: ClipInformationInteractiveDismissalAnimator?
+    private var transitionMode: ClipInformationTransitionMode = .initialValue
+    private let logger: TBoxLoggable
 
-    lazy var dismissalInteractiveAnimator: ClipInformationInteractiveDismissalAnimator = {
-        let animator = ClipInformationInteractiveDismissalAnimator()
-        animator.delegate = self
-        return animator
-    }()
+    // MARK: - Lifecycle
+
+    public init(logger: TBoxLoggable) {
+        self.logger = logger
+    }
+}
+
+extension ClipInformationTransitioningController: ClipInformationTransitioningControllerProtocol {
+    // MARK: - ClipInformationTransitioningControllerProtocol
 
     public var isInteractive: Bool {
         guard case .custom(interactive: true) = self.transitionMode else { return false }
         return true
     }
 
-    weak var presenting: ClipInformationPresenting?
-    weak var presented: ClipInformationPresented?
-    var transitionMode: ClipInformationTransitionMode = .initialValue
-}
-
-extension ClipInformationTransitioningController: ClipInformationTransitioningControllerProtocol {
-    // MARK: - ClipInformationTransitioningControllerProtocol
-
-    public func set(presenting: ClipInformationPresenting) {
-        self.presenting = presenting
-    }
-
-    public func set(presented: ClipInformationPresented) {
-        self.presented = presented
-    }
-
     public func beginTransition(_ mode: ClipInformationTransitionMode) {
         self.transitionMode = mode
     }
 
-    public func endTransition() {
-        self.transitionMode = .initialValue
-    }
-
     public func didPanForDismissal(sender: UIPanGestureRecognizer) {
-        self.dismissalInteractiveAnimator.didPan(sender: sender)
+        self.dismissalInteractiveAnimator?.didPan(sender: sender)
     }
 
     public func didPanForPresentation(sender: UIPanGestureRecognizer) {
-        self.presentationInteractiveAnimator.didPan(sender: sender)
+        self.presentationInteractiveAnimator?.didPan(sender: sender)
     }
 }
 
-extension ClipInformationTransitioningController: ClipInformationPresentationAnimatorDelegate {
-    // MARK: - ClipInformationPresentationAnimatorDelegate
+extension ClipInformationTransitioningController: ClipInformationAnimatorDelegate {
+    // MARK: - ClipInformationAnimatorDelegate
 
-    func didFailToPresent(_ animator: ClipInformationAnimator) {
-        self.presenting?.didFailToPresent(self)
-    }
-}
-
-extension ClipInformationTransitioningController: ClipInformationDismissalAnimatorDelegate {
-    // MARK: - ClipInformationDismissalAnimatorDelegate
-
-    func didFailToDismiss(_ animator: ClipInformationAnimator) {
-        self.presented?.didFailToDismiss(self)
+    func clipInformationAnimatorDelegate(_ animator: ClipInformationAnimator, didComplete: Bool) {
+        self.transitionMode = .initialValue
     }
 }
 
@@ -106,9 +70,7 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     {
         switch self.transitionMode {
         case .custom:
-            let animator = ClipInformationPresentationAnimator()
-            animator.delegate = self
-            return animator
+            return ClipInformationPresentationAnimator(delegate: self)
 
         default:
             return nil
@@ -118,9 +80,7 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
-            let animator = ClipInformationDismissalAnimator()
-            animator.delegate = self
-            return animator
+            return ClipInformationDismissalAnimator(delegate: self)
 
         default:
             return nil
@@ -130,6 +90,7 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
+            self.presentationInteractiveAnimator = ClipInformationInteractivePresentationAnimator(logger: self.logger)
             return self.presentationInteractiveAnimator
 
         default:
@@ -140,6 +101,7 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
+            self.dismissalInteractiveAnimator = ClipInformationInteractiveDismissalAnimator(logger: self.logger)
             return self.dismissalInteractiveAnimator
 
         default:

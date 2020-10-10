@@ -24,7 +24,7 @@ protocol ViewControllerFactory {
     func makeClipInformationViewController(clipId: Clip.Identity,
                                            itemId: ClipItem.Identity,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
-                                           dataSource: ClipInformationViewDataSource) -> ClipInformationPresented?
+                                           dataSource: ClipInformationViewDataSource) -> UIViewController?
 
     // MARK: Selection
 
@@ -55,7 +55,6 @@ class DependencyContainer {
     private let clipStorage: ClipStorage
     private lazy var logger = RootLogger.shared
     private lazy var userSettingsStorage = UserSettingsStorage()
-    private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
 
     init() throws {
         self.clipStorage = try ClipStorage()
@@ -118,18 +117,19 @@ extension DependencyContainer: ViewControllerFactory {
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
         let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
 
-        let transitioningController = ClipInformationTransitioningController()
-        let pageViewController = ClipPreviewPageViewController(factory: self,
-                                                               presenter: presenter,
-                                                               barItemsProvider: barItemsProvider,
-                                                               previewTransitionController: self.clipPreviewTransitionController,
-                                                               informationTransitionController: transitioningController)
-        transitioningController.set(presenting: pageViewController)
-        self.clipPreviewTransitionController.delegate = pageViewController
-        self.clipPreviewTransitionController.dataSource = pageViewController
+        let previewTransitioningController = ClipPreviewTransitioningController(logger: self.logger)
+        let informationTransitioningController = ClipInformationTransitioningController(logger: self.logger)
+
+        let pageViewController = ClipPreviewPageViewController(
+            factory: self,
+            presenter: presenter,
+            barItemsProvider: barItemsProvider,
+            previewTransitioningController: previewTransitioningController,
+            informationTransitionController: informationTransitioningController
+        )
 
         let viewController = ClipPreviewViewController(pageViewController: pageViewController)
-        viewController.transitioningDelegate = self.clipPreviewTransitionController
+        viewController.transitioningDelegate = previewTransitioningController
         viewController.modalPresentationStyle = .fullScreen
 
         return viewController
@@ -161,7 +161,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipInformationViewController(clipId: Clip.Identity,
                                            itemId: ClipItem.Identity,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
-                                           dataSource: ClipInformationViewDataSource) -> ClipInformationPresented?
+                                           dataSource: ClipInformationViewDataSource) -> UIViewController?
     {
         let query: ClipQuery
         switch self.clipStorage.queryClip(having: clipId) {
@@ -184,7 +184,6 @@ extension DependencyContainer: ViewControllerFactory {
                                                            dataSource: dataSource,
                                                            presenter: presenter,
                                                            transitioningController: transitioningController)
-        transitioningController.set(presented: viewController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
         return viewController

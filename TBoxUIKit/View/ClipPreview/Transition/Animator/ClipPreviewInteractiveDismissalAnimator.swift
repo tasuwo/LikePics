@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
 // swiftlint:disable function_parameter_count
@@ -26,9 +27,15 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let cancelAnimateDuration: Double = 0.5
     private static let endAnimateDuration: Double = 0.25
 
+    private var logger: TBoxLoggable
     private var innerContext: InnerContext?
+    private var shouldEndImmediately: Bool = false
 
-    weak var delegate: ClipPreviewAnimatorDelegate?
+    // MARK: - Lifecycle
+
+    init(logger: TBoxLoggable) {
+        self.logger = logger
+    }
 
     // MARK: - Methods
 
@@ -58,7 +65,15 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     // MARK: Internal
 
     func didPan(sender: UIPanGestureRecognizer) {
-        guard let innerContext = self.innerContext else { return }
+        guard let innerContext = self.innerContext else {
+            guard sender.state == .ended else {
+                self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipInformationView is not ready. Ignored gesture."))
+                return
+            }
+            self.shouldEndImmediately = true
+            return
+        }
+
         let transitionContext = innerContext.transitionContext
         let containerView = transitionContext.containerView
         let initialImageFrame = innerContext.initialImageFrame
@@ -73,6 +88,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let fromImageView = fromPage.imageView,
             let toCell = to.animatingCell(self)
         else {
+            innerContext.transitionContext.cancelInteractiveTransition()
             innerContext.transitionContext.completeTransition(false)
             return
         }
@@ -111,9 +127,18 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let scrollToUp = velocity.y < 0
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
             if scrollToUp || releaseAboveInitialPosition {
-                self.startCancelAnimation(hideViews: [to.view], presentViews: [from.view], hiddenViews: [toCell, fromImageView], currentCornerRadius: cornerRadius, innerContext: innerContext)
+                self.startCancelAnimation(hideViews: [to.view],
+                                          presentViews: [from.view],
+                                          hiddenViews: [toCell, fromImageView],
+                                          currentCornerRadius: cornerRadius,
+                                          innerContext: innerContext)
             } else {
-                self.startEndAnimation(finalImageFrame: finalImageFrame, hideViews: [from.view], presentViews: [to.view], hiddenViews: [toCell, fromImageView], currentCornerRadius: cornerRadius, innerContext: innerContext)
+                self.startEndAnimation(finalImageFrame: finalImageFrame,
+                                       hideViews: [from.view],
+                                       presentViews: [to.view],
+                                       hiddenViews: [toCell, fromImageView],
+                                       currentCornerRadius: cornerRadius,
+                                       innerContext: innerContext)
             }
         }
     }
@@ -127,7 +152,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             hiddenViews.forEach { $0.isHidden = false }
             innerContext.animatingView.removeFromSuperview()
             innerContext.transitionContext.cancelInteractiveTransition()
-            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
         }
 
@@ -162,7 +187,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
             innerContext.animatingView.removeFromSuperview()
-            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            innerContext.transitionContext.finishInteractiveTransition()
+            innerContext.transitionContext.completeTransition(true)
             self.innerContext = nil
         }
 
@@ -202,10 +228,12 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
+            let fromIndex = from.currentIndex(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self)
         else {
+            transitionContext.cancelInteractiveTransition()
             transitionContext.completeTransition(false)
             return
         }
@@ -231,16 +259,25 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         toCell.isHidden = true
         fromImageView.isHidden = true
 
-        self.innerContext = .init(
+        let innerContext = InnerContext(
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingView: animatingView,
             animatingImageView: animatingImageView
         )
-    }
 
-    func animationEnded(_ transitionCompleted: Bool) {
-        guard transitionCompleted == false else { return }
-        self.delegate?.didFailToDismiss(self)
+        if self.shouldEndImmediately {
+            self.shouldEndImmediately = false
+            let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
+            self.startEndAnimation(finalImageFrame: finalImageFrame,
+                                   hideViews: [from.view],
+                                   presentViews: [to.view],
+                                   hiddenViews: [toCell, fromImageView],
+                                   currentCornerRadius: 0,
+                                   innerContext: innerContext)
+            return
+        }
+
+        self.innerContext = innerContext
     }
 }

@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
 class ClipInformationInteractiveDismissalAnimator: NSObject {
@@ -18,9 +19,15 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     private static let cancelAnimateDuration: Double = 0.5
     private static let endAnimateDuration: Double = 0.25
 
+    private var logger: TBoxLoggable
     private var innerContext: InnerContext?
+    private var shouldEndImmediately: Bool = false
 
-    weak var delegate: ClipInformationDismissalAnimatorDelegate?
+    // MARK: - Lifecycle
+
+    init(logger: TBoxLoggable) {
+        self.logger = logger
+    }
 
     // MARK: - Methods
 
@@ -46,7 +53,15 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     // MARK: Internal
 
     func didPan(sender: UIPanGestureRecognizer) {
-        guard let innerContext = self.innerContext else { return }
+        guard let innerContext = self.innerContext else {
+            guard sender.state == .ended else {
+                self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipInformationView is not ready. Ignored gesture."))
+                return
+            }
+            self.shouldEndImmediately = true
+            return
+        }
+
         let transitionContext = innerContext.transitionContext
         let containerView = transitionContext.containerView
         let initialImageFrame = innerContext.initialImageFrame
@@ -60,6 +75,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             let fromImageView = fromInformationView.imageView,
             let targetPage = to.animatingPageView(self)
         else {
+            transitionContext.cancelInteractiveTransition()
             transitionContext.completeTransition(false)
             return
         }
@@ -118,7 +134,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             hiddenViews.forEach { $0.isHidden = false }
             innerContext.animatingView.removeFromSuperview()
             innerContext.transitionContext.cancelInteractiveTransition()
-            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
         }
 
@@ -145,7 +161,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
             innerContext.animatingView.removeFromSuperview()
-            innerContext.transitionContext.completeTransition(!innerContext.transitionContext.transitionWasCancelled)
+            innerContext.transitionContext.finishInteractiveTransition()
+            innerContext.transitionContext.completeTransition(true)
             self.innerContext = nil
         }
 
@@ -181,6 +198,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             let fromImage = fromImageView.image,
             let targetPage = to.animatingPageView(self)
         else {
+            transitionContext.cancelInteractiveTransition()
             transitionContext.completeTransition(false)
             return
         }
@@ -203,20 +221,24 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
         targetPage.imageView.isHidden = true
         fromImageView.isHidden = true
 
-        self.innerContext = .init(
+        let innerContext = InnerContext(
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingView: animatingView,
             animatingImageView: animatingImageView
         )
-    }
 
-    func animationEnded(_ transitionCompleted: Bool) {
-        defer {
-            self.innerContext = nil
+        if self.shouldEndImmediately {
+            self.shouldEndImmediately = false
+            let finalImageFrame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+            self.startEndAnimation(finalImageFrame: finalImageFrame,
+                                   hideViews: [from.view],
+                                   presentViews: [to.view],
+                                   hiddenViews: [targetPage.imageView, fromImageView],
+                                   innerContext: innerContext)
+            return
         }
-        if !transitionCompleted, self.innerContext?.transitionContext.transitionWasCancelled == false {
-            self.delegate?.didFailToDismiss(self)
-        }
+
+        self.innerContext = innerContext
     }
 }

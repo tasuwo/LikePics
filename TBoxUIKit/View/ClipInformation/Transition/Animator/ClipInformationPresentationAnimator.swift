@@ -5,7 +5,13 @@
 import UIKit
 
 class ClipInformationPresentationAnimator: NSObject {
-    weak var delegate: ClipInformationPresentationAnimatorDelegate?
+    private weak var delegate: ClipInformationAnimatorDelegate?
+
+    // MARK: - Lifecycle
+
+    init(delegate: ClipInformationAnimatorDelegate) {
+        self.delegate = delegate
+    }
 }
 
 extension ClipInformationPresentationAnimator: ClipInformationAnimator {}
@@ -67,8 +73,6 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        if !transitionCompleted {
-            self.delegate?.didFailToPresent(self)
-        }
+        self.delegate?.clipInformationAnimatorDelegate(self, didComplete: transitionCompleted)
     }
 }

@@ -19,11 +19,10 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let factory: Factory
     private let presenter: ClipPreviewPagePresenter
     private let barItemsProvider: ClipPreviewPageBarButtonItemsProvider
-    private let previewTransitionController: ClipPreviewTransitionControllerProtocol
+    private let previewTransitioningController: ClipPreviewTransitionControllerProtocol
     private let informationTransitioningController: ClipInformationTransitioningControllerProtocol
 
     private var destination: TransitionDestination?
-    private var internalDismissalMode: ClipPreviewDismissalMode = .custom(interactive: false)
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
@@ -60,13 +59,13 @@ class ClipPreviewPageViewController: UIPageViewController {
     init(factory: Factory,
          presenter: ClipPreviewPagePresenter,
          barItemsProvider: ClipPreviewPageBarButtonItemsProvider,
-         previewTransitionController: ClipPreviewTransitionControllerProtocol,
+         previewTransitioningController: ClipPreviewTransitionControllerProtocol,
          informationTransitionController: ClipInformationTransitioningController)
     {
         self.factory = factory
         self.presenter = presenter
         self.barItemsProvider = barItemsProvider
-        self.previewTransitionController = previewTransitionController
+        self.previewTransitioningController = previewTransitioningController
         self.informationTransitioningController = informationTransitionController
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
@@ -131,20 +130,19 @@ class ClipPreviewPageViewController: UIPageViewController {
         switch (sender.state, self.destination) {
         case (.began, .back):
             self.currentViewController?.previewView.isScrollEnabled = false
-            self.internalDismissalMode = .custom(interactive: true)
+            self.previewTransitioningController.beginTransition(.custom(interactive: true))
             self.dismiss(animated: true, completion: nil)
 
         case (.ended, .back):
-            if case .custom(interactive: true) = self.internalDismissalMode {
+            if self.previewTransitioningController.isInteractive {
                 self.currentViewController?.previewView.isScrollEnabled = true
-                self.internalDismissalMode = .custom(interactive: false)
-                self.previewTransitionController.didPan(sender: sender)
+                self.previewTransitioningController.didPanForDismissal(sender: sender)
             }
             self.destination = nil
 
         case (_, .back):
-            if case .custom(interactive: true) = self.internalDismissalMode {
-                self.previewTransitionController.didPan(sender: sender)
+            if self.previewTransitioningController.isInteractive {
+                self.previewTransitioningController.didPanForDismissal(sender: sender)
             }
 
         case (.began, .information):
@@ -161,7 +159,6 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         case (.ended, .information):
             if self.informationTransitioningController.isInteractive {
-                self.informationTransitioningController.endTransition()
                 self.informationTransitioningController.didPanForPresentation(sender: sender)
             }
             self.destination = nil
@@ -262,7 +259,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
     }
 
     func closePages() {
-        self.internalDismissalMode = .custom(interactive: false)
+        self.previewTransitioningController.beginTransition(.custom(interactive: false))
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -365,6 +362,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+        self.previewTransitioningController.beginTransition(.custom(interactive: false))
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -378,9 +376,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
         )
         guard let viewController = nullableViewController else { return }
         self.informationTransitioningController.beginTransition(.custom(interactive: false))
-        self.present(viewController, animated: true, completion: { [weak self] in
-            self?.informationTransitioningController.endTransition()
-        })
+        self.present(viewController, animated: true, completion: nil)
     }
 }
 
@@ -389,34 +385,5 @@ extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTags tags: [Tag]) {
         self.presenter.addTagsToClip(tags)
-    }
-}
-
-extension ClipPreviewPageViewController: ClipPreviewTransitioningControllerDataSource {
-    // MARK: - ClipPreviewTransitioningControllerDataSource
-
-    var dismissalMode: ClipPreviewDismissalMode {
-        return self.internalDismissalMode
-    }
-}
-
-extension ClipPreviewPageViewController: ClipInformationPresenting {
-    // MARK: - ClipInformationPresenting
-
-    func didFailToPresent(_ controller: ClipInformationTransitioningController) {
-        RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to present to ClipInformationView"))
-    }
-}
-
-extension ClipPreviewPageViewController: ClipPreviewTransitioningControllerDelegate {
-    // MARK: - ClipPreviewTransitioningControllerDelegate
-
-    func didFailToPresent(_ controller: ClipPreviewTransitioningController) {
-        // NOP
-    }
-
-    func didFailToDismiss(_ controller: ClipPreviewTransitioningController) {
-        self.internalDismissalMode = .default
-        self.dismiss(animated: true, completion: nil)
     }
 }

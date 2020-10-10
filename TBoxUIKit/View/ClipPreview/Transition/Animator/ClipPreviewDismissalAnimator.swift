@@ -5,7 +5,13 @@
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
-    weak var delegate: ClipPreviewAnimatorDelegate?
+    private weak var delegate: ClipPreviewAnimatorDelegate?
+
+    // MARK: - Lifecycle
+
+    init(delegate: ClipPreviewAnimatorDelegate) {
+        self.delegate = delegate
+    }
 }
 
 extension ClipPreviewDismissalAnimator: ClipPreviewAnimator {}
@@ -83,7 +89,6 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        guard transitionCompleted == false else { return }
-        self.delegate?.didFailToDismiss(self)
+        self.delegate?.clipPreviewAnimator(self, didComplete: transitionCompleted)
     }
 }

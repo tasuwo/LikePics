@@ -2,42 +2,56 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
+public enum ClipPreviewTransitionMode {
+    case custom(interactive: Bool)
+    case `default`
+
+    static let initialValue: Self = .custom(interactive: false)
+}
+
 public protocol ClipPreviewTransitionControllerProtocol {
-    var delegate: ClipPreviewTransitioningControllerDelegate? { get set }
-    var dataSource: ClipPreviewTransitioningControllerDataSource? { get set }
-    func didPan(sender: UIPanGestureRecognizer)
+    var isInteractive: Bool { get }
+    func beginTransition(_ mode: ClipPreviewTransitionMode)
+    func didPanForDismissal(sender: UIPanGestureRecognizer)
 }
 
 public class ClipPreviewTransitioningController: NSObject {
-    private lazy var interactiveAnimator: ClipPreviewInteractiveDismissalAnimator = {
-        let animator = ClipPreviewInteractiveDismissalAnimator()
-        animator.delegate = self
-        return animator
-    }()
+    private let logger: TBoxLoggable
+    private var dismissalInteractiveAnimator: ClipPreviewInteractiveDismissalAnimator?
+    private var transitionMode: ClipPreviewTransitionMode = .initialValue
 
-    public weak var delegate: ClipPreviewTransitioningControllerDelegate?
-    public weak var dataSource: ClipPreviewTransitioningControllerDataSource?
+    // MARK: - Lifecycle
+
+    public init(logger: TBoxLoggable) {
+        self.logger = logger
+    }
 }
 
 extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerProtocol {
     // MARK: - ClipPreviewTransitionControllerProtocol
 
-    public func didPan(sender: UIPanGestureRecognizer) {
-        self.interactiveAnimator.didPan(sender: sender)
+    public var isInteractive: Bool {
+        guard case .custom(interactive: true) = self.transitionMode else { return false }
+        return true
+    }
+
+    public func beginTransition(_ mode: ClipPreviewTransitionMode) {
+        self.transitionMode = mode
+    }
+
+    public func didPanForDismissal(sender: UIPanGestureRecognizer) {
+        self.dismissalInteractiveAnimator?.didPan(sender: sender)
     }
 }
 
 extension ClipPreviewTransitioningController: ClipPreviewAnimatorDelegate {
     // MARK: - ClipPreviewAnimatorDelegate
 
-    func didFailToPresent(_ animator: ClipPreviewAnimator) {
-        self.delegate?.didFailToPresent(self)
-    }
-
-    func didFailToDismiss(_ animator: ClipPreviewAnimator) {
-        self.delegate?.didFailToDismiss(self)
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, didComplete: Bool) {
+        self.transitionMode = .initialValue
     }
 }
 
@@ -48,29 +62,37 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
                                     presenting: UIViewController,
                                     source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        let animator = ClipPreviewPresentationAnimator()
-        animator.delegate = self
-        return animator
-    }
-
-    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let dataSource = self.dataSource else { return nil }
-        switch dataSource.dismissalMode {
+        switch self.transitionMode {
         case .custom:
-            let animator = ClipPreviewDismissalAnimator()
-            animator.delegate = self
-            return animator
+            return ClipPreviewPresentationAnimator(delegate: self)
 
         default:
             return nil
         }
     }
 
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        switch self.transitionMode {
+        case .custom:
+            return ClipPreviewDismissalAnimator(delegate: self)
+
+        default:
+            return nil
+        }
+    }
+
+    public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if case .custom(interactive: true) = self.transitionMode {
+            self.logger.write(ConsoleLog(level: .error, message: "Cannot use interactive transition for presenting ClipPreview."))
+        }
+        return nil
+    }
+
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let dataSource = self.dataSource else { return nil }
-        switch dataSource.dismissalMode {
+        switch self.transitionMode {
         case .custom(interactive: true):
-            return self.interactiveAnimator
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger)
+            return self.dismissalInteractiveAnimator
 
         default:
             return nil
@@ -86,32 +108,35 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
                                      from fromVC: UIViewController,
                                      to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        switch operation {
-        case .push:
-            return ClipPreviewPresentationAnimator()
+        switch (operation, self.transitionMode) {
+        case (.push, .custom):
+            return ClipPreviewPresentationAnimator(delegate: self)
 
-        case .pop:
-            guard let dataSource = self.dataSource else { return nil }
-            switch dataSource.dismissalMode {
-            case .custom:
-                let animator = ClipPreviewDismissalAnimator()
-                animator.delegate = self
-                return animator
+        case (.push, _):
+            return nil
 
-            default:
-                return nil
-            }
+        case (.pop, .custom):
+            return ClipPreviewDismissalAnimator(delegate: self)
+
+        case (.pop, _):
+            return nil
 
         default:
             return nil
         }
     }
 
-    public func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let dataSource = self.dataSource else { return nil }
-        switch dataSource.dismissalMode {
+    public func navigationController(_ navigationController: UINavigationController,
+                                     interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning?
+    {
+        switch self.transitionMode {
         case .custom(interactive: true):
-            return self.interactiveAnimator
+            guard animationController is ClipPreviewDismissalAnimator else {
+                self.logger.write(ConsoleLog(level: .error, message: "Interactive transition for presenting ClipPreview is unsupported."))
+                return nil
+            }
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger)
+            return self.dismissalInteractiveAnimator
 
         default:
             return nil

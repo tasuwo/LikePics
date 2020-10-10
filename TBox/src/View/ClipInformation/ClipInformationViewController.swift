@@ -102,7 +102,6 @@ class ClipInformationViewController: UIViewController {
         case .ended:
             self.informationView.isScrollEnabled = true
             if self.transitioningController.isInteractive {
-                self.transitioningController.endTransition()
                 self.transitioningController.didPanForDismissal(sender: sender)
             }
 
@@ -206,16 +205,5 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
         // HACK: Update safeAreaInsets immediately.
         containerView.layoutIfNeeded()
         return self.informationView.convert(self.informationView.calcInitialFrame(), to: containerView)
-    }
-}
-
-extension ClipInformationViewController: ClipInformationPresented {
-    // MARK: - ClipInformationPresented
-
-    func didFailToDismiss(_ controller: ClipInformationTransitioningController) {
-        self.transitioningController.beginTransition(.default)
-        self.dismiss(animated: true, completion: { [weak self] in
-            self?.transitioningController.endTransition()
-        })
     }
 }

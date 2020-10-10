@@ -5,7 +5,13 @@
 import UIKit
 
 class ClipPreviewPresentationAnimator: NSObject {
-    weak var delegate: ClipPreviewAnimatorDelegate?
+    private weak var delegate: ClipPreviewAnimatorDelegate?
+
+    // MARK: - Lifecycle
+
+    init(delegate: ClipPreviewAnimatorDelegate) {
+        self.delegate = delegate
+    }
 }
 
 extension ClipPreviewPresentationAnimator: ClipPreviewAnimator {}
@@ -76,7 +82,6 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        guard transitionCompleted == false else { return }
-        self.delegate?.didFailToPresent(self)
+        self.delegate?.clipPreviewAnimator(self, didComplete: transitionCompleted)
     }
 }
