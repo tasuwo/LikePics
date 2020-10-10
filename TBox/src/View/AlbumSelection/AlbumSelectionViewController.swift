@@ -19,7 +19,7 @@ class AlbumSelectionViewController: UIViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UITableViewDiffableDataSource<Section, Album>!
 
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet var tableView: AlbumSelectionTableView!
 
     // MARK: - Lifecycle
 
@@ -50,14 +50,20 @@ class AlbumSelectionViewController: UIViewController {
     // MARK: Table View
 
     private func setupTableView() {
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.tableView.delegate = self
         self.configureDataSource()
     }
 
     private func configureDataSource() {
-        self.dataSource = .init(tableView: self.tableView) { tableView, indexPath, album in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-            cell.textLabel?.text = album.title
+        self.dataSource = .init(tableView: self.tableView) { [weak self] tableView, indexPath, album in
+            let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: AlbumSelectionTableView.cellIdentifier, for: indexPath)
+            guard let cell = dequeuedCell as? AlbumSelectionCell else { return dequeuedCell }
+
+            cell.title = album.title
+            if let data = self?.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
+                cell.thumbnail = image
+            }
+
             return cell
         }
     }
@@ -79,7 +85,11 @@ extension AlbumSelectionViewController: AlbumSelectionViewProtocol {
         self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func showErrorMassage(_ message: String) {
+    func reload() {
+        self.tableView.reloadData()
+    }
+
+    func showErrorMessage(_ message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
