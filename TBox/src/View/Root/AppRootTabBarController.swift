@@ -10,11 +10,13 @@ class AppRootTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
+    let logger: TBoxLoggable
 
     // MARK: - Lifecycle
 
-    init(factory: Factory) {
+    init(factory: Factory, logger: TBoxLoggable = RootLogger.shared) {
         self.factory = factory
+        self.logger = logger
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -27,17 +29,17 @@ class AppRootTabBarController: UITabBarController {
         super.viewDidLoad()
 
         guard let topClipsListViewController = self.factory.makeTopClipsListViewController() else {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipsListView."))
+            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipsListView."))
             return
         }
 
         guard let tagListViewController = self.factory.makeTagListViewController() else {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize TagListViewController."))
+            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TagListViewController."))
             return
         }
 
         guard let albumListViewController = self.factory.makeAlbumListViewController() else {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unable to initialize AlbumListViewController."))
+            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize AlbumListViewController."))
             return
         }
 

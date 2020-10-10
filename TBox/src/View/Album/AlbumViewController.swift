@@ -168,9 +168,32 @@ extension AlbumViewController: ClipPreviewPresentingViewController {
         return self.presenter.previewingClip
     }
 
-    var previewingIndexPath: IndexPath? {
-        guard let clip = self.previewingClip else { return nil }
-        return self.dataSource.indexPath(for: clip)
+    var previewingCell: ClipsCollectionViewCell? {
+        guard
+            let clip = self.previewingClip,
+            let indexPath = self.dataSource.indexPath(for: clip)
+        else {
+            return nil
+        }
+        return self.collectionView.cellForItem(at: indexPath) as? ClipsCollectionViewCell
+    }
+
+    func displayOnScreenPreviewingCellIfNeeded() {
+        guard
+            let clip = self.previewingClip,
+            let indexPath = self.dataSource.indexPath(for: clip)
+        else {
+            return
+        }
+
+        self.view.layoutIfNeeded()
+        self.collectionView.layoutIfNeeded()
+
+        if !self.collectionView.indexPathsForVisibleItems.contains(indexPath) {
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+            self.view.layoutIfNeeded()
+            self.collectionView.layoutIfNeeded()
+        }
     }
 }
 

@@ -7,8 +7,7 @@ import TBoxUIKit
 import UIKit
 
 protocol ClipPreviewPresentingViewController: UIViewController {
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    var collectionView: ClipsCollectionView! { get }
     var previewingClip: Clip? { get }
-    var previewingIndexPath: IndexPath? { get }
+    var previewingCell: ClipsCollectionViewCell? { get }
+    func displayOnScreenPreviewingCellIfNeeded()
 }
