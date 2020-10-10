@@ -213,12 +213,37 @@ extension TopClipsListViewController: ClipsListCollectionViewProviderDataSource 
 extension TopClipsListViewController: ClipsListCollectionViewProviderDelegate {
     // MARK: - ClipsListCollectionViewProviderDelegate
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelectClip clipId: Clip.Identity) {
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelect clipId: Clip.Identity) {
         self.presenter.select(clipId: clipId)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselectClip clipId: Clip.Identity) {
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselect clipId: Clip.Identity) {
         self.presenter.deselect(clipId: clipId)
+    }
+
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddTagsTo clipId: Clip.Identity) {
+        // TODO:
+        print(#function)
+    }
+
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddToAlbum clipId: Clip.Identity) {
+        // TODO:
+        print(#function)
+    }
+
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity) {
+        // TODO:
+        print(#function)
+    }
+
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity) {
+        // TODO:
+        print(#function)
+    }
+
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity) {
+        // TODO:
+        print(#function)
     }
 }
 

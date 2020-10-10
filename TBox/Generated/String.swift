@@ -112,6 +112,16 @@ internal enum L10n {
 
     /// 選択したクリップは、設定が有効な間は全ての場所から隠されます
     internal static let clipsListAlertForHideMessage = L10n.tr("Localizable", "clips_list_alert_for_hide_message")
+    /// タグを追加
+    internal static let clipsListContextMenuAddTag = L10n.tr("Localizable", "clips_list_context_menu_add_tag")
+    /// アルバムへ追加
+    internal static let clipsListContextMenuAddToAlbum = L10n.tr("Localizable", "clips_list_context_menu_add_to_album")
+    /// 削除
+    internal static let clipsListContextMenuDelete = L10n.tr("Localizable", "clips_list_context_menu_delete")
+    /// 隠す
+    internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
+    /// 表示する
+    internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
     /// クリップの削除に失敗しました
     internal static let clipsListErrorAtDeleteClips = L10n.tr("Localizable", "clips_list_error_at_delete_clips")
     /// 画像の読み込みに失敗しました

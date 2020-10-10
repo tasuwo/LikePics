@@ -13,8 +13,13 @@ protocol ClipsListCollectionViewProviderDataSource: AnyObject {
 }
 
 protocol ClipsListCollectionViewProviderDelegate: AnyObject {
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelectClip clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselectClip clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelect clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselect clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddTagsTo clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddToAlbum clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity)
 }
 
 class ClipsListCollectionViewProvider: NSObject {
@@ -57,12 +62,66 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath) else { return }
-        self.delegate?.clipsListCollectionViewProvider(self, didSelectClip: clip.identity)
+        self.delegate?.clipsListCollectionViewProvider(self, didSelect: clip.identity)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath) else { return }
-        self.delegate?.clipsListCollectionViewProvider(self, didDeselectClip: clip.identity)
+        self.delegate?.clipsListCollectionViewProvider(self, didDeselect: clip.identity)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard
+            let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath),
+            self.dataSource?.isEditing(self) == false
+        else {
+            return nil
+        }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: clip))
+    }
+
+    private func makeActionProvider(for clip: Clip) -> UIContextMenuActionProvider {
+        let addTag = UIAction(title: L10n.clipsListContextMenuAddTag,
+                              image: UIImage(systemName: "tag.fill")) { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
+        }
+        let addToAlbum = UIAction(title: L10n.clipsListContextMenuAddToAlbum,
+                                  image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
+        }
+
+        let hideAction: UIAction
+        if clip.isHidden {
+            hideAction = UIAction(title: L10n.clipsListContextMenuUnhide,
+                                  image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
+            }
+        } else {
+            hideAction = UIAction(title: L10n.clipsListContextMenuHide,
+                                  image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
+            }
+        }
+
+        let delete = UIAction(title: L10n.clipsListContextMenuDelete,
+                              image: UIImage(systemName: "trash.fill"),
+                              attributes: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+        }
+
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [
+                addTag,
+                addToAlbum,
+                hideAction,
+                delete
+            ])
+        }
     }
 }
 

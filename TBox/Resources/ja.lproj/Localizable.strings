@@ -27,6 +27,11 @@
 "clips_list_alert_for_delete_in_album_action_delete" = "削除";
 "clips_list_alert_for_hide_message" = "選択したクリップは、設定が有効な間は全ての場所から隠されます";
 "clips_list_alert_for_hide_action" = "%d件のクリップを隠す";
+"clips_list_context_menu_add_tag" = "タグを追加";
+"clips_list_context_menu_add_to_album" = "アルバムへ追加";
+"clips_list_context_menu_hide" = "隠す";
+"clips_list_context_menu_unhide" = "表示する";
+"clips_list_context_menu_delete" = "削除";
 
 "clip_target_finder_view_title" = "画像を選択";
 

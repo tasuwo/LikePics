@@ -27,6 +27,11 @@
 "clips_list_alert_for_delete_in_album_action_delete" = "Delete";
 "clips_list_alert_for_hide_message" = "Theses clips will be hidden from all places while setting is enabled";
 "clips_list_alert_for_hide_action" = "Hide %d Clips";
+"clips_list_context_menu_add_tag" = "Add Tags";
+"clips_list_context_menu_add_to_album" = "Add to Album";
+"clips_list_context_menu_hide" = "Hide";
+"clips_list_context_menu_unhide" = "Show";
+"clips_list_context_menu_delete" = "Delete";
 
 "clip_target_finder_view_title" = "Select image.";
 
