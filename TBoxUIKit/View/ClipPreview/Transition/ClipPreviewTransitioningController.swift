@@ -52,6 +52,7 @@ extension ClipPreviewTransitioningController: ClipPreviewAnimatorDelegate {
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, didComplete: Bool) {
         self.transitionMode = .initialValue
+        self.dismissalInteractiveAnimator = nil
     }
 }
 
@@ -64,7 +65,8 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     {
         switch self.transitionMode {
         case .custom:
-            return ClipPreviewPresentationAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipPreviewPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
             return nil
@@ -74,7 +76,8 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
-            return ClipPreviewDismissalAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipPreviewDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
             return nil
@@ -91,7 +94,9 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger,
+                                                                                        fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:
@@ -110,13 +115,15 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
     {
         switch (operation, self.transitionMode) {
         case (.push, .custom):
-            return ClipPreviewPresentationAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipPreviewPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         case (.push, _):
             return nil
 
         case (.pop, .custom):
-            return ClipPreviewDismissalAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipPreviewDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         case (.pop, _):
             return nil
@@ -135,7 +142,9 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
                 self.logger.write(ConsoleLog(level: .error, message: "Interactive transition for presenting ClipPreview is unsupported."))
                 return nil
             }
-            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger,
+                                                                                        fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:

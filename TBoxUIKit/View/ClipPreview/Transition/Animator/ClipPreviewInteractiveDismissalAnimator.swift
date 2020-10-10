@@ -24,17 +24,20 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let startingCornerRadius: CGFloat = 0
     private static let finalCornerRadius: CGFloat = 10
 
-    private static let cancelAnimateDuration: Double = 0.5
-    private static let endAnimateDuration: Double = 0.25
+    private static let cancelAnimateDuration: TimeInterval = 0.5
+    private static let endAnimateDuration: TimeInterval = 0.25
+    private static let fallbackAnimateDuration: TimeInterval = 0.3
 
     private var logger: TBoxLoggable
+    private var fallbackAnimator: FadeTransitionAnimatorProtocol
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable) {
+    init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.logger = logger
+        self.fallbackAnimator = fallbackAnimator
     }
 
     // MARK: - Methods
@@ -88,8 +91,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let fromImageView = fromPage.imageView,
             let toCell = to.animatingCell(self)
         else {
-            innerContext.transitionContext.cancelInteractiveTransition()
-            innerContext.transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 
@@ -233,8 +235,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self)
         else {
-            transitionContext.cancelInteractiveTransition()
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 

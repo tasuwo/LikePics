@@ -5,12 +5,16 @@
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
+    static let transitionDuration: TimeInterval = 0.3
+
     private weak var delegate: ClipPreviewAnimatorDelegate?
+    private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
     // MARK: - Lifecycle
 
-    init(delegate: ClipPreviewAnimatorDelegate) {
+    init(delegate: ClipPreviewAnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.delegate = delegate
+        self.fallbackAnimator = fallbackAnimator
     }
 }
 
@@ -20,7 +24,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     // MARK: - UIViewControllerAnimatedTransitioning
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+        return Self.transitionDuration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -35,7 +39,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromImage = fromImageView.image,
             let targetCell = to.animatingCell(self)
         else {
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
         }
 

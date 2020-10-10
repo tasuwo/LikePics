@@ -18,6 +18,9 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     private static let cancelAnimateDuration: Double = 0.5
     private static let endAnimateDuration: Double = 0.25
+    private static let fallbackAnimateDuration: Double = 0.3
+
+    private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
     private var logger: TBoxLoggable
     private var innerContext: InnerContext?
@@ -25,8 +28,9 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable) {
+    init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.logger = logger
+        self.fallbackAnimator = fallbackAnimator
     }
 
     // MARK: - Methods
@@ -75,8 +79,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             let fromImageView = fromInformationView.imageView,
             let targetPage = to.animatingPageView(self)
         else {
-            transitionContext.cancelInteractiveTransition()
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 
@@ -198,8 +201,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             let fromImage = fromImageView.image,
             let targetPage = to.animatingPageView(self)
         else {
-            transitionContext.cancelInteractiveTransition()
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 

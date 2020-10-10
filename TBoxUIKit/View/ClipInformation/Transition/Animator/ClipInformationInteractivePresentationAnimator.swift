@@ -16,8 +16,11 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private static let startingAlpha: CGFloat = 1.0
     private static let finalAlpha: CGFloat = 0
 
-    private static let cancelAnimateDuration: Double = 0.25
-    private static let endAnimateDuration: Double = 0.25
+    private static let cancelAnimateDuration: TimeInterval = 0.25
+    private static let endAnimateDuration: TimeInterval = 0.25
+    private static let fallbackAnimateDuration: TimeInterval = 0.3
+
+    private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
     private var logger: TBoxLoggable
     private var innerContext: InnerContext?
@@ -25,8 +28,9 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable) {
+    init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.logger = logger
+        self.fallbackAnimator = fallbackAnimator
     }
 
     // MARK: - Methods
@@ -75,8 +79,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
             let selectedPage = from.animatingPageView(self),
             let selectedImageView = selectedPage.imageView
         else {
-            transitionContext.cancelInteractiveTransition()
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 
@@ -195,8 +198,7 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
             let selectedImageView = selectedPage.imageView,
             let selectedImage = selectedImageView.image
         else {
-            transitionContext.cancelInteractiveTransition()
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
 

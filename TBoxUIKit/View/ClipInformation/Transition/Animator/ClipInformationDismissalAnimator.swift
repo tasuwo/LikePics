@@ -5,12 +5,16 @@
 import UIKit
 
 class ClipInformationDismissalAnimator: NSObject {
+    private static let transitionDuration: TimeInterval = 0.4
+
     private weak var delegate: ClipInformationAnimatorDelegate?
+    private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
     // MARK: - Lifecycle
 
-    init(delegate: ClipInformationAnimatorDelegate) {
+    init(delegate: ClipInformationAnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.delegate = delegate
+        self.fallbackAnimator = fallbackAnimator
     }
 }
 
@@ -20,7 +24,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
     // MARK: - UIViewControllerAnimatedTransitioning
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return Self.transitionDuration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -34,7 +38,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
             let fromImage = fromImageView.image,
             let targetPage = to.animatingPageView(self)
         else {
-            transitionContext.completeTransition(false)
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
         }
 

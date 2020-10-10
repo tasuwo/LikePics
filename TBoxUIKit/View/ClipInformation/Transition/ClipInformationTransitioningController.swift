@@ -58,6 +58,8 @@ extension ClipInformationTransitioningController: ClipInformationAnimatorDelegat
 
     func clipInformationAnimatorDelegate(_ animator: ClipInformationAnimator, didComplete: Bool) {
         self.transitionMode = .initialValue
+        self.presentationInteractiveAnimator = nil
+        self.dismissalInteractiveAnimator = nil
     }
 }
 
@@ -70,7 +72,8 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     {
         switch self.transitionMode {
         case .custom:
-            return ClipInformationPresentationAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipInformationPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
             return nil
@@ -80,7 +83,8 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
-            return ClipInformationDismissalAnimator(delegate: self)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            return ClipInformationDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
             return nil
@@ -90,7 +94,9 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            self.presentationInteractiveAnimator = ClipInformationInteractivePresentationAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            self.presentationInteractiveAnimator = ClipInformationInteractivePresentationAnimator(logger: self.logger,
+                                                                                                  fallbackAnimator: fallback)
             return self.presentationInteractiveAnimator
 
         default:
@@ -101,7 +107,9 @@ extension ClipInformationTransitioningController: UIViewControllerTransitioningD
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            self.dismissalInteractiveAnimator = ClipInformationInteractiveDismissalAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator(logger: self.logger)
+            self.dismissalInteractiveAnimator = ClipInformationInteractiveDismissalAnimator(logger: self.logger,
+                                                                                            fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:
