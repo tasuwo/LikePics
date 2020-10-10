@@ -1010,6 +1010,8 @@
 			isa = PBXGroup;
 			children = (
 				2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */,
+				2C64FE3E2531A7AE0016DA9A /* ClipInformation */,
+				2C64FE3D2531A7A20016DA9A /* ClipPreview */,
 			);
 			path = Transition;
 			sourceTree = "<group>";
@@ -1283,7 +1285,6 @@
 		2C447A75250D435E00EAA448 /* ClipInformation */ = {
 			isa = PBXGroup;
 			children = (
-				2CFC5D10250E386D001A02E4 /* Transition */,
 				2C2C9EEC250BC7370020715B /* ClipInformationView.xib */,
 				2C2C9EEE250BC7710020715B /* ClipInformationView.swift */,
 				2C8B30532528348C00A0A151 /* ClipInformationCell.swift */,
@@ -1426,6 +1427,28 @@
 				2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */,
 			);
 			path = TopClipsList;
+			sourceTree = "<group>";
+		};
+		2C64FE3D2531A7A20016DA9A /* ClipPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */,
+				2C27D7C324E29F39006B5DA9 /* Animator */,
+				2C170BA9253199F3001B1542 /* Delegate */,
+				2CE22D4724E2A0D600449210 /* DataSource */,
+			);
+			path = ClipPreview;
+			sourceTree = "<group>";
+		};
+		2C64FE3E2531A7AE0016DA9A /* ClipInformation */ = {
+			isa = PBXGroup;
+			children = (
+				2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */,
+				2CFC5D11250E3875001A02E4 /* Animator */,
+				2C170BAA25319A0E001B1542 /* Delegate */,
+				2CFC5D16250E3917001A02E4 /* DataSource */,
+			);
+			path = ClipInformation;
 			sourceTree = "<group>";
 		};
 		2C69CF3B24E43AAA0008C7AA /* Migration */ = {
@@ -1631,7 +1654,6 @@
 		2C95EC4C24E1600A00D6EEB4 /* ClipPreview */ = {
 			isa = PBXGroup;
 			children = (
-				2CBD406924E158F2003A107C /* Transition */,
 				2CE22D4824E2A45A00449210 /* ClipPreviewView.swift */,
 				2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */,
 			);
@@ -1840,17 +1862,6 @@
 			path = FetchedImageData;
 			sourceTree = "<group>";
 		};
-		2CBD406924E158F2003A107C /* Transition */ = {
-			isa = PBXGroup;
-			children = (
-				2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */,
-				2C27D7C324E29F39006B5DA9 /* Animator */,
-				2C170BA9253199F3001B1542 /* Delegate */,
-				2CE22D4724E2A0D600449210 /* DataSource */,
-			);
-			path = Transition;
-			sourceTree = "<group>";
-		};
 		2CCB8C97252E07560062A25A /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -2021,17 +2032,6 @@
 				2CFC5D0E250E17F6001A02E4 /* ErrorCodeSource.swift */,
 			);
 			path = ErrorCode;
-			sourceTree = "<group>";
-		};
-		2CFC5D10250E386D001A02E4 /* Transition */ = {
-			isa = PBXGroup;
-			children = (
-				2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */,
-				2CFC5D11250E3875001A02E4 /* Animator */,
-				2C170BAA25319A0E001B1542 /* Delegate */,
-				2CFC5D16250E3917001A02E4 /* DataSource */,
-			);
-			path = Transition;
 			sourceTree = "<group>";
 		};
 		2CFC5D11250E3875001A02E4 /* Animator */ = {
