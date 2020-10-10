@@ -21,6 +21,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
 
+    weak var delegate: ClipInformationPresentationAnimatorDelegate?
+
     // MARK: - Methods
 
     // MARK: Calculation
@@ -224,5 +226,14 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
         }
 
         self.innerContext = innerContext
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        defer {
+            self.innerContext = nil
+        }
+        if !transitionCompleted, self.innerContext?.transitionContext.transitionWasCancelled == false {
+            self.delegate?.didFailToPresent(self)
+        }
     }
 }

@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import TBoxCore
 import TBoxUIKit
@@ -19,7 +20,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let presenter: ClipPreviewPagePresenter
     private let barItemsProvider: ClipPreviewPageBarButtonItemsProvider
     private let previewTransitionController: ClipPreviewTransitionControllerProtocol
-    private let informationTransitionController: ClipInformationTransitionControllerProtocol
+    private let informationTransitioningController: ClipInformationTransitioningControllerProtocol
 
     private var destination: TransitionDestination?
     private var internalDismissalMode: ClipPreviewDismissalMode = .custom(interactive: false)
@@ -66,7 +67,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.presenter = presenter
         self.barItemsProvider = barItemsProvider
         self.previewTransitionController = previewTransitionController
-        self.informationTransitionController = informationTransitionController
+        self.informationTransitioningController = informationTransitionController
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             UIPageViewController.OptionsKey.interPageSpacing: 40
@@ -148,23 +149,26 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         case (.began, .information):
             guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
-            let nullableViewController = self.factory.makeClipInformationViewController(clipId: self.presenter.clip.identity,
-                                                                                        itemId: self.presenter.clip.items[index].identity,
-                                                                                        dataSource: self)
+            let nullableViewController = self.factory.makeClipInformationViewController(
+                clipId: self.presenter.clip.identity,
+                itemId: self.presenter.clip.items[index].identity,
+                transitioningController: self.informationTransitioningController,
+                dataSource: self
+            )
             guard let viewController = nullableViewController else { return }
-            self.informationTransitionController.beginInteractiveTransition(.present)
+            self.informationTransitioningController.beginTransition(.custom(interactive: true))
             self.present(viewController, animated: true, completion: nil)
 
         case (.ended, .information):
-            if self.informationTransitionController.isInteractiveTransitioning {
-                self.informationTransitionController.endInteractiveTransition()
-                self.informationTransitionController.didPan(sender: sender)
+            if self.informationTransitioningController.isInteractive {
+                self.informationTransitioningController.endTransition()
+                self.informationTransitioningController.didPanForPresentation(sender: sender)
             }
             self.destination = nil
 
         case (_, .information):
-            if self.informationTransitionController.isInteractiveTransitioning {
-                self.informationTransitionController.didPan(sender: sender)
+            if self.informationTransitioningController.isInteractive {
+                self.informationTransitioningController.didPanForPresentation(sender: sender)
             }
 
         case (_, .none):
@@ -366,11 +370,17 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 
     func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
-        let nullableViewController = self.factory.makeClipInformationViewController(clipId: self.presenter.clip.identity,
-                                                                                    itemId: self.presenter.clip.items[index].identity,
-                                                                                    dataSource: self)
+        let nullableViewController = self.factory.makeClipInformationViewController(
+            clipId: self.presenter.clip.identity,
+            itemId: self.presenter.clip.items[index].identity,
+            transitioningController: self.informationTransitioningController,
+            dataSource: self
+        )
         guard let viewController = nullableViewController else { return }
-        self.present(viewController, animated: true, completion: nil)
+        self.informationTransitioningController.beginTransition(.custom(interactive: false))
+        self.present(viewController, animated: true, completion: { [weak self] in
+            self?.informationTransitioningController.endTransition()
+        })
     }
 }
 
@@ -387,6 +397,14 @@ extension ClipPreviewPageViewController: ClipPreviewTransitioningControllerDataS
 
     var dismissalMode: ClipPreviewDismissalMode {
         return self.internalDismissalMode
+    }
+}
+
+extension ClipPreviewPageViewController: ClipInformationPresenting {
+    // MARK: - ClipInformationPresenting
+
+    func didFailToPresent(_ controller: ClipInformationTransitioningController) {
+        RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to present to ClipInformationView"))
     }
 }
 

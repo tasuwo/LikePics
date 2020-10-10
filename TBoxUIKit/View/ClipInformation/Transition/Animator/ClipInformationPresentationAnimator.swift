@@ -4,7 +4,9 @@
 
 import UIKit
 
-class ClipInformationPresentationAnimator: NSObject {}
+class ClipInformationPresentationAnimator: NSObject {
+    weak var delegate: ClipInformationPresentationAnimatorDelegate?
+}
 
 extension ClipInformationPresentationAnimator: ClipInformationAnimator {}
 
@@ -62,5 +64,11 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
         }
 
         CATransaction.commit()
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        if !transitionCompleted {
+            self.delegate?.didFailToPresent(self)
+        }
     }
 }

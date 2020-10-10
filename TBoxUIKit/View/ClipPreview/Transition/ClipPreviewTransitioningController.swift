@@ -56,7 +56,7 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let dataSource = self.dataSource else { return nil }
         switch dataSource.dismissalMode {
-        case .custom(interactive: false):
+        case .custom:
             let animator = ClipPreviewDismissalAnimator()
             animator.delegate = self
             return animator
@@ -93,7 +93,7 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
         case .pop:
             guard let dataSource = self.dataSource else { return nil }
             switch dataSource.dismissalMode {
-            case .custom(interactive: false):
+            case .custom:
                 let animator = ClipPreviewDismissalAnimator()
                 animator.delegate = self
                 return animator

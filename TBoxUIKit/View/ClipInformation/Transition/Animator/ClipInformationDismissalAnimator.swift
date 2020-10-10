@@ -4,7 +4,9 @@
 
 import UIKit
 
-class ClipInformationDismissalAnimator: NSObject {}
+class ClipInformationDismissalAnimator: NSObject {
+    weak var delegate: ClipInformationDismissalAnimatorDelegate?
+}
 
 extension ClipInformationDismissalAnimator: ClipInformationAnimator {}
 
@@ -67,5 +69,11 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
         }
 
         CATransaction.commit()
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        if !transitionCompleted {
+            self.delegate?.didFailToDismiss(self)
+        }
     }
 }

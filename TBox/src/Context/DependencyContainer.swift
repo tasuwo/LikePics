@@ -21,7 +21,10 @@ protocol ViewControllerFactory {
 
     // MARK: Information
 
-    func makeClipInformationViewController(clipId: Clip.Identity, itemId: ClipItem.Identity, dataSource: ClipInformationViewDataSource) -> UIViewController?
+    func makeClipInformationViewController(clipId: Clip.Identity,
+                                           itemId: ClipItem.Identity,
+                                           transitioningController: ClipInformationTransitioningControllerProtocol,
+                                           dataSource: ClipInformationViewDataSource) -> ClipInformationPresented?
 
     // MARK: Selection
 
@@ -53,7 +56,6 @@ class DependencyContainer {
     private lazy var logger = RootLogger.shared
     private lazy var userSettingsStorage = UserSettingsStorage()
     private lazy var clipPreviewTransitionController = ClipPreviewTransitioningController()
-    private lazy var clipInformationTransitionController = ClipInformationTransitioningController()
 
     init() throws {
         self.clipStorage = try ClipStorage()
@@ -116,11 +118,13 @@ extension DependencyContainer: ViewControllerFactory {
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
         let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
 
+        let transitioningController = ClipInformationTransitioningController()
         let pageViewController = ClipPreviewPageViewController(factory: self,
                                                                presenter: presenter,
                                                                barItemsProvider: barItemsProvider,
                                                                previewTransitionController: self.clipPreviewTransitionController,
-                                                               informationTransitionController: self.clipInformationTransitionController)
+                                                               informationTransitionController: transitioningController)
+        transitioningController.set(presenting: pageViewController)
         self.clipPreviewTransitionController.delegate = pageViewController
         self.clipPreviewTransitionController.dataSource = pageViewController
 
@@ -154,7 +158,11 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipInformationViewController(clipId: Clip.Identity, itemId: ClipItem.Identity, dataSource: ClipInformationViewDataSource) -> UIViewController? {
+    func makeClipInformationViewController(clipId: Clip.Identity,
+                                           itemId: ClipItem.Identity,
+                                           transitioningController: ClipInformationTransitioningControllerProtocol,
+                                           dataSource: ClipInformationViewDataSource) -> ClipInformationPresented?
+    {
         let query: ClipQuery
         switch self.clipStorage.queryClip(having: clipId) {
         case let .success(result):
@@ -175,8 +183,9 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = ClipInformationViewController(factory: self,
                                                            dataSource: dataSource,
                                                            presenter: presenter,
-                                                           transitionController: self.clipInformationTransitionController)
-        viewController.transitioningDelegate = self.clipInformationTransitionController
+                                                           transitioningController: transitioningController)
+        transitioningController.set(presented: viewController)
+        viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
         return viewController
     }

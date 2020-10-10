@@ -20,6 +20,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     private var innerContext: InnerContext?
 
+    weak var delegate: ClipInformationDismissalAnimatorDelegate?
+
     // MARK: - Methods
 
     // MARK: Calculation
@@ -207,5 +209,14 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             animatingView: animatingView,
             animatingImageView: animatingImageView
         )
+    }
+
+    func animationEnded(_ transitionCompleted: Bool) {
+        defer {
+            self.innerContext = nil
+        }
+        if !transitionCompleted, self.innerContext?.transitionContext.transitionWasCancelled == false {
+            self.delegate?.didFailToDismiss(self)
+        }
     }
 }

@@ -11,7 +11,7 @@ class ClipInformationViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ClipInformationPresenter
-    private let transitionController: ClipInformationTransitioningController
+    private let transitioningController: ClipInformationTransitioningControllerProtocol
     private lazy var alertContainer = AddingAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
@@ -32,10 +32,14 @@ class ClipInformationViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, dataSource: ClipInformationViewDataSource, presenter: ClipInformationPresenter, transitionController: ClipInformationTransitioningController) {
+    init(factory: Factory,
+         dataSource: ClipInformationViewDataSource,
+         presenter: ClipInformationPresenter,
+         transitioningController: ClipInformationTransitioningControllerProtocol)
+    {
         self.factory = factory
         self.presenter = presenter
-        self.transitionController = transitionController
+        self.transitioningController = transitioningController
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
 
@@ -50,6 +54,7 @@ class ClipInformationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
         self.setupGestureRecognizer()
 
         self.informationView.delegate = self
@@ -74,6 +79,10 @@ class ClipInformationViewController: UIViewController {
 
     // MARK: - Methods
 
+    private func setupAppearance() {
+        self.modalTransitionStyle = .crossDissolve
+    }
+
     // MARK: Gesture Recognizer
 
     private func setupGestureRecognizer() {
@@ -87,19 +96,19 @@ class ClipInformationViewController: UIViewController {
         switch sender.state {
         case .began:
             self.informationView.isScrollEnabled = false
-            self.transitionController.beginInteractiveTransition(.dismiss)
+            self.transitioningController.beginTransition(.custom(interactive: true))
             self.dismiss(animated: true, completion: nil)
 
         case .ended:
             self.informationView.isScrollEnabled = true
-            if self.transitionController.isInteractiveTransitioning {
-                self.transitionController.endInteractiveTransition()
-                self.transitionController.didPan(sender: sender)
+            if self.transitioningController.isInteractive {
+                self.transitioningController.endTransition()
+                self.transitioningController.didPanForDismissal(sender: sender)
             }
 
         default:
-            if self.transitionController.isInteractiveTransitioning {
-                self.transitionController.didPan(sender: sender)
+            if self.transitioningController.isInteractive {
+                self.transitioningController.didPanForDismissal(sender: sender)
             }
         }
     }
@@ -197,5 +206,16 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
         // HACK: Update safeAreaInsets immediately.
         containerView.layoutIfNeeded()
         return self.informationView.convert(self.informationView.calcInitialFrame(), to: containerView)
+    }
+}
+
+extension ClipInformationViewController: ClipInformationPresented {
+    // MARK: - ClipInformationPresented
+
+    func didFailToDismiss(_ controller: ClipInformationTransitioningController) {
+        self.transitioningController.beginTransition(.default)
+        self.dismiss(animated: true, completion: { [weak self] in
+            self?.transitioningController.endTransition()
+        })
     }
 }
