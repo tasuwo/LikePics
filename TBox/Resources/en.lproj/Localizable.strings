@@ -86,9 +86,7 @@
 "clip_information_view_alert_for_delete_tag_message" = "Are you sure you want to delete this tag?\nThe clips and images will not be deleted.";
 "clip_information_view_alert_for_delete_tag_action" = "Delete";
 
-"adding_clips_to_album_view_title" = "Add to Album";
-"adding_clips_to_album_view_error_at_read_albums" = "Failed to read album.";
-"adding_clips_to_album_view_error_at_update_album" = "Failed to update album.";
+"album_selection_view_title" = "Add to Album";
 
 "adding_alert_action_save" = "Save";
 "adding_alert_action_cancel" = "Cancel";

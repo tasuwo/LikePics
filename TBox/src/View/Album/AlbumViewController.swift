@@ -277,7 +277,7 @@ extension AlbumViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.selectedClips, delegate: nil)
+        guard let viewController = self.factory.makeAlbumSelectionViewController(delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -301,6 +301,15 @@ extension AlbumViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
         self.presenter.unhideSelectedClips()
+    }
+}
+
+extension AlbumViewController: AlbumSelectionPresenterDelegate {
+    // MARK: - AlbumSelectionPresenterDelegate
+
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity) {
+        // TODO:
+        print(#function)
     }
 }
 

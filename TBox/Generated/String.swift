@@ -14,12 +14,6 @@ internal enum L10n {
     internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
     /// 保存
     internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
-    /// アルバムの読み込みに失敗しました
-    internal static let addingClipsToAlbumViewErrorAtReadAlbums = L10n.tr("Localizable", "adding_clips_to_album_view_error_at_read_albums")
-    /// アルバムの更新に失敗しました
-    internal static let addingClipsToAlbumViewErrorAtUpdateAlbum = L10n.tr("Localizable", "adding_clips_to_album_view_error_at_update_album")
-    /// アルバムへ追加
-    internal static let addingClipsToAlbumViewTitle = L10n.tr("Localizable", "adding_clips_to_album_view_title")
     /// このアルバムの名前を入力してください
     internal static let albumListViewAlertForAddMessage = L10n.tr("Localizable", "album_list_view_alert_for_add_message")
     /// アルバム名
@@ -48,6 +42,8 @@ internal enum L10n {
     internal static let albumListViewErrorAtReadImageData = L10n.tr("Localizable", "album_list_view_error_at_read_image_data")
     /// アルバム
     internal static let albumListViewTitle = L10n.tr("Localizable", "album_list_view_title")
+    /// アルバムへ追加
+    internal static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム

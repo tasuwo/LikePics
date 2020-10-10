@@ -339,7 +339,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: [self.presenter.clip], delegate: nil)
+        guard let viewController = self.factory.makeAlbumSelectionViewController(delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -377,6 +377,15 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
         guard let viewController = nullableViewController else { return }
         self.informationTransitioningController.beginTransition(.custom(interactive: false))
         self.present(viewController, animated: true, completion: nil)
+    }
+}
+
+extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
+    // MARK: - AlbumSelectionPresenterDelegate
+
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity) {
+        // TODO:
+        print(#function)
     }
 }
 

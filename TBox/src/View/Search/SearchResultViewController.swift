@@ -276,7 +276,7 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        let viewController = self.factory.makeAddingClipsToAlbumViewController(clips: self.selectedClips, delegate: nil)
+        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -300,6 +300,15 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
         self.presenter.unhideSelectedClips()
+    }
+}
+
+extension SearchResultViewController: AlbumSelectionPresenterDelegate {
+    // MARK: - AlbumSelectionPresenterDelegate
+
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity) {
+        // TODO:
+        print(#function)
     }
 }
 

@@ -39,7 +39,7 @@ protocol ViewControllerFactory {
 
     func makeAlbumListViewController() -> UIViewController?
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?
-    func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController
+    func makeAlbumSelectionViewController(delegate: AlbumSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Tag
 
@@ -317,10 +317,25 @@ extension DependencyContainer: ViewControllerFactory {
                                    toolBarItemsProvider: toolBarItemsProvider)
     }
 
-    func makeAddingClipsToAlbumViewController(clips: [Clip], delegate: AddingClipsToAlbumPresenterDelegate?) -> UIViewController {
-        let presenter = AddingClipsToAlbumPresenter(sourceClips: clips, storage: self.clipStorage, logger: self.logger)
+    func makeAlbumSelectionViewController(delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
+        let query: AlbumListQuery
+        switch self.clipStorage.queryAllAlbums() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open AlbumSelectionView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let presenter = AlbumSelectionPresenter(query: query,
+                                                storage: self.clipStorage,
+                                                logger: self.logger)
         presenter.delegate = delegate
-        let viewController = AddingClipsToAlbumViewController(factory: self, presenter: presenter)
+        let viewController = AlbumSelectionViewController(factory: self, presenter: presenter)
+
         return UINavigationController(rootViewController: viewController)
     }
 
