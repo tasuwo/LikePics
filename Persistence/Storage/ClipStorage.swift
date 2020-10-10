@@ -554,6 +554,47 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+        self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+                return .failure(.notFound)
+            }
+
+            var clips: [ClipObject] = []
+            for clipId in clipIds.map({ $0.absoluteString }) {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                guard !album.clips.contains(clip) else {
+                    return .failure(.duplicated)
+                }
+            }
+
+            do {
+                try realm.write {
+                    album.updatedAt = Date()
+
+                    for clip in clips {
+                        if !album.clips.contains(clip) {
+                            album.clips.append(clip)
+                        }
+                    }
+                }
+                return .success(())
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func update(_ album: Album, byDeletingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError> {
         self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {

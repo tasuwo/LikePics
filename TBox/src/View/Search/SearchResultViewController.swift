@@ -306,9 +306,8 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 extension SearchResultViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity) {
-        // TODO:
-        print(#function)
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum albumId: Album.Identity) {
+        self.presenter.addSelectedClipsToAlbum(albumId)
     }
 }
 

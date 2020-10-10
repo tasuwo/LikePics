@@ -67,6 +67,8 @@ public protocol ClipStorageProtocol {
 
     func update(_ album: Album, byAddingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
 
+    func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
+
     func update(_ album: Album, byDeletingClipsHaving clipUrls: [URL]) -> Result<Void, ClipStorageError>
 
     func update(_ album: Album, titleTo title: String) -> Result<Album, ClipStorageError>
