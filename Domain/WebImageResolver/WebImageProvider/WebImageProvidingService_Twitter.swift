@@ -2,129 +2,177 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
+import Common
 import Erik
 import PromiseKit
 
 extension WebImageProvidingService {
     public enum Twitter: WebImageProvider {
         struct Context {
-            let isInitialLoaded: Bool
-            let delayBeforeRetry: DispatchTimeInterval
-            let retryCounter: Int
-
-            init() {
-                self.isInitialLoaded = false
-                self.delayBeforeRetry = .milliseconds(200)
-                self.retryCounter = 5
+            struct DisplayElement {
+                let numberOfSensitiveContents: Int
+                let sensitiveContentRevealButton: Element?
             }
 
-            init(isInitialLoaded: Bool, delayBeforeRetry: DispatchTimeInterval, retryCounter: Int) {
-                self.isInitialLoaded = isInitialLoaded
-                self.delayBeforeRetry = delayBeforeRetry
-                self.retryCounter = retryCounter
-            }
+            let existsSensitiveContents: Bool
+            let displayElement: DisplayElement
 
-            func foundSensitiveContentsAlert() -> Self {
-                return Context(isInitialLoaded: true,
-                               delayBeforeRetry: .milliseconds(100),
-                               retryCounter: 3)
-            }
-
-            func retryCounterDecremented() -> Self {
-                return Context(isInitialLoaded: self.isInitialLoaded,
-                               delayBeforeRetry: self.delayBeforeRetry,
-                               retryCounter: self.retryCounter - 1)
+            var readyToReveal: Bool {
+                return self.displayElement.numberOfSensitiveContents > 0
+                    && self.displayElement.sensitiveContentRevealButton != nil
             }
         }
 
-        enum RecoverableError: Error {
-            case timeout(Context, Document)
-            case networkError(Context, Document?, Error)
-            case internalError(Context, Document?)
+        enum ContextError: Error {
+            case networkError(Error)
+            case noDocument
+        }
 
-            var context: Context {
+        enum State {
+            case `init`
+            case revealing(limits: Int)
+            case loading(limits: Int)
+            case finish
+            case timeout
+
+            var isEnd: Bool {
                 switch self {
-                case let .timeout(context, _):
-                    return context
+                case .finish, .timeout:
+                    return true
 
-                case let .networkError(context, _, _):
-                    return context
-
-                case let .internalError(context, _):
-                    return context
-                }
-            }
-
-            var document: Document? {
-                switch self {
-                case let .timeout(_, document):
-                    return document
-
-                case let .networkError(_, document, _):
-                    return document
-
-                case let .internalError(_, document):
-                    return document
-                }
-            }
-
-            var webImageProvderError: WebImageUrlFinderError {
-                switch self {
-                case .timeout:
-                    return .timeout
-
-                case let .networkError(_, _, error):
-                    return .networkError(error)
-
-                case .internalError:
-                    return .internalError
+                default:
+                    return false
                 }
             }
         }
 
-        private static func preprocess(_ browser: Erik, document: Document, context: Context) -> Promise<Document> {
-            return Promise { seal in
-                browser.currentContent { document, error in
-                    var currentContext = context
-
-                    if let error = error {
-                        seal.resolve(.rejected(RecoverableError.networkError(currentContext, document, error)))
-                        return
+        enum StateMachine {
+            static func start(on browser: Erik) -> AnyPublisher<Erik, Error> {
+                return Just(())
+                    .setFailureType(to: Error.self)
+                    .delay(for: 2, scheduler: RunLoop.main)
+                    .flatMap { () -> AnyPublisher<Erik, Error> in
+                        return self.transition(browser, from: .`init`, withContext: nil)
                     }
+                    .eraseToAnyPublisher()
+            }
 
-                    guard let document = document else {
-                        seal.resolve(.rejected(RecoverableError.internalError(currentContext, nil)))
-                        return
-                    }
+            static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Erik, Error> {
+                return Self.currentContext(browser, withState: state, previousContext: context)
+                    .mapError { $0 as Error }
+                    .flatMap { context -> AnyPublisher<(State, Context), Error> in
+                        guard let nextState = self.nextState(from: state, withContext: context) else {
+                            return Fail(error: NSError())
+                                .mapError({ $0 as Error })
+                                .eraseToAnyPublisher()
+                        }
 
-                    let numberOfAlerts = document.querySelectorAll("a[href=\"/settings/safety\"]").count
-                    if numberOfAlerts == 0, currentContext.isInitialLoaded {
-                        seal.resolve(.fulfilled(document))
-                        return
-                    }
-                    guard numberOfAlerts > 0 else {
-                        seal.resolve(.rejected(RecoverableError.timeout(currentContext, document)))
-                        return
-                    }
+                        print("State: \(state.label) => \(nextState.label)")
+                        RootLogger.shared.write(ConsoleLog(level: .debug, message: "Twitter WebImage loading. Transition: \(state.label) => \(nextState.label)"))
 
-                    currentContext = currentContext.foundSensitiveContentsAlert()
 
-                    let sensitiveContentRevealButton = document.querySelectorAll("span")
-                        .first(where: {
-                            guard let innerHtml = $0.innerHTML else { return false }
-                            return innerHtml == "表示" || innerHtml == "View"
-                        })
-                    guard let button = sensitiveContentRevealButton else {
-                        seal.resolve(.rejected(RecoverableError.timeout(currentContext, document)))
-                        return
-                    }
-                    button.click { _, _ in
-                        if numberOfAlerts > 0 {
-                            seal.resolve(.rejected(RecoverableError.timeout(currentContext, document)))
-                        } else {
-                            seal.resolve(.fulfilled(document))
+                        switch nextState {
+                        case .`init`:
+                            return Fail(error: NSError())
+                                .mapError({ $0 as Error })
+                                .eraseToAnyPublisher()
+
+                        case .revealing:
+                            return Future { promise in
+                                context.displayElement.sensitiveContentRevealButton?.click { _, _ in
+                                    promise(.success((nextState, context)))
+                                }
+                            }
+                            .delay(for: 0.2, scheduler: RunLoop.main)
+                            .eraseToAnyPublisher()
+
+                        case .loading:
+                            return Just((nextState, context))
+                                .setFailureType(to: Error.self)
+                                .delay(for: 0.1, scheduler: RunLoop.main)
+                                .eraseToAnyPublisher()
+
+                        case .finish, .timeout:
+                            return Just((nextState, context))
+                                .setFailureType(to: Error.self)
+                                .eraseToAnyPublisher()
                         }
                     }
+                    .flatMap { nextState, context -> AnyPublisher<Erik, Error> in
+                        return nextState.isEnd
+                            ? Just(browser).setFailureType(to: Error.self).eraseToAnyPublisher()
+                            : self.transition(browser, from: nextState, withContext: context)
+                    }
+                    .eraseToAnyPublisher()
+            }
+
+            static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, ContextError> {
+                return Future { promise in
+                    browser.currentContent { document, error in
+                        if let error = error {
+                            promise(.failure(.networkError(error)))
+                            return
+                        }
+
+                        guard let document = document else {
+                            promise(.failure(.noDocument))
+                            return
+                        }
+
+                        let sensitiveContentAlerts = document.querySelectorAll("a[href=\"/settings/safety\"]")
+                        let sensitiveContentRevealButton = document.querySelectorAll("span")
+                            .first(where: {
+                                guard let innerHtml = $0.innerHTML else { return false }
+                                return innerHtml == "表示" || innerHtml == "View"
+                            })
+
+                        let existsSensitiveContents: Bool = {
+                            if case .`init` = state, !sensitiveContentAlerts.isEmpty {
+                                return true
+                            }
+                            return previousContext?.existsSensitiveContents ?? false
+                        }()
+
+                        let displayElement = Context.DisplayElement(numberOfSensitiveContents: sensitiveContentAlerts.count,
+                                                                    sensitiveContentRevealButton: sensitiveContentRevealButton)
+                        let context = Context(existsSensitiveContents: existsSensitiveContents, displayElement: displayElement)
+
+                        promise(.success(context))
+                    }
+                }
+            }
+
+            static func nextState(from state: State, withContext context: Context) -> State? {
+                switch state {
+                case .`init`:
+                    return context.existsSensitiveContents
+                        ? .revealing(limits: 10)
+                        : .finish
+
+                case let .revealing(limits: count):
+                    guard context.readyToReveal else {
+                        return .loading(limits: 3)
+                    }
+                    guard count - 1 > 0 else {
+                        return .timeout
+                    }
+                    return .revealing(limits: count - 1)
+
+                case let .loading(limits: count):
+                    guard count - 1 > 0 else {
+                        return .timeout
+                    }
+                    guard context.readyToReveal else {
+                        return .loading(limits: count - 1)
+                    }
+                    return .revealing(limits: 3)
+
+                case .finish:
+                    return nil
+
+                case .timeout:
+                    return nil
                 }
             }
         }
@@ -157,21 +205,7 @@ extension WebImageProvidingService.Twitter {
     }
 
     public static func preprocess(_ browser: Erik, document: Document) -> Promise<Document> {
-        func handle(_ document: Document, _ context: Context) -> Promise<Document> {
-            return self.preprocess(browser, document: document, context: context).recover { error -> Promise<Document> in
-                guard let recoverbleError = error as? RecoverableError else { throw error }
-
-                let nextContext = recoverbleError.context.retryCounterDecremented()
-                guard nextContext.retryCounter > 0 else {
-                    return .value(document)
-                }
-
-                return after(nextContext.delayBeforeRetry).then {
-                    handle(recoverbleError.document ?? document, nextContext)
-                }
-            }
-        }
-        return handle(document, Context())
+        return Promise { $0.resolve(.fulfilled(document)) }
     }
 
     public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
@@ -212,5 +246,26 @@ extension WebImageProvidingService.Twitter {
 
     public static func modifyRequest(_ request: URLRequest) -> URLRequest {
         return request
+    }
+}
+
+extension WebImageProvidingService.Twitter.State {
+    var label: String {
+        switch self {
+        case .`init`:
+            return "Init"
+
+        case let .revealing(limits: count):
+            return "Revealing(\(count))"
+
+        case let .loading(limits: count):
+            return "Loading(\(count))"
+
+        case .finish:
+            return "Finish"
+
+        case .timeout:
+            return "Timeout"
+        }
     }
 }
