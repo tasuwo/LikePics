@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Erik
-import PromiseKit
 import WebKit
 
 public struct WebImageUrlSet {
@@ -17,11 +17,10 @@ public protocol WebImageUrlFinderProtocol {
 }
 
 public class WebImageUrlFinder {
-    private static let maxRetryCount = 5
-    private static let delayAtRetry: DispatchTimeInterval = .milliseconds(200)
-
     public let webView: WKWebView
     private let browser: Erik
+
+    private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -36,25 +35,25 @@ public class WebImageUrlFinder {
 
     // MARK: - Methods
 
-    private func openPage(url: URL) -> Promise<Document> {
-        return Promise { [weak self] seal in
+    private func openPage(url: URL) -> Future<Document, WebImageUrlFinderError> {
+        return Future { [weak self] promise in
             guard let self = self else {
-                seal.resolve(.rejected(WebImageUrlFinderError.internalError))
+                promise(.failure(.internalError))
                 return
             }
 
             let handler: DocumentCompletionHandler = { document, error in
                 if let error = error {
-                    seal.resolve(.rejected(WebImageUrlFinderError.networkError(error)))
+                    promise(.failure(.networkError(error)))
                     return
                 }
 
                 guard let document = document else {
-                    seal.resolve(.rejected(WebImageUrlFinderError.internalError))
+                    promise(.failure(.internalError))
                     return
                 }
 
-                seal.resolve(.fulfilled(document))
+                promise(.success(document))
             }
 
             onMainThread(execute: {
@@ -63,25 +62,25 @@ public class WebImageUrlFinder {
         }
     }
 
-    func checkCurrentContent(fulfilled: @escaping (Document) -> Bool) -> Promise<Document> {
-        return Promise { seal in
+    func checkCurrentContent(fulfilled: @escaping (Document) -> Bool) -> Future<Document, WebImageUrlFinderError> {
+        return Future { promise in
             self.browser.currentContent { document, error in
                 if let error = error {
-                    seal.resolve(.rejected(WebImageUrlFinderError.networkError(error)))
+                    promise(.failure(.networkError(error)))
                     return
                 }
 
                 guard let document = document else {
-                    seal.resolve(.rejected(WebImageUrlFinderError.internalError))
+                    promise(.failure(.internalError))
                     return
                 }
 
                 guard fulfilled(document) else {
-                    seal.resolve(.rejected(WebImageUrlFinderError.timeout))
+                    promise(.failure(.timeout))
                     return
                 }
 
-                seal.resolve(.fulfilled(document))
+                promise(.success(document))
             }
         }
     }
@@ -91,26 +90,31 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
     // MARK: - WebImageUrlFinderProtocol
 
     public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) {
-        var preprocessedStep: Promise<Document>
+        var preprocessedStep: AnyPublisher<Void, WebImageUrlFinderError>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
-            preprocessedStep = firstly {
-                self.openPage(url: provider.modifyUrlForProcessing(url))
-            }.then { document in
-                provider.preprocess(self.browser, document: document)
-            }
+            preprocessedStep = self.openPage(url: url)
+                .flatMap { [weak self] document -> AnyPublisher<Void, WebImageUrlFinderError> in
+                    guard let self = self else {
+                        return Fail(error: WebImageUrlFinderError.internalError)
+                            .eraseToAnyPublisher()
+                    }
+                    return provider.preprocess(self.browser, document: document)
+                }
+                .eraseToAnyPublisher()
         } else {
-            preprocessedStep = firstly {
-                self.openPage(url: url)
-            }
+            preprocessedStep = self.openPage(url: url)
+                .map({ _ in () })
+                .eraseToAnyPublisher()
         }
 
         preprocessedStep
-            .then { _ in
-                attempt(maximumRetryCount: Self.maxRetryCount, delayBeforeRetry: Self.delayAtRetry) {
-                    self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
-                }
+            .flatMap { _ in
+                // TODO: Retry
+                return self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
             }
-            .done { document in
+            .sink(receiveCompletion: { _ in
+                // TODO: Error Handling
+            }, receiveValue: { document in
                 let imageUrls: [WebImageUrlSet] = document
                     .querySelectorAll("img")
                     .compactMap { $0["src"] }
@@ -123,13 +127,7 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                                               lowQualityUrl: provider.resolveLowQualityImageUrl(of: $0))
                     }
                 completion(.success(imageUrls))
-            }
-            .catch { error in
-                guard let error = error as? WebImageUrlFinderError else {
-                    completion(.failure(.internalError))
-                    return
-                }
-                completion(.failure(error))
-            }
+            })
+            .store(in: &self.cancellableBag)
     }
 }

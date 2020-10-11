@@ -5,12 +5,12 @@
 import Combine
 import Common
 import Erik
-import PromiseKit
 
 extension WebImageProvidingService {
     public enum Twitter: WebImageProvider {
         struct Context {
             struct DisplayElement {
+                let existsImages: Bool
                 let numberOfSensitiveContents: Int
                 let sensitiveContentRevealButton: Element?
             }
@@ -24,15 +24,11 @@ extension WebImageProvidingService {
             }
         }
 
-        enum ContextError: Error {
-            case networkError(Error)
-            case noDocument
-        }
-
         enum State {
             case `init`
+            case initialLoading(limits: Int)
             case revealing(limits: Int)
-            case loading(limits: Int)
+            case loadingForReveal(limits: Int)
             case finish
             case timeout
 
@@ -48,34 +44,29 @@ extension WebImageProvidingService {
         }
 
         enum StateMachine {
-            static func start(on browser: Erik) -> AnyPublisher<Erik, Error> {
-                return Just(())
-                    .setFailureType(to: Error.self)
-                    .delay(for: 2, scheduler: RunLoop.main)
-                    .flatMap { () -> AnyPublisher<Erik, Error> in
-                        return self.transition(browser, from: .`init`, withContext: nil)
-                    }
-                    .eraseToAnyPublisher()
+            static func start(on browser: Erik) -> AnyPublisher<Void, WebImageUrlFinderError> {
+                return self.transition(browser, from: .`init`, withContext: nil)
             }
 
-            static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Erik, Error> {
+            static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Void, WebImageUrlFinderError> {
                 return Self.currentContext(browser, withState: state, previousContext: context)
-                    .mapError { $0 as Error }
-                    .flatMap { context -> AnyPublisher<(State, Context), Error> in
+                    .flatMap { context -> AnyPublisher<(State, Context), WebImageUrlFinderError> in
                         guard let nextState = self.nextState(from: state, withContext: context) else {
-                            return Fail(error: NSError())
-                                .mapError({ $0 as Error })
+                            return Fail(error: WebImageUrlFinderError.internalError)
                                 .eraseToAnyPublisher()
                         }
 
-                        print("State: \(state.label) => \(nextState.label)")
                         RootLogger.shared.write(ConsoleLog(level: .debug, message: "Twitter WebImage loading. Transition: \(state.label) => \(nextState.label)"))
-
 
                         switch nextState {
                         case .`init`:
-                            return Fail(error: NSError())
-                                .mapError({ $0 as Error })
+                            return Fail(error: WebImageUrlFinderError.internalError)
+                                .eraseToAnyPublisher()
+
+                        case .initialLoading:
+                            return Just((nextState, context))
+                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .delay(for: 0.2, scheduler: RunLoop.main)
                                 .eraseToAnyPublisher()
 
                         case .revealing:
@@ -87,27 +78,27 @@ extension WebImageProvidingService {
                             .delay(for: 0.2, scheduler: RunLoop.main)
                             .eraseToAnyPublisher()
 
-                        case .loading:
+                        case .loadingForReveal:
                             return Just((nextState, context))
-                                .setFailureType(to: Error.self)
+                                .setFailureType(to: WebImageUrlFinderError.self)
                                 .delay(for: 0.1, scheduler: RunLoop.main)
                                 .eraseToAnyPublisher()
 
                         case .finish, .timeout:
                             return Just((nextState, context))
-                                .setFailureType(to: Error.self)
+                                .setFailureType(to: WebImageUrlFinderError.self)
                                 .eraseToAnyPublisher()
                         }
                     }
-                    .flatMap { nextState, context -> AnyPublisher<Erik, Error> in
+                    .flatMap { nextState, context -> AnyPublisher<Void, WebImageUrlFinderError> in
                         return nextState.isEnd
-                            ? Just(browser).setFailureType(to: Error.self).eraseToAnyPublisher()
+                            ? Just(()).setFailureType(to: WebImageUrlFinderError.self).eraseToAnyPublisher()
                             : self.transition(browser, from: nextState, withContext: context)
                     }
                     .eraseToAnyPublisher()
             }
 
-            static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, ContextError> {
+            static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, WebImageUrlFinderError> {
                 return Future { promise in
                     browser.currentContent { document, error in
                         if let error = error {
@@ -116,9 +107,11 @@ extension WebImageProvidingService {
                         }
 
                         guard let document = document else {
-                            promise(.failure(.noDocument))
+                            promise(.failure(.internalError))
                             return
                         }
+
+                        let existsImages = !document.querySelectorAll("img").isEmpty
 
                         let sensitiveContentAlerts = document.querySelectorAll("a[href=\"/settings/safety\"]")
                         let sensitiveContentRevealButton = document.querySelectorAll("span")
@@ -128,13 +121,14 @@ extension WebImageProvidingService {
                             })
 
                         let existsSensitiveContents: Bool = {
-                            if case .`init` = state, !sensitiveContentAlerts.isEmpty {
+                            if case .initialLoading = state, !sensitiveContentAlerts.isEmpty {
                                 return true
                             }
                             return previousContext?.existsSensitiveContents ?? false
                         }()
 
-                        let displayElement = Context.DisplayElement(numberOfSensitiveContents: sensitiveContentAlerts.count,
+                        let displayElement = Context.DisplayElement(existsImages: existsImages,
+                                                                    numberOfSensitiveContents: sensitiveContentAlerts.count,
                                                                     sensitiveContentRevealButton: sensitiveContentRevealButton)
                         let context = Context(existsSensitiveContents: existsSensitiveContents, displayElement: displayElement)
 
@@ -146,25 +140,34 @@ extension WebImageProvidingService {
             static func nextState(from state: State, withContext context: Context) -> State? {
                 switch state {
                 case .`init`:
+                    return .initialLoading(limits: 10)
+
+                case let .initialLoading(limits: count):
+                    guard count - 1 > 0 else {
+                        return .timeout
+                    }
+                    guard context.displayElement.existsImages else {
+                        return .initialLoading(limits: count - 1)
+                    }
                     return context.existsSensitiveContents
                         ? .revealing(limits: 10)
                         : .finish
 
                 case let .revealing(limits: count):
                     guard context.readyToReveal else {
-                        return .loading(limits: 3)
+                        return .loadingForReveal(limits: 3)
                     }
                     guard count - 1 > 0 else {
                         return .timeout
                     }
                     return .revealing(limits: count - 1)
 
-                case let .loading(limits: count):
+                case let .loadingForReveal(limits: count):
                     guard count - 1 > 0 else {
                         return .timeout
                     }
                     guard context.readyToReveal else {
-                        return .loading(limits: count - 1)
+                        return .loadingForReveal(limits: count - 1)
                     }
                     return .revealing(limits: 3)
 
@@ -204,8 +207,8 @@ extension WebImageProvidingService.Twitter {
         return url.host?.contains("twitter") == true
     }
 
-    public static func preprocess(_ browser: Erik, document: Document) -> Promise<Document> {
-        return Promise { $0.resolve(.fulfilled(document)) }
+    public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
+        return StateMachine.start(on: browser)
     }
 
     public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
@@ -255,11 +258,14 @@ extension WebImageProvidingService.Twitter.State {
         case .`init`:
             return "Init"
 
+        case let .initialLoading(limits: count):
+            return "InitialLoading(\(count))"
+
         case let .revealing(limits: count):
             return "Revealing(\(count))"
 
-        case let .loading(limits: count):
-            return "Loading(\(count))"
+        case let .loadingForReveal(limits: count):
+            return "LoadingForReveal(\(count))"
 
         case .finish:
             return "Finish"

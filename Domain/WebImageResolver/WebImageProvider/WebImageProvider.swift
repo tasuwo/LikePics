@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Erik
-import PromiseKit
 
 public protocol WebImageProvider {
     static func isProviding(url: URL) -> Bool
@@ -12,7 +12,7 @@ public protocol WebImageProvider {
 
     static func shouldPreprocess(for url: URL) -> Bool
 
-    static func preprocess(_ browser: Erik, document: Document) -> Promise<Document>
+    static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError>
 
     static func resolveLowQualityImageUrl(of url: URL) -> URL?
 

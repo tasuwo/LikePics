@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Erik
-import PromiseKit
 
 extension WebImageProvidingService {
     public enum Pixiv: WebImageProvider {
@@ -22,8 +22,10 @@ extension WebImageProvidingService {
             return false
         }
 
-        public static func preprocess(_ browser: Erik, document: Document) -> Promise<Document> {
-            return Promise { $0.resolve(.fulfilled(document)) }
+        public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
+            return Just(())
+                .setFailureType(to: WebImageUrlFinderError.self)
+                .eraseToAnyPublisher()
         }
 
         public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
