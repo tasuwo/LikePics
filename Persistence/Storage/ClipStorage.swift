@@ -511,16 +511,20 @@ extension ClipStorage: ClipStorageProtocol {
             return .failure(.internalError)
         }
 
-        let tags = ids.reduce(into: [TagObject]()) { results, tagId in
-            guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else { return }
-            results.append(tag)
+        var tags: [TagObject] = []
+        for id in ids {
+            guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id) else {
+                return .failure(.notFound)
+            }
+            tags.append(tag)
         }
+        let deleteTarget = Array(tags.map({ Tag.make(by: $0) }))
 
         do {
             try realm.write {
                 realm.delete(tags)
             }
-            return .success(Array(tags.map({ Tag.make(by: $0) })))
+            return .success(deleteTarget)
         } catch {
             return .failure(.internalError)
         }

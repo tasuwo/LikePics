@@ -194,6 +194,47 @@ public class WebImageProviderMock: WebImageProvider {
     }
 }
 
+public class ImageStorageProtocolMock: ImageStorageProtocol {
+    public init() { }
+
+    public private(set) var saveCallCount = 0
+    public var saveHandler: ((Data, String, URL) throws -> Void)?
+    public func save(_ image: Data, asName fileName: String, inClip url: URL) throws {
+        saveCallCount += 1
+        if let saveHandler = saveHandler {
+            try saveHandler(image, fileName, url)
+        }
+    }
+
+    public private(set) var deleteCallCount = 0
+    public var deleteHandler: ((String, URL) throws -> Void)?
+    public func delete(fileName: String, inClip url: URL) throws {
+        deleteCallCount += 1
+        if let deleteHandler = deleteHandler {
+            try deleteHandler(fileName, url)
+        }
+    }
+
+    public private(set) var deleteAllCallCount = 0
+    public var deleteAllHandler: ((URL) throws -> Void)?
+    public func deleteAll(inClip url: URL) throws {
+        deleteAllCallCount += 1
+        if let deleteAllHandler = deleteAllHandler {
+            try deleteAllHandler(url)
+        }
+    }
+
+    public private(set) var readImageCallCount = 0
+    public var readImageHandler: ((String, URL) throws -> (Data))?
+    public func readImage(named name: String, inClip url: URL) throws -> Data {
+        readImageCallCount += 1
+        if let readImageHandler = readImageHandler {
+            return try readImageHandler(name, url)
+        }
+        fatalError("readImageHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
 public class WebImageUrlFinderProtocolMock: WebImageUrlFinderProtocol {
     public init() { }
     public init(webView: WKWebView) {

@@ -11,99 +11,15 @@ import RealmSwift
 @testable import TestHelper
 
 class ClipStorageSpec: QuickSpec {
-    func makeClip(url: String,
-                  description: String = "hoge",
-                  items: [ClipItemObject] = [],
-                  tags: [TagObject] = [],
-                  isHidden: Bool = false,
-                  registeredAt: Date = Date(timeIntervalSince1970: 0),
-                  updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
-    {
-        let obj = ClipObject()
-        obj.url = url
-        obj.descriptionText = description
-        items.forEach {
-            obj.items.append($0)
-        }
-        tags.forEach {
-            obj.tags.append($0)
-        }
-        obj.isHidden = isHidden
-        obj.registeredAt = registeredAt
-        obj.updatedAt = updatedAt
-        return obj
-    }
-
-    func makeClipItem(clipUrl: String,
-                      clipIndex: Int,
-                      thumbnailFileName: String,
-                      thumbnailHeight: Double,
-                      thumbnailWidth: Double,
-                      imageFileName: String,
-                      imageUrl: String,
-                      registeredAt: Date,
-                      updatedAt: Date) -> ClipItemObject
-    {
-        let obj = ClipItemObject()
-        obj.clipUrl = clipUrl
-        obj.clipIndex = clipIndex
-        obj.thumbnailFileName = thumbnailFileName
-        obj.thumbnailHeight = thumbnailHeight
-        obj.thumbnailWidth = thumbnailWidth
-        obj.imageFileName = imageFileName
-        obj.imageUrl = imageUrl
-        obj.registeredAt = registeredAt
-        obj.updatedAt = updatedAt
-        obj.key = obj.makeKey()
-        return obj
-    }
-
-    func makeTag(id: String, name: String) -> TagObject {
-        let obj = TagObject()
-        obj.id = id
-        obj.name = name
-        return obj
-    }
-
-    class ImageStorageMock: ImageStorageProtocol {
-        var saveCallCount = 0
-        var saveHandler: ((Data, String, URL) throws -> Void)?
-        func save(_ image: Data, asName fileName: String, inClip url: URL) throws {
-            self.saveCallCount += 1
-            try self.saveHandler?(image, fileName, url)
-        }
-
-        var deleteCallCount = 0
-        var deleteHandler: ((String, URL) throws -> Void)?
-        func delete(fileName: String, inClip url: URL) throws {
-            self.deleteCallCount += 1
-            try self.deleteHandler?(fileName, url)
-        }
-
-        var readImageCallCount = 0
-        var readImageHandler: ((String, URL) throws -> Data)?
-        func readImage(named name: String, inClip url: URL) throws -> Data {
-            self.readImageCallCount += 1
-            return try self.readImageHandler?(name, url) ?? Data()
-        }
-
-        var deleteAllCallCount = 0
-        var deleteAllHandler: ((URL) throws -> Void)?
-        func deleteAll(inClip url: URL) throws {
-            self.deleteCallCount += 1
-            try self.deleteAllHandler?(url)
-        }
-    }
-
     override func spec() {
         let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 3)
         let realm = try! Realm(configuration: configuration)
 
         var service: ClipStorage!
-        var imageStorage: ImageStorageMock!
+        var imageStorage: ImageStorageProtocolMock!
 
         beforeSuite {
-            imageStorage = ImageStorageMock()
+            imageStorage = ImageStorageProtocolMock()
             service = try! ClipStorage(realmConfiguration: configuration, imageStorage: imageStorage)
         }
 
@@ -231,93 +147,6 @@ class ClipStorageSpec: QuickSpec {
 
         // MARK: Read
 
-        describe("readClip(having:)") {
-            var result: Result<Clip, ClipStorageError>!
-
-            context("対象のクリップが存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost",
-                                                description: "hogehoge",
-                                                items: [
-                                                    self.makeClipItem(clipUrl: "https://localhost/1",
-                                                                      clipIndex: 1,
-                                                                      thumbnailFileName: "fuga1.png",
-                                                                      thumbnailHeight: 100,
-                                                                      thumbnailWidth: 200,
-                                                                      imageFileName: "hoge1.png",
-                                                                      imageUrl: "https://localhost/image/large/1",
-                                                                      registeredAt: Date(timeIntervalSince1970: 0),
-                                                                      updatedAt: Date(timeIntervalSince1970: 1000)),
-                                                    self.makeClipItem(clipUrl: "https://localhost/2",
-                                                                      clipIndex: 2,
-                                                                      thumbnailFileName: "fuga2.png",
-                                                                      thumbnailHeight: 500,
-                                                                      thumbnailWidth: 600,
-                                                                      imageFileName: "hoge2.png",
-                                                                      imageUrl: "https://localhost/image/large/2",
-                                                                      registeredAt: Date(timeIntervalSince1970: 0),
-                                                                      updatedAt: Date(timeIntervalSince1970: 1000))
-                                                ],
-                                                tags: [
-                                                    self.makeTag(id: "111", name: "hoge"),
-                                                    self.makeTag(id: "222", name: "fuga"),
-                                                ],
-                                                registeredAt: Date(timeIntervalSince1970: 0),
-                                                updatedAt: Date(timeIntervalSince1970: 1000))
-                        realm.add(obj)
-                    }
-                    result = service.readClip(having: URL(string: "https://localhost")!)
-                }
-                it("successが返る") {
-                    switch result! {
-                    case let .success(clip):
-                        expect(clip.url).to(equal(URL(string: "https://localhost")!))
-                        expect(clip.description).to(equal("hogehoge"))
-                        expect(clip.items).to(haveCount(2))
-                        expect(clip.items[0].clipUrl).to(equal(URL(string: "https://localhost/1")!))
-                        expect(clip.items[0].clipIndex).to(equal(1))
-                        expect(clip.items[0].thumbnailFileName).to(equal("fuga1.png"))
-                        expect(clip.items[0].thumbnailSize).to(equal(.init(height: 100, width: 200)))
-                        expect(clip.items[0].imageFileName).to(equal("hoge1.png"))
-                        expect(clip.items[0].imageUrl).to(equal(URL(string: "https://localhost/image/large/1")!))
-                        expect(clip.items[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clip.items[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clip.items[1].clipUrl).to(equal(URL(string: "https://localhost/2")!))
-                        expect(clip.items[1].clipIndex).to(equal(2))
-                        expect(clip.items[1].thumbnailSize).to(equal(.init(height: 500, width: 600)))
-                        expect(clip.items[1].imageFileName).to(equal("hoge2.png"))
-                        expect(clip.items[1].imageUrl).to(equal(URL(string: "https://localhost/image/large/2")!))
-                        expect(clip.items[1].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clip.items[1].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clip.tags).to(haveCount(2))
-                        expect(clip.tags[0]).to(equal("hoge"))
-                        expect(clip.tags[1]).to(equal("fuga"))
-                        expect(clip.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clip.updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("対象のクリップが存在しない") {
-                beforeEach {
-                    result = service.readClip(having: URL(string: "https://localhost")!)
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
         describe("readImageData(of:)") {
             var result: Result<Data, ClipStorageError>!
 
@@ -410,787 +239,30 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("readAllClips()") {
-            var result: Result<[Clip], ClipStorageError>!
-
-            [true, false].forEach { containsHiddenItems in
-                context("隠れたクリップを\(containsHiddenItems ? "含んで" : "除いて")全件取得する") {
-                    context("クリップが1つも存在しない") {
-                        beforeEach {
-                            result = service.readAllClips(containsHiddenClips: containsHiddenItems)
-                        }
-                        it("successが返り、結果は空配列となる") {
-                            switch result! {
-                            case let .success(clips):
-                                expect(clips).to(beEmpty())
-                            case let .failure(error):
-                                fail("Unexpected failure: \(error)")
-                            }
-                        }
-                    }
-                }
-            }
-
-            context("クリップが複数存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 description: "hoge1",
-                                                 isHidden: false,
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 description: "hoge2",
-                                                 isHidden: true,
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 description: "hoge3",
-                                                 isHidden: false,
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                }
-
-                context("隠れたクリップを含んで全件取得する") {
-                    beforeEach {
-                        result = service.readAllClips(containsHiddenClips: true)
-                    }
-                    it("successが返り、全てのクリップが取得できる") {
-                        switch result! {
-                        case let .success(v):
-                            let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                            expect(clips).to(haveCount(3))
-                            expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
-                            expect(clips[0].description).to(equal("hoge1"))
-                            expect(clips[0].items).to(beEmpty())
-                            expect(clips[0].tags).to(beEmpty())
-                            expect(clips[0].isHidden).to(beFalse())
-                            expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                            expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                            expect(clips[1].url).to(equal(URL(string: "https://localhost/2")!))
-                            expect(clips[1].description).to(equal("hoge2"))
-                            expect(clips[1].items).to(beEmpty())
-                            expect(clips[1].tags).to(beEmpty())
-                            expect(clips[1].isHidden).to(beTrue())
-                            expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                            expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                            expect(clips[2].url).to(equal(URL(string: "https://localhost/3")!))
-                            expect(clips[2].description).to(equal("hoge3"))
-                            expect(clips[2].items).to(beEmpty())
-                            expect(clips[2].tags).to(beEmpty())
-                            expect(clips[2].isHidden).to(beFalse())
-                            expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                            expect(clips[2].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                        case let .failure(error):
-                            fail("Unexpected failure: \(error)")
-                        }
-                    }
-                }
-
-                context("隠れたクリップを除いて全件取得する") {
-                    beforeEach {
-                        result = service.readAllClips(containsHiddenClips: false)
-                    }
-                    it("successが返り、隠れたクリップ以外のクリップが全て取得できる") {
-                        switch result! {
-                        case let .success(v):
-                            let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                            expect(clips).to(haveCount(2))
-                            expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
-                            expect(clips[0].description).to(equal("hoge1"))
-                            expect(clips[0].items).to(beEmpty())
-                            expect(clips[0].tags).to(beEmpty())
-                            expect(clips[0].isHidden).to(beFalse())
-                            expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                            expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                            expect(clips[1].url).to(equal(URL(string: "https://localhost/3")!))
-                            expect(clips[1].description).to(equal("hoge3"))
-                            expect(clips[1].items).to(beEmpty())
-                            expect(clips[1].tags).to(beEmpty())
-                            expect(clips[1].isHidden).to(beFalse())
-                            expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                            expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                        case let .failure(error):
-                            fail("Unexpected failure: \(error)")
-                        }
-                    }
-                }
-            }
-        }
-
-        describe("readAllTags()") {
-            var result: Result<[String], ClipStorageError>!
-
-            context("タグが1つも存在しない") {
-                beforeEach {
-                    result = service.readAllTags()
-                }
-                it("successが返り、結果は空配列となる") {
-                    switch result! {
-                    case let .success(tags):
-                        expect(tags).to(beEmpty())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("タグが複数存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeTag(id: "111", name: "hoge")
-                        let obj2 = self.makeTag(id: "222", name: "fuga")
-                        let obj3 = self.makeTag(id: "333", name: "piyo")
-
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                    result = service.readAllTags()
-                }
-                it("successが返り、全てのタグが取得できる") {
-                    switch result! {
-                    case let .success(v):
-                        let tags = v.sorted(by: { $0 < $1 })
-                        expect(tags).to(haveCount(3))
-                        expect(tags[0]).to(equal("fuga"))
-                        expect(tags[1]).to(equal("hoge"))
-                        expect(tags[2]).to(equal("piyo"))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
-        describe("readAllAlbums()") {
-            var result: Result<[Album], ClipStorageError>!
-
-            context("アルバムが1つも存在しない") {
-                beforeEach {
-                    result = service.readAllAlbums()
-                }
-                it("successが返り、結果は空配列となる") {
-                    switch result! {
-                    case let .success(albums):
-                        expect(albums).to(beEmpty())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("アルバムが複数存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = AlbumObject()
-                        obj1.id = "111"
-                        obj1.title = "hoge"
-                        obj1.registeredAt = Date(timeIntervalSince1970: 0)
-                        obj1.updatedAt = Date(timeIntervalSince1970: 1000)
-
-                        let obj2 = AlbumObject()
-                        obj2.id = "222"
-                        obj2.title = "fuga"
-                        obj2.registeredAt = Date(timeIntervalSince1970: 1000)
-                        obj2.updatedAt = Date(timeIntervalSince1970: 2000)
-
-                        let obj3 = AlbumObject()
-                        obj3.id = "333"
-                        obj3.title = "piyo"
-                        obj3.registeredAt = Date(timeIntervalSince1970: 2000)
-                        obj3.updatedAt = Date(timeIntervalSince1970: 3000)
-
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                    result = service.readAllAlbums()
-                }
-                it("successが返り、全てのクリップが取得できる") {
-                    switch result! {
-                    case let .success(v):
-                        let albums = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(albums).to(haveCount(3))
-                        expect(albums[0].id).to(equal("111"))
-                        expect(albums[0].title).to(equal("hoge"))
-                        expect(albums[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(albums[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(albums[1].id).to(equal("222"))
-                        expect(albums[1].title).to(equal("fuga"))
-                        expect(albums[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(albums[1].updatedDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(albums[2].id).to(equal("333"))
-                        expect(albums[2].title).to(equal("piyo"))
-                        expect(albums[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(albums[2].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
-        describe("searchClips(byKeywords:)") {
-            var result: Result<[Clip], ClipStorageError>!
-
-            context("条件にマッチするクリップが1件も存在しない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 description: "hoge1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 description: "hoge2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 description: "hoge3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                    result = service.searchClips(byKeywords: ["hoge", "fuga", "piyo"])
-                }
-                it("successが返り、結果は空配列となる") {
-                    switch result! {
-                    case let .success(clips):
-                        expect(clips).to(beEmpty())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("1つのキーワードにマッチするクリップが複数存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/hogehoge",
-                                                 description: "hoge1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/poe",
-                                                 description: "hoge2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/hoge",
-                                                 description: "hoge3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                    result = service.searchClips(byKeywords: ["hoge"])
-                }
-                it("successが返り、マッチしたクリップが返る") {
-                    switch result! {
-                    case let .success(v):
-                        let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(clips).to(haveCount(2))
-                        expect(clips[0].url).to(equal(URL(string: "https://localhost/hogehoge")!))
-                        expect(clips[0].description).to(equal("hoge1"))
-                        expect(clips[0].items).to(beEmpty())
-                        expect(clips[0].tags).to(beEmpty())
-                        expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].url).to(equal(URL(string: "https://localhost/hoge")!))
-                        expect(clips[1].description).to(equal("hoge3"))
-                        expect(clips[1].items).to(beEmpty())
-                        expect(clips[1].tags).to(beEmpty())
-                        expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("複数のキーワードでOR検索できる") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/hoge",
-                                                 description: "hoge1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/piyo",
-                                                 description: "hoge2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/fuga",
-                                                 description: "hoge3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        let obj4 = self.makeClip(url: "https://localhost/poe",
-                                                 description: "hoge4",
-                                                 registeredAt: Date(timeIntervalSince1970: 4000),
-                                                 updatedAt: Date(timeIntervalSince1970: 5000))
-                        let obj5 = self.makeClip(url: "https://localhost/hogefuga",
-                                                 description: "hoge5",
-                                                 registeredAt: Date(timeIntervalSince1970: 6000),
-                                                 updatedAt: Date(timeIntervalSince1970: 7000))
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                        realm.add(obj4)
-                        realm.add(obj5)
-                    }
-                    result = service.searchClips(byKeywords: ["hoge", "fuga"])
-                }
-                it("successが返り、マッチしたクリップが返る") {
-                    switch result! {
-                    case let .success(v):
-                        let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(clips).to(haveCount(3))
-                        expect(clips[0].url).to(equal(URL(string: "https://localhost/hoge")!))
-                        expect(clips[0].description).to(equal("hoge1"))
-                        expect(clips[0].items).to(beEmpty())
-                        expect(clips[0].tags).to(beEmpty())
-                        expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].url).to(equal(URL(string: "https://localhost/fuga")!))
-                        expect(clips[1].description).to(equal("hoge3"))
-                        expect(clips[1].items).to(beEmpty())
-                        expect(clips[1].tags).to(beEmpty())
-                        expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                        expect(clips[2].url).to(equal(URL(string: "https://localhost/hogefuga")!))
-                        expect(clips[2].description).to(equal("hoge5"))
-                        expect(clips[2].items).to(beEmpty())
-                        expect(clips[2].tags).to(beEmpty())
-                        expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 6000)))
-                        expect(clips[2].updatedDate).to(equal(Date(timeIntervalSince1970: 7000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
-        describe("searchClips(byTags:)") {
-            var result: Result<[Clip], ClipStorageError>!
-
-            context("条件にマッチするクリップが1件も存在しない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 description: "hoge1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 description: "hoge2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 description: "hoge3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        realm.add(obj1)
-                        realm.add(obj2)
-                        realm.add(obj3)
-                    }
-                    result = service.searchClips(byTags: ["hoge", "fuga", "piyo"])
-                }
-                it("successが返り、結果は空配列となる") {
-                    switch result! {
-                    case let .success(clips):
-                        expect(clips).to(beEmpty())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("1つのタグにマッチするクリップが複数存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 description: "hoge1",
-                                                 tags: [
-                                                     self.makeTag(id: "111", name: "hoge")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 description: "hoge2",
-                                                 tags: [
-                                                     self.makeTag(id: "222", name: "fuga")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 description: "hoge3",
-                                                 tags: [
-                                                     self.makeTag(id: "111", name: "hoge"),
-                                                     self.makeTag(id: "222", name: "fuga")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        realm.add(obj1, update: .modified)
-                        realm.add(obj2, update: .modified)
-                        realm.add(obj3, update: .modified)
-                    }
-                    result = service.searchClips(byTags: ["hoge"])
-                }
-                it("successが返り、マッチしたクリップが返る") {
-                    switch result! {
-                    case let .success(v):
-                        let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(clips).to(haveCount(2))
-                        expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
-                        expect(clips[0].description).to(equal("hoge1"))
-                        expect(clips[0].items).to(beEmpty())
-                        expect(clips[0].tags).to(haveCount(1))
-                        expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].url).to(equal(URL(string: "https://localhost/3")!))
-                        expect(clips[1].description).to(equal("hoge3"))
-                        expect(clips[1].items).to(beEmpty())
-                        expect(clips[1].tags).to(haveCount(2))
-                        expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("複数のタグでOR検索できる") {
-                beforeEach {
-                    try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 description: "hoge1",
-                                                 tags: [
-                                                     self.makeTag(id: "111", name: "hoge")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 description: "hoge2",
-                                                 tags: [
-                                                     self.makeTag(id: "222", name: "piyo")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 description: "hoge3",
-                                                 tags: [
-                                                     self.makeTag(id: "333", name: "fuga")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        let obj4 = self.makeClip(url: "https://localhost/4",
-                                                 description: "hoge4",
-                                                 tags: [
-                                                     self.makeTag(id: "444", name: "poe")
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 4000),
-                                                 updatedAt: Date(timeIntervalSince1970: 5000))
-                        let obj5 = self.makeClip(url: "https://localhost/5",
-                                                 description: "hoge5",
-                                                 tags: [
-                                                     self.makeTag(id: "111", name: "hoge"),
-                                                     self.makeTag(id: "333", name: "fuga"),
-                                                 ],
-                                                 registeredAt: Date(timeIntervalSince1970: 6000),
-                                                 updatedAt: Date(timeIntervalSince1970: 7000))
-                        realm.add(obj1, update: .modified)
-                        realm.add(obj2, update: .modified)
-                        realm.add(obj3, update: .modified)
-                        realm.add(obj4, update: .modified)
-                        realm.add(obj5, update: .modified)
-                    }
-                    result = service.searchClips(byTags: ["hoge", "fuga"])
-                }
-                it("successが返り、マッチしたクリップが返る") {
-                    switch result! {
-                    case let .success(v):
-                        let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
-                        expect(clips).to(haveCount(3))
-                        expect(clips[0].url).to(equal(URL(string: "https://localhost/1")!))
-                        expect(clips[0].description).to(equal("hoge1"))
-                        expect(clips[0].items).to(beEmpty())
-                        expect(clips[0].tags).to(haveCount(1))
-                        expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                        expect(clips[0].updatedDate).to(equal(Date(timeIntervalSince1970: 1000)))
-                        expect(clips[1].url).to(equal(URL(string: "https://localhost/3")!))
-                        expect(clips[1].description).to(equal("hoge3"))
-                        expect(clips[1].items).to(beEmpty())
-                        expect(clips[1].tags).to(haveCount(1))
-                        expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
-                        expect(clips[1].updatedDate).to(equal(Date(timeIntervalSince1970: 3000)))
-                        expect(clips[2].url).to(equal(URL(string: "https://localhost/5")!))
-                        expect(clips[2].description).to(equal("hoge5"))
-                        expect(clips[2].items).to(beEmpty())
-                        expect(clips[2].tags).to(haveCount(2))
-                        expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 6000)))
-                        expect(clips[2].updatedDate).to(equal(Date(timeIntervalSince1970: 7000)))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
         // MARK: Update
 
-        describe("update(_:byAddingTag:)") {
-            var result: Result<Clip, ClipStorageError>!
-
-            context("追加対象のタグとクリップが存在する") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost")
-                        let tagObj = self.makeTag(id: "111", name: "hoge")
-                        realm.add(obj)
-                        realm.add(tagObj)
-                    }
-                    result = service.update(Clip(url: URL(string: "https://localhost")!,
-                                                 description: nil,
-                                                 items: [],
-                                                 tags: [], isHidden: false,
-                                                 registeredDate: Date(timeIntervalSince1970: 0),
-                                                 updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byAddingTag: "hoge")
-                }
-                it("successが返る") {
-                    switch result! {
-                    case .success:
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-                it("返ってきたクリップが更新されている") {
-                    guard case let .success(clip) = result else {
-                        fail("Unexpected failure")
-                        return
-                    }
-                    expect(clip.url).to(equal(URL(string: "https://localhost")))
-                    expect(clip.description).to(equal("hoge"))
-                    expect(clip.items).to(beEmpty())
-                    expect(clip.tags).to(haveCount(1))
-                    expect(clip.tags.first!).to(equal("hoge"))
-                    expect(clip.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                    // 更新時刻が更新されている
-                    expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
-                }
-                it("Realm内のクリップが更新されている") {
-                    let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: "https://localhost")
-                    expect(clip?.url).to(equal("https://localhost"))
-                    expect(clip?.descriptionText).to(equal("hoge"))
-                    expect(clip?.items).to(beEmpty())
-                    expect(clip?.tags).to(haveCount(1))
-                    expect(clip?.tags.first!.id).to(equal("111"))
-                    expect(clip?.tags.first!.name).to(equal("hoge"))
-                    expect(clip?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
-                    // 更新時刻が更新されている
-                    expect(clip?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
-                }
-                it("タグは新しく増えない") {
-                    let tags = realm.objects(TagObject.self)
-                    expect(tags).to(haveCount(1))
-                    expect(tags.first?.id).to(equal("111"))
-                    expect(tags.first?.name).to(equal("hoge"))
-                }
-            }
-
-            context("追加対象のタグが存在しない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost")
-                        realm.add(obj)
-                    }
-                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!),
-                                            byAddingTag: "hoge")
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-                it("タグは新しく増えない") {
-                    let tags = realm.objects(TagObject.self)
-                    expect(tags).to(haveCount(0))
-                }
-            }
-
-            context("追加対象のクリップが存在しない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeTag(id: "111", name: "hoge")
-                        realm.add(obj)
-                    }
-                    result = service.update(Clip.makeDefault(), byAddingTag: "hoge")
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
-        describe("update(_:byDeletingTag:)") {
-            var result: Result<Clip, ClipStorageError>!
-
-            context("クリップが削除対象のタグを保持している") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost",
-                                                tags: [
-                                                    self.makeTag(id: "111", name: "hoge"),
-                                                    self.makeTag(id: "222", name: "fuga"),
-                                                    self.makeTag(id: "333", name: "piyo"),
-
-                                                ])
-                        realm.add(obj)
-                    }
-                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!,
-                                                             registeredDate: Date(timeIntervalSince1970: 0),
-                                                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byDeletingTag: "fuga")
-                }
-                it("successが返る") {
-                    switch result! {
-                    case .success:
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-                it("返ってきたクリップが更新されている") {
-                    guard case let .success(clip) = result else {
-                        fail("Unexpected failure")
-                        return
-                    }
-                    expect(clip.url).to(equal(URL(string: "https://localhost")))
-                    expect(clip.description).to(equal("hoge"))
-                    expect(clip.items).to(beEmpty())
-                    expect(clip.tags).to(haveCount(2))
-                    expect(clip.tags).to(equal(["hoge", "piyo"]))
-                    expect(clip.registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
-                    // 更新時刻が更新されている
-                    expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
-                }
-                it("Realm内のクリップが更新されている") {
-                    let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: "https://localhost")
-                    expect(clip?.url).to(equal("https://localhost"))
-                    expect(clip?.descriptionText).to(equal("hoge"))
-                    expect(clip?.items).to(beEmpty())
-                    expect(clip?.tags).to(haveCount(2))
-                    expect(clip?.tags[0].id).to(equal("111"))
-                    expect(clip?.tags[0].name).to(equal("hoge"))
-                    expect(clip?.tags[1].id).to(equal("333"))
-                    expect(clip?.tags[1].name).to(equal("piyo"))
-                    expect(clip?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
-                    // 更新時刻が更新されている
-                    expect(clip?.updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
-                }
-                it("タグ自体は残っている") {
-                    let tags = realm.objects(TagObject.self).sorted(by: { $0.id < $1.id })
-                    expect(tags).to(haveCount(3))
-                    expect(tags[0].id).to(equal("111"))
-                    expect(tags[0].name).to(equal("hoge"))
-                    expect(tags[1].id).to(equal("222"))
-                    expect(tags[1].name).to(equal("fuga"))
-                    expect(tags[2].id).to(equal("333"))
-                    expect(tags[2].name).to(equal("piyo"))
-                }
-            }
-
-            context("更新対象のクリップが削除対象のタグを持っていない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeClip(url: "https://localhost",
-                                                tags: [
-                                                    self.makeTag(id: "111", name: "fuga"),
-                                                    self.makeTag(id: "222", name: "piyo"),
-                                                ])
-                        realm.add(obj)
-                    }
-                    result = service.update(Clip.makeDefault(url: URL(string: "https://localhost")!,
-                                                             registeredDate: Date(timeIntervalSince1970: 0),
-                                                             updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byDeletingTag: "hoge")
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("更新対象のクリップが存在しない") {
-                beforeEach {
-                    try! realm.write {
-                        let obj = self.makeTag(id: "111", name: "hoge")
-                        realm.add(obj)
-                    }
-                    result = service.update(Clip.makeDefault(),
-                                            byDeletingTag: "hoge")
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-        }
-
-        describe("update(_:byHiding:)") {
+        describe("updateClips(having:byHiding:)") {
             var result: Result<[Clip], ClipStorageError>!
 
-            context("追加対象のクリップが存在する") {
+            context("更新対象のクリップが存在する") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/3")!,
                     ],
                     byHiding: true)
                 }
@@ -1246,10 +318,10 @@ class ClipStorageSpec: QuickSpec {
 
             context("追加対象のクリップが1つも存在しない") {
                 beforeEach {
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
                     byHiding: true)
                 }
@@ -1272,25 +344,19 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のクリップが一部存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
                         realm.add(obj3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
                     byHiding: true)
                 }
@@ -1319,24 +385,24 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("update(_:byAddingTags:)") {
+        describe("updateClips(having:byAddingTagsHaving:)") {
             var result: Result<[Clip], ClipStorageError>!
 
             context("追加対象のタグとクリップが存在する") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        let tag1 = self.makeTag(id: "111", name: "hoge")
-                        let tag2 = self.makeTag(id: "222", name: "fuga")
-                        let tag3 = self.makeTag(id: "333", name: "piyo")
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
 
                         realm.add(obj1)
                         realm.add(obj2)
@@ -1345,18 +411,12 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
-                    byAddingTags: ["hoge", "fuga", "piyo"])
+                    byAddingTagsHaving: ["111", "222", "333"])
                 }
 
                 it("successが返る") {
@@ -1376,27 +436,27 @@ class ClipStorageSpec: QuickSpec {
                     expect(clips).to(haveCount(3))
                     expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
                     expect(clips[0].tags).to(haveCount(3))
-                    expect(clips[0].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
-                    expect(clips[0].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
-                    expect(clips[0].tags.sorted(by: { $0 < $1 })[2]).to(equal("piyo"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
                     expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
                     // 更新時刻が更新されている
                     expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal(URL(string: "https://localhost/2")))
                     expect(clips[1].tags).to(haveCount(3))
-                    expect(clips[1].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
-                    expect(clips[1].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
-                    expect(clips[1].tags.sorted(by: { $0 < $1 })[2]).to(equal("piyo"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
                     expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
                     // 更新時刻が更新されている
                     expect(clips[1].updatedDate).notTo(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal(URL(string: "https://localhost/3")))
                     expect(clips[2].tags).to(haveCount(3))
-                    expect(clips[2].tags.sorted(by: { $0 < $1 })[0]).to(equal("fuga"))
-                    expect(clips[2].tags.sorted(by: { $0 < $1 })[1]).to(equal("hoge"))
-                    expect(clips[2].tags.sorted(by: { $0 < $1 })[2]).to(equal("piyo"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
                     expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
                     // 更新時刻が更新されている
                     expect(clips[2].updatedDate).notTo(equal(Date(timeIntervalSince1970: 3000)))
@@ -1455,31 +515,25 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のタグが1つも存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
                         realm.add(obj1)
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
-                    byAddingTags: ["hoge", "fuga", "piyo"])
+                    byAddingTagsHaving: ["111", "222", "333"])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1516,17 +570,17 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のタグが一部存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj2 = self.makeClip(url: "https://localhost/2",
-                                                 registeredAt: Date(timeIntervalSince1970: 1000),
-                                                 updatedAt: Date(timeIntervalSince1970: 2000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        let tag1 = self.makeTag(id: "111", name: "hoge")
-                        let tag3 = self.makeTag(id: "333", name: "piyo")
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
 
                         realm.add(obj1)
                         realm.add(obj2)
@@ -1534,18 +588,12 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag1)
                         realm.add(tag3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
-                    byAddingTags: ["hoge", "fuga", "piyo"])
+                    byAddingTagsHaving: ["111", "222", "333"])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1586,25 +634,19 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のクリップが1つも存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let tag1 = self.makeTag(id: "111", name: "hoge")
-                        let tag2 = self.makeTag(id: "222", name: "fuga")
-                        let tag3 = self.makeTag(id: "333", name: "piyo")
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
                         realm.add(tag1)
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
-                    byAddingTags: ["hoge", "fuga", "piyo"])
+                    byAddingTagsHaving: ["111", "222", "333"])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1635,33 +677,27 @@ class ClipStorageSpec: QuickSpec {
             context("追加対象のクリップが一部存在しない") {
                 beforeEach {
                     try! realm.write {
-                        let obj1 = self.makeClip(url: "https://localhost/1",
-                                                 registeredAt: Date(timeIntervalSince1970: 0),
-                                                 updatedAt: Date(timeIntervalSince1970: 1000))
-                        let obj3 = self.makeClip(url: "https://localhost/3",
-                                                 registeredAt: Date(timeIntervalSince1970: 2000),
-                                                 updatedAt: Date(timeIntervalSince1970: 3000))
-                        let tag1 = self.makeTag(id: "111", name: "hoge")
-                        let tag2 = self.makeTag(id: "222", name: "fuga")
-                        let tag3 = self.makeTag(id: "333", name: "piyo")
+                        let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj3 = ClipObject.makeDefault(url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
                         realm.add(obj1)
                         realm.add(obj3)
                         realm.add(tag1)
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.update([
-                        Clip.makeDefault(url: URL(string: "https://localhost/1")!,
-                                         registeredDate: Date(timeIntervalSince1970: 0),
-                                         updatedDate: Date(timeIntervalSince1970: 1000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/2")!,
-                                         registeredDate: Date(timeIntervalSince1970: 1000),
-                                         updatedDate: Date(timeIntervalSince1970: 2000)),
-                        Clip.makeDefault(url: URL(string: "https://localhost/3")!,
-                                         registeredDate: Date(timeIntervalSince1970: 2000),
-                                         updatedDate: Date(timeIntervalSince1970: 3000)),
+                    result = service.updateClips(having: [
+                        URL(string: "https://localhost/1")!,
+                        URL(string: "https://localhost/2")!,
+                        URL(string: "https://localhost/3")!,
                     ],
-                    byAddingTags: ["hoge", "fuga", "piyo"])
+                    byAddingTagsHaving: ["111", "222", "333"])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1702,7 +738,7 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("update(_:byAddingClipsHaving:)") {
+        describe("updateAlbum(having:byAddingClipsHaving:)") {
             var result: Result<Void, ClipStorageError>!
 
             context("更新対象のアルバムが存在し追加対象のクリップを保持していない") {
@@ -1715,14 +751,11 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album.makeDefault(id: "111",
-                                                              title: "hogehoge",
-                                                              registeredDate: Date(timeIntervalSince1970: 0),
-                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byAddingClipsHaving: [
-                                                URL(string: "https://localhost/1")!,
-                                                URL(string: "https://localhost/2")!
-                                            ])
+                    result = service.updateAlbum(having: "111",
+                                                 byAddingClipsHaving: [
+                                                     URL(string: "https://localhost/1")!,
+                                                     URL(string: "https://localhost/2")!
+                                                 ])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1737,7 +770,7 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("update(_:byDeletingClipsHaving:)") {
+        describe("updateAlbum(having:byDeletingClipsHaving:)") {
             var result: Result<Void, ClipStorageError>!
 
             context("更新対象のアルバムが存在し削除対象のクリップを保持している") {
@@ -1750,14 +783,11 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album.makeDefault(id: "111",
-                                                              title: "hogehoge",
-                                                              registeredDate: Date(timeIntervalSince1970: 0),
-                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            byDeletingClipsHaving: [
-                                                URL(string: "https://localhost/1")!,
-                                                URL(string: "https://localhost/2")!
-                                            ])
+                    result = service.updateAlbum(having: "111",
+                                                 byDeletingClipsHaving: [
+                                                     URL(string: "https://localhost/1")!,
+                                                     URL(string: "https://localhost/2")!
+                                                 ])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1772,7 +802,7 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
-        describe("update(_:titleTo:)") {
+        describe("updateAlbum(having:titleTo:)") {
             var result: Result<Album, ClipStorageError>!
 
             context("更新対象のアルバムが存在する") {
@@ -1785,11 +815,7 @@ class ClipStorageSpec: QuickSpec {
                         obj.updatedAt = Date(timeIntervalSince1970: 1000)
                         realm.add(obj)
                     }
-                    result = service.update(Album.makeDefault(id: "111",
-                                                              title: "hogehoge",
-                                                              registeredDate: Date(timeIntervalSince1970: 0),
-                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            titleTo: "fugafuga")
+                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
                 }
                 it("successが返る") {
                     switch result! {
@@ -1836,11 +862,7 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj1)
                         realm.add(obj2)
                     }
-                    result = service.update(Album.makeDefault(id: "111",
-                                                              title: "hogehoge",
-                                                              registeredDate: Date(timeIntervalSince1970: 0),
-                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            titleTo: "fugafuga")
+                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
                 }
                 it("duplicatedが返る") {
                     switch result! {
@@ -1867,11 +889,7 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.update(Album.makeDefault(id: "111",
-                                                              title: "hogehoge",
-                                                              registeredDate: Date(timeIntervalSince1970: 0),
-                                                              updatedDate: Date(timeIntervalSince1970: 1000)),
-                                            titleTo: "fugafuga")
+                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1886,16 +904,20 @@ class ClipStorageSpec: QuickSpec {
             }
         }
 
+        describe("updateTag(having:nameTo:)") {
+            // TODO:
+        }
+
         // MARK: Delete
 
         // TODO:
 
-        describe("delegeTag(_:)") {
-            var result: Result<String, ClipStorageError>!
+        describe("delegeTags(having:)") {
+            var result: Result<[Tag], ClipStorageError>!
 
             context("削除対象のタグが存在しない") {
                 beforeEach {
-                    result = service.deleteTag("hoge")
+                    result = service.deleteTags(having: ["111"])
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1912,19 +934,19 @@ class ClipStorageSpec: QuickSpec {
                 context("削除対象のタグにひもづくクリップが存在しない") {
                     beforeEach {
                         try! realm.write {
-                            let tag1 = self.makeTag(id: "111", name: "hoge")
-                            let tag2 = self.makeTag(id: "222", name: "fuga")
-                            let tag3 = self.makeTag(id: "333", name: "piyo")
+                            let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                            let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                            let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
                             realm.add(tag1)
                             realm.add(tag2)
                             realm.add(tag3)
                         }
-                        result = service.deleteTag("fuga")
+                        result = service.deleteTags(having: ["222"])
                     }
                     it("successが返り、削除対象のタグ名が返ってくる") {
                         switch result! {
-                        case let .success(tag):
-                            expect(tag).to(equal("fuga"))
+                        case let .success(tags):
+                            expect(tags).to(equal([.makeDefault(id: "222", name: "fuga")]))
                         case let .failure(error):
                             fail("Unexpected failure: \(error)")
                         }
@@ -1941,28 +963,28 @@ class ClipStorageSpec: QuickSpec {
                 context("削除対象のタグにひもづくクリップが存在する") {
                     beforeEach {
                         try! realm.write {
-                            let obj1 = self.makeClip(url: "https://localhost/1",
-                                                     tags: [
-                                                         self.makeTag(id: "222", name: "fuga"),
-                                                     ],
-                                                     registeredAt: Date(timeIntervalSince1970: 0),
-                                                     updatedAt: Date(timeIntervalSince1970: 1000))
-                            let obj2 = self.makeClip(url: "https://localhost/2",
-                                                     tags: [
-                                                         self.makeTag(id: "111", name: "hoge"),
-                                                         self.makeTag(id: "222", name: "fuga"),
-                                                     ],
-                                                     registeredAt: Date(timeIntervalSince1970: 2000),
-                                                     updatedAt: Date(timeIntervalSince1970: 3000))
+                            let obj1 = ClipObject.makeDefault(url: "https://localhost/1",
+                                                              tags: [
+                                                                  TagObject.makeDefault(id: "222", name: "fuga"),
+                                                              ],
+                                                              registeredAt: Date(timeIntervalSince1970: 0),
+                                                              updatedAt: Date(timeIntervalSince1970: 1000))
+                            let obj2 = ClipObject.makeDefault(url: "https://localhost/2",
+                                                              tags: [
+                                                                  TagObject.makeDefault(id: "111", name: "hoge"),
+                                                                  TagObject.makeDefault(id: "222", name: "fuga"),
+                                                              ],
+                                                              registeredAt: Date(timeIntervalSince1970: 2000),
+                                                              updatedAt: Date(timeIntervalSince1970: 3000))
                             realm.add(obj1, update: .modified)
                             realm.add(obj2, update: .modified)
                         }
-                        result = service.deleteTag("fuga")
+                        result = service.deleteTags(having: ["222"])
                     }
                     it("successが返り、削除対象のタグ名が返ってくる") {
                         switch result! {
-                        case let .success(tag):
-                            expect(tag).to(equal("fuga"))
+                        case let .success(tags):
+                            expect(tags).to(equal([.makeDefault(id: "222", name: "fuga")]))
                         case let .failure(error):
                             fail("Unexpected failure: \(error)")
                         }

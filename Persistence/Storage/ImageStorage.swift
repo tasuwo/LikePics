@@ -7,6 +7,7 @@ public enum ImageStorageError: Error {
     case notFound
 }
 
+/// @mockable
 public protocol ImageStorageProtocol {
     func save(_ image: Data, asName fileName: String, inClip url: URL) throws
     func delete(fileName: String, inClip url: URL) throws

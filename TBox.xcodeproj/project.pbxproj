@@ -11,6 +11,7 @@
 		1ED907618ACF4EB0CE458757 /* Pods_TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */; };
 		21F6427C98F672FC692809BC /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */; };
 		25D157F00CE2CE137E028F2E /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD982A953CB84789D6B8AF /* Pods_Domain.framework */; };
+		2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02174F2533704400AE4A43 /* Object+makeDefault.swift */; };
 		2C05969A25198C90008F11F5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C05969C25198C90008F11F5 /* Localizable.strings */; };
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
@@ -556,6 +557,7 @@
 		14AA3644D517916EE7969F7C /* Pods-TBoxCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.debug.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.debug.xcconfig"; sourceTree = "<group>"; };
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
+		2C02174F2533704400AE4A43 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
 		2C05969B25198C90008F11F5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596A525198C95008F11F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -982,6 +984,14 @@
 				7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2C02174E2533700000AE4A43 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				2C02174F2533704400AE4A43 /* Object+makeDefault.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		2C0596DD2519AEF8008F11F5 /* Protocol */ = {
@@ -1905,6 +1915,7 @@
 		2CCECE2224DDC0CB00ADFE54 /* PersistenceTests */ = {
 			isa = PBXGroup;
 			children = (
+				2C02174E2533700000AE4A43 /* Helper */,
 				2CF332572507D30C007EF072 /* Storage */,
 				2CCECE2524DDC0CB00ADFE54 /* Info.plist */,
 				2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */,
@@ -3384,6 +3395,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */,
+				2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */,
 				2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
