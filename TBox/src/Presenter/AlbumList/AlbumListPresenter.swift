@@ -77,7 +77,7 @@ class AlbumListPresenter {
     }
 
     func deleteAlbum(_ album: Album) {
-        if case let .failure(error) = self.storage.delete(album) {
+        if case let .failure(error) = self.storage.deleteAlbum(having: album.identity) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
         }

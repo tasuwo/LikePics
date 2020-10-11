@@ -66,7 +66,7 @@ class TagListPresenter {
     }
 
     func delete(_ tags: [Tag]) {
-        if case let .failure(error) = self.storage.delete(tags) {
+        if case let .failure(error) = self.storage.deleteTags(having: tags.map({ $0.identity })) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.tagListViewErrorAtDeleteTag)\n\(error.makeErrorCode())")
             return

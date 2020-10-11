@@ -25,6 +25,7 @@
 		2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */; };
 		2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */; };
 		2C0F9B4D2528EF9000235B25 /* ClipInformationLayoutHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */; };
+		2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1524312532EB0A00C51847 /* Array+identifiable.swift */; };
 		2C1604F42520438400A39E58 /* TopClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */; };
 		2C1604FE2520448500A39E58 /* TopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */; };
 		2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16050725207C6A00A39E58 /* Identifiable.swift */; };
@@ -575,6 +576,7 @@
 		2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
+		2C1524312532EB0A00C51847 /* Array+identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+identifiable.swift"; sourceTree = "<group>"; };
 		2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListPresenter.swift; sourceTree = "<group>"; };
 		2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
 		2C16050725207C6A00A39E58 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
@@ -996,6 +998,13 @@
 			path = Protocol;
 			sourceTree = "<group>";
 		};
+		2C1524302532EAFA00C51847 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2C170BA9253199F3001B1542 /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1407,6 +1416,7 @@
 			isa = PBXGroup;
 			children = (
 				2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */,
+				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -1584,6 +1594,7 @@
 			children = (
 				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
 				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
+				2C1524302532EAFA00C51847 /* Extensions */,
 				2C570B5924E04F7900A1DC9F /* Context */,
 				2C570B5C24E04FA400A1DC9F /* Presenter */,
 				2C810D0024E04A6600BC0FDF /* View */,
@@ -3327,6 +3338,7 @@
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
+				2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
 				2CD3DA5F24EEC8720031A065 /* TextEditAlert.swift in Sources */,

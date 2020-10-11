@@ -196,7 +196,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func deleteSelectedClips() {
-        if case let .failure(error) = self.clipStorage.delete(self.selectedClips) {
+        if case let .failure(error) = self.clipStorage.deleteClips(having: self.selectedClips.ids) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -205,7 +205,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func hideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -214,7 +214,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func unhideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -223,7 +223,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func removeSelectedClipsFromAlbum() {
-        if case let .failure(error) = self.clipStorage.update(self.album, byDeletingClipsHaving: self.selectedClips.map { $0.url }) {
+        if case let .failure(error) = self.clipStorage.updateAlbum(having: self.album.identity, byDeletingClipsHaving: self.selectedClips.ids) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -232,7 +232,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tagIds) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

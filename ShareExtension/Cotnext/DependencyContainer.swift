@@ -28,7 +28,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
         let presenter = ClipTargetFinderPresenter(url: url,
-                                                  storage: self.storage,
+                                                  clipStorage: self.storage,
+                                                  queryService: self.storage,
                                                   finder: self.finder,
                                                   currentDateResolver: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)

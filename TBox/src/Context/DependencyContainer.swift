@@ -191,7 +191,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
-                                                  storage: self.clipStorage,
+                                                  clipStorage: self.clipStorage,
+                                                  queryService: self.clipStorage,
                                                   finder: WebImageUrlFinder(),
                                                   currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)

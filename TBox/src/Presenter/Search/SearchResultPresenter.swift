@@ -215,7 +215,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func deleteSelectedClips() {
-        if case let .failure(error) = self.clipStorage.delete(self.selectedClips) {
+        if case let .failure(error) = self.clipStorage.deleteClips(having: self.selectedClips.ids) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -224,7 +224,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func hideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: true) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -233,7 +233,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func unhideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byHiding: false) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
@@ -242,7 +242,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.clipStorage.update(self.selectedClips, byAddingTags: tagIds) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

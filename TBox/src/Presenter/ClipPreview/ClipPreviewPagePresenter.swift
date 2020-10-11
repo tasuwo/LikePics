@@ -56,7 +56,7 @@ class ClipPreviewPagePresenter {
     }
 
     func deleteClip() {
-        if case let .failure(error) = self.storage.delete([self.clip]) {
+        if case let .failure(error) = self.storage.deleteClips(having: [self.clip.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtDeleteClip)\n\(error.makeErrorCode())")
         }
@@ -71,7 +71,7 @@ class ClipPreviewPagePresenter {
     }
 
     func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.storage.update([self.clip], byAddingTags: tagIds) {
+        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

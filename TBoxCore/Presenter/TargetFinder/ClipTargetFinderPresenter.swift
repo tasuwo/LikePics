@@ -52,7 +52,8 @@ public class ClipTargetFinderPresenter {
     weak var view: ClipTargetFinderViewProtocol?
 
     private let url: URL
-    private let storage: ClipStorageProtocol
+    private let clipStorage: ClipStorageProtocol
+    private let queryService: ClipQueryServiceProtocol
     private let finder: WebImageUrlFinderProtocol
     private let currentDateResolver: () -> Date
     private let urlSession: URLSession
@@ -60,14 +61,16 @@ public class ClipTargetFinderPresenter {
     // MARK: - Lifecycle
 
     public init(url: URL,
-                storage: ClipStorageProtocol,
+                clipStorage: ClipStorageProtocol,
+                queryService: ClipQueryServiceProtocol,
                 finder: WebImageUrlFinderProtocol,
                 currentDateResolver: @escaping () -> Date,
                 isEnabledOverwrite: Bool = false,
                 urlSession: URLSession = URLSession.shared)
     {
         self.url = url
-        self.storage = storage
+        self.clipStorage = clipStorage
+        self.queryService = queryService
         self.finder = finder
         self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
@@ -113,7 +116,7 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        if !self.isEnabledOverwrite, case .success = self.storage.readClip(having: self.url) {
+        if !self.isEnabledOverwrite, case .success = self.queryService.queryClip(having: self.url) {
             self.view?.showConfirmationForOverwrite()
             return
         }
@@ -306,7 +309,7 @@ public class ClipTargetFinderPresenter {
                 ]
             }
 
-            switch self.storage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
+            switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
             case .success:
                 seal.resolve(.fulfilled(()))
 
