@@ -7,7 +7,7 @@ import Common
 import Domain
 
 protocol AlbumSelectionPresenterDelegate: AnyObject {
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity)
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?)
 }
 
 protocol AlbumSelectionViewProtocol: AnyObject {
@@ -19,6 +19,7 @@ protocol AlbumSelectionViewProtocol: AnyObject {
 
 class AlbumSelectionPresenter {
     private let query: AlbumListQuery
+    private let context: Any?
     private let storage: ClipStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
@@ -45,11 +46,13 @@ class AlbumSelectionPresenter {
     // MARK: - Lifecycle
 
     init(query: AlbumListQuery,
+         context: Any?,
          storage: ClipStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
+        self.context = context
         self.storage = storage
         self.settingStorage = settingStorage
         self.logger = logger
@@ -77,7 +80,7 @@ class AlbumSelectionPresenter {
     }
 
     func select(albumId: Album.Identity) {
-        self.delegate?.albumSelectionPresenter(self, didSelectAlbum: albumId)
+        self.delegate?.albumSelectionPresenter(self, didSelectAlbumHaving: albumId, withContext: self.context)
         self.view?.close()
     }
 

@@ -39,6 +39,12 @@ protocol TopClipsListPresenterProtocol {
     func unhideSelectedClips()
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>)
     func addSelectedClipsToAlbum(_ albumId: Album.Identity)
+
+    func deleteClip(having id: Clip.Identity)
+    func hideClip(having id: Clip.Identity)
+    func unhideClip(having id: Clip.Identity)
+    func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity)
+    func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity)
 }
 
 class TopClipsListPresenter {
@@ -231,6 +237,46 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         }
         self.selections = []
         self.isEditing = false
+    }
+
+    func deleteClip(having id: Clip.Identity) {
+        if case let .failure(error) = self.clipStorage.deleteClips(having: [id]) {
+            // TODO: Error handling
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func hideClip(having id: Clip.Identity) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: true) {
+            // TODO: Error handling
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clip \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func unhideClip(having id: Clip.Identity) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: false) {
+            // TODO: Error handling
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clip \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byAddingTagsHaving: Array(tagIds)) {
+            // TODO: Error handling
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags (\(tagIds.joined(separator: ",")) to clip \(clipId). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity) {
+        if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
+            // TODO: Error handling
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add clip \(clipId) to album \(albumId). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
     }
 }
 

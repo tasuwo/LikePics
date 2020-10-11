@@ -70,6 +70,9 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
         self.delegate?.clipsListCollectionViewProvider(self, didDeselect: clip.identity)
     }
 
+    func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    }
+
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard
             let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath),
@@ -84,12 +87,16 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
         let addTag = UIAction(title: L10n.clipsListContextMenuAddTag,
                               image: UIImage(systemName: "tag.fill")) { [weak self] _ in
             guard let self = self else { return }
-            self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
+            }
         }
         let addToAlbum = UIAction(title: L10n.clipsListContextMenuAddToAlbum,
                                   image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
             guard let self = self else { return }
-            self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
+            }
         }
 
         let hideAction: UIAction
@@ -97,13 +104,17 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
             hideAction = UIAction(title: L10n.clipsListContextMenuUnhide,
                                   image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
+                }
             }
         } else {
             hideAction = UIAction(title: L10n.clipsListContextMenuHide,
                                   image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
+                }
             }
         }
 
@@ -111,7 +122,9 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                               image: UIImage(systemName: "trash.fill"),
                               attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+            }
         }
 
         return { _ in

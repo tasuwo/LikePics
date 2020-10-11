@@ -14,11 +14,12 @@ protocol TagSelectionViewProtocol: AnyObject {
 }
 
 protocol TagSelectionPresenterDelegate: AnyObject {
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagIds tagIds: Set<Tag.Identity>)
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?)
 }
 
 class TagSelectionPresenter {
     private let query: TagListQuery
+    private let context: Any?
     private let storage: ClipStorageProtocol
     private let logger: TBoxLoggable
 
@@ -51,8 +52,14 @@ class TagSelectionPresenter {
 
     // MARK: - Lifecycle
 
-    init(query: TagListQuery, selectedTags: [Tag.Identity], storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(query: TagListQuery,
+         selectedTags: [Tag.Identity],
+         context: Any?,
+         storage: ClipStorageProtocol,
+         logger: TBoxLoggable)
+    {
         self.query = query
+        self.context = context
         self.storage = storage
         self.logger = logger
         self.selections = Set(selectedTags)
@@ -86,7 +93,7 @@ class TagSelectionPresenter {
     }
 
     func performSelection() {
-        self.delegate?.tagSelectionPresenter(self, didSelectTagIds: self.selections)
+        self.delegate?.tagSelectionPresenter(self, didSelectTagsHaving: self.selections, withContext: self.context)
         self.view?.close()
     }
 

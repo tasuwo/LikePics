@@ -224,28 +224,30 @@ extension SearchResultViewController: ClipsListCollectionViewProviderDelegate {
     }
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddTagsTo clipId: Clip.Identity) {
-        // TODO:
-        print(#function)
+        guard
+            let clip = self.presenter.clips.first(where: { $0.identity == clipId }),
+            let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
+        else {
+            return
+        }
+        self.present(viewController, animated: true, completion: nil)
     }
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddToAlbum clipId: Clip.Identity) {
-        // TODO:
-        print(#function)
+        guard let viewController = self.factory.makeAlbumSelectionViewController(context: clipId, delegate: self) else { return }
+        self.present(viewController, animated: true, completion: nil)
     }
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity) {
-        // TODO:
-        print(#function)
+        self.presenter.deleteClip(having: clipId)
     }
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity) {
-        // TODO:
-        print(#function)
+        self.presenter.unhideClip(having: clipId)
     }
 
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity) {
-        // TODO:
-        print(#function)
+        self.presenter.hideClip(having: clipId)
     }
 }
 
@@ -276,13 +278,13 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], delegate: self) else { return }
+        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], delegate: self) else { return }
+        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
@@ -306,15 +308,25 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 extension SearchResultViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum albumId: Album.Identity) {
-        self.presenter.addSelectedClipsToAlbum(albumId)
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
+        if self.isEditing {
+            self.presenter.addSelectedClipsToAlbum(albumId)
+        } else {
+            guard let clipId = context as? Clip.Identity else { return }
+            self.presenter.addClip(having: clipId, toAlbumHaving: albumId)
+        }
     }
 }
 
 extension SearchResultViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagIds tagIds: Set<Tag.Identity>) {
-        self.presenter.addTagsToSelectedClips(tagIds)
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
+        if self.isEditing {
+            self.presenter.addTagsToSelectedClips(tagIds)
+        } else {
+            guard let clipId = context as? Clip.Identity else { return }
+            self.presenter.addTags(having: tagIds, toClipHaving: clipId)
+        }
     }
 }

@@ -339,13 +339,13 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        guard let viewController = self.factory.makeAlbumSelectionViewController(delegate: self) else { return }
+        guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         let tags = self.presenter.clip.tags.map { $0.identity }
-        let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, delegate: self)
+        let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
         guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)
     }
@@ -383,7 +383,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbum: Album.Identity) {
+    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         // TODO:
         print(#function)
     }
@@ -392,7 +392,7 @@ extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
 extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagIds tagIds: Set<Tag.Identity>) {
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
         self.presenter.addTagsToClip(tagIds)
     }
 }

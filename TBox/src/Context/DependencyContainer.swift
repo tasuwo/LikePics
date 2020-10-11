@@ -39,12 +39,12 @@ protocol ViewControllerFactory {
 
     func makeAlbumListViewController() -> UIViewController?
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?
-    func makeAlbumSelectionViewController(delegate: AlbumSelectionPresenterDelegate) -> UIViewController?
+    func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Tag
 
     func makeTagListViewController() -> UIViewController?
-    func makeTagSelectionViewController(selectedTags: [Tag.Identity], delegate: TagSelectionPresenterDelegate) -> UIViewController?
+    func makeTagSelectionViewController(selectedTags: [Tag.Identity], context: Any?, delegate: TagSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Settings
 
@@ -317,7 +317,7 @@ extension DependencyContainer: ViewControllerFactory {
                                    toolBarItemsProvider: toolBarItemsProvider)
     }
 
-    func makeAlbumSelectionViewController(delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
+    func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
         let query: AlbumListQuery
         switch self.clipStorage.queryAllAlbums() {
         case let .success(result):
@@ -331,6 +331,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = AlbumSelectionPresenter(query: query,
+                                                context: context,
                                                 storage: self.clipStorage,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
@@ -361,7 +362,10 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeTagSelectionViewController(selectedTags: [Tag.Identity], delegate: TagSelectionPresenterDelegate) -> UIViewController? {
+    func makeTagSelectionViewController(selectedTags: [Tag.Identity],
+                                        context: Any?,
+                                        delegate: TagSelectionPresenterDelegate) -> UIViewController?
+    {
         let query: TagListQuery
         switch self.clipStorage.queryAllTags() {
         case let .success(result):
@@ -376,6 +380,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = TagSelectionPresenter(query: query,
                                               selectedTags: selectedTags,
+                                              context: context,
                                               storage: self.clipStorage,
                                               logger: self.logger)
         presenter.delegate = delegate
