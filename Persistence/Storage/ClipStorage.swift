@@ -341,14 +341,18 @@ extension ClipStorage: ClipStorageProtocol {
     }
 
     public func update(_ clips: [Clip], byHiding isHidden: Bool) -> Result<[Clip], ClipStorageError> {
+        self.updateClips(having: clips.map({ $0.identity }), byHiding: isHidden)
+    }
+
+    public func updateClips(having ids: [Clip.Identity], byHiding isHidden: Bool) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
             var clipObjs: [ClipObject] = []
-            for clip in clips {
-                guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) else {
+            for id in ids.map({ $0.absoluteString }) {
+                guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: id) else {
                     return .failure(.notFound)
                 }
                 clipObjs.append(clipObj)
@@ -358,6 +362,46 @@ extension ClipStorage: ClipStorageProtocol {
                 try realm.write {
                     for clipObj in clipObjs {
                         clipObj.isHidden = isHidden
+                        clipObj.updatedAt = Date()
+                    }
+                }
+                return .success(clipObjs.map { Clip.make(by: $0) })
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
+
+    public func updateClips(having clipIds: [Clip.Identity], byAddingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            var tagObjs: [TagObject] = []
+            for tagId in tagIds {
+                guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else {
+                    return .failure(.notFound)
+                }
+                tagObjs.append(tagObj)
+            }
+
+            var clipObjs: [ClipObject] = []
+            for clipId in clipIds.map({ $0.absoluteString }) {
+                guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+                    return .failure(.notFound)
+                }
+                clipObjs.append(clipObj)
+            }
+
+            do {
+                try realm.write {
+                    for clipObj in clipObjs {
+                        for tagObj in tagObjs {
+                            if !clipObj.tags.contains(tagObj) {
+                                clipObj.tags.append(tagObj)
+                            }
+                        }
                         clipObj.updatedAt = Date()
                     }
                 }
@@ -683,6 +727,46 @@ extension ClipStorage: ClipStorageProtocol {
     }
 
     // MARK: Delete
+
+    public func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError> {
+        return self.queue.sync {
+            guard let realm = try? Realm(configuration: self.configuration) else {
+                return .failure(.internalError)
+            }
+
+            var clipObjects: [ClipObject] = []
+            for clipId in ids.map({ $0.absoluteString }) {
+                guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+                    return .failure(.notFound)
+                }
+                clipObjects.append(clip)
+            }
+            let removeTargets = clipObjects.map { Clip.make(by: $0) }
+
+            // NOTE: Delete only found objects.
+            let clipItems = clipObjects
+                .flatMap { $0.items }
+                .map { $0.makeKey() }
+                .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
+
+            clipObjects
+                .flatMap { $0.items }
+                .forEach { clipItem in
+                    try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClip: URL(string: clipItem.clipUrl)!)
+                    try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClip: URL(string: clipItem.clipUrl)!)
+                }
+
+            do {
+                try realm.write {
+                    realm.delete(clipItems)
+                    realm.delete(clipObjects)
+                }
+                return .success(removeTargets)
+            } catch {
+                return .failure(.internalError)
+            }
+        }
+    }
 
     public func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError> {
         return self.queue.sync {

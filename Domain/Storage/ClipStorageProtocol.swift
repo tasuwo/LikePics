@@ -57,6 +57,10 @@ public protocol ClipStorageProtocol {
 
     func update(_ clips: [Clip], byHiding: Bool) -> Result<[Clip], ClipStorageError>
 
+    func updateClips(having ids: [Clip.Identity], byHiding: Bool) -> Result<[Clip], ClipStorageError>
+
+    func updateClips(having clipIds: [Clip.Identity], byAddingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError>
+
     func update(_ clips: [Clip], byAddingTags tags: [String]) -> Result<[Clip], ClipStorageError>
 
     func update(_ clips: [Clip], byAddingTags tagIds: Set<Tag.Identity>) -> Result<[Clip], ClipStorageError>
@@ -78,6 +82,8 @@ public protocol ClipStorageProtocol {
     // MARK: Delete
 
     func delete(_ clips: [Clip]) -> Result<[Clip], ClipStorageError>
+
+    func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError>
 
     func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError>
 
