@@ -5,6 +5,7 @@
 import Combine
 import Erik
 
+/// @mockable
 public protocol WebImageProvider {
     static func isProviding(url: URL) -> Bool
 

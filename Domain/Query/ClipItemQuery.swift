@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol ClipItemQuery {
     var clipItem: CurrentValueSubject<ClipItem, Error> { get }
 }

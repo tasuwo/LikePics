@@ -11,6 +11,7 @@ public struct WebImageUrlSet {
     public let lowQualityUrl: URL?
 }
 
+/// @mockable
 public protocol WebImageUrlFinderProtocol {
     var webView: WKWebView { get }
     func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void)

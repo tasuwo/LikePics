@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol AlbumListQuery {
     var albums: CurrentValueSubject<[Album], Error> { get }
 }

@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol TagListQuery {
     var tags: CurrentValueSubject<[Tag], Error> { get }
 }

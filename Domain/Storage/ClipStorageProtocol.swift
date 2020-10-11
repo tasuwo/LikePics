@@ -11,6 +11,7 @@ public enum ClipStorageError: Int, Error {
     case internalError
 }
 
+/// @mockable
 public protocol ClipQueryServiceProtocol {
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
@@ -22,6 +23,7 @@ public protocol ClipQueryServiceProtocol {
     func queryAllTags() -> Result<TagListQuery, ClipStorageError>
 }
 
+/// @mockable
 public protocol ClipStorageProtocol {
     // MARK: Create
 
