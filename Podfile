@@ -48,7 +48,6 @@ target 'TBoxUIKit' do
 end
 
 target 'TBoxCore' do
-  pod 'PromiseKit', '~> 6.8'
 end
 
 target 'TBoxUIKitCatalog' do

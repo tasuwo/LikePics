@@ -2,9 +2,9 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
-import PromiseKit
 import UIKit
 
 protocol ClipTargetFinderViewProtocol: AnyObject {
@@ -46,6 +46,7 @@ public class ClipTargetFinderPresenter {
     }
 
     private var isEnabledOverwrite: Bool
+    private var cancellableBag = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
@@ -128,25 +129,25 @@ public class ClipTargetFinderPresenter {
 
         self.view?.startLoading()
 
-        firstly {
-            self.resolveWebImages(ofUrl: self.url)
-        }
-        .then(on: self.imageLoadQueue) { (webImages: [WebImageUrlSet]) in
-            self.resolveSize(ofWebImages: webImages)
-        }
-        .done(on: .main) { [weak self] (fetchedWebImages: [DisplayableImageMeta]) in
-            self?.imageMetas = fetchedWebImages
-            self?.view?.endLoading()
-            self?.view?.reloadList()
-        }
-        .catch(on: .main) { [weak self] error in
-            let error: PresenterError = {
-                guard let error = error as? PresenterError else { return .internalError }
-                return error
-            }()
-            self?.view?.endLoading()
-            self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
-        }
+        self.resolveWebImages(ofUrl: self.url)
+            .map { webImages in
+                return self.resolveSize(ofWebImages: webImages)
+            }
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case let .failure(error):
+                    self?.view?.endLoading()
+                    self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
+
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] fetchedWebImages in
+                self?.imageMetas = fetchedWebImages
+                self?.view?.endLoading()
+                self?.view?.reloadList()
+            })
+            .store(in: &self.cancellableBag)
     }
 
     func saveSelectedImages() {
@@ -155,27 +156,41 @@ public class ClipTargetFinderPresenter {
         let selections: [OrderedImageMeta] = self.selectedIndices.enumerated()
             .map { ($0.offset, self.imageMetas[$0.element]) }
 
-        firstly {
-            when(fulfilled: self.fetchImageData(for: selections, using: self.urlSession))
-        }
-        .then(on: self.imageLoadQueue) { (results: [OrderedImageData]) in
-            self.buildSaveData(forClip: self.url, from: results)
-        }
-        .then(on: self.imageLoadQueue) { (saveData: [ImageDataSet]) in
-            self.save(target: saveData)
-        }
-        .done { [weak self] _ in
-            self?.view?.endLoading()
-            self?.view?.notifySavedImagesSuccessfully()
-        }
-        .catch(on: .main) { [weak self] error in
-            let error: PresenterError = {
-                guard let error = error as? PresenterError else { return .internalError }
-                return error
-            }()
-            self?.view?.endLoading()
-            self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
-        }
+        Publishers.MergeMany(self.fetchImageData(for: selections, using: self.urlSession))
+            .collect()
+            .mapError { _ in
+                return PresenterError.failedToDownloadImages
+            }
+            .flatMap { [weak self] results -> AnyPublisher<[ImageDataSet], PresenterError> in
+                guard let self = self else {
+                    return Fail(error: .internalError).eraseToAnyPublisher()
+                }
+                return self.buildSaveData(forClip: self.url, from: results)
+                    .publisher
+                    .eraseToAnyPublisher()
+            }
+            .flatMap { [weak self] imageDataSets -> AnyPublisher<Void, PresenterError> in
+                guard let self = self else {
+                    return Fail(error: .internalError).eraseToAnyPublisher()
+                }
+                return self.save(target: imageDataSets)
+                    .publisher
+                    .eraseToAnyPublisher()
+            }
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case let .failure(error):
+                    self?.view?.endLoading()
+                    self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
+
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] _ in
+                self?.view?.endLoading()
+                self?.view?.notifySavedImagesSuccessfully()
+            })
+            .store(in: &self.cancellableBag)
     }
 
     func selectItem(at index: Int) {
@@ -201,32 +216,29 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Load Images
 
-    private func resolveWebImages(ofUrl url: URL) -> Promise<[WebImageUrlSet]> {
-        return Promise<[WebImageUrlSet]> { seal in
+    private func resolveWebImages(ofUrl url: URL) -> Future<[WebImageUrlSet], PresenterError> {
+        return Future { promise in
             self.finder.findImageUrls(inWebSiteAt: url) { result in
                 switch result {
                 case let .success(urls):
-                    seal.resolve(.fulfilled(urls))
+                    promise(.success(urls))
 
                 case let .failure(error):
-                    seal.resolve(.rejected(PresenterError.failedToFindImages(error)))
+                    promise(.failure(.failedToFindImages(error)))
                 }
             }
         }
     }
 
-    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> Promise<[DisplayableImageMeta]> {
-        return Promise<[DisplayableImageMeta]> { seal in
-            let validWebImages = webImages
-                .map { DisplayableImageMeta(urlSet: $0) }
-                .filter { $0.isValid }
-            seal.resolve(.fulfilled(validWebImages))
-        }
+    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> [DisplayableImageMeta] {
+        return webImages
+            .map { DisplayableImageMeta(urlSet: $0) }
+            .filter { $0.isValid }
     }
 
     // MARK: Save Images
 
-    private func fetchImageData(for metas: [OrderedImageMeta], using session: URLSession) -> [Promise<OrderedImageData>] {
+    private func fetchImageData(for metas: [OrderedImageMeta], using session: URLSession) -> [AnyPublisher<OrderedImageData, Error>] {
         return metas
             .flatMap { meta -> [(OrderedImageMeta, ImageQuality)] in
                 [(meta, .original), (meta, .thumbnail)]
@@ -235,87 +247,82 @@ public class ClipTargetFinderPresenter {
                 switch quality {
                 case .original:
                     let imageUrl = orderedMeta.meta.imageUrl
-                    return session.dataTask(.promise, with: imageUrl)
-                        .map {
+                    return session
+                        .dataTaskPublisher(for: imageUrl)
+                        .tryMap { data, response -> FetchedImageData in
                             FetchedImageData(url: imageUrl,
-                                             data: $0,
-                                             mimeType: $1.mimeType,
+                                             data: data,
+                                             mimeType: response.mimeType,
                                              quality: quality,
                                              imageHeight: Double(orderedMeta.meta.imageSize.height),
                                              imageWidth: Double(orderedMeta.meta.imageSize.width))
                         }
                         .map { (orderedMeta.index, $0) }
+                        .eraseToAnyPublisher()
 
                 case .thumbnail:
                     guard let imageUrl = orderedMeta.meta.thumbImageUrl else { return nil }
-                    return session.dataTask(.promise, with: imageUrl)
-                        .map {
+                    return session
+                        .dataTaskPublisher(for: imageUrl)
+                        .tryMap { data, response -> FetchedImageData in
                             FetchedImageData(url: imageUrl,
-                                             data: $0,
-                                             mimeType: $1.mimeType,
+                                             data: data,
+                                             mimeType: response.mimeType,
                                              quality: quality,
                                              imageHeight: Double(orderedMeta.meta.imageSize.height),
                                              imageWidth: Double(orderedMeta.meta.imageSize.width))
                         }
                         .map { (orderedMeta.index, $0) }
+                        .eraseToAnyPublisher()
                 }
             }
     }
 
-    private func buildSaveData(forClip clipUrl: URL, from images: [OrderedImageData]) -> Promise<[ImageDataSet]> {
-        return Promise<[ImageDataSet]> { seal in
-            do {
-                let imageDataSets = try images
-                    .reduce(into: [Int: ComposingFetchedImageDataSet]()) { result, orderedImage in
-                        if let dataSet = result[orderedImage.index] {
-                            result[orderedImage.index] = dataSet.setting(data: orderedImage.data)
-                        } else {
-                            result[orderedImage.index] = ComposingFetchedImageDataSet(data: orderedImage.data)
-                        }
+    private func buildSaveData(forClip clipUrl: URL, from images: [OrderedImageData]) -> Result<[ImageDataSet], PresenterError> {
+        do {
+            let result = try images
+                .reduce(into: [Int: ComposingFetchedImageDataSet]()) { result, orderedImage in
+                    if let dataSet = result[orderedImage.index] {
+                        result[orderedImage.index] = dataSet.setting(data: orderedImage.data)
+                    } else {
+                        result[orderedImage.index] = ComposingFetchedImageDataSet(data: orderedImage.data)
                     }
-                    .map {
-                        guard let original = $0.value.original else {
-                            throw PresenterError.failedToDownloadImages
-                        }
-                        return FetchedImageDataSet(index: $0.key,
-                                                   imageHeight: original.imageHeight,
-                                                   imageWidth: original.imageWidth,
-                                                   original: original,
-                                                   thumbnail: $0.value.thumbnail)
+                }
+                .map {
+                    guard let original = $0.value.original else {
+                        throw PresenterError.failedToDownloadImages
                     }
-                    .map { ImageDataSet(dataSet: $0) }
-                seal.resolve(.fulfilled(imageDataSets))
-            } catch {
-                seal.resolve(.rejected(error))
-            }
+                    return FetchedImageDataSet(index: $0.key,
+                                               imageHeight: original.imageHeight,
+                                               imageWidth: original.imageWidth,
+                                               original: original,
+                                               thumbnail: $0.value.thumbnail)
+                }
+                .map { ImageDataSet(dataSet: $0) }
+            return .success(result)
+        } catch {
+            return .failure(.failedToDownloadImages)
         }
     }
 
-    private func save(target: [ImageDataSet]) -> Promise<Void> {
-        return Promise<Void> { [weak self] seal in
-            guard let self = self else {
-                seal.reject(PresenterError.internalError)
-                return
-            }
+    private func save(target: [ImageDataSet]) -> Result<Void, PresenterError> {
+        let currentDate = self.currentDateResolver()
+        let items = target.map { ClipItem(clipUrl: self.url, dataSet: $0, currentDate: currentDate) }
+        let clip = Clip(url: self.url, clipItems: items, currentDate: currentDate)
 
-            let currentDate = self.currentDateResolver()
-            let items = target.map { ClipItem(clipUrl: self.url, dataSet: $0, currentDate: currentDate) }
-            let clip = Clip(url: self.url, clipItems: items, currentDate: currentDate)
+        let data = target.flatMap {
+            [
+                ($0.originalImageFileName, $0.originalImageData),
+                ($0.thumbnailFileName, $0.thumbnailData)
+            ]
+        }
 
-            let data = target.flatMap {
-                [
-                    ($0.originalImageFileName, $0.originalImageData),
-                    ($0.thumbnailFileName, $0.thumbnailData)
-                ]
-            }
+        switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
+        case .success:
+            return .success(())
 
-            switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
-            case .success:
-                seal.resolve(.fulfilled(()))
-
-            case let .failure(error):
-                seal.resolve(.rejected(PresenterError.failedToSave(error)))
-            }
+        case let .failure(error):
+            return .failure(.failedToSave(error))
         }
     }
 }
