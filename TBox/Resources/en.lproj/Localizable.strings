@@ -12,9 +12,6 @@
 "app_root_tab_item_search" = "Search";
 "app_root_tab_item_settings" = "Settings";
 
-"clips_list_error_at_read_clips" = "Failed to read clips.";
-"clips_list_error_at_delete_clips" = "Failed to delete clips.";
-"clips_list_error_at_get_image_data" = "Failed to load images.";
 "clips_list_right_bar_item_for_select_title" = "Select";
 "clips_list_right_bar_item_for_select_all_title" = "Select All";
 "clips_list_right_bar_item_for_deselect_all_title" = "Deselect All";
@@ -36,10 +33,6 @@
 "clip_target_finder_view_title" = "Select image.";
 
 "album_list_view_title" = "Albums";
-"album_list_view_error_at_read_albums" = "Failed to read albums.";
-"album_list_view_error_at_add_album" = "Failed to add album.";
-"album_list_view_error_at_delete_album" = "Failed to delete album.";
-"album_list_view_error_at_read_image_data" = "Failed to read image data.";
 "album_list_view_alert_for_add_title" = "New Album";
 "album_list_view_alert_for_add_message" = "Enter a name for this album.";
 "album_list_view_alert_for_add_placeholder" = "Title";
@@ -51,15 +44,12 @@
 "search_entry_view_search_bar_placeholder" = "Keywords";
 "search_entry_view_error_at_search" = "Failed to search.";
 
+"search_result_title_uncategorized" = "Uncategorized";
+
 "tag_list_view_title" = "Tags";
 "tag_list_view_context_menu_action_copy" = "Copy";
 "tag_list_view_context_menu_action_delete" = "Delete";
 "tag_list_view_context_menu_action_update" = "Rename";
-"tag_list_view_error_at_read_tags" = "Failed to read tags.";
-"tag_list_view_error_at_add_tag" = "Failed to add tag.";
-"tag_list_view_error_at_add_tags_to_clip" = "Failed to add tags to a clip.";
-"tag_list_view_error_at_delete_tag" = "Failed to delete tag.";
-"tag_list_view_error_at_search_clip" = "Failed to search clip.";
 "tag_list_view_alert_for_add_title" = "New Tag";
 "tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
 "tag_list_view_alert_for_add_placeholder" = "Name";
@@ -79,9 +69,7 @@
 "clip_item_preview_view_alert_for_successfully_delete_message" = "Successfully deleted.";
 "clip_item_preview_view_alert_for_hide_message" = "Theses clips will be hidden from all places while setting is enabled";
 "clip_item_preview_view_alert_for_hide_action" = "Hide";
-"clip_item_preview_view_error_at_read_image" = "Failed to read image.";
-"clip_item_preview_view_error_at_delete_clip" = "Failed to delete clip.";
-"clip_item_preview_view_error_at_delete_clip_item" = "Failed to delete image.";
+"clip_item_preview_view_error_at_read_image" = "Failed to read image. Please retry clip.";
 
 "clip_information_view_alert_for_delete_tag_message" = "Are you sure you want to delete this tag?\nThe clips and images will not be deleted.";
 "clip_information_view_alert_for_delete_tag_action" = "Delete";
@@ -94,3 +82,42 @@
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";
+
+// MARK: - Error
+
+// MARK: Clip
+
+"clips_list_error_at_delete_clips" = "Failed to delete clips.";
+"clips_list_error_at_hide_clips" = "Failed to hide clips.";
+"clips_list_error_at_unhide_clips" = "Failed to unhide clips.";
+"clips_list_error_at_add_tags_to_clips" = "Failed to add tags to clips.";
+"clips_list_error_at_add_clips_to_album" = "Failed to add clips to album.";
+"clips_list_error_at_delete_clip" = "Failed to delete a clip.";
+"clips_list_error_at_hide_clip" = "Failed to hide a clip.";
+"clips_list_error_at_unhide_clip" = "Failed to unhide a clip.";
+"clips_list_error_at_add_tags_to_clip" = "Failed to add tags to a clip.";
+"clips_list_error_at_add_clip_to_album" = "Failed to add a clip to album.";
+"clips_list_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
+"clips_list_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
+
+// MARK: Album
+
+"album_list_view_error_at_read_albums" = "Failed to read albums.";
+"album_list_view_error_at_add_album" = "Failed to add album.";
+"album_list_view_error_at_delete_album" = "Failed to delete album.";
+"album_list_view_error_at_read_image_data" = "Failed to read image data.";
+
+// MARK: Tag
+
+"tag_list_view_error_at_read_tags" = "Failed to read tags.";
+"tag_list_view_error_at_add_tag" = "Failed to add tag.";
+"tag_list_view_error_at_add_tags_to_clip" = "Failed to add tags to a clip.";
+"tag_list_view_error_at_delete_tag" = "Failed to delete tag.";
+"tag_list_view_error_at_search_clip" = "Failed to search clip.";
+
+"error_tag_read" = "Failed to read tags.";
+"error_tag_add" = "Failed to add tag.";
+"error_tag_add_to_clip" = "Failed to add tags to a clip.";
+"error_tag_delete" = "Failed to delete tag.";
+"error_tag_search" = "Failed to search tag.";
+"error_tag_rename" = "Failed to rename tag.";

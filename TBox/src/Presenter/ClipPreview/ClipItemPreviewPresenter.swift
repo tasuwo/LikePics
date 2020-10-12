@@ -36,8 +36,9 @@ class ClipItemPreviewPresenter {
             return data
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to load image data. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read thumbnail. (code: \(error.rawValue))
+            """))
             return nil
         }
     }
@@ -49,7 +50,9 @@ class ClipItemPreviewPresenter {
             return data
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to load image data. (code: \(error.rawValue))"))
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read image for preview. (code: \(error.rawValue))
+            """))
             self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
             return nil
         }

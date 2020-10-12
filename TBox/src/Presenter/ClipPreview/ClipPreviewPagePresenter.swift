@@ -57,23 +57,38 @@ class ClipPreviewPagePresenter {
 
     func deleteClip() {
         if case let .failure(error) = self.storage.deleteClips(having: [self.clip.identity]) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtDeleteClip)\n\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete clip having id \(self.clip.identity). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClip)\n\(error.makeErrorCode())")
         }
     }
 
-    func deleteClipItem(having itemId: ClipItem.Identity) {
+    func removeClipItem(having itemId: ClipItem.Identity) {
         guard let item = self.clip.items.first(where: { $0.identity == itemId }) else { return }
         if case let .failure(error) = self.storage.delete(item) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip item. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtDeleteClipItem)\n\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete clip item having id \(itemId). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveItemFromClip)\n\(error.makeErrorCode())")
         }
     }
 
     func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
         if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add tags (\(tagIds.joined(separator: ", "))) to clip. (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func addClipToAlbum(_ albumId: Album.Identity) {
+        if case let .failure(error) = self.storage.updateAlbum(having: albumId, byAddingClipsHaving: [self.clip.identity]) {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
     }
 }

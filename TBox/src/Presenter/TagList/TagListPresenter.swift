@@ -41,7 +41,9 @@ class TagListPresenter {
             .tags
             .combineLatest(self.searchQuery)
             .sink(receiveCompletion: { [weak self] _ in
-                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TagSelectionView."))
+                self?.logger.write(ConsoleLog(level: .error, message: """
+                Unexpectedly finished observing at TagSelectionView.
+                """))
             }, receiveValue: { [weak self] tags, searchQuery in
                 guard let self = self else { return }
 
@@ -55,9 +57,17 @@ class TagListPresenter {
     }
 
     func addTag(_ name: String) {
-        if case let .failure(error) = self.storage.create(tagWithName: name) {
+        guard case let .failure(error) = self.storage.create(tagWithName: name) else { return }
+        switch error {
+        case .duplicated:
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Duplicated tag name "\(name)". (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.errorTagAddDuplicated)\n\(error.makeErrorCode())")
+
+        default:
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtAddTag)\n\(error.makeErrorCode())")
+            self.view?.showErrorMessage("\(L10n.errorTagAddDefault)\n\(error.makeErrorCode())")
         }
     }
 
@@ -67,19 +77,25 @@ class TagListPresenter {
 
     func delete(_ tags: [Tag]) {
         if case let .failure(error) = self.storage.deleteTags(having: tags.map({ $0.identity })) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtDeleteTag)\n\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete tags. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.errorTagDelete)\n\(error.makeErrorCode())")
             return
         }
         self.view?.endEditing()
     }
 
     func updateTag(having id: Tag.Identity, nameTo name: String) {
-        if case let .failure(error) = self.storage.updateTag(having: id, nameTo: name) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to rename tag. (code: \(error.rawValue))"))
-            // TODO:
-            self.view?.showErrorMessage("\(L10n.tagListViewErrorAtDeleteTag)\n\(error.makeErrorCode())")
-            return
+        guard case let .failure(error) = self.storage.updateTag(having: id, nameTo: name) else { return }
+        switch error {
+        case .duplicated:
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Duplicated tag name "\(name)". (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.errorTagRenameDuplicated)\n\(error.makeErrorCode())")
+
+        default:
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.errorTagRenameDefault)\n\(error.makeErrorCode())")
         }
     }
 

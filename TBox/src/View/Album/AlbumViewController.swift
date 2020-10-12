@@ -23,13 +23,14 @@ class AlbumViewController: UIViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
-    internal var collectionView: ClipsCollectionView!
-    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
+    var collectionView: ClipsCollectionView!
 
     var selectedClips: [Clip] {
         return self.collectionView.indexPathsForSelectedItems?
             .compactMap { self.dataSource.itemIdentifier(for: $0) } ?? []
     }
+
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Lifecycle
 

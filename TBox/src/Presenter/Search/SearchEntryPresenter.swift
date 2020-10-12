@@ -25,10 +25,6 @@ class SearchEntryPresenter {
 
     // MARK: - Methods
 
-    private static func resolveErrorMessage(_ error: ClipStorageError) -> String {
-        return L10n.searchEntryViewErrorAtSearch + "\n(\(error.makeErrorCode()))"
-    }
-
     func search(by text: String) {
         guard !text.isEmpty else { return }
         self.view?.search(with: .keywords(text.split(separator: " ").map { String($0) }))

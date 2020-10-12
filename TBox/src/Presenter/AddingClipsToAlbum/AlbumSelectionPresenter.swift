@@ -99,9 +99,9 @@ class AlbumSelectionPresenter {
             return data
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            // TODO: Localize
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+                            Failed to read album thumbnail image. (code: \(error.rawValue))
+            """))
             return nil
         }
     }

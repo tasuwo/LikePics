@@ -130,8 +130,9 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             return data
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read albums. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.clipsListErrorAtGetImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to search result thumbnail for clip having id \(clip.identity). (code: \(error.rawValue))
+            """))
             return nil
         }
     }
@@ -143,7 +144,9 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             .eraseToAnyPublisher()
             .combineLatest(self.settingStorage.showHiddenItems)
             .sink(receiveCompletion: { [weak self] _ in
-                self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at TopClipsView."))
+                self?.logger.write(ConsoleLog(level: .error, message: """
+                Unexpectedly finished observing at AlbumView.
+                """))
             }, receiveValue: { [weak self] album, showHiddenItems in
                 guard let self = self else { return }
 
@@ -197,8 +200,8 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func deleteSelectedClips() {
         if case let .failure(error) = self.clipStorage.deleteClips(having: self.selectedClips.ids) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clips. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -206,8 +209,8 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func hideSelectedClips() {
         if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: true) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -215,8 +218,8 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func unhideSelectedClips() {
         if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: false) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -224,8 +227,10 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func removeSelectedClipsFromAlbum() {
         if case let .failure(error) = self.clipStorage.updateAlbum(having: self.album.identity, byDeletingClipsHaving: self.selectedClips.ids) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to remove clips from album having id \(self.album.identity). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveClipsFromAlbum)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -233,8 +238,10 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
         if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add tags (\(tagIds.joined(separator: ", "))) to clips. (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -242,9 +249,10 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
         if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add to album \(albumId). (code: \(error.rawValue))"))
-            // TODO: Error handling
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
         self.selections = []
         self.isEditing = false
@@ -252,41 +260,40 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func deleteClip(having id: Clip.Identity) {
         if case let .failure(error) = self.clipStorage.deleteClips(having: [id]) {
-            // TODO: Error handling
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip \(id). (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip having id \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func hideClip(having id: Clip.Identity) {
         if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: true) {
-            // TODO: Error handling
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clip \(id). (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clip having id \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func unhideClip(having id: Clip.Identity) {
         if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: false) {
-            // TODO: Error handling
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clip \(id). (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clip having id \(id). (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
         if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byAddingTagsHaving: Array(tagIds)) {
-            // TODO: Error handling
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags (\(tagIds.joined(separator: ",")) to clip \(clipId). (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add tags (\(tagIds.joined(separator: ",")) to clip \(clipId). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity) {
         if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
-            // TODO: Error handling
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add clip \(clipId) to album \(albumId). (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add clip having id \(clipId) to album having id \(albumId). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipToAlbum)\n(\(error.makeErrorCode())")
         }
     }
 }

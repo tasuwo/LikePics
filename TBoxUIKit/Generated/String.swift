@@ -44,6 +44,8 @@ internal enum L10n {
     internal static let clipInformationViewSectionLabelTag = L10n.tr("Localizable", "clip_information_view_section_label_tag")
     /// サイトのURL
     internal static let clipInformationViewSiteUrlTitle = L10n.tr("Localizable", "clip_information_view_site_url_title")
+    /// 未分類のクリップを閲覧する
+    internal static let uncategorizedCellTitle = L10n.tr("Localizable", "uncategorized_cell_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

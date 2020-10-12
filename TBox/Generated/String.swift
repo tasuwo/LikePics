@@ -74,11 +74,7 @@ internal enum L10n {
     internal static let clipItemPreviewViewAlertForHideMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_message")
     /// 正常に削除しました
     internal static let clipItemPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_successfully_delete_message")
-    /// クリップの削除に失敗しました
-    internal static let clipItemPreviewViewErrorAtDeleteClip = L10n.tr("Localizable", "clip_item_preview_view_error_at_delete_clip")
-    /// 画像の削除に失敗しました
-    internal static let clipItemPreviewViewErrorAtDeleteClipItem = L10n.tr("Localizable", "clip_item_preview_view_error_at_delete_clip_item")
-    /// 画像の読み込みに失敗しました
+    /// 画像の読み込みに失敗しました。クリップしなおしてください
     internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
     /// クリップの読み込みに失敗しました
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
@@ -118,12 +114,30 @@ internal enum L10n {
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
     /// 表示する
     internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
+    /// アルバムへの追加に失敗しました
+    internal static let clipsListErrorAtAddClipToAlbum = L10n.tr("Localizable", "clips_list_error_at_add_clip_to_album")
+    /// アルバムへの追加に失敗しました
+    internal static let clipsListErrorAtAddClipsToAlbum = L10n.tr("Localizable", "clips_list_error_at_add_clips_to_album")
+    /// タグの追加に失敗しました
+    internal static let clipsListErrorAtAddTagsToClip = L10n.tr("Localizable", "clips_list_error_at_add_tags_to_clip")
+    /// タグの追加に失敗しました
+    internal static let clipsListErrorAtAddTagsToClips = L10n.tr("Localizable", "clips_list_error_at_add_tags_to_clips")
+    /// クリップの削除に失敗しました
+    internal static let clipsListErrorAtDeleteClip = L10n.tr("Localizable", "clips_list_error_at_delete_clip")
     /// クリップの削除に失敗しました
     internal static let clipsListErrorAtDeleteClips = L10n.tr("Localizable", "clips_list_error_at_delete_clips")
-    /// 画像の読み込みに失敗しました
-    internal static let clipsListErrorAtGetImageData = L10n.tr("Localizable", "clips_list_error_at_get_image_data")
-    /// クリップの読み込みに失敗しました
-    internal static let clipsListErrorAtReadClips = L10n.tr("Localizable", "clips_list_error_at_read_clips")
+    /// クリップの更新に失敗しました
+    internal static let clipsListErrorAtHideClip = L10n.tr("Localizable", "clips_list_error_at_hide_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipsListErrorAtHideClips = L10n.tr("Localizable", "clips_list_error_at_hide_clips")
+    /// アルバムからの削除に失敗しました
+    internal static let clipsListErrorAtRemoveClipsFromAlbum = L10n.tr("Localizable", "clips_list_error_at_remove_clips_from_album")
+    /// クリップ内の画像の削除に失敗しました
+    internal static let clipsListErrorAtRemoveItemFromClip = L10n.tr("Localizable", "clips_list_error_at_remove_item_from_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipsListErrorAtUnhideClip = L10n.tr("Localizable", "clips_list_error_at_unhide_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipsListErrorAtUnhideClips = L10n.tr("Localizable", "clips_list_error_at_unhide_clips")
     /// 全て選択解除
     internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
     /// 全て選択
@@ -136,12 +150,26 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
+    /// タグの追加に失敗しました
+    internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
+    /// 同名のタグを追加することはできません
+    internal static let errorTagAddDuplicated = L10n.tr("Localizable", "error_tag_add_duplicated")
+    /// タグの削除に失敗しました
+    internal static let errorTagDelete = L10n.tr("Localizable", "error_tag_delete")
+    /// タグの読み込みに失敗しました
+    internal static let errorTagRead = L10n.tr("Localizable", "error_tag_read")
+    /// クリップの更新に失敗しました
+    internal static let errorTagRenameDefault = L10n.tr("Localizable", "error_tag_rename_default")
+    /// 同じ名前のタグが既に存在します
+    internal static let errorTagRenameDuplicated = L10n.tr("Localizable", "error_tag_rename_duplicated")
     /// 検索に失敗しました
     internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
     /// キーワード
     internal static let searchEntryViewSearchBarPlaceholder = L10n.tr("Localizable", "search_entry_view_search_bar_placeholder")
     /// 検索
     internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
+    /// 未分類
+    internal static let searchResultTitleUncategorized = L10n.tr("Localizable", "search_result_title_uncategorized")
     /// このタグの名前を入力してください
     internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
     /// タグ名
@@ -167,16 +195,6 @@ internal enum L10n {
     internal static let tagListViewContextMenuActionDelete = L10n.tr("Localizable", "tag_list_view_context_menu_action_delete")
     /// 名前の変更
     internal static let tagListViewContextMenuActionUpdate = L10n.tr("Localizable", "tag_list_view_context_menu_action_update")
-    /// タグの追加に失敗しました
-    internal static let tagListViewErrorAtAddTag = L10n.tr("Localizable", "tag_list_view_error_at_add_tag")
-    /// クリップへのタグの追加に失敗しました
-    internal static let tagListViewErrorAtAddTagsToClip = L10n.tr("Localizable", "tag_list_view_error_at_add_tags_to_clip")
-    /// タグの削除に失敗しました
-    internal static let tagListViewErrorAtDeleteTag = L10n.tr("Localizable", "tag_list_view_error_at_delete_tag")
-    /// タグの読み込みに失敗しました
-    internal static let tagListViewErrorAtReadTags = L10n.tr("Localizable", "tag_list_view_error_at_read_tags")
-    /// クリップの取得に失敗しました
-    internal static let tagListViewErrorAtSearchClip = L10n.tr("Localizable", "tag_list_view_error_at_search_clip")
     /// タグ
     internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
 }

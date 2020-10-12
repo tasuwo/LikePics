@@ -12,9 +12,6 @@
 "app_root_tab_item_search" = "検索";
 "app_root_tab_item_settings" = "設定";
 
-"clips_list_error_at_read_clips" = "クリップの読み込みに失敗しました";
-"clips_list_error_at_delete_clips" = "クリップの削除に失敗しました";
-"clips_list_error_at_get_image_data" = "画像の読み込みに失敗しました";
 "clips_list_right_bar_item_for_select_title" = "選択";
 "clips_list_right_bar_item_for_select_all_title" = "全て選択";
 "clips_list_right_bar_item_for_deselect_all_title" = "全て選択解除";
@@ -36,10 +33,6 @@
 "clip_target_finder_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";
-"album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
-"album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
-"album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
-"album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
 "album_list_view_alert_for_add_title" = "新規アルバム";
 "album_list_view_alert_for_add_message" = "このアルバムの名前を入力してください";
 "album_list_view_alert_for_add_placeholder" = "アルバム名";
@@ -51,15 +44,12 @@
 "search_entry_view_search_bar_placeholder" = "キーワード";
 "search_entry_view_error_at_search" = "検索に失敗しました";
 
+"search_result_title_uncategorized" = "未分類";
+
 "tag_list_view_title" = "タグ";
 "tag_list_view_context_menu_action_copy" = "コピー";
 "tag_list_view_context_menu_action_delete" = "削除";
 "tag_list_view_context_menu_action_update" = "名前の変更";
-"tag_list_view_error_at_read_tags" = "タグの読み込みに失敗しました";
-"tag_list_view_error_at_add_tag" = "タグの追加に失敗しました";
-"tag_list_view_error_at_add_tags_to_clip" = "クリップへのタグの追加に失敗しました";
-"tag_list_view_error_at_delete_tag" = "タグの削除に失敗しました";
-"tag_list_view_error_at_search_clip" = "クリップの取得に失敗しました";
 "tag_list_view_alert_for_add_title" = "新規タグ";
 "tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
 "tag_list_view_alert_for_add_placeholder" = "タグ名";
@@ -79,9 +69,7 @@
 "clip_item_preview_view_alert_for_successfully_delete_message" = "正常に削除しました";
 "clip_item_preview_view_alert_for_hide_message" = "このクリップは、設定が有効な間は全ての場所から隠されます";
 "clip_item_preview_view_alert_for_hide_action" = "隠す";
-"clip_item_preview_view_error_at_read_image" = "画像の読み込みに失敗しました";
-"clip_item_preview_view_error_at_delete_clip" = "クリップの削除に失敗しました";
-"clip_item_preview_view_error_at_delete_clip_item" = "画像の削除に失敗しました";
+"clip_item_preview_view_error_at_read_image" = "画像の読み込みに失敗しました。クリップしなおしてください";
 
 "clip_information_view_alert_for_delete_tag_message" = "このタグを削除しますか？\nクリップ及び画像は削除されません";
 "clip_information_view_alert_for_delete_tag_action" = "削除";
@@ -94,3 +82,36 @@
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";
+
+// MARK: - Error
+
+// MARK: Clip
+
+"clips_list_error_at_delete_clips" = "クリップの削除に失敗しました";
+"clips_list_error_at_hide_clips" = "クリップの更新に失敗しました";
+"clips_list_error_at_unhide_clips" = "クリップの更新に失敗しました";
+"clips_list_error_at_add_tags_to_clips" = "タグの追加に失敗しました";
+"clips_list_error_at_add_clips_to_album" = "アルバムへの追加に失敗しました";
+"clips_list_error_at_delete_clip" = "クリップの削除に失敗しました";
+"clips_list_error_at_hide_clip" = "クリップの更新に失敗しました";
+"clips_list_error_at_unhide_clip" = "クリップの更新に失敗しました";
+"clips_list_error_at_add_tags_to_clip" = "タグの追加に失敗しました";
+"clips_list_error_at_add_clip_to_album" = "アルバムへの追加に失敗しました";
+"clips_list_error_at_remove_clips_from_album" = "アルバムからの削除に失敗しました";
+"clips_list_error_at_remove_item_from_clip" = "クリップ内の画像の削除に失敗しました";
+
+// MARK: Album
+
+"album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
+"album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
+"album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
+"album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
+
+// MARK: Tag
+
+"error_tag_read" = "タグの読み込みに失敗しました";
+"error_tag_add_default" = "タグの追加に失敗しました";
+"error_tag_add_duplicated" = "同名のタグを追加することはできません";
+"error_tag_delete" = "タグの削除に失敗しました";
+"error_tag_rename_default" = "クリップの更新に失敗しました";
+"error_tag_rename_duplicated" = "同じ名前のタグが既に存在します";

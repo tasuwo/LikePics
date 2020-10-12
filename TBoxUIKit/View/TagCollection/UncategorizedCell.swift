@@ -30,8 +30,7 @@ public class UncategorizedCell: UICollectionViewCell {
     // MARK: - Methods
 
     public func setupAppearance() {
-        // TODO: Localize
-        self.button.setTitle("未分類のクリップを閲覧する", for: .normal)
+        self.button.setTitle(L10n.uncategorizedCellTitle, for: .normal)
         self.button.titleLabel?.adjustsFontForContentSizeCategory = true
         self.button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }

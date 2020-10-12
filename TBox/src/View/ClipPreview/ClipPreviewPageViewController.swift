@@ -335,7 +335,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 
     func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider) {
         guard let clipId = self.currentViewController?.itemId else { return }
-        self.presenter.deleteClipItem(having: clipId)
+        self.presenter.removeClipItem(having: clipId)
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
@@ -384,8 +384,7 @@ extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
-        // TODO:
-        print(#function)
+        self.presenter.addClipToAlbum(albumId)
     }
 }
 
