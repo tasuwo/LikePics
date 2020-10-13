@@ -130,9 +130,10 @@ public class ClipTargetFinderPresenter {
         self.view?.startLoading()
 
         self.resolveWebImages(ofUrl: self.url)
-            .map { webImages in
+            .flatMap { webImages -> AnyPublisher<[DisplayableImageMeta], PresenterError> in
                 return self.resolveSize(ofWebImages: webImages)
             }
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case let .failure(error):
@@ -177,6 +178,7 @@ public class ClipTargetFinderPresenter {
                     .publisher
                     .eraseToAnyPublisher()
             }
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case let .failure(error):
@@ -230,10 +232,22 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> [DisplayableImageMeta] {
-        return webImages
-            .map { DisplayableImageMeta(urlSet: $0) }
-            .filter { $0.isValid }
+    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> AnyPublisher<[DisplayableImageMeta], PresenterError> {
+        do {
+            let publishers: [AnyPublisher<DisplayableImageMeta, Never>] = try webImages
+                .map { [weak self] webImage in
+                    guard let self = self else { throw PresenterError.internalError }
+                    return DisplayableImageMeta.make(by: webImage, using: self.urlSession)
+                }
+            return Publishers.MergeMany(publishers)
+                .filter({ $0.isValid })
+                .collect()
+                .mapError { _ in PresenterError.internalError }
+                .eraseToAnyPublisher()
+        } catch {
+            return Fail(error: PresenterError.internalError)
+                .eraseToAnyPublisher()
+        }
     }
 
     // MARK: Save Images
