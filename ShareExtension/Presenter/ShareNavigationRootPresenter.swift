@@ -34,6 +34,8 @@ class ShareNavigationRootPresenter {
             return
         }
 
+        // TODO: 画像が渡ってきた場合にも対応する
+
         guard let attachment = item.attachments?.first(where: { $0.isUrl }) else {
             self.view?.show(errorMessage: Self.resolveErrorMessage(.noUrlInAttachments))
             return
