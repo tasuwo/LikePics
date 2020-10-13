@@ -44,6 +44,7 @@ class ShareNavigationRootPresenter {
                 switch result {
                 case let .success(url):
                     self?.view?.presentClipTargetSelectionView(by: url)
+
                 case let .failure(error):
                     self?.view?.show(errorMessage: Self.resolveErrorMessage(.failedToResolveUrl(error)))
                 }

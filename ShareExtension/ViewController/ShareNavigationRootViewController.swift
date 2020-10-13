@@ -31,6 +31,7 @@ class ShareNavigationRootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.indicator.hidesWhenStopped = true
         self.indicator.startAnimating()
 
         self.presenter.resolveUrl(from: self.extensionContext)
@@ -41,11 +42,18 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
     // MARK: - ShareNavigationViewProtocol
 
     func show(errorMessage: String) {
-        let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true) { [weak self] in
-            self?.dismiss(animated: true, completion: nil)
+        if self.indicator.isAnimating {
+            self.indicator.stopAnimating()
         }
+
+        let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
+        alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
+            let error = NSError(domain: "net.tasuwo.TBox",
+                                code: 0,
+                                userInfo: [NSLocalizedDescriptionKey: "An error description"])
+            self?.extensionContext?.cancelRequest(withError: error)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
     func presentClipTargetSelectionView(by url: URL) {
