@@ -13,7 +13,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 
     public var imageUrl: URL? {
         willSet {
-            // TODO: Cancel loading image
+            self.imageView.kf.cancelDownloadTask()
         }
         didSet {
             guard let url = self.imageUrl else {
