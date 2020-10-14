@@ -113,8 +113,14 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                 // TODO: Retry
                 return self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
             }
-            .sink(receiveCompletion: { _ in
-                // TODO: Error Handling
+            .sink(receiveCompletion: { finish in
+                switch finish {
+                case let .failure(error):
+                    completion(.failure(error))
+
+                case .finished:
+                    break
+                }
             }, receiveValue: { document in
                 let imageUrls: [WebImageUrlSet] = document
                     .querySelectorAll("img")
