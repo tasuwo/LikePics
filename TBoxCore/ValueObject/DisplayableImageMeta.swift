@@ -48,9 +48,9 @@ struct DisplayableImageMeta {
                                             thumbImageUrl: urlSet.lowQualityUrl,
                                             imageSize: CGSize(width: pixelWidth, height: pixelHeight))
             }
-            .catch { meta -> AnyPublisher<DisplayableImageMeta?, Never> in
+            .catch { _ -> AnyPublisher<DisplayableImageMeta?, Never> in
                 RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(targetUrl)"))
-                return Just(Optional<DisplayableImageMeta>.none)
+                return Just(DisplayableImageMeta?.none)
                     .eraseToAnyPublisher()
             }
             .compactMap { $0 }
