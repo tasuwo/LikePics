@@ -6,7 +6,7 @@ import Domain
 import RealmSwift
 
 final class ClipItemObject: Object {
-    @objc dynamic var key: String = ""
+    @objc dynamic var id: String = ""
     @objc dynamic var clipUrl: String = ""
     @objc dynamic var clipIndex: Int = 0
     @objc dynamic var thumbnailUrl: String? = ""
@@ -19,11 +19,7 @@ final class ClipItemObject: Object {
     @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
-        return "key"
-    }
-
-    func makeKey() -> String {
-        return "\(self.clipUrl)-\(self.imageUrl)"
+        return "id"
     }
 }
 
@@ -38,8 +34,9 @@ extension ClipItem: Persistable {
             thumbnailUrl = nil
         }
 
-        // swiftlint:disable:next force_unwrapping
-        return ClipItem(clipUrl: URL(string: managedObject.clipUrl)!,
+        return ClipItem(id: managedObject.id,
+                        // swiftlint:disable:next force_unwrapping
+                        clipUrl: URL(string: managedObject.clipUrl)!,
                         clipIndex: managedObject.clipIndex,
                         thumbnailFileName: managedObject.thumbnailFileName,
                         thumbnailUrl: thumbnailUrl,
@@ -54,6 +51,7 @@ extension ClipItem: Persistable {
 
     func asManagedObject() -> ClipItemObject {
         let obj = ClipItemObject()
+        obj.id = self.id
         obj.clipUrl = self.clipUrl.absoluteString
         obj.clipIndex = self.clipIndex
         obj.thumbnailUrl = self.thumbnailUrl?.absoluteString
@@ -64,9 +62,6 @@ extension ClipItem: Persistable {
         obj.imageUrl = self.imageUrl.absoluteString
         obj.registeredAt = self.registeredDate
         obj.updatedAt = self.updatedDate
-
-        obj.key = obj.makeKey()
-
         return obj
     }
 }

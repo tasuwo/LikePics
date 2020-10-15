@@ -13,6 +13,7 @@ public enum ClipStorageError: Int, Error {
 
 /// @mockable
 public protocol ClipQueryServiceProtocol {
+    func existsClip(havingUrl: URL) -> Result<Bool, ClipStorageError>
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
     func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError>

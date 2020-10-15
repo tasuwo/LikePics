@@ -28,17 +28,28 @@ enum ClipStorageMigrationService {
         if oldSchemaVersion < 1 {
             fatalError("Unsupported schema version")
         } else if oldSchemaVersion < 2 {
-            Self.migraitonToV2(migration)
+            Self.migrateToV2(migration)
         } else if oldSchemaVersion < 3 {
-            Self.migraitonToV3(migration)
+            Self.migrateToV3(migration)
         } else if oldSchemaVersion < 4 {
-            Self.migraitonToV4(migration)
+            Self.migrateToV4(migration)
         } else if oldSchemaVersion < 5 {
-            Self.migraitonToV5(migration)
+            Self.migrateToV5(migration)
+        } else if oldSchemaVersion < 6 {
+            Self.migrateToV6(migration)
         }
     }
 
-    private static func migraitonToV5(_ migration: Migration) {
+    private static func migrateToV6(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { _, newObject in
+            newObject!["id"] = UUID().uuidString
+        }
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { _, newObject in
+            newObject!["id"] = UUID().uuidString
+        }
+    }
+
+    private static func migrateToV5(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
             newObject!["thumbnailUrl"] = oldObject!["thumbnailImageUrl"]
             newObject!["imageUrl"] = oldObject!["largeImageUrl"]
@@ -49,19 +60,19 @@ enum ClipStorageMigrationService {
         migration.deleteData(forType: "ClippedImageObject")
     }
 
-    private static func migraitonToV4(_ migration: Migration) {
+    private static func migrateToV4(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipObject.className()) { _, newObject in
             newObject!["isHidden"] = false
         }
     }
 
-    private static func migraitonToV3(_ migration: Migration) {
+    private static func migrateToV3(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipObject.className()) { _, newObject in
             newObject!["tags"] = List<TagObject>()
         }
     }
 
-    private static func migraitonToV2(_ migration: Migration) {
+    private static func migrateToV2(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipObject.className()) { _, newObject in
             newObject!["registeredAt"] = Date()
             newObject!["updatedAt"] = Date()

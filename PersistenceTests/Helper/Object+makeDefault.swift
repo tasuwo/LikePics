@@ -5,7 +5,8 @@
 @testable import Persistence
 
 extension ClipObject {
-    static func makeDefault(url: String,
+    static func makeDefault(id: String,
+                            url: String,
                             description: String = "hoge",
                             items: [ClipItemObject] = [],
                             tags: [TagObject] = [],
@@ -14,6 +15,7 @@ extension ClipObject {
                             updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
     {
         let obj = ClipObject()
+        obj.id = id
         obj.url = url
         obj.descriptionText = description
         items.forEach {
@@ -30,17 +32,19 @@ extension ClipObject {
 }
 
 extension ClipItemObject {
-    static func makeDefault(clipUrl: String,
-                            clipIndex: Int,
-                            thumbnailFileName: String,
-                            thumbnailHeight: Double,
-                            thumbnailWidth: Double,
-                            imageFileName: String,
-                            imageUrl: String,
-                            registeredAt: Date,
-                            updatedAt: Date) -> ClipItemObject
+    static func makeDefault(id: String = "",
+                            clipUrl: String = "",
+                            clipIndex: Int = 0,
+                            thumbnailFileName: String = "",
+                            thumbnailHeight: Double = 0,
+                            thumbnailWidth: Double = 0,
+                            imageFileName: String = "",
+                            imageUrl: String = "",
+                            registeredAt: Date = Date(timeIntervalSince1970: 0),
+                            updatedAt: Date = Date(timeIntervalSince1970: 0)) -> ClipItemObject
     {
         let obj = ClipItemObject()
+        obj.id = id
         obj.clipUrl = clipUrl
         obj.clipIndex = clipIndex
         obj.thumbnailFileName = thumbnailFileName
@@ -50,7 +54,6 @@ extension ClipItemObject {
         obj.imageUrl = imageUrl
         obj.registeredAt = registeredAt
         obj.updatedAt = updatedAt
-        obj.key = obj.makeKey()
         return obj
     }
 }

@@ -5,15 +5,29 @@
 import Domain
 import RealmSwift
 
+// swiftlint:disable first_where
+
 extension ClipStorage: ClipQueryServiceProtocol {
     // MARK: - ClipQueryServiceProtocol
+
+    public func existsClip(havingUrl url: URL) -> Result<Bool, ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else {
+            return .failure(.internalError)
+        }
+
+        guard realm.objects(ClipObject.self).filter("url = '\(url.absoluteString)'").first != nil else {
+            return .success(false)
+        }
+
+        return .success(true)
+    }
 
     public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }
 
-        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: id.absoluteString) else {
+        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: id) else {
             return .failure(.notFound)
         }
 

@@ -117,7 +117,18 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        if !self.isEnabledOverwrite, case .success = self.queryService.queryClip(having: self.url) {
+        let alreadyClipped: Bool
+        switch self.queryService.existsClip(havingUrl: self.url) {
+        case let .success(exists):
+            alreadyClipped = exists
+
+        case let .failure(error):
+            self.view?.endLoading()
+            self.view?.show(errorMessage: L10n.clipTargetFinderViewErrorAlertBodyInternalError + "\n(\(error.makeErrorCode())")
+            return
+        }
+
+        if !self.isEnabledOverwrite, alreadyClipped {
             self.view?.showConfirmationForOverwrite()
             return
         }
@@ -343,7 +354,8 @@ public class ClipTargetFinderPresenter {
 
 extension ClipItem {
     init(clipUrl: URL, dataSet: ImageDataSet, currentDate: Date) {
-        self.init(clipUrl: clipUrl,
+        self.init(id: UUID().uuidString,
+                  clipUrl: clipUrl,
                   clipIndex: dataSet.index,
                   thumbnailFileName: dataSet.thumbnailFileName,
                   thumbnailUrl: dataSet.thumbnailUrl,
@@ -357,7 +369,8 @@ extension ClipItem {
 
 extension Clip {
     init(url: URL, clipItems: [ClipItem], currentDate: Date) {
-        self.init(url: url,
+        self.init(id: UUID().uuidString,
+                  url: url,
                   description: nil,
                   items: clipItems,
                   tags: [],

@@ -6,6 +6,7 @@ import Domain
 import RealmSwift
 
 final class ClipObject: Object {
+    @objc dynamic var id: String = ""
     @objc dynamic var url: String = ""
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
@@ -15,7 +16,7 @@ final class ClipObject: Object {
     @objc dynamic var updatedAt = Date()
 
     override static func primaryKey() -> String? {
-        return "url"
+        return "id"
     }
 }
 
@@ -24,8 +25,9 @@ extension Clip: Persistable {
 
     static func make(by managedObject: ClipObject) -> Clip {
         let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
-        // swiftlint:disable:next force_unwrapping
-        return .init(url: URL(string: managedObject.url)!,
+        return .init(id: managedObject.id,
+                     // swiftlint:disable:next force_unwrapping
+                     url: URL(string: managedObject.url)!,
                      description: managedObject.descriptionText,
                      items: items,
                      tags: managedObject.tags.map { Tag.make(by: $0) },
@@ -36,6 +38,7 @@ extension Clip: Persistable {
 
     func asManagedObject() -> ClipObject {
         let obj = ClipObject()
+        obj.id = self.id
         obj.url = self.url.absoluteString
         obj.descriptionText = self.description
         self.items.forEach {

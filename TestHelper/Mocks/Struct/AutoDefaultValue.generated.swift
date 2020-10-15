@@ -25,6 +25,7 @@ extension Album {
 
 extension Clip {
     static func makeDefault(
+        id: String = "",
         url: URL = URL(string: "https://xxx.xxxx.xx")!,
         description: String? = nil,
         items: [ClipItem] = [],
@@ -34,6 +35,7 @@ extension Clip {
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
+            id: id,
             url: url,
             description: description,
             items: items,
@@ -47,6 +49,7 @@ extension Clip {
 
 extension ClipItem {
     static func makeDefault(
+        id: String = "",
         clipUrl: URL = URL(string: "https://xxx.xxxx.xx")!,
         clipIndex: Int = 0,
         thumbnailFileName: String = "",
@@ -58,6 +61,7 @@ extension ClipItem {
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
+            id: id,
             clipUrl: clipUrl,
             clipIndex: clipIndex,
             thumbnailFileName: thumbnailFileName,

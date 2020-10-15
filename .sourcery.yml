@@ -7,6 +7,6 @@ templates:
 exclude:
     - ./Pods
 output:
-    ./TestHelper/Mocks/Structs/
+    ./TestHelper/Mocks/Struct/
 args:
     testable_import: Domain,Persistence,TBoxUIKit

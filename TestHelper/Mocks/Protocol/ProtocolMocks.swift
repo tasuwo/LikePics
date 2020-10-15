@@ -261,6 +261,16 @@ public class WebImageUrlFinderProtocolMock: WebImageUrlFinderProtocol {
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
+    public private(set) var existsClipCallCount = 0
+    public var existsClipHandler: ((URL) -> (Result<Bool, ClipStorageError>))?
+    public func existsClip(havingUrl: URL) -> Result<Bool, ClipStorageError> {
+        existsClipCallCount += 1
+        if let existsClipHandler = existsClipHandler {
+            return existsClipHandler(havingUrl)
+        }
+        fatalError("existsClipHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var queryClipCallCount = 0
     public var queryClipHandler: ((Clip.Identity) -> (Result<ClipQuery, ClipStorageError>))?
     public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {

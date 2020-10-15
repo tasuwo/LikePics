@@ -13,7 +13,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 5,
+                schemaVersion: 6,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )
@@ -70,10 +70,18 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.invalidParameter)
             }
 
+            var appendingTags: [TagObject] = []
+            for tag in clip.tags {
+                guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) else {
+                    return .failure(.invalidParameter)
+                }
+                appendingTags.append(tagObj)
+            }
+
             // Check duplication
 
             var duplicatedClip: ClipObject?
-            if let clipObject = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.url.absoluteString) {
+            if let clipObject = realm.objects(ClipObject.self).filter("url = '\(clip.url)'").first {
                 if forced {
                     duplicatedClip = clipObject
                 } else {
@@ -83,25 +91,47 @@ extension ClipStorage: ClipStorageProtocol {
 
             // Prepare new objects
 
-            let newClip = clip.asManagedObject()
+            let newClip = ClipObject()
+            newClip.id = duplicatedClip?.id ?? clip.id
+            newClip.url = clip.url.absoluteString
+            newClip.descriptionText = clip.description
+
+            clip.items.forEach { item in
+                let newClipItem = ClipItemObject()
+
+                newClipItem.id = item.id
+                newClipItem.clipUrl = item.clipUrl.absoluteString
+                newClipItem.clipIndex = item.clipIndex
+                newClipItem.thumbnailUrl = item.thumbnailUrl?.absoluteString
+                newClipItem.thumbnailFileName = item.thumbnailFileName
+                newClipItem.thumbnailHeight = item.thumbnailSize.height
+                newClipItem.thumbnailWidth = item.thumbnailSize.width
+                newClipItem.imageFileName = item.imageFileName
+                newClipItem.imageUrl = item.imageUrl.absoluteString
+                newClipItem.registeredAt = item.registeredDate
+                newClipItem.updatedAt = item.updatedDate
+
+                newClip.items.append(newClipItem)
+            }
+
+            appendingTags.forEach { newClip.tags.append($0) }
+
+            newClip.isHidden = clip.isHidden
             if let oldClip = duplicatedClip {
+                // TODO: Share時のタグの追加をサポートし、このタグの引継ぎ処理を削除する
+                oldClip.tags.forEach { newClip.tags.append($0) }
                 newClip.registeredAt = oldClip.registeredAt
+            } else {
+                newClip.registeredAt = clip.registeredDate
             }
-
-            // Check remove targets
-
-            var shouldDeleteClipItems: [ClipItemObject] = []
-            if let oldClip = duplicatedClip {
-                shouldDeleteClipItems = oldClip.items
-                    .filter { oldItem in !newClip.items.contains(where: { $0.makeKey() == oldItem.makeKey() }) }
-            }
+            newClip.updatedAt = clip.updatedDate
 
             // Delete
 
             let updatePolicy: Realm.UpdatePolicy = forced ? .modified : .error
             do {
                 try realm.write {
-                    shouldDeleteClipItems.forEach { item in
+                    duplicatedClip?.items.forEach { item in
                         realm.delete(item)
                     }
                     realm.add(newClip, update: updatePolicy)
@@ -205,7 +235,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         var clips: [ClipObject] = []
-        for id in ids.map({ $0.absoluteString }) {
+        for id in ids {
             guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: id) else {
                 return .failure(.notFound)
             }
@@ -239,7 +269,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         var clips: [ClipObject] = []
-        for clipId in clipIds.map({ $0.absoluteString }) {
+        for clipId in clipIds {
             guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
@@ -276,7 +306,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         var clips: [ClipObject] = []
-        for clipId in clipIds.map({ $0.absoluteString }) {
+        for clipId in clipIds {
             guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
@@ -309,7 +339,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         var clips: [ClipObject] = []
-        for clipId in clipIds.map({ $0.absoluteString }) {
+        for clipId in clipIds {
             guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
@@ -349,7 +379,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.absoluteString) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
             clips.append(clip)
@@ -427,7 +457,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         var clipObjects: [ClipObject] = []
-        for clipId in ids.map({ $0.absoluteString }) {
+        for clipId in ids {
             guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
@@ -438,8 +468,7 @@ extension ClipStorage: ClipStorageProtocol {
         // NOTE: Delete only found objects.
         let clipItems = clipObjects
             .flatMap { $0.items }
-            .map { $0.makeKey() }
-            .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0) }
+            .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0.id) }
 
         clipObjects
             .flatMap { $0.items }
@@ -468,8 +497,7 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.internalError)
             }
 
-            let primaryKey = clipItem.asManagedObject().makeKey()
-            guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: primaryKey) else {
+            guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: clipItem.identity) else {
                 return .failure(.notFound)
             }
             let removeTarget = ClipItem.make(by: item)
