@@ -6,12 +6,36 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+// swiftlint:disable force_try force_unwrapping
+
+import Persistence
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        let legacyStorage = try! LegacyImageStorage()
+        let storage = try! ImageStorage()
+
+        switch try! ClipStorage().queryAllClips() {
+        case let .success(query):
+            for clip in query.clips.value {
+                for item in clip.items {
+                    let oldImageData = try! legacyStorage.readImage(named: item.imageFileName, inClip: clip.url!)
+                    try! storage.save(oldImageData, asName: item.imageFileName, inClipHaving: clip.identity)
+
+                    let oldThumbnailData = try! legacyStorage.readImage(named: item.thumbnailFileName, inClip: clip.url!)
+                    try! storage.save(oldThumbnailData, asName: item.thumbnailFileName, inClipHaving: clip.identity)
+                }
+                try! legacyStorage.deleteAll(inClip: clip.url!)
+            }
+
+        default:
+            fatalError("Failed to migration")
+        }
+
         return true
     }
 
