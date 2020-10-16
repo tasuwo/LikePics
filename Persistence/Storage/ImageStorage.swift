@@ -17,11 +17,11 @@ public protocol ImageStorageProtocol {
     func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data
 }
 
-public class ImageStorage {
-    public enum StorageConfiguration {
-        public static var directoryName: String = "TBoxImages"
+class ImageStorage {
+    enum StorageConfiguration {
+        static var directoryName: String = "TBoxImages"
 
-        public static var defaultTargetUrl: URL {
+        static var defaultTargetUrl: URL {
             if let appGroupIdentifier = Constants.appGroupIdentifier,
                 let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
             {
@@ -35,7 +35,7 @@ public class ImageStorage {
     private let fileManager: FileManager
     private let baseUrl: URL
 
-    public init(fileManager: FileManager = .default, targetDirectoryUrl: URL = StorageConfiguration.defaultTargetUrl) throws {
+    init(fileManager: FileManager = .default, targetDirectoryUrl: URL = StorageConfiguration.defaultTargetUrl) throws {
         self.fileManager = fileManager
         self.baseUrl = targetDirectoryUrl
 
@@ -68,7 +68,7 @@ public class ImageStorage {
 extension ImageStorage: ImageStorageProtocol {
     // MARK: - LegacyImageStorageProtocol
 
-    public func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
+    func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
         let clipDirectoryUrl = self.resolveClipDirectoryUrl(forClipId: clipId)
 
         if !self.fileManager.fileExists(atPath: clipDirectoryUrl.path) {
@@ -85,7 +85,7 @@ extension ImageStorage: ImageStorageProtocol {
         }
     }
 
-    public func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
+    func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
         let fileUrl = self.resolveImageFileUrl(fileName: fileName, clipId: clipId)
 
         guard self.fileManager.fileExists(atPath: fileUrl.path) else {
@@ -100,7 +100,7 @@ extension ImageStorage: ImageStorageProtocol {
         }
     }
 
-    public func deleteAll(inClipHaving clipId: Clip.Identity) throws {
+    func deleteAll(inClipHaving clipId: Clip.Identity) throws {
         let clipDirectoryUrl = self.resolveClipDirectoryUrl(forClipId: clipId)
 
         guard self.fileManager.fileExists(atPath: clipDirectoryUrl.path) else {
@@ -110,7 +110,7 @@ extension ImageStorage: ImageStorageProtocol {
         try self.fileManager.removeItem(at: clipDirectoryUrl)
     }
 
-    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data {
+    func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data {
         let fileUrl = self.resolveImageFileUrl(fileName: name, clipId: clipId)
 
         guard self.fileManager.fileExists(atPath: fileUrl.path) else {

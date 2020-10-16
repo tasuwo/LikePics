@@ -192,7 +192,6 @@
 		2CB2253925184920002CB04C /* ComposingFetchedImageDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2253825184920002CB04C /* ComposingFetchedImageDataSet.swift */; };
 		2CB2254325184935002CB04C /* FetchedImageDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2254225184935002CB04C /* FetchedImageDataSet.swift */; };
 		2CB2254D25184946002CB04C /* ImageDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2254C25184946002CB04C /* ImageDataSet.swift */; };
-		2CB2257825187236002CB04C /* LegacyImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2257725187236002CB04C /* LegacyImageStorage.swift */; };
 		2CB3CB1A2515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB192515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift */; };
 		2CB3CB342515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */; };
 		2CB3CB3E2515EFF900BE06E5 /* ClipsListAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */; };
@@ -734,7 +733,6 @@
 		2CB2253825184920002CB04C /* ComposingFetchedImageDataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposingFetchedImageDataSet.swift; sourceTree = "<group>"; };
 		2CB2254225184935002CB04C /* FetchedImageDataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedImageDataSet.swift; sourceTree = "<group>"; };
 		2CB2254C25184946002CB04C /* ImageDataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataSet.swift; sourceTree = "<group>"; };
-		2CB2257725187236002CB04C /* LegacyImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyImageStorage.swift; sourceTree = "<group>"; };
 		2CB3CB192515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListNavigationItemsPresenter.swift; sourceTree = "<group>"; };
 		2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListToolBarItemsProvider.swift; sourceTree = "<group>"; };
 		2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListAlertPresentable.swift; sourceTree = "<group>"; };
@@ -1697,7 +1695,6 @@
 				2C69CF3B24E43AAA0008C7AA /* Migration */,
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
-				2CB2257725187236002CB04C /* LegacyImageStorage.swift */,
 				2CBA2F92253890A500ECFF47 /* ImageStorage.swift */,
 				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
 			);
@@ -3383,7 +3380,6 @@
 				2CD25B9C251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */,
-				2CB2257825187236002CB04C /* LegacyImageStorage.swift in Sources */,
 				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
