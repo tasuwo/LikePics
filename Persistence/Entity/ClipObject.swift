@@ -7,7 +7,7 @@ import RealmSwift
 
 final class ClipObject: Object {
     @objc dynamic var id: String = ""
-    @objc dynamic var url: String = ""
+    @objc dynamic var url: String? = ""
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
     let tags = List<TagObject>()
@@ -25,9 +25,16 @@ extension Clip: Persistable {
 
     static func make(by managedObject: ClipObject) -> Clip {
         let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
+
+        let url: URL?
+        if let urlString = managedObject.url {
+            url = URL(string: urlString)
+        } else {
+            url = nil
+        }
+
         return .init(id: managedObject.id,
-                     // swiftlint:disable:next force_unwrapping
-                     url: URL(string: managedObject.url)!,
+                     url: url,
                      description: managedObject.descriptionText,
                      items: items,
                      tags: managedObject.tags.map { Tag.make(by: $0) },
@@ -39,7 +46,7 @@ extension Clip: Persistable {
     func asManagedObject() -> ClipObject {
         let obj = ClipObject()
         obj.id = self.id
-        obj.url = self.url.absoluteString
+        obj.url = self.url?.absoluteString
         obj.descriptionText = self.description
         self.items.forEach {
             obj.items.append($0.asManagedObject())

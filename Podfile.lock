@@ -4,26 +4,26 @@ PODS:
     - Kanna
   - Erik/Core (5.0.0):
     - Kanna
-  - Kanna (5.2.2)
-  - Kingfisher (5.15.3):
-    - Kingfisher/Core (= 5.15.3)
-  - Kingfisher/Core (5.15.3)
+  - Kanna (5.2.3)
+  - Kingfisher (5.15.6):
+    - Kingfisher/Core (= 5.15.6)
+  - Kingfisher/Core (5.15.6)
   - Nimble (8.0.9)
   - Quick (2.2.1)
-  - Realm (5.4.3):
-    - Realm/Headers (= 5.4.3)
-  - Realm/Headers (5.4.3)
-  - RealmSwift (5.4.3):
-    - Realm (= 5.4.3)
+  - Realm (5.5.0):
+    - Realm/Headers (= 5.5.0)
+  - Realm/Headers (5.5.0)
+  - RealmSwift (5.5.0):
+    - Realm (= 5.5.0)
   - Sourcery (1.0.0)
-  - SwiftGen (6.3.0)
+  - SwiftGen (6.4.0)
 
 DEPENDENCIES:
   - Erik (~> 5.0.0)
   - Kingfisher (~> 5.15.3)
   - Nimble (~> 8.0.5)
   - Quick (~> 2.2.0)
-  - RealmSwift (~> 5.4.3)
+  - RealmSwift (~> 5.5.0)
   - Sourcery (~> 1.0)
   - SwiftGen (~> 6.0)
 
@@ -41,15 +41,15 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
-  Kanna: 2c4eddaaa4bfb9a1ed19e53c0b3d42ef02838046
-  Kingfisher: 2fef2f4d9e809285aff7f6195b5290520904f3fa
+  Kanna: 113d111e95d7e903efe0c3eb7221f7635716084c
+  Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
   Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
-  Realm: e3d5fcc50fd79ddf87a2d86301f6edbf57531f84
-  RealmSwift: db608068eccc54bce47928e8118bde13c120c307
+  Realm: fb399d76f44042e5cdfc630f33828fdb4d077345
+  RealmSwift: 3b7e62356207ef16d34de4e55d475163bd2062bb
   Sourcery: 928a146ea9b777fa64b0c6ce915c4128b4488cff
-  SwiftGen: 3d5024a47ea79e408cded20763d7a17d18a4548c
+  SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
 
-PODFILE CHECKSUM: 482e0d60c12258d587ccab57d05c13a18b152562
+PODFILE CHECKSUM: 98b000b352da3ba0677b64edc1df9c1cc3b9f7b9
 
 COCOAPODS: 1.10.0.rc.1

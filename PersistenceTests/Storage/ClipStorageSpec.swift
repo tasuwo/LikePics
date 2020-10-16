@@ -12,7 +12,7 @@ import RealmSwift
 
 class ClipStorageSpec: QuickSpec {
     override func spec() {
-        let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 6)
+        let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 7)
         let realm = try! Realm(configuration: configuration)
         let sampleImage = UIImage(named: "TestImage", in: Bundle(for: Self.self), with: nil)!
 
@@ -32,11 +32,11 @@ class ClipStorageSpec: QuickSpec {
 
         describe("create(clip:withData:forced:)") {
             var result: Result<Void, ClipStorageError>!
-            var savedData: [(Data, String, URL)] = []
+            var savedData: [(Data, String, Clip.Identity)] = []
 
             beforeEach {
-                imageStorage.saveHandler = { data, fileName, url in
-                    savedData.append((data, fileName, url))
+                imageStorage.saveHandler = { data, fileName, clipId in
+                    savedData.append((data, fileName, clipId))
                 }
             }
 
@@ -53,9 +53,9 @@ class ClipStorageSpec: QuickSpec {
                                 url: URL(string: "https://localhost/1")!,
                                 description: "my description",
                                 items: [
-                                    ClipItem.makeDefault(thumbnailFileName: "fuga1", imageFileName: "hoge1"),
-                                    ClipItem.makeDefault(thumbnailFileName: "fuga2", imageFileName: "hoge2"),
-                                    ClipItem.makeDefault(thumbnailFileName: "fuga3", imageFileName: "hoge3"),
+                                    ClipItem.makeDefault(id: "111", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
+                                    ClipItem.makeDefault(id: "222", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
+                                    ClipItem.makeDefault(id: "333", thumbnailFileName: "fuga3", imageFileName: "hoge3"),
                                 ],
                                 tags: [],
                                 isHidden: false,
@@ -99,11 +99,11 @@ class ClipStorageSpec: QuickSpec {
                                 url: "https://localhost/1",
                                 description: "my description",
                                 items: [
-                                    ClipItemObject.makeDefault(id: "11",
-                                                               clipUrl: "https://localhost/1",
+                                    ClipItemObject.makeDefault(id: "111",
+                                                               clipId: "1",
                                                                clipIndex: 1),
-                                    ClipItemObject.makeDefault(id: "22",
-                                                               clipUrl: "https://localhost/1",
+                                    ClipItemObject.makeDefault(id: "222",
+                                                               clipId: "1",
                                                                clipIndex: 2),
                                 ],
                                 tags: [
@@ -125,9 +125,9 @@ class ClipStorageSpec: QuickSpec {
                                     url: URL(string: "https://localhost/1")!,
                                     description: "my new description",
                                     items: [
-                                        ClipItem.makeDefault(id: "111", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
-                                        ClipItem.makeDefault(id: "222", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
-                                        ClipItem.makeDefault(id: "333", thumbnailFileName: "fuga3", imageFileName: "hoge3"),
+                                        ClipItem.makeDefault(id: "11", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
+                                        ClipItem.makeDefault(id: "22", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
+                                        ClipItem.makeDefault(id: "33", thumbnailFileName: "fuga3", imageFileName: "hoge3"),
                                     ],
                                     tags: [],
                                     isHidden: true,
@@ -178,9 +178,9 @@ class ClipStorageSpec: QuickSpec {
                             let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
                             expect(items).to(haveCount(3))
                             if items.count == 3 {
-                                expect(items[0].id).to(equal("111"))
-                                expect(items[1].id).to(equal("222"))
-                                expect(items[2].id).to(equal("333"))
+                                expect(items[0].id).to(equal("11"))
+                                expect(items[1].id).to(equal("22"))
+                                expect(items[2].id).to(equal("33"))
                             }
                         }
                         it("除去されたタグはRealmから削除されない") {
@@ -200,9 +200,9 @@ class ClipStorageSpec: QuickSpec {
                                     url: URL(string: "https://localhost/1")!,
                                     description: "my description",
                                     items: [
-                                        ClipItem.makeDefault(thumbnailFileName: "fuga1", imageFileName: "hoge1"),
-                                        ClipItem.makeDefault(thumbnailFileName: "fuga2", imageFileName: "hoge2"),
-                                        ClipItem.makeDefault(thumbnailFileName: "fuga3", imageFileName: "hoge3"),
+                                        ClipItem.makeDefault(id: "11", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
+                                        ClipItem.makeDefault(id: "22", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
+                                        ClipItem.makeDefault(id: "33", thumbnailFileName: "fuga3", imageFileName: "hoge3"),
                                     ],
                                     tags: [],
                                     isHidden: false,
@@ -246,9 +246,9 @@ class ClipStorageSpec: QuickSpec {
                     beforeEach {
                         result = service.create(
                             clip: .makeDefault(items: [
-                                ClipItem.makeDefault(thumbnailFileName: "fuga1", imageFileName: "hoge1"),
-                                ClipItem.makeDefault(thumbnailFileName: "fuga2", imageFileName: "hoge2"),
-                                ClipItem.makeDefault(thumbnailFileName: "fuga3", imageFileName: "hoge1"),
+                                ClipItem.makeDefault(id: "11", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
+                                ClipItem.makeDefault(id: "22", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
+                                ClipItem.makeDefault(id: "33", thumbnailFileName: "fuga3", imageFileName: "hoge1"),
                             ]),
                             withData: [
                                 ("hoge1", sampleImage.pngData()!),
@@ -274,9 +274,9 @@ class ClipStorageSpec: QuickSpec {
                     beforeEach {
                         result = service.create(
                             clip: .makeDefault(items: [
-                                ClipItem.makeDefault(thumbnailFileName: "fuga1", imageFileName: "hoge1"),
-                                ClipItem.makeDefault(thumbnailFileName: "fuga2", imageFileName: "hoge2"),
-                                ClipItem.makeDefault(thumbnailFileName: "fuga3", imageFileName: "hoge3"),
+                                ClipItem.makeDefault(id: "11", thumbnailFileName: "fuga1", imageFileName: "hoge1"),
+                                ClipItem.makeDefault(id: "22", thumbnailFileName: "fuga2", imageFileName: "hoge2"),
+                                ClipItem.makeDefault(id: "33", thumbnailFileName: "fuga3", imageFileName: "hoge3"),
                             ]),
                             withData: [
                                 ("hoge1", sampleImage.pngData()!),
@@ -420,12 +420,12 @@ class ClipStorageSpec: QuickSpec {
 
             context("対象の画像データが存在する") {
                 beforeEach {
-                    imageStorage.readImageHandler = { name, clipUrl in
+                    imageStorage.readImageHandler = { name, clipId in
                         expect(name).to(equal("hoge.png"))
-                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        expect(clipId).to(equal("111"))
                         return Data(base64Encoded: "hogehoge")!
                     }
-                    result = service.readImageData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                    result = service.readImageData(of: .makeDefault(clipId: "111",
                                                                     imageFileName: "hoge.png"))
                 }
                 it("successが返る") {
@@ -440,12 +440,12 @@ class ClipStorageSpec: QuickSpec {
 
             context("対象の画像データが存在しない") {
                 beforeEach {
-                    imageStorage.readImageHandler = { name, clipUrl in
+                    imageStorage.readImageHandler = { name, clipId in
                         expect(name).to(equal("hoge.png"))
-                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        expect(clipId).to(equal("111"))
                         throw ImageStorageError.notFound
                     }
-                    result = service.readImageData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                    result = service.readImageData(of: .makeDefault(clipId: "111",
                                                                     imageFileName: "hoge.png"))
                 }
                 it("notFoundが返る") {
@@ -466,12 +466,12 @@ class ClipStorageSpec: QuickSpec {
 
             context("対象の画像データが存在する") {
                 beforeEach {
-                    imageStorage.readImageHandler = { name, clipUrl in
+                    imageStorage.readImageHandler = { name, clipId in
                         expect(name).to(equal("hoge.png"))
-                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        expect(clipId).to(equal("111"))
                         return Data(base64Encoded: "hogehoge")!
                     }
-                    result = service.readThumbnailData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                    result = service.readThumbnailData(of: .makeDefault(clipId: "111",
                                                                         thumbnailFileName: "hoge.png"))
                 }
                 it("successが返る") {
@@ -486,12 +486,12 @@ class ClipStorageSpec: QuickSpec {
 
             context("対象の画像データが存在しない") {
                 beforeEach {
-                    imageStorage.readImageHandler = { name, clipUrl in
+                    imageStorage.readImageHandler = { name, clipId in
                         expect(name).to(equal("hoge.png"))
-                        expect(clipUrl).to(equal(URL(string: "http://localhost/hoge")!))
+                        expect(clipId).to(equal("111"))
                         throw ImageStorageError.notFound
                     }
-                    result = service.readThumbnailData(of: .makeDefault(clipUrl: URL(string: "http://localhost/hoge")!,
+                    result = service.readThumbnailData(of: .makeDefault(clipId: "111",
                                                                         thumbnailFileName: "hoge.png"))
                 }
                 it("notFoundが返る") {

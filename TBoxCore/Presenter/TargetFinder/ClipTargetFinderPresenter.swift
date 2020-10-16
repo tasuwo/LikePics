@@ -332,8 +332,9 @@ public class ClipTargetFinderPresenter {
 
     private func save(target: [ImageDataSet]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
-        let items = target.map { ClipItem(clipUrl: self.url, dataSet: $0, currentDate: currentDate) }
-        let clip = Clip(url: self.url, clipItems: items, currentDate: currentDate)
+        let clipId = UUID().uuidString
+        let items = target.map { ClipItem(clipId: clipId, dataSet: $0, currentDate: currentDate) }
+        let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
 
         let data = target.flatMap {
             [
@@ -353,9 +354,9 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(clipUrl: URL, dataSet: ImageDataSet, currentDate: Date) {
+    init(clipId: Clip.Identity, dataSet: ImageDataSet, currentDate: Date) {
         self.init(id: UUID().uuidString,
-                  clipUrl: clipUrl,
+                  clipId: clipId,
                   clipIndex: dataSet.index,
                   thumbnailFileName: dataSet.thumbnailFileName,
                   thumbnailUrl: dataSet.thumbnailUrl,
@@ -368,8 +369,8 @@ extension ClipItem {
 }
 
 extension Clip {
-    init(url: URL, clipItems: [ClipItem], currentDate: Date) {
-        self.init(id: UUID().uuidString,
+    init(clipId: Clip.Identity, url: URL, clipItems: [ClipItem], currentDate: Date) {
+        self.init(id: clipId,
                   url: url,
                   description: nil,
                   items: clipItems,

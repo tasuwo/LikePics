@@ -5,7 +5,7 @@
 // sourcery: AutoDefaultValue
 public struct Clip: Equatable {
     public let id: String
-    public let url: URL
+    public let url: URL?
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
@@ -32,7 +32,7 @@ public struct Clip: Equatable {
     // MARK: - Lifecycle
 
     public init(id: String,
-                url: URL,
+                url: URL?,
                 description: String?,
                 items: [ClipItem],
                 tags: [Tag],

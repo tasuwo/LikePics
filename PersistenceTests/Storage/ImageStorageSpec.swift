@@ -15,9 +15,9 @@ class ImageStorageSpec: QuickSpec {
     override func spec() {
         var storage: ImageStorage!
         let sampleImage = UIImage(named: "TestImage", in: Bundle(for: Self.self), with: nil)!
-        let sampleClipUrl = URL(string: "https://localhost/media/hogehogefugafuga?format=hoge&name=fuga")!
+        let sampleClipId = "111222333hogehogefugafuga"
         let expectedClipDirectoryUrl = Self.testDirectory
-            .appendingPathComponent("https___localhost_media_hogehogefugafuga?format=hoge&name=fuga", isDirectory: true)
+            .appendingPathComponent("111222333hogehogefugafuga", isDirectory: true)
 
         beforeSuite {
             if FileManager.default.fileExists(atPath: Self.testDirectory.path) {
@@ -39,12 +39,12 @@ class ImageStorageSpec: QuickSpec {
             }
         }
 
-        describe("save(_:asName:inClip:)") {
+        describe("save(_:asName:inClipHaving:)") {
             context("新しいクリップに画像を保存する") {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
                 afterEach {
@@ -67,8 +67,8 @@ class ImageStorageSpec: QuickSpec {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
-                    try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
+                    try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClipHaving: sampleClipId)
                 }
 
                 afterEach {
@@ -96,8 +96,8 @@ class ImageStorageSpec: QuickSpec {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
                 afterEach {
@@ -117,15 +117,15 @@ class ImageStorageSpec: QuickSpec {
             }
         }
 
-        describe("delete(fileName:inClip:)") {
+        describe("delete(fileName:inClipHaving:)") {
             context("クリップに複数存在するうちの1つの画像を削除する") {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
-                    try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
+                    try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClipHaving: sampleClipId)
 
-                    try! storage.delete(fileName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
                 afterEach {
@@ -153,9 +153,9 @@ class ImageStorageSpec: QuickSpec {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
-                    try! storage.delete(fileName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
                 it("クリップ用のディレクトリが削除されている") {
@@ -170,22 +170,22 @@ class ImageStorageSpec: QuickSpec {
                 }
                 it("notFoundエラーがスローされる") {
                     expect(expression: {
-                        try storage.delete(fileName: "hogehoge.png", inClip: sampleClipUrl)
+                        try storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
                     }).to(throwError(ImageStorageError.notFound))
                 }
             }
         }
 
-        describe("readImage(named:inClip:)") {
+        describe("readImage(named:inClipHaving:)") {
             context("存在する画像を読み込む") {
                 var data: Data!
 
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 targetDirectoryUrl: Self.testDirectory)
-                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClip: sampleClipUrl)
+                    try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
-                    data = try! storage.readImage(named: "hogehoge.png", inClip: sampleClipUrl)
+                    data = try! storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
                 afterEach {
@@ -205,7 +205,7 @@ class ImageStorageSpec: QuickSpec {
                 }
                 it("notFoundエラーがスローされる") {
                     expect(expression: {
-                        try storage.readImage(named: "hogehoge.png", inClip: sampleClipUrl)
+                        try storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
                     }).to(throwError(ImageStorageError.notFound))
                 }
             }

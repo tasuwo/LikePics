@@ -7,14 +7,14 @@ import RealmSwift
 
 final class ClipItemObject: Object {
     @objc dynamic var id: String = ""
-    @objc dynamic var clipUrl: String = ""
+    @objc dynamic var clipId: String = ""
     @objc dynamic var clipIndex: Int = 0
     @objc dynamic var thumbnailUrl: String? = ""
     @objc dynamic var thumbnailFileName: String = ""
     @objc dynamic var thumbnailHeight: Double = 0
     @objc dynamic var thumbnailWidth: Double = 0
     @objc dynamic var imageFileName: String = ""
-    @objc dynamic var imageUrl: String = ""
+    @objc dynamic var imageUrl: String? = ""
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()
 
@@ -34,17 +34,22 @@ extension ClipItem: Persistable {
             thumbnailUrl = nil
         }
 
+        let imageUrl: URL?
+        if let imageUrlString = managedObject.imageUrl {
+            imageUrl = URL(string: imageUrlString)
+        } else {
+            imageUrl = nil
+        }
+
         return ClipItem(id: managedObject.id,
-                        // swiftlint:disable:next force_unwrapping
-                        clipUrl: URL(string: managedObject.clipUrl)!,
+                        clipId: managedObject.clipId,
                         clipIndex: managedObject.clipIndex,
                         thumbnailFileName: managedObject.thumbnailFileName,
                         thumbnailUrl: thumbnailUrl,
                         thumbnailSize: ImageSize(height: managedObject.thumbnailHeight,
                                                  width: managedObject.thumbnailWidth),
                         imageFileName: managedObject.imageFileName,
-                        // swiftlint:disable:next force_unwrapping
-                        imageUrl: URL(string: managedObject.imageUrl)!,
+                        imageUrl: imageUrl,
                         registeredDate: managedObject.registeredAt,
                         updatedDate: managedObject.updatedAt)
     }
@@ -52,14 +57,14 @@ extension ClipItem: Persistable {
     func asManagedObject() -> ClipItemObject {
         let obj = ClipItemObject()
         obj.id = self.id
-        obj.clipUrl = self.clipUrl.absoluteString
+        obj.clipId = self.clipId
         obj.clipIndex = self.clipIndex
         obj.thumbnailUrl = self.thumbnailUrl?.absoluteString
         obj.thumbnailFileName = self.thumbnailFileName
         obj.thumbnailHeight = self.thumbnailSize.height
         obj.thumbnailWidth = self.thumbnailSize.width
         obj.imageFileName = self.imageFileName
-        obj.imageUrl = self.imageUrl.absoluteString
+        obj.imageUrl = self.imageUrl?.absoluteString
         obj.registeredAt = self.registeredDate
         obj.updatedAt = self.updatedDate
         return obj

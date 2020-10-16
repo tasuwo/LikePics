@@ -13,7 +13,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 6,
+                schemaVersion: 7,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )
@@ -81,7 +81,7 @@ extension ClipStorage: ClipStorageProtocol {
             // Check duplication
 
             var duplicatedClip: ClipObject?
-            if let clipObject = realm.objects(ClipObject.self).filter("url = '\(clip.url)'").first {
+            if let clipUrl = clip.url, let clipObject = realm.objects(ClipObject.self).filter("url = '\(clipUrl)'").first {
                 if forced {
                     duplicatedClip = clipObject
                 } else {
@@ -93,21 +93,21 @@ extension ClipStorage: ClipStorageProtocol {
 
             let newClip = ClipObject()
             newClip.id = duplicatedClip?.id ?? clip.id
-            newClip.url = clip.url.absoluteString
+            newClip.url = clip.url?.absoluteString
             newClip.descriptionText = clip.description
 
             clip.items.forEach { item in
                 let newClipItem = ClipItemObject()
 
                 newClipItem.id = item.id
-                newClipItem.clipUrl = item.clipUrl.absoluteString
+                newClipItem.clipId = item.clipId
                 newClipItem.clipIndex = item.clipIndex
                 newClipItem.thumbnailUrl = item.thumbnailUrl?.absoluteString
                 newClipItem.thumbnailFileName = item.thumbnailFileName
                 newClipItem.thumbnailHeight = item.thumbnailSize.height
                 newClipItem.thumbnailWidth = item.thumbnailSize.width
                 newClipItem.imageFileName = item.imageFileName
-                newClipItem.imageUrl = item.imageUrl.absoluteString
+                newClipItem.imageUrl = item.imageUrl?.absoluteString
                 newClipItem.registeredAt = item.registeredDate
                 newClipItem.updatedAt = item.updatedDate
 
@@ -137,9 +137,9 @@ extension ClipStorage: ClipStorageProtocol {
                     realm.add(newClip, update: updatePolicy)
                 }
 
-                try? self.imageStorage.deleteAll(inClip: clip.url)
+                try? self.imageStorage.deleteAll(inClipHaving: newClip.id)
                 try data.forEach { value in
-                    try self.imageStorage.save(value.image, asName: value.fileName, inClip: clip.url)
+                    try self.imageStorage.save(value.image, asName: value.fileName, inClipHaving: clip.identity)
                 }
 
                 return .success(())
@@ -206,7 +206,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError> {
         return self.queue.sync {
             do {
-                return .success(try self.imageStorage.readImage(named: item.imageFileName, inClip: item.clipUrl))
+                return .success(try self.imageStorage.readImage(named: item.imageFileName, inClipHaving: item.clipId))
             } catch ImageStorageError.notFound {
                 return .failure(.notFound)
             } catch {
@@ -218,7 +218,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError> {
         return self.queue.sync {
             do {
-                return .success(try self.imageStorage.readImage(named: item.thumbnailFileName, inClip: item.clipUrl))
+                return .success(try self.imageStorage.readImage(named: item.thumbnailFileName, inClipHaving: item.clipId))
             } catch ImageStorageError.notFound {
                 return .failure(.notFound)
             } catch {
@@ -474,9 +474,9 @@ extension ClipStorage: ClipStorageProtocol {
             .flatMap { $0.items }
             .forEach { clipItem in
                 // swiftlint:disable:next force_unwrapping
-                try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClip: URL(string: clipItem.clipUrl)!)
+                try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
                 // swiftlint:disable:next force_unwrapping
-                try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClip: URL(string: clipItem.clipUrl)!)
+                try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClipHaving: clipItem.clipId)
             }
 
         do {
@@ -502,8 +502,8 @@ extension ClipStorage: ClipStorageProtocol {
             }
             let removeTarget = ClipItem.make(by: item)
 
-            try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClip: clipItem.clipUrl)
-            try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClip: clipItem.clipUrl)
+            try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
+            try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClipHaving: clipItem.clipId)
 
             do {
                 try realm.write {

@@ -33,7 +33,7 @@ extension ClipObject {
 
 extension ClipItemObject {
     static func makeDefault(id: String = "",
-                            clipUrl: String = "",
+                            clipId: String = "",
                             clipIndex: Int = 0,
                             thumbnailFileName: String = "",
                             thumbnailHeight: Double = 0,
@@ -45,7 +45,7 @@ extension ClipItemObject {
     {
         let obj = ClipItemObject()
         obj.id = id
-        obj.clipUrl = clipUrl
+        obj.clipId = clipId
         obj.clipIndex = clipIndex
         obj.thumbnailFileName = thumbnailFileName
         obj.thumbnailHeight = thumbnailHeight

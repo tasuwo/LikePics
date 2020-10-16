@@ -7,7 +7,7 @@ def test_shared_pods
 end
 
 target 'Persistence' do
-  pod 'RealmSwift', '~> 5.4.3'
+  pod 'RealmSwift', '~> 5.5.0'
 
   target 'PersistenceTests' do
     inherit! :search_paths

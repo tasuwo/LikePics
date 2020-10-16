@@ -37,6 +37,27 @@ enum ClipStorageMigrationService {
             Self.migrateToV5(migration)
         } else if oldSchemaVersion < 6 {
             Self.migrateToV6(migration)
+        } else if oldSchemaVersion < 7 {
+            Self.migrateToV7(migration)
+        }
+    }
+
+    private static func migrateToV7(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
+            // swiftlint:disable:next force_cast
+            let clipId = oldObject!["id"] as! String
+            // swiftlint:disable:next force_cast
+            let clipUrlString = oldObject!["url"] as! String
+
+            newObject!["url"] = clipUrlString
+
+            migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+                // swiftlint:disable:next force_cast
+                guard oldObject!["clipUrl"] as! String == clipUrlString else { return }
+
+                newObject!["imageUrl"] = oldObject!["imageUrl"]
+                newObject!["clipId"] = clipId
+            }
         }
     }
 
