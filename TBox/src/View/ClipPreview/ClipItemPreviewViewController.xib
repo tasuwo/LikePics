@@ -27,10 +27,10 @@
             <viewLayoutGuide key="safeArea" id="oFO-2E-sV7"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="yvr-dk-LFa" firstAttribute="leading" secondItem="oFO-2E-sV7" secondAttribute="leading" id="BBx-gm-U3i"/>
-                <constraint firstItem="yvr-dk-LFa" firstAttribute="top" secondItem="oFO-2E-sV7" secondAttribute="top" id="X47-JT-OVn"/>
-                <constraint firstItem="oFO-2E-sV7" firstAttribute="bottom" secondItem="yvr-dk-LFa" secondAttribute="bottom" id="spS-dQ-jCN"/>
-                <constraint firstItem="yvr-dk-LFa" firstAttribute="trailing" secondItem="oFO-2E-sV7" secondAttribute="trailing" id="tcL-eR-jfx"/>
+                <constraint firstItem="yvr-dk-LFa" firstAttribute="leading" secondItem="iRe-7r-fh0" secondAttribute="leading" id="BBx-gm-U3i"/>
+                <constraint firstItem="yvr-dk-LFa" firstAttribute="top" secondItem="iRe-7r-fh0" secondAttribute="top" id="X47-JT-OVn"/>
+                <constraint firstAttribute="bottom" secondItem="yvr-dk-LFa" secondAttribute="bottom" id="spS-dQ-jCN"/>
+                <constraint firstItem="yvr-dk-LFa" firstAttribute="trailing" secondItem="iRe-7r-fh0" secondAttribute="trailing" id="tcL-eR-jfx"/>
             </constraints>
             <point key="canvasLocation" x="97" y="135"/>
         </view>
