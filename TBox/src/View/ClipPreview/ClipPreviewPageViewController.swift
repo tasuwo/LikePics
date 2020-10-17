@@ -34,10 +34,8 @@ class ClipPreviewPageViewController: UIPageViewController {
             self.setNeedsStatusBarAppearanceUpdate()
 
             guard let navigationController = self.navigationController else { return }
-            UIView.animate(withDuration: 0.1, animations: {
-                navigationController.toolbar.alpha = self.isFullscreen ? 0 : 1
-                navigationController.navigationBar.alpha = self.isFullscreen ? 0 : 1
-            })
+            navigationController.toolbar.isHidden = self.isFullscreen
+            navigationController.navigationBar.isHidden = self.isFullscreen
         }
     }
 
