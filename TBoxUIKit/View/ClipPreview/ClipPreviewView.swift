@@ -91,7 +91,18 @@ public class ClipPreviewView: UIView {
         return min(widthScale, heightScale)
     }
 
+    /**
+     * SafeAreaのない端末にて、
+     *
+     * 1. 初期状態からダブルタップ
+     * 2. NavigationBarが非表示になる
+     * 3. `ClipItemPreviewViewController#viewDidLayoutSubviews` が実行される
+     * 4. このメソッドが実行され、スケールが初期位置に戻される
+     *
+     * といった事象が発生した。そのため、レイアウト調整は初期状態に限る
+     */
     public func shouldRecalculateInitialScale() {
+        guard self.scrollView.zoomScale == self.scrollView.minimumZoomScale else { return }
         guard let image = self.imageView.image else { return }
         self.setupScale(image, on: self.bounds.size)
         self.updateConstraints(for: image, on: self.bounds)
