@@ -49,7 +49,7 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
         guard let pageView = self.pageViewController?.currentViewController?.previewView else {
             return .zero
         }
-        return pageView.convert(pageView.imageViewFrame, to: containerView)
+        return pageView.convert(pageView.initialImageFrame, to: containerView)
     }
 }
 
@@ -66,6 +66,6 @@ extension ClipPreviewViewController: ClipInformationPresentingAnimatorDataSource
         guard let pageView = self.pageViewController?.currentViewController?.previewView else {
             return .zero
         }
-        return pageView.convert(pageView.imageViewFrame, to: containerView)
+        return pageView.convert(pageView.initialImageFrame, to: containerView)
     }
 }

@@ -43,8 +43,14 @@ public class ClipPreviewView: UIView {
         }
     }
 
-    public var imageViewFrame: CGRect {
-        self.imageView.frame
+    public var initialImageFrame: CGRect {
+        guard let image = self.imageView.image else { return .zero }
+        let scale = Self.calcScaleToFit(image, on: self.bounds.size)
+        let initialImageSize = CGSize(width: image.size.width * scale,
+                                      height: image.size.height * scale)
+        return CGRect(origin: CGPoint(x: (self.bounds.width - initialImageSize.width) / 2,
+                                      y: (self.bounds.height - initialImageSize.height) / 2),
+                      size: initialImageSize)
     }
 
     public var zoomGestureRecognizer: UITapGestureRecognizer {
