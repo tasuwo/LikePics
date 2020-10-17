@@ -130,11 +130,11 @@ public class ClipPreviewView: UIView {
             }
         }()
 
-        let currentHorizonalInset = max((self.bounds.width - image.size.width * self.scrollView.zoomScale) / 2, 0)
+        let currentHorizontalInset = max((self.bounds.width - image.size.width * self.scrollView.zoomScale) / 2, 0)
         let currentVerticalInset = max((self.bounds.height - image.size.height * self.scrollView.zoomScale) / 2, 0)
         let width = self.scrollView.bounds.width / nextScale
         let height = self.scrollView.bounds.height / nextScale
-        let nextPoint = CGPoint(x: point.x - (width / 2.0) - currentHorizonalInset,
+        let nextPoint = CGPoint(x: point.x - (width / 2.0) - currentHorizontalInset,
                                 y: point.y - (height / 2.0) - currentVerticalInset)
         let nextRect = CGRect(origin: nextPoint, size: .init(width: width, height: height))
 
@@ -153,16 +153,16 @@ public class ClipPreviewView: UIView {
     func updateConstraints(for image: UIImage, on frame: CGRect) {
         let currentScale = self.scrollView.zoomScale
 
-        let horizonalInset = max((frame.width - image.size.width * currentScale) / 2, 0)
+        let horizontalInset = max((frame.width - image.size.width * currentScale) / 2, 0)
         let verticalInset = max((frame.height - image.size.height * currentScale) / 2, 0)
 
         self.topInsetConstraint.constant = verticalInset
         self.bottomInsetConstraint.constant = verticalInset
-        self.leftInsetConstraint.constant = horizonalInset
-        self.rightInsetConstraint.constant = horizonalInset
+        self.leftInsetConstraint.constant = horizontalInset
+        self.rightInsetConstraint.constant = horizontalInset
 
         self.layoutIfNeeded()
-        self.scrollView.contentSize = .init(width: self.imageView.frame.width + horizonalInset * 2,
+        self.scrollView.contentSize = .init(width: self.imageView.frame.width + horizontalInset * 2,
                                             height: self.imageView.frame.height + verticalInset * 2)
     }
 }
