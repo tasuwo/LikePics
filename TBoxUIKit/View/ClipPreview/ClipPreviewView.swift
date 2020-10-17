@@ -109,6 +109,7 @@ public class ClipPreviewView: UIView {
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.alwaysBounceVertical = false
         self.scrollView.alwaysBounceHorizontal = false
+        self.scrollView.contentInsetAdjustmentBehavior = .never
     }
 
     private func setupGestureRecognizer() {
