@@ -142,12 +142,12 @@ public class ClipPreviewView: UIView {
     }
 
     func setupScale(_ image: UIImage, on size: CGSize) {
-        let scale = Self.calcScaleToFit(image, on: size)
+        let scaleToFit = Self.calcScaleToFit(image, on: size)
 
-        self.scrollView.minimumZoomScale = scale
-        self.scrollView.maximumZoomScale = scale * 3
+        self.scrollView.minimumZoomScale = min(1, scaleToFit)
+        self.scrollView.maximumZoomScale = max(1, scaleToFit)
 
-        self.scrollView.zoomScale = scale
+        self.scrollView.zoomScale = self.scrollView.minimumZoomScale
     }
 
     func updateConstraints(for image: UIImage, on frame: CGRect) {
