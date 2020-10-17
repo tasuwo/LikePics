@@ -171,7 +171,7 @@ extension ClipInformationViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
-        self.presenter.addTagsToClip(tagIds)
+        self.presenter.replaceTagsOfClip(tagIds)
     }
 }
 

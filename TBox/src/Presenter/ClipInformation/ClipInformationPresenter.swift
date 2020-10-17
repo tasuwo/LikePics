@@ -62,9 +62,9 @@ class ClipInformationPresenter {
             })
     }
 
-    func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
+    func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {
+        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byReplacingTagsHaving: Array(tagIds)) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to replace tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
     }

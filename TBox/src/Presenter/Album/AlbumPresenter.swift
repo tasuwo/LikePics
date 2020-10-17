@@ -280,9 +280,9 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byAddingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add tags (\(tagIds.joined(separator: ",")) to clip \(clipId). (code: \(error.rawValue))
+            Failed to replace tags (\(tagIds.joined(separator: ",")) of clip \(clipId). (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
         }
