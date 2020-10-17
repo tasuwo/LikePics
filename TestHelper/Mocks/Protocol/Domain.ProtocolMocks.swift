@@ -3,13 +3,8 @@
 ///
 
 import Combine
-@testable import Common
 @testable import Domain
 import Erik
-@testable import Persistence
-import RealmSwift
-@testable import TBoxUIKit
-import UIKit
 import WebKit
 
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
@@ -459,47 +454,6 @@ public class WebImageProviderMock: WebImageProvider {
             return modifyRequestHandler(request)
         }
         fatalError("modifyRequestHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class ImageStorageProtocolMock: ImageStorageProtocol {
-    public init() { }
-
-    public private(set) var saveCallCount = 0
-    public var saveHandler: ((Data, String, Clip.Identity) throws -> Void)?
-    public func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
-        saveCallCount += 1
-        if let saveHandler = saveHandler {
-            try saveHandler(image, fileName, clipId)
-        }
-    }
-
-    public private(set) var deleteCallCount = 0
-    public var deleteHandler: ((String, Clip.Identity) throws -> Void)?
-    public func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
-        deleteCallCount += 1
-        if let deleteHandler = deleteHandler {
-            try deleteHandler(fileName, clipId)
-        }
-    }
-
-    public private(set) var deleteAllCallCount = 0
-    public var deleteAllHandler: ((Clip.Identity) throws -> Void)?
-    public func deleteAll(inClipHaving clipId: Clip.Identity) throws {
-        deleteAllCallCount += 1
-        if let deleteAllHandler = deleteAllHandler {
-            try deleteAllHandler(clipId)
-        }
-    }
-
-    public private(set) var readImageCallCount = 0
-    public var readImageHandler: ((String, Clip.Identity) throws -> (Data))?
-    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data {
-        readImageCallCount += 1
-        if let readImageHandler = readImageHandler {
-            return try readImageHandler(name, clipId)
-        }
-        fatalError("readImageHandler returns can't have a default value thus its handler must be set")
     }
 }
 
