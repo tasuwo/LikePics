@@ -184,7 +184,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         UIView.animate(
             withDuration: Self.cancelAnimateDuration,
             delay: 0,
-            options: [.curveEaseIn],
+            options: [.curveEaseOut],
             animations: {
                 innerContext.animatingView.frame = innerContext.initialImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds
