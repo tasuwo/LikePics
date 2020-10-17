@@ -33,9 +33,11 @@ class ClipPreviewPageViewController: UIPageViewController {
         didSet {
             self.setNeedsStatusBarAppearanceUpdate()
 
-            guard let navigationController = self.navigationController else { return }
-            navigationController.toolbar.isHidden = self.isFullscreen
-            navigationController.navigationBar.isHidden = self.isFullscreen
+            UIView.animate(withDuration: 0.2) {
+                self.navigationController?.toolbar.isHidden = self.isFullscreen
+                self.navigationController?.navigationBar.isHidden = self.isFullscreen
+                self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.backgroundClient.color
+            }
         }
     }
 
