@@ -43,7 +43,7 @@ class AppRootTabBarController: UITabBarController {
             return
         }
 
-        let searchEntryViewController = self.factory.makeSearchEntryViewController()
+        // let searchEntryViewController = self.factory.makeSearchEntryViewController()
         let settingsViewController = self.factory.makeSettingsViewController()
 
         topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
@@ -55,18 +55,18 @@ class AppRootTabBarController: UITabBarController {
         tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
                                                         image: UIImage(systemName: "tag"),
                                                         tag: 2)
-        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
-                                                            image: UIImage(systemName: "magnifyingglass"),
-                                                            tag: 3)
+        // searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
+        //                                                     image: UIImage(systemName: "magnifyingglass"),
+        //                                                     tag: 3)
         settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
                                                          image: UIImage(systemName: "gear"),
-                                                         tag: 4)
+                                                         tag: 3)
 
         self.viewControllers = [
             topClipsListViewController,
             tagListViewController,
             albumListViewController,
-            searchEntryViewController,
+            // searchEntryViewController,
             settingsViewController
         ]
     }
