@@ -68,7 +68,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             targetImageView.isHidden = false
             selectedImageView.isHidden = false
             selectedCell.alpha = 1
-            from.view.alpha = 1.0
+            from.componentsOverPresentingView(self).forEach { $0.alpha = 1.0 }
             to.view.backgroundColor = backgroundView.backgroundColor
             animatingImageView.removeFromSuperview()
             backgroundView.removeFromSuperview()
@@ -94,6 +94,14 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
 
             to.view.alpha = 1.0
             backgroundView.alpha = 1.0
+        }
+
+        UIView.animate(
+            withDuration: self.transitionDuration(using: transitionContext) / 3,
+            delay: (self.transitionDuration(using: transitionContext) / 3) * 2,
+            options: [.curveEaseIn]
+        ) {
+            from.componentsOverPresentingView(self).forEach { $0.alpha = 0.0 }
         }
 
         CATransaction.commit()

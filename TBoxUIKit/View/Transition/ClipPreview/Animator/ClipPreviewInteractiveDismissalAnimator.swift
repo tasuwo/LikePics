@@ -25,7 +25,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let startingCornerRadius: CGFloat = 0
     private static let finalCornerRadius: CGFloat = 10
 
-    private static let cancelAnimateDuration: TimeInterval = 0.2
+    private static let cancelAnimateDuration: TimeInterval = 0.15
     private static let endAnimateDuration: TimeInterval = 0.2
     private static let fallbackAnimateDuration: TimeInterval = 0.2
 
@@ -137,6 +137,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                                           hiddenViews: [toCell, fromImageView],
                                           removeViews: [animatingView, backgroundView],
                                           fromView: from.view,
+                                          overViews: to.componentsOverPresentingView(self),
                                           currentCornerRadius: cornerRadius,
                                           innerContext: innerContext)
             } else {
@@ -159,6 +160,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                                       hiddenViews: [UIView],
                                       removeViews: [UIView],
                                       fromView: UIView,
+                                      overViews: [UIView],
                                       currentCornerRadius: CGFloat,
                                       innerContext: InnerContext)
     {
@@ -168,6 +170,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             hiddenViews.forEach { $0.isHidden = false }
             removeViews.forEach { $0.removeFromSuperview() }
             fromView.backgroundColor = innerContext.backgroundView.backgroundColor
+            overViews.forEach { $0.alpha = 1.0 }
             innerContext.transitionContext.cancelInteractiveTransition()
             innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
@@ -192,6 +195,14 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                 presentViews.forEach { $0?.alpha = 1 }
             }
         )
+
+        UIView.animate(
+            withDuration: Self.cancelAnimateDuration / 3,
+            delay: (Self.cancelAnimateDuration / 3) * 2,
+            options: [.curveEaseIn]
+        ) {
+            overViews.forEach { $0.alpha = 0.0 }
+        }
 
         CATransaction.commit()
     }

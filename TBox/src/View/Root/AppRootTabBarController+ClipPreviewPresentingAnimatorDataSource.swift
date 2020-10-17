@@ -39,6 +39,10 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         return self.selectedViewController?.view
     }
 
+    func componentsOverPresentingView(_ animator: ClipPreviewAnimator) -> [UIView] {
+        return [self.tabBar]
+    }
+
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forIndex index: Int) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
         guard let selectedCell = viewController.previewingCell else { return .zero }
