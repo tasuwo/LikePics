@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipInformationPresentationAnimator: NSObject {
-    private static let transitionDuration: TimeInterval = 0.3
+    private static let transitionDuration: TimeInterval = 0.25
 
     private weak var delegate: ClipInformationAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -67,7 +67,11 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             transitionContext.completeTransition(true)
         }
 
-        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
+        UIView.animate(
+            withDuration: self.transitionDuration(using: transitionContext),
+            delay: 0,
+            options: [.curveEaseInOut]
+        ) {
             animatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
             from.view.alpha = 0
             to.view.alpha = 1.0

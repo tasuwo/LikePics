@@ -16,9 +16,9 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     private static let startingAlpha: CGFloat = 1.0
     private static let finalAlpha: CGFloat = 0
 
-    private static let cancelAnimateDuration: Double = 0.5
-    private static let endAnimateDuration: Double = 0.25
-    private static let fallbackAnimateDuration: Double = 0.3
+    private static let cancelAnimateDuration: Double = 0.2
+    private static let endAnimateDuration: Double = 0.2
+    private static let fallbackAnimateDuration: Double = 0.2
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
@@ -146,7 +146,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             delay: 0,
             usingSpringWithDamping: 0.9,
             initialSpringVelocity: 0,
-            options: [],
+            options: [.curveEaseInOut],
             animations: {
                 innerContext.animatingView.frame = innerContext.initialImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds
@@ -172,7 +172,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         UIView.animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
-            options: [],
+            options: [.curveEaseInOut],
             animations: {
                 innerContext.animatingView.frame = finalImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds

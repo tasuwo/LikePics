@@ -18,7 +18,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     private static let cancelAnimateDuration: TimeInterval = 0.25
     private static let endAnimateDuration: TimeInterval = 0.25
-    private static let fallbackAnimateDuration: TimeInterval = 0.3
+    private static let fallbackAnimateDuration: TimeInterval = 0.25
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
@@ -143,7 +143,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
             delay: 0,
             usingSpringWithDamping: 0.9,
             initialSpringVelocity: 0,
-            options: [],
+            options: [.curveEaseInOut],
             animations: {
                 innerContext.animatingView.frame = innerContext.initialImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds
@@ -169,7 +169,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         UIView.animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
-            options: [],
+            options: [.curveEaseInOut],
             animations: {
                 innerContext.animatingView.frame = finalImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds

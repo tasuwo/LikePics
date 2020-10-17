@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
-    static let transitionDuration: TimeInterval = 0.3
+    static let transitionDuration: TimeInterval = 0.2
 
     private weak var delegate: ClipPreviewAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -81,7 +81,11 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
+        UIView.animate(
+            withDuration: self.transitionDuration(using: transitionContext),
+            delay: 0,
+            options: [.curveEaseIn]
+        ) {
             animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
             animatingImageView.frame = animatingView.bounds
 

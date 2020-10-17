@@ -24,9 +24,9 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let startingCornerRadius: CGFloat = 0
     private static let finalCornerRadius: CGFloat = 10
 
-    private static let cancelAnimateDuration: TimeInterval = 0.5
-    private static let endAnimateDuration: TimeInterval = 0.25
-    private static let fallbackAnimateDuration: TimeInterval = 0.3
+    private static let cancelAnimateDuration: TimeInterval = 0.2
+    private static let endAnimateDuration: TimeInterval = 0.2
+    private static let fallbackAnimateDuration: TimeInterval = 0.2
 
     private var logger: TBoxLoggable
     private var fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -169,9 +169,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         UIView.animate(
             withDuration: Self.cancelAnimateDuration,
             delay: 0,
-            usingSpringWithDamping: 0.9,
-            initialSpringVelocity: 0,
-            options: [],
+            options: [.curveEaseIn],
             animations: {
                 innerContext.animatingView.frame = innerContext.initialImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds
@@ -205,7 +203,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         UIView.animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
-            options: [],
+            options: [.curveEaseIn],
             animations: {
                 innerContext.animatingView.frame = finalImageFrame
                 innerContext.animatingImageView.frame = innerContext.animatingView.bounds
