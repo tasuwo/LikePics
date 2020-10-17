@@ -104,6 +104,8 @@
 		2C5A4361251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A4360251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift */; };
 		2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */; };
 		2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */; };
+		2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */; };
+		2C6C79CC253B409F00A8A9B8 /* ClipStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79CB253B409F00A8A9B8 /* ClipStorageError.swift */; };
 		2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */; };
 		2C6E098C24E6D94F00B541D9 /* ShareNavigationRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */; };
@@ -653,6 +655,8 @@
 		2C5A4360251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListNavigatoinItemsProvider.swift; sourceTree = "<group>"; };
 		2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineUIButton.swift; sourceTree = "<group>"; };
+		2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryServiceProtocol.swift; sourceTree = "<group>"; };
+		2C6C79CB253B409F00A8A9B8 /* ClipStorageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageError.swift; sourceTree = "<group>"; };
 		2C6C8F8A24DF0BAC00692301 /* ClipSelectionCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionView.swift; sourceTree = "<group>"; };
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
 		2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Twitter.swift; sourceTree = "<group>"; };
@@ -1486,6 +1490,15 @@
 			path = Migration;
 			sourceTree = "<group>";
 		};
+		2C6C79CA253B409300A8A9B8 /* ClipStorage */ = {
+			isa = PBXGroup;
+			children = (
+				2C6C79CB253B409F00A8A9B8 /* ClipStorageError.swift */,
+				2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */,
+			);
+			path = ClipStorage;
+			sourceTree = "<group>";
+		};
 		2C6C8F8D24DF981800692301 /* WebImageProvider */ = {
 			isa = PBXGroup;
 			children = (
@@ -1744,7 +1757,8 @@
 		2C99278424DDCAA100672CA7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */,
+				2C6C79CA253B409300A8A9B8 /* ClipStorage */,
+				2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */,
 				2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */,
 			);
 			path = Storage;
@@ -3244,6 +3258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */,
+				2C6C79CC253B409F00A8A9B8 /* ClipStorageError.swift in Sources */,
 				2CD25AE4251E454500BEE210 /* ClipListQuery.swift in Sources */,
 				2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
@@ -3269,6 +3284,7 @@
 				2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */,
 				2C8AF8A524E3EE4F00CB0642 /* ImageSize.swift in Sources */,
 				2C45D40024EEACF80045B6D3 /* Album.swift in Sources */,
+				2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */,
 				2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
