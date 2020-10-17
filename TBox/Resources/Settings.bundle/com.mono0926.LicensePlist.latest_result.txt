@@ -1,0 +1,145 @@
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: LicensePlist, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 3.0.4
+
+name: Nimble, nameSpecified: 
+body: Apache License
+     …
+version: 8.0.9
+
+name: Nimble, nameSpecified: 
+body: Apache License
+     …
+version: 8.0.9
+
+name: Nimble, nameSpecified: 
+body: Apache License
+     …
+version: 8.0.9
+
+name: Nimble, nameSpecified: 
+body: Apache License
+     …
+version: 8.0.9
+
+name: Quick, nameSpecified: 
+body: Apache License
+     …
+version: 2.2.1
+
+name: Quick, nameSpecified: 
+body: Apache License
+     …
+version: 2.2.1
+
+name: Quick, nameSpecified: 
+body: Apache License
+     …
+version: 2.2.1
+
+name: Quick, nameSpecified: 
+body: Apache License
+     …
+version: 2.2.1
+
+name: Realm, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: Realm, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: RealmSwift, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: RealmSwift, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: Sourcery, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 1.0.0
+
+name: SwiftGen, nameSpecified: 
+body: MIT Licence
+
+Copyrig…
+version: 6.4.0
+
+name: mockolo, nameSpecified: , owner: uber, version: 1.2.8
+
+name: mockolo, nameSpecified: , owner: uber, version: 1.2.8
+
+name: mockolo, nameSpecified: , owner: uber, version: 1.2.8
+
+name: Commandant, nameSpecified: Commandant, owner: Carthage, version: 0.17.0
+
+name: Nimble, nameSpecified: Nimble, owner: Quick, version: 8.1.2
+
+name: Quick, nameSpecified: Quick, owner: Quick, version: 2.2.1
+
+name: SourceKitten, nameSpecified: SourceKitten, owner: jpsim, version: 0.30.0
+
+name: SwiftFormat, nameSpecified: SwiftFormat, owner: nicklockwood, version: 0.46.3
+
+name: SwiftLint, nameSpecified: SwiftLint, owner: realm, version: 0.40.2
+
+name: SwiftyTextTable, nameSpecified: SwiftyTextTable, owner: scottrhoyt, version: 0.9.0
+
+name: SWXMLHash, nameSpecified: SWXMLHash, owner: drmohundro, version: 5.0.1
+
+name: Yams, nameSpecified: Yams, owner: jpsim, version: 4.0.0
+
+add-version-numbers: false
+
+LicensePlist Version: 3.0.4

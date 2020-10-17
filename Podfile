@@ -6,6 +6,17 @@ def test_shared_pods
     pod 'Nimble',        '~> 8.0.5'
 end
 
+target 'TBox' do
+  pod 'LicensePlist', '~> 3.0.4'
+  pod 'SwiftGen', '~> 6.0'
+  pod 'Sourcery', '~> 1.0'
+
+  target 'TBoxTests' do
+    inherit! :search_paths
+    test_shared_pods
+  end
+end
+
 target 'Persistence' do
   pod 'RealmSwift', '~> 10.0.0'
 
@@ -19,17 +30,6 @@ target 'Domain' do
   pod 'Erik', '~> 5.0.0'
 
   target 'DomainTests' do
-    inherit! :search_paths
-    test_shared_pods
-  end
-end
-
-target 'TBox' do
-
-  pod 'SwiftGen', '~> 6.0'
-  pod 'Sourcery', '~> 1.0'
-
-  target 'TBoxTests' do
     inherit! :search_paths
     test_shared_pods
   end

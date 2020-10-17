@@ -109,6 +109,7 @@
 		2C6C7A21253B519E00A8A9B8 /* Common.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1D253B519E00A8A9B8 /* Common.ProtocolMocks.swift */; };
 		2C6C7A22253B519E00A8A9B8 /* Persistence.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1E253B519E00A8A9B8 /* Persistence.ProtocolMocks.swift */; };
 		2C6C7A23253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1F253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift */; };
+		2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2C6C7A3D253B552700A8A9B8 /* Settings.bundle */; };
 		2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C6C8F9124DF98F000692301 /* WebImageProvidingService_Twitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */; };
 		2C6E098C24E6D94F00B541D9 /* ShareNavigationRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */; };
@@ -663,6 +664,7 @@
 		2C6C7A1D253B519E00A8A9B8 /* Common.ProtocolMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C6C7A1E253B519E00A8A9B8 /* Persistence.ProtocolMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C6C7A1F253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
+		2C6C7A3D253B552700A8A9B8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		2C6C8F8A24DF0BAC00692301 /* ClipSelectionCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionView.swift; sourceTree = "<group>"; };
 		2C6C8F8E24DF982800692301 /* WebImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvider.swift; sourceTree = "<group>"; };
 		2C6C8F9024DF98F000692301 /* WebImageProvidingService_Twitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Twitter.swift; sourceTree = "<group>"; };
@@ -1608,6 +1610,7 @@
 				2CA0229524DD9F5F00329251 /* Assets.xcassets */,
 				2CA0229A24DD9F5F00329251 /* Info.plist */,
 				2C6E09B824E8101900B541D9 /* Localizable.strings */,
+				2C6C7A3D253B552700A8A9B8 /* Settings.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2365,6 +2368,7 @@
 				2CFC5CF4250DEDD9001A02E4 /* SwiftGen */,
 				2CA022AE24DD9F6E00329251 /* SwiftFormat */,
 				2CA022AF24DD9F8300329251 /* SwiftLint */,
+				2C6C7A2C253B53D100A8A9B8 /* License plist */,
 				2CA0228524DD9F5E00329251 /* Sources */,
 				2CA0228624DD9F5E00329251 /* Frameworks */,
 				2CA0228724DD9F5E00329251 /* Resources */,
@@ -2671,6 +2675,7 @@
 				2C45D41124EEC04B0045B6D3 /* AlbumListViewController.xib in Resources */,
 				2C3ADF6124EEE6DF007C4AA0 /* AlbumSelectionViewController.xib in Resources */,
 				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
+				2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
 				2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */,
 				2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */,
@@ -2778,6 +2783,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\nswift run -c release swiftformat --config $PROJECT_DIR/.swiftformat \"$SRCROOT\"\n";
+		};
+		2C6C7A2C253B53D100A8A9B8 /* License plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "License plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\" --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --package-path $SRCROOT/BuildTools/Package.swift \\\n                                            --config-path $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n\n\n";
 		};
 		2CA022AE24DD9F6E00329251 /* SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;

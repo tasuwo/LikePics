@@ -8,6 +8,7 @@ PODS:
   - Kingfisher (5.15.6):
     - Kingfisher/Core (= 5.15.6)
   - Kingfisher/Core (5.15.6)
+  - LicensePlist (3.0.4)
   - Nimble (8.0.9)
   - Quick (2.2.1)
   - Realm (10.0.0):
@@ -21,6 +22,7 @@ PODS:
 DEPENDENCIES:
   - Erik (~> 5.0.0)
   - Kingfisher (~> 5.15.3)
+  - LicensePlist (~> 3.0.4)
   - Nimble (~> 8.0.5)
   - Quick (~> 2.2.0)
   - RealmSwift (~> 10.0.0)
@@ -32,6 +34,7 @@ SPEC REPOS:
     - Erik
     - Kanna
     - Kingfisher
+    - LicensePlist
     - Nimble
     - Quick
     - Realm
@@ -43,6 +46,7 @@ SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
   Kanna: 113d111e95d7e903efe0c3eb7221f7635716084c
   Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
+  LicensePlist: 89acb246ba9345fdc2d3a91f04353c214f3d0bd4
   Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
   Quick: f5754d69b7013f5864c29aab9ae6f0c79c5bc200
   Realm: 5654b8e5e45034d07b219e089034be2ef7d1e7bf
@@ -50,6 +54,6 @@ SPEC CHECKSUMS:
   Sourcery: 928a146ea9b777fa64b0c6ce915c4128b4488cff
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
 
-PODFILE CHECKSUM: d27fa96be8ef03e0e7bd4b7d249cbb29cc655fdd
+PODFILE CHECKSUM: 7673053a49fba4d05eae9470b4241bc33c5a9b5b
 
 COCOAPODS: 1.10.0.rc.1
