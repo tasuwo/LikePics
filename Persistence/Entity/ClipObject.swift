@@ -42,21 +42,4 @@ extension Clip: Persistable {
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
-
-    func asManagedObject() -> ClipObject {
-        let obj = ClipObject()
-        obj.id = self.id
-        obj.url = self.url?.absoluteString
-        obj.descriptionText = self.description
-        self.items.forEach {
-            obj.items.append($0.asManagedObject())
-        }
-        if !self.tags.isEmpty {
-            fatalError("Unsupported to generate managed object for clips containing tag")
-        }
-        obj.isHidden = self.isHidden
-        obj.registeredAt = self.registeredDate
-        obj.updatedAt = self.updatedDate
-        return obj
-    }
 }

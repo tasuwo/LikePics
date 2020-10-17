@@ -21,11 +21,4 @@ extension Tag: Persistable {
     static func make(by managedObject: TagObject) -> Tag {
         return .init(id: managedObject.id, name: managedObject.name)
     }
-
-    func asManagedObject() -> TagObject {
-        let obj = TagObject()
-        obj.id = self.id
-        obj.name = self.name
-        return obj
-    }
 }

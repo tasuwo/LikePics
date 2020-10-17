@@ -28,16 +28,4 @@ extension Album: Persistable {
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
-
-    func asManagedObject() -> AlbumObject {
-        let obj = AlbumObject()
-        obj.id = self.id
-        obj.title = self.title
-        self.clips.forEach {
-            obj.clips.append($0.asManagedObject())
-        }
-        obj.registeredAt = self.registeredDate
-        obj.updatedAt = self.updatedDate
-        return obj
-    }
 }

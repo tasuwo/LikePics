@@ -6,8 +6,5 @@ import RealmSwift
 
 protocol Persistable {
     associatedtype ManagedObject: RealmSwift.Object
-
     static func make(by managedObject: ManagedObject) -> Self
-
-    func asManagedObject() -> ManagedObject
 }

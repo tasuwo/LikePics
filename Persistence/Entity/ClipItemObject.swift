@@ -53,20 +53,4 @@ extension ClipItem: Persistable {
                         registeredDate: managedObject.registeredAt,
                         updatedDate: managedObject.updatedAt)
     }
-
-    func asManagedObject() -> ClipItemObject {
-        let obj = ClipItemObject()
-        obj.id = self.id
-        obj.clipId = self.clipId
-        obj.clipIndex = self.clipIndex
-        obj.thumbnailUrl = self.thumbnailUrl?.absoluteString
-        obj.thumbnailFileName = self.thumbnailFileName
-        obj.thumbnailHeight = self.thumbnailSize.height
-        obj.thumbnailWidth = self.thumbnailSize.width
-        obj.imageFileName = self.imageFileName
-        obj.imageUrl = self.imageUrl?.absoluteString
-        obj.registeredAt = self.registeredDate
-        obj.updatedAt = self.updatedDate
-        return obj
-    }
 }
