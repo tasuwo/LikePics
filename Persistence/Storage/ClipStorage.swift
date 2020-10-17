@@ -329,6 +329,41 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else {
+            return .failure(.internalError)
+        }
+
+        var tags: [TagObject] = []
+        for tagId in tagIds {
+            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else {
+                return .failure(.notFound)
+            }
+            tags.append(tagObj)
+        }
+
+        var clips: [ClipObject] = []
+        for clipId in clipIds {
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+                return .failure(.notFound)
+            }
+            clips.append(clipObj)
+        }
+
+        do {
+            try realm.write {
+                for clip in clips {
+                    clip.tags.removeAll()
+                    tags.forEach { clip.tags.append($0) }
+                    clip.updatedAt = Date()
+                }
+            }
+            return .success(clips.map { Clip.make(by: $0) })
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)

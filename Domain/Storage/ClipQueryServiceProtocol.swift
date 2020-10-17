@@ -14,4 +14,3 @@ public protocol ClipQueryServiceProtocol {
     func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError>
     func queryAllTags() -> Result<TagListQuery, ClipStorageError>
 }
-

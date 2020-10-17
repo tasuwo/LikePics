@@ -652,14 +652,17 @@ class ClipStorageSpec: QuickSpec {
                     try! realm.write {
                         let obj1 = ClipObject.makeDefault(id: "1",
                                                           url: "https://localhost/1",
+                                                          tags: [TagObject.makeDefault(id: "444", name: "poyo")],
                                                           registeredAt: Date(timeIntervalSince1970: 0),
                                                           updatedAt: Date(timeIntervalSince1970: 1000))
                         let obj2 = ClipObject.makeDefault(id: "2",
                                                           url: "https://localhost/2",
+                                                          tags: [TagObject.makeDefault(id: "555", name: "huwa")],
                                                           registeredAt: Date(timeIntervalSince1970: 1000),
                                                           updatedAt: Date(timeIntervalSince1970: 2000))
                         let obj3 = ClipObject.makeDefault(id: "3",
                                                           url: "https://localhost/3",
+                                                          tags: [TagObject.makeDefault(id: "666", name: "pien")],
                                                           registeredAt: Date(timeIntervalSince1970: 2000),
                                                           updatedAt: Date(timeIntervalSince1970: 3000))
                         let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
@@ -684,36 +687,43 @@ class ClipStorageSpec: QuickSpec {
                         fail("Unexpected failure: \(error)")
                     }
                 }
-                it("返ってきたクリップが更新されている") {
+                it("返ってきたクリップにタグが追加されている") {
                     guard case let .success(v) = result else {
                         fail("Unexpected failure")
                         return
                     }
                     let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
                     expect(clips).to(haveCount(3))
+                    guard clips.count == 3 else { return }
                     expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
-                    expect(clips[0].tags).to(haveCount(3))
+                    expect(clips[0].tags).to(haveCount(4))
+                    guard clips[0].tags.count == 4 else { return }
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[3]).to(equal(.makeDefault(id: "444", name: "poyo")))
                     expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
                     // 更新時刻が更新されている
                     expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal(URL(string: "https://localhost/2")))
-                    expect(clips[1].tags).to(haveCount(3))
+                    expect(clips[1].tags).to(haveCount(4))
+                    guard clips[1].tags.count == 3 else { return }
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[3]).to(equal(.makeDefault(id: "555", name: "fuwa")))
                     expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
                     // 更新時刻が更新されている
                     expect(clips[1].updatedDate).notTo(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal(URL(string: "https://localhost/3")))
-                    expect(clips[2].tags).to(haveCount(3))
+                    expect(clips[2].tags).to(haveCount(4))
+                    guard clips[2].tags.count == 3 else { return }
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[3]).to(equal(.makeDefault(id: "666", name: "pien")))
                     expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
                     // 更新時刻が更新されている
                     expect(clips[2].updatedDate).notTo(equal(Date(timeIntervalSince1970: 3000)))
@@ -721,51 +731,68 @@ class ClipStorageSpec: QuickSpec {
                 it("Realm内のクリップが更新されている") {
                     let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
                     expect(clips).to(haveCount(3))
+                    guard clips.count == 3 else { return }
                     expect(clips[0].url).to(equal("https://localhost/1"))
-                    expect(clips[0].tags).to(haveCount(3))
+                    expect(clips[0].tags).to(haveCount(4))
+                    guard clips[0].tags.count == 4 else { return }
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
                     expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[3].id).to(equal("444"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[3].name).to(equal("poyo"))
                     expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                     // 更新時刻が更新されている
                     expect(clips[0].updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
 
                     expect(clips[1].url).to(equal("https://localhost/2"))
-                    expect(clips[1].tags).to(haveCount(3))
+                    expect(clips[1].tags).to(haveCount(4))
+                    guard clips[1].tags.count == 4 else { return }
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
                     expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[3].id).to(equal("555"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[3].name).to(equal("huwa"))
                     expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     // 更新時刻が更新されている
                     expect(clips[1].updatedAt).notTo(equal(Date(timeIntervalSince1970: 2000)))
 
                     expect(clips[2].url).to(equal("https://localhost/3"))
-                    expect(clips[2].tags).to(haveCount(3))
+                    expect(clips[2].tags).to(haveCount(4))
+                    guard clips[2].tags.count == 4 else { return }
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
                     expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[3].id).to(equal("666"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[3].name).to(equal("pien"))
                     expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
                     // 更新時刻が更新されている
                     expect(clips[2].updatedAt).notTo(equal(Date(timeIntervalSince1970: 3000)))
                 }
                 it("タグは新しく増えない") {
                     let tags = realm.objects(TagObject.self)
-                    expect(tags).to(haveCount(3))
+                    expect(tags).to(haveCount(6))
+                    guard tags.count == 6 else { return }
                     expect(tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
                     expect(tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
                     expect(tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
                     expect(tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
                     expect(tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
                     expect(tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[3].id).to(equal("444"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[3].name).to(equal("poyo"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[4].id).to(equal("555"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[4].name).to(equal("huwa"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[5].id).to(equal("666"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[5].name).to(equal("pien"))
                 }
             }
 
@@ -943,6 +970,355 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag3)
                     }
                     result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内のクリップが更新されない") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(2))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].descriptionText).to(equal("hoge"))
+                    expect(clips[0].items).to(beEmpty())
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].url).to(equal("https://localhost/3"))
+                    expect(clips[1].descriptionText).to(equal("hoge"))
+                    expect(clips[1].items).to(beEmpty())
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(3))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                }
+            }
+        }
+
+        describe("updateClips(having:byReplacingTagsHaving:)") {
+            var result: Result<[Clip], ClipStorageError>!
+
+            context("追加対象のタグとクリップが存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = ClipObject.makeDefault(id: "1",
+                                                          url: "https://localhost/1",
+                                                          tags: [TagObject.makeDefault(id: "444", name: "poyo")],
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(id: "2",
+                                                          url: "https://localhost/2",
+                                                          tags: [TagObject.makeDefault(id: "555", name: "huwa")],
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(id: "3",
+                                                          url: "https://localhost/3",
+                                                          tags: [TagObject.makeDefault(id: "666", name: "pien")],
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
+
+                        realm.add(obj1)
+                        realm.add(obj2)
+                        realm.add(obj3)
+                        realm.add(tag1)
+                        realm.add(tag2)
+                        realm.add(tag3)
+                    }
+                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                }
+
+                it("successが返る") {
+                    switch result! {
+                    case .success:
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("返ってきたクリップが更新されている") {
+                    guard case let .success(v) = result else {
+                        fail("Unexpected failure")
+                        return
+                    }
+                    let clips = v.sorted(by: { $0.registeredDate < $1.registeredDate })
+                    expect(clips).to(haveCount(3))
+                    expect(clips[0].url).to(equal(URL(string: "https://localhost/1")))
+                    expect(clips[0].tags).to(haveCount(3))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[0].registeredDate).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clips[0].updatedDate).notTo(equal(Date(timeIntervalSince1970: 1000)))
+
+                    expect(clips[1].url).to(equal(URL(string: "https://localhost/2")))
+                    expect(clips[1].tags).to(haveCount(3))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[1].registeredDate).to(equal(Date(timeIntervalSince1970: 1000)))
+                    // 更新時刻が更新されている
+                    expect(clips[1].updatedDate).notTo(equal(Date(timeIntervalSince1970: 2000)))
+
+                    expect(clips[2].url).to(equal(URL(string: "https://localhost/3")))
+                    expect(clips[2].tags).to(haveCount(3))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0]).to(equal(.makeDefault(id: "111", name: "hoge")))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1]).to(equal(.makeDefault(id: "222", name: "fuga")))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2]).to(equal(.makeDefault(id: "333", name: "piyo")))
+                    expect(clips[2].registeredDate).to(equal(Date(timeIntervalSince1970: 2000)))
+                    // 更新時刻が更新されている
+                    expect(clips[2].updatedDate).notTo(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("Realm内のクリップのタグが置き換えられている") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(3))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].tags).to(haveCount(3))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(clips[0].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    // 更新時刻が更新されている
+                    expect(clips[0].updatedAt).notTo(equal(Date(timeIntervalSince1970: 1000)))
+
+                    expect(clips[1].url).to(equal("https://localhost/2"))
+                    expect(clips[1].tags).to(haveCount(3))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(clips[1].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    // 更新時刻が更新されている
+                    expect(clips[1].updatedAt).notTo(equal(Date(timeIntervalSince1970: 2000)))
+
+                    expect(clips[2].url).to(equal("https://localhost/3"))
+                    expect(clips[2].tags).to(haveCount(3))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(clips[2].tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    // 更新時刻が更新されている
+                    expect(clips[2].updatedAt).notTo(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("置き換えられたタグは削除されない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(6))
+                    guard tags.count == 6 else { return }
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[3].id).to(equal("444"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[3].name).to(equal("poyo"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[4].id).to(equal("555"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[4].name).to(equal("huwa"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[5].id).to(equal("666"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[5].name).to(equal("pien"))
+                }
+            }
+
+            context("追加対象のタグが1つも存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = ClipObject.makeDefault(id: "1",
+                                                          url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(id: "2",
+                                                          url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(id: "3",
+                                                          url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        realm.add(obj1)
+                        realm.add(obj2)
+                        realm.add(obj3)
+                    }
+                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内のクリップが更新されない") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(3))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].url).to(equal("https://localhost/2"))
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[2].url).to(equal("https://localhost/3"))
+                    expect(clips[2].tags).to(haveCount(0))
+                    expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[2].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(0))
+                }
+            }
+
+            context("追加対象のタグが一部存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = ClipObject.makeDefault(id: "1",
+                                                          url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj2 = ClipObject.makeDefault(id: "2",
+                                                          url: "https://localhost/2",
+                                                          registeredAt: Date(timeIntervalSince1970: 1000),
+                                                          updatedAt: Date(timeIntervalSince1970: 2000))
+                        let obj3 = ClipObject.makeDefault(id: "3",
+                                                          url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
+
+                        realm.add(obj1)
+                        realm.add(obj2)
+                        realm.add(obj3)
+                        realm.add(tag1)
+                        realm.add(tag3)
+                    }
+                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内のクリップが更新されない") {
+                    let clips = realm.objects(ClipObject.self).sorted(by: { $0.registeredAt < $1.registeredAt })
+                    expect(clips).to(haveCount(3))
+                    expect(clips[0].url).to(equal("https://localhost/1"))
+                    expect(clips[0].tags).to(haveCount(0))
+                    expect(clips[0].registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                    expect(clips[0].updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].url).to(equal("https://localhost/2"))
+                    expect(clips[1].tags).to(haveCount(0))
+                    expect(clips[1].registeredAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    expect(clips[1].updatedAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[2].url).to(equal("https://localhost/3"))
+                    expect(clips[2].tags).to(haveCount(0))
+                    expect(clips[2].registeredAt).to(equal(Date(timeIntervalSince1970: 2000)))
+                    expect(clips[2].updatedAt).to(equal(Date(timeIntervalSince1970: 3000)))
+                }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(2))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("333"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("piyo"))
+                }
+            }
+
+            context("追加対象のクリップが1つも存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
+                        realm.add(tag1)
+                        realm.add(tag2)
+                        realm.add(tag3)
+                    }
+                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                }
+                it("notFoundが返る") {
+                    switch result! {
+                    case .success:
+                        fail("Unexpected success")
+                    case .failure(.notFound):
+                        expect(true).to(beTrue())
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realm内にクリップが追加されない") {
+                    let clips = realm.objects(ClipObject.self)
+                    expect(clips).to(beEmpty())
+                }
+                it("タグは新しく増えない") {
+                    let tags = realm.objects(TagObject.self)
+                    expect(tags).to(haveCount(3))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].id).to(equal("111"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[0].name).to(equal("hoge"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].id).to(equal("222"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[1].name).to(equal("fuga"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].id).to(equal("333"))
+                    expect(tags.sorted(by: { $0.id < $1.id })[2].name).to(equal("piyo"))
+                }
+            }
+
+            context("追加対象のクリップが一部存在しない") {
+                beforeEach {
+                    try! realm.write {
+                        let obj1 = ClipObject.makeDefault(id: "1",
+                                                          url: "https://localhost/1",
+                                                          registeredAt: Date(timeIntervalSince1970: 0),
+                                                          updatedAt: Date(timeIntervalSince1970: 1000))
+                        let obj3 = ClipObject.makeDefault(id: "2",
+                                                          url: "https://localhost/3",
+                                                          registeredAt: Date(timeIntervalSince1970: 2000),
+                                                          updatedAt: Date(timeIntervalSince1970: 3000))
+                        let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                        let tag2 = TagObject.makeDefault(id: "222", name: "fuga")
+                        let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
+                        realm.add(obj1)
+                        realm.add(obj3)
+                        realm.add(tag1)
+                        realm.add(tag2)
+                        realm.add(tag3)
+                    }
+                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
                 }
                 it("notFoundが返る") {
                     switch result! {
