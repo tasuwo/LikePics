@@ -13,6 +13,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let initialImageFrame: CGRect
         let animatingView: UIView
         let animatingImageView: UIImageView
+        let backgroundView: UIView
     }
 
     private static let startingImageScale: CGFloat = 1.0
@@ -82,6 +83,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let initialImageFrame = innerContext.initialImageFrame
         let animatingView = innerContext.animatingView
         let animatingImageView = innerContext.animatingImageView
+        let backgroundView = innerContext.backgroundView
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
@@ -110,6 +112,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         to.view.alpha = 1
         from.view.alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
+        backgroundView.alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
 
         animatingView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let initialAnchorPoint = CGPoint(x: initialImageFrame.midX, y: initialImageFrame.midY)
@@ -129,16 +132,20 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let scrollToUp = velocity.y < 0
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
             if scrollToUp || releaseAboveInitialPosition {
-                self.startCancelAnimation(hideViews: [to.view],
-                                          presentViews: [from.view],
+                self.startCancelAnimation(hideViews: [],
+                                          presentViews: [from.view, backgroundView],
                                           hiddenViews: [toCell, fromImageView],
+                                          removeViews: [animatingView, backgroundView],
+                                          fromView: from.view,
                                           currentCornerRadius: cornerRadius,
                                           innerContext: innerContext)
             } else {
                 self.startEndAnimation(finalImageFrame: finalImageFrame,
-                                       hideViews: [from.view],
-                                       presentViews: [to.view],
+                                       hideViews: [from.view, backgroundView],
+                                       presentViews: [],
                                        hiddenViews: [toCell, fromImageView],
+                                       removeViews: [animatingView, backgroundView],
+                                       fromView: from.view,
                                        currentCornerRadius: cornerRadius,
                                        innerContext: innerContext)
             }
@@ -147,12 +154,20 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     // MARK: Animation
 
-    private func startCancelAnimation(hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], currentCornerRadius: CGFloat, innerContext: InnerContext) {
+    private func startCancelAnimation(hideViews: [UIView?],
+                                      presentViews: [UIView?],
+                                      hiddenViews: [UIView],
+                                      removeViews: [UIView],
+                                      fromView: UIView,
+                                      currentCornerRadius: CGFloat,
+                                      innerContext: InnerContext)
+    {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
-            innerContext.animatingView.removeFromSuperview()
+            removeViews.forEach { $0.removeFromSuperview() }
+            fromView.backgroundColor = innerContext.backgroundView.backgroundColor
             innerContext.transitionContext.cancelInteractiveTransition()
             innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
@@ -181,12 +196,21 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.commit()
     }
 
-    private func startEndAnimation(finalImageFrame: CGRect, hideViews: [UIView?], presentViews: [UIView?], hiddenViews: [UIView], currentCornerRadius: CGFloat, innerContext: InnerContext) {
+    private func startEndAnimation(finalImageFrame: CGRect,
+                                   hideViews: [UIView?],
+                                   presentViews: [UIView?],
+                                   hiddenViews: [UIView],
+                                   removeViews: [UIView],
+                                   fromView: UIView,
+                                   currentCornerRadius: CGFloat,
+                                   innerContext: InnerContext)
+    {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
             hiddenViews.forEach { $0.isHidden = false }
-            innerContext.animatingView.removeFromSuperview()
+            removeViews.forEach { $0.removeFromSuperview() }
+            fromView.backgroundColor = innerContext.backgroundView.backgroundColor
             innerContext.transitionContext.finishInteractiveTransition()
             innerContext.transitionContext.completeTransition(true)
             self.innerContext = nil
@@ -231,7 +255,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let fromIndex = from.currentIndex(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self)
+            let toCell = to.animatingCell(self),
+            let presentingView = to.presentingView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -244,10 +269,16 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         let initialImageFrame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
 
+        let backgroundView = UIView()
+        backgroundView.frame = presentingView.frame
+        backgroundView.backgroundColor = from.view.backgroundColor
+        from.view.backgroundColor = .clear
+        presentingView.addSubview(backgroundView)
+
         let animatingView = UIView()
         ClipsCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
         animatingView.frame = initialImageFrame
-        containerView.addSubview(animatingView)
+        presentingView.insertSubview(animatingView, aboveSubview: backgroundView)
 
         let animatingImageView = UIImageView(image: fromImage)
         ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
@@ -261,16 +292,19 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingView: animatingView,
-            animatingImageView: animatingImageView
+            animatingImageView: animatingImageView,
+            backgroundView: backgroundView
         )
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
             let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
             self.startEndAnimation(finalImageFrame: finalImageFrame,
-                                   hideViews: [from.view],
-                                   presentViews: [to.view],
+                                   hideViews: [from.view, backgroundView],
+                                   presentViews: [],
                                    hiddenViews: [toCell, fromImageView],
+                                   removeViews: [animatingView, backgroundView],
+                                   fromView: from.view,
                                    currentCornerRadius: 0,
                                    innerContext: innerContext)
             return

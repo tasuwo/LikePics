@@ -36,7 +36,8 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let targetImageView = to.animatingPage(self),
             let selectedCell = from.animatingCell(self),
             let selectedImageView = selectedCell.primaryImageView,
-            let selectedImage = selectedImageView.image
+            let selectedImage = selectedImageView.image,
+            let presentingView = from.presentingView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -45,15 +46,21 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
-        containerView.backgroundColor = .clear
-        containerView.insertSubview(to.view, belowSubview: from.view)
+        containerView.insertSubview(to.view, aboveSubview: from.view)
+
+        let backgroundView = UIView()
+        backgroundView.frame = presentingView.frame
+        backgroundView.backgroundColor = to.view.backgroundColor
+        to.view.backgroundColor = .clear
+        presentingView.addSubview(backgroundView)
 
         let animatingImageView = UIImageView(image: selectedImage)
         ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: 0)
-        containerView.addSubview(animatingImageView)
+        presentingView.insertSubview(animatingImageView, aboveSubview: backgroundView)
 
         to.view.alpha = 0
+        backgroundView.alpha = 0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
@@ -62,7 +69,9 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             selectedImageView.isHidden = false
             selectedCell.alpha = 1
             from.view.alpha = 1.0
+            to.view.backgroundColor = backgroundView.backgroundColor
             animatingImageView.removeFromSuperview()
+            backgroundView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }
 
@@ -82,8 +91,9 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             options: [.curveEaseInOut]
         ) {
             animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView)
-            from.view.alpha = 0
+
             to.view.alpha = 1.0
+            backgroundView.alpha = 1.0
         }
 
         CATransaction.commit()
