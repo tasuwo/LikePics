@@ -45,7 +45,7 @@ public class ClipPreviewView: UIView {
 
     public var initialImageFrame: CGRect {
         guard let image = self.imageView.image else { return .zero }
-        let scale = Self.calcScaleToFit(image, on: self.bounds.size)
+        let scale = min(1, Self.calcScaleToFit(image, on: self.bounds.size))
         let initialImageSize = CGSize(width: image.size.width * scale,
                                       height: image.size.height * scale)
         return CGRect(origin: CGPoint(x: (self.bounds.width - initialImageSize.width) / 2,
