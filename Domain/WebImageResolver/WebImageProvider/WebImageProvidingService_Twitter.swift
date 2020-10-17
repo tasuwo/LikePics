@@ -70,13 +70,15 @@ extension WebImageProvidingService {
                                 .eraseToAnyPublisher()
 
                         case .revealing:
-                            return Future { promise in
-                                context.displayElement.sensitiveContentRevealButton?.click { _, _ in
-                                    promise(.success((nextState, context)))
-                                }
+                            guard let button = context.displayElement.sensitiveContentRevealButton else {
+                                return Fail(error: WebImageUrlFinderError.internalError)
+                                    .eraseToAnyPublisher()
                             }
-                            .delay(for: 0.2, scheduler: RunLoop.main)
-                            .eraseToAnyPublisher()
+                            button.click()
+                            return Just((nextState, context))
+                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .delay(for: 0.2, scheduler: RunLoop.main)
+                                .eraseToAnyPublisher()
 
                         case .loadingForReveal:
                             return Just((nextState, context))
