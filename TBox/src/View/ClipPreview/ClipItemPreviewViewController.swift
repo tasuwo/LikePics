@@ -36,15 +36,13 @@ class ClipItemPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let data = self.presenter.readThumbnailImageData() {
-            self.previewView.image = UIImage(data: data)
-        }
-        DispatchQueue.global().async { [weak self] in
-            if let data = self?.presenter.readImageData() {
-                DispatchQueue.main.async {
-                    self?.previewView.image = UIImage(data: data)
-                }
-            }
+        if
+            let thumbnailData = self.presenter.readThumbnailImageData(),
+            let thumbnailImage = UIImage(data: thumbnailData),
+            let imageSize = self.presenter.imageSize,
+            let url = self.presenter.resolveImageUrl()
+        {
+            self.previewView.source = (url, imageSize.cgSize, thumbnailImage)
         }
     }
 

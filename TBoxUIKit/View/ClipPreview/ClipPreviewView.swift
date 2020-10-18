@@ -2,6 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
+import Kingfisher
 import UIKit
 
 public protocol ClipPreviewPageViewDelegate: AnyObject {
@@ -9,17 +11,34 @@ public protocol ClipPreviewPageViewDelegate: AnyObject {
 }
 
 public class ClipPreviewView: UIView {
-    public var image: UIImage? {
-        get {
-            self.imageView.image
-        }
-        set {
-            self.imageView.image = newValue
+    public typealias Source = (imageFileUrl: URL, imageSize: CGSize, thumbnail: UIImage)
 
-            guard let image = self.imageView.image else { return }
-            self.setupScale(image, on: self.bounds.size)
-            self.updateConstraints(for: image, on: self.bounds)
+    public var source: Source? {
+        didSet {
+            guard let source = self.source else { return }
+
+            self.imageView.kf.indicatorType = .activity
+            self.imageView.kf.setImage(
+                with: LocalFileImageDataProvider(fileURL: source.imageFileUrl),
+                placeholder: source.thumbnail,
+                options: [],
+                completionHandler: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success:
+                        self.setupScale(forImageSize: source.imageSize, on: self.bounds.size)
+                        self.updateConstraints(forImageSize: source.imageSize, on: self.bounds)
+
+                    case let .failure(error):
+                        self.logger.write(ConsoleLog(level: .error, message: error.localizedDescription))
+                    }
+                }
+            )
         }
+    }
+
+    public var image: UIImage? {
+        self.imageView.image
     }
 
     public var panGestureRecognizer: UIPanGestureRecognizer {
@@ -44,10 +63,10 @@ public class ClipPreviewView: UIView {
     }
 
     public var initialImageFrame: CGRect {
-        guard let image = self.imageView.image else { return .zero }
-        let scale = min(1, Self.calcScaleToFit(image, on: self.bounds.size))
-        let initialImageSize = CGSize(width: image.size.width * scale,
-                                      height: image.size.height * scale)
+        guard let source = self.source else { return .zero }
+        let scale = min(1, Self.calcScaleScaleToFit(forSize: source.imageSize, fittingIn: self.bounds.size))
+        let initialImageSize = CGSize(width: source.imageSize.width * scale,
+                                      height: source.imageSize.height * scale)
         return CGRect(origin: CGPoint(x: (self.bounds.width - initialImageSize.width) / 2,
                                       y: (self.bounds.height - initialImageSize.height) / 2),
                       size: initialImageSize)
@@ -61,6 +80,8 @@ public class ClipPreviewView: UIView {
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var doubleTapGestureRecognizer: UITapGestureRecognizer!
+
+    private lazy var logger: TBoxLoggable = RootLogger.shared
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
@@ -91,9 +112,9 @@ public class ClipPreviewView: UIView {
 
     // MARK: - Methods
 
-    static func calcScaleToFit(_ image: UIImage, on size: CGSize) -> CGFloat {
-        let widthScale = size.width / image.size.width
-        let heightScale = size.height / image.size.height
+    static func calcScaleScaleToFit(forSize source: CGSize, fittingIn destination: CGSize) -> CGFloat {
+        let widthScale = destination.width / source.width
+        let heightScale = destination.height / source.height
         return min(widthScale, heightScale)
     }
 
@@ -109,9 +130,9 @@ public class ClipPreviewView: UIView {
      */
     public func shouldRecalculateInitialScale() {
         guard self.scrollView.zoomScale == self.scrollView.minimumZoomScale else { return }
-        guard let image = self.imageView.image else { return }
-        self.setupScale(image, on: self.bounds.size)
-        self.updateConstraints(for: image, on: self.bounds)
+        guard let source = self.source else { return }
+        self.setupScale(forImageSize: source.imageSize, on: self.bounds.size)
+        self.updateConstraints(forImageSize: source.imageSize, on: self.bounds)
     }
 
     private func setupFromNib() {
@@ -159,8 +180,8 @@ public class ClipPreviewView: UIView {
         self.scrollView.zoom(to: nextRect, animated: true)
     }
 
-    func setupScale(_ image: UIImage, on size: CGSize) {
-        let scaleToFit = Self.calcScaleToFit(image, on: size)
+    private func setupScale(forImageSize imageSize: CGSize, on size: CGSize) {
+        let scaleToFit = Self.calcScaleScaleToFit(forSize: imageSize, fittingIn: size)
 
         self.scrollView.minimumZoomScale = min(1, scaleToFit)
         self.scrollView.maximumZoomScale = max(1, scaleToFit)
@@ -168,11 +189,11 @@ public class ClipPreviewView: UIView {
         self.scrollView.zoomScale = self.scrollView.minimumZoomScale
     }
 
-    func updateConstraints(for image: UIImage, on frame: CGRect) {
+    private func updateConstraints(forImageSize imageSize: CGSize, on frame: CGRect) {
         let currentScale = self.scrollView.zoomScale
 
-        let horizontalInset = max((frame.width - image.size.width * currentScale) / 2, 0)
-        let verticalInset = max((frame.height - image.size.height * currentScale) / 2, 0)
+        let horizontalInset = max((frame.width - imageSize.width * currentScale) / 2, 0)
+        let verticalInset = max((frame.height - imageSize.height * currentScale) / 2, 0)
 
         self.topInsetConstraint.constant = verticalInset
         self.bottomInsetConstraint.constant = verticalInset
@@ -193,8 +214,8 @@ extension ClipPreviewView: UIScrollViewDelegate {
     }
 
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        guard let image = self.imageView.image else { return }
-        self.updateConstraints(for: image, on: self.bounds)
+        guard let source = self.source else { return }
+        self.updateConstraints(forImageSize: source.imageSize, on: self.bounds)
     }
 
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {

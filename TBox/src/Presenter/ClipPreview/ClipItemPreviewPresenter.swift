@@ -16,6 +16,13 @@ class ClipItemPreviewPresenter {
     private let storage: ClipStorageProtocol
     private let logger: TBoxLoggable
 
+    var imageSize: ImageSize? {
+        return self.query.clip.value
+            .items
+            .first(where: { $0.identity == self.itemId })?
+            .thumbnailSize
+    }
+
     weak var view: ClipItemPreviewViewProtocol?
 
     // MARK: - Lifecycle
@@ -39,6 +46,21 @@ class ClipItemPreviewPresenter {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to read thumbnail. (code: \(error.rawValue))
             """))
+            return nil
+        }
+    }
+
+    func resolveImageUrl() -> URL? {
+        guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
+        switch self.storage.readImageFileUrl(of: item) {
+        case let .success(url):
+            return url
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read image url for preview. (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
             return nil
         }
     }

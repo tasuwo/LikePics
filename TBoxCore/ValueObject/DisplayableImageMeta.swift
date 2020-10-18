@@ -23,14 +23,13 @@ struct DisplayableImageMeta {
     // MARK: - Lifecycle
 
     static func make(by urlSet: WebImageUrlSet, using session: URLSession) -> AnyPublisher<Self, Never> {
-        let targetUrl = urlSet.lowQualityUrl ?? urlSet.url
         let request: URLRequest
-        if let provider = WebImageProviderPreset.resolveProvider(by: targetUrl),
-            provider.shouldModifyRequest(for: targetUrl)
+        if let provider = WebImageProviderPreset.resolveProvider(by: urlSet.url),
+            provider.shouldModifyRequest(for: urlSet.url)
         {
-            request = provider.modifyRequest(URLRequest(url: targetUrl))
+            request = provider.modifyRequest(URLRequest(url: urlSet.url))
         } else {
-            request = URLRequest(url: targetUrl)
+            request = URLRequest(url: urlSet.url)
         }
 
         return session
@@ -49,7 +48,7 @@ struct DisplayableImageMeta {
                                             imageSize: CGSize(width: pixelWidth, height: pixelHeight))
             }
             .catch { _ -> AnyPublisher<DisplayableImageMeta?, Never> in
-                RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(targetUrl)"))
+                RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(urlSet.url)"))
                 return Just(DisplayableImageMeta?.none)
                     .eraseToAnyPublisher()
             }
