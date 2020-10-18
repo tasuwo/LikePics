@@ -45,4 +45,14 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
         }
         fatalError("readImageHandler returns can't have a default value thus its handler must be set")
     }
+
+    public private(set) var readImageFileUrlCallCount = 0
+    public var readImageFileUrlHandler: ((String, Clip.Identity) throws -> (URL))?
+    public func readImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL {
+        readImageFileUrlCallCount += 1
+        if let readImageFileUrlHandler = readImageFileUrlHandler {
+            return try readImageFileUrlHandler(name, clipId)
+        }
+        return URL(fileURLWithPath: "")
+    }
 }

@@ -12,6 +12,7 @@ public protocol ClipStorageProtocol {
 
     // MARK: Read
 
+    func readImageFileUrl(of item: ClipItem) -> Result<URL, ClipStorageError>
     func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError>
     func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError>
 

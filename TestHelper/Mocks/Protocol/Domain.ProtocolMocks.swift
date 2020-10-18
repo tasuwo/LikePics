@@ -134,6 +134,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("createAlbumWithTitleHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var readImageFileUrlCallCount = 0
+    public var readImageFileUrlHandler: ((ClipItem) -> (Result<URL, ClipStorageError>))?
+    public func readImageFileUrl(of item: ClipItem) -> Result<URL, ClipStorageError> {
+        readImageFileUrlCallCount += 1
+        if let readImageFileUrlHandler = readImageFileUrlHandler {
+            return readImageFileUrlHandler(item)
+        }
+        fatalError("readImageFileUrlHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var readImageDataCallCount = 0
     public var readImageDataHandler: ((ClipItem) -> (Result<Data, ClipStorageError>))?
     public func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError> {

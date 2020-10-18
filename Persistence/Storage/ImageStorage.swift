@@ -15,6 +15,7 @@ public protocol ImageStorageProtocol {
     func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws
     func deleteAll(inClipHaving clipId: Clip.Identity) throws
     func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data
+    func readImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL
 }
 
 class ImageStorage {
@@ -118,5 +119,15 @@ extension ImageStorage: ImageStorageProtocol {
         }
 
         return try Data(contentsOf: fileUrl)
+    }
+
+    func readImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL {
+        let fileUrl = self.resolveImageFileUrl(fileName: name, clipId: clipId)
+
+        guard self.fileManager.fileExists(atPath: fileUrl.path) else {
+            throw ImageStorageError.notFound
+        }
+
+        return fileUrl
     }
 }
