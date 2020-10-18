@@ -6,12 +6,19 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Kingfisher
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        KingfisherManager.shared.defaultOptions = [
+            .cacheMemoryOnly,
+            .memoryCacheExpiration(.seconds(0))
+        ]
+
         return true
     }
 
