@@ -146,19 +146,19 @@ extension ClipsListCollectionViewProvider: ClipsCollectionLayoutDelegate {
 
         switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
         case let (.some(item), .none, .none):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+            return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
 
         case let (.some(item), .some, .none):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+            return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
                 + ClipsCollectionViewCell.secondaryStickingOutMargin
 
         case let (.some(item), .some, .some):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+            return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
                 + ClipsCollectionViewCell.secondaryStickingOutMargin
                 + ClipsCollectionViewCell.tertiaryStickingOutMargin
 
         case let (.some(item), _, _):
-            return width * (CGFloat(item.thumbnailSize.height) / CGFloat(item.thumbnailSize.width))
+            return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
 
         default:
             return width

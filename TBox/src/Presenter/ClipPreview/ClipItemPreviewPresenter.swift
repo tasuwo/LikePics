@@ -20,7 +20,7 @@ class ClipItemPreviewPresenter {
         return self.query.clip.value
             .items
             .first(where: { $0.identity == self.itemId })?
-            .thumbnailSize
+            .imageSize
     }
 
     weak var view: ClipItemPreviewViewProtocol?

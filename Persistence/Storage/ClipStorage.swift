@@ -108,6 +108,8 @@ extension ClipStorage: ClipStorageProtocol {
                 newClipItem.thumbnailWidth = item.thumbnailSize.width
                 newClipItem.imageFileName = item.imageFileName
                 newClipItem.imageUrl = item.imageUrl?.absoluteString
+                newClipItem.imageHeight = item.imageSize.height
+                newClipItem.imageWidth = item.imageSize.width
                 newClipItem.registeredAt = item.registeredDate
                 newClipItem.updatedAt = item.updatedDate
 
