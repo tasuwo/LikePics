@@ -13,7 +13,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 7,
+                schemaVersion: 8,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )

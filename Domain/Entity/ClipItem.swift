@@ -12,6 +12,7 @@ public struct ClipItem: Equatable {
     public let thumbnailSize: ImageSize
     public let imageFileName: String
     public let imageUrl: URL?
+    public let imageSize: ImageSize
     public let registeredDate: Date
     public let updatedDate: Date
 
@@ -25,6 +26,7 @@ public struct ClipItem: Equatable {
                 thumbnailSize: ImageSize,
                 imageFileName: String,
                 imageUrl: URL?,
+                imageSize: ImageSize,
                 registeredDate: Date,
                 updatedDate: Date)
     {
@@ -36,6 +38,7 @@ public struct ClipItem: Equatable {
         self.thumbnailSize = thumbnailSize
         self.imageFileName = imageFileName
         self.imageUrl = imageUrl
+        self.imageSize = imageSize
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }

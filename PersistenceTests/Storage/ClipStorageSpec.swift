@@ -12,7 +12,7 @@ import RealmSwift
 
 class ClipStorageSpec: QuickSpec {
     override func spec() {
-        let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 7)
+        let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 8)
         let realm = try! Realm(configuration: configuration)
         let sampleImage = UIImage(named: "TestImage", in: Bundle(for: Self.self), with: nil)!
 

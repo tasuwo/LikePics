@@ -360,9 +360,11 @@ extension ClipItem {
                   clipIndex: dataSet.index,
                   thumbnailFileName: dataSet.thumbnailFileName,
                   thumbnailUrl: dataSet.thumbnailUrl,
+                  // TODO: 削除する
                   thumbnailSize: ImageSize(height: dataSet.imageHeight, width: dataSet.imageWidth),
                   imageFileName: dataSet.originalImageFileName,
                   imageUrl: dataSet.originalImageUrl,
+                  imageSize: ImageSize(height: dataSet.imageHeight, width: dataSet.imageWidth),
                   registeredDate: currentDate,
                   updatedDate: currentDate)
     }

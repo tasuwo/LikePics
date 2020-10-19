@@ -57,6 +57,7 @@ extension ClipItem {
         thumbnailSize: ImageSize = ImageSize.makeDefault(),
         imageFileName: String = "",
         imageUrl: URL? = nil,
+        imageSize: ImageSize = ImageSize.makeDefault(),
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
@@ -69,6 +70,7 @@ extension ClipItem {
             thumbnailSize: thumbnailSize,
             imageFileName: imageFileName,
             imageUrl: imageUrl,
+            imageSize: imageSize,
             registeredDate: registeredDate,
             updatedDate: updatedDate
         )

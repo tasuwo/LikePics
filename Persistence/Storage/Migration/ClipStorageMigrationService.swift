@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable force_unwrapping
+// swiftlint:disable force_unwrapping force_cast force_try
 
 import Domain
 import RealmSwift
@@ -39,20 +39,35 @@ enum ClipStorageMigrationService {
             Self.migrateToV6(migration)
         } else if oldSchemaVersion < 7 {
             Self.migrateToV7(migration)
+        } else if oldSchemaVersion < 8 {
+            Self.migrateToV8(migration)
+        }
+    }
+
+    private static func migrateToV8(_ migration: Migration) {
+        let storage = try! ImageStorage()
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+            autoreleasepool {
+                let imageFileName = oldObject!["imageFileName"] as! String
+                let clipId = oldObject!["clipId"] as! String
+
+                let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)
+                let image = UIImage(data: data)!
+
+                newObject!["imageHeight"] = image.size.height
+                newObject!["imageWidth"] = image.size.width
+            }
         }
     }
 
     private static func migrateToV7(_ migration: Migration) {
         migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, newObject in
-            // swiftlint:disable:next force_cast
             let clipId = oldObject!["id"] as! String
-            // swiftlint:disable:next force_cast
             let clipUrlString = oldObject!["url"] as! String
 
             newObject!["url"] = clipUrlString
 
             migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
-                // swiftlint:disable:next force_cast
                 guard oldObject!["clipUrl"] as! String == clipUrlString else { return }
 
                 newObject!["imageUrl"] = oldObject!["imageUrl"]
@@ -99,7 +114,6 @@ enum ClipStorageMigrationService {
             newObject!["updatedAt"] = Date()
         }
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
-            // swiftlint:disable:next force_cast
             newObject!["key"] = "\(oldObject!["clipUrl"] as! String)-\(oldObject!["largeImageUrl"] as! String)"
             newObject!["registeredAt"] = Date()
             newObject!["updatedAt"] = Date()

@@ -15,6 +15,8 @@ final class ClipItemObject: Object {
     @objc dynamic var thumbnailWidth: Double = 0
     @objc dynamic var imageFileName: String = ""
     @objc dynamic var imageUrl: String? = ""
+    @objc dynamic var imageHeight: Double = 0
+    @objc dynamic var imageWidth: Double = 0
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()
 
@@ -50,6 +52,8 @@ extension ClipItem: Persistable {
                                                  width: managedObject.thumbnailWidth),
                         imageFileName: managedObject.imageFileName,
                         imageUrl: imageUrl,
+                        imageSize: ImageSize(height: managedObject.imageHeight,
+                                             width: managedObject.imageWidth),
                         registeredDate: managedObject.registeredAt,
                         updatedDate: managedObject.updatedAt)
     }
