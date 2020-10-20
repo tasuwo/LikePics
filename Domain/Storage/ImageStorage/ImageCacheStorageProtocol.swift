@@ -5,6 +5,12 @@
 import UIKit
 
 public protocol ImageCacheStorageProtocol {
+    /**
+     * Clear all cache
+     *
+     * - attention: for DEBUG
+     */
+    func clearCache()
     func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void)
 }
 

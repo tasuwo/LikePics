@@ -125,6 +125,12 @@ public class ImageCacheStorage {
 }
 
 extension ImageCacheStorage: ImageCacheStorageProtocol {
+    public func clearCache() {
+        guard self.fileManager.fileExists(atPath: self.baseUrl.path) else { return }
+        try? self.fileManager.removeItem(at: self.baseUrl)
+        try? self.createDirectoryIfNeeded(at: self.baseUrl)
+    }
+
     public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.ioQueue.sync {
             guard !self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else {
