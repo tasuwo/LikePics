@@ -65,7 +65,7 @@ protocol SearchResultPresenterProtocol {
 class SearchResultPresenter {
     private var query: ClipListQuery
     private let clipStorage: ClipStorageProtocol
-    private let cacheStorage: ImageCacheStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -113,7 +113,7 @@ class SearchResultPresenter {
     init(context: SearchContext,
          query: ClipListQuery,
          clipStorage: ClipStorageProtocol,
-         cacheStorage: ImageCacheStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {

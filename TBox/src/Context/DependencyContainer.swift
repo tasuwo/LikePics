@@ -53,13 +53,13 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private let clipStorage: ClipStorage
-    private let cacheStorage: ImageCacheStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private lazy var logger = RootLogger.shared
     private lazy var userSettingsStorage = UserSettingsStorage()
 
     init() throws {
         self.clipStorage = try ClipStorage()
-        self.cacheStorage = try ImageCacheStorage()
+        self.cacheStorage = try ThumbnailStorage()
     }
 }
 

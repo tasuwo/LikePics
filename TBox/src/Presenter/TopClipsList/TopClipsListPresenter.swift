@@ -51,7 +51,7 @@ protocol TopClipsListPresenterProtocol {
 class TopClipsListPresenter {
     private let query: ClipListQuery
     private let clipStorage: ClipStorageProtocol
-    private let cacheStorage: ImageCacheStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -96,7 +96,7 @@ class TopClipsListPresenter {
 
     init(query: ClipListQuery,
          clipStorage: ClipStorageProtocol,
-         cacheStorage: ImageCacheStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {

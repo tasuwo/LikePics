@@ -47,7 +47,7 @@ protocol AlbumPresenterProtocol {
 class AlbumPresenter {
     private let query: AlbumQuery
     private let clipStorage: ClipStorageProtocol
-    private let cacheStorage: ImageCacheStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -94,7 +94,7 @@ class AlbumPresenter {
 
     init(query: AlbumQuery,
          clipStorage: ClipStorageProtocol,
-         cacheStorage: ImageCacheStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {

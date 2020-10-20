@@ -4,7 +4,7 @@
 
 import UIKit
 
-public protocol ImageCacheStorageProtocol {
+public protocol ThumbnailStorageProtocol {
     /**
      * Clear all cache
      *
@@ -14,7 +14,7 @@ public protocol ImageCacheStorageProtocol {
     func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void)
 }
 
-extension ImageCacheStorageProtocol {
+extension ThumbnailStorageProtocol {
     public static func calcDownsamplingSize(for item: ClipItem) -> CGSize {
         let imageSize = item.imageSize
 
