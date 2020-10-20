@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import UIKit
 
 protocol AlbumViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
@@ -21,7 +22,7 @@ protocol AlbumPresenterProtocol {
 
     func viewDidAppear()
 
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
+    func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: AlbumViewProtocol)
     func setEditing(_ editing: Bool)
@@ -46,6 +47,7 @@ protocol AlbumPresenterProtocol {
 class AlbumPresenter {
     private let query: AlbumQuery
     private let clipStorage: ClipStorageProtocol
+    private let cacheStorage: ImageCacheStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -92,12 +94,14 @@ class AlbumPresenter {
 
     init(query: AlbumQuery,
          clipStorage: ClipStorageProtocol,
+         cacheStorage: ImageCacheStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.album = query.album.value
         self.clipStorage = clipStorage
+        self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -110,31 +114,8 @@ extension AlbumPresenter: AlbumPresenterProtocol {
         self.previewingClipId = nil
     }
 
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        let nullableClipItem: ClipItem? = {
-            switch layer {
-            case .primary:
-                return clip.primaryItem
-
-            case .secondary:
-                return clip.secondaryItem
-
-            case .tertiary:
-                return clip.tertiaryItem
-            }
-        }()
-        guard let clipItem = nullableClipItem else { return nil }
-
-        switch self.clipStorage.readThumbnailData(of: clipItem) {
-        case let .success(data):
-            return data
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to search result thumbnail for clip having id \(clip.identity). (code: \(error.rawValue))
-            """))
-            return nil
-        }
+    func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
+        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func setup(with view: AlbumViewProtocol) {

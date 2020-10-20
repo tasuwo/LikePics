@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import UIKit
 
 enum ThumbnailLayer {
     case primary
@@ -26,7 +27,7 @@ protocol TopClipsListPresenterProtocol {
 
     func viewDidAppear()
 
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data?
+    func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: TopClipsListViewProtocol)
     func setEditing(_ editing: Bool)
@@ -50,6 +51,7 @@ protocol TopClipsListPresenterProtocol {
 class TopClipsListPresenter {
     private let query: ClipListQuery
     private let clipStorage: ClipStorageProtocol
+    private let cacheStorage: ImageCacheStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -94,11 +96,13 @@ class TopClipsListPresenter {
 
     init(query: ClipListQuery,
          clipStorage: ClipStorageProtocol,
+         cacheStorage: ImageCacheStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.clipStorage = clipStorage
+        self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -111,31 +115,8 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         self.previewingClipId = nil
     }
 
-    func getImageData(for layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        let nullableClipItem: ClipItem? = {
-            switch layer {
-            case .primary:
-                return clip.primaryItem
-
-            case .secondary:
-                return clip.secondaryItem
-
-            case .tertiary:
-                return clip.tertiaryItem
-            }
-        }()
-        guard let clipItem = nullableClipItem else { return nil }
-
-        switch self.clipStorage.readThumbnailData(of: clipItem) {
-        case let .success(data):
-            return data
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read thumbnail. (code: \(error.rawValue))
-            """))
-            return nil
-        }
+    func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
+        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func setup(with view: TopClipsListViewProtocol) {

@@ -205,12 +205,12 @@ extension AlbumViewController: ClipsListCollectionViewProviderDataSource {
         return self.isEditing
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageDataAt layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        return self.presenter.getImageData(for: layer, in: clip)
-    }
-
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip? {
         return self.dataSource.itemIdentifier(for: indexPath)
+    }
+
+    func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
+        self.presenter.fetchImage(for: clipItem, completion: completion)
     }
 }
 

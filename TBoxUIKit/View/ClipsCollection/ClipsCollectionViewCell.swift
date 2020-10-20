@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
 public class ClipsCollectionViewCell: UICollectionViewCell {
@@ -13,6 +14,8 @@ public class ClipsCollectionViewCell: UICollectionViewCell {
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
     static let cornerRadius: CGFloat = 10
+
+    public var identifier: Clip.Identity?
 
     public var primaryImage: UIImage? {
         get {

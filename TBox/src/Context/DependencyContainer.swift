@@ -53,11 +53,13 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private let clipStorage: ClipStorage
+    private let cacheStorage: ImageCacheStorageProtocol
     private lazy var logger = RootLogger.shared
     private lazy var userSettingsStorage = UserSettingsStorage()
 
     init() throws {
         self.clipStorage = try ClipStorage()
+        self.cacheStorage = try ImageCacheStorage()
     }
 }
 
@@ -79,6 +81,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = TopClipsListPresenter(query: query,
                                               clipStorage: self.clipStorage,
+                                              cacheStorage: self.cacheStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -249,6 +252,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = SearchResultPresenter(context: context,
                                               query: query,
                                               clipStorage: self.clipStorage,
+                                              cacheStorage: self.cacheStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -302,6 +306,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = AlbumPresenter(query: query,
                                        clipStorage: self.clipStorage,
+                                       cacheStorage: self.cacheStorage,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 

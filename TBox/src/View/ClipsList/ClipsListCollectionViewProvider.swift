@@ -8,8 +8,8 @@ import UIKit
 
 protocol ClipsListCollectionViewProviderDataSource: AnyObject {
     func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageDataAt layer: ThumbnailLayer, in clip: Clip) -> Data?
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip?
+    func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 }
 
 protocol ClipsListCollectionViewProviderDelegate: AnyObject {
@@ -30,18 +30,38 @@ class ClipsListCollectionViewProvider: NSObject {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
 
-        cell.primaryImage = {
-            guard let data = self.dataSource?.clipsListCollectionViewProvider(self, imageDataAt: .primary, in: clip) else { return nil }
-            return UIImage(data: data)
-        }()
-        cell.secondaryImage = {
-            guard let data = self.dataSource?.clipsListCollectionViewProvider(self, imageDataAt: .secondary, in: clip) else { return nil }
-            return UIImage(data: data)
-        }()
-        cell.tertiaryImage = {
-            guard let data = self.dataSource?.clipsListCollectionViewProvider(self, imageDataAt: .tertiary, in: clip) else { return nil }
-            return UIImage(data: data)
-        }()
+        cell.identifier = clip.identity
+
+        cell.primaryImage = nil
+        cell.secondaryImage = nil
+        cell.tertiaryImage = nil
+
+        if let item = clip.primaryItem {
+            self.dataSource?.requestImage(self, for: item) { image in
+                DispatchQueue.main.async {
+                    guard cell.identifier == clip.identity else { return }
+                    cell.primaryImage = image
+                }
+            }
+        }
+
+        if let item = clip.secondaryItem {
+            self.dataSource?.requestImage(self, for: item) { image in
+                DispatchQueue.main.async {
+                    guard cell.identifier == clip.identity else { return }
+                    cell.secondaryImage = image
+                }
+            }
+        }
+
+        if let item = clip.tertiaryItem {
+            self.dataSource?.requestImage(self, for: item) { image in
+                DispatchQueue.main.async {
+                    guard cell.identifier == clip.identity else { return }
+                    cell.tertiaryImage = image
+                }
+            }
+        }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false
 

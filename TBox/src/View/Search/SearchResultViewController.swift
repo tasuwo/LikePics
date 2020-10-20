@@ -207,8 +207,8 @@ extension SearchResultViewController: ClipsListCollectionViewProviderDataSource 
         return self.dataSource.itemIdentifier(for: indexPath)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageDataAt layer: ThumbnailLayer, in clip: Clip) -> Data? {
-        return self.presenter.getImageData(for: layer, in: clip)
+    func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
+        self.presenter.fetchImage(for: clipItem, completion: completion)
     }
 }
 
