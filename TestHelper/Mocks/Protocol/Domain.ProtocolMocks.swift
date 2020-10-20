@@ -5,6 +5,7 @@
 import Combine
 @testable import Domain
 import Erik
+import UIKit
 import WebKit
 
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
