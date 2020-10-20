@@ -9,6 +9,7 @@ import UIKit
 protocol ClipsListCollectionViewProviderDataSource: AnyObject {
     func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip?
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage?
     func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 }
 
@@ -32,35 +33,55 @@ class ClipsListCollectionViewProvider: NSObject {
 
         cell.identifier = clip.identity
 
-        cell.primaryImage = nil
         cell.secondaryImage = nil
         cell.tertiaryImage = nil
 
         if let item = clip.primaryItem {
-            self.dataSource?.requestImage(self, for: item) { image in
-                DispatchQueue.main.async {
-                    guard cell.identifier == clip.identity else { return }
-                    cell.primaryImage = image
+            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+                cell.primaryImage = image
+            } else {
+                cell.primaryImage = nil
+                self.dataSource?.requestImage(self, for: item) { image in
+                    DispatchQueue.main.async {
+                        guard cell.identifier == clip.identity else { return }
+                        cell.primaryImage = image
+                    }
                 }
             }
+        } else {
+            cell.primaryImage = nil
         }
 
         if let item = clip.secondaryItem {
-            self.dataSource?.requestImage(self, for: item) { image in
-                DispatchQueue.main.async {
-                    guard cell.identifier == clip.identity else { return }
-                    cell.secondaryImage = image
+            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+                cell.secondaryImage = image
+            } else {
+                cell.secondaryImage = nil
+                self.dataSource?.requestImage(self, for: item) { image in
+                    DispatchQueue.main.async {
+                        guard cell.identifier == clip.identity else { return }
+                        cell.secondaryImage = image
+                    }
                 }
             }
+        } else {
+            cell.secondaryImage = nil
         }
 
         if let item = clip.tertiaryItem {
-            self.dataSource?.requestImage(self, for: item) { image in
-                DispatchQueue.main.async {
-                    guard cell.identifier == clip.identity else { return }
-                    cell.tertiaryImage = image
+            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+                cell.tertiaryImage = image
+            } else {
+                cell.tertiaryImage = nil
+                self.dataSource?.requestImage(self, for: item) { image in
+                    DispatchQueue.main.async {
+                        guard cell.identifier == clip.identity else { return }
+                        cell.tertiaryImage = image
+                    }
                 }
             }
+        } else {
+            cell.tertiaryImage = nil
         }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false

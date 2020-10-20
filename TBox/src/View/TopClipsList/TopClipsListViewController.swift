@@ -205,6 +205,10 @@ extension TopClipsListViewController: ClipsListCollectionViewProviderDataSource 
         return self.dataSource.itemIdentifier(for: indexPath)
     }
 
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage? {
+        return self.presenter.readImageIfExists(for: clipItem)
+    }
+
     func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.presenter.fetchImage(for: clipItem, completion: completion)
     }

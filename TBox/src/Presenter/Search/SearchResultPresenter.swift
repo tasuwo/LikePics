@@ -41,6 +41,7 @@ protocol SearchResultPresenterProtocol {
 
     func viewDidAppear()
 
+    func readImageIfExists(for clipItem: ClipItem) -> UIImage?
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: SearchResultViewProtocol)
@@ -131,6 +132,10 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func viewDidAppear() {
         self.previewingClipId = nil
+    }
+
+    func readImageIfExists(for clipItem: ClipItem) -> UIImage? {
+        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {

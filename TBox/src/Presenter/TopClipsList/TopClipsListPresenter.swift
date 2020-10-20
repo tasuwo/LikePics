@@ -27,6 +27,7 @@ protocol TopClipsListPresenterProtocol {
 
     func viewDidAppear()
 
+    func readImageIfExists(for clipItem: ClipItem) -> UIImage?
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: TopClipsListViewProtocol)
@@ -113,6 +114,10 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
 
     func viewDidAppear() {
         self.previewingClipId = nil
+    }
+
+    func readImageIfExists(for clipItem: ClipItem) -> UIImage? {
+        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {

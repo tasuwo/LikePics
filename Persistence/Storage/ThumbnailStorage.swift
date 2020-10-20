@@ -131,6 +131,13 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
         try? self.createDirectoryIfNeeded(at: self.baseUrl)
     }
 
+    public func readThumbnailIfExists(for item: ClipItem) -> UIImage? {
+        return self.ioQueue.sync {
+            guard self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else { return nil }
+            return try? self.readCache(named: item.imageFileName, inClipHaving: item.clipId)
+        }
+    }
+
     public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.ioQueue.sync {
             guard !self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else {

@@ -11,6 +11,7 @@ public protocol ThumbnailStorageProtocol {
      * - attention: for DEBUG
      */
     func clearCache()
+    func readThumbnailIfExists(for item: ClipItem) -> UIImage?
     func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void)
 }
 
