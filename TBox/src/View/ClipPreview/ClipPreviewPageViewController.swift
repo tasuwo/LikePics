@@ -351,14 +351,12 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldRefetchClip(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        // TODO: エラー文言
         guard let clipUrl = self.presenter.clip.url else { return }
         let viewController = self.factory.makeClipTargetCollectionViewController(clipUrl: clipUrl, delegate: self, isOverwrite: true)
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        // TODO: エラー文言
         guard let clipUrl = self.presenter.clip.url else { return }
         UIApplication.shared.open(clipUrl, options: [:], completionHandler: nil)
     }

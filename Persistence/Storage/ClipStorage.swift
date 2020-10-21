@@ -505,7 +505,6 @@ extension ClipStorage: ClipStorageProtocol {
         clipObjects
             .flatMap { $0.items }
             .forEach { clipItem in
-                // swiftlint:disable:next force_unwrapping
                 try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
             }
 
