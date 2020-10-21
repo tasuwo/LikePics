@@ -155,16 +155,6 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("readImageDataHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) var readThumbnailDataCallCount = 0
-    public var readThumbnailDataHandler: ((ClipItem) -> (Result<Data, ClipStorageError>))?
-    public func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError> {
-        readThumbnailDataCallCount += 1
-        if let readThumbnailDataHandler = readThumbnailDataHandler {
-            return readThumbnailDataHandler(item)
-        }
-        fatalError("readThumbnailDataHandler returns can't have a default value thus its handler must be set")
-    }
-
     public private(set) var updateClipsCallCount = 0
     public var updateClipsHandler: (([Clip.Identity], Bool) -> (Result<[Clip], ClipStorageError>))?
     public func updateClips(having ids: [Clip.Identity], byHiding: Bool) -> Result<[Clip], ClipStorageError> {

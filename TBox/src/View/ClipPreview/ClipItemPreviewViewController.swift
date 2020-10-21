@@ -36,14 +36,17 @@ class ClipItemPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if
-            let thumbnailData = self.presenter.readThumbnailImageData(),
-            let thumbnailImage = UIImage(data: thumbnailData),
-            let imageSize = self.presenter.imageSize,
-            let url = self.presenter.resolveImageUrl()
-        {
-            self.previewView.source = (url, imageSize.cgSize, thumbnailImage)
-        }
+        // TODO: Previewを表示する
+        /*
+         if
+             let thumbnailData = self.presenter.readThumbnailImageData(),
+             let thumbnailImage = UIImage(data: thumbnailData),
+             let imageSize = self.presenter.imageSize,
+             let url = self.presenter.resolveImageUrl()
+         {
+             self.previewView.source = (url, imageSize.cgSize, thumbnailImage)
+         }
+          */
     }
 
     override func viewDidLayoutSubviews() {

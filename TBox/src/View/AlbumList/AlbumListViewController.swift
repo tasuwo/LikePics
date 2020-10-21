@@ -70,11 +70,14 @@ class AlbumListViewController: UIViewController {
 
             cell.title = album.title
 
-            if let data = self.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
-                cell.thumbnail = image
-            } else {
-                cell.thumbnail = nil
-            }
+            // TODO: サムネイルを取得する
+            /*
+             if let data = self.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
+                 cell.thumbnail = image
+             } else {
+                 cell.thumbnail = nil
+             }
+              */
 
             cell.deletate = self
             cell.visibleDeleteButton = self.isEditing

@@ -7,9 +7,6 @@ public struct ClipItem: Equatable {
     public let id: String
     public let clipId: String
     public let clipIndex: Int
-    public let thumbnailFileName: String
-    public let thumbnailUrl: URL?
-    public let thumbnailSize: ImageSize
     public let imageFileName: String
     public let imageUrl: URL?
     public let imageSize: ImageSize
@@ -21,9 +18,6 @@ public struct ClipItem: Equatable {
     public init(id: String,
                 clipId: String,
                 clipIndex: Int,
-                thumbnailFileName: String,
-                thumbnailUrl: URL?,
-                thumbnailSize: ImageSize,
                 imageFileName: String,
                 imageUrl: URL?,
                 imageSize: ImageSize,
@@ -33,9 +27,6 @@ public struct ClipItem: Equatable {
         self.id = id
         self.clipId = clipId
         self.clipIndex = clipIndex
-        self.thumbnailUrl = thumbnailUrl
-        self.thumbnailFileName = thumbnailFileName
-        self.thumbnailSize = thumbnailSize
         self.imageFileName = imageFileName
         self.imageUrl = imageUrl
         self.imageSize = imageSize

@@ -60,9 +60,13 @@ class AlbumSelectionViewController: UIViewController {
             guard let cell = dequeuedCell as? AlbumSelectionCell else { return dequeuedCell }
 
             cell.title = album.title
-            if let data = self?.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
-                cell.thumbnail = image
-            }
+
+            // TODO: サムネイルを取得する
+            /*
+             if let data = self?.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
+                 cell.thumbnail = image
+             }
+              */
 
             return cell
         }

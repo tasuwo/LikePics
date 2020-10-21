@@ -36,20 +36,6 @@ class ClipItemPreviewPresenter {
 
     // MARK: - Methods
 
-    func readThumbnailImageData() -> Data? {
-        guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
-        switch self.storage.readThumbnailData(of: item) {
-        case let .success(data):
-            return data
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read thumbnail. (code: \(error.rawValue))
-            """))
-            return nil
-        }
-    }
-
     func resolveImageUrl() -> URL? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
         switch self.storage.readImageFileUrl(of: item) {

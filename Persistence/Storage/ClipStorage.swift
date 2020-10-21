@@ -13,7 +13,7 @@ public class ClipStorage {
 
         public static func makeConfiguration() -> Realm.Configuration {
             var configuration = Realm.Configuration(
-                schemaVersion: 8,
+                schemaVersion: 9,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false
             )
@@ -64,7 +64,6 @@ extension ClipStorage: ClipStorageProtocol {
 
             let containsFilesFor = { (item: ClipItem) in
                 return data.contains(where: { $0.fileName == item.imageFileName })
-                    && data.contains(where: { $0.fileName == item.thumbnailFileName })
             }
             guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
                 return .failure(.invalidParameter)
@@ -102,10 +101,6 @@ extension ClipStorage: ClipStorageProtocol {
                 newClipItem.id = item.id
                 newClipItem.clipId = item.clipId
                 newClipItem.clipIndex = item.clipIndex
-                newClipItem.thumbnailUrl = item.thumbnailUrl?.absoluteString
-                newClipItem.thumbnailFileName = item.thumbnailFileName
-                newClipItem.thumbnailHeight = item.thumbnailSize.height
-                newClipItem.thumbnailWidth = item.thumbnailSize.width
                 newClipItem.imageFileName = item.imageFileName
                 newClipItem.imageUrl = item.imageUrl?.absoluteString
                 newClipItem.imageHeight = item.imageSize.height
@@ -221,18 +216,6 @@ extension ClipStorage: ClipStorageProtocol {
         return self.queue.sync {
             do {
                 return .success(try self.imageStorage.readImage(named: item.imageFileName, inClipHaving: item.clipId))
-            } catch ImageStorageError.notFound {
-                return .failure(.notFound)
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
-    public func readThumbnailData(of item: ClipItem) -> Result<Data, ClipStorageError> {
-        return self.queue.sync {
-            do {
-                return .success(try self.imageStorage.readImage(named: item.thumbnailFileName, inClipHaving: item.clipId))
             } catch ImageStorageError.notFound {
                 return .failure(.notFound)
             } catch {
@@ -524,8 +507,6 @@ extension ClipStorage: ClipStorageProtocol {
             .forEach { clipItem in
                 // swiftlint:disable:next force_unwrapping
                 try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
-                // swiftlint:disable:next force_unwrapping
-                try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClipHaving: clipItem.clipId)
             }
 
         do {
@@ -552,7 +533,6 @@ extension ClipStorage: ClipStorageProtocol {
             let removeTarget = ClipItem.make(by: item)
 
             try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
-            try? self.imageStorage.delete(fileName: clipItem.thumbnailFileName, inClipHaving: clipItem.clipId)
 
             do {
                 try realm.write {

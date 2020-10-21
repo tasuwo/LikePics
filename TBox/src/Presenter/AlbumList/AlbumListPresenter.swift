@@ -82,25 +82,4 @@ class AlbumListPresenter {
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
         }
     }
-
-    func readThumbnailImageData(for album: Album) -> Data? {
-        let thumbnailTarget: ClipItem? = {
-            if self.showHiddenItems {
-                return album.clips.first?.items.first
-            } else {
-                return album.clips.first(where: { !$0.isHidden })?.items.first
-            }
-        }()
-        guard let clipItem = thumbnailTarget else { return nil }
-
-        switch self.storage.readThumbnailData(of: clipItem) {
-        case let .success(data):
-            return data
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to read image. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
-            return nil
-        }
-    }
 }

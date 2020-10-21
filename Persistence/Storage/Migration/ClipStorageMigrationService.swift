@@ -41,6 +41,15 @@ enum ClipStorageMigrationService {
             Self.migrateToV7(migration)
         } else if oldSchemaVersion < 8 {
             Self.migrateToV8(migration)
+        } else if oldSchemaVersion < 9 {
+            Self.migrateToV9(migration)
+        }
+    }
+
+    private static func migrateToV9(_ migration: Migration) {
+        let storage = try! ImageStorage()
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, _ in
+            try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! String)
         }
     }
 
