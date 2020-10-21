@@ -2794,7 +2794,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\" --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --package-path $SRCROOT/BuildTools/Package.swift \\\n                                            --config-path $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n\n\n";
+			shellScript = "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\" --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --config-path $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n\n\n";
 		};
 		2CA022AE24DD9F6E00329251 /* SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
