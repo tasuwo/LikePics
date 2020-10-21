@@ -15,8 +15,6 @@ public protocol WebImageProvider {
 
     static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError>
 
-    static func resolveLowQualityImageUrl(of url: URL) -> URL?
-
     static func resolveHighQualityImageUrl(of url: URL) -> URL?
 
     static func shouldModifyRequest(for url: URL) -> Bool

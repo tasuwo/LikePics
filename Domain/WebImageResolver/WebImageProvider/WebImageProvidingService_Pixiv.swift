@@ -28,10 +28,6 @@ extension WebImageProvidingService {
                 .eraseToAnyPublisher()
         }
 
-        public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
-            return nil
-        }
-
         public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
             return nil
         }

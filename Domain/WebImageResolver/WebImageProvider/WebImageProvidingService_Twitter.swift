@@ -213,22 +213,6 @@ extension WebImageProvidingService.Twitter {
         return StateMachine.start(on: browser)
     }
 
-    public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
-        guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
-            return nil
-        }
-
-        let newQueryItems: [URLQueryItem] = queryItems
-            .compactMap { queryItem in
-                guard queryItem.name == "name" else { return queryItem }
-                return URLQueryItem(name: "name", value: "small")
-            }
-
-        components.queryItems = newQueryItems
-
-        return components.url
-    }
-
     public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
         guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
             return nil

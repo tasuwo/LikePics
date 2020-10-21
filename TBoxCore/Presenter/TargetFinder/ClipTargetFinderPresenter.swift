@@ -19,8 +19,7 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
     func notifySavedImagesSuccessfully()
 }
 
-typealias OrderedImageMeta = (index: Int, meta: DisplayableImageMeta)
-typealias OrderedImageData = (index: Int, data: FetchedImageData)
+typealias OrderingSelectableImage = (index: Int, meta: SelectableImage)
 
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
@@ -30,7 +29,7 @@ public class ClipTargetFinderPresenter {
         case internalError
     }
 
-    private(set) var imageMetas: [DisplayableImageMeta] = [] {
+    private(set) var selectableImages: [SelectableImage] = [] {
         didSet {
             self.selectedIndices = []
             self.view?.resetSelection()
@@ -133,16 +132,16 @@ public class ClipTargetFinderPresenter {
             return
         }
 
-        if !self.imageMetas.isEmpty {
-            self.imageMetas = []
+        if !self.selectableImages.isEmpty {
+            self.selectableImages = []
             self.view?.reloadList()
         }
 
         self.view?.startLoading()
 
-        self.resolveWebImages(ofUrl: self.url)
-            .flatMap { webImages -> AnyPublisher<[DisplayableImageMeta], PresenterError> in
-                return self.resolveSize(ofWebImages: webImages)
+        self.resolveImageUrls(at: self.url)
+            .flatMap { urls -> AnyPublisher<[SelectableImage], PresenterError> in
+                return self.resolveSizes(ofImageUrls: urls)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -154,8 +153,8 @@ public class ClipTargetFinderPresenter {
                 case .finished:
                     break
                 }
-            }, receiveValue: { [weak self] fetchedWebImages in
-                self?.imageMetas = fetchedWebImages
+            }, receiveValue: { [weak self] foundImages in
+                self?.selectableImages = foundImages
                 self?.view?.endLoading()
                 self?.view?.reloadList()
             })
@@ -165,21 +164,13 @@ public class ClipTargetFinderPresenter {
     func saveSelectedImages() {
         self.view?.startLoading()
 
-        let selections: [OrderedImageMeta] = self.selectedIndices.enumerated()
-            .map { ($0.offset, self.imageMetas[$0.element]) }
+        let selections: [OrderingSelectableImage] = self.selectedIndices.enumerated()
+            .map { ($0.offset, self.selectableImages[$0.element]) }
 
         Publishers.MergeMany(self.fetchImageData(for: selections, using: self.urlSession))
             .collect()
             .mapError { _ in
                 return PresenterError.failedToDownloadImages
-            }
-            .flatMap { [weak self] results -> AnyPublisher<[ImageDataSet], PresenterError> in
-                guard let self = self else {
-                    return Fail(error: .internalError).eraseToAnyPublisher()
-                }
-                return self.buildSaveData(forClip: self.url, from: results)
-                    .publisher
-                    .eraseToAnyPublisher()
             }
             .flatMap { [weak self] imageDataSets -> AnyPublisher<Void, PresenterError> in
                 guard let self = self else {
@@ -207,7 +198,7 @@ public class ClipTargetFinderPresenter {
     }
 
     func selectItem(at index: Int) {
-        guard self.imageMetas.indices.contains(index) else { return }
+        guard self.selectableImages.indices.contains(index) else { return }
 
         let indexInSelection = self.selectedIndices.count + 1
         self.selectedIndices.append(index)
@@ -229,7 +220,7 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Load Images
 
-    private func resolveWebImages(ofUrl url: URL) -> Future<[WebImageUrlSet], PresenterError> {
+    private func resolveImageUrls(at url: URL) -> Future<[URL], PresenterError> {
         return Future { promise in
             self.finder.findImageUrls(inWebSiteAt: url) { result in
                 switch result {
@@ -243,12 +234,12 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private func resolveSize(ofWebImages webImages: [WebImageUrlSet]) -> AnyPublisher<[DisplayableImageMeta], PresenterError> {
+    private func resolveSizes(ofImageUrls urls: [URL]) -> AnyPublisher<[SelectableImage], PresenterError> {
         do {
-            let publishers: [AnyPublisher<DisplayableImageMeta, Never>] = try webImages
-                .map { [weak self] webImage in
+            let publishers: [AnyPublisher<SelectableImage, Never>] = try urls
+                .map { [weak self] url in
                     guard let self = self else { throw PresenterError.internalError }
-                    return DisplayableImageMeta.make(by: webImage, using: self.urlSession)
+                    return SelectableImage.make(by: url, using: self.urlSession)
                 }
             return Publishers.MergeMany(publishers)
                 .filter({ $0.isValid })
@@ -263,85 +254,32 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Save Images
 
-    private func fetchImageData(for metas: [OrderedImageMeta], using session: URLSession) -> [AnyPublisher<OrderedImageData, Error>] {
-        return metas
-            .flatMap { meta -> [(OrderedImageMeta, ImageQuality)] in
-                [(meta, .original), (meta, .thumbnail)]
-            }
-            .compactMap { orderedMeta, quality in
-                switch quality {
-                case .original:
-                    let imageUrl = orderedMeta.meta.imageUrl
-                    return session
-                        .dataTaskPublisher(for: imageUrl)
-                        .tryMap { data, response -> FetchedImageData in
-                            FetchedImageData(url: imageUrl,
-                                             data: data,
-                                             mimeType: response.mimeType,
-                                             quality: quality,
-                                             imageHeight: Double(orderedMeta.meta.imageSize.height),
-                                             imageWidth: Double(orderedMeta.meta.imageSize.width))
-                        }
-                        .map { (orderedMeta.index, $0) }
-                        .eraseToAnyPublisher()
-
-                case .thumbnail:
-                    guard let imageUrl = orderedMeta.meta.thumbImageUrl else { return nil }
-                    return session
-                        .dataTaskPublisher(for: imageUrl)
-                        .tryMap { data, response -> FetchedImageData in
-                            FetchedImageData(url: imageUrl,
-                                             data: data,
-                                             mimeType: response.mimeType,
-                                             quality: quality,
-                                             imageHeight: Double(orderedMeta.meta.imageSize.height),
-                                             imageWidth: Double(orderedMeta.meta.imageSize.width))
-                        }
-                        .map { (orderedMeta.index, $0) }
-                        .eraseToAnyPublisher()
-                }
+    private func fetchImageData(for images: [OrderingSelectableImage], using session: URLSession) -> [AnyPublisher<ClipItemDataSource, Error>] {
+        return images
+            .compactMap { image in
+                let imageUrl = image.meta.imageUrl
+                return session
+                    .dataTaskPublisher(for: imageUrl)
+                    .tryMap { data, response -> ClipItemDataSource in
+                        ClipItemDataSource(index: image.index,
+                                           url: imageUrl,
+                                           data: data,
+                                           mimeType: response.mimeType,
+                                           height: Double(image.meta.imageSize.height),
+                                           width: Double(image.meta.imageSize.width))
+                    }
+                    .eraseToAnyPublisher()
             }
     }
 
-    private func buildSaveData(forClip clipUrl: URL, from images: [OrderedImageData]) -> Result<[ImageDataSet], PresenterError> {
-        do {
-            let result = try images
-                .reduce(into: [Int: ComposingFetchedImageDataSet]()) { result, orderedImage in
-                    if let dataSet = result[orderedImage.index] {
-                        result[orderedImage.index] = dataSet.setting(data: orderedImage.data)
-                    } else {
-                        result[orderedImage.index] = ComposingFetchedImageDataSet(data: orderedImage.data)
-                    }
-                }
-                .map {
-                    guard let original = $0.value.original else {
-                        throw PresenterError.failedToDownloadImages
-                    }
-                    return FetchedImageDataSet(index: $0.key,
-                                               imageHeight: original.imageHeight,
-                                               imageWidth: original.imageWidth,
-                                               original: original,
-                                               thumbnail: $0.value.thumbnail)
-                }
-                .map { ImageDataSet(dataSet: $0) }
-            return .success(result)
-        } catch {
-            return .failure(.failedToDownloadImages)
-        }
-    }
-
-    private func save(target: [ImageDataSet]) -> Result<Void, PresenterError> {
+    private func save(target: [ClipItemDataSource]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
         let clipId = UUID().uuidString
-        let items = target.map { ClipItem(clipId: clipId, dataSet: $0, currentDate: currentDate) }
-        let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
-
-        let data = target.flatMap {
-            [
-                ($0.originalImageFileName, $0.originalImageData),
-                ($0.thumbnailFileName, $0.thumbnailData)
-            ]
+        let items = target.map {
+            ClipItem(id: UUID().uuidString, clipId: clipId, dataSet: $0, currentDate: currentDate)
         }
+        let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
+        let data = target.map { ($0.fileName, $0.data) }
 
         switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
         case .success:
@@ -354,13 +292,13 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(clipId: Clip.Identity, dataSet: ImageDataSet, currentDate: Date) {
-        self.init(id: UUID().uuidString,
+    init(id: ClipItem.Identity, clipId: Clip.Identity, dataSet: ClipItemDataSource, currentDate: Date) {
+        self.init(id: id,
                   clipId: clipId,
                   clipIndex: dataSet.index,
-                  imageFileName: dataSet.originalImageFileName,
-                  imageUrl: dataSet.originalImageUrl,
-                  imageSize: ImageSize(height: dataSet.imageHeight, width: dataSet.imageWidth),
+                  imageFileName: dataSet.fileName,
+                  imageUrl: dataSet.url,
+                  imageSize: ImageSize(height: dataSet.height, width: dataSet.width),
                   registeredDate: currentDate,
                   updatedDate: currentDate)
     }

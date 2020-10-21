@@ -6,15 +6,10 @@ import Combine
 import Erik
 import WebKit
 
-public struct WebImageUrlSet {
-    public let url: URL
-    public let lowQualityUrl: URL?
-}
-
 /// @mockable
 public protocol WebImageUrlFinderProtocol {
     var webView: WKWebView { get }
-    func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void)
+    func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void)
 }
 
 public class WebImageUrlFinder {
@@ -90,7 +85,7 @@ public class WebImageUrlFinder {
 extension WebImageUrlFinder: WebImageUrlFinderProtocol {
     // MARK: - WebImageUrlFinderProtocol
 
-    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) {
+    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
         var preprocessedStep: AnyPublisher<Void, WebImageUrlFinderError>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = self.openPage(url: url)
@@ -122,16 +117,13 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                     break
                 }
             }, receiveValue: { document in
-                let imageUrls: [WebImageUrlSet] = document
+                let imageUrls: [URL] = document
                     .querySelectorAll("img")
                     .compactMap { $0["src"] }
                     .compactMap { URL(string: $0) }
                     .map {
-                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                            return WebImageUrlSet(url: $0, lowQualityUrl: nil)
-                        }
-                        return WebImageUrlSet(url: provider.resolveHighQualityImageUrl(of: $0) ?? $0,
-                                              lowQualityUrl: provider.resolveLowQualityImageUrl(of: $0))
+                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else { return $0 }
+                        return provider.resolveHighQualityImageUrl(of: $0) ?? $0
                     }
                 completion(.success(imageUrls))
             })

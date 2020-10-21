@@ -4,16 +4,15 @@
 
 import Domain
 
-struct FetchedImageData {
+struct ClipItemDataSource {
     static let fallbackFileExtension = "jpeg"
 
+    let index: Int
     let url: URL
     let data: Data
     let mimeType: String?
-    let quality: ImageQuality
-
-    let imageHeight: Double
-    let imageWidth: Double
+    let height: Double
+    let width: Double
 
     var fileName: String {
         let ext: String = {

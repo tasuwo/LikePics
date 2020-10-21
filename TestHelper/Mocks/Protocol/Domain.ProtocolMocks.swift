@@ -417,16 +417,6 @@ public class WebImageProviderMock: WebImageProvider {
         fatalError("preprocessHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) static var resolveLowQualityImageUrlCallCount = 0
-    public static var resolveLowQualityImageUrlHandler: ((URL) -> (URL?))?
-    public static func resolveLowQualityImageUrl(of url: URL) -> URL? {
-        resolveLowQualityImageUrlCallCount += 1
-        if let resolveLowQualityImageUrlHandler = resolveLowQualityImageUrlHandler {
-            return resolveLowQualityImageUrlHandler(url)
-        }
-        return nil
-    }
-
     public private(set) static var resolveHighQualityImageUrlCallCount = 0
     public static var resolveHighQualityImageUrlHandler: ((URL) -> (URL?))?
     public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
@@ -472,8 +462,8 @@ public class WebImageUrlFinderProtocolMock: WebImageUrlFinderProtocol {
     }
 
     public private(set) var findImageUrlsCallCount = 0
-    public var findImageUrlsHandler: ((URL, @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) -> Void)?
-    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) {
+    public var findImageUrlsHandler: ((URL, @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) -> Void)?
+    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
         findImageUrlsCallCount += 1
         if let findImageUrlsHandler = findImageUrlsHandler {
             findImageUrlsHandler(url, completion)

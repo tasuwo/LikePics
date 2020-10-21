@@ -35,9 +35,6 @@ extension ClipItemObject {
     static func makeDefault(id: String = "",
                             clipId: String = "",
                             clipIndex: Int = 0,
-                            thumbnailFileName: String = "",
-                            thumbnailHeight: Double = 0,
-                            thumbnailWidth: Double = 0,
                             imageFileName: String = "",
                             imageUrl: String = "",
                             registeredAt: Date = Date(timeIntervalSince1970: 0),
@@ -47,9 +44,6 @@ extension ClipItemObject {
         obj.id = id
         obj.clipId = clipId
         obj.clipIndex = clipIndex
-        obj.thumbnailFileName = thumbnailFileName
-        obj.thumbnailHeight = thumbnailHeight
-        obj.thumbnailWidth = thumbnailWidth
         obj.imageFileName = imageFileName
         obj.imageUrl = imageUrl
         obj.registeredAt = registeredAt
