@@ -68,16 +68,20 @@ class AlbumListViewController: UIViewController {
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
             guard let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
 
+            cell.identifier = album.identity
             cell.title = album.title
 
-            // TODO: サムネイルを取得する
-            /*
-             if let data = self.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
-                 cell.thumbnail = image
-             } else {
-                 cell.thumbnail = nil
-             }
-              */
+            if let image = self.presenter.readImageIfExists(for: album) {
+                cell.thumbnail = image
+            } else {
+                cell.thumbnail = nil
+                self.presenter.fetchImage(for: album) { image in
+                    DispatchQueue.main.async {
+                        guard cell.identifier == album.identity else { return }
+                        cell.thumbnail = image
+                    }
+                }
+            }
 
             cell.deletate = self
             cell.visibleDeleteButton = self.isEditing

@@ -284,6 +284,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = AlbumListPresenter(query: query,
                                            storage: self.clipStorage,
+                                           cacheStorage: self.cacheStorage,
                                            settingStorage: self.userSettingsStorage,
                                            logger: self.logger)
 
@@ -339,6 +340,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = AlbumSelectionPresenter(query: query,
                                                 context: context,
                                                 storage: self.clipStorage,
+                                                cacheStorage: self.cacheStorage,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
         presenter.delegate = delegate

@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import UIKit
 
 protocol AlbumListViewProtocol: AnyObject {
     func apply(_ albums: [Album])
@@ -15,6 +16,7 @@ protocol AlbumListViewProtocol: AnyObject {
 class AlbumListPresenter {
     private let query: AlbumListQuery
     private let storage: ClipStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -39,11 +41,13 @@ class AlbumListPresenter {
 
     init(query: AlbumListQuery,
          storage: ClipStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.storage = storage
+        self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -80,6 +84,27 @@ class AlbumListPresenter {
         if case let .failure(error) = self.storage.deleteAlbum(having: album.identity) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func readImageIfExists(for album: Album) -> UIImage? {
+        guard let clipItem = self.resolveThumbnailItem(for: album) else { return nil }
+        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
+    }
+
+    func fetchImage(for album: Album, completion: @escaping (UIImage?) -> Void) {
+        guard let clipItem = self.resolveThumbnailItem(for: album) else {
+            completion(nil)
+            return
+        }
+        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
+    }
+
+    private func resolveThumbnailItem(for album: Album) -> ClipItem? {
+        if self.showHiddenItems {
+            return album.clips.first?.items.first
+        } else {
+            return album.clips.first(where: { !$0.isHidden })?.items.first
         }
     }
 }

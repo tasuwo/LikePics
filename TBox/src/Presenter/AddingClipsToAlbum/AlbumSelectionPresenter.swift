@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import UIKit
 
 protocol AlbumSelectionPresenterDelegate: AnyObject {
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?)
@@ -21,6 +22,7 @@ class AlbumSelectionPresenter {
     private let query: AlbumListQuery
     private let context: Any?
     private let storage: ClipStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -48,12 +50,14 @@ class AlbumSelectionPresenter {
     init(query: AlbumListQuery,
          context: Any?,
          storage: ClipStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.context = context
         self.storage = storage
+        self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -82,5 +86,26 @@ class AlbumSelectionPresenter {
     func select(albumId: Album.Identity) {
         self.delegate?.albumSelectionPresenter(self, didSelectAlbumHaving: albumId, withContext: self.context)
         self.view?.close()
+    }
+
+    func readImageIfExists(for album: Album) -> UIImage? {
+        guard let clipItem = self.resolveThumbnailItem(for: album) else { return nil }
+        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
+    }
+
+    func fetchImage(for album: Album, completion: @escaping (UIImage?) -> Void) {
+        guard let clipItem = self.resolveThumbnailItem(for: album) else {
+            completion(nil)
+            return
+        }
+        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
+    }
+
+    private func resolveThumbnailItem(for album: Album) -> ClipItem? {
+        if self.showHiddenItems {
+            return album.clips.first?.items.first
+        } else {
+            return album.clips.first(where: { !$0.isHidden })?.items.first
+        }
     }
 }

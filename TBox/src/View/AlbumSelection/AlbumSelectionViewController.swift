@@ -59,14 +59,20 @@ class AlbumSelectionViewController: UIViewController {
             let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: AlbumSelectionTableView.cellIdentifier, for: indexPath)
             guard let cell = dequeuedCell as? AlbumSelectionCell else { return dequeuedCell }
 
+            cell.identifier = album.identity
             cell.title = album.title
 
-            // TODO: サムネイルを取得する
-            /*
-             if let data = self?.presenter.readThumbnailImageData(for: album), let image = UIImage(data: data) {
-                 cell.thumbnail = image
-             }
-              */
+            if let image = self?.presenter.readImageIfExists(for: album) {
+                cell.thumbnail = image
+            } else {
+                cell.thumbnail = nil
+                self?.presenter.fetchImage(for: album) { image in
+                    DispatchQueue.main.async {
+                        guard cell.identifier == album.identity else { return }
+                        cell.thumbnail = image
+                    }
+                }
+            }
 
             return cell
         }

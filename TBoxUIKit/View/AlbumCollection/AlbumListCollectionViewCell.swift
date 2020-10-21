@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
 public protocol AlbumListCollectionViewCellDelegate: AnyObject {
@@ -12,6 +13,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     public static var nib: UINib {
         return UINib(nibName: "AlbumListCollectionViewCell", bundle: Bundle(for: Self.self))
     }
+
+    public var identifier: Album.Identity?
 
     public var thumbnail: UIImage? {
         get {
