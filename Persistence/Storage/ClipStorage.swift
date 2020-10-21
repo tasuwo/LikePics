@@ -99,8 +99,10 @@ extension ClipStorage: ClipStorageProtocol {
 
             // Prepare new objects
 
+            let targetClipId = duplicatedClip?.id ?? clip.id
+
             let newClip = ClipObject()
-            newClip.id = duplicatedClip?.id ?? clip.id
+            newClip.id = targetClipId
             newClip.url = clip.url?.absoluteString
             newClip.descriptionText = clip.description
 
@@ -108,7 +110,7 @@ extension ClipStorage: ClipStorageProtocol {
                 let newClipItem = ClipItemObject()
 
                 newClipItem.id = item.id
-                newClipItem.clipId = item.clipId
+                newClipItem.clipId = targetClipId
                 newClipItem.clipIndex = item.clipIndex
                 newClipItem.imageFileName = item.imageFileName
                 newClipItem.imageUrl = item.imageUrl?.absoluteString
@@ -143,9 +145,9 @@ extension ClipStorage: ClipStorageProtocol {
                     realm.add(newClip, update: updatePolicy)
                 }
 
-                try? self.imageStorage.deleteAll(inClipHaving: newClip.id)
+                try? self.imageStorage.deleteAll(inClipHaving: targetClipId)
                 try data.forEach { value in
-                    try self.imageStorage.save(value.image, asName: value.fileName, inClipHaving: clip.identity)
+                    try self.imageStorage.save(value.image, asName: value.fileName, inClipHaving: targetClipId)
                 }
 
                 return .success(())
