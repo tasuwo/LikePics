@@ -169,7 +169,7 @@ class ImageStorageSpec: QuickSpec {
                                                 targetDirectoryUrl: Self.testDirectory)
                 }
                 it("notFoundエラーがスローされる") {
-                    expect(expression: {
+                    expect({
                         try storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
                     }).to(throwError(ImageStorageError.notFound))
                 }
@@ -204,7 +204,7 @@ class ImageStorageSpec: QuickSpec {
                                                 targetDirectoryUrl: Self.testDirectory)
                 }
                 it("notFoundエラーがスローされる") {
-                    expect(expression: {
+                    expect({
                         try storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
                     }).to(throwError(ImageStorageError.notFound))
                 }

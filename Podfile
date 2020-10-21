@@ -2,8 +2,8 @@ use_frameworks!
 platform :ios, '13.0'
 
 def test_shared_pods
-    pod 'Quick',         '~> 2.2.0'
-    pod 'Nimble',        '~> 8.0.5'
+    pod 'Quick',         '~> 3.0.0'
+    pod 'Nimble',        '~> 9.0.0'
 end
 
 target 'TBox' do

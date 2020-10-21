@@ -43,42 +43,42 @@ version: 3.0.4
 name: Nimble, nameSpecified: 
 body: Apache License
      …
-version: 8.0.9
+version: 9.0.0
 
 name: Nimble, nameSpecified: 
 body: Apache License
      …
-version: 8.0.9
+version: 9.0.0
 
 name: Nimble, nameSpecified: 
 body: Apache License
      …
-version: 8.0.9
+version: 9.0.0
 
 name: Nimble, nameSpecified: 
 body: Apache License
      …
-version: 8.0.9
+version: 9.0.0
 
 name: Quick, nameSpecified: 
 body: Apache License
      …
-version: 2.2.1
+version: 3.0.0
 
 name: Quick, nameSpecified: 
 body: Apache License
      …
-version: 2.2.1
+version: 3.0.0
 
 name: Quick, nameSpecified: 
 body: Apache License
      …
-version: 2.2.1
+version: 3.0.0
 
 name: Quick, nameSpecified: 
 body: Apache License
      …
-version: 2.2.1
+version: 3.0.0
 
 name: Realm, nameSpecified: 
 body: TABLE OF CONTENTS
