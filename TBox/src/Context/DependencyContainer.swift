@@ -154,6 +154,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipItemPreviewPresenter(query: query,
                                                  itemId: itemId,
                                                  storage: self.clipStorage,
+                                                 cacheStorage: self.cacheStorage,
                                                  logger: self.logger)
 
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)

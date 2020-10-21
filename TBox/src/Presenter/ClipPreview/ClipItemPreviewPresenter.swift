@@ -4,6 +4,7 @@
 
 import Common
 import Domain
+import UIKit
 
 protocol ClipItemPreviewViewProtocol: AnyObject {
     func showErrorMessage(_ message: String)
@@ -14,6 +15,7 @@ class ClipItemPreviewPresenter {
 
     private let query: ClipQuery
     private let storage: ClipStorageProtocol
+    private let cacheStorage: ThumbnailStorageProtocol
     private let logger: TBoxLoggable
 
     var imageSize: ImageSize? {
@@ -27,10 +29,16 @@ class ClipItemPreviewPresenter {
 
     // MARK: - Lifecycle
 
-    init(query: ClipQuery, itemId: ClipItem.Identity, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(query: ClipQuery,
+         itemId: ClipItem.Identity,
+         storage: ClipStorageProtocol,
+         cacheStorage: ThumbnailStorageProtocol,
+         logger: TBoxLoggable)
+    {
         self.query = query
         self.itemId = itemId
         self.storage = storage
+        self.cacheStorage = cacheStorage
         self.logger = logger
     }
 
@@ -49,6 +57,11 @@ class ClipItemPreviewPresenter {
             self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
             return nil
         }
+    }
+
+    func readThumbnailIfExists() -> UIImage? {
+        guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
+        return self.cacheStorage.readThumbnailIfExists(for: item)
     }
 
     func readImageData() -> Data? {

@@ -11,7 +11,7 @@ public protocol ClipPreviewPageViewDelegate: AnyObject {
 }
 
 public class ClipPreviewView: UIView {
-    public typealias Source = (imageFileUrl: URL, imageSize: CGSize, thumbnail: UIImage)
+    public typealias Source = (imageFileUrl: URL, imageSize: CGSize, thumbnail: UIImage?)
 
     public var source: Source? {
         didSet {
