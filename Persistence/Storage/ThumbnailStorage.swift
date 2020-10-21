@@ -195,4 +195,12 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
             }
         }
     }
+
+    public func deleteThumbnailCacheIfExists(for item: ClipItem) {
+        return self.ioQueue.sync {
+            guard self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else { return }
+            let fileUrl = self.resolveCacheImageFileUrl(fileName: item.imageFileName, clipId: item.clipId)
+            try? self.fileManager.removeItem(at: fileUrl)
+        }
+    }
 }

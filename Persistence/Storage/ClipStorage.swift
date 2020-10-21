@@ -31,19 +31,28 @@ public class ClipStorage {
     }
 
     private let imageStorage: ImageStorageProtocol
+    private let thumbnailStorage: ThumbnailStorageProtocol
 
     private(set) var configuration: Realm.Configuration
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.queue")
 
     // MARK: - Lifecycle
 
-    public init(realmConfiguration: Realm.Configuration, imageStorage: ImageStorageProtocol) throws {
+    public init(realmConfiguration: Realm.Configuration,
+                imageStorage: ImageStorageProtocol,
+                thumbnailStorage: ThumbnailStorageProtocol) throws
+    {
         self.configuration = realmConfiguration
         self.imageStorage = imageStorage
+        self.thumbnailStorage = thumbnailStorage
     }
 
-    public convenience init() throws {
-        try self.init(realmConfiguration: StorageConfiguration.makeConfiguration(), imageStorage: ImageStorage())
+    public convenience init(imageStorage: ImageStorageProtocol,
+                            thumbnailStorage: ThumbnailStorageProtocol) throws
+    {
+        try self.init(realmConfiguration: StorageConfiguration.makeConfiguration(),
+                      imageStorage: imageStorage,
+                      thumbnailStorage: thumbnailStorage)
     }
 }
 
@@ -519,23 +528,32 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError> {
+    public func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError> {
         // TODO: Update clipItemIndex
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
             }
 
-            guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: clipItem.identity) else {
+            guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: id) else {
                 return .failure(.notFound)
             }
             let removeTarget = ClipItem.make(by: item)
 
-            try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: item.clipId) else {
+                return .failure(.notFound)
+            }
+
+            try? self.imageStorage.delete(fileName: item.imageFileName, inClipHaving: item.clipId)
+            self.thumbnailStorage.deleteThumbnailCacheIfExists(for: removeTarget)
 
             do {
                 try realm.write {
                     realm.delete(item)
+                    clip.items
+                        .sorted(by: { $0.clipIndex < $1.clipIndex })
+                        .enumerated()
+                        .forEach { $0.element.clipIndex = $0.offset }
                 }
                 return .success(removeTarget)
             } catch {

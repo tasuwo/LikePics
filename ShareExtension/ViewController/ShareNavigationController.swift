@@ -6,12 +6,18 @@ import UIKit
 
 @objc(ShareNavigationController)
 class ShareNavigationController: UINavigationController {
-    private let factory = DependencyContainer()
+    private var factory: DependencyContainer!
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        do {
+            self.factory = try DependencyContainer()
+        } catch {
+            fatalError("Unable to start Share Extension.")
+        }
 
         self.navigationItem.hidesBackButton = true
 

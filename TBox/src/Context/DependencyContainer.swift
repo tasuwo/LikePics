@@ -58,8 +58,10 @@ class DependencyContainer {
     private lazy var userSettingsStorage = UserSettingsStorage()
 
     init() throws {
-        self.clipStorage = try ClipStorage()
-        self.cacheStorage = try ThumbnailStorage()
+        let thumbnailStorage = try ThumbnailStorage()
+        self.clipStorage = try ClipStorage(imageStorage: ImageStorage(),
+                                           thumbnailStorage: thumbnailStorage)
+        self.cacheStorage = thumbnailStorage
     }
 }
 

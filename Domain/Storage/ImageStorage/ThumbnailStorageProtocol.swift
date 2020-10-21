@@ -4,6 +4,7 @@
 
 import UIKit
 
+/// @mockable
 public protocol ThumbnailStorageProtocol {
     /**
      * Clear all cache
@@ -13,6 +14,7 @@ public protocol ThumbnailStorageProtocol {
     func clearCache()
     func readThumbnailIfExists(for item: ClipItem) -> UIImage?
     func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void)
+    func deleteThumbnailCacheIfExists(for item: ClipItem)
 }
 
 extension ThumbnailStorageProtocol {

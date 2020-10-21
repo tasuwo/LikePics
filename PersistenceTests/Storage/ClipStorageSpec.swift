@@ -1479,6 +1479,9 @@ class ClipStorageSpec: QuickSpec {
 
         // TODO:
 
+        describe("delete(") {
+        }
+
         describe("delegeTags(having:)") {
             var result: Result<[Tag], ClipStorageError>!
 

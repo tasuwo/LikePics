@@ -245,14 +245,14 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) var deleteCallCount = 0
-    public var deleteHandler: ((ClipItem) -> (Result<ClipItem, ClipStorageError>))?
-    public func delete(_ clipItem: ClipItem) -> Result<ClipItem, ClipStorageError> {
-        deleteCallCount += 1
-        if let deleteHandler = deleteHandler {
-            return deleteHandler(clipItem)
+    public private(set) var deleteClipItemCallCount = 0
+    public var deleteClipItemHandler: ((ClipItem.Identity) -> (Result<ClipItem, ClipStorageError>))?
+    public func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError> {
+        deleteClipItemCallCount += 1
+        if let deleteClipItemHandler = deleteClipItemHandler {
+            return deleteClipItemHandler(id)
         }
-        fatalError("deleteHandler returns can't have a default value thus its handler must be set")
+        fatalError("deleteClipItemHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var deleteAlbumCallCount = 0
@@ -273,6 +273,47 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return deleteTagsHandler(ids)
         }
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class ThumbnailStorageProtocolMock: ThumbnailStorageProtocol {
+    public init() { }
+
+    public private(set) var clearCacheCallCount = 0
+    public var clearCacheHandler: (() -> Void)?
+    public func clearCache() {
+        clearCacheCallCount += 1
+        if let clearCacheHandler = clearCacheHandler {
+            clearCacheHandler()
+        }
+    }
+
+    public private(set) var readThumbnailIfExistsCallCount = 0
+    public var readThumbnailIfExistsHandler: ((ClipItem) -> (UIImage?))?
+    public func readThumbnailIfExists(for item: ClipItem) -> UIImage? {
+        readThumbnailIfExistsCallCount += 1
+        if let readThumbnailIfExistsHandler = readThumbnailIfExistsHandler {
+            return readThumbnailIfExistsHandler(item)
+        }
+        return nil
+    }
+
+    public private(set) var requestThumbnailCallCount = 0
+    public var requestThumbnailHandler: ((ClipItem, @escaping (UIImage?) -> Void) -> Void)?
+    public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
+        requestThumbnailCallCount += 1
+        if let requestThumbnailHandler = requestThumbnailHandler {
+            requestThumbnailHandler(item, completion)
+        }
+    }
+
+    public private(set) var deleteThumbnailCacheIfExistsCallCount = 0
+    public var deleteThumbnailCacheIfExistsHandler: ((ClipItem) -> Void)?
+    public func deleteThumbnailCacheIfExists(for item: ClipItem) {
+        deleteThumbnailCacheIfExistsCallCount += 1
+        if let deleteThumbnailCacheIfExistsHandler = deleteThumbnailCacheIfExistsHandler {
+            deleteThumbnailCacheIfExistsHandler(item)
+        }
     }
 }
 

@@ -12,10 +12,15 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    // TODO: Error Handling
-    private lazy var storage = try! ClipStorage()
+    private let storage: ClipStorage
     private lazy var finder = WebImageUrlFinder()
     private lazy var currentDateResolver = { Date() }
+
+    init() throws {
+        let thumbnailStorage = try ThumbnailStorage()
+        self.storage = try ClipStorage(imageStorage: try ImageStorage(),
+                                       thumbnailStorage: thumbnailStorage)
+    }
 }
 
 extension DependencyContainer: ViewControllerFactory {
