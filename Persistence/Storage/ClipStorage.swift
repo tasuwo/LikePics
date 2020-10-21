@@ -531,7 +531,6 @@ extension ClipStorage: ClipStorageProtocol {
     }
 
     public func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError> {
-        // TODO: Update clipItemIndex
         return self.queue.sync {
             guard let realm = try? Realm(configuration: self.configuration) else {
                 return .failure(.internalError)
