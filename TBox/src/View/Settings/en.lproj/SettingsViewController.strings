@@ -1,0 +1,6 @@
+
+/* Class = "UILabel"; text = "隠れたアイテムを表示する"; ObjectID = "0Vj-Ia-aAu"; */
+"0Vj-Ia-aAu.text" = "Show hidden items";
+
+/* Class = "UITableViewSection"; headerTitle = "設定"; ObjectID = "R8c-8b-MTp"; */
+"R8c-8b-MTp.headerTitle" = "Setting";

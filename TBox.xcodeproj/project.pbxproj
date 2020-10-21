@@ -233,6 +233,7 @@
 		2CE22D4924E2A45A00449210 /* ClipPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE22D4824E2A45A00449210 /* ClipPreviewView.swift */; };
 		2CE22D4B24E2A48C00449210 /* ClipPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */; };
 		2CF05A8525408BB200564A3D /* ClipItemDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2254C25184946002CB04C /* ClipItemDataSource.swift */; };
+		2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */; };
 		2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF332592507D327007EF072 /* ClipStorageSpec.swift */; };
 		2CF465742511045B00DF78E6 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CF465722511045B00DF78E6 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CF465772511045B00DF78E6 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CF465702511045B00DF78E6 /* TestHelper.framework */; };
@@ -243,7 +244,6 @@
 		2CF465822511096700DF78E6 /* AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */; };
 		2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */; };
 		2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */; };
-		2CF46589251112EF00DF78E6 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */; };
 		2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658A2511134300DF78E6 /* SettingsViewController.swift */; };
 		2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */; };
 		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
@@ -779,6 +779,9 @@
 		2CDA49DC2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewAlertPresentable.swift; sourceTree = "<group>"; };
 		2CE22D4824E2A45A00449210 /* ClipPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewView.swift; sourceTree = "<group>"; };
 		2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewView.xib; sourceTree = "<group>"; };
+		2CF05ACC25409E2B00564A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
+		2CF05AD725409E3000564A3D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
+		2CF05AD925409E3B00564A3D /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2CF332592507D327007EF072 /* ClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageSpec.swift; sourceTree = "<group>"; };
 		2CF465702511045B00DF78E6 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CF465722511045B00DF78E6 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -786,7 +789,6 @@
 		2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
 		2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorageProtocol.swift; sourceTree = "<group>"; };
 		2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorage.swift; sourceTree = "<group>"; };
-		2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2CF4658A2511134300DF78E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		2CF5ABB024FB47D10084695F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -1991,7 +1993,7 @@
 		2CF46587251112D900DF78E6 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				2CF46588251112EF00DF78E6 /* SettingsViewController.storyboard */,
+				2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */,
 				2CF4658A2511134300DF78E6 /* SettingsViewController.swift */,
 			);
 			path = Settings;
@@ -2675,7 +2677,7 @@
 				2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
-				2CF46589251112EF00DF78E6 /* SettingsViewController.storyboard in Resources */,
+				2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3658,6 +3660,16 @@
 				2CB071222509026C0000E7E1 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2CF05ACC25409E2B00564A3D /* Base */,
+				2CF05AD725409E3000564A3D /* en */,
+				2CF05AD925409E3B00564A3D /* ja */,
+			);
+			name = SettingsViewController.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
