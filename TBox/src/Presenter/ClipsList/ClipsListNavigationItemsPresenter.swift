@@ -17,7 +17,17 @@ class ClipsListNavigationItemsPresenter {
         case cancel
         case selectAll
         case deselectAll
-        case select
+        case select(isEnabled: Bool)
+
+        var isEnabled: Bool {
+            switch self {
+            case let .select(isEnabled):
+                return isEnabled
+
+            default:
+                return true
+            }
+        }
     }
 
     private var isEditing: Bool = false {
@@ -56,12 +66,16 @@ class ClipsListNavigationItemsPresenter {
             guard let dataSource = self.dataSource else { return false }
             return dataSource.clipsCount(self) <= dataSource.selectedClipsCount(self)
         }()
+        let isSelectable: Bool = {
+            guard let dataSource = self.dataSource else { return false }
+            return dataSource.clipsCount(self) > 0
+        }()
 
         if self.isEditing {
             self.navigationBar?.setRightBarButtonItems([.cancel])
             self.navigationBar?.setLeftBarButtonItems([isSelectedAll ? .deselectAll : .selectAll])
         } else {
-            self.navigationBar?.setRightBarButtonItems([.select])
+            self.navigationBar?.setRightBarButtonItems([.select(isEnabled: isSelectable)])
             self.navigationBar?.setLeftBarButtonItems([])
         }
     }

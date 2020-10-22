@@ -103,11 +103,19 @@ extension ClipsListNavigationItemsProvider: ClipsListNavigationBar {
 
     func setRightBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item]) {
         self.navigationItem?.rightBarButtonItems = items
-            .map { UIBarButtonItem(customView: self.resolveCustomView(for: $0)) }
+            .map {
+                let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))
+                item.isEnabled = $0.isEnabled
+                return item
+            }
     }
 
     func setLeftBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item]) {
         self.navigationItem?.leftBarButtonItems = items
-            .map { UIBarButtonItem(customView: self.resolveCustomView(for: $0)) }
+            .map {
+                let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))
+                item.isEnabled = $0.isEnabled
+                return item
+            }
     }
 }
