@@ -5,6 +5,12 @@
 import UIKit
 
 public class RoundedButton: UIButton {
+    override public var isEnabled: Bool {
+        didSet {
+            self.backgroundColor = isEnabled ? UIColor.systemBlue : UIColor.systemGray
+        }
+    }
+
     // MARK: - Lifecycle
 
     override public init(frame: CGRect) {
@@ -24,6 +30,7 @@ public class RoundedButton: UIButton {
         self.backgroundColor = UIColor.systemBlue
         self.contentEdgeInsets = .init(top: 6, left: 12, bottom: 6, right: 12)
         self.layer.cornerRadius = 14
+        self.layer.cornerCurve = .continuous
 
         self.titleLabel?.font = .systemFont(ofSize: 14, weight: .heavy)
     }
