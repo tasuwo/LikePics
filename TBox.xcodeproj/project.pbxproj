@@ -715,7 +715,7 @@
 		2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemObject.swift; sourceTree = "<group>"; };
 		2C9EF6A3253DE55900CBF357 /* ThumbnailStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailStorageProtocol.swift; sourceTree = "<group>"; };
 		2C9EF6B6253DE70A00CBF357 /* ThumbnailStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailStorage.swift; sourceTree = "<group>"; };
-		2CA0228924DD9F5E00329251 /* TBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CA0228924DD9F5E00329251 /* LikePics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA0228C24DD9F5E00329251 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2CA0229524DD9F5F00329251 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1828,7 +1828,7 @@
 		2CA0228A24DD9F5E00329251 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2CA0228924DD9F5E00329251 /* TBox.app */,
+				2CA0228924DD9F5E00329251 /* LikePics.app */,
 				2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */,
 				2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */,
 				2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */,
@@ -2385,7 +2385,7 @@
 			);
 			name = TBox;
 			productName = TBox;
-			productReference = 2CA0228924DD9F5E00329251 /* TBox.app */;
+			productReference = 2CA0228924DD9F5E00329251 /* LikePics.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2CA0229E24DD9F5F00329251 /* TBoxTests */ = {
@@ -4230,7 +4230,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4252,7 +4252,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

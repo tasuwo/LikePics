@@ -1,0 +1,81 @@
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Erik, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.0.0
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kanna, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.2.3
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: Kingfisher, nameSpecified: 
+body: The MIT License (MIT…
+version: 5.15.6
+
+name: LicensePlist, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 3.0.4
+
+name: Realm, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: Realm, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: RealmSwift, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: RealmSwift, nameSpecified: 
+body: TABLE OF CONTENTS
+
+1…
+version: 10.0.0
+
+name: Sourcery, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 1.0.0
+
+name: SwiftGen, nameSpecified: 
+body: MIT Licence
+
+Copyrig…
+version: 6.4.0
+
+add-version-numbers: false
+
+LicensePlist Version: 3.0.4

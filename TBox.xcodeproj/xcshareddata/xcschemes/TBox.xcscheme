@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-               BuildableName = "TBox.app"
+               BuildableName = "LikePics.app"
                BlueprintName = "TBox"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-            BuildableName = "TBox.app"
+            BuildableName = "LikePics.app"
             BlueprintName = "TBox"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
@@ -112,7 +112,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-            BuildableName = "TBox.app"
+            BuildableName = "LikePics.app"
             BlueprintName = "TBox"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
