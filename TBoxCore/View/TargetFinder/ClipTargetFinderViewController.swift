@@ -195,7 +195,7 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
         guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return cell }
 
         let imageMeta = self.presenter.selectableImages[indexPath.row]
-        cell.imageUrl = imageMeta.imageUrl
+        cell.imageData = imageMeta.imageData
 
         if let indexInSelection = self.presenter.selectedIndices.firstIndex(of: indexPath.row) {
             cell.selectionOrder = indexInSelection + 1

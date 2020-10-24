@@ -3,7 +3,6 @@
 //
 
 import Domain
-import Kingfisher
 import UIKit
 
 public class ClipSelectionCollectionViewCell: UICollectionViewCell {
@@ -11,16 +10,15 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var imageUrl: URL? {
-        willSet {
-            self.imageView.kf.cancelDownloadTask()
-        }
+    var currentDataTask: URLSessionDataTask?
+
+    public var imageData: Data? {
         didSet {
-            guard let url = self.imageUrl else {
+            guard let data = self.imageData, let image = UIImage(data: data) else {
                 self.imageView.image = nil
                 return
             }
-            self.apply(imageUrl: url)
+            self.imageView.image = image
         }
     }
 
@@ -69,35 +67,17 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     @IBOutlet var overlayView: UIView!
     @IBOutlet var selectionOrderLabel: UILabel!
 
-    // MARK: - Lifecycle
+    // MARK: - Methods
 
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
     }
 
-    // MARK: - Methods
-
     private func setupAppearance() {
         self.layer.cornerRadius = 10
         self.overlayView.isHidden = true
         self.selectionOrderLabel.isHidden = true
-    }
-
-    private func apply(imageUrl: URL) {
-        var options: KingfisherOptionsInfo = []
-
-        if let provider = WebImageProviderPreset.resolveProvider(by: imageUrl),
-            provider.shouldModifyRequest(for: imageUrl)
-        {
-            let modifier = AnyModifier(modify: provider.modifyRequest)
-            options.append(.requestModifier(modifier))
-        }
-
-        let processor = RoundCornerImageProcessor(cornerRadius: 10)
-        options.append(.processor(processor))
-
-        self.imageView.kf.setImage(with: imageUrl, placeholder: nil, options: options)
     }
 
     private func updateSelectionOrderAppearance() {

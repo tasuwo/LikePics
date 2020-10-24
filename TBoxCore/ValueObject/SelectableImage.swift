@@ -11,6 +11,7 @@ import ImageIO
 struct SelectableImage {
     let imageUrl: URL
     let imageSize: CGSize
+    let imageData: Data
 
     var isValid: Bool {
         return self.imageSize.height != 0
@@ -43,7 +44,8 @@ struct SelectableImage {
                     return nil
                 }
                 return SelectableImage(imageUrl: url,
-                                       imageSize: CGSize(width: pixelWidth, height: pixelHeight))
+                                       imageSize: CGSize(width: pixelWidth, height: pixelHeight),
+                                       imageData: data)
             }
             .catch { _ -> AnyPublisher<SelectableImage?, Never> in
                 RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(url)"))
