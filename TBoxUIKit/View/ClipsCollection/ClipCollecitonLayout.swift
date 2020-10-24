@@ -39,7 +39,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
         guard let collectionView = self.collectionView else {
             return 0
         }
-        let insets = collectionView.contentInset
+        let insets = collectionView.adjustedContentInset
         return collectionView.bounds.width - (insets.left + insets.right)
     }
 

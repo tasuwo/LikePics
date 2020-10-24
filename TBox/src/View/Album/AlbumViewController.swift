@@ -89,6 +89,7 @@ class AlbumViewController: UIViewController {
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
         self.collectionView.delegate = self.clipsListCollectionViewProvider
+        self.collectionView.contentInsetAdjustmentBehavior = .always
 
         self.view.addSubview(collectionView)
 
