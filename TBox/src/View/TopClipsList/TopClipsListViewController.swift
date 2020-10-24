@@ -126,7 +126,11 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
         snapshot.appendSections([.main])
         snapshot.appendItems(clips)
-        self.dataSource.apply(snapshot)
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            UIView.animate(withDuration: 0.2) {
+                self?.collectionView.visibleEmptyMessage = clips.isEmpty
+            }
+        }
 
         self.navigationItemsProvider.onUpdateSelection()
     }
