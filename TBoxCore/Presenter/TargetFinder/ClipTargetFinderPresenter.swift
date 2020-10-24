@@ -167,6 +167,7 @@ public class ClipTargetFinderPresenter {
         let selections: [OrderingSelectableImage] = self.selectedIndices.enumerated()
             .map { ($0.offset, self.selectableImages[$0.element]) }
 
+        // TODO: fetchImageDataは削除し、SelectedImage内にあるデータをそのままDLする
         Publishers.MergeMany(self.fetchImageData(for: selections, using: self.urlSession))
             .collect()
             .mapError { _ in

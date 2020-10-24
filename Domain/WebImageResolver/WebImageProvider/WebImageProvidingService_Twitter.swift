@@ -214,6 +214,8 @@ extension WebImageProvidingService.Twitter {
     }
 
     public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
+        // TODO: URLが存在しなかった場合Fallbackする
+
         guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
             return nil
         }
