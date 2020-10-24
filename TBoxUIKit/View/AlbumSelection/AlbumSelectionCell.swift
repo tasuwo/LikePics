@@ -46,7 +46,5 @@ public class AlbumSelectionCell: UITableViewCell {
         self.thumbnailImageView.layer.cornerCurve = .continuous
         self.thumbnailImageView.contentMode = .scaleAspectFill
         self.thumbnailImageView.clipsToBounds = true
-        self.titleLabel.adjustsFontForContentSizeCategory = true
-        self.titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
     }
 }

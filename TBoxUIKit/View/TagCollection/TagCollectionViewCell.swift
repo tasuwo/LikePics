@@ -62,8 +62,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     func setupAppearance() {
-        let font = UIFont.preferredFont(forTextStyle: .body)
-        self.titleLabel.font = font
         self.layer.cornerCurve = .continuous
 
         self.updateRadius()
