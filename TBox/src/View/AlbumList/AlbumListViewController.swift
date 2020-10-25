@@ -54,6 +54,19 @@ class AlbumListViewController: UIViewController {
 
     // MARK: - Methods
 
+    private func startAddingAlbum() {
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.presenter.addAlbum(title: text)
+            }
+        )
+    }
+
     // MARK: Collection View
 
     private func setupCollectionView() {
@@ -128,7 +141,6 @@ class AlbumListViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.albumListViewTitle
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
-
         self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
@@ -163,21 +175,6 @@ class AlbumListViewController: UIViewController {
         self.collectionView.visibleCells
             .compactMap { $0 as? AlbumListCollectionViewCell }
             .forEach { $0.visibleDeleteButton = editing }
-    }
-
-    // MARK: - Methods
-
-    private func startAddingAlbum() {
-        self.alertContainer.present(
-            withText: nil,
-            on: self,
-            validator: {
-                $0?.isEmpty != true
-            }, completion: { [weak self] action in
-                guard case let .saved(text: text) = action else { return }
-                self?.presenter.addAlbum(title: text)
-            }
-        )
     }
 }
 

@@ -101,6 +101,13 @@ class AlbumSelectionPresenter {
         self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
+    func addAlbum(title: String) {
+        if case let .failure(error) = self.storage.create(albumWithTitle: title) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to add album. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtAddAlbum)\n(\(error.makeErrorCode())")
+        }
+    }
+
     private func resolveThumbnailItem(for album: Album) -> ClipItem? {
         if self.showHiddenItems {
             return album.clips.first?.items.first

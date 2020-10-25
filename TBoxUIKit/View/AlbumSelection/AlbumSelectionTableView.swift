@@ -33,5 +33,6 @@ public class AlbumSelectionTableView: UITableView {
     private func setupAppearance() {
         self.allowsSelection = true
         self.allowsMultipleSelection = false
+        self.tableFooterView = UIView()
     }
 }

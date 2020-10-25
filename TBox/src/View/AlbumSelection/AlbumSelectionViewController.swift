@@ -15,6 +15,12 @@ class AlbumSelectionViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumSelectionPresenter
+    private let emptyMessageView = EmptyMessageView()
+    private lazy var alertContainer = TextEditAlert(
+        configuration: .init(title: L10n.albumListViewAlertForAddTitle,
+                             message: L10n.albumListViewAlertForAddMessage,
+                             placeholder: L10n.albumListViewAlertForAddPlaceholder)
+    )
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UITableViewDiffableDataSource<Section, Album>!
@@ -41,11 +47,25 @@ class AlbumSelectionViewController: UIViewController {
 
         self.setupTableView()
         self.setupNavigationBar()
+        self.setupEmptyMessage()
 
         self.presenter.setup()
     }
 
     // MARK: - Methods
+
+    private func startAddingAlbum() {
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.presenter.addAlbum(title: text)
+            }
+        )
+    }
 
     // MARK: Table View
 
@@ -82,6 +102,32 @@ class AlbumSelectionViewController: UIViewController {
 
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.albumSelectionViewTitle
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
+                                                                target: self,
+                                                                action: #selector(self.didTapAdd))
+    }
+
+    @objc
+    func didTapAdd() {
+        self.startAddingAlbum()
+    }
+
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.albumListViewEmptyTitle
+        self.emptyMessageView.message = L10n.albumListViewEmptyMessage
+        self.emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
+        self.emptyMessageView.delegate = self
+
+        self.emptyMessageView.alpha = 0
     }
 }
 
@@ -92,7 +138,16 @@ extension AlbumSelectionViewController: AlbumSelectionViewProtocol {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
         snapshot.appendSections([.main])
         snapshot.appendItems(albums)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+
+        if !albums.isEmpty {
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard albums.isEmpty else { return }
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+        }
     }
 
     func reload() {
@@ -116,5 +171,13 @@ extension AlbumSelectionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
         self.presenter.select(albumId: album.id)
+    }
+}
+
+extension AlbumSelectionViewController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    func didTapActionButton(_ view: EmptyMessageView) {
+        self.startAddingAlbum()
     }
 }
