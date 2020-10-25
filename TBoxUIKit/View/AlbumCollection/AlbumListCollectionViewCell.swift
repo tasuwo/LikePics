@@ -43,7 +43,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public weak var deletate: AlbumListCollectionViewCellDelegate?
+    public weak var delegate: AlbumListCollectionViewCellDelegate?
 
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
@@ -52,7 +52,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     // MARK: - IBActions
 
     @IBAction func didTapDeleteButton(_ sender: Any) {
-        self.deletate?.didTapDeleteButton(self)
+        self.delegate?.didTapDeleteButton(self)
     }
 
     // MARK: - Methods

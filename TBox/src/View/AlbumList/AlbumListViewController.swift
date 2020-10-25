@@ -75,10 +75,10 @@ class AlbumListViewController: UIViewController {
         self.collectionView.backgroundColor = Asset.backgroundClient.color
         self.view.addSubview(collectionView)
         self.collectionView.delegate = self
-        self.configureDataSouce()
+        self.configureDataSource()
     }
 
-    private func configureDataSouce() {
+    private func configureDataSource() {
         self.dataSource = .init(collectionView: self.collectionView) { collectionView, indexPath, album -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
             guard let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
@@ -98,7 +98,7 @@ class AlbumListViewController: UIViewController {
                 }
             }
 
-            cell.deletate = self
+            cell.delegate = self
             cell.visibleDeleteButton = self.isEditing
 
             return cell
