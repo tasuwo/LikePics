@@ -7,7 +7,7 @@ import Common
 import Domain
 
 protocol TagSelectionViewProtocol: AnyObject {
-    func apply(_ tags: [Tag])
+    func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool)
     func apply(selection: Set<Tag>)
     func showErrorMessage(_ message: String)
     func close()
@@ -27,9 +27,9 @@ class TagSelectionPresenter {
     private var searchStorage: SearchableTagsStorage = .init()
     private var cancellableBag = Set<AnyCancellable>()
 
+    /// - attention: `setup()` 経由でのみ更新することを想定している
     private(set) var tags: [Tag] = [] {
         didSet {
-            self.view?.apply(self.tags)
             self.view?.apply(selection: Set(self.selectedTags))
         }
     }
@@ -79,9 +79,10 @@ class TagSelectionPresenter {
                 guard let self = self else { return }
 
                 self.searchStorage.updateCache(tags)
-                let tags = self.searchStorage.resolveTags(byQuery: searchQuery)
+                let filteredTags = self.searchStorage.resolveTags(byQuery: searchQuery)
                     .sorted(by: { $0.name < $1.name })
 
+                self.view?.apply(filteredTags, isFiltered: !searchQuery.isEmpty, isEmpty: tags.isEmpty)
                 self.tags = tags
             })
             .store(in: &self.cancellableBag)

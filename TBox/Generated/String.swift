@@ -229,6 +229,8 @@ internal enum L10n {
     internal static let tagListViewEmptyTitle = L10n.tr("Localizable", "tag_list_view_empty_title")
     /// タグ
     internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
+    /// タグを選択
+    internal static let tagSelectionViewTitle = L10n.tr("Localizable", "tag_selection_view_title")
     /// 他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう
     internal static let topClipViewEmptyMessage = L10n.tr("Localizable", "top_clip_view_empty_message")
     /// クリップがありません

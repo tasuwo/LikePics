@@ -15,6 +15,7 @@ class TagSelectionViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: TagSelectionPresenter
+    private let emptyMessageView = EmptyMessageView()
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
@@ -48,11 +49,25 @@ class TagSelectionViewController: UIViewController {
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupSearchBar()
+        self.setupEmptyMessage()
 
         self.presenter.setup()
     }
 
     // MARK: - Methods
+
+    private func startAddingTag() {
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: tag) = action else { return }
+                self?.presenter.addTag(tag)
+            }
+        )
+    }
 
     // MARK: Collection View
 
@@ -84,7 +99,7 @@ class TagSelectionViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.navigationItem.title = "タグを選択"
+        self.navigationItem.title = L10n.tagSelectionViewTitle
 
         let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
         let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.didTapSave))
@@ -95,16 +110,7 @@ class TagSelectionViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.alertContainer.present(
-            withText: nil,
-            on: self,
-            validator: {
-                $0?.isEmpty != true
-            }, completion: { [weak self] action in
-                guard case let .saved(text: tag) = action else { return }
-                self?.presenter.addTag(tag)
-            }
-        )
+        self.startAddingTag()
     }
 
     @objc
@@ -118,16 +124,50 @@ class TagSelectionViewController: UIViewController {
         self.searchBar.delegate = self
         self.searchBar.showsCancelButton = false
     }
+
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.tagListViewEmptyTitle
+        self.emptyMessageView.message = L10n.tagListViewEmptyMessage
+        self.emptyMessageView.actionButtonTitle = L10n.tagListViewEmptyActionTitle
+        self.emptyMessageView.delegate = self
+
+        self.emptyMessageView.alpha = 0
+    }
 }
 
 extension TagSelectionViewController: TagSelectionViewProtocol {
     // MARK: - TagSelectionViewProtocol
 
-    func apply(_ tags: [Tag]) {
+    func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
         snapshot.appendSections([.main])
         snapshot.appendItems(tags)
-        self.dataSource.apply(snapshot)
+
+        if !isEmpty {
+            self.searchBar.isHidden = false
+            self.collectionView.isHidden = false
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard isEmpty else { return }
+            self?.searchBar.isHidden = true
+            self?.collectionView.isHidden = true
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+            self?.searchBar.resignFirstResponder()
+            self?.searchBar.text = nil
+            self?.presenter.performQuery("")
+        }
     }
 
     func apply(selection: Set<Tag>) {
@@ -209,5 +249,13 @@ extension TagSelectionViewController: UISearchBarDelegate {
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.searchBar.resignFirstResponder()
+    }
+}
+
+extension TagSelectionViewController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    func didTapActionButton(_ view: EmptyMessageView) {
+        self.startAddingTag()
     }
 }

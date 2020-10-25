@@ -73,6 +73,8 @@
 "tag_list_view_empty_message" = "クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます";
 "tag_list_view_empty_action_title" = "はじめてのタグを追加する";
 
+"tag_selection_view_title" = "タグを選択";
+
 "clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
 
 "clip_item_preview_view_alert_for_delete_message" = "クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます";

@@ -42,7 +42,7 @@ class TagListPresenter {
             .combineLatest(self.searchQuery)
             .sink(receiveCompletion: { [weak self] _ in
                 self?.logger.write(ConsoleLog(level: .error, message: """
-                Unexpectedly finished observing at TagSelectionView.
+                Unexpectedly finished observing at TagListView.
                 """))
             }, receiveValue: { [weak self] tags, searchQuery in
                 guard let self = self else { return }
