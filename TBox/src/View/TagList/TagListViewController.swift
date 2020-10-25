@@ -66,6 +66,8 @@ class TagListViewController: UIViewController {
         self.setupSearchBar()
         self.setupEmptyMessage()
 
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+
         self.presenter.setup()
     }
 
@@ -273,14 +275,14 @@ extension TagListViewController: TagListViewProtocol {
             self.searchBar.isHidden = false
             self.collectionView.isHidden = false
             self.emptyMessageView.alpha = 0
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
         }
         self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
             guard isEmpty else { return }
+            self?.navigationItem.rightBarButtonItem?.isEnabled = false
             self?.searchBar.isHidden = true
             self?.collectionView.isHidden = true
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
-            }
+            self?.emptyMessageView.alpha = 1
             self?.searchBar.resignFirstResponder()
             self?.searchBar.text = nil
             self?.presenter.performQuery("")

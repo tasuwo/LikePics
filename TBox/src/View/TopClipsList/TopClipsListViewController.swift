@@ -152,9 +152,7 @@ extension TopClipsListViewController: TopClipsListViewProtocol {
         }
         self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
             guard clips.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
-            }
+            self?.emptyMessageView.alpha = 1
         }
 
         self.navigationItemsProvider.onUpdateSelection()

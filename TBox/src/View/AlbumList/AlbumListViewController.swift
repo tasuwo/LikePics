@@ -142,6 +142,7 @@ class AlbumListViewController: UIViewController {
         self.navigationItem.title = L10n.albumListViewTitle
         self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 
     @objc
@@ -188,12 +189,12 @@ extension AlbumListViewController: AlbumListViewProtocol {
 
         if !albums.isEmpty {
             self.emptyMessageView.alpha = 0
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
         }
         self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
             guard albums.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
-            }
+            self?.navigationItem.rightBarButtonItem?.isEnabled = false
+            self?.emptyMessageView.alpha = 1
         }
     }
 
