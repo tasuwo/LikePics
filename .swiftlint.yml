@@ -5,6 +5,7 @@ included:
   - ../Persistence
   - ../TBoxCore
   - ../TBoxUIKit
+  - ../ShareExtension
 excluded:
   - Pods
 opt_in_rules:

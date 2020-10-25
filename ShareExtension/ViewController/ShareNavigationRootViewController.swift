@@ -65,7 +65,7 @@ extension ShareNavigationRootViewController: ClipTargetFinderDelegate {
     // MARK: - ClipTargetCollectionViewControllerDelegate
 
     func didFinish(_ viewController: ClipTargetFinderViewController) {
-        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
     }
 
     func didCancel(_ viewController: ClipTargetFinderViewController) {

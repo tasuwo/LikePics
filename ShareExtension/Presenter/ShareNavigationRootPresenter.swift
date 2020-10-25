@@ -28,6 +28,17 @@ class ShareNavigationRootPresenter {
 
     // MARK: - Methods
 
+    private static func resolveErrorMessage(_ error: PresenterError) -> String {
+        switch error {
+        case .noContext:
+            return "Internal Error."
+        case .noUrlInAttachments:
+            return "No valid url found."
+        case .failedToResolveUrl:
+            return "No valid url found."
+        }
+    }
+
     func resolveUrl(from context: NSExtensionContext?) {
         guard let item = context?.inputItems.first as? NSExtensionItem else {
             self.view?.show(errorMessage: Self.resolveErrorMessage(.noContext))
@@ -51,17 +62,6 @@ class ShareNavigationRootPresenter {
                     self?.view?.show(errorMessage: Self.resolveErrorMessage(.failedToResolveUrl(error)))
                 }
             }
-        }
-    }
-
-    private static func resolveErrorMessage(_ error: PresenterError) -> String {
-        switch error {
-        case .noContext:
-            return "Internal Error."
-        case .noUrlInAttachments:
-            return "No valid url found."
-        case .failedToResolveUrl:
-            return "No valid url found."
         }
     }
 }
