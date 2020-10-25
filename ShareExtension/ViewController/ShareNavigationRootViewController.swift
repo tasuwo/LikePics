@@ -69,7 +69,9 @@ extension ShareNavigationRootViewController: ClipTargetFinderDelegate {
     }
 
     func didCancel(_ viewController: ClipTargetFinderViewController) {
-        let error = NSError(domain: "net.tasuwo.TBox", code: 0, userInfo: [NSLocalizedDescriptionKey: "An error description"])
+        let error = NSError(domain: "net.tasuwo.TBox",
+                            code: 0,
+                            userInfo: [NSLocalizedDescriptionKey: "An error description"])
         self.extensionContext?.cancelRequest(withError: error)
     }
 }

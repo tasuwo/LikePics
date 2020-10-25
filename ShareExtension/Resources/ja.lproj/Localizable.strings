@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/10/25.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+"error_no_url" = "画像を探す対象の有効なWebサイトURLが見つかりませんでした";
+"error_unknown" = "共有に失敗しました";

@@ -31,11 +31,13 @@ class ShareNavigationRootPresenter {
     private static func resolveErrorMessage(_ error: PresenterError) -> String {
         switch error {
         case .noContext:
-            return "Internal Error."
+            return L10n.errorUnknown
+
         case .noUrlInAttachments:
-            return "No valid url found."
+            return L10n.errorNoUrl
+
         case .failedToResolveUrl:
-            return "No valid url found."
+            return L10n.errorNoUrl
         }
     }
 
@@ -44,8 +46,6 @@ class ShareNavigationRootPresenter {
             self.view?.show(errorMessage: Self.resolveErrorMessage(.noContext))
             return
         }
-
-        // TODO: 画像が渡ってきた場合にも対応する
 
         guard let attachment = item.attachments?.first(where: { $0.isUrl }) else {
             self.view?.show(errorMessage: Self.resolveErrorMessage(.noUrlInAttachments))

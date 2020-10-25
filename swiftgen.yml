@@ -14,6 +14,11 @@ strings:
       outputs:
         - templateName: structured-swift5
           output: TBoxUIKit/Generated/String.swift
+    - inputs:
+        - ShareExtension/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: ShareExtension/Generated/String.swift
 xcassets:
     - inputs:
         - TBoxUIKit/Resources/Assets.xcassets

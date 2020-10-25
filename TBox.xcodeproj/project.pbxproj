@@ -58,6 +58,8 @@
 		2C3506C82517911B009248C6 /* ImageExtensionResolverSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3506C72517911B009248C6 /* ImageExtensionResolverSpec.swift */; };
 		2C3506ED25179545009248C6 /* ClipItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3506EC25179545009248C6 /* ClipItemSource.swift */; };
 		2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35C13124E4DE2600871C87 /* DependencyContainer.swift */; };
+		2C369A732545765900462097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C369A752545765900462097 /* Localizable.strings */; };
+		2C369A892545773000462097 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C369A882545773000462097 /* String.swift */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
 		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C704250AF33B00F32102 /* TagSelectionViewController.swift */; };
@@ -609,6 +611,9 @@
 		2C3506C72517911B009248C6 /* ImageExtensionResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensionResolverSpec.swift; sourceTree = "<group>"; };
 		2C3506EC25179545009248C6 /* ClipItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemSource.swift; sourceTree = "<group>"; };
 		2C35C13124E4DE2600871C87 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+		2C369A742545765900462097 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2C369A7E2545765D00462097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2C369A882545773000462097 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractivePresentationAnimator.swift; sourceTree = "<group>"; };
 		2C38C704250AF33B00F32102 /* TagSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionViewController.swift; sourceTree = "<group>"; };
@@ -1205,6 +1210,22 @@
 			path = Cotnext;
 			sourceTree = "<group>";
 		};
+		2C369A60254575F200462097 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C369A752545765900462097 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2C369A872545773000462097 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				2C369A882545773000462097 /* String.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		2C38C703250AF31900F32102 /* TagSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1780,6 +1801,8 @@
 		2C99279324DDD65E00672CA7 /* ShareExtension */ = {
 			isa = PBXGroup;
 			children = (
+				2C369A872545773000462097 /* Generated */,
+				2C369A60254575F200462097 /* Resources */,
 				2C35C13024E4DE1400871C87 /* Cotnext */,
 				2C2AB06424DEFAD8007E2B18 /* Presenter */,
 				2C55D12624DFD1B000A43B8D /* ViewController */,
@@ -2656,6 +2679,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C6E098C24E6D94F00B541D9 /* ShareNavigationRootViewController.xib in Resources */,
+				2C369A732545765900462097 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3344,6 +3368,7 @@
 			files = (
 				2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */,
 				2C35C13224E4DE2600871C87 /* DependencyContainer.swift in Sources */,
+				2C369A892545773000462097 /* String.swift in Sources */,
 				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
 				2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */,
 			);
@@ -3612,6 +3637,15 @@
 			children = (
 				2C05969B25198C90008F11F5 /* ja */,
 				2C0596A525198C95008F11F5 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		2C369A752545765900462097 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C369A742545765900462097 /* ja */,
+				2C369A7E2545765D00462097 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
