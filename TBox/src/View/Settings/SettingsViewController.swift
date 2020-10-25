@@ -15,20 +15,32 @@ class SettingsViewController: UITableViewController {
     var cancellableBag: Set<AnyCancellable> = .init()
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!
+    @IBOutlet var versionLabel: UILabel!
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.presenter.view = self
+
         self.presenter.shouldShowHiddenItems
             .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
             .store(in: &self.cancellableBag)
+        self.presenter.displayVersion()
     }
 
     // MARK: - IBActions
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {
         self.presenter.set(showHiddenItems: sender.isOn)
+    }
+}
+
+extension SettingsViewController: SettingsViewProtocol {
+    // MARK: - SettingsViewProtocol
+
+    func set(version: String) {
+        self.versionLabel.text = version
     }
 }

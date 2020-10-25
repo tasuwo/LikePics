@@ -5,11 +5,17 @@
 import Combine
 import Domain
 
+protocol SettingsViewProtocol: AnyObject {
+    func set(version: String)
+}
+
 class SettingsPresenter {
     private let storage: UserSettingsStorageProtocol
     private var cancellableBag: Set<AnyCancellable> = .init()
 
     private(set) var shouldShowHiddenItems: CurrentValueSubject<Bool, Never>
+
+    weak var view: SettingsViewProtocol?
 
     // MARK: - Lifecycle
 
@@ -26,5 +32,11 @@ class SettingsPresenter {
 
     func set(showHiddenItems: Bool) {
         self.storage.set(showHiddenItems: showHiddenItems)
+    }
+
+    func displayVersion() {
+        // swiftlint:disable:next force_cast force_unwrapping
+        let versionString = Bundle(for: Self.self).infoDictionary!["CFBundleShortVersionString"] as! String
+        self.view?.set(version: "\(versionString) (Beta)")
     }
 }
