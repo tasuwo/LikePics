@@ -20,7 +20,7 @@
                         <sections>
                             <tableViewSection headerTitle="表示設定" id="R8c-8b-MTp">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="0Vj-Ia-aAu" style="IBUITableViewCellStyleDefault" id="MqD-fY-pjO">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="0Vj-Ia-aAu" style="IBUITableViewCellStyleDefault" id="MqD-fY-pjO">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MqD-fY-pjO" id="zhs-WE-TYH">
@@ -44,7 +44,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="このアプリについて" id="AO9-Qh-TEP">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="fFY-Xv-c8Z" detailTextLabel="C57-na-o8G" style="IBUITableViewCellStyleValue1" id="ttX-FA-7CA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="fFY-Xv-c8Z" detailTextLabel="C57-na-o8G" style="IBUITableViewCellStyleValue1" id="ttX-FA-7CA">
                                         <rect key="frame" x="0.0" y="155" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ttX-FA-7CA" id="HTB-Cx-gBV">
