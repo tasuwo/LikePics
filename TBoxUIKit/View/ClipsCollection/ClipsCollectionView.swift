@@ -7,18 +7,6 @@ import UIKit
 public class ClipsCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
-    lazy var emptyMessageView: UIView = {
-        let nib = UINib(nibName: "ClipsCollectionEmptyMessageView", bundle: Bundle(for: Self.self))
-        // swiftlint:disable:next force_cast
-        return nib.instantiate(withOwner: self, options: nil).first as! UIView
-    }()
-
-    public var visibleEmptyMessage: Bool = false {
-        didSet {
-            self.emptyMessageView.alpha = self.visibleEmptyMessage ? 1 : 0
-        }
-    }
-
     // MARK: - Lifecycle
 
     override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
@@ -52,14 +40,5 @@ public class ClipsCollectionView: UICollectionView {
     private func setupAppearance() {
         self.allowsSelection = true
         self.allowsMultipleSelection = false
-
-        self.addSubview(self.emptyMessageView)
-        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
-        self.emptyMessageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor).isActive = true
-        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor).isActive = true
-
-        self.visibleEmptyMessage = false
     }
 }

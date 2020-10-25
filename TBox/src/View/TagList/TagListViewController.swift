@@ -25,6 +25,7 @@ class TagListViewController: UIViewController {
     private let factory: Factory
     private let presenter: TagListPresenter
     private let logger: TBoxLoggable
+    private let emptyMessageView = EmptyMessageView()
     private lazy var addAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
@@ -63,6 +64,7 @@ class TagListViewController: UIViewController {
         self.setupAppearance()
         self.updateNavigationBar(for: self.isEditing)
         self.setupSearchBar()
+        self.setupEmptyMessage()
 
         self.presenter.setup()
     }
@@ -163,16 +165,7 @@ class TagListViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.addAlertContainer.present(
-            withText: nil,
-            on: self,
-            validator: {
-                $0?.isEmpty != true
-            }, completion: { [weak self] action in
-                guard case let .saved(text: tag) = action else { return }
-                self?.presenter.addTag(tag)
-            }
-        )
+        self.startAddingTag()
     }
 
     @objc
@@ -217,6 +210,24 @@ class TagListViewController: UIViewController {
         self.searchBar.showsCancelButton = false
     }
 
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.tagListViewEmptyTitle
+        self.emptyMessageView.message = L10n.tagListViewEmptyMessage
+        self.emptyMessageView.actionButtonTitle = L10n.tagListViewEmptyActionTitle
+        self.emptyMessageView.delegate = self
+
+        self.emptyMessageView.alpha = 0
+    }
+
     // MARK: UIViewController (Override)
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -233,18 +244,49 @@ class TagListViewController: UIViewController {
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
         self.collectionView.allowsMultipleSelection = editing
     }
+
+    // MARK: - Methods
+
+    private func startAddingTag() {
+        self.addAlertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: tag) = action else { return }
+                self?.presenter.addTag(tag)
+            }
+        )
+    }
 }
 
 extension TagListViewController: TagListViewProtocol {
     // MARK: - TagListViewProtocol
 
-    func apply(_ tags: [Tag], isFiltered: Bool) {
+    func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.uncategorized])
         snapshot.appendItems(isFiltered ? [] : [.uncategorized])
         snapshot.appendSections([.main])
         snapshot.appendItems(tags.map { .tag($0) })
-        self.dataSource.apply(snapshot)
+
+        if !isEmpty {
+            self.searchBar.isHidden = false
+            self.collectionView.isHidden = false
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard isEmpty else { return }
+            self?.searchBar.isHidden = true
+            self?.collectionView.isHidden = true
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+            self?.searchBar.resignFirstResponder()
+            self?.searchBar.text = nil
+            self?.presenter.performQuery("")
+        }
     }
 
     func search(with context: SearchContext) {
@@ -383,5 +425,13 @@ extension TagListViewController: UncategorizedCellDelegate {
             return
         }
         self.show(viewController, sender: nil)
+    }
+}
+
+extension TagListViewController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    func didTapActionButton(_ view: EmptyMessageView) {
+        self.startAddingTag()
     }
 }

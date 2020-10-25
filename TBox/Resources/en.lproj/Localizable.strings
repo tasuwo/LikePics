@@ -32,6 +32,9 @@
 
 "clip_target_finder_view_title" = "Select image.";
 
+"top_clip_view_empty_title" = "No Clips";
+"top_clip_view_empty_message" = "Share the url of the site containing your favorite images using other apps.";
+
 "album_list_view_title" = "Albums";
 "album_list_view_alert_for_add_title" = "New Album";
 "album_list_view_alert_for_add_message" = "Enter a name for this album.";
@@ -39,12 +42,20 @@
 "album_list_view_alert_for_delete_title" = "Delete \"%@\"";
 "album_list_view_alert_for_delete_message" = "Are you sure you want to delete the album \"%@\"?\nThe clips will not be deleted.";
 "album_list_view_alert_for_delete_action" = "Delete Album";
+"album_list_view_empty_title" = "No Clips";
+"album_list_view_empty_message" = "You can collect clips into an album";
+"album_list_view_empty_action_title" = "Add your first Album";
+
+"album_view_empty_title" = "No Clips in this Album";
 
 "search_entry_view_title" = "Search";
 "search_entry_view_search_bar_placeholder" = "Keywords";
 "search_entry_view_error_at_search" = "Failed to search.";
 
 "search_result_title_uncategorized" = "Uncategorized";
+"search_result_for_keywords_empty_title" = "No clips for \"%@\"";
+"search_result_for_tag_empty_title" = "No clips categorized with Tag \"%@\"";
+"search_result_for_uncategorized_empty_title" = "No Uncategorized Clips";
 
 "tag_list_view_title" = "Tags";
 "tag_list_view_context_menu_action_copy" = "Copy";
@@ -58,6 +69,9 @@
 "tag_list_view_alert_for_update_placeholder" = "Name";
 "tag_list_view_alert_for_delete_message" = "Are you sure you want to delete selected tags?\nThe clips will not be deleted.";
 "tag_list_view_alert_for_delete_action" = "Delete %d Tags";
+"tag_list_view_empty_title" = "No tags";
+"tag_list_view_empty_message" = "If you classify clips by tags, you can list the clips categorized with specific tag later.";
+"tag_list_view_empty_action_title" = "Add your first Tag";
 
 "clip_preview_page_view_error_at_read_clip" = "Failed to read clip.";
 
@@ -75,6 +89,9 @@
 "clip_information_view_alert_for_delete_tag_action" = "Delete";
 
 "album_selection_view_title" = "Add to Album";
+"album_selection_view_empty_title" = "No Albums";
+"album_selection_view_empty_message" = "You can collect clips into an album";
+"album_selection_view_empty_action_title" = "Add your first Album";
 
 "adding_alert_action_save" = "Save";
 "adding_alert_action_cancel" = "Cancel";

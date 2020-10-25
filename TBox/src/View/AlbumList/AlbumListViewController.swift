@@ -16,6 +16,7 @@ class AlbumListViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: AlbumListPresenter
+    private let emptyMessageView = EmptyMessageView()
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
@@ -46,6 +47,7 @@ class AlbumListViewController: UIViewController {
 
         self.setupNavigationBar()
         self.setupCollectionView()
+        self.setupEmptyMessage()
 
         self.presenter.setup()
     }
@@ -132,16 +134,25 @@ class AlbumListViewController: UIViewController {
 
     @objc
     func didTapAdd() {
-        self.alertContainer.present(
-            withText: nil,
-            on: self,
-            validator: {
-                $0?.isEmpty != true
-            }, completion: { [weak self] action in
-                guard case let .saved(text: text) = action else { return }
-                self?.presenter.addAlbum(title: text)
-            }
-        )
+        self.startAddingAlbum()
+    }
+
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.albumListViewEmptyTitle
+        self.emptyMessageView.message = L10n.albumListViewEmptyMessage
+        self.emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
+        self.emptyMessageView.delegate = self
+
+        self.emptyMessageView.alpha = 0
     }
 
     // MARK: UIViewController (Override)
@@ -153,6 +164,21 @@ class AlbumListViewController: UIViewController {
             .compactMap { $0 as? AlbumListCollectionViewCell }
             .forEach { $0.visibleDeleteButton = editing }
     }
+
+    // MARK: - Methods
+
+    private func startAddingAlbum() {
+        self.alertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.presenter.addAlbum(title: text)
+            }
+        )
+    }
 }
 
 extension AlbumListViewController: AlbumListViewProtocol {
@@ -162,7 +188,16 @@ extension AlbumListViewController: AlbumListViewProtocol {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
         snapshot.appendSections([.main])
         snapshot.appendItems(albums)
-        self.dataSource.apply(snapshot)
+
+        if !albums.isEmpty {
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard albums.isEmpty else { return }
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+        }
     }
 
     func reload() {
@@ -221,5 +256,13 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension AlbumListViewController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    func didTapActionButton(_ view: EmptyMessageView) {
+        self.startAddingAlbum()
     }
 }

@@ -19,6 +19,7 @@ class AlbumViewController: UIViewController {
     private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
     private let navigationItemsProvider: ClipsListNavigationItemsProvider
     private let toolBarItemsProvider: ClipsListToolBarItemsProvider
+    private let emptyMessageView = EmptyMessageView()
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
@@ -60,6 +61,7 @@ class AlbumViewController: UIViewController {
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
+        self.setupEmptyMessage()
 
         self.presenter.setup(with: self)
     }
@@ -112,6 +114,23 @@ class AlbumViewController: UIViewController {
         self.toolBarItemsProvider.delegate = self
     }
 
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.albumViewEmptyTitle
+        self.emptyMessageView.isMessageHidden = true
+        self.emptyMessageView.isActionButtonHidden = true
+
+        self.emptyMessageView.alpha = 0
+    }
+
     // MARK: UIViewController (Override)
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -130,7 +149,16 @@ extension AlbumViewController: AlbumViewProtocol {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
         snapshot.appendSections([.main])
         snapshot.appendItems(clips)
-        self.dataSource.apply(snapshot)
+
+        if !clips.isEmpty {
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard clips.isEmpty else { return }
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+        }
 
         self.navigationItemsProvider.onUpdateSelection()
     }

@@ -30,6 +30,9 @@
 "clips_list_context_menu_unhide" = "表示する";
 "clips_list_context_menu_delete" = "削除";
 
+"top_clip_view_empty_title" = "クリップがありません";
+"top_clip_view_empty_message" = "他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう";
+
 "clip_target_finder_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";
@@ -39,12 +42,20 @@
 "album_list_view_alert_for_delete_title" = "\"%@\"を削除";
 "album_list_view_alert_for_delete_message" = "アルバム\"%@\"を削除しますか？\n含まれるクリップは削除されません";
 "album_list_view_alert_for_delete_action" = "アルバムを削除";
+"album_list_view_empty_title" = "アルバムがありません";
+"album_list_view_empty_message" = "複数のクリップをアルバムにまとめることができます";
+"album_list_view_empty_action_title" = "はじめてのアルバムを追加する";
+
+"album_view_empty_title" = "アルバム内にクリップがありません";
 
 "search_entry_view_title" = "検索";
 "search_entry_view_search_bar_placeholder" = "キーワード";
 "search_entry_view_error_at_search" = "検索に失敗しました";
 
 "search_result_title_uncategorized" = "未分類";
+"search_result_for_keywords_empty_title" = "キーワード「%@」に一致するクリップは見つかりませんでした";
+"search_result_for_tag_empty_title" = "タグ「%@」が付与されたクリップはありません";
+"search_result_for_uncategorized_empty_title" = "未分類のクリップはありません";
 
 "tag_list_view_title" = "タグ";
 "tag_list_view_context_menu_action_copy" = "コピー";
@@ -58,6 +69,9 @@
 "tag_list_view_alert_for_update_placeholder" = "タグ名";
 "tag_list_view_alert_for_delete_message" = "選択中のタグを削除しますか？\n含まれるクリップは削除されません";
 "tag_list_view_alert_for_delete_action" = "%d件のタグを削除";
+"tag_list_view_empty_title" = "タグがありません";
+"tag_list_view_empty_message" = "クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます";
+"tag_list_view_empty_action_title" = "はじめてのタグを追加する";
 
 "clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
 
@@ -75,6 +89,9 @@
 "clip_information_view_alert_for_delete_tag_action" = "削除";
 
 "album_selection_view_title" = "アルバムへ追加";
+"album_selection_view_empty_title" = "アルバムがありません";
+"album_selection_view_empty_message" = "複数のクリップをアルバムにまとめることができます";
+"album_selection_view_empty_action_title" = "はじめてのアルバムを追加する";
 
 "adding_alert_action_save" = "保存";
 "adding_alert_action_cancel" = "キャンセル";
