@@ -29,6 +29,9 @@ public class ClipTargetFinderPresenter {
         case internalError
     }
 
+    private static let maxDelayMs = 5000
+    private static let incrementalDelayMs = 1000
+
     private(set) var selectableImages: [ClipItemSource] = [] {
         didSet {
             self.selectedIndices = []
@@ -45,6 +48,7 @@ public class ClipTargetFinderPresenter {
     }
 
     private var isEnabledOverwrite: Bool
+    private var urlFinderDelayMs: Int = 0
     private var cancellableBag = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
@@ -211,8 +215,13 @@ public class ClipTargetFinderPresenter {
     // MARK: Load Images
 
     private func resolveImageUrls(at url: URL) -> Future<[URL], PresenterError> {
-        return Future { promise in
-            self.finder.findImageUrls(inWebSiteAt: url) { result in
+        return Future { [weak self] promise in
+            guard let self = self else {
+                promise(.failure(.internalError))
+                return
+            }
+
+            self.finder.findImageUrls(inWebSiteAt: url, delay: self.urlFinderDelayMs) { result in
                 switch result {
                 case let .success(urls):
                     promise(.success(urls))
@@ -220,6 +229,10 @@ public class ClipTargetFinderPresenter {
                 case let .failure(error):
                     promise(.failure(.failedToFindImages(error)))
                 }
+            }
+
+            if self.urlFinderDelayMs < Self.maxDelayMs {
+                self.urlFinderDelayMs += Self.incrementalDelayMs
             }
         }
     }

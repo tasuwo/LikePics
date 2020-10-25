@@ -503,11 +503,11 @@ public class WebImageUrlFinderProtocolMock: WebImageUrlFinderProtocol {
     }
 
     public private(set) var findImageUrlsCallCount = 0
-    public var findImageUrlsHandler: ((URL, @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) -> Void)?
-    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
+    public var findImageUrlsHandler: ((URL, Int, @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) -> Void)?
+    public func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
         findImageUrlsCallCount += 1
         if let findImageUrlsHandler = findImageUrlsHandler {
-            findImageUrlsHandler(url, completion)
+            findImageUrlsHandler(url, milliseconds, completion)
         }
     }
 }

@@ -9,7 +9,7 @@ import WebKit
 /// @mockable
 public protocol WebImageUrlFinderProtocol {
     var webView: WKWebView { get }
-    func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void)
+    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void)
 }
 
 public class WebImageUrlFinder {
@@ -85,7 +85,7 @@ public class WebImageUrlFinder {
 extension WebImageUrlFinder: WebImageUrlFinderProtocol {
     // MARK: - WebImageUrlFinderProtocol
 
-    public func findImageUrls(inWebSiteAt url: URL, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
+    public func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
         var preprocessedStep: AnyPublisher<Void, WebImageUrlFinderError>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = self.openPage(url: url)
@@ -104,8 +104,8 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
         }
 
         preprocessedStep
+            .delay(for: .milliseconds(milliseconds), scheduler: RunLoop.main)
             .flatMap { _ in
-                // TODO: Retry
                 return self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
             }
             .sink(receiveCompletion: { finish in
