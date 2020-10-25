@@ -207,6 +207,10 @@ extension AlbumListViewController: AlbumListViewProtocol {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+
+    func endEditing() {
+        self.setEditing(false, animated: true)
+    }
 }
 
 extension AlbumListViewController: UICollectionViewDelegate {

@@ -11,6 +11,7 @@ protocol AlbumListViewProtocol: AnyObject {
     func apply(_ albums: [Album])
     func reload()
     func showErrorMessage(_ message: String)
+    func endEditing()
 }
 
 class AlbumListPresenter {
@@ -85,6 +86,7 @@ class AlbumListPresenter {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
         }
+        self.view?.endEditing()
     }
 
     func readImageIfExists(for album: Album) -> UIImage? {
