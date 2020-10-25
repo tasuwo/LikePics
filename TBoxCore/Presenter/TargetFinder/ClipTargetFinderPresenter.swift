@@ -167,20 +167,9 @@ public class ClipTargetFinderPresenter {
         let selections: [OrderingSelectableImage] = self.selectedIndices.enumerated()
             .map { ($0.offset, self.selectableImages[$0.element]) }
 
-        // TODO: fetchImageDataは削除し、SelectedImage内にあるデータをそのままDLする
-        Publishers.MergeMany(self.fetchImageData(for: selections, using: self.urlSession))
-            .collect()
-            .mapError { _ in
-                return PresenterError.failedToDownloadImages
-            }
-            .flatMap { [weak self] imageDataSets -> AnyPublisher<Void, PresenterError> in
-                guard let self = self else {
-                    return Fail(error: .internalError).eraseToAnyPublisher()
-                }
-                return self.save(target: imageDataSets)
-                    .publisher
-                    .eraseToAnyPublisher()
-            }
+        self.save(target: selections)
+            .publisher
+            .eraseToAnyPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -255,32 +244,14 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Save Images
 
-    private func fetchImageData(for images: [OrderingSelectableImage], using session: URLSession) -> [AnyPublisher<ClipItemDataSource, Error>] {
-        return images
-            .compactMap { image in
-                let imageUrl = image.meta.imageUrl
-                return session
-                    .dataTaskPublisher(for: imageUrl)
-                    .tryMap { data, response -> ClipItemDataSource in
-                        ClipItemDataSource(index: image.index,
-                                           url: imageUrl,
-                                           data: data,
-                                           mimeType: response.mimeType,
-                                           height: Double(image.meta.imageSize.height),
-                                           width: Double(image.meta.imageSize.width))
-                    }
-                    .eraseToAnyPublisher()
-            }
-    }
-
-    private func save(target: [ClipItemDataSource]) -> Result<Void, PresenterError> {
+    private func save(target: [OrderingSelectableImage]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
         let clipId = UUID().uuidString
         let items = target.map {
-            ClipItem(id: UUID().uuidString, clipId: clipId, dataSet: $0, currentDate: currentDate)
+            ClipItem(id: UUID().uuidString, clipId: clipId, index: $0.index, dataSet: $0.meta, currentDate: currentDate)
         }
         let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
-        let data = target.map { ($0.fileName, $0.data) }
+        let data = target.map { ($0.meta.fileName, $0.meta.data) }
 
         switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
         case .success:
@@ -293,10 +264,10 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(id: ClipItem.Identity, clipId: Clip.Identity, dataSet: ClipItemDataSource, currentDate: Date) {
+    init(id: ClipItem.Identity, clipId: Clip.Identity, index: Int, dataSet: SelectableImage, currentDate: Date) {
         self.init(id: id,
                   clipId: clipId,
-                  clipIndex: dataSet.index,
+                  clipIndex: index,
                   imageFileName: dataSet.fileName,
                   imageUrl: dataSet.url,
                   imageSize: ImageSize(height: dataSet.height, width: dataSet.width),

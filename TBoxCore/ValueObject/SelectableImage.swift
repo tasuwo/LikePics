@@ -9,15 +9,28 @@ import Domain
 import ImageIO
 
 struct SelectableImage {
-    let imageUrl: URL
-    let imageSize: CGSize
-    let imageData: Data
+    static let fallbackFileExtension = "jpeg"
+
+    let url: URL
+    let data: Data
+    let mimeType: String?
+    let height: Double
+    let width: Double
 
     var isValid: Bool {
-        return self.imageSize.height != 0
-            && self.imageSize.width != 0
-            && self.imageSize.height > 10
-            && self.imageSize.width > 10
+        return self.height != 0 && self.width != 0 && self.height > 10 && self.width > 10
+    }
+
+    var fileName: String {
+        let ext: String = {
+            if let mimeType = self.mimeType {
+                return ImageExtensionResolver.resolveFileExtension(forMimeType: mimeType) ?? Self.fallbackFileExtension
+            } else {
+                return Self.fallbackFileExtension
+            }
+        }()
+        let name = WebImageNameResolver.resolveFileName(from: self.url) ?? UUID().uuidString
+        return "\(name).\(ext)"
     }
 
     // MARK: - Lifecycle
@@ -34,7 +47,7 @@ struct SelectableImage {
 
         return session
             .dataTaskPublisher(for: request)
-            .map { data, _ -> SelectableImage? in
+            .map { data, response -> SelectableImage? in
                 guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
                 guard
                     let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
@@ -43,9 +56,11 @@ struct SelectableImage {
                 else {
                     return nil
                 }
-                return SelectableImage(imageUrl: url,
-                                       imageSize: CGSize(width: pixelWidth, height: pixelHeight),
-                                       imageData: data)
+                return SelectableImage(url: url,
+                                       data: data,
+                                       mimeType: response.mimeType,
+                                       height: Double(pixelHeight),
+                                       width: Double(pixelWidth))
             }
             .catch { _ -> AnyPublisher<SelectableImage?, Never> in
                 RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(url)"))

@@ -195,7 +195,7 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
         guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return cell }
 
         let imageMeta = self.presenter.selectableImages[indexPath.row]
-        cell.imageData = imageMeta.imageData
+        cell.imageData = imageMeta.data
 
         if let indexInSelection = self.presenter.selectedIndices.firstIndex(of: indexPath.row) {
             cell.selectionOrder = indexInSelection + 1
@@ -210,8 +210,9 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return .zero }
-        let imageSize = self.presenter.selectableImages[indexPath.row].imageSize
-        return width * (imageSize.height / imageSize.width)
+        let imageHeight = self.presenter.selectableImages[indexPath.row].height
+        let imageWidth = self.presenter.selectableImages[indexPath.row].width
+        return width * CGFloat(imageHeight / imageWidth)
     }
 
     public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
