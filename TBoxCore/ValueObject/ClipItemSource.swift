@@ -8,7 +8,7 @@ import CoreGraphics
 import Domain
 import ImageIO
 
-struct SelectableImage {
+struct ClipItemSource {
     static let fallbackFileExtension = "jpeg"
 
     let url: URL
@@ -47,7 +47,7 @@ struct SelectableImage {
 
         return session
             .dataTaskPublisher(for: request)
-            .map { data, response -> SelectableImage? in
+            .map { data, response -> ClipItemSource? in
                 guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
                 guard
                     let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
@@ -56,15 +56,15 @@ struct SelectableImage {
                 else {
                     return nil
                 }
-                return SelectableImage(url: url,
-                                       data: data,
-                                       mimeType: response.mimeType,
-                                       height: Double(pixelHeight),
-                                       width: Double(pixelWidth))
+                return ClipItemSource(url: url,
+                                      data: data,
+                                      mimeType: response.mimeType,
+                                      height: Double(pixelHeight),
+                                      width: Double(pixelWidth))
             }
-            .catch { _ -> AnyPublisher<SelectableImage?, Never> in
+            .catch { _ -> AnyPublisher<ClipItemSource?, Never> in
                 RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(url)"))
-                return Just(SelectableImage?.none)
+                return Just(ClipItemSource?.none)
                     .eraseToAnyPublisher()
             }
             .compactMap { $0 }

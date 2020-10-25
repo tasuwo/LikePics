@@ -19,7 +19,7 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
     func notifySavedImagesSuccessfully()
 }
 
-typealias OrderingSelectableImage = (index: Int, meta: SelectableImage)
+typealias OrderingSelectableImage = (index: Int, meta: ClipItemSource)
 
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
@@ -29,7 +29,7 @@ public class ClipTargetFinderPresenter {
         case internalError
     }
 
-    private(set) var selectableImages: [SelectableImage] = [] {
+    private(set) var selectableImages: [ClipItemSource] = [] {
         didSet {
             self.selectedIndices = []
             self.view?.resetSelection()
@@ -140,8 +140,8 @@ public class ClipTargetFinderPresenter {
         self.view?.startLoading()
 
         self.resolveImageUrls(at: self.url)
-            .flatMap { urls -> AnyPublisher<[SelectableImage], PresenterError> in
-                return self.resolveSizes(ofImageUrls: urls)
+            .flatMap { urls -> AnyPublisher<[ClipItemSource], PresenterError> in
+                return self.fetchImages(atUrls: urls)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -224,12 +224,12 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private func resolveSizes(ofImageUrls urls: [URL]) -> AnyPublisher<[SelectableImage], PresenterError> {
+    private func fetchImages(atUrls urls: [URL]) -> AnyPublisher<[ClipItemSource], PresenterError> {
         do {
-            let publishers: [AnyPublisher<SelectableImage, Never>] = try urls
+            let publishers: [AnyPublisher<ClipItemSource, Never>] = try urls
                 .map { [weak self] url in
                     guard let self = self else { throw PresenterError.internalError }
-                    return SelectableImage.make(by: url, using: self.urlSession)
+                    return ClipItemSource.make(by: url, using: self.urlSession)
                 }
             return Publishers.MergeMany(publishers)
                 .filter({ $0.isValid })
@@ -248,7 +248,11 @@ public class ClipTargetFinderPresenter {
         let currentDate = self.currentDateResolver()
         let clipId = UUID().uuidString
         let items = target.map {
-            ClipItem(id: UUID().uuidString, clipId: clipId, index: $0.index, dataSet: $0.meta, currentDate: currentDate)
+            ClipItem(id: UUID().uuidString,
+                     clipId: clipId,
+                     index: $0.index,
+                     source: $0.meta,
+                     currentDate: currentDate)
         }
         let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
         let data = target.map { ($0.meta.fileName, $0.meta.data) }
@@ -264,13 +268,13 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(id: ClipItem.Identity, clipId: Clip.Identity, index: Int, dataSet: SelectableImage, currentDate: Date) {
+    init(id: ClipItem.Identity, clipId: Clip.Identity, index: Int, source: ClipItemSource, currentDate: Date) {
         self.init(id: id,
                   clipId: clipId,
                   clipIndex: index,
-                  imageFileName: dataSet.fileName,
-                  imageUrl: dataSet.url,
-                  imageSize: ImageSize(height: dataSet.height, width: dataSet.width),
+                  imageFileName: source.fileName,
+                  imageUrl: source.url,
+                  imageSize: ImageSize(height: source.height, width: source.width),
                   registeredDate: currentDate,
                   updatedDate: currentDate)
     }
