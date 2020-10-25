@@ -3844,7 +3844,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Debug;
 		};
@@ -3864,7 +3864,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Release;
 		};
@@ -3946,7 +3946,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Debug;
 		};
@@ -3966,7 +3966,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Release;
 		};
@@ -4056,7 +4056,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Debug;
 		};
@@ -4078,7 +4078,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Release;
 		};
@@ -4307,7 +4307,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Debug;
 		};
@@ -4330,7 +4330,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Release;
 		};
@@ -4456,7 +4456,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Debug;
 		};
@@ -4477,7 +4477,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TBox.app/TBox";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
 			};
 			name = Release;
 		};

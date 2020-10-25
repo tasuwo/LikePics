@@ -21,7 +21,7 @@ class ClipStorageSpec: QuickSpec {
 
         beforeEach {
             imageStorage = ImageStorageProtocolMock()
-            service = try! ClipStorage(realmConfiguration: configuration, imageStorage: imageStorage)
+            service = try! ClipStorage(realmConfiguration: configuration, imageStorage: imageStorage, thumbnailStorage: ThumbnailStorageProtocolMock())
 
             try! realm.write {
                 realm.deleteAll()
