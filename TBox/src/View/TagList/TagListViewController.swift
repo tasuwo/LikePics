@@ -75,6 +75,19 @@ class TagListViewController: UIViewController {
         self.title = L10n.tagListViewTitle
     }
 
+    private func startAddingTag() {
+        self.addAlertContainer.present(
+            withText: nil,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: tag) = action else { return }
+                self?.presenter.addTag(tag)
+            }
+        )
+    }
+
     // MARK: Collection View
 
     private func setupCollectionView() {
@@ -243,21 +256,6 @@ class TagListViewController: UIViewController {
             .indexPathsForSelectedItems?
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
         self.collectionView.allowsMultipleSelection = editing
-    }
-
-    // MARK: - Methods
-
-    private func startAddingTag() {
-        self.addAlertContainer.present(
-            withText: nil,
-            on: self,
-            validator: {
-                $0?.isEmpty != true
-            }, completion: { [weak self] action in
-                guard case let .saved(text: tag) = action else { return }
-                self?.presenter.addTag(tag)
-            }
-        )
     }
 }
 
