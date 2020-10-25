@@ -12,8 +12,11 @@
 "clip_target_finder_view_overwrite_alert_cancel" = "Cancel";
 "clip_target_finder_view_error_alert_title" = "Error";
 "clip_target_finder_view_error_alert_ok" = "OK";
-"clip_target_finder_view_error_alert_body_failed_to_find_images_timeout" = "Timed out. There are not images in the web site or the connection is unstable. Please try again later.";
+"clip_target_finder_view_error_alert_body_failed_to_find_images_timeout" = "Timed out. There might be no available images in the web site or the connection might be bad. Please try again later.";
 "clip_target_finder_view_error_alert_body_failed_to_find_images" = "Failed to find images for clip.";
 "clip_target_finder_view_error_alert_body_failed_to_download_images" = "Failed to download images. Please try again later.";
 "clip_target_finder_view_error_alert_body_failed_to_save_images" = "Filed to save images. Please try again later.";
 "clip_target_finder_view_error_alert_body_internal_error" = "Sorry, somthing went wrong. Please try again later.";
+"clip_target_finder_view_empty_title" = "No images found";
+"clip_target_finder_view_empty_message" = "There might be no available images in the web site or the connection might be bad.";
+"clip_target_finder_view_empty_action_title" = "Retry";

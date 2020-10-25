@@ -17,3 +17,6 @@
 "clip_target_finder_view_error_alert_body_failed_to_download_images" = "画像のダウンロードに失敗しました。時間をおいて再度お試しください";
 "clip_target_finder_view_error_alert_body_failed_to_save_images" = "画像の保存に失敗しました。クリップをやり直してください";
 "clip_target_finder_view_error_alert_body_internal_error" = "問題が発生しました。クリップをやり直してください";
+"clip_target_finder_view_empty_title" = "画像が見つかりませんでした";
+"clip_target_finder_view_empty_message" = "保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります";
+"clip_target_finder_view_empty_action_title" = "もう一度試す";

@@ -10,6 +10,12 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// もう一度試す
+    internal static let clipTargetFinderViewEmptyActionTitle = L10n.tr("Localizable", "clip_target_finder_view_empty_action_title")
+    /// 保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります
+    internal static let clipTargetFinderViewEmptyMessage = L10n.tr("Localizable", "clip_target_finder_view_empty_message")
+    /// 画像が見つかりませんでした
+    internal static let clipTargetFinderViewEmptyTitle = L10n.tr("Localizable", "clip_target_finder_view_empty_title")
     /// 画像のダウンロードに失敗しました。時間をおいて再度お試しください
     internal static let clipTargetFinderViewErrorAlertBodyFailedToDownloadImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_download_images")
     /// 保存可能な画像が見つからなかったため、クリップできません

@@ -15,6 +15,7 @@ public protocol ClipTargetFinderDelegate: AnyObject {
 
 public class ClipTargetFinderViewController: UIViewController {
     private let presenter: ClipTargetFinderPresenter
+    private let emptyMessageView = EmptyMessageView()
 
     private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAction))
     private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(reloadAction))
@@ -49,10 +50,14 @@ public class ClipTargetFinderViewController: UIViewController {
         }
 
         self.setupNavigationBar()
+        self.setupEmptyMessage()
+
         self.presenter.findImages()
     }
 
     // MARK: - Methods
+
+    // MARK: NavigationBar
 
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.clipTargetFinderViewTitle
@@ -75,12 +80,31 @@ public class ClipTargetFinderViewController: UIViewController {
     private func reloadAction() {
         self.presenter.findImages()
     }
+
+    // MARK: EmptyMessage
+
+    private func setupEmptyMessage() {
+        self.view.addSubview(self.emptyMessageView)
+        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+
+        self.emptyMessageView.title = L10n.clipTargetFinderViewEmptyTitle
+        self.emptyMessageView.message = L10n.clipTargetFinderViewEmptyMessage
+        self.emptyMessageView.actionButtonTitle = L10n.clipTargetFinderViewEmptyActionTitle
+        self.emptyMessageView.delegate = self
+
+        self.emptyMessageView.alpha = 0
+    }
 }
 
 extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     // MARK: - ClipTargetFinderViewProtocol
 
     func startLoading() {
+        self.emptyMessageView.alpha = 0
         self.indicator.startAnimating()
         self.indicator.isHidden = false
         self.itemReload.isEnabled = false
@@ -93,6 +117,13 @@ extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
     }
 
     func reloadList() {
+        if self.presenter.selectableImages.isEmpty {
+            self.collectionView.isHidden = true
+            self.emptyMessageView.alpha = 1
+        } else {
+            self.collectionView.isHidden = false
+            self.emptyMessageView.alpha = 0
+        }
         self.collectionView.reloadData()
     }
 
@@ -217,5 +248,13 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
         return .zero
+    }
+}
+
+extension ClipTargetFinderViewController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    public func didTapActionButton(_ view: EmptyMessageView) {
+        self.presenter.findImages()
     }
 }
