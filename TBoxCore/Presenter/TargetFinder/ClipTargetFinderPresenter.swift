@@ -144,7 +144,11 @@ public class ClipTargetFinderPresenter {
         self.view?.startLoading()
 
         self.resolveImageUrls(at: self.url)
-            .flatMap { urls -> AnyPublisher<[ClipItemSource], PresenterError> in
+            .flatMap { [weak self] urls -> AnyPublisher<[ClipItemSource], PresenterError> in
+                guard let self = self else {
+                    return Fail(error: PresenterError.internalError)
+                        .eraseToAnyPublisher()
+                }
                 return self.fetchImages(atUrls: urls)
             }
             .receive(on: DispatchQueue.main)
