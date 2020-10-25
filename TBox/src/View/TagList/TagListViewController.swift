@@ -358,7 +358,7 @@ extension TagListViewController: UICollectionViewDelegate {
             UIPasteboard.general.string = tag.name
         }
         let delete = UIAction(title: L10n.tagListViewContextMenuActionDelete,
-                              image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
+                              image: UIImage(systemName: "trash.fill")) { [weak self] _ in
             self?.presenter.delete([tag])
         }
         let update = UIAction(title: L10n.tagListViewContextMenuActionUpdate,
