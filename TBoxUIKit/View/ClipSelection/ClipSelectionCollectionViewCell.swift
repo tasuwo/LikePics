@@ -12,9 +12,9 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 
     var currentDataTask: URLSessionDataTask?
 
-    public var imageData: Data? {
+    public var image: UIImage? {
         didSet {
-            guard let data = self.imageData, let image = UIImage(data: data) else {
+            guard let image = self.image else {
                 self.imageView.image = nil
                 return
             }
