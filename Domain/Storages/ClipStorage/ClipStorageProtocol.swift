@@ -4,9 +4,16 @@
 
 /// @mockable
 public protocol ClipStorageProtocol {
+    // MARK: Transaction
+
+    var isInTransaction: Bool { get }
+    func beginTransaction() throws
+    func commitTransaction() throws
+    func cancelTransaction() throws
+
     // MARK: Create
 
-    func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError>
+    func create(clip: Clip, forced: Bool) -> Result<Clip.Identity, ClipStorageError>
     func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 
@@ -27,10 +34,4 @@ public protocol ClipStorageProtocol {
     func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError>
     func deleteAlbum(having id: Album.Identity) -> Result<Album, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<[Tag], ClipStorageError>
-}
-
-extension ClipStorageProtocol {
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
-        self.create(clip: clip, withData: data, forced: false)
-    }
 }

@@ -14,7 +14,7 @@ protocol ClipPreviewPageViewProtocol: AnyObject {
 
 class ClipPreviewPagePresenter {
     private let query: ClipQuery
-    private let storage: ClipStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellable: AnyCancellable?
@@ -29,10 +29,10 @@ class ClipPreviewPagePresenter {
 
     // MARK: - Lifecycle
 
-    init(query: ClipQuery, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(query: ClipQuery, clipCommandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
         self.query = query
         self.clip = query.clip.value
-        self.storage = storage
+        self.clipCommandService = clipCommandService
         self.logger = logger
     }
 
@@ -56,7 +56,7 @@ class ClipPreviewPagePresenter {
     }
 
     func deleteClip() {
-        if case let .failure(error) = self.storage.deleteClips(having: [self.clip.identity]) {
+        if case let .failure(error) = self.clipCommandService.deleteClips(having: [self.clip.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to delete clip having id \(self.clip.identity). (code: \(error.rawValue))
             """))
@@ -66,7 +66,7 @@ class ClipPreviewPagePresenter {
 
     func removeClipItem(having itemId: ClipItem.Identity) {
         guard let item = self.clip.items.first(where: { $0.identity == itemId }) else { return }
-        if case let .failure(error) = self.storage.deleteClipItem(having: item.identity) {
+        if case let .failure(error) = self.clipCommandService.deleteClipItem(having: item.identity) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to delete clip item having id \(itemId). (code: \(error.rawValue))
             """))
@@ -75,7 +75,7 @@ class ClipPreviewPagePresenter {
     }
 
     func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add tags (\(tagIds.joined(separator: ", "))) to clip. (code: \(error.rawValue))
             """))
@@ -84,7 +84,7 @@ class ClipPreviewPagePresenter {
     }
 
     func addClipToAlbum(_ albumId: Album.Identity) {
-        if case let .failure(error) = self.storage.updateAlbum(having: albumId, byAddingClipsHaving: [self.clip.identity]) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [self.clip.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
             """))

@@ -20,7 +20,7 @@ protocol TagSelectionPresenterDelegate: AnyObject {
 class TagSelectionPresenter {
     private let query: TagListQuery
     private let context: Any?
-    private let storage: ClipStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let logger: TBoxLoggable
 
     private let searchQuery: CurrentValueSubject<String, Error> = .init("")
@@ -55,12 +55,12 @@ class TagSelectionPresenter {
     init(query: TagListQuery,
          selectedTags: [Tag.Identity],
          context: Any?,
-         storage: ClipStorageProtocol,
+         clipCommandService: ClipCommandServiceProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.context = context
-        self.storage = storage
+        self.clipCommandService = clipCommandService
         self.logger = logger
         self.selections = Set(selectedTags)
     }
@@ -89,7 +89,7 @@ class TagSelectionPresenter {
     }
 
     func addTag(_ name: String) {
-        guard case let .failure(error) = self.storage.create(tagWithName: name) else { return }
+        guard case let .failure(error) = self.clipCommandService.create(tagWithName: name) else { return }
         switch error {
         case .duplicated:
             self.logger.write(ConsoleLog(level: .info, message: """

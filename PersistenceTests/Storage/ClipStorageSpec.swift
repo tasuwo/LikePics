@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import Domain
 import Nimble
 import Quick
@@ -14,15 +15,11 @@ class ClipStorageSpec: QuickSpec {
     override func spec() {
         let configuration = Realm.Configuration(inMemoryIdentifier: self.name, schemaVersion: 8)
         let realm = try! Realm(configuration: configuration)
-        let sampleImage = UIImage(named: "TestImage", in: Bundle(for: Self.self), with: nil)!
 
-        var service: ClipStorage!
-        var imageStorage: ImageStorageProtocolMock!
+        var clipStorage: ClipStorage!
 
         beforeEach {
-            imageStorage = ImageStorageProtocolMock()
-            service = try! ClipStorage(realmConfiguration: configuration, imageStorage: imageStorage, thumbnailStorage: ThumbnailStorageProtocolMock())
-
+            clipStorage = try! ClipStorage(realmConfiguration: configuration, logger: RootLogger.shared)
             try! realm.write {
                 realm.deleteAll()
             }
@@ -30,24 +27,14 @@ class ClipStorageSpec: QuickSpec {
 
         // MARK: Create
 
-        describe("create(clip:withData:forced:)") {
-            var result: Result<Void, ClipStorageError>!
-            var savedData: [(Data, String, Clip.Identity)] = []
-
-            beforeEach {
-                imageStorage.saveHandler = { data, fileName, clipId in
-                    savedData.append((data, fileName, clipId))
-                }
-            }
-
-            afterEach {
-                savedData = []
-            }
+        describe("create(clip:forced:)") {
+            var result: Result<Clip.Identity, ClipStorageError>!
 
             context("引数が不正ではない") {
                 context("URLが同一のClipが存在しない") {
                     beforeEach {
-                        result = service.create(
+                        try! clipStorage.beginTransaction()
+                        result = clipStorage.create(
                             clip: Clip.makeDefault(
                                 id: "1",
                                 url: URL(string: "https://localhost/1")!,
@@ -62,16 +49,9 @@ class ClipStorageSpec: QuickSpec {
                                 registeredDate: Date(timeIntervalSince1970: 0),
                                 updatedDate: Date(timeIntervalSince1970: 1000)
                             ),
-                            withData: [
-                                ("hoge1", sampleImage.pngData()!),
-                                ("hoge2", sampleImage.pngData()!),
-                                ("hoge3", sampleImage.pngData()!),
-                                ("fuga1", sampleImage.pngData()!),
-                                ("fuga2", sampleImage.pngData()!),
-                                ("fuga3", sampleImage.pngData()!),
-                            ],
                             forced: true
                         )
+                        try! clipStorage.commitTransaction()
                     }
 
                     it("ClipとClipItemがRealmに書き込まれている") {
@@ -85,10 +65,6 @@ class ClipStorageSpec: QuickSpec {
                         expect(clips.first?.tags).to(haveCount(0))
                         expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                         expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
-                    }
-                    it("画像データが保存される") {
-                        expect(imageStorage.saveCallCount).to(equal(6))
-                        expect(savedData).toEventually(haveCount(6))
                     }
                 }
                 context("URLが同一のClipが存在する") {
@@ -119,7 +95,8 @@ class ClipStorageSpec: QuickSpec {
 
                     context("強制上書きフラグがオン") {
                         beforeEach {
-                            result = service.create(
+                            try! clipStorage.beginTransaction()
+                            result = clipStorage.create(
                                 clip: Clip.makeDefault(
                                     id: "9999",
                                     url: URL(string: "https://localhost/1")!,
@@ -134,16 +111,9 @@ class ClipStorageSpec: QuickSpec {
                                     registeredDate: Date(timeIntervalSince1970: 8888),
                                     updatedDate: Date(timeIntervalSince1970: 9999)
                                 ),
-                                withData: [
-                                    ("hoge1", sampleImage.pngData()!),
-                                    ("hoge2", sampleImage.pngData()!),
-                                    ("hoge3", sampleImage.pngData()!),
-                                    ("fuga1", sampleImage.pngData()!),
-                                    ("fuga2", sampleImage.pngData()!),
-                                    ("fuga3", sampleImage.pngData()!),
-                                ],
                                 forced: true
                             )
+                            try! clipStorage.commitTransaction()
                         }
                         it("successが返る") {
                             guard case let .failure(error) = result else {
@@ -167,13 +137,6 @@ class ClipStorageSpec: QuickSpec {
                             expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                             expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 9999)))
                         }
-                        it("既存の画像データは全て削除される") {
-                            expect(imageStorage.deleteAllCallCount).to(equal(1))
-                        }
-                        it("新しい画像データが保存される") {
-                            expect(imageStorage.saveCallCount).to(equal(6))
-                            expect(savedData).toEventually(haveCount(6))
-                        }
                         it("古いClipItemは全て削除される") {
                             let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
                             expect(items).to(haveCount(3))
@@ -194,7 +157,8 @@ class ClipStorageSpec: QuickSpec {
                     }
                     context("強制上書きフラグがオフ") {
                         beforeEach {
-                            result = service.create(
+                            try! clipStorage.beginTransaction()
+                            result = clipStorage.create(
                                 clip: Clip.makeDefault(
                                     id: "9999",
                                     url: URL(string: "https://localhost/1")!,
@@ -209,16 +173,9 @@ class ClipStorageSpec: QuickSpec {
                                     registeredDate: Date(timeIntervalSince1970: 0),
                                     updatedDate: Date(timeIntervalSince1970: 1000)
                                 ),
-                                withData: [
-                                    ("hoge1", sampleImage.pngData()!),
-                                    ("hoge2", sampleImage.pngData()!),
-                                    ("hoge3", sampleImage.pngData()!),
-                                    ("fuga1", sampleImage.pngData()!),
-                                    ("fuga2", sampleImage.pngData()!),
-                                    ("fuga3", sampleImage.pngData()!),
-                                ],
                                 forced: false
                             )
+                            try! clipStorage.commitTransaction()
                         }
                         it("duplicatedエラーが返る") {
                             guard case let .failure(error) = result else {
@@ -231,9 +188,6 @@ class ClipStorageSpec: QuickSpec {
                             expect(realm.object(ofType: ClipObject.self, forPrimaryKey: "9999")).to(beNil())
                             expect(realm.object(ofType: ClipObject.self, forPrimaryKey: "1")).notTo(beNil())
                         }
-                        it("画像データが保存されない") {
-                            expect(imageStorage.saveCallCount).to(equal(0))
-                        }
                         it("ClipItem,Tagが変わらない") {
                             expect(realm.objects(TagObject.self)).to(haveCount(2))
                             expect(realm.objects(ClipItemObject.self)).to(haveCount(2))
@@ -242,61 +196,6 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
             context("引数が不正") {
-                context("同一のファイル名のデータが含まれている") {
-                    beforeEach {
-                        result = service.create(
-                            clip: .makeDefault(items: [
-                                ClipItem.makeDefault(id: "11", imageFileName: "hoge1"),
-                                ClipItem.makeDefault(id: "22", imageFileName: "hoge2"),
-                                ClipItem.makeDefault(id: "33", imageFileName: "hoge1"),
-                            ]),
-                            withData: [
-                                ("hoge1", sampleImage.pngData()!),
-                                ("hoge2", sampleImage.pngData()!),
-                                ("hoge1", sampleImage.pngData()!),
-                                ("fuga1", sampleImage.pngData()!),
-                                ("fuga2", sampleImage.pngData()!),
-                                ("fuga3", sampleImage.pngData()!),
-                            ],
-                            forced: true
-                        )
-                    }
-                    it("invalidParameterエラーが返る") {
-                        guard case let .failure(error) = result else {
-                            fail("Unexpected success")
-                            return
-                        }
-                        expect(error).to(equal(.invalidParameter))
-                    }
-                }
-
-                context("ClipItemに対応するファイル名のデータが欠損している") {
-                    beforeEach {
-                        result = service.create(
-                            clip: .makeDefault(items: [
-                                ClipItem.makeDefault(id: "11", imageFileName: "hoge1"),
-                                ClipItem.makeDefault(id: "22", imageFileName: "hoge2"),
-                                ClipItem.makeDefault(id: "33", imageFileName: "hoge3"),
-                            ]),
-                            withData: [
-                                ("hoge1", sampleImage.pngData()!),
-                                ("hoge2", sampleImage.pngData()!),
-                                ("fuga1", sampleImage.pngData()!),
-                                ("fuga2", sampleImage.pngData()!),
-                                ("fuga3", sampleImage.pngData()!),
-                            ],
-                            forced: true
-                        )
-                    }
-                    it("invalidParameterエラーが返る") {
-                        guard case let .failure(error) = result else {
-                            fail("Unexpected success")
-                            return
-                        }
-                        expect(error).to(equal(.invalidParameter))
-                    }
-                }
-
                 context("存在しないタグを指定した") {
                     // TODO:
                 }
@@ -308,7 +207,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("同名のタグが存在しない") {
                 beforeEach {
-                    result = service.create(tagWithName: "hoge")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.create(tagWithName: "hoge")
+                    try! clipStorage.commitTransaction()
                 }
                 it("successが返る") {
                     switch result! {
@@ -337,7 +238,9 @@ class ClipStorageSpec: QuickSpec {
                         obj.name = "hoge"
                         realm.add(obj)
                     }
-                    result = service.create(tagWithName: "hoge")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.create(tagWithName: "hoge")
+                    try! clipStorage.commitTransaction()
                 }
                 it("duplicatedが返る") {
                     switch result! {
@@ -363,7 +266,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("同名のアルバムが存在しない") {
                 beforeEach {
-                    result = service.create(albumWithTitle: "hoge")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.create(albumWithTitle: "hoge")
+                    try! clipStorage.commitTransaction()
                 }
                 it("successが返る") {
                     switch result! {
@@ -392,7 +297,9 @@ class ClipStorageSpec: QuickSpec {
                         obj.title = "hoge"
                         realm.add(obj)
                     }
-                    result = service.create(albumWithTitle: "hoge")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.create(albumWithTitle: "hoge")
+                    try! clipStorage.commitTransaction()
                 }
                 it("duplicatedが返る") {
                     switch result! {
@@ -409,54 +316,6 @@ class ClipStorageSpec: QuickSpec {
                     expect(savedAlbums).to(haveCount(1))
                     expect(savedAlbums[0].id).to(equal("999"))
                     expect(savedAlbums[0].title).to(equal("hoge"))
-                }
-            }
-        }
-
-        // MARK: Read
-
-        describe("readImageData(of:)") {
-            var result: Result<Data, ClipStorageError>!
-
-            context("対象の画像データが存在する") {
-                beforeEach {
-                    imageStorage.readImageHandler = { name, clipId in
-                        expect(name).to(equal("hoge.png"))
-                        expect(clipId).to(equal("111"))
-                        return Data(base64Encoded: "hogehoge")!
-                    }
-                    result = service.readImageData(of: .makeDefault(clipId: "111",
-                                                                    imageFileName: "hoge.png"))
-                }
-                it("successが返る") {
-                    switch result! {
-                    case let .success(data):
-                        expect(data).to(equal(Data(base64Encoded: "hogehoge")!))
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
-                }
-            }
-
-            context("対象の画像データが存在しない") {
-                beforeEach {
-                    imageStorage.readImageHandler = { name, clipId in
-                        expect(name).to(equal("hoge.png"))
-                        expect(clipId).to(equal("111"))
-                        throw ImageStorageError.notFound
-                    }
-                    result = service.readImageData(of: .makeDefault(clipId: "111",
-                                                                    imageFileName: "hoge.png"))
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
-                        expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
-                    }
                 }
             }
         }
@@ -485,7 +344,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.updateClips(having: ["1", "3"], byHiding: true)
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "3"], byHiding: true)
+                    try! clipStorage.commitTransaction()
                 }
 
                 it("successが返る") {
@@ -539,7 +400,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("追加対象のクリップが1つも存在しない") {
                 beforeEach {
-                    result = service.updateClips(having: ["1", "2", "3"], byHiding: true)
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byHiding: true)
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -571,7 +434,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj1)
                         realm.add(obj3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byHiding: true)
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byHiding: true)
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -630,7 +495,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
 
                 it("successが返る") {
@@ -769,7 +636,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -827,7 +696,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag1)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -875,7 +746,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -923,7 +796,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byAddingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -996,7 +871,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
 
                 it("successが返る") {
@@ -1118,7 +995,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj2)
                         realm.add(obj3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1176,7 +1055,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag1)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1224,7 +1105,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1272,7 +1155,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(tag2)
                         realm.add(tag3)
                     }
-                    result = service.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateClips(having: ["1", "2", "3"], byReplacingTagsHaving: ["111", "222", "333"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1326,7 +1211,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.updateAlbum(having: "111", byAddingClipsHaving: ["1", "2"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateAlbum(having: "111", byAddingClipsHaving: ["1", "2"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1354,7 +1241,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.updateAlbum(having: "111", byDeletingClipsHaving: ["1", "2"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateAlbum(having: "111", byDeletingClipsHaving: ["1", "2"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1382,7 +1271,9 @@ class ClipStorageSpec: QuickSpec {
                         obj.updatedAt = Date(timeIntervalSince1970: 1000)
                         realm.add(obj)
                     }
-                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.commitTransaction()
                 }
                 it("successが返る") {
                     switch result! {
@@ -1429,7 +1320,9 @@ class ClipStorageSpec: QuickSpec {
                         realm.add(obj1)
                         realm.add(obj2)
                     }
-                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.commitTransaction()
                 }
                 it("duplicatedが返る") {
                     switch result! {
@@ -1456,7 +1349,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("更新対象のアルバムが存在しない") {
                 beforeEach {
-                    result = service.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.updateAlbum(having: "111", titleTo: "fugafuga")
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1487,7 +1382,9 @@ class ClipStorageSpec: QuickSpec {
 
             context("削除対象のタグが存在しない") {
                 beforeEach {
-                    result = service.deleteTags(having: ["111"])
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.deleteTags(having: ["111"])
+                    try! clipStorage.commitTransaction()
                 }
                 it("notFoundが返る") {
                     switch result! {
@@ -1511,7 +1408,9 @@ class ClipStorageSpec: QuickSpec {
                             realm.add(tag2)
                             realm.add(tag3)
                         }
-                        result = service.deleteTags(having: ["222"])
+                        try! clipStorage.beginTransaction()
+                        result = clipStorage.deleteTags(having: ["222"])
+                        try! clipStorage.commitTransaction()
                     }
                     it("successが返り、削除対象のタグ名が返ってくる") {
                         switch result! {
@@ -1551,7 +1450,9 @@ class ClipStorageSpec: QuickSpec {
                             realm.add(obj1, update: .modified)
                             realm.add(obj2, update: .modified)
                         }
-                        result = service.deleteTags(having: ["222"])
+                        try! clipStorage.beginTransaction()
+                        result = clipStorage.deleteTags(having: ["222"])
+                        try! clipStorage.commitTransaction()
                     }
                     it("successが返り、削除対象のタグ名が返ってくる") {
                         switch result! {

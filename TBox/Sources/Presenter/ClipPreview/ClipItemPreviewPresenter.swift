@@ -14,7 +14,6 @@ class ClipItemPreviewPresenter {
     let itemId: ClipItem.Identity
 
     private let query: ClipQuery
-    private let clipStorage: ClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
     private let logger: TBoxLoggable
@@ -32,14 +31,12 @@ class ClipItemPreviewPresenter {
 
     init(query: ClipQuery,
          itemId: ClipItem.Identity,
-         clipStorage: ClipStorageProtocol,
          imageStorage: ImageStorageProtocol,
          thumbnailStorage: ThumbnailStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.itemId = itemId
-        self.clipStorage = clipStorage
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger

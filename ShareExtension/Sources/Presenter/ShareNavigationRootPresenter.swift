@@ -18,13 +18,6 @@ class ShareNavigationRootPresenter {
     }
 
     weak var view: ShareNavigationViewProtocol?
-    private let storage: ClipStorageProtocol
-
-    // MARK: - Lifecycle
-
-    init(storage: ClipStorageProtocol) {
-        self.storage = storage
-    }
 
     // MARK: - Methods
 

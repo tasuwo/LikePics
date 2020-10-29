@@ -16,8 +16,8 @@ protocol AlbumListViewProtocol: AnyObject {
 
 class AlbumListPresenter {
     private let query: AlbumListQuery
-    private let storage: ClipStorageProtocol
-    private let cacheStorage: ThumbnailStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
+    private let thumbnailStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -41,14 +41,14 @@ class AlbumListPresenter {
     // MARK: - Lifecycle
 
     init(query: AlbumListQuery,
-         storage: ClipStorageProtocol,
-         cacheStorage: ThumbnailStorageProtocol,
+         clipCommandService: ClipCommandServiceProtocol,
+         thumbnailStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
-        self.storage = storage
-        self.cacheStorage = cacheStorage
+        self.clipCommandService = clipCommandService
+        self.thumbnailStorage = thumbnailStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -75,14 +75,14 @@ class AlbumListPresenter {
     }
 
     func addAlbum(title: String) {
-        if case let .failure(error) = self.storage.create(albumWithTitle: title) {
+        if case let .failure(error) = self.clipCommandService.create(albumWithTitle: title) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtAddAlbum)\n(\(error.makeErrorCode())")
         }
     }
 
     func deleteAlbum(_ album: Album) {
-        if case let .failure(error) = self.storage.deleteAlbum(having: album.identity) {
+        if case let .failure(error) = self.clipCommandService.deleteAlbum(having: album.identity) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtDeleteAlbum)\n(\(error.makeErrorCode())")
         }
@@ -91,7 +91,7 @@ class AlbumListPresenter {
 
     func readImageIfExists(for album: Album) -> UIImage? {
         guard let clipItem = self.resolveThumbnailItem(for: album) else { return nil }
-        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
+        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func fetchImage(for album: Album, completion: @escaping (UIImage?) -> Void) {
@@ -99,7 +99,7 @@ class AlbumListPresenter {
             completion(nil)
             return
         }
-        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
+        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     private func resolveThumbnailItem(for album: Album) -> ClipItem? {

@@ -16,7 +16,7 @@ class ClipInformationPresenter {
     let itemId: ClipItem.Identity
 
     private let query: ClipQuery
-    private let storage: ClipStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellable: AnyCancellable?
@@ -33,13 +33,13 @@ class ClipInformationPresenter {
 
     init(query: ClipQuery,
          itemId: ClipItem.Identity,
-         storage: ClipStorageProtocol,
+         clipCommandService: ClipCommandServiceProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.clip = query.clip.value
         self.itemId = itemId
-        self.storage = storage
+        self.clipCommandService = clipCommandService
         self.logger = logger
     }
 
@@ -63,14 +63,14 @@ class ClipInformationPresenter {
     }
 
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byReplacingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to replace tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
     }
 
     func removeTagFromClip(_ tag: Tag) {
-        if case let .failure(error) = self.storage.updateClips(having: [self.clip.identity], byDeletingTagsHaving: [tag.identity]) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byDeletingTagsHaving: [tag.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }

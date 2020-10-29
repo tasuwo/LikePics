@@ -13,15 +13,9 @@ protocol SearchEntryViewProtocol: AnyObject {
 class SearchEntryPresenter {
     weak var view: SearchEntryViewProtocol?
 
-    private let storage: ClipStorageProtocol
-    private let logger: TBoxLoggable
-
     // MARK: - Lifecycle
 
-    init(storage: ClipStorageProtocol, logger: TBoxLoggable) {
-        self.storage = storage
-        self.logger = logger
-    }
+    init() {}
 
     // MARK: - Methods
 

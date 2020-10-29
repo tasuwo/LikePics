@@ -21,8 +21,8 @@ protocol AlbumSelectionViewProtocol: AnyObject {
 class AlbumSelectionPresenter {
     private let query: AlbumListQuery
     private let context: Any?
-    private let storage: ClipStorageProtocol
-    private let cacheStorage: ThumbnailStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
+    private let thumbnailStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -49,15 +49,15 @@ class AlbumSelectionPresenter {
 
     init(query: AlbumListQuery,
          context: Any?,
-         storage: ClipStorageProtocol,
-         cacheStorage: ThumbnailStorageProtocol,
+         clipCommandService: ClipCommandServiceProtocol,
+         thumbnailStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.context = context
-        self.storage = storage
-        self.cacheStorage = cacheStorage
+        self.clipCommandService = clipCommandService
+        self.thumbnailStorage = thumbnailStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -90,7 +90,7 @@ class AlbumSelectionPresenter {
 
     func readImageIfExists(for album: Album) -> UIImage? {
         guard let clipItem = self.resolveThumbnailItem(for: album) else { return nil }
-        return self.cacheStorage.readThumbnailIfExists(for: clipItem)
+        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func fetchImage(for album: Album, completion: @escaping (UIImage?) -> Void) {
@@ -98,11 +98,11 @@ class AlbumSelectionPresenter {
             completion(nil)
             return
         }
-        self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
+        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func addAlbum(title: String) {
-        if case let .failure(error) = self.storage.create(albumWithTitle: title) {
+        if case let .failure(error) = self.clipCommandService.create(albumWithTitle: title) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtAddAlbum)\n(\(error.makeErrorCode())")
         }

@@ -15,7 +15,7 @@ protocol TagListViewProtocol: AnyObject {
 
 class TagListPresenter {
     private let query: TagListQuery
-    private let storage: ClipStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellable: AnyCancellable?
@@ -28,9 +28,9 @@ class TagListPresenter {
 
     // MARK: - Lifecycle
 
-    init(query: TagListQuery, storage: ClipStorageProtocol, logger: TBoxLoggable) {
+    init(query: TagListQuery, clipCommandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
         self.query = query
-        self.storage = storage
+        self.clipCommandService = clipCommandService
         self.logger = logger
     }
 
@@ -57,7 +57,7 @@ class TagListPresenter {
     }
 
     func addTag(_ name: String) {
-        guard case let .failure(error) = self.storage.create(tagWithName: name) else { return }
+        guard case let .failure(error) = self.clipCommandService.create(tagWithName: name) else { return }
         switch error {
         case .duplicated:
             self.logger.write(ConsoleLog(level: .info, message: """
@@ -76,7 +76,7 @@ class TagListPresenter {
     }
 
     func delete(_ tags: [Tag]) {
-        if case let .failure(error) = self.storage.deleteTags(having: tags.map({ $0.identity })) {
+        if case let .failure(error) = self.clipCommandService.deleteTags(having: tags.map({ $0.identity })) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete tags. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.errorTagDelete)\n\(error.makeErrorCode())")
             return
@@ -85,7 +85,7 @@ class TagListPresenter {
     }
 
     func updateTag(having id: Tag.Identity, nameTo name: String) {
-        guard case let .failure(error) = self.storage.updateTag(having: id, nameTo: name) else { return }
+        guard case let .failure(error) = self.clipCommandService.updateTag(having: id, nameTo: name) else { return }
         switch error {
         case .duplicated:
             self.logger.write(ConsoleLog(level: .info, message: """

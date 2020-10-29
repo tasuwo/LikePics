@@ -52,19 +52,25 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    private let clipStorage: ClipStorage
+    private let clipQueryService: ClipQueryServiceProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
-    private lazy var logger = RootLogger.shared
-    private lazy var userSettingsStorage = UserSettingsStorage()
+    private let logger: TBoxLoggable
+    private let userSettingsStorage = UserSettingsStorage()
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
         let imageStorage = try ImageStorage()
-        self.clipStorage = try ClipStorage(imageStorage: imageStorage,
-                                           thumbnailStorage: thumbnailStorage)
+        let logger = RootLogger.shared
+        let clipStorage = try ClipStorage(logger: logger)
+        self.clipQueryService = clipStorage
+        self.clipCommandService = ClipCommandService(clipStorage: clipStorage,
+                                                     imageStorage: imageStorage,
+                                                     thumbnailStorage: thumbnailStorage)
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
+        self.logger = logger
     }
 }
 
@@ -73,7 +79,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeTopClipsListViewController() -> UIViewController? {
         let query: ClipListQuery
-        switch self.clipStorage.queryAllClips() {
+        switch self.clipQueryService.queryAllClips() {
         case let .success(result):
             query = result
 
@@ -85,7 +91,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = TopClipsListPresenter(query: query,
-                                              clipStorage: self.clipStorage,
+                                              clipService: self.clipCommandService,
                                               cacheStorage: self.thumbnailStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
@@ -107,7 +113,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController? {
         let query: ClipQuery
-        switch self.clipStorage.queryClip(having: clipId) {
+        switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
             query = result
 
@@ -119,7 +125,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = ClipPreviewPagePresenter(query: query,
-                                                 storage: self.clipStorage,
+                                                 clipCommandService: self.clipCommandService,
                                                  logger: self.logger)
 
         let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
@@ -145,7 +151,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
         let query: ClipQuery
-        switch self.clipStorage.queryClip(having: clipId) {
+        switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
             query = result
 
@@ -158,7 +164,6 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = ClipItemPreviewPresenter(query: query,
                                                  itemId: itemId,
-                                                 clipStorage: self.clipStorage,
                                                  imageStorage: self.imageStorage,
                                                  thumbnailStorage: self.thumbnailStorage,
                                                  logger: self.logger)
@@ -174,7 +179,7 @@ extension DependencyContainer: ViewControllerFactory {
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
     {
         let query: ClipQuery
-        switch self.clipStorage.queryClip(having: clipId) {
+        switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
             query = result
 
@@ -187,7 +192,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = ClipInformationPresenter(query: query,
                                                  itemId: itemId,
-                                                 storage: self.clipStorage,
+                                                 clipCommandService: self.clipCommandService,
                                                  logger: self.logger)
 
         let viewController = ClipInformationViewController(factory: self,
@@ -201,8 +206,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
-                                                  clipStorage: self.clipStorage,
-                                                  queryService: self.clipStorage,
+                                                  clipCommandService: self.clipCommandService,
+                                                  clipQueryService: self.clipQueryService,
                                                   finder: WebImageUrlFinder(),
                                                   currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
@@ -211,7 +216,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchEntryViewController() -> UIViewController {
-        let presenter = SearchEntryPresenter(storage: self.clipStorage, logger: self.logger)
+        let presenter = SearchEntryPresenter()
         let viewController = SearchEntryViewController(factory: self, presenter: presenter)
         return UINavigationController(rootViewController: viewController)
     }
@@ -220,7 +225,7 @@ extension DependencyContainer: ViewControllerFactory {
         let query: ClipListQuery
         switch context {
         case let .keywords(values):
-            switch self.clipStorage.queryClips(matchingKeywords: values) {
+            switch self.clipQueryService.queryClips(matchingKeywords: values) {
             case let .success(result):
                 query = result
 
@@ -232,7 +237,7 @@ extension DependencyContainer: ViewControllerFactory {
             }
 
         case let .tag(value):
-            switch self.clipStorage.queryClips(tagged: value) {
+            switch self.clipQueryService.queryClips(tagged: value) {
             case let .success(result):
                 query = result
 
@@ -244,7 +249,7 @@ extension DependencyContainer: ViewControllerFactory {
             }
 
         case .uncategorized:
-            switch self.clipStorage.queryUncategorizedClips() {
+            switch self.clipQueryService.queryUncategorizedClips() {
             case let .success(result):
                 query = result
 
@@ -258,7 +263,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = SearchResultPresenter(context: context,
                                               query: query,
-                                              clipStorage: self.clipStorage,
+                                              clipCommandService: self.clipCommandService,
                                               cacheStorage: self.thumbnailStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
@@ -278,7 +283,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeAlbumListViewController() -> UIViewController? {
         let query: AlbumListQuery
-        switch self.clipStorage.queryAllAlbums() {
+        switch self.clipQueryService.queryAllAlbums() {
         case let .success(result):
             query = result
 
@@ -290,8 +295,8 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = AlbumListPresenter(query: query,
-                                           storage: self.clipStorage,
-                                           cacheStorage: self.thumbnailStorage,
+                                           clipCommandService: self.clipCommandService,
+                                           thumbnailStorage: self.thumbnailStorage,
                                            settingStorage: self.userSettingsStorage,
                                            logger: self.logger)
 
@@ -301,7 +306,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController? {
         let query: AlbumQuery
-        switch self.clipStorage.queryAlbum(having: albumId) {
+        switch self.clipQueryService.queryAlbum(having: albumId) {
         case let .success(result):
             query = result
 
@@ -313,8 +318,8 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = AlbumPresenter(query: query,
-                                       clipStorage: self.clipStorage,
-                                       cacheStorage: self.thumbnailStorage,
+                                       clipCommandService: self.clipCommandService,
+                                       thumbnailStorage: self.thumbnailStorage,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 
@@ -333,7 +338,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
         let query: AlbumListQuery
-        switch self.clipStorage.queryAllAlbums() {
+        switch self.clipQueryService.queryAllAlbums() {
         case let .success(result):
             query = result
 
@@ -346,8 +351,8 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = AlbumSelectionPresenter(query: query,
                                                 context: context,
-                                                storage: self.clipStorage,
-                                                cacheStorage: self.thumbnailStorage,
+                                                clipCommandService: self.clipCommandService,
+                                                thumbnailStorage: self.thumbnailStorage,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
         presenter.delegate = delegate
@@ -358,7 +363,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeTagListViewController() -> UIViewController? {
         let query: TagListQuery
-        switch self.clipStorage.queryAllTags() {
+        switch self.clipQueryService.queryAllTags() {
         case let .success(result):
             query = result
 
@@ -370,7 +375,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let presenter = TagListPresenter(query: query,
-                                         storage: self.clipStorage,
+                                         clipCommandService: self.clipCommandService,
                                          logger: self.logger)
         let viewController = TagListViewController(factory: self, presenter: presenter, logger: self.logger)
 
@@ -382,7 +387,7 @@ extension DependencyContainer: ViewControllerFactory {
                                         delegate: TagSelectionPresenterDelegate) -> UIViewController?
     {
         let query: TagListQuery
-        switch self.clipStorage.queryAllTags() {
+        switch self.clipQueryService.queryAllTags() {
         case let .success(result):
             query = result
 
@@ -396,7 +401,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = TagSelectionPresenter(query: query,
                                               selectedTags: selectedTags,
                                               context: context,
-                                              storage: self.clipStorage,
+                                              clipCommandService: self.clipCommandService,
                                               logger: self.logger)
         presenter.delegate = delegate
         let viewController = TagSelectionViewController(factory: self, presenter: presenter)

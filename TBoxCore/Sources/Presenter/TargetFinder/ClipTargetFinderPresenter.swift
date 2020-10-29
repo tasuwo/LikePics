@@ -56,8 +56,8 @@ public class ClipTargetFinderPresenter {
     weak var view: ClipTargetFinderViewProtocol?
 
     private let url: URL
-    private let clipStorage: ClipStorageProtocol
-    private let queryService: ClipQueryServiceProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
+    private let clipQueryService: ClipQueryServiceProtocol
     private let finder: WebImageUrlFinderProtocol
     private let currentDateResolver: () -> Date
     private let urlSession: URLSession
@@ -65,16 +65,16 @@ public class ClipTargetFinderPresenter {
     // MARK: - Lifecycle
 
     public init(url: URL,
-                clipStorage: ClipStorageProtocol,
-                queryService: ClipQueryServiceProtocol,
+                clipCommandService: ClipCommandServiceProtocol,
+                clipQueryService: ClipQueryServiceProtocol,
                 finder: WebImageUrlFinderProtocol,
                 currentDateResolver: @escaping () -> Date,
                 isEnabledOverwrite: Bool = false,
                 urlSession: URLSession = URLSession.shared)
     {
         self.url = url
-        self.clipStorage = clipStorage
-        self.queryService = queryService
+        self.clipCommandService = clipCommandService
+        self.clipQueryService = clipQueryService
         self.finder = finder
         self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
@@ -121,7 +121,7 @@ public class ClipTargetFinderPresenter {
 
     func findImages() {
         let alreadyClipped: Bool
-        switch self.queryService.existsClip(havingUrl: self.url) {
+        switch self.clipQueryService.existsClip(havingUrl: self.url) {
         case let .success(exists):
             alreadyClipped = exists
 
@@ -274,7 +274,7 @@ public class ClipTargetFinderPresenter {
         let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
         let data = target.map { ($0.meta.fileName, $0.meta.data) }
 
-        switch self.clipStorage.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
+        switch self.clipCommandService.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
         case .success:
             return .success(())
 

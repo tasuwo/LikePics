@@ -65,7 +65,7 @@ protocol SearchResultPresenterProtocol {
 
 class SearchResultPresenter {
     private var query: ClipListQuery
-    private let clipStorage: ClipStorageProtocol
+    private let clipCommandService: ClipCommandServiceProtocol
     private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
@@ -113,14 +113,14 @@ class SearchResultPresenter {
 
     init(context: SearchContext,
          query: ClipListQuery,
-         clipStorage: ClipStorageProtocol,
+         clipCommandService: ClipCommandServiceProtocol,
          cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.context = context
         self.query = query
-        self.clipStorage = clipStorage
+        self.clipCommandService = clipCommandService
         self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
@@ -203,7 +203,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func deleteSelectedClips() {
-        if case let .failure(error) = self.clipStorage.deleteClips(having: self.selectedClips.ids) {
+        if case let .failure(error) = self.clipCommandService.deleteClips(having: self.selectedClips.ids) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
@@ -212,7 +212,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func hideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: true) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: self.selectedClips.ids, byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
@@ -221,7 +221,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func unhideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: false) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: self.selectedClips.ids, byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
@@ -230,7 +230,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add tags (\(tagIds.joined(separator: ", "))) to clips. (code: \(error.rawValue))
             """))
@@ -241,7 +241,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
-        if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
             """))
@@ -252,28 +252,28 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func deleteClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.deleteClips(having: [id]) {
+        if case let .failure(error) = self.clipCommandService.deleteClips(having: [id]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func hideClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: true) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [id], byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func unhideClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: false) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [id], byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to replace tags (\(tagIds.joined(separator: ",")) of clip having \(clipId). (code: \(error.rawValue))
             """))
@@ -282,7 +282,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 
     func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity) {
-        if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clip having id \(clipId) to album having id \(albumId). (code: \(error.rawValue))
             """))

@@ -97,6 +97,8 @@
 		2C523D15254AEF090099F6DD /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
 		2C5445E6254B0F070088C8BC /* TemporaryClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */; };
 		2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C544604254B10270088C8BC /* ImageStorageProtocol.swift */; };
+		2C544640254B20850088C8BC /* ClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */; };
+		2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C544653254B21980088C8BC /* ClipCommandService.swift */; };
 		2C55D11824DF9D2600A43B8D /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */; };
 		2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */; };
 		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
@@ -629,6 +631,8 @@
 		2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorage.swift; sourceTree = "<group>"; };
 		2C544604254B10270088C8BC /* ImageStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageProtocol.swift; sourceTree = "<group>"; };
+		2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
+		2C544653254B21980088C8BC /* ClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandService.swift; sourceTree = "<group>"; };
 		2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService.swift; sourceTree = "<group>"; };
 		2C55D11924DF9F7700A43B8D /* ClipSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C55D11B24DFA0D200A43B8D /* ClipSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1419,6 +1423,9 @@
 		2C54462C254B1E110088C8BC /* ClipService */ = {
 			isa = PBXGroup;
 			children = (
+				2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */,
+				2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */,
+				2C544653254B21980088C8BC /* ClipCommandService.swift */,
 			);
 			path = ClipService;
 			sourceTree = "<group>";
@@ -1795,7 +1802,6 @@
 			children = (
 				2C9EF6A2253DE54500CBF357 /* ImageStorage */,
 				2C6C79CA253B409300A8A9B8 /* ClipStorage */,
-				2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */,
 				2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */,
 				2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */,
 			);
@@ -3279,12 +3285,14 @@
 				2CD25AE4251E454500BEE210 /* ClipListQuery.swift in Sources */,
 				2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */,
 				2C9EF6A4253DE55900CBF357 /* ThumbnailStorageProtocol.swift in Sources */,
+				2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
 				2C2727A324DED48500FEF1BD /* WebImageUrlFinder.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */,
 				2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */,
+				2C544640254B20850088C8BC /* ClipCommandServiceProtocol.swift in Sources */,
 				2CD25B1A251E46B800BEE210 /* AlbumListQuery.swift in Sources */,
 				2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */,
 				2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */,

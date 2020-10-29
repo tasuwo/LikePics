@@ -5,6 +5,7 @@
 import Combine
 @testable import Domain
 import Erik
+import Foundation
 import UIKit
 import WebKit
 
@@ -104,13 +105,46 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
 
 public class ClipStorageProtocolMock: ClipStorageProtocol {
     public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionCallCount = 0
+    public var cancelTransactionHandler: (() throws -> Void)?
+    public func cancelTransaction() throws {
+        cancelTransactionCallCount += 1
+        if let cancelTransactionHandler = cancelTransactionHandler {
+            try cancelTransactionHandler()
+        }
+    }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, [(fileName: String, image: Data)], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((Clip, Bool) -> (Result<Clip.Identity, ClipStorageError>))?
+    public func create(clip: Clip, forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
-            return createHandler(clip, data, forced)
+            return createHandler(clip, forced)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
     }

@@ -51,7 +51,7 @@ protocol TopClipsListPresenterProtocol {
 
 class TopClipsListPresenter {
     private let query: ClipListQuery
-    private let clipStorage: ClipStorageProtocol
+    private let clipService: ClipCommandServiceProtocol
     private let cacheStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
@@ -96,13 +96,13 @@ class TopClipsListPresenter {
     // MARK: - Lifecycle
 
     init(query: ClipListQuery,
-         clipStorage: ClipStorageProtocol,
+         clipService: ClipCommandServiceProtocol,
          cacheStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
-        self.clipStorage = clipStorage
+        self.clipService = clipService
         self.cacheStorage = cacheStorage
         self.settingStorage = settingStorage
         self.logger = logger
@@ -183,7 +183,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func deleteSelectedClips() {
-        if case let .failure(error) = self.clipStorage.deleteClips(having: self.selectedClips.ids) {
+        if case let .failure(error) = self.clipService.deleteClips(having: self.selectedClips.ids) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
@@ -192,7 +192,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func hideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: true) {
+        if case let .failure(error) = self.clipService.updateClips(having: self.selectedClips.ids, byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
@@ -201,7 +201,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func unhideSelectedClips() {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byHiding: false) {
+        if case let .failure(error) = self.clipService.updateClips(having: self.selectedClips.ids, byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
@@ -210,7 +210,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipService.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add tags (\(tagIds.joined(separator: ", "))) to clips. (code: \(error.rawValue))
             """))
@@ -221,7 +221,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
-        if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
+        if case let .failure(error) = self.clipService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
             """))
@@ -232,28 +232,28 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func deleteClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.deleteClips(having: [id]) {
+        if case let .failure(error) = self.clipService.deleteClips(having: [id]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func hideClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: true) {
+        if case let .failure(error) = self.clipService.updateClips(having: [id], byHiding: true) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func unhideClip(having id: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [id], byHiding: false) {
+        if case let .failure(error) = self.clipService.updateClips(having: [id], byHiding: false) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClip)\n(\(error.makeErrorCode())")
         }
     }
 
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
-        if case let .failure(error) = self.clipStorage.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
+        if case let .failure(error) = self.clipService.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to replace tags (\(tagIds.joined(separator: ",")) of clip having \(clipId). (code: \(error.rawValue))
             """))
@@ -262,7 +262,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 
     func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity) {
-        if case let .failure(error) = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
+        if case let .failure(error) = self.clipService.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clip having id \(clipId) to album having id \(albumId). (code: \(error.rawValue))
             """))
