@@ -3,7 +3,7 @@ strings:
         - TBox/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: TBox/Generated/String.swift
+          output: TBox/Sources/Generated/String.swift
     - inputs:
         - TBoxCore/Resources/ja.lproj
       outputs:
@@ -18,7 +18,7 @@ strings:
         - ShareExtension/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: ShareExtension/Generated/String.swift
+          output: ShareExtension/Sources/Generated/String.swift
 xcassets:
     - inputs:
         - TBoxUIKit/Resources/Assets.xcassets
