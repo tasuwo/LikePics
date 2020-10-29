@@ -1403,6 +1403,14 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		2C523D28254AEFCC0099F6DD /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				2C08BC3A254880F000A81B0B /* UITestHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		2C55D12424DFD18900A43B8D /* ClipSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1888,13 +1896,13 @@
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				2C523D28254AEFCC0099F6DD /* Helper */,
 				2C236DA1251A118400AB5EDD /* Query */,
 				2C99278A24DDCED700672CA7 /* Configuration */,
 				2C99275624DDC6DB00672CA7 /* Storage */,
 				2C2F623624DDC4C4000A8CDB /* Entity */,
 				2CCECE1624DDC0CB00ADFE54 /* Persistence.h */,
 				2CCECE1724DDC0CB00ADFE54 /* Info.plist */,
-				2C08BC3A254880F000A81B0B /* UITestHelper.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
