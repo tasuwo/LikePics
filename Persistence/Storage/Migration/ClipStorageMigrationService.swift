@@ -60,7 +60,7 @@ enum ClipStorageMigrationService {
                 let imageFileName = oldObject!["imageFileName"] as! String
                 let clipId = oldObject!["clipId"] as! String
 
-                let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)
+                let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)!
                 let image = UIImage(data: data)!
 
                 newObject!["imageHeight"] = image.size.height

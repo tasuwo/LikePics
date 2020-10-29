@@ -197,18 +197,17 @@ class ImageStorageSpec: QuickSpec {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 configuration: Self.config)
                 }
-                it("notFoundエラーがスローされる") {
+                it("何も起きない") {
                     expect({
                         try storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
-                    }).to(throwError(ImageStorageError.notFound))
+                    }).notTo(throwError())
                 }
             }
         }
 
         describe("readImage(named:inClipHaving:)") {
+            var data: Data!
             context("存在する画像を読み込む") {
-                var data: Data!
-
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 configuration: Self.config)
@@ -231,11 +230,10 @@ class ImageStorageSpec: QuickSpec {
                 beforeEach {
                     storage = try! ImageStorage(fileManager: FileManager.default,
                                                 configuration: Self.config)
+                    data = try! storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
                 }
-                it("notFoundエラーがスローされる") {
-                    expect({
-                        try storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
-                    }).to(throwError(ImageStorageError.notFound))
+                it("nilが返る") {
+                    expect(data).to(beNil())
                 }
             }
         }

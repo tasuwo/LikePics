@@ -10,11 +10,6 @@ public protocol ClipStorageProtocol {
     func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 
-    // MARK: Read
-
-    func readImageFileUrl(of item: ClipItem) -> Result<URL, ClipStorageError>
-    func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError>
-
     // MARK: Update
 
     func updateClips(having ids: [Clip.Identity], byHiding: Bool) -> Result<[Clip], ClipStorageError>

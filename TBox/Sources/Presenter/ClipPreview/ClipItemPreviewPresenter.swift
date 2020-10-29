@@ -14,8 +14,9 @@ class ClipItemPreviewPresenter {
     let itemId: ClipItem.Identity
 
     private let query: ClipQuery
-    private let storage: ClipStorageProtocol
-    private let cacheStorage: ThumbnailStorageProtocol
+    private let clipStorage: ClipStorageProtocol
+    private let imageStorage: ImageStorageProtocol
+    private let thumbnailStorage: ThumbnailStorageProtocol
     private let logger: TBoxLoggable
 
     var imageSize: ImageSize? {
@@ -31,14 +32,16 @@ class ClipItemPreviewPresenter {
 
     init(query: ClipQuery,
          itemId: ClipItem.Identity,
-         storage: ClipStorageProtocol,
-         cacheStorage: ThumbnailStorageProtocol,
+         clipStorage: ClipStorageProtocol,
+         imageStorage: ImageStorageProtocol,
+         thumbnailStorage: ThumbnailStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.itemId = itemId
-        self.storage = storage
-        self.cacheStorage = cacheStorage
+        self.clipStorage = clipStorage
+        self.imageStorage = imageStorage
+        self.thumbnailStorage = thumbnailStorage
         self.logger = logger
     }
 
@@ -46,35 +49,30 @@ class ClipItemPreviewPresenter {
 
     func resolveImageUrl() -> URL? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
-        switch self.storage.readImageFileUrl(of: item) {
-        case let .success(url):
-            return url
-
-        case let .failure(error):
+        guard let url = try? self.imageStorage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId) else {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read image url for preview. (code: \(error.rawValue))
+            Failed to read image url for preview.
             """))
-            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
+            self.view?.showErrorMessage(L10n.clipItemPreviewViewErrorAtReadImage)
             return nil
         }
+        return url
     }
 
     func readThumbnailIfExists() -> UIImage? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
-        return self.cacheStorage.readThumbnailIfExists(for: item)
+        return self.thumbnailStorage.readThumbnailIfExists(for: item)
     }
 
     func readImageData() -> Data? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
-        switch self.storage.readImageData(of: item) {
-        case let .success(data):
-            return data
-
-        case let .failure(error):
+        do {
+            return try self.imageStorage.readImage(named: item.imageFileName, inClipHaving: item.clipId)
+        } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read image for preview. (code: \(error.rawValue))
+            Failed to read image for preview. \(error.localizedDescription)
             """))
-            self.view?.showErrorMessage("\(L10n.clipItemPreviewViewErrorAtReadImage)\n\(error.makeErrorCode())")
+            self.view?.showErrorMessage(L10n.clipItemPreviewViewErrorAtReadImage)
             return nil
         }
     }

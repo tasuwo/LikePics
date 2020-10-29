@@ -53,15 +53,18 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private let clipStorage: ClipStorage
-    private let cacheStorage: ThumbnailStorageProtocol
+    private let imageStorage: ImageStorageProtocol
+    private let thumbnailStorage: ThumbnailStorageProtocol
     private lazy var logger = RootLogger.shared
     private lazy var userSettingsStorage = UserSettingsStorage()
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
-        self.clipStorage = try ClipStorage(imageStorage: ImageStorage(),
+        let imageStorage = try ImageStorage()
+        self.clipStorage = try ClipStorage(imageStorage: imageStorage,
                                            thumbnailStorage: thumbnailStorage)
-        self.cacheStorage = thumbnailStorage
+        self.imageStorage = imageStorage
+        self.thumbnailStorage = thumbnailStorage
     }
 }
 
@@ -83,7 +86,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = TopClipsListPresenter(query: query,
                                               clipStorage: self.clipStorage,
-                                              cacheStorage: self.cacheStorage,
+                                              cacheStorage: self.thumbnailStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -155,8 +158,9 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = ClipItemPreviewPresenter(query: query,
                                                  itemId: itemId,
-                                                 storage: self.clipStorage,
-                                                 cacheStorage: self.cacheStorage,
+                                                 clipStorage: self.clipStorage,
+                                                 imageStorage: self.imageStorage,
+                                                 thumbnailStorage: self.thumbnailStorage,
                                                  logger: self.logger)
 
         let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
@@ -255,7 +259,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = SearchResultPresenter(context: context,
                                               query: query,
                                               clipStorage: self.clipStorage,
-                                              cacheStorage: self.cacheStorage,
+                                              cacheStorage: self.thumbnailStorage,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -287,7 +291,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = AlbumListPresenter(query: query,
                                            storage: self.clipStorage,
-                                           cacheStorage: self.cacheStorage,
+                                           cacheStorage: self.thumbnailStorage,
                                            settingStorage: self.userSettingsStorage,
                                            logger: self.logger)
 
@@ -310,7 +314,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = AlbumPresenter(query: query,
                                        clipStorage: self.clipStorage,
-                                       cacheStorage: self.cacheStorage,
+                                       cacheStorage: self.thumbnailStorage,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 
@@ -343,7 +347,7 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = AlbumSelectionPresenter(query: query,
                                                 context: context,
                                                 storage: self.clipStorage,
-                                                cacheStorage: self.cacheStorage,
+                                                cacheStorage: self.thumbnailStorage,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
         presenter.delegate = delegate

@@ -4,21 +4,6 @@
 
 import Domain
 
-public enum ImageStorageError: Error {
-    case failedToCreateImageFile
-    case notFound
-}
-
-/// @mockable
-public protocol ImageStorageProtocol {
-    func imageFileExists(named name: String, inClipHaving clipId: Clip.Identity) -> Bool
-    func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws
-    func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws
-    func deleteAll(inClipHaving clipId: Clip.Identity) throws
-    func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data
-    func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL
-}
-
 public class ImageStorage {
     public struct Configuration {
         let targetUrl: URL
@@ -71,21 +56,12 @@ extension ImageStorage: ImageStorageProtocol {
         try Self.createDirectoryIfNeeded(at: directory, using: self.fileManager)
 
         let filePath = self.buildImageFileUrl(name: fileName, clipId: clipId).path
-        switch self.fileManager.createFile(atPath: filePath, contents: image, attributes: nil) {
-        case true:
-            break
-
-        case false:
-            throw ImageStorageError.failedToCreateImageFile
-        }
+        self.fileManager.createFile(atPath: filePath, contents: image, attributes: nil)
     }
 
     public func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
         let fileUrl = self.buildImageFileUrl(name: fileName, clipId: clipId)
-
-        guard self.fileManager.fileExists(atPath: fileUrl.path) else {
-            throw ImageStorageError.notFound
-        }
+        guard self.fileManager.fileExists(atPath: fileUrl.path) else { return }
 
         // Delete file
         try self.fileManager.removeItem(at: fileUrl)
@@ -99,31 +75,19 @@ extension ImageStorage: ImageStorageProtocol {
 
     public func deleteAll(inClipHaving clipId: Clip.Identity) throws {
         let directory = self.buildTargetDirectoryUrl(for: clipId)
-
-        guard self.fileManager.fileExists(atPath: directory.path) else {
-            throw ImageStorageError.notFound
-        }
-
+        guard self.fileManager.fileExists(atPath: directory.path) else { return }
         try self.fileManager.removeItem(at: directory)
     }
 
-    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data {
+    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data? {
         let fileUrl = self.buildImageFileUrl(name: name, clipId: clipId)
-
-        guard self.fileManager.fileExists(atPath: fileUrl.path) else {
-            throw ImageStorageError.notFound
-        }
-
+        guard self.fileManager.fileExists(atPath: fileUrl.path) else { return nil }
         return try Data(contentsOf: fileUrl)
     }
 
-    public func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL {
+    public func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL? {
         let fileUrl = self.buildImageFileUrl(name: name, clipId: clipId)
-
-        guard self.fileManager.fileExists(atPath: fileUrl.path) else {
-            throw ImageStorageError.notFound
-        }
-
+        guard self.fileManager.fileExists(atPath: fileUrl.path) else { return nil }
         return fileUrl
     }
 }

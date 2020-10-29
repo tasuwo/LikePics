@@ -209,32 +209,6 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    // MARK: Read
-
-    public func readImageFileUrl(of item: ClipItem) -> Result<URL, ClipStorageError> {
-        return self.queue.sync {
-            do {
-                return .success(try self.imageStorage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId))
-            } catch ImageStorageError.notFound {
-                return .failure(.notFound)
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
-    public func readImageData(of item: ClipItem) -> Result<Data, ClipStorageError> {
-        return self.queue.sync {
-            do {
-                return .success(try self.imageStorage.readImage(named: item.imageFileName, inClipHaving: item.clipId))
-            } catch ImageStorageError.notFound {
-                return .failure(.notFound)
-            } catch {
-                return .failure(.internalError)
-            }
-        }
-    }
-
     // MARK: Update
 
     public func updateClips(having ids: [Clip.Identity], byHiding isHidden: Bool) -> Result<[Clip], ClipStorageError> {

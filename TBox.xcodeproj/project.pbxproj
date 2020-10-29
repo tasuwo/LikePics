@@ -95,6 +95,8 @@
 		2C51D45424E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */; };
 		2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */; };
 		2C523D15254AEF090099F6DD /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
+		2C5445E6254B0F070088C8BC /* TemporaryClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */; };
+		2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C544604254B10270088C8BC /* ImageStorageProtocol.swift */; };
 		2C55D11824DF9D2600A43B8D /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */; };
 		2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */; };
 		2C570B6624E0505F00A1DC9F /* ClipsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */; };
@@ -625,6 +627,8 @@
 		2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewDismissalAnimator.swift; sourceTree = "<group>"; };
+		2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorage.swift; sourceTree = "<group>"; };
+		2C544604254B10270088C8BC /* ImageStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageProtocol.swift; sourceTree = "<group>"; };
 		2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService.swift; sourceTree = "<group>"; };
 		2C55D11924DF9F7700A43B8D /* ClipSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C55D11B24DFA0D200A43B8D /* ClipSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1734,6 +1738,7 @@
 				2CBA2F92253890A500ECFF47 /* ImageStorage.swift */,
 				2C9EF6B6253DE70A00CBF357 /* ThumbnailStorage.swift */,
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
+				2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */,
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
 				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
 			);
@@ -1811,6 +1816,7 @@
 		2C9EF6A2253DE54500CBF357 /* ImageStorage */ = {
 			isa = PBXGroup;
 			children = (
+				2C544604254B10270088C8BC /* ImageStorageProtocol.swift */,
 				2C9EF6A3253DE55900CBF357 /* ThumbnailStorageProtocol.swift */,
 			);
 			path = ImageStorage;
@@ -3270,6 +3276,7 @@
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C6C8F8F24DF982800692301 /* WebImageProvider.swift in Sources */,
+				2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */,
 				2CD25B1A251E46B800BEE210 /* AlbumListQuery.swift in Sources */,
 				2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */,
 				2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */,
@@ -3395,6 +3402,7 @@
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C9EF6B7253DE70A00CBF357 /* ThumbnailStorage.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
+				2C5445E6254B0F070088C8BC /* TemporaryClipStorage.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 				2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */,
 				2CD25B5C251E4CEE00BEE210 /* RealmClipsResultQuery.swift in Sources */,
