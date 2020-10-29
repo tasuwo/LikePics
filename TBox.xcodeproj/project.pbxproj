@@ -1379,6 +1379,17 @@
 			path = AlbumSelection;
 			sourceTree = "<group>";
 		};
+		2C523CD9254AED850099F6DD /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2CFC5CFE250DF294001A02E4 /* Generated */,
+				2C6E099F24E6DD3700B541D9 /* View */,
+				2C6E099E24E6DD3100B541D9 /* Presenter */,
+				2C3506D925179516009248C6 /* ValueObject */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 		2C55D12424DFD18900A43B8D /* ClipSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1509,11 +1520,8 @@
 		2C6E099324E6DD1A00B541D9 /* TBoxCore */ = {
 			isa = PBXGroup;
 			children = (
-				2CFC5CFE250DF294001A02E4 /* Generated */,
+				2C523CD9254AED850099F6DD /* Sources */,
 				2CFC5CFD250DF22A001A02E4 /* Resources */,
-				2C6E099F24E6DD3700B541D9 /* View */,
-				2C6E099E24E6DD3100B541D9 /* Presenter */,
-				2C3506D925179516009248C6 /* ValueObject */,
 				2C6E099424E6DD1A00B541D9 /* TBoxCore.h */,
 				2C6E099524E6DD1A00B541D9 /* Info.plist */,
 			);

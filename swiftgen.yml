@@ -8,7 +8,7 @@ strings:
         - TBoxCore/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: TBoxCore/Generated/String.swift
+          output: TBoxCore/Sources/Generated/String.swift
     - inputs:
         - TBoxUIKit/Resources/ja.lproj
       outputs:
