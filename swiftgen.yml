@@ -31,5 +31,5 @@ xcassets:
         - TBox/Resources/Assets.xcassets
       outputs:
         - templateName: swift5
-          output: TBox/Generated/AssetCatalog.swift
+          output: TBox/Sources/Generated/AssetCatalog.swift
           forceProvidesNamespaces: true

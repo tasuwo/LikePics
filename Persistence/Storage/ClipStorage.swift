@@ -214,7 +214,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func readImageFileUrl(of item: ClipItem) -> Result<URL, ClipStorageError> {
         return self.queue.sync {
             do {
-                return .success(try self.imageStorage.readImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId))
+                return .success(try self.imageStorage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId))
             } catch ImageStorageError.notFound {
                 return .failure(.notFound)
             } catch {

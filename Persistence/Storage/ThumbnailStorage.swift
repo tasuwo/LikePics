@@ -160,7 +160,7 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
         }
 
         self.downsamplingQueue.async {
-            guard let url = try? self.storage.readImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId) else {
+            guard let url = try? self.storage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to resolve image file url. (name=\(item.imageFileName), clipId=\(item.clipId)
                 """))

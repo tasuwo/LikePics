@@ -9,6 +9,16 @@ import RealmSwift
 public class ImageStorageProtocolMock: ImageStorageProtocol {
     public init() { }
 
+    public private(set) var imageFileExistsCallCount = 0
+    public var imageFileExistsHandler: ((String, Clip.Identity) -> (Bool))?
+    public func imageFileExists(named name: String, inClipHaving clipId: Clip.Identity) -> Bool {
+        imageFileExistsCallCount += 1
+        if let imageFileExistsHandler = imageFileExistsHandler {
+            return imageFileExistsHandler(name, clipId)
+        }
+        return false
+    }
+
     public private(set) var saveCallCount = 0
     public var saveHandler: ((Data, String, Clip.Identity) throws -> Void)?
     public func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
@@ -46,12 +56,12 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
         fatalError("readImageHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) var readImageFileUrlCallCount = 0
-    public var readImageFileUrlHandler: ((String, Clip.Identity) throws -> (URL))?
-    public func readImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL {
-        readImageFileUrlCallCount += 1
-        if let readImageFileUrlHandler = readImageFileUrlHandler {
-            return try readImageFileUrlHandler(name, clipId)
+    public private(set) var resolveImageFileUrlCallCount = 0
+    public var resolveImageFileUrlHandler: ((String, Clip.Identity) throws -> (URL))?
+    public func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL {
+        resolveImageFileUrlCallCount += 1
+        if let resolveImageFileUrlHandler = resolveImageFileUrlHandler {
+            return try resolveImageFileUrlHandler(name, clipId)
         }
         return URL(fileURLWithPath: "")
     }
