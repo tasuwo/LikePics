@@ -140,8 +140,8 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, Bool) -> (Result<Clip.Identity, ClipStorageError>))?
-    public func create(clip: Clip, forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
+    public var createHandler: ((Clip, Bool) -> (Result<Clip, ClipStorageError>))?
+    public func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip, forced)

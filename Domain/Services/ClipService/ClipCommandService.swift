@@ -4,15 +4,18 @@
 
 public class ClipCommandService {
     private let clipStorage: ClipStorageProtocol
+    private let lightweightClipStorage: LightweightClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ClipCommandService")
 
     public init(clipStorage: ClipStorageProtocol,
+                lightweightClipStorage: LightweightClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 thumbnailStorage: ThumbnailStorageProtocol)
     {
         self.clipStorage = clipStorage
+        self.lightweightClipStorage = lightweightClipStorage
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
     }
@@ -38,34 +41,52 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.beginTransaction()
+                try self.lightweightClipStorage.beginTransaction()
 
-                let clipId: Clip.Identity
+                let createdClip: Clip
                 switch self.clipStorage.create(clip: clip, forced: forced) {
-                case let .success(targetClipId):
-                    clipId = targetClipId
+                case let .success(result):
+                    createdClip = result
 
                 case let .failure(error):
-                    try self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                let lightweightClip = LightweightClip(id: createdClip.identity,
+                                                      url: createdClip.url,
+                                                      tags: createdClip.tags.map { LightweightTag(id: $0.id, name: $0.name) })
+                switch self.lightweightClipStorage.create(clip: lightweightClip) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
                 let existsFiles = data
                     .allSatisfy {
-                        self.imageStorage.imageFileExists(named: $0.fileName, inClipHaving: clip.identity) == true
+                        self.imageStorage.imageFileExists(named: $0.fileName, inClipHaving: createdClip.identity) == true
                     }
                 guard existsFiles else {
-                    try self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                     return .failure(.internalError)
                 }
 
-                try? self.imageStorage.deleteAll(inClipHaving: clipId)
-                data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: clipId) }
+                try? self.imageStorage.deleteAll(inClipHaving: createdClip.identity)
+                data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: createdClip.identity) }
 
                 try self.clipStorage.commitTransaction()
+                try self.lightweightClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -75,11 +96,36 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.create(tagWithName: name).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                let tag: Tag
+                switch self.clipStorage.create(tagWithName: name) {
+                case let .success(result):
+                    tag = result
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.create(tag: .init(id: tag.identity, name: tag.name)) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -119,11 +165,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                switch self.clipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -133,11 +203,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                switch self.clipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -147,11 +241,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                switch self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -203,11 +321,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateTag(having: id, nameTo: name).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                switch self.clipStorage.updateTag(having: id, nameTo: name) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.updateTag(having: id, nameTo: name) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -219,6 +361,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
+                try self.lightweightClipStorage.beginTransaction()
 
                 let clips: [Clip]
                 switch self.clipStorage.deleteClips(having: ids) {
@@ -227,6 +370,17 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.deleteClips(having: ids) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
@@ -235,6 +389,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     .allSatisfy { self.imageStorage.imageFileExists(named: $0.imageFileName, inClipHaving: $0.clipId) }
                 guard existsFiles else {
                     try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                     return .failure(.internalError)
                 }
 
@@ -245,10 +400,12 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     }
 
                 try self.clipStorage.commitTransaction()
+                try self.lightweightClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -304,11 +461,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.deleteTags(having: ids).map { _ in () }
+                try self.lightweightClipStorage.beginTransaction()
+
+                switch self.clipStorage.deleteTags(having: ids) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
+                switch self.lightweightClipStorage.deleteTags(having: ids) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.lightweightClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }

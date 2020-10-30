@@ -21,11 +21,13 @@ class DependencyContainer {
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
         let imageStorage = try ImageStorage()
-        let storage = try ClipStorage(logger: RootLogger.shared)
-        self.clipCommandService = ClipCommandService(clipStorage: storage,
+        let lightweightClipStorage = try LightweightClipStorage(logger: RootLogger.shared)
+        let clipStorage = try ClipStorage(logger: RootLogger.shared)
+        self.clipCommandService = ClipCommandService(clipStorage: clipStorage,
+                                                     lightweightClipStorage: lightweightClipStorage,
                                                      imageStorage: imageStorage,
                                                      thumbnailStorage: thumbnailStorage)
-        self.clipQueryService = storage
+        self.clipQueryService = clipStorage
     }
 }
 

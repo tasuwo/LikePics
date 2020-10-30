@@ -19,9 +19,7 @@ public class ClipStorage {
                 deleteRealmIfMigrationNeeded: false
             )
 
-            if let appGroupIdentifier = Constants.appGroupIdentifier,
-                let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
-            {
+            if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 configuration.fileURL = directory.appendingPathComponent(self.realmFileName)
             } else {
                 fatalError("Unable to resolve realm file url.")
@@ -77,7 +75,7 @@ extension ClipStorage: ClipStorageProtocol {
         realm.cancelWrite()
     }
 
-    public func create(clip: Clip, forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
+    public func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
@@ -146,7 +144,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
         realm.add(newClip, update: updatePolicy)
 
-        return .success(targetClipId)
+        return .success(Clip.make(by: newClip))
     }
 
     public func create(tagWithName name: String) -> Result<Tag, ClipStorageError> {

@@ -83,6 +83,32 @@ extension ImageSize {
     }
 }
 
+extension LightweightClip {
+    static func makeDefault(
+        id: String = "",
+        url: URL? = nil,
+        tags: [LightweightTag] = []
+    ) -> Self {
+        return .init(
+            id: id,
+            url: url,
+            tags: tags
+        )
+    }
+}
+
+extension LightweightTag {
+    static func makeDefault(
+        id: String = "",
+        name: String = ""
+    ) -> Self {
+        return .init(
+            id: id,
+            name: name
+        )
+    }
+}
+
 extension Tag {
     static func makeDefault(
         id: String = "",
