@@ -132,7 +132,7 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
 
     public private(set) var cancelTransactionCallCount = 0
     public var cancelTransactionHandler: (() throws -> Void)?
-    public func cancelTransaction() throws {
+    public func cancelTransactionIfNeeded() throws {
         cancelTransactionCallCount += 1
         if let cancelTransactionHandler = cancelTransactionHandler {
             try cancelTransactionHandler()

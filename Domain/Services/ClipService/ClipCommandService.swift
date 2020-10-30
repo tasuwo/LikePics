@@ -45,7 +45,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     clipId = targetClipId
 
                 case let .failure(error):
-                    try self.clipStorage.cancelTransaction()
+                    try self.clipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
@@ -58,7 +58,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 return .success(())
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -72,7 +72,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -86,7 +86,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -102,7 +102,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -116,7 +116,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -130,7 +130,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -144,7 +144,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -158,7 +158,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -172,7 +172,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -186,7 +186,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -200,7 +200,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -219,7 +219,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     clips = result
 
                 case let .failure(error):
-                    try? self.clipStorage.cancelTransaction()
+                    try? self.clipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
@@ -233,7 +233,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 return .success(())
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -250,7 +250,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     clipItem = result
 
                 case let .failure(error):
-                    try? self.clipStorage.cancelTransaction()
+                    try? self.clipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
@@ -260,7 +260,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return .success(())
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -274,7 +274,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }
@@ -288,7 +288,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
-                try? self.clipStorage.cancelTransaction()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 return .failure(.internalError)
             }
         }

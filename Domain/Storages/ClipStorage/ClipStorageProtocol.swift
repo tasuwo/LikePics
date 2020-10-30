@@ -9,7 +9,7 @@ public protocol ClipStorageProtocol {
     var isInTransaction: Bool { get }
     func beginTransaction() throws
     func commitTransaction() throws
-    func cancelTransaction() throws
+    func cancelTransactionIfNeeded() throws
 
     // MARK: Create
 

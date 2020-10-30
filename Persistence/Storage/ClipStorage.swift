@@ -71,7 +71,7 @@ extension ClipStorage: ClipStorageProtocol {
         try realm.commitWrite()
     }
 
-    public func cancelTransaction() {
+    public func cancelTransactionIfNeeded() {
         defer { self.realm = nil }
         guard let realm = self.realm, realm.isInWriteTransaction else { return }
         realm.cancelWrite()
