@@ -49,7 +49,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                guard data.allSatisfy({ [weak self] e in self?.imageStorage.imageFileExists(named: e.fileName, inClipHaving: clip.identity) == true }) else {
+                let existsFiles = data
+                    .allSatisfy {
+                        self.imageStorage.imageFileExists(named: $0.fileName, inClipHaving: clip.identity) == true
+                    }
+                guard existsFiles else {
                     try self.clipStorage.cancelTransactionIfNeeded()
                     return .failure(.internalError)
                 }
