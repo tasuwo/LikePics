@@ -1374,26 +1374,93 @@ class ClipStorageSpec: QuickSpec {
 
         // TODO:
 
-        describe("delete(") {
+        describe("deleteAlbum(having:)") {
+            var result: Result<Album, ClipStorageError>!
+
+            context("削除対象のアルバムが存在しない") {
+                beforeEach {
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.deleteAlbum(having: "123")
+                    try! clipStorage.commitTransaction()
+                }
+                it("notFoundが返る") {
+                    guard case .failure(.notFound) = result else {
+                        fail("Unexpected result: \(String(describing: result))")
+                        return
+                    }
+                    expect(true).to(beTrue())
+                }
+            }
+            context("削除対象のアルバムが存在する") {
+                beforeEach {
+                    try! realm.write {
+                        let album1 = AlbumObject.makeDefault(id: "1", title: "hoge")
+                        let album2 = AlbumObject.makeDefault(id: "2", title: "fuga")
+                        let album3 = AlbumObject.makeDefault(id: "3", title: "piyo")
+                        realm.add(album1)
+                        realm.add(album2)
+                        realm.add(album3)
+                    }
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.deleteAlbum(having: "2")
+                    try! clipStorage.commitTransaction()
+                }
+                it("successが返り、削除対象のタグ名が返ってくる") {
+                    switch result! {
+                    case let .success(album):
+                        expect(album).to(equal(.makeDefault(id: "2", title: "fuga")))
+                    case let .failure(error):
+                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                it("Realmからアルバムが削除されている") {
+                    let albums = realm.objects(AlbumObject.self).sorted(by: { $0.id < $1.id })
+                    expect(albums).to(haveCount(2))
+                    guard albums.count == 2 else { return }
+                    expect(albums[0].id).to(equal("1"))
+                    expect(albums[0].title).to(equal("hoge"))
+                    expect(albums[1].id).to(equal("3"))
+                    expect(albums[1].title).to(equal("piyo"))
+                }
+            }
         }
 
         describe("delegeTags(having:)") {
             var result: Result<[Tag], ClipStorageError>!
 
             context("削除対象のタグが存在しない") {
-                beforeEach {
-                    try! clipStorage.beginTransaction()
-                    result = clipStorage.deleteTags(having: ["111"])
-                    try! clipStorage.commitTransaction()
-                }
-                it("notFoundが返る") {
-                    switch result! {
-                    case .success:
-                        fail("Unexpected success")
-                    case .failure(.notFound):
+                context("全て存在しない") {
+                    beforeEach {
+                        try! clipStorage.beginTransaction()
+                        result = clipStorage.deleteTags(having: ["111"])
+                        try! clipStorage.commitTransaction()
+                    }
+                    it("notFoundが返る") {
+                        guard case .failure(.notFound) = result else {
+                            fail("Unexpected result: \(String(describing: result))")
+                            return
+                        }
                         expect(true).to(beTrue())
-                    case let .failure(error):
-                        fail("Unexpected failure: \(error)")
+                    }
+                }
+                context("一部存在する") {
+                    beforeEach {
+                        try! realm.write {
+                            let tag1 = TagObject.makeDefault(id: "111", name: "hoge")
+                            let tag3 = TagObject.makeDefault(id: "333", name: "piyo")
+                            realm.add(tag1)
+                            realm.add(tag3)
+                        }
+                        try! clipStorage.beginTransaction()
+                        result = clipStorage.deleteTags(having: ["111", "222", "333"])
+                        try! clipStorage.commitTransaction()
+                    }
+                    it("notFoundが返る") {
+                        guard case .failure(.notFound) = result else {
+                            fail("Unexpected result: \(String(describing: result))")
+                            return
+                        }
+                        expect(true).to(beTrue())
                     }
                 }
             }

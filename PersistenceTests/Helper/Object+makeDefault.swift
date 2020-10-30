@@ -60,3 +60,22 @@ extension TagObject {
         return obj
     }
 }
+
+extension AlbumObject {
+    static func makeDefault(id: String = "",
+                            title: String = "",
+                            clips: [ClipObject] = [],
+                            registeredAt: Date = Date(timeIntervalSince1970: 0),
+                            updatedAt: Date = Date(timeIntervalSince1970: 0)) -> AlbumObject
+    {
+        let obj = AlbumObject()
+        obj.id = id
+        clips.forEach {
+            obj.clips.append($0)
+        }
+        obj.title = title
+        obj.registeredAt = registeredAt
+        obj.updatedAt = updatedAt
+        return obj
+    }
+}
