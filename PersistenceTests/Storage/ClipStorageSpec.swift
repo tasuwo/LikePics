@@ -1374,6 +1374,118 @@ class ClipStorageSpec: QuickSpec {
 
         // TODO:
 
+        context("deleteClipItem") {
+            var result: Result<ClipItem, ClipStorageError>!
+
+            context("削除対象のクリップが存在しない") {
+                beforeEach {
+                    try! clipStorage.beginTransaction()
+                    result = clipStorage.deleteClipItem(having: "1")
+                    try! clipStorage.commitTransaction()
+                }
+                it("notFoundが返る") {
+                    guard case .failure(.notFound) = result else {
+                        fail("Unexpected result: \(String(describing: result))")
+                        return
+                    }
+                    expect(true).to(beTrue())
+                }
+            }
+            context("削除対象のクリップが存在する") {
+                context("削除対象のクリップが存在しない") {
+                    // TODO:
+                }
+                context("削除対象のクリップが存在する") {
+                    beforeEach {
+                        try! realm.write {
+                            let item1 = ClipItemObject.makeDefault(id: "1", clipId: "1", clipIndex: 0)
+                            let item2 = ClipItemObject.makeDefault(id: "2", clipId: "1", clipIndex: 1)
+                            let item3 = ClipItemObject.makeDefault(id: "3", clipId: "1", clipIndex: 2)
+                            let clip = ClipObject.makeDefault(id: "1",
+                                                              url: "https://localhost",
+                                                              items: [item1, item2, item3])
+                            realm.add(clip)
+                        }
+                    }
+                    context("最初のアイテムを削除") {
+                        beforeEach {
+                            try! clipStorage.beginTransaction()
+                            result = clipStorage.deleteClipItem(having: "1")
+                            try! clipStorage.commitTransaction()
+                        }
+                        it("successが返り、削除対象のアイテムが返ってくる") {
+                            guard case let .success(item) = result else {
+                                fail("Unexpected result: \(String(describing: result))")
+                                return
+                            }
+                            expect(item).to(equal(.makeDefault(id: "1", clipId: "1", clipIndex: 0)))
+                        }
+                        it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
+                            let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
+                            expect(items).to(haveCount(2))
+                            guard items.count == 2 else { return }
+                            expect(items[0].id).to(equal("2"))
+                            expect(items[0].clipId).to(equal("1"))
+                            expect(items[0].clipIndex).to(equal(0))
+                            expect(items[1].id).to(equal("3"))
+                            expect(items[1].clipId).to(equal("1"))
+                            expect(items[1].clipIndex).to(equal(1))
+                        }
+                    }
+                    context("中のアイテムを削除") {
+                        beforeEach {
+                            try! clipStorage.beginTransaction()
+                            result = clipStorage.deleteClipItem(having: "2")
+                            try! clipStorage.commitTransaction()
+                        }
+                        it("successが返り、削除対象のアイテムが返ってくる") {
+                            guard case let .success(item) = result else {
+                                fail("Unexpected result: \(String(describing: result))")
+                                return
+                            }
+                            expect(item).to(equal(.makeDefault(id: "2", clipId: "1", clipIndex: 1)))
+                        }
+                        it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
+                            let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
+                            expect(items).to(haveCount(2))
+                            guard items.count == 2 else { return }
+                            expect(items[0].id).to(equal("1"))
+                            expect(items[0].clipId).to(equal("1"))
+                            expect(items[0].clipIndex).to(equal(0))
+                            expect(items[1].id).to(equal("3"))
+                            expect(items[1].clipId).to(equal("1"))
+                            expect(items[1].clipIndex).to(equal(1))
+                        }
+                    }
+                    context("最後のアイテムを削除") {
+                        beforeEach {
+                            try! clipStorage.beginTransaction()
+                            result = clipStorage.deleteClipItem(having: "3")
+                            try! clipStorage.commitTransaction()
+                        }
+                        it("successが返り、削除対象のアイテムが返ってくる") {
+                            guard case let .success(item) = result else {
+                                fail("Unexpected result: \(String(describing: result))")
+                                return
+                            }
+                            expect(item).to(equal(.makeDefault(id: "3", clipId: "1", clipIndex: 2)))
+                        }
+                        it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
+                            let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
+                            expect(items).to(haveCount(2))
+                            guard items.count == 2 else { return }
+                            expect(items[0].id).to(equal("1"))
+                            expect(items[0].clipId).to(equal("1"))
+                            expect(items[0].clipIndex).to(equal(0))
+                            expect(items[1].id).to(equal("2"))
+                            expect(items[1].clipId).to(equal("1"))
+                            expect(items[1].clipIndex).to(equal(1))
+                        }
+                    }
+                }
+            }
+        }
+
         describe("deleteAlbum(having:)") {
             var result: Result<Album, ClipStorageError>!
 
