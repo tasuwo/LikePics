@@ -226,10 +226,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                try clips
+                let existsFiles = clips
+                    .flatMap { $0.items }
+                    .allSatisfy { self.imageStorage.imageFileExists(named: $0.imageFileName, inClipHaving: $0.clipId) }
+                guard existsFiles else {
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    return .failure(.internalError)
+                }
+
+                clips
                     .flatMap { $0.items }
                     .forEach { clipItem in
-                        try self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
+                        try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
                     }
 
                 try self.clipStorage.commitTransaction()
@@ -257,7 +265,12 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                try self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
+                guard self.imageStorage.imageFileExists(named: clipItem.imageFileName, inClipHaving: clipItem.clipId) else {
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    return .failure(.internalError)
+                }
+
+                try? self.imageStorage.delete(fileName: clipItem.imageFileName, inClipHaving: clipItem.clipId)
                 self.thumbnailStorage.deleteThumbnailCacheIfExists(for: clipItem)
 
                 try self.clipStorage.commitTransaction()
