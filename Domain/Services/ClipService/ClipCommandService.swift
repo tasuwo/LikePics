@@ -49,10 +49,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                try self.imageStorage.deleteAll(inClipHaving: clipId)
-                try data.forEach { value in
-                    try self.imageStorage.save(value.image, asName: value.fileName, inClipHaving: clipId)
+                guard data.allSatisfy({ [weak self] e in self?.imageStorage.imageFileExists(named: e.fileName, inClipHaving: clip.identity) == true }) else {
+                    try self.clipStorage.cancelTransactionIfNeeded()
+                    return .failure(.internalError)
                 }
+
+                try? self.imageStorage.deleteAll(inClipHaving: clipId)
+                data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: clipId) }
 
                 try self.clipStorage.commitTransaction()
 
