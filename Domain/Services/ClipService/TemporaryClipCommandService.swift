@@ -52,7 +52,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 try self.referenceClipStorage.beginTransaction()
 
                 let createdClip: Clip
-                switch self.clipStorage.create(clip: clip, forced: forced) {
+                switch self.clipStorage.create(clip: clip, overwrite: forced) {
                 case let .success(result):
                     createdClip = result
 

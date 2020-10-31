@@ -64,7 +64,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError> {
+    public func create(clip: Clip, overwrite: Bool) -> Result<Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
@@ -81,7 +81,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var duplicatedClip: ClipObject?
         if let clipUrl = clip.url, let clipObject = realm.objects(ClipObject.self).filter("url = '\(clipUrl)'").first {
-            if forced {
+            if overwrite {
                 duplicatedClip = clipObject
             } else {
                 return .failure(.duplicated)
@@ -119,7 +119,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         // Delete
 
-        let updatePolicy: Realm.UpdatePolicy = forced ? .modified : .error
+        let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
         duplicatedClip?.items.forEach { item in
             realm.delete(item)
         }

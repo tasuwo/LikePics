@@ -150,10 +150,10 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
 
     public private(set) var createCallCount = 0
     public var createHandler: ((Clip, Bool) -> (Result<Clip, ClipStorageError>))?
-    public func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError> {
+    public func create(clip: Clip, overwrite: Bool) -> Result<Clip, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
-            return createHandler(clip, forced)
+            return createHandler(clip, overwrite)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
     }
