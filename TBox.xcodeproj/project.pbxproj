@@ -25,7 +25,7 @@
 		2C0B5C58254D26DD00FA43F8 /* TemporaryClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */; };
 		2C0B5C78254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C77254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift */; };
 		2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C82254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift */; };
-		2C0B5C98254D469C00FA43F8 /* ClipIntegrityChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C97254D469C00FA43F8 /* ClipIntegrityChecker.swift */; };
+		2C0B5C98254D469C00FA43F8 /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C97254D469C00FA43F8 /* ClipReferencesIntegrityValidationService.swift */; };
 		2C0B5CAC254D515400FA43F8 /* SampleImageGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */; };
 		2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5CC8254D651C00FA43F8 /* TransferringClip.swift */; };
 		2C0F9B152528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */; };
@@ -573,7 +573,7 @@
 		2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandService.swift; sourceTree = "<group>"; };
 		2C0B5C77254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReferenceClipStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		2C0B5C82254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
-		2C0B5C97254D469C00FA43F8 /* ClipIntegrityChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipIntegrityChecker.swift; sourceTree = "<group>"; };
+		2C0B5C97254D469C00FA43F8 /* ClipReferencesIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationService.swift; sourceTree = "<group>"; };
 		2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SampleImageGray.png; sourceTree = "<group>"; };
 		2C0B5CC8254D651C00FA43F8 /* TransferringClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferringClip.swift; sourceTree = "<group>"; };
 		2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
@@ -1034,7 +1034,7 @@
 		2C0B5C96254D459400FA43F8 /* Integrity */ = {
 			isa = PBXGroup;
 			children = (
-				2C0B5C97254D469C00FA43F8 /* ClipIntegrityChecker.swift */,
+				2C0B5C97254D469C00FA43F8 /* ClipReferencesIntegrityValidationService.swift */,
 				2C10411B254D9B20000DF7DE /* ClipCommandService+ClipReferencesIntegrityValidationService.swift */,
 			);
 			path = Integrity;
@@ -3440,7 +3440,7 @@
 				2C35066C251780EC009248C6 /* WebImageNameResolver.swift in Sources */,
 				2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */,
 				2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */,
-				2C0B5C98254D469C00FA43F8 /* ClipIntegrityChecker.swift in Sources */,
+				2C0B5C98254D469C00FA43F8 /* ClipReferencesIntegrityValidationService.swift in Sources */,
 				2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */,
 				2C2727A824DED57D00FEF1BD /* OnMainThread.swift in Sources */,
 				2CD25ADA251E450000BEE210 /* ClipItemQuery.swift in Sources */,
