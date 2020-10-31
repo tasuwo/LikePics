@@ -49,11 +49,11 @@ class ClipStorageSpec: QuickSpec {
                                 registeredDate: Date(timeIntervalSince1970: 0),
                                 updatedDate: Date(timeIntervalSince1970: 1000)
                             ),
-                            forced: true
+                            allowTagCreation: false,
+                            overwrite: true
                         )
                         try! clipStorage.commitTransaction()
                     }
-
                     it("ClipとClipItemがRealmに書き込まれている") {
                         let clips = realm.objects(ClipObject.self)
                         expect(clips).to(haveCount(1))
@@ -67,6 +67,7 @@ class ClipStorageSpec: QuickSpec {
                         expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
                     }
                 }
+
                 context("URLが同一のClipが存在する") {
                     beforeEach {
                         try! realm.write {
@@ -75,25 +76,208 @@ class ClipStorageSpec: QuickSpec {
                                 url: "https://localhost/1",
                                 description: "my description",
                                 items: [
-                                    ClipItemObject.makeDefault(id: "111",
-                                                               clipId: "1",
-                                                               clipIndex: 1),
-                                    ClipItemObject.makeDefault(id: "222",
-                                                               clipId: "1",
-                                                               clipIndex: 2),
+                                    ClipItemObject.makeDefault(id: "111"),
+                                    ClipItemObject.makeDefault(id: "222"),
                                 ],
                                 tags: [
                                     TagObject.makeDefault(id: "111", name: "tag1"),
                                     TagObject.makeDefault(id: "222", name: "tag2"),
                                 ],
+                                isHidden: false,
                                 registeredAt: Date(timeIntervalSince1970: 0),
                                 updatedAt: Date(timeIntervalSince1970: 1000)
                             )
                             realm.add(clip)
+                            let tag = TagObject.makeDefault(id: "333", name: "piyo")
+                            realm.add(tag)
                         }
                     }
 
-                    context("強制上書きフラグがオン") {
+                    let verifyNoChanged = {
+                        let clips = realm.objects(ClipObject.self)
+                        expect(clips).to(haveCount(1))
+                        expect(clips.first?.id).to(equal("1"))
+                        expect(clips.first?.url).to(equal("https://localhost/1"))
+                        expect(clips.first?.descriptionText).to(equal("my description"))
+                        expect(clips.first?.items).to(haveCount(2))
+                        guard clips.first?.items.count == 2 else { return }
+                        expect(clips.first?.items[0].id).to(equal("111"))
+                        expect(clips.first?.items[1].id).to(equal("222"))
+                        expect(clips.first?.tags).to(haveCount(2))
+                        guard clips.first?.tags.count == 2 else { return }
+                        expect(clips.first?.tags[0].id).to(equal("111"))
+                        expect(clips.first?.tags[0].name).to(equal("tag1"))
+                        expect(clips.first?.tags[1].id).to(equal("222"))
+                        expect(clips.first?.tags[1].name).to(equal("tag2"))
+                        expect(clips.first?.isHidden).to(beFalse())
+                        expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                        expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                    }
+
+                    context("IDが一致している") {
+                        context("強制上書きフラグがオン") {
+                            beforeEach {
+                                try! clipStorage.beginTransaction()
+                                result = clipStorage.create(
+                                    clip: Clip.makeDefault(
+                                        id: "1",
+                                        url: URL(string: "https://localhost/1")!,
+                                        description: "my new description",
+                                        items: [
+                                            ClipItem.makeDefault(id: "11"),
+                                            ClipItem.makeDefault(id: "22"),
+                                            ClipItem.makeDefault(id: "33"),
+                                        ],
+                                        tags: [
+                                            Tag.makeDefault(id: "333", name: "piyo")
+                                        ],
+                                        isHidden: true,
+                                        registeredDate: Date(timeIntervalSince1970: 8888),
+                                        updatedDate: Date(timeIntervalSince1970: 9999)
+                                    ),
+                                    allowTagCreation: false,
+                                    overwrite: true
+                                )
+                                try! clipStorage.commitTransaction()
+                            }
+                            it("successが返る") {
+                                guard case let .failure(error) = result else {
+                                    expect(true).to(beTrue())
+                                    return
+                                }
+                                fail("Unexpected failed with \(error)")
+                            }
+                            it("Clipが上書きされる") {
+                                let clips = realm.objects(ClipObject.self)
+                                expect(clips).to(haveCount(1))
+                                expect(clips.first?.id).to(equal("1"))
+                                expect(clips.first?.url).to(equal("https://localhost/1"))
+                                expect(clips.first?.descriptionText).to(equal("my new description"))
+                                expect(clips.first?.items).to(haveCount(3))
+                                guard clips.first?.items.count == 3 else { return }
+                                expect(clips.first?.items[0].id).to(equal("11"))
+                                expect(clips.first?.items[1].id).to(equal("22"))
+                                expect(clips.first?.items[2].id).to(equal("33"))
+                                expect(clips.first?.tags).to(haveCount(1))
+                                guard clips.first?.tags.count == 1 else { return }
+                                expect(clips.first?.tags[0].id).to(equal("333"))
+                                expect(clips.first?.tags[0].name).to(equal("piyo"))
+                                expect(clips.first?.isHidden).to(beTrue())
+                                expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 8888)))
+                                expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 9999)))
+                            }
+                            it("古いClipItemは全て削除される") {
+                                let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
+                                expect(items).to(haveCount(3))
+                                if items.count == 3 {
+                                    expect(items[0].id).to(equal("11"))
+                                    expect(items[1].id).to(equal("22"))
+                                    expect(items[2].id).to(equal("33"))
+                                }
+                            }
+                            it("除去されたタグはRealmから削除されない") {
+                                let tags = realm.objects(TagObject.self).sorted(by: { $0.id < $1.id })
+                                expect(tags).to(haveCount(3))
+                                guard tags.count == 3 else { return }
+                                expect(tags[0].id).to(equal("111"))
+                                expect(tags[1].id).to(equal("222"))
+                                expect(tags[2].id).to(equal("333"))
+                            }
+                        }
+
+                        context("強制上書きフラグがオフ") {
+                            beforeEach {
+                                try! clipStorage.beginTransaction()
+                                result = clipStorage.create(
+                                    clip: Clip.makeDefault(
+                                        id: "1",
+                                        url: URL(string: "https://localhost/1")!,
+                                        description: "my new description",
+                                        items: [
+                                            ClipItem.makeDefault(id: "11"),
+                                            ClipItem.makeDefault(id: "22"),
+                                            ClipItem.makeDefault(id: "33"),
+                                        ],
+                                        tags: [
+                                            Tag.makeDefault(id: "333", name: "piyo")
+                                        ],
+                                        isHidden: true,
+                                        registeredDate: Date(timeIntervalSince1970: 8888),
+                                        updatedDate: Date(timeIntervalSince1970: 9999)
+                                    ),
+                                    allowTagCreation: false,
+                                    overwrite: false
+                                )
+                                try! clipStorage.commitTransaction()
+                            }
+                            it("duplicatedエラーが返る") {
+                                guard case let .failure(error) = result else {
+                                    fail("Unexpected success")
+                                    return
+                                }
+                                expect(error).to(equal(.duplicated))
+                            }
+                            it("Clipが保存されない") {
+                                let clips = realm.objects(ClipObject.self)
+                                expect(clips).to(haveCount(1))
+                                expect(clips.first?.id).to(equal("1"))
+                                expect(clips.first?.url).to(equal("https://localhost/1"))
+                                expect(clips.first?.descriptionText).to(equal("my description"))
+                                expect(clips.first?.items).to(haveCount(2))
+                                guard clips.first?.items.count == 2 else { return }
+                                expect(clips.first?.items[0].id).to(equal("111"))
+                                expect(clips.first?.items[1].id).to(equal("222"))
+                                expect(clips.first?.tags).to(haveCount(2))
+                                guard clips.first?.tags.count == 2 else { return }
+                                expect(clips.first?.tags[0].id).to(equal("111"))
+                                expect(clips.first?.tags[0].name).to(equal("tag1"))
+                                expect(clips.first?.tags[1].id).to(equal("222"))
+                                expect(clips.first?.tags[1].name).to(equal("tag2"))
+                                expect(clips.first?.isHidden).to(beFalse())
+                                expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
+                                expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
+                            }
+                        }
+
+                        context("URLが変更されている") {
+                            beforeEach {
+                                try! clipStorage.beginTransaction()
+                                result = clipStorage.create(
+                                    clip: Clip.makeDefault(
+                                        id: "1",
+                                        url: URL(string: "https://localhost/new/1")!,
+                                        description: "my new description",
+                                        items: [
+                                            ClipItem.makeDefault(id: "11"),
+                                            ClipItem.makeDefault(id: "22"),
+                                            ClipItem.makeDefault(id: "33"),
+                                        ],
+                                        tags: [
+                                            Tag.makeDefault(id: "333", name: "piyo")
+                                        ],
+                                        isHidden: true,
+                                        registeredDate: Date(timeIntervalSince1970: 8888),
+                                        updatedDate: Date(timeIntervalSince1970: 9999)
+                                    ),
+                                    allowTagCreation: false,
+                                    overwrite: true
+                                )
+                                try! clipStorage.commitTransaction()
+                            }
+                            it("duplicatedエラーが返る") {
+                                guard case let .failure(error) = result else {
+                                    fail("Unexpected success")
+                                    return
+                                }
+                                expect(error).to(equal(.duplicated))
+                            }
+                            it("Clipが保存されない") {
+                                verifyNoChanged()
+                            }
+                        }
+                    }
+
+                    context("IDが一致していない") {
                         beforeEach {
                             try! clipStorage.beginTransaction()
                             result = clipStorage.create(
@@ -102,78 +286,19 @@ class ClipStorageSpec: QuickSpec {
                                     url: URL(string: "https://localhost/1")!,
                                     description: "my new description",
                                     items: [
-                                        ClipItem.makeDefault(id: "11", imageFileName: "hoge1"),
-                                        ClipItem.makeDefault(id: "22", imageFileName: "hoge2"),
-                                        ClipItem.makeDefault(id: "33", imageFileName: "hoge3"),
+                                        ClipItem.makeDefault(id: "11"),
+                                        ClipItem.makeDefault(id: "22"),
+                                        ClipItem.makeDefault(id: "33"),
                                     ],
-                                    tags: [],
+                                    tags: [
+                                        Tag.makeDefault(id: "333", name: "piyo")
+                                    ],
                                     isHidden: true,
                                     registeredDate: Date(timeIntervalSince1970: 8888),
                                     updatedDate: Date(timeIntervalSince1970: 9999)
                                 ),
-                                forced: true
-                            )
-                            try! clipStorage.commitTransaction()
-                        }
-                        it("successが返る") {
-                            guard case let .failure(error) = result else {
-                                expect(true).to(beTrue())
-                                return
-                            }
-                            fail("Unexpected failed with \(error)")
-                        }
-                        it("Clipが上書きされる") {
-                            let clips = realm.objects(ClipObject.self)
-                            expect(clips).to(haveCount(1))
-                            // idは引き継がれる
-                            expect(clips.first?.id).to(equal("1"))
-                            expect(clips.first?.url).to(equal("https://localhost/1"))
-                            expect(clips.first?.descriptionText).to(equal("my new description"))
-                            expect(clips.first?.items).to(haveCount(3))
-                            // FIXME: 現状、tagは引き継がれる
-                            expect(clips.first?.tags).to(haveCount(2))
-                            expect(clips.first?.isHidden).to(beTrue())
-                            // 登録日は引き継がれる
-                            expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
-                            expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 9999)))
-                        }
-                        it("古いClipItemは全て削除される") {
-                            let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
-                            expect(items).to(haveCount(3))
-                            if items.count == 3 {
-                                expect(items[0].id).to(equal("11"))
-                                expect(items[1].id).to(equal("22"))
-                                expect(items[2].id).to(equal("33"))
-                            }
-                        }
-                        it("除去されたタグはRealmから削除されない") {
-                            let tags = realm.objects(TagObject.self).sorted(by: { $0.id < $1.id })
-                            expect(tags).to(haveCount(2))
-                            if tags.count == 2 {
-                                expect(tags[0].id).to(equal("111"))
-                                expect(tags[1].id).to(equal("222"))
-                            }
-                        }
-                    }
-                    context("強制上書きフラグがオフ") {
-                        beforeEach {
-                            try! clipStorage.beginTransaction()
-                            result = clipStorage.create(
-                                clip: Clip.makeDefault(
-                                    id: "9999",
-                                    url: URL(string: "https://localhost/1")!,
-                                    description: "my description",
-                                    items: [
-                                        ClipItem.makeDefault(id: "11", imageFileName: "hoge1"),
-                                        ClipItem.makeDefault(id: "22", imageFileName: "hoge2"),
-                                        ClipItem.makeDefault(id: "33", imageFileName: "hoge3"),
-                                    ],
-                                    tags: [],
-                                    isHidden: false,
-                                    registeredDate: Date(timeIntervalSince1970: 0),
-                                    updatedDate: Date(timeIntervalSince1970: 1000)
-                                ),
-                                forced: false
+                                allowTagCreation: false,
+                                overwrite: true
                             )
                             try! clipStorage.commitTransaction()
                         }
@@ -185,16 +310,12 @@ class ClipStorageSpec: QuickSpec {
                             expect(error).to(equal(.duplicated))
                         }
                         it("Clipが保存されない") {
-                            expect(realm.object(ofType: ClipObject.self, forPrimaryKey: "9999")).to(beNil())
-                            expect(realm.object(ofType: ClipObject.self, forPrimaryKey: "1")).notTo(beNil())
-                        }
-                        it("ClipItem,Tagが変わらない") {
-                            expect(realm.objects(TagObject.self)).to(haveCount(2))
-                            expect(realm.objects(ClipItemObject.self)).to(haveCount(2))
+                            verifyNoChanged()
                         }
                     }
                 }
             }
+
             context("引数が不正") {
                 context("存在しないタグを指定した") {
                     // TODO:
