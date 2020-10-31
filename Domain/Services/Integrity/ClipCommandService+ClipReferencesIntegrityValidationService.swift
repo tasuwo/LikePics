@@ -38,7 +38,12 @@ extension ClipCommandService {
 
         for (tagId, tag) in tags {
             if let referenceTag = referenceTags[tagId] {
+                // Dirtyフラグが立っていた場合、整合の対象から外す
+                if referenceTag.isDirty { continue }
+
+                // 名前が同一であれば、整合性が保たれているとみなし、何もしない
                 if referenceTag.name == tag.name { continue }
+
                 if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, nameTo: tag.name) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update tag '\(referenceTag.name)' to '\(tag.name)'
@@ -67,7 +72,7 @@ extension ClipCommandService {
         try self.referenceClipStorage.commitTransaction()
     }
 
-    fileprivate func validateAndFixClipsIntegrityIfNeeded() throws {
+    func validateAndFixClipsIntegrityIfNeeded() throws {
         let referenceClips: [ReferenceClip.Identity: ReferenceClip]
         switch self.referenceClipStorage.readAllClips() {
         case let .success(result):
@@ -99,19 +104,24 @@ extension ClipCommandService {
         try self.referenceClipStorage.beginTransaction()
 
         for (clipId, clip) in clips {
-            if let referenceClip = referenceClips[clipId], referenceClip.isDirty == false {
+            if let referenceClip = referenceClips[clipId] {
+                // Dirtyフラグが立っていた場合、整合の対象から外す
+                if referenceClip.isDirty { continue }
+
                 let expectedClip = ReferenceClip(id: clip.id,
                                                  url: clip.url,
                                                  description: clip.description,
                                                  tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
                                                  isHidden: clip.isHidden,
                                                  registeredDate: clip.registeredDate)
-                if referenceClip != expectedClip {
-                    if case let .failure(error) = self.referenceClipStorage.create(clip: expectedClip) {
-                        self.logger.write(ConsoleLog(level: .error, message: """
-                        Failed to create reference clip: \(error.localizedDescription)
-                        """))
-                    }
+
+                // 同一であれば、整合性が保たれているとみなし、何もしない
+                if referenceClip == expectedClip { continue }
+
+                if case let .failure(error) = self.referenceClipStorage.create(clip: expectedClip) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to create reference clip: \(error.localizedDescription)
+                    """))
                 }
             } else {
                 let newClip = ReferenceClip(id: clip.id,
@@ -151,7 +161,6 @@ extension ClipCommandService: ClipReferencesIntegrityValidationService {
                 try self.validateAndFixClipsIntegrityIfNeeded()
             } catch {
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to fix integrity: \(error.localizedDescription)
                 """))
