@@ -10,6 +10,10 @@ public protocol LightweightClipStorageProtocol {
     func commitTransaction() throws
     func cancelTransactionIfNeeded() throws
 
+    // MARK: Read
+
+    func existsClip(havingUrl url: URL) -> Bool?
+
     // MARK: Create
 
     func create(clip: LightweightClip) -> Result<Void, ClipStorageError>

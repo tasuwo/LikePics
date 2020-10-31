@@ -6,6 +6,8 @@ import Common
 import Domain
 import RealmSwift
 
+// swiftlint:disable first_where
+
 public class LightweightClipStorage {
     public enum StorageConfiguration {
         static let realmFileName = "lightweight-clips.realm"
@@ -17,10 +19,10 @@ public class LightweightClipStorage {
                 deleteRealmIfMigrationNeeded: false
             )
 
-            if let appGroupIdentifier = Constants.appGroupIdentifier,
-                let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
-            {
-                configuration.fileURL = directory.appendingPathComponent(self.realmFileName)
+            if let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) {
+                configuration.fileURL = directory
+                    .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+                    .appendingPathComponent(self.realmFileName)
             } else {
                 fatalError("Unable to resolve realm file url.")
             }
@@ -75,6 +77,18 @@ extension LightweightClipStorage: LightweightClipStorageProtocol {
         realm.cancelWrite()
     }
 
+    // MARK: Read
+
+    public func existsClip(havingUrl url: URL) -> Bool? {
+        guard let realm = try? Realm(configuration: self.configuration) else { return nil }
+
+        guard realm.objects(LightweightClipObject.self).filter("url = '\(url.absoluteString)'").first != nil else {
+            return false
+        }
+
+        return true
+    }
+
     // MARK: Create
 
     public func create(clip: LightweightClip) -> Result<Void, ClipStorageError> {
@@ -90,7 +104,7 @@ extension LightweightClipStorage: LightweightClipStorageProtocol {
             obj.tags.append(tagObj)
         }
 
-        realm.add(obj)
+        realm.add(obj, update: .modified)
 
         return .success(())
     }
@@ -102,7 +116,7 @@ extension LightweightClipStorage: LightweightClipStorageProtocol {
         obj.id = tag.id
         obj.name = tag.name
 
-        realm.add(obj)
+        realm.add(obj, update: .modified)
 
         return .success(())
     }

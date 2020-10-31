@@ -19,7 +19,9 @@ public class ThumbnailStorage {
 
         static var cacheTargetUrl: URL {
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
-                return directory.appendingPathComponent(self.directoryName, isDirectory: true)
+                return directory
+                    .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+                    .appendingPathComponent(self.directoryName, isDirectory: true)
             } else {
                 fatalError("Failed to resolve directory url for image cache.")
             }
@@ -53,7 +55,7 @@ public class ThumbnailStorage {
     }
 
     public convenience init() throws {
-        try self.init(storage: try ImageStorage())
+        try self.init(storage: try ImageStorage(configuration: .main))
     }
 
     // MARK: - Methods

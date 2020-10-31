@@ -67,16 +67,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                let existsFiles = data
-                    .allSatisfy {
-                        self.imageStorage.imageFileExists(named: $0.fileName, inClipHaving: createdClip.identity) == true
-                    }
-                guard existsFiles else {
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
-                    return .failure(.internalError)
-                }
-
                 try? self.imageStorage.deleteAll(inClipHaving: createdClip.identity)
                 data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: createdClip.identity) }
 

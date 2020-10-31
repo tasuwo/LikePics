@@ -14,8 +14,8 @@ public class ImageStorage {
 
     // MARK: - Lifecycle
 
-    public init(fileManager: FileManager = .default,
-                configuration: Configuration = Constants.imageStorageConfiguration) throws
+    public init(configuration: Configuration,
+                fileManager: FileManager = .default) throws
     {
         self.fileManager = fileManager
         self.baseUrl = configuration.targetUrl

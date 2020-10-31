@@ -47,14 +47,14 @@ enum ClipStorageMigrationService {
     }
 
     private static func migrateToV9(_ migration: Migration) {
-        let storage = try! ImageStorage()
+        let storage = try! ImageStorage(configuration: .main)
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, _ in
             try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! String)
         }
     }
 
     private static func migrateToV8(_ migration: Migration) {
-        let storage = try! ImageStorage()
+        let storage = try! ImageStorage(configuration: .main)
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
             autoreleasepool {
                 let imageFileName = oldObject!["imageFileName"] as! String

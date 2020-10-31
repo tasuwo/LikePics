@@ -54,6 +54,8 @@ protocol ViewControllerFactory {
 class DependencyContainer {
     private let clipQueryService: ClipQueryServiceProtocol
     private let clipCommandService: ClipCommandServiceProtocol
+    private let clipViewer: ClipViewable
+    private let clipStore: ClipStorable
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
     private let logger: TBoxLoggable
@@ -61,15 +63,19 @@ class DependencyContainer {
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
-        let imageStorage = try ImageStorage()
+        let imageStorage = try ImageStorage(configuration: .main)
         let logger = RootLogger.shared
-        let clipStorage = try ClipStorage(logger: logger)
+        let clipStorage = try ClipStorage(config: .main,
+                                          logger: logger)
         let lightweightClipStorage = try LightweightClipStorage(logger: logger)
+        let clipCommandService = ClipCommandService(clipStorage: clipStorage,
+                                                    lightweightClipStorage: lightweightClipStorage,
+                                                    imageStorage: imageStorage,
+                                                    thumbnailStorage: thumbnailStorage)
         self.clipQueryService = clipStorage
-        self.clipCommandService = ClipCommandService(clipStorage: clipStorage,
-                                                     lightweightClipStorage: lightweightClipStorage,
-                                                     imageStorage: imageStorage,
-                                                     thumbnailStorage: thumbnailStorage)
+        self.clipCommandService = clipCommandService
+        self.clipViewer = clipStorage
+        self.clipStore = clipCommandService
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
@@ -208,8 +214,8 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
-                                                  clipCommandService: self.clipCommandService,
-                                                  clipQueryService: self.clipQueryService,
+                                                  clipStore: self.clipStore,
+                                                  clipViewer: self.clipViewer,
                                                   finder: WebImageUrlFinder(),
                                                   currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
@@ -423,3 +429,6 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 }
+
+extension ClipCommandService: ClipStorable {}
+extension ClipStorage: ClipViewable {}

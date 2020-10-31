@@ -56,8 +56,8 @@ public class ClipTargetFinderPresenter {
     weak var view: ClipTargetFinderViewProtocol?
 
     private let url: URL
-    private let clipCommandService: ClipCommandServiceProtocol
-    private let clipQueryService: ClipQueryServiceProtocol
+    private let clipStore: ClipStorable
+    private let clipViewer: ClipViewable
     private let finder: WebImageUrlFinderProtocol
     private let currentDateResolver: () -> Date
     private let urlSession: URLSession
@@ -65,16 +65,16 @@ public class ClipTargetFinderPresenter {
     // MARK: - Lifecycle
 
     public init(url: URL,
-                clipCommandService: ClipCommandServiceProtocol,
-                clipQueryService: ClipQueryServiceProtocol,
+                clipStore: ClipStorable,
+                clipViewer: ClipViewable,
                 finder: WebImageUrlFinderProtocol,
                 currentDateResolver: @escaping () -> Date,
                 isEnabledOverwrite: Bool = false,
                 urlSession: URLSession = URLSession.shared)
     {
         self.url = url
-        self.clipCommandService = clipCommandService
-        self.clipQueryService = clipQueryService
+        self.clipStore = clipStore
+        self.clipViewer = clipViewer
         self.finder = finder
         self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
@@ -120,14 +120,9 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        let alreadyClipped: Bool
-        switch self.clipQueryService.existsClip(havingUrl: self.url) {
-        case let .success(exists):
-            alreadyClipped = exists
-
-        case let .failure(error):
+        guard let alreadyClipped = self.clipViewer.existsClip(havingUrl: self.url) else {
             self.view?.endLoading()
-            self.view?.show(errorMessage: L10n.clipTargetFinderViewErrorAlertBodyInternalError + "\n(\(error.makeErrorCode())")
+            self.view?.show(errorMessage: L10n.clipTargetFinderViewErrorAlertBodyInternalError)
             return
         }
 
@@ -274,7 +269,7 @@ public class ClipTargetFinderPresenter {
         let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
         let data = target.map { ($0.meta.fileName, $0.meta.data) }
 
-        switch self.clipCommandService.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
+        switch self.clipStore.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
         case .success:
             return .success(())
 

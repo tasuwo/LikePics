@@ -4,7 +4,7 @@
 
 /// @mockable
 public protocol ClipQueryServiceProtocol {
-    func existsClip(havingUrl: URL) -> Result<Bool, ClipStorageError>
+    func existsClip(havingUrl: URL) -> Bool?
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
     func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError>

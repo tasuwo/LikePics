@@ -4,9 +4,7 @@
 
 public enum UITestHelper {
     static var appGroupTarget: URL {
-        if let appGroupIdentifier = Constants.appGroupIdentifier,
-            let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
-        {
+        if let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) {
             return directory
         } else {
             fatalError("Unable to resolve path for ui test.")

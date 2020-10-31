@@ -10,16 +10,14 @@ import RealmSwift
 extension ClipStorage: ClipQueryServiceProtocol {
     // MARK: - ClipQueryServiceProtocol
 
-    public func existsClip(havingUrl url: URL) -> Result<Bool, ClipStorageError> {
-        guard let realm = try? Realm(configuration: self.configuration) else {
-            return .failure(.internalError)
-        }
+    public func existsClip(havingUrl url: URL) -> Bool? {
+        guard let realm = try? Realm(configuration: self.configuration) else { return nil }
 
         guard realm.objects(ClipObject.self).filter("url = '\(url.absoluteString)'").first != nil else {
-            return .success(false)
+            return false
         }
 
-        return .success(true)
+        return true
     }
 
     public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {

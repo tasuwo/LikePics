@@ -5,7 +5,6 @@
 import Combine
 @testable import Domain
 import Erik
-import Foundation
 import UIKit
 import WebKit
 
@@ -13,13 +12,13 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
     public private(set) var existsClipCallCount = 0
-    public var existsClipHandler: ((URL) -> (Result<Bool, ClipStorageError>))?
-    public func existsClip(havingUrl: URL) -> Result<Bool, ClipStorageError> {
+    public var existsClipHandler: ((URL) -> (Bool?))?
+    public func existsClip(havingUrl: URL) -> Bool? {
         existsClipCallCount += 1
         if let existsClipHandler = existsClipHandler {
             return existsClipHandler(havingUrl)
         }
-        fatalError("existsClipHandler returns can't have a default value thus its handler must be set")
+        return nil
     }
 
     public private(set) var queryClipCallCount = 0

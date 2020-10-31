@@ -13,21 +13,21 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    private let clipCommandService: ClipCommandServiceProtocol
-    private let clipQueryService: ClipQueryServiceProtocol
-    private lazy var finder = WebImageUrlFinder()
-    private lazy var currentDateResolver = { Date() }
+    private let clipStore: ClipStorable
+    private let clipViewer: ClipViewable
+    private let finder = WebImageUrlFinder()
+    private let currentDateResolver = { Date() }
 
     init() throws {
-        let thumbnailStorage = try ThumbnailStorage()
-        let imageStorage = try ImageStorage()
-        let lightweightClipStorage = try LightweightClipStorage(logger: RootLogger.shared)
-        let clipStorage = try ClipStorage(logger: RootLogger.shared)
-        self.clipCommandService = ClipCommandService(clipStorage: clipStorage,
+        let logger = RootLogger.shared
+        let imageStorage = try ImageStorage(configuration: .temporary)
+        let lightweightClipStorage = try LightweightClipStorage(logger: logger)
+        let clipStorage = try ClipStorage(config: .temporary, logger: logger)
+        self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
                                                      lightweightClipStorage: lightweightClipStorage,
                                                      imageStorage: imageStorage,
-                                                     thumbnailStorage: thumbnailStorage)
-        self.clipQueryService = clipStorage
+                                                     logger: logger)
+        self.clipViewer = lightweightClipStorage
     }
 }
 
@@ -41,10 +41,13 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
         let presenter = ClipTargetFinderPresenter(url: url,
-                                                  clipCommandService: self.clipCommandService,
-                                                  clipQueryService: self.clipQueryService,
+                                                  clipStore: self.clipStore,
+                                                  clipViewer: self.clipViewer,
                                                   finder: self.finder,
                                                   currentDateResolver: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }
 }
+
+extension TemporaryClipCommandService: ClipStorable {}
+extension LightweightClipStorage: ClipViewable {}

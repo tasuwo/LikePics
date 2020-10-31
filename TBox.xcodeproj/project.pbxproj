@@ -22,6 +22,7 @@
 		2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */; };
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
 		2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */; };
+		2C0B5C58254D26DD00FA43F8 /* TemporaryClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */; };
 		2C0F9B152528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */; };
 		2C0F9B272528ACDC00235B25 /* ClipInformationSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B262528ACDC00235B25 /* ClipInformationSectionHeader.swift */; };
 		2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */; };
@@ -69,6 +70,8 @@
 		2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */; };
 		2C3ADF5E24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift */; };
 		2C3ADF6124EEE6DF007C4AA0 /* AlbumSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AlbumSelectionViewController.xib */; };
+		2C3BD964254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */; };
+		2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */; };
 		2C3C955D24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */; };
 		2C3C955F24DF9B0200471813 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
@@ -95,7 +98,6 @@
 		2C51D45424E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */; };
 		2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */; };
 		2C523D15254AEF090099F6DD /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */; };
-		2C5445E6254B0F070088C8BC /* TemporaryClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */; };
 		2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C544604254B10270088C8BC /* ImageStorageProtocol.swift */; };
 		2C544640254B20850088C8BC /* ClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */; };
 		2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C544653254B21980088C8BC /* ClipCommandService.swift */; };
@@ -140,6 +142,7 @@
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
+		2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */; };
 		2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */; };
 		2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -206,6 +209,8 @@
 		2CBA8427254C73E400DA5045 /* LightweightClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8426254C73E400DA5045 /* LightweightClipStorage.swift */; };
 		2CBA8432254C744000DA5045 /* LightweightClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8431254C744000DA5045 /* LightweightClipStorageProtocol.swift */; };
 		2CBA8451254C815000DA5045 /* LightweightClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8450254C815000DA5045 /* LightweightClipStorageMigrationService.swift */; };
+		2CBA848C254C8F6200DA5045 /* ClipViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA846E254C8AF800DA5045 /* ClipViewable.swift */; };
+		2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA84C1254C918900DA5045 /* ClipStorable.swift */; };
 		2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */; };
 		2CC0EB4C2518AAFF006D6DB4 /* TestImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */; };
 		2CC1D3D424E6B1F500E1B21C /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */; };
@@ -557,6 +562,7 @@
 		2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewPresenter.swift; sourceTree = "<group>"; };
 		2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemPreviewViewController.xib; sourceTree = "<group>"; };
 		2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimator.swift; sourceTree = "<group>"; };
+		2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandService.swift; sourceTree = "<group>"; };
 		2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
 		2C0F9B262528ACDC00235B25 /* ClipInformationSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationSectionHeader.swift; sourceTree = "<group>"; };
 		2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationSectionHeader.xib; sourceTree = "<group>"; };
@@ -611,6 +617,8 @@
 		2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenter.swift; sourceTree = "<group>"; };
 		2C3ADF5D24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionViewController.swift; sourceTree = "<group>"; };
 		2C3ADF6024EEE6DF007C4AA0 /* AlbumSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumSelectionViewController.xib; sourceTree = "<group>"; };
+		2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
+		2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
 		2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProviderPreset.swift; sourceTree = "<group>"; };
 		2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift"; sourceTree = "<group>"; };
@@ -636,7 +644,6 @@
 		2C51D45124E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45324E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2C51D45924E2290E006811F6 /* ClipPreviewDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewDismissalAnimator.swift; sourceTree = "<group>"; };
-		2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorage.swift; sourceTree = "<group>"; };
 		2C544604254B10270088C8BC /* ImageStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageProtocol.swift; sourceTree = "<group>"; };
 		2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C544653254B21980088C8BC /* ClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandService.swift; sourceTree = "<group>"; };
@@ -674,6 +681,7 @@
 		2C6E09D424E8150500B541D9 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncategorizedCell.swift; sourceTree = "<group>"; };
 		2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncategorizedCell.xib; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
@@ -739,6 +747,8 @@
 		2CBA8426254C73E400DA5045 /* LightweightClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightweightClipStorage.swift; sourceTree = "<group>"; };
 		2CBA8431254C744000DA5045 /* LightweightClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightweightClipStorageProtocol.swift; sourceTree = "<group>"; };
 		2CBA8450254C815000DA5045 /* LightweightClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightweightClipStorageMigrationService.swift; sourceTree = "<group>"; };
+		2CBA846E254C8AF800DA5045 /* ClipViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipViewable.swift; sourceTree = "<group>"; };
+		2CBA84C1254C918900DA5045 /* ClipStorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorable.swift; sourceTree = "<group>"; };
 		2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageSpec.swift; sourceTree = "<group>"; };
 		2CC0EB4B2518AAFF006D6DB4 /* TestImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TestImage.png; sourceTree = "<group>"; };
 		2CC1D3D324E6B1F500E1B21C /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1394,6 +1404,7 @@
 				2CFC5CFE250DF294001A02E4 /* Generated */,
 				2C6E099F24E6DD3700B541D9 /* View */,
 				2C6E099E24E6DD3100B541D9 /* Presenter */,
+				2CBA8482254C8F4E00DA5045 /* Services */,
 				2C3506D925179516009248C6 /* ValueObject */,
 			);
 			path = Sources;
@@ -1442,6 +1453,8 @@
 				2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */,
 				2C54463F254B20850088C8BC /* ClipCommandServiceProtocol.swift */,
 				2C544653254B21980088C8BC /* ClipCommandService.swift */,
+				2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */,
+				2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */,
 			);
 			path = ClipService;
 			sourceTree = "<group>";
@@ -1772,7 +1785,6 @@
 				2C9EF6B6253DE70A00CBF357 /* ThumbnailStorage.swift */,
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
 				2CBA8426254C73E400DA5045 /* LightweightClipStorage.swift */,
-				2C5445E5254B0F070088C8BC /* TemporaryClipStorage.swift */,
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
 				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
 			);
@@ -1809,10 +1821,10 @@
 			children = (
 				2C99277C24DDC7E600672CA7 /* Clip.swift */,
 				2C8FD62624E02297005887F9 /* ClipItem.swift */,
-				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
-				2CF5ABB024FB47D10084695F /* Tag.swift */,
 				2CBA83DF254C6F7E00DA5045 /* LightweightClip.swift */,
 				2CBA83EA254C6FA000DA5045 /* LightweightTag.swift */,
+				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
+				2CF5ABB024FB47D10084695F /* Tag.swift */,
 				2C16050725207C6A00A39E58 /* Identifiable.swift */,
 			);
 			path = Entity;
@@ -1833,6 +1845,8 @@
 			isa = PBXGroup;
 			children = (
 				2C99278B24DDCEF700672CA7 /* Constants.swift */,
+				2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */,
+				2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -1932,6 +1946,15 @@
 				2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */,
 			);
 			path = TagCollection;
+			sourceTree = "<group>";
+		};
+		2CBA8482254C8F4E00DA5045 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2CBA846E254C8AF800DA5045 /* ClipViewable.swift */,
+				2CBA84C1254C918900DA5045 /* ClipStorable.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
@@ -3206,6 +3229,8 @@
 			files = (
 				2C3506ED25179545009248C6 /* ClipItemSource.swift in Sources */,
 				2CFC5D00250DF294001A02E4 /* String.swift in Sources */,
+				2CBA848C254C8F6200DA5045 /* ClipViewable.swift in Sources */,
+				2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */,
 				2C6E09A224E6DD5A00B541D9 /* ClipTargetFinderPresenter.swift in Sources */,
 				2C6E09A024E6DD4400B541D9 /* ClipTargetFinderViewController.swift in Sources */,
 			);
@@ -3306,10 +3331,12 @@
 				2C6C79CC253B409F00A8A9B8 /* ClipStorageError.swift in Sources */,
 				2CD25AE4251E454500BEE210 /* ClipListQuery.swift in Sources */,
 				2CBA8432254C744000DA5045 /* LightweightClipStorageProtocol.swift in Sources */,
+				2C0B5C58254D26DD00FA43F8 /* TemporaryClipCommandService.swift in Sources */,
 				2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */,
 				2C9EF6A4253DE55900CBF357 /* ThumbnailStorageProtocol.swift in Sources */,
 				2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
+				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,
 				2C2727A324DED48500FEF1BD /* WebImageUrlFinder.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
@@ -3429,6 +3456,7 @@
 				2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */,
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
+				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
 				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
 				2CBA8451254C815000DA5045 /* LightweightClipStorageMigrationService.swift in Sources */,
 				2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */,
@@ -3446,11 +3474,11 @@
 				2C9EF6B7253DE70A00CBF357 /* ThumbnailStorage.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
 				2CBA8427254C73E400DA5045 /* LightweightClipStorage.swift in Sources */,
-				2C5445E6254B0F070088C8BC /* TemporaryClipStorage.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 				2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */,
 				2CD25B5C251E4CEE00BEE210 /* RealmClipsResultQuery.swift in Sources */,
 				2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */,
+				2C3BD964254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

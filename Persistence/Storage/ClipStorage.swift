@@ -9,24 +9,8 @@ import RealmSwift
 // swiftlint:disable contains_over_filter_is_empty first_where
 
 public class ClipStorage {
-    public enum StorageConfiguration {
-        static let realmFileName = "clips.realm"
-
-        public static func makeConfiguration() -> Realm.Configuration {
-            var configuration = Realm.Configuration(
-                schemaVersion: 9,
-                migrationBlock: ClipStorageMigrationService.migrationBlock,
-                deleteRealmIfMigrationNeeded: false
-            )
-
-            if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                configuration.fileURL = directory.appendingPathComponent(self.realmFileName)
-            } else {
-                fatalError("Unable to resolve realm file url.")
-            }
-
-            return configuration
-        }
+    public struct Configuration {
+        let realmConfiguration: Realm.Configuration
     }
 
     let configuration: Realm.Configuration
@@ -38,14 +22,9 @@ public class ClipStorage {
 
     // MARK: - Lifecycle
 
-    init(realmConfiguration: Realm.Configuration, logger: TBoxLoggable) throws {
-        self.configuration = realmConfiguration
+    public init(config: ClipStorage.Configuration, logger: TBoxLoggable) throws {
+        self.configuration = config.realmConfiguration
         self.logger = logger
-    }
-
-    public convenience init(logger: TBoxLoggable) throws {
-        try self.init(realmConfiguration: StorageConfiguration.makeConfiguration(),
-                      logger: logger)
     }
 }
 
