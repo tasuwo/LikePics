@@ -5,6 +5,7 @@
 import Combine
 @testable import Domain
 import Erik
+import Foundation
 import UIKit
 import WebKit
 
@@ -136,6 +137,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
             try cancelTransactionIfNeededHandler()
         }
+    }
+
+    public private(set) var readAllClipsCallCount = 0
+    public var readAllClipsHandler: (() -> (Result<[Clip], ClipStorageError>))?
+    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+        readAllClipsCallCount += 1
+        if let readAllClipsHandler = readAllClipsHandler {
+            return readAllClipsHandler()
+        }
+        fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var createCallCount = 0

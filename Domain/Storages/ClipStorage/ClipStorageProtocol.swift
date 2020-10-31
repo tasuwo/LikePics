@@ -11,6 +11,10 @@ public protocol ClipStorageProtocol {
     func commitTransaction() throws
     func cancelTransactionIfNeeded() throws
 
+    // MARK: Read
+
+    func readAllClips() -> Result<[Clip], ClipStorageError>
+
     // MARK: Create
 
     func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError>

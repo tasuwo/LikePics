@@ -28,6 +28,8 @@ public class ClipStorage {
 extension ClipStorage: ClipStorageProtocol {
     // MARK: - ClipStorageProtocol
 
+    // MARK: Transaction
+
     public var isInTransaction: Bool {
         return self.realm?.isInWriteTransaction ?? false
     }
@@ -50,6 +52,17 @@ extension ClipStorage: ClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return }
         realm.cancelWrite()
     }
+
+    // MARK: Read
+
+    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let clips = realm.objects(ClipObject.self)
+            .map { Clip.make(by: $0) }
+        return .success(Array(clips))
+    }
+
+    // MARK: Create
 
     public func create(clip: Clip, forced: Bool) -> Result<Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
