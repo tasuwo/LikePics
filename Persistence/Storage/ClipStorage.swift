@@ -133,10 +133,13 @@ extension ClipStorage: ClipStorageProtocol {
 
         // Delete
 
-        let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
         duplicatedClip?.items.forEach { item in
             realm.delete(item)
         }
+
+        // Add
+
+        let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
         realm.add(newClip, update: updatePolicy)
 
         return .success(Clip.make(by: newClip))
