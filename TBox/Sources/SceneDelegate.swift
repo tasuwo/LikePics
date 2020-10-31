@@ -42,7 +42,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        self.dependencyContainer?.integrityChecker.integrateTemporaryClipsIfNeeded()
+        // 実行箇所を考える
+        self.dependencyContainer?.transportService.transportIfNeeded()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

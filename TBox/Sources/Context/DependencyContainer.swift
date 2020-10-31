@@ -61,7 +61,7 @@ class DependencyContainer {
     private let logger: TBoxLoggable
     private let userSettingsStorage = UserSettingsStorage()
 
-    let integrityChecker: ClipIntegrityCheckerProtocol
+    let transportService: TemporaryClipsTransportService
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
@@ -85,7 +85,7 @@ class DependencyContainer {
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
-        self.integrityChecker = clipCommandService
+        self.transportService = clipCommandService
     }
 }
 
