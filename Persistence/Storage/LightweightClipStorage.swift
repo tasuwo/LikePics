@@ -100,7 +100,7 @@ extension LightweightClipStorage: LightweightClipStorageProtocol {
     public func updateTag(having id: LightweightTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id)
+        let tag = realm.object(ofType: LightweightTagObject.self, forPrimaryKey: id)
         tag?.name = name
 
         return .success(())
