@@ -5,7 +5,7 @@
 import RealmSwift
 
 extension LightweightClipStorage.Configuration {
-    public static var main: LightweightClipStorage.Configuration {
+    public static var group: LightweightClipStorage.Configuration {
         let realmFileName = "lightweight-clips.realm"
 
         var configuration = Realm.Configuration(

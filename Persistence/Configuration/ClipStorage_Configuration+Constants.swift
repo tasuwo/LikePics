@@ -5,7 +5,7 @@
 import RealmSwift
 
 extension ClipStorage.Configuration {
-    public static var main: ClipStorage.Configuration {
+    public static var document: ClipStorage.Configuration {
         let realmFileName = "clips.realm"
 
         var configuration = Realm.Configuration(
@@ -31,7 +31,7 @@ extension ClipStorage.Configuration {
         return .init(realmConfiguration: configuration)
     }
 
-    public static var temporary: ClipStorage.Configuration {
+    public static var group: ClipStorage.Configuration {
         let realmFileName = "temporary-clips.realm"
 
         var configuration = Realm.Configuration(
