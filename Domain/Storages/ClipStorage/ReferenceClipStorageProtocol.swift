@@ -27,6 +27,7 @@ public protocol ReferenceClipStorageProtocol {
     func updateClips(having clipIds: [ReferenceClip.Identity], byAddingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError>
     func updateClips(having clipIds: [ReferenceClip.Identity], byDeletingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError>
     func updateClips(having clipIds: [ReferenceClip.Identity], byReplacingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError>
+    func updateClips(having clipIds: [ReferenceClip.Identity], byUpdatingDirty isDirty: Bool) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 

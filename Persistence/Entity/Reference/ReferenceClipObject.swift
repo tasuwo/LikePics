@@ -12,6 +12,7 @@ final class ReferenceClipObject: Object {
     let tags = List<ReferenceTagObject>()
     @objc dynamic var isHidden: Bool = false
     @objc dynamic var registeredAt = Date()
+    @objc dynamic var isDirty: Bool = false
 
     override static func primaryKey() -> String? {
         return "id"
@@ -34,6 +35,7 @@ extension ReferenceClip: Persistable {
                      description: managedObject.descriptionText,
                      tags: managedObject.tags.map { ReferenceTag.make(by: $0) },
                      isHidden: managedObject.isHidden,
-                     registeredDate: managedObject.registeredAt)
+                     registeredDate: managedObject.registeredAt,
+                     isDirty: managedObject.isDirty)
     }
 }

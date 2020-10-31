@@ -90,7 +90,8 @@ extension ReferenceClip {
         description: String? = nil,
         tags: [ReferenceTag] = [],
         isHidden: Bool = false,
-        registeredDate: Date = Date(timeIntervalSince1970: 0)
+        registeredDate: Date = Date(timeIntervalSince1970: 0),
+        isDirty: Bool = false
     ) -> Self {
         return .init(
             id: id,
@@ -98,7 +99,8 @@ extension ReferenceClip {
             description: description,
             tags: tags,
             isHidden: isHidden,
-            registeredDate: registeredDate
+            registeredDate: registeredDate,
+            isDirty: isDirty
         )
     }
 }
@@ -106,11 +108,13 @@ extension ReferenceClip {
 extension ReferenceTag {
     static func makeDefault(
         id: String = "",
-        name: String = ""
+        name: String = "",
+        isDirty: Bool = false
     ) -> Self {
         return .init(
             id: id,
-            name: name
+            name: name,
+            isDirty: isDirty
         )
     }
 }

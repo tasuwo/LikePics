@@ -38,6 +38,7 @@ extension ClipCommandService: TemporaryClipsTransportService {
 
                 try self.clipStorage.beginTransaction()
                 try self.temporaryClipStorage.beginTransaction()
+                try self.referenceClipStorage.beginTransaction()
 
                 for clip in clips {
                     switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
@@ -47,6 +48,7 @@ extension ClipCommandService: TemporaryClipsTransportService {
                     case let .failure(error):
                         try? self.clipStorage.cancelTransactionIfNeeded()
                         try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                        try? self.referenceClipStorage.cancelTransactionIfNeeded()
                         self.logger.write(ConsoleLog(level: .error, message: """
                         一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)
                         """))
@@ -61,12 +63,28 @@ extension ClipCommandService: TemporaryClipsTransportService {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     一時保存クリップの削除に失敗: \(error.localizedDescription)
                     """))
                     return
                 }
 
+                switch self.referenceClipStorage.updateClips(having: clips.map { $0.identity }, byUpdatingDirty: false) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    参照クリップのisDirty更新に失敗: \(error.localizedDescription)
+                    """))
+                    return
+                }
+
+                // TODO: 本当にこれで良いか？
                 switch self.temporaryClipStorage.deleteAllTags() {
                 case .success:
                     break
@@ -74,6 +92,7 @@ extension ClipCommandService: TemporaryClipsTransportService {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     一時保存領域のタグの削除に失敗: \(error.localizedDescription)
                     """))
@@ -86,6 +105,7 @@ extension ClipCommandService: TemporaryClipsTransportService {
                 guard allImagesExists else {
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     一時保存領域に移行対象の画像が存在しない
                     """))
@@ -107,12 +127,14 @@ extension ClipCommandService: TemporaryClipsTransportService {
 
                 try self.clipStorage.commitTransaction()
                 try self.temporaryClipStorage.commitTransaction()
+                try self.referenceClipStorage.commitTransaction()
             } catch {
                 self.logger.write(ConsoleLog(level: .info, message: """
                 一時保存領域からのクリップの移行に失敗: \(error.localizedDescription)
                 """))
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.temporaryClipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 return
             }
         }

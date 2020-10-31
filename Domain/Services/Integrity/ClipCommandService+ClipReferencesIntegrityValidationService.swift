@@ -5,7 +5,7 @@
 import Common
 
 extension ClipCommandService {
-    fileprivate func validateAndFixTagsIntegrityIfNeeded() throws {
+    private func validateAndFixTagsIntegrityIfNeeded() throws {
         let referenceTags: [ReferenceTag.Identity: ReferenceTag]
         switch self.referenceClipStorage.readAllTags() {
         case let .success(result):
@@ -55,7 +55,14 @@ extension ClipCommandService {
             }
         }
 
-        // TODO: 余分なタグがあった場合削除
+        let extraTagIds = Set(referenceTags.keys)
+            .subtracting(Set(tags.keys))
+            .filter { referenceTags[$0]?.isDirty == false }
+        if case let .failure(error) = self.referenceClipStorage.deleteTags(having: Array(extraTagIds)) {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete extra reference tag: \(error.localizedDescription)
+            """))
+        }
 
         try self.referenceClipStorage.commitTransaction()
     }
@@ -92,8 +99,20 @@ extension ClipCommandService {
         try self.referenceClipStorage.beginTransaction()
 
         for (clipId, clip) in clips {
-            if let _ = referenceClips[clipId] {
-                // Note: Clipのタグについては、transport前のものである可能性があるため無視する
+            if let referenceClip = referenceClips[clipId], referenceClip.isDirty == false {
+                let expectedClip = ReferenceClip(id: clip.id,
+                                                 url: clip.url,
+                                                 description: clip.description,
+                                                 tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
+                                                 isHidden: clip.isHidden,
+                                                 registeredDate: clip.registeredDate)
+                if referenceClip != expectedClip {
+                    if case let .failure(error) = self.referenceClipStorage.create(clip: expectedClip) {
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        Failed to create reference clip: \(error.localizedDescription)
+                        """))
+                    }
+                }
             } else {
                 let newClip = ReferenceClip(id: clip.id,
                                             url: clip.url,
@@ -109,7 +128,14 @@ extension ClipCommandService {
             }
         }
 
-        // Note: 余分なClipはtransport前のものである可能性があるため無視する
+        let extraClipIds = Set(referenceClips.keys)
+            .subtracting(Set(clips.keys))
+            .filter { referenceClips[$0]?.isDirty == false }
+        if case let .failure(error) = self.referenceClipStorage.deleteClips(having: Array(extraClipIds)) {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete extra clips: \(error.localizedDescription)
+            """))
+        }
 
         try self.referenceClipStorage.commitTransaction()
     }

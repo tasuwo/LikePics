@@ -85,12 +85,16 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         let obj = ReferenceClipObject()
         obj.id = clip.id
         obj.url = clip.url?.absoluteString
+        obj.descriptionText = clip.description
         clip.tags.forEach { tag in
             let tagObj = ReferenceTagObject()
             tagObj.id = tag.id
             tagObj.name = tag.name
             obj.tags.append(tagObj)
         }
+        obj.isHidden = clip.isHidden
+        obj.registeredAt = clip.registeredDate
+        obj.isDirty = clip.isDirty
 
         realm.add(obj, update: .modified)
 
@@ -103,6 +107,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         let obj = ReferenceTagObject()
         obj.id = tag.id
         obj.name = tag.name
+        obj.isDirty = tag.isDirty
 
         realm.add(obj, update: .modified)
 
@@ -163,6 +168,14 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
             tags.forEach { clip.tags.append($0) }
         }
 
+        return .success(())
+    }
+
+    public func updateClips(having clipIds: [ReferenceClip.Identity], byUpdatingDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+        for clip in clipIds.compactMap({ realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }) {
+            clip.isDirty = isDirty
+        }
         return .success(())
     }
 

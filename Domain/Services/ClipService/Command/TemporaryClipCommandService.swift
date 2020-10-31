@@ -70,7 +70,8 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                                                   description: createdClip.description,
                                                   tags: createdClip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
                                                   isHidden: createdClip.isHidden,
-                                                  registeredDate: createdClip.registeredDate)
+                                                  registeredDate: createdClip.registeredDate,
+                                                  isDirty: true)
                 switch self.referenceClipStorage.create(clip: referenceClip) {
                 case .success:
                     break

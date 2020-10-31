@@ -10,6 +10,7 @@ public struct ReferenceClip: Equatable {
     public let tags: [ReferenceTag]
     public let isHidden: Bool
     public let registeredDate: Date
+    public let isDirty: Bool
 
     // MARK: - Lifecycle
 
@@ -18,7 +19,8 @@ public struct ReferenceClip: Equatable {
                 description: String?,
                 tags: [ReferenceTag],
                 isHidden: Bool,
-                registeredDate: Date)
+                registeredDate: Date,
+                isDirty: Bool = false)
     {
         self.id = id
         self.url = url
@@ -26,6 +28,7 @@ public struct ReferenceClip: Equatable {
         self.tags = tags
         self.isHidden = isHidden
         self.registeredDate = registeredDate
+        self.isDirty = isDirty
     }
 }
 
