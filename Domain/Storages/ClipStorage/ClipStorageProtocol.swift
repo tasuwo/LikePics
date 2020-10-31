@@ -14,6 +14,7 @@ public protocol ClipStorageProtocol {
     // MARK: Read
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
+    func readAllTags() -> Result<[Tag], ClipStorageError>
 
     // MARK: Create
 

@@ -148,6 +148,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var readAllTagsCallCount = 0
+    public var readAllTagsHandler: (() -> (Result<[Tag], ClipStorageError>))?
+    public func readAllTags() -> Result<[Tag], ClipStorageError> {
+        readAllTagsCallCount += 1
+        if let readAllTagsHandler = readAllTagsHandler {
+            return readAllTagsHandler()
+        }
+        fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var createCallCount = 0
     public var createHandler: ((Clip, Bool, Bool) -> (Result<Clip, ClipStorageError>))?
     public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError> {

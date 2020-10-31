@@ -53,6 +53,13 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
     // MARK: Read
 
+    public func readAllClips() -> Result<[ReferenceClip], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let clips = realm.objects(ReferenceClipObject.self)
+            .map { ReferenceClip.make(by: $0) }
+        return .success(Array(clips))
+    }
+
     public func readClip(havingUrl url: URL) -> Result<ReferenceClip?, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
 
@@ -61,6 +68,13 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         }
 
         return .success(ReferenceClip.make(by: clip))
+    }
+
+    public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let tags = realm.objects(ReferenceTagObject.self)
+            .map { ReferenceTag.make(by: $0) }
+        return .success(Array(tags))
     }
 
     // MARK: Create

@@ -62,6 +62,13 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(Array(clips))
     }
 
+    public func readAllTags() -> Result<[Tag], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let tags = realm.objects(TagObject.self)
+            .map { Tag.make(by: $0) }
+        return .success(Array(tags))
+    }
+
     // MARK: Create
 
     public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError> {

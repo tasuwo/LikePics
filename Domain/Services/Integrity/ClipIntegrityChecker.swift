@@ -2,6 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public protocol ClipIntegrityValidationService {
-    func validateReferencesAndFixIntegrityIfNeeded()
+public protocol ClipReferencesIntegrityValidationService {
+    func validateAndFixIntegrityIfNeeded()
 }

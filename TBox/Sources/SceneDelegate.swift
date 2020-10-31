@@ -26,6 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.makeKeyAndVisible()
 
             self.window = window
+
+            // TODO: 実行頻度を考える
+            container.integrityValidationService.validateAndFixIntegrityIfNeeded()
         } catch {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
             fatalError("Unable to launch app.")
@@ -42,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // 実行箇所を考える
+        // TODO: 実行箇所を考える
         self.dependencyContainer?.transportService.transportIfNeeded()
     }
 

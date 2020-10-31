@@ -12,6 +12,8 @@ public protocol ReferenceClipStorageProtocol {
 
     // MARK: Read
 
+    func readAllClips() -> Result<[ReferenceClip], ClipStorageError>
+    func readAllTags() -> Result<[ReferenceTag], ClipStorageError>
     func readClip(havingUrl url: URL) -> Result<ReferenceClip?, ClipStorageError>
 
     // MARK: Create

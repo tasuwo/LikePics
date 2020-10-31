@@ -7,6 +7,8 @@ import Common
 extension ClipCommandService: TemporaryClipsTransportService {
     // MARK: - TemporaryClipsTransportService
 
+    // TODO: 移行できなかったデータを捨てる
+
     public func transportIfNeeded() {
         self.queue.sync {
             guard self.takeExecutionLock() else {

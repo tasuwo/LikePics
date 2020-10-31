@@ -62,6 +62,7 @@ class DependencyContainer {
     private let userSettingsStorage = UserSettingsStorage()
 
     let transportService: TemporaryClipsTransportService
+    let integrityValidationService: ClipReferencesIntegrityValidationService
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
@@ -86,6 +87,7 @@ class DependencyContainer {
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
         self.transportService = clipCommandService
+        self.integrityValidationService = clipCommandService
     }
 }
 
