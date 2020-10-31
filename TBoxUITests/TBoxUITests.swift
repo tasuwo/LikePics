@@ -4,6 +4,7 @@
 
 import XCTest
 
+/*
 class TBoxUITests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -29,3 +30,4 @@ class TBoxUITests: XCTestCase {
         snapshot("Info")
     }
 }
+ */
