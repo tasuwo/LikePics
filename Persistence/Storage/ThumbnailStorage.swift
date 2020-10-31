@@ -14,18 +14,11 @@ public enum ThumbnailStorageError: Error {
 }
 
 public class ThumbnailStorage {
-    enum StorageConfiguration {
-        static var directoryName: String = "TBoxThumbnails"
+    public struct Configuration {
+        let targetUrl: URL
+    }
 
-        static var cacheTargetUrl: URL {
-            if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
-                return directory
-                    .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
-                    .appendingPathComponent(self.directoryName, isDirectory: true)
-            } else {
-                fatalError("Failed to resolve directory url for image cache.")
-            }
-        }
+    enum StorageConfiguration {
     }
 
     private let storage: ImageStorageProtocol
@@ -43,19 +36,19 @@ public class ThumbnailStorage {
 
     init(storage: ImageStorageProtocol,
          fileManager: FileManager = .default,
-         cacheDirectoryUrl: URL = StorageConfiguration.cacheTargetUrl,
+         configuration: Configuration = .cache,
          logger: TBoxLoggable = RootLogger.shared) throws
     {
         self.storage = storage
         self.fileManager = fileManager
-        self.baseUrl = cacheDirectoryUrl
+        self.baseUrl = configuration.targetUrl
         self.logger = logger
 
         try self.createDirectoryIfNeeded(at: self.baseUrl)
     }
 
     public convenience init() throws {
-        try self.init(storage: try ImageStorage(configuration: .main))
+        try self.init(storage: try ImageStorage(configuration: .document))
     }
 
     // MARK: - Methods

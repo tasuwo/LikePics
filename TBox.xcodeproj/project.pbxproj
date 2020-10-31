@@ -24,6 +24,7 @@
 		2C0B11B924E2F6030054016C /* ClipPreviewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */; };
 		2C0B5C58254D26DD00FA43F8 /* TemporaryClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */; };
 		2C0B5C78254D3B9500FA43F8 /* LightweightClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C77254D3B9500FA43F8 /* LightweightClipStorage_Configuration+Constants.swift */; };
+		2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C82254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift */; };
 		2C0F9B152528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */; };
 		2C0F9B272528ACDC00235B25 /* ClipInformationSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B262528ACDC00235B25 /* ClipInformationSectionHeader.swift */; };
 		2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */; };
@@ -565,6 +566,7 @@
 		2C0B11B824E2F6020054016C /* ClipPreviewAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimator.swift; sourceTree = "<group>"; };
 		2C0B5C57254D26DD00FA43F8 /* TemporaryClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandService.swift; sourceTree = "<group>"; };
 		2C0B5C77254D3B9500FA43F8 /* LightweightClipStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LightweightClipStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
+		2C0B5C82254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
 		2C0F9B262528ACDC00235B25 /* ClipInformationSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationSectionHeader.swift; sourceTree = "<group>"; };
 		2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationSectionHeader.xib; sourceTree = "<group>"; };
@@ -1848,6 +1850,7 @@
 			children = (
 				2C99278B24DDCEF700672CA7 /* Constants.swift */,
 				2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */,
+				2C0B5C82254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift */,
 				2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */,
 				2C0B5C77254D3B9500FA43F8 /* LightweightClipStorage_Configuration+Constants.swift */,
 			);
@@ -3460,6 +3463,7 @@
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
+				2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */,
 				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
 				2CBA8451254C815000DA5045 /* LightweightClipStorageMigrationService.swift in Sources */,
 				2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */,

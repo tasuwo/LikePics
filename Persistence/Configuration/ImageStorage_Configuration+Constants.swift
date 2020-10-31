@@ -3,9 +3,9 @@
 //
 
 extension ImageStorage.Configuration {
-    public static var main: ImageStorage.Configuration {
+    public static var document: ImageStorage.Configuration {
         let targetUrl: URL = {
-            let directoryName: String = "TBoxImages"
+            let directoryName: String = "images"
             if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 return directory
                     .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
@@ -19,7 +19,7 @@ extension ImageStorage.Configuration {
 
     public static var temporary: ImageStorage.Configuration {
         let targetUrl: URL = {
-            let directoryName: String = "TBoxTemporaryImages"
+            let directoryName: String = "images"
             guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) else {
                 fatalError("Failed to resolve images containing directory url.")
             }
