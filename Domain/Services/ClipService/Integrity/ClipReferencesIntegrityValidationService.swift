@@ -83,16 +83,18 @@ public class ClipReferencesIntegrityValidationService {
         let extraTagIds = Set(referenceTags.keys)
             .subtracting(Set(tags.keys))
             .filter { referenceTags[$0]?.isDirty == false }
-        if case let .failure(error) = self.referenceClipStorage.deleteTags(having: Array(extraTagIds)) {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete extra reference tag: \(error.localizedDescription)
-            """))
+        if !extraTagIds.isEmpty {
+            if case let .failure(error) = self.referenceClipStorage.deleteTags(having: Array(extraTagIds)) {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to delete extra reference tag: \(error.localizedDescription)
+                """))
+            }
         }
 
         try self.referenceClipStorage.commitTransaction()
     }
 
-    func validateAndFixClipsIntegrityIfNeeded() throws {
+    private func validateAndFixClipsIntegrityIfNeeded() throws {
         let referenceClips: [ReferenceClip.Identity: ReferenceClip]
         switch self.referenceClipStorage.readAllClips() {
         case let .success(result):

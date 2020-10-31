@@ -151,6 +151,7 @@
 		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
 		2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */; };
+		2C79485C254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */; };
 		2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */; };
 		2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -698,6 +699,7 @@
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
+		2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationServiceSpec.swift; sourceTree = "<group>"; };
 		2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncategorizedCell.swift; sourceTree = "<group>"; };
 		2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncategorizedCell.xib; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
@@ -1721,6 +1723,7 @@
 		2C79484E254DD11700A4E15D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2C794859254DD2B200A4E15D /* ClipService */,
 				2C79484F254DD12100A4E15D /* WebImageResolver */,
 			);
 			path = Services;
@@ -1733,6 +1736,22 @@
 				2C35068625178125009248C6 /* WebImageNameResolverSpec.swift */,
 			);
 			path = WebImageResolver;
+			sourceTree = "<group>";
+		};
+		2C794859254DD2B200A4E15D /* ClipService */ = {
+			isa = PBXGroup;
+			children = (
+				2C79485A254DD2BB00A4E15D /* Integrity */,
+			);
+			path = ClipService;
+			sourceTree = "<group>";
+		};
+		2C79485A254DD2BB00A4E15D /* Integrity */ = {
+			isa = PBXGroup;
+			children = (
+				2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */,
+			);
+			path = Integrity;
 			sourceTree = "<group>";
 		};
 		2C810D0024E04A6600BC0FDF /* View */ = {
@@ -3465,6 +3484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C3506C82517911B009248C6 /* ImageExtensionResolverSpec.swift in Sources */,
+				2C79485C254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */,
 				2C35068725178125009248C6 /* WebImageNameResolverSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
