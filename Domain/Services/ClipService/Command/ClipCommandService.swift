@@ -12,7 +12,7 @@ public class ClipCommandService {
     let imageStorage: ImageStorageProtocol
     let thumbnailStorage: ThumbnailStorageProtocol
     let logger: TBoxLoggable
-    let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ClipCommandService")
+    let queue: DispatchQueue
 
     private(set) var isTransporting: Bool = false
 
@@ -24,7 +24,8 @@ public class ClipCommandService {
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 thumbnailStorage: ThumbnailStorageProtocol,
-                logger: TBoxLoggable)
+                logger: TBoxLoggable,
+                queue: DispatchQueue)
     {
         self.temporaryClipStorage = temporaryClipStorage
         self.temporaryImageStorage = temporaryImageStorage
@@ -33,6 +34,7 @@ public class ClipCommandService {
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
+        self.queue = queue
     }
 
     // MARK: - Methods

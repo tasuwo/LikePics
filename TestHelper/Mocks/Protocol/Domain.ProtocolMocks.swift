@@ -256,7 +256,7 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     }
 }
 
-public class ClipReferencesIntegrityValidationServiceMock: ClipReferencesIntegrityValidationService {
+public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReferencesIntegrityValidationServiceProtocol {
     public init() { }
 
     public private(set) var validateAndFixIntegrityIfNeededCallCount = 0

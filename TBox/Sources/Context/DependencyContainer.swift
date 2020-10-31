@@ -61,8 +61,10 @@ class DependencyContainer {
     private let logger: TBoxLoggable
     private let userSettingsStorage = UserSettingsStorage()
 
+    private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
+
     let transportService: TemporaryClipsTransportService
-    let integrityValidationService: ClipReferencesIntegrityValidationService
+    let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
 
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
@@ -78,7 +80,8 @@ class DependencyContainer {
                                                     referenceClipStorage: referenceClipStorage,
                                                     imageStorage: imageStorage,
                                                     thumbnailStorage: thumbnailStorage,
-                                                    logger: logger)
+                                                    logger: logger,
+                                                    queue: self.clipCommandQueue)
         self.clipQueryService = clipStorage
         self.clipCommandService = clipCommandService
         self.clipViewer = clipStorage
@@ -87,7 +90,10 @@ class DependencyContainer {
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
         self.transportService = clipCommandService
-        self.integrityValidationService = clipCommandService
+        self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
+                                                                                   referenceClipStorage: referenceClipStorage,
+                                                                                   logger: logger,
+                                                                                   queue: self.clipCommandQueue)
     }
 }
 
