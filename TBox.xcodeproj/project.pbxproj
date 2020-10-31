@@ -1042,6 +1042,37 @@
 			path = Reference;
 			sourceTree = "<group>";
 		};
+		2C1040DB254D9509000DF7DE /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */,
+				2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */,
+				2C45D40124EEAD750045B6D3 /* AlbumObject.swift */,
+				2CF5ABB224FB486A0084695F /* TagObject.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		2C1040DC254D9534000DF7DE /* Reference */ = {
+			isa = PBXGroup;
+			children = (
+				2CBA83DF254C6F7E00DA5045 /* ReferenceClip.swift */,
+				2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */,
+			);
+			path = Reference;
+			sourceTree = "<group>";
+		};
+		2C1040DD254D953D000DF7DE /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2C99277C24DDC7E600672CA7 /* Clip.swift */,
+				2C8FD62624E02297005887F9 /* ClipItem.swift */,
+				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
+				2CF5ABB024FB47D10084695F /* Tag.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		2C1524302532EAFA00C51847 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1184,11 +1215,8 @@
 		2C2F623624DDC4C4000A8CDB /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */,
-				2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */,
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
-				2C45D40124EEAD750045B6D3 /* AlbumObject.swift */,
-				2CF5ABB224FB486A0084695F /* TagObject.swift */,
+				2C1040DB254D9509000DF7DE /* Common */,
 				2C0B5CD4254D861000FA43F8 /* Reference */,
 			);
 			path = Entity;
@@ -1847,13 +1875,9 @@
 		2C99277B24DDC7DA00672CA7 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				2C99277C24DDC7E600672CA7 /* Clip.swift */,
-				2C8FD62624E02297005887F9 /* ClipItem.swift */,
-				2CBA83DF254C6F7E00DA5045 /* ReferenceClip.swift */,
-				2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */,
-				2C45D3FF24EEACF80045B6D3 /* Album.swift */,
-				2CF5ABB024FB47D10084695F /* Tag.swift */,
 				2C16050725207C6A00A39E58 /* Identifiable.swift */,
+				2C1040DD254D953D000DF7DE /* Common */,
+				2C1040DC254D9534000DF7DE /* Reference */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
