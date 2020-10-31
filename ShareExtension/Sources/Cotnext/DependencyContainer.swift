@@ -21,7 +21,7 @@ class DependencyContainer {
     init() throws {
         let logger = RootLogger.shared
         let imageStorage = try ImageStorage(configuration: .temporary)
-        let lightweightClipStorage = try LightweightClipStorage(logger: logger)
+        let lightweightClipStorage = try LightweightClipStorage(config: .main, logger: logger)
         let clipStorage = try ClipStorage(config: .temporary, logger: logger)
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
                                                      lightweightClipStorage: lightweightClipStorage,

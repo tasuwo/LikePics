@@ -11,7 +11,13 @@ extension ClipStorage.Configuration {
         var configuration = Realm.Configuration(
             schemaVersion: 9,
             migrationBlock: ClipStorageMigrationService.migrationBlock,
-            deleteRealmIfMigrationNeeded: false
+            deleteRealmIfMigrationNeeded: false,
+            objectTypes: [
+                ClipObject.self,
+                ClipItemObject.self,
+                AlbumObject.self,
+                TagObject.self
+            ]
         )
 
         if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
@@ -31,7 +37,12 @@ extension ClipStorage.Configuration {
         var configuration = Realm.Configuration(
             schemaVersion: 0,
             migrationBlock: ClipStorageMigrationService.migrationBlock,
-            deleteRealmIfMigrationNeeded: false
+            deleteRealmIfMigrationNeeded: false,
+            objectTypes: [
+                ClipObject.self,
+                ClipItemObject.self,
+                TagObject.self
+            ]
         )
 
         guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) else {
