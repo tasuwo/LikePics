@@ -14,10 +14,7 @@ public class ClipStorage {
     }
 
     let configuration: Realm.Configuration
-
     private let logger: TBoxLoggable
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ClipStorage")
-
     private var realm: Realm?
 
     // MARK: - Lifecycle
