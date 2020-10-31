@@ -71,7 +71,8 @@ class DependencyContainer {
         let clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                     lightweightClipStorage: lightweightClipStorage,
                                                     imageStorage: imageStorage,
-                                                    thumbnailStorage: thumbnailStorage)
+                                                    thumbnailStorage: thumbnailStorage,
+                                                    logger: logger)
         self.clipQueryService = clipStorage
         self.clipCommandService = clipCommandService
         self.clipViewer = clipStorage

@@ -30,7 +30,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 guard data.count == Set(data.map { $0.fileName }).count else {
-                    self.logger.write(ConsoleLog(level: .error, message: "ファイル名に重複が存在"))
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    ファイル名に重複が存在: \(data.map { $0.fileName }.joined(separator: ","))
+                    """))
                     return .failure(.invalidParameter)
                 }
 
@@ -38,7 +40,11 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                     return data.contains(where: { $0.fileName == item.imageFileName })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
-                    self.logger.write(ConsoleLog(level: .error, message: "Clipに紐付けれた全Itemの画像データが揃っていない"))
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Clipに紐付けれた全Itemの画像データが揃っていない:
+                    - expected: \(clip.items.map { $0.imageFileName }.joined(separator: ","))
+                    - got: \(data.map { $0.fileName }.joined(separator: ","))
+                    """))
                     return .failure(.invalidParameter)
                 }
 
@@ -53,7 +59,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.lightweightClipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: "一時クリップの保存に失敗: \(error.localizedDescription)"))
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    一時クリップの保存に失敗: \(error.localizedDescription)
+                    """))
                     return .failure(error)
                 }
 
@@ -67,7 +75,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.lightweightClipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: "軽量クリップの保存に失敗: \(error.localizedDescription)"))
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    軽量クリップの保存に失敗: \(error.localizedDescription)
+                    """))
                     return .failure(error)
                 }
 
@@ -81,7 +91,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.lightweightClipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: "一時クリップの保存に失敗: \(error.localizedDescription)"))
+                self.logger.write(ConsoleLog(level: .error, message: """
+                一時クリップの保存に失敗: \(error.localizedDescription)
+                """))
                 return .failure(.internalError)
             }
         }

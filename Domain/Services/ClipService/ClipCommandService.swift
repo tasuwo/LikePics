@@ -2,22 +2,27 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
+
 public class ClipCommandService {
     private let clipStorage: ClipStorageProtocol
     private let lightweightClipStorage: LightweightClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
+    private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ClipCommandService")
 
     public init(clipStorage: ClipStorageProtocol,
                 lightweightClipStorage: LightweightClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
-                thumbnailStorage: ThumbnailStorageProtocol)
+                thumbnailStorage: ThumbnailStorageProtocol,
+                logger: TBoxLoggable)
     {
         self.clipStorage = clipStorage
         self.lightweightClipStorage = lightweightClipStorage
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
+        self.logger = logger
     }
 }
 
@@ -30,6 +35,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 guard data.count == Set(data.map { $0.fileName }).count else {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    ファイル名に重複が存在: \(data.map { $0.fileName }.joined(separator: ","))
+                    """))
                     return .failure(.invalidParameter)
                 }
 
@@ -37,6 +45,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return data.contains(where: { $0.fileName == item.imageFileName })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Clipに紐付けれた全Itemの画像データが揃っていない:
+                    - expected: \(clip.items.map { $0.imageFileName }.joined(separator: ","))
+                    - got: \(data.map { $0.fileName }.joined(separator: ","))
+                    """))
                     return .failure(.invalidParameter)
                 }
 
@@ -51,6 +64,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    クリップの保存に失敗: \(error.localizedDescription)
+                    """))
                     return .failure(error)
                 }
 
@@ -64,6 +80,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    軽量クリップの保存に失敗: \(error.localizedDescription)
+                    """))
                     return .failure(error)
                 }
 
@@ -77,6 +96,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                クリップの保存に失敗: \(error.localizedDescription)
+                """))
                 return .failure(.internalError)
             }
         }
