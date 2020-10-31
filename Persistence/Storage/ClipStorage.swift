@@ -64,17 +64,24 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Clip, overwrite: Bool) -> Result<Clip, ClipStorageError> {
+    public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
 
         var appendingTags: [TagObject] = []
         for tag in clip.tags {
-            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) else {
-                return .failure(.invalidParameter)
+            if let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) {
+                appendingTags.append(tagObj)
+            } else {
+                guard allowTagCreation else {
+                    return .failure(.invalidParameter)
+                }
+                let newTag = TagObject()
+                newTag.id = tag.id
+                newTag.name = tag.name
+                appendingTags.append(newTag)
             }
-            appendingTags.append(tagObj)
         }
 
         // Check duplication

@@ -63,7 +63,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.beginTransaction()
 
                 let createdClip: Clip
-                switch self.clipStorage.create(clip: clip, overwrite: forced) {
+                switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
                 case let .success(result):
                     createdClip = result
 
@@ -544,7 +544,7 @@ extension ClipCommandService: ClipIntegrityCheckerProtocol {
                 try self.temporaryClipStorage.beginTransaction()
 
                 for clip in clips {
-                    switch self.clipStorage.create(clip: clip, overwrite: true) {
+                    switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
                     case .success:
                         break
 
