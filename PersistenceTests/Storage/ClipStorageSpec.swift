@@ -19,7 +19,7 @@ class ClipStorageSpec: QuickSpec {
         var clipStorage: ClipStorage!
 
         beforeEach {
-            clipStorage = try! ClipStorage(realmConfiguration: configuration, logger: RootLogger.shared)
+            clipStorage = try! ClipStorage(config: .init(realmConfiguration: configuration), logger: RootLogger.shared)
             try! realm.write {
                 realm.deleteAll()
             }
@@ -28,7 +28,7 @@ class ClipStorageSpec: QuickSpec {
         // MARK: Create
 
         describe("create(clip:forced:)") {
-            var result: Result<Clip.Identity, ClipStorageError>!
+            var result: Result<Clip, ClipStorageError>!
 
             context("引数が不正ではない") {
                 context("URLが同一のClipが存在しない") {

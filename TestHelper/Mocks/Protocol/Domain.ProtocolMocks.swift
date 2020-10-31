@@ -5,7 +5,6 @@
 import Combine
 @testable import Domain
 import Erik
-import Foundation
 import UIKit
 import WebKit
 
@@ -337,6 +336,15 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
         deleteAllCallCount += 1
         if let deleteAllHandler = deleteAllHandler {
             try deleteAllHandler(clipId)
+        }
+    }
+
+    public private(set) var moveImageFileCallCount = 0
+    public var moveImageFileHandler: ((URL, String, Clip.Identity) throws -> Void)?
+    public func moveImageFile(at url: URL, withName fileName: String, toClipHaving clipId: Clip.Identity) throws {
+        moveImageFileCallCount += 1
+        if let moveImageFileHandler = moveImageFileHandler {
+            try moveImageFileHandler(url, fileName, clipId)
         }
     }
 
