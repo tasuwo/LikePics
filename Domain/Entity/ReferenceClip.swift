@@ -3,11 +3,11 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct LightweightClip: Equatable {
+public struct ReferenceClip: Equatable {
     public let id: String
     public let url: URL?
     public let description: String?
-    public let tags: [LightweightTag]
+    public let tags: [ReferenceTag]
     public let isHidden: Bool
     public let registeredDate: Date
 
@@ -16,7 +16,7 @@ public struct LightweightClip: Equatable {
     public init(id: String,
                 url: URL?,
                 description: String?,
-                tags: [LightweightTag],
+                tags: [ReferenceTag],
                 isHidden: Bool,
                 registeredDate: Date)
     {
@@ -29,7 +29,7 @@ public struct LightweightClip: Equatable {
     }
 }
 
-extension LightweightClip: Identifiable {
+extension ReferenceClip: Identifiable {
     public typealias Identity = Clip.Identity
 
     public var identity: Clip.Identity {
@@ -37,4 +37,4 @@ extension LightweightClip: Identifiable {
     }
 }
 
-extension LightweightClip: Hashable {}
+extension ReferenceClip: Hashable {}

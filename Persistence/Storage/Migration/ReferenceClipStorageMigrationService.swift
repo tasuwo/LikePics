@@ -5,6 +5,6 @@
 import Domain
 import RealmSwift
 
-enum LightweightClipStorageMigrationService {
+enum ReferenceClipStorageMigrationService {
     static let migrationBlock: MigrationBlock = { _, _ in }
 }

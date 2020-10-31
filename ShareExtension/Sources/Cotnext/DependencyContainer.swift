@@ -21,13 +21,13 @@ class DependencyContainer {
     init() throws {
         let logger = RootLogger.shared
         let imageStorage = try ImageStorage(configuration: .temporary)
-        let lightweightClipStorage = try LightweightClipStorage(config: .group, logger: logger)
+        let referenceClipStorage = try ReferenceClipStorage(config: .group, logger: logger)
         let clipStorage = try ClipStorage(config: .group, logger: logger)
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
-                                                     lightweightClipStorage: lightweightClipStorage,
+                                                     referenceClipStorage: referenceClipStorage,
                                                      imageStorage: imageStorage,
                                                      logger: logger)
-        self.clipViewer = lightweightClipStorage
+        self.clipViewer = referenceClipStorage
     }
 }
 
@@ -50,7 +50,7 @@ extension DependencyContainer: ViewControllerFactory {
 }
 
 extension TemporaryClipCommandService: ClipStorable {}
-extension LightweightClipStorage: ClipViewable {
+extension ReferenceClipStorage: ClipViewable {
     // MARK: - ClipViewable
 
     public func clip(havingUrl url: URL) -> Result<TransferringClip?, Error> {

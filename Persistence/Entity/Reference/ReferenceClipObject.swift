@@ -9,7 +9,7 @@ final class ReferenceClipObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var url: String? = ""
     @objc dynamic var descriptionText: String?
-    let tags = List<LightweightTagObject>()
+    let tags = List<ReferenceTagObject>()
     @objc dynamic var isHidden: Bool = false
     @objc dynamic var registeredAt = Date()
 
@@ -18,10 +18,10 @@ final class ReferenceClipObject: Object {
     }
 }
 
-extension LightweightClip: Persistable {
+extension ReferenceClip: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: ReferenceClipObject) -> LightweightClip {
+    static func make(by managedObject: ReferenceClipObject) -> ReferenceClip {
         let url: URL?
         if let urlString = managedObject.url {
             url = URL(string: urlString)
@@ -32,7 +32,7 @@ extension LightweightClip: Persistable {
         return .init(id: managedObject.id,
                      url: url,
                      description: managedObject.descriptionText,
-                     tags: managedObject.tags.map { LightweightTag.make(by: $0) },
+                     tags: managedObject.tags.map { ReferenceTag.make(by: $0) },
                      isHidden: managedObject.isHidden,
                      registeredDate: managedObject.registeredAt)
     }

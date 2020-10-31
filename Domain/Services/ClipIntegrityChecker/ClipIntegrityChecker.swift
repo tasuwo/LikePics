@@ -3,6 +3,6 @@
 //
 
 public protocol ClipIntegrityCheckerProtocol {
-    func validateLightweightClips()
+    func validateReference()
     func integrateTemporaryClipsIfNeeded()
 }

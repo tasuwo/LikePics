@@ -5,20 +5,20 @@
 import Domain
 import RealmSwift
 
-final class LightweightTagObject: Object {
+final class ReferenceTagObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var name: String = ""
-    let clips = LinkingObjects(fromType: LightweightClipObject.self, property: "tags")
+    let clips = LinkingObjects(fromType: ReferenceClipObject.self, property: "tags")
 
     override static func primaryKey() -> String? {
         return "id"
     }
 }
 
-extension LightweightTag: Persistable {
+extension ReferenceTag: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: LightweightTagObject) -> LightweightTag {
+    static func make(by managedObject: ReferenceTagObject) -> ReferenceTag {
         return .init(id: managedObject.id,
                      name: managedObject.name)
     }

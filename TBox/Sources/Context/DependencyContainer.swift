@@ -70,11 +70,11 @@ class DependencyContainer {
         let logger = RootLogger.shared
         let clipStorage = try ClipStorage(config: .document, logger: logger)
         let tmpClipStorage = try ClipStorage(config: .group, logger: logger)
-        let lightweightClipStorage = try LightweightClipStorage(config: .group, logger: logger)
+        let referenceClipStorage = try ReferenceClipStorage(config: .group, logger: logger)
         let clipCommandService = ClipCommandService(temporaryClipStorage: tmpClipStorage,
                                                     temporaryImageStorage: tmpImageStorage,
                                                     clipStorage: clipStorage,
-                                                    lightweightClipStorage: lightweightClipStorage,
+                                                    referenceClipStorage: referenceClipStorage,
                                                     imageStorage: imageStorage,
                                                     thumbnailStorage: thumbnailStorage,
                                                     logger: logger)

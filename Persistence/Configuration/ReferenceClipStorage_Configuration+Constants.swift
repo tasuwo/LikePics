@@ -4,17 +4,17 @@
 
 import RealmSwift
 
-extension LightweightClipStorage.Configuration {
-    public static var group: LightweightClipStorage.Configuration {
-        let realmFileName = "lightweight-clips.realm"
+extension ReferenceClipStorage.Configuration {
+    public static var group: ReferenceClipStorage.Configuration {
+        let realmFileName = "reference-clips.realm"
 
         var configuration = Realm.Configuration(
             schemaVersion: 0,
-            migrationBlock: LightweightClipStorageMigrationService.migrationBlock,
+            migrationBlock: ReferenceClipStorageMigrationService.migrationBlock,
             deleteRealmIfMigrationNeeded: false,
             objectTypes: [
-                LightweightClipObject.self,
-                LightweightTagObject.self
+                ReferenceClipObject.self,
+                ReferenceTagObject.self
             ]
         )
 

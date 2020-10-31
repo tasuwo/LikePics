@@ -6,18 +6,18 @@ import Common
 
 public class TemporaryClipCommandService {
     private let clipStorage: ClipStorageProtocol
-    private let lightweightClipStorage: LightweightClipStorageProtocol
+    private let referenceClipStorage: ReferenceClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.TemporaryClipCommandService")
 
     public init(clipStorage: ClipStorageProtocol,
-                lightweightClipStorage: LightweightClipStorageProtocol,
+                referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 logger: TBoxLoggable)
     {
         self.clipStorage = clipStorage
-        self.lightweightClipStorage = lightweightClipStorage
+        self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
         self.logger = logger
     }
@@ -49,7 +49,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.beginTransaction()
-                try self.lightweightClipStorage.beginTransaction()
+                try self.referenceClipStorage.beginTransaction()
 
                 let createdClip: Clip
                 switch self.clipStorage.create(clip: clip, forced: forced) {
@@ -58,26 +58,26 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     一時クリップの保存に失敗: \(error.localizedDescription)
                     """))
                     return .failure(error)
                 }
 
-                let lightweightClip = LightweightClip(id: createdClip.identity,
-                                                      url: createdClip.url,
-                                                      description: createdClip.description,
-                                                      tags: createdClip.tags.map { LightweightTag(id: $0.id, name: $0.name) },
-                                                      isHidden: createdClip.isHidden,
-                                                      registeredDate: createdClip.registeredDate)
-                switch self.lightweightClipStorage.create(clip: lightweightClip) {
+                let referenceClip = ReferenceClip(id: createdClip.identity,
+                                                  url: createdClip.url,
+                                                  description: createdClip.description,
+                                                  tags: createdClip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
+                                                  isHidden: createdClip.isHidden,
+                                                  registeredDate: createdClip.registeredDate)
+                switch self.referenceClipStorage.create(clip: referenceClip) {
                 case .success:
                     break
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     軽量クリップの保存に失敗: \(error.localizedDescription)
                     """))
@@ -88,12 +88,12 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: createdClip.identity) }
 
                 try self.clipStorage.commitTransaction()
-                try self.lightweightClipStorage.commitTransaction()
+                try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.lightweightClipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時クリップの保存に失敗: \(error.localizedDescription)
                 """))

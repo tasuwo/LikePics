@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct LightweightTag: Equatable {
+public struct ReferenceTag: Equatable {
     public let id: String
     public let name: String
 
@@ -15,7 +15,7 @@ public struct LightweightTag: Equatable {
     }
 }
 
-extension LightweightTag: Identifiable {
+extension ReferenceTag: Identifiable {
     public typealias Identity = Tag.Identity
 
     public var identity: Tag.Identity {
@@ -23,4 +23,4 @@ extension LightweightTag: Identifiable {
     }
 }
 
-extension LightweightTag: Hashable {}
+extension ReferenceTag: Hashable {}

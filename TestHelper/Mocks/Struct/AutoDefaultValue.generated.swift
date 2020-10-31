@@ -83,12 +83,12 @@ extension ImageSize {
     }
 }
 
-extension LightweightClip {
+extension ReferenceClip {
     static func makeDefault(
         id: String = "",
         url: URL? = nil,
         description: String? = nil,
-        tags: [LightweightTag] = [],
+        tags: [ReferenceTag] = [],
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
@@ -103,7 +103,7 @@ extension LightweightClip {
     }
 }
 
-extension LightweightTag {
+extension ReferenceTag {
     static func makeDefault(
         id: String = "",
         name: String = ""
