@@ -66,7 +66,7 @@ class DependencyContainer {
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
         let imageStorage = try ImageStorage(configuration: .document)
-        let tmpImageStorage = try ImageStorage(configuration: .temporary)
+        let tmpImageStorage = try ImageStorage(configuration: .group)
         let logger = RootLogger.shared
         let clipStorage = try ClipStorage(config: .document, logger: logger)
         let tmpClipStorage = try ClipStorage(config: .group, logger: logger)

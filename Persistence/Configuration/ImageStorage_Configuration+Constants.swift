@@ -17,7 +17,7 @@ extension ImageStorage.Configuration {
         return .init(targetUrl: targetUrl)
     }
 
-    public static var temporary: ImageStorage.Configuration {
+    public static var group: ImageStorage.Configuration {
         let targetUrl: URL = {
             let directoryName: String = "images"
             guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) else {

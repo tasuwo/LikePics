@@ -20,7 +20,7 @@ class DependencyContainer {
 
     init() throws {
         let logger = RootLogger.shared
-        let imageStorage = try ImageStorage(configuration: .temporary)
+        let imageStorage = try ImageStorage(configuration: .group)
         let referenceClipStorage = try ReferenceClipStorage(config: .group, logger: logger)
         let clipStorage = try ClipStorage(config: .group, logger: logger)
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
