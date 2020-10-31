@@ -12,7 +12,7 @@ public protocol LightweightClipStorageProtocol {
 
     // MARK: Read
 
-    func existsClip(havingUrl url: URL) -> Bool?
+    func readClip(havingUrl url: URL) -> Result<LightweightClip?, ClipStorageError>
 
     // MARK: Create
 

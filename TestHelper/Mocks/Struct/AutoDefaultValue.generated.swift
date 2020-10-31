@@ -87,12 +87,18 @@ extension LightweightClip {
     static func makeDefault(
         id: String = "",
         url: URL? = nil,
-        tags: [LightweightTag] = []
+        description: String? = nil,
+        tags: [LightweightTag] = [],
+        isHidden: Bool = false,
+        registeredDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
             id: id,
             url: url,
-            tags: tags
+            description: description,
+            tags: tags,
+            isHidden: isHidden,
+            registeredDate: registeredDate
         )
     }
 }

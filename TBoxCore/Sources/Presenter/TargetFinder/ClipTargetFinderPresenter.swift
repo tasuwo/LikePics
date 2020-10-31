@@ -49,6 +49,7 @@ public class ClipTargetFinderPresenter {
 
     private var isEnabledOverwrite: Bool
     private var urlFinderDelayMs: Int = 0
+    private var alreadyClippedClip: TransferringClip?
     private var cancellableBag = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
@@ -120,16 +121,23 @@ public class ClipTargetFinderPresenter {
     }
 
     func findImages() {
-        guard let alreadyClipped = self.clipViewer.existsClip(havingUrl: self.url) else {
+        let alreadyClippedClip: TransferringClip?
+        switch self.clipViewer.clip(havingUrl: self.url) {
+        case let .success(clip):
+            alreadyClippedClip = clip
+
+        case .failure:
             self.view?.endLoading()
             self.view?.show(errorMessage: L10n.clipTargetFinderViewErrorAlertBodyInternalError)
             return
         }
 
-        if !self.isEnabledOverwrite, alreadyClipped {
+        if !self.isEnabledOverwrite, alreadyClippedClip != nil {
             self.view?.showConfirmationForOverwrite()
             return
         }
+
+        self.alreadyClippedClip = alreadyClippedClip
 
         if !self.selectableImages.isEmpty {
             self.selectableImages = []
@@ -184,6 +192,7 @@ public class ClipTargetFinderPresenter {
                     break
                 }
             }, receiveValue: { [weak self] _ in
+                self?.alreadyClippedClip = nil
                 self?.view?.endLoading()
                 self?.view?.notifySavedImagesSuccessfully()
             })
@@ -258,7 +267,7 @@ public class ClipTargetFinderPresenter {
 
     private func save(target: [OrderingSelectableImage]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
-        let clipId = UUID().uuidString
+        let clipId = self.alreadyClippedClip?.id ?? UUID().uuidString
         let items = target.map {
             ClipItem(id: UUID().uuidString,
                      clipId: clipId,
@@ -266,7 +275,12 @@ public class ClipTargetFinderPresenter {
                      source: $0.meta,
                      currentDate: currentDate)
         }
-        let clip = Clip(clipId: clipId, url: self.url, clipItems: items, currentDate: currentDate)
+        let clip = Clip(clipId: clipId,
+                        url: self.url,
+                        clipItems: items,
+                        tags: self.alreadyClippedClip?.tags.map { Tag(id: $0.id, name: $0.name) } ?? [],
+                        registeredDate: self.alreadyClippedClip?.registeredDate ?? currentDate,
+                        currentDate: currentDate)
         let data = target.map { ($0.meta.fileName, $0.meta.data) }
 
         switch self.clipStore.create(clip: clip, withData: data, forced: self.isEnabledOverwrite) {
@@ -293,14 +307,14 @@ extension ClipItem {
 }
 
 extension Clip {
-    init(clipId: Clip.Identity, url: URL, clipItems: [ClipItem], currentDate: Date) {
+    init(clipId: Clip.Identity, url: URL, clipItems: [ClipItem], tags: [Tag], registeredDate: Date, currentDate: Date) {
         self.init(id: clipId,
                   url: url,
                   description: nil,
                   items: clipItems,
-                  tags: [],
+                  tags: tags,
                   isHidden: false,
-                  registeredDate: currentDate,
+                  registeredDate: registeredDate,
                   updatedDate: currentDate)
     }
 }

@@ -8,7 +8,10 @@ import RealmSwift
 final class LightweightClipObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var url: String? = ""
+    @objc dynamic var descriptionText: String?
     let tags = List<LightweightTagObject>()
+    @objc dynamic var isHidden: Bool = false
+    @objc dynamic var registeredAt = Date()
 
     override static func primaryKey() -> String? {
         return "id"
@@ -28,6 +31,9 @@ extension LightweightClip: Persistable {
 
         return .init(id: managedObject.id,
                      url: url,
-                     tags: managedObject.tags.map { LightweightTag.make(by: $0) })
+                     description: managedObject.descriptionText,
+                     tags: managedObject.tags.map { LightweightTag.make(by: $0) },
+                     isHidden: managedObject.isHidden,
+                     registeredDate: managedObject.registeredAt)
     }
 }

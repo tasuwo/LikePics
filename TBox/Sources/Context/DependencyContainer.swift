@@ -61,14 +61,19 @@ class DependencyContainer {
     private let logger: TBoxLoggable
     private let userSettingsStorage = UserSettingsStorage()
 
+    let integrityChecker: ClipIntegrityCheckerProtocol
+
     init() throws {
         let thumbnailStorage = try ThumbnailStorage()
         let imageStorage = try ImageStorage(configuration: .document)
+        let tmpImageStorage = try ImageStorage(configuration: .temporary)
         let logger = RootLogger.shared
-        let clipStorage = try ClipStorage(config: .document,
-                                          logger: logger)
+        let clipStorage = try ClipStorage(config: .document, logger: logger)
+        let tmpClipStorage = try ClipStorage(config: .group, logger: logger)
         let lightweightClipStorage = try LightweightClipStorage(config: .group, logger: logger)
-        let clipCommandService = ClipCommandService(clipStorage: clipStorage,
+        let clipCommandService = ClipCommandService(temporaryClipStorage: tmpClipStorage,
+                                                    temporaryImageStorage: tmpImageStorage,
+                                                    clipStorage: clipStorage,
                                                     lightweightClipStorage: lightweightClipStorage,
                                                     imageStorage: imageStorage,
                                                     thumbnailStorage: thumbnailStorage,
@@ -80,6 +85,7 @@ class DependencyContainer {
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
+        self.integrityChecker = clipCommandService
     }
 }
 
@@ -432,4 +438,26 @@ extension DependencyContainer: ViewControllerFactory {
 }
 
 extension ClipCommandService: ClipStorable {}
-extension ClipStorage: ClipViewable {}
+extension ClipStorage: ClipViewable {
+    // MARK: - ClipViewable
+
+    public func clip(havingUrl url: URL) -> Result<TransferringClip?, Error> {
+        switch self.readClip(havingUrl: url) {
+        case .success(.none):
+            return .success(nil)
+
+        case let .success(.some(clip)):
+            return .success(.init(id: clip.id,
+                                  url: clip.url,
+                                  description: clip.description,
+                                  tags: clip.tags.map {
+                                      TransferringClip.Tag(id: $0.id, name: $0.name)
+                                  },
+                                  isHidden: clip.isHidden,
+                                  registeredDate: clip.registeredDate))
+
+        case let .failure(error):
+            return .failure(error)
+        }
+    }
+}

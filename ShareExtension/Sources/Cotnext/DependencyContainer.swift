@@ -50,4 +50,26 @@ extension DependencyContainer: ViewControllerFactory {
 }
 
 extension TemporaryClipCommandService: ClipStorable {}
-extension LightweightClipStorage: ClipViewable {}
+extension LightweightClipStorage: ClipViewable {
+    // MARK: - ClipViewable
+
+    public func clip(havingUrl url: URL) -> Result<TransferringClip?, Error> {
+        switch self.readClip(havingUrl: url) {
+        case .success(.none):
+            return .success(nil)
+
+        case let .success(.some(clip)):
+            return .success(.init(id: clip.id,
+                                  url: clip.url,
+                                  description: clip.description,
+                                  tags: clip.tags.map {
+                                      TransferringClip.Tag(id: $0.id, name: $0.name)
+                                  },
+                                  isHidden: clip.isHidden,
+                                  registeredDate: clip.registeredDate))
+
+        case let .failure(error):
+            return .failure(error)
+        }
+    }
+}

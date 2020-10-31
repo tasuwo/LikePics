@@ -67,7 +67,10 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 let lightweightClip = LightweightClip(id: createdClip.identity,
                                                       url: createdClip.url,
-                                                      tags: createdClip.tags.map { LightweightTag(id: $0.id, name: $0.name) })
+                                                      description: createdClip.description,
+                                                      tags: createdClip.tags.map { LightweightTag(id: $0.id, name: $0.name) },
+                                                      isHidden: createdClip.isHidden,
+                                                      registeredDate: createdClip.registeredDate)
                 switch self.lightweightClipStorage.create(clip: lightweightClip) {
                 case .success:
                     break

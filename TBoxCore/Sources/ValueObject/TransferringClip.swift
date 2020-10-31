@@ -2,12 +2,25 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-// sourcery: AutoDefaultValue
-public struct LightweightClip: Equatable {
+import Foundation
+
+public struct TransferringClip {
+    public struct Tag {
+        public let id: String
+        public let name: String
+
+        // MARK: - Lifecycle
+
+        public init(id: String, name: String) {
+            self.id = id
+            self.name = name
+        }
+    }
+
     public let id: String
     public let url: URL?
     public let description: String?
-    public let tags: [LightweightTag]
+    public let tags: [Tag]
     public let isHidden: Bool
     public let registeredDate: Date
 
@@ -16,7 +29,7 @@ public struct LightweightClip: Equatable {
     public init(id: String,
                 url: URL?,
                 description: String?,
-                tags: [LightweightTag],
+                tags: [Tag],
                 isHidden: Bool,
                 registeredDate: Date)
     {
@@ -28,13 +41,3 @@ public struct LightweightClip: Equatable {
         self.registeredDate = registeredDate
     }
 }
-
-extension LightweightClip: Identifiable {
-    public typealias Identity = Clip.Identity
-
-    public var identity: Clip.Identity {
-        return self.id
-    }
-}
-
-extension LightweightClip: Hashable {}

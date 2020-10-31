@@ -11,14 +11,14 @@ import WebKit
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
-    public private(set) var existsClipCallCount = 0
-    public var existsClipHandler: ((URL) -> (Bool?))?
-    public func existsClip(havingUrl: URL) -> Bool? {
-        existsClipCallCount += 1
-        if let existsClipHandler = existsClipHandler {
-            return existsClipHandler(havingUrl)
+    public private(set) var readClipCallCount = 0
+    public var readClipHandler: ((URL) -> (Result<Clip?, ClipStorageError>))?
+    public func readClip(havingUrl url: URL) -> Result<Clip?, ClipStorageError> {
+        readClipCallCount += 1
+        if let readClipHandler = readClipHandler {
+            return readClipHandler(url)
         }
-        return nil
+        fatalError("readClipHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var queryClipCallCount = 0
@@ -296,6 +296,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return deleteTagsHandler(ids)
         }
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteAllTagsCallCount = 0
+    public var deleteAllTagsHandler: (() -> (Result<Void, ClipStorageError>))?
+    public func deleteAllTags() -> Result<Void, ClipStorageError> {
+        deleteAllTagsCallCount += 1
+        if let deleteAllTagsHandler = deleteAllTagsHandler {
+            return deleteAllTagsHandler()
+        }
+        fatalError("deleteAllTagsHandler returns can't have a default value thus its handler must be set")
     }
 }
 

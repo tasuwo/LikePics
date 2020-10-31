@@ -53,14 +53,14 @@ extension LightweightClipStorage: LightweightClipStorageProtocol {
 
     // MARK: Read
 
-    public func existsClip(havingUrl url: URL) -> Bool? {
-        guard let realm = try? Realm(configuration: self.configuration) else { return nil }
+    public func readClip(havingUrl url: URL) -> Result<LightweightClip?, ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
 
-        guard realm.objects(LightweightClipObject.self).filter("url = '\(url.absoluteString)'").first != nil else {
-            return false
+        guard let clip = realm.objects(LightweightClipObject.self).filter("url = '\(url.absoluteString)'").first else {
+            return .success(nil)
         }
 
-        return true
+        return .success(LightweightClip.make(by: clip))
     }
 
     // MARK: Create

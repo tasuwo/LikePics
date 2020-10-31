@@ -90,10 +90,8 @@ extension ClipStorage: ClipStorageProtocol {
 
         // Prepare new objects
 
-        let targetClipId = duplicatedClip?.id ?? clip.id
-
         let newClip = ClipObject()
-        newClip.id = targetClipId
+        newClip.id = clip.id
         newClip.url = clip.url?.absoluteString
         newClip.descriptionText = clip.description
 
@@ -101,7 +99,7 @@ extension ClipStorage: ClipStorageProtocol {
             let newClipItem = ClipItemObject()
 
             newClipItem.id = item.id
-            newClipItem.clipId = targetClipId
+            newClipItem.clipId = clip.id
             newClipItem.clipIndex = item.clipIndex
             newClipItem.imageFileName = item.imageFileName
             newClipItem.imageUrl = item.imageUrl?.absoluteString
@@ -116,13 +114,7 @@ extension ClipStorage: ClipStorageProtocol {
         appendingTags.forEach { newClip.tags.append($0) }
 
         newClip.isHidden = clip.isHidden
-        if let oldClip = duplicatedClip {
-            // TODO: Share時のタグの追加をサポートし、このタグの引継ぎ処理を削除する
-            oldClip.tags.forEach { newClip.tags.append($0) }
-            newClip.registeredAt = oldClip.registeredAt
-        } else {
-            newClip.registeredAt = clip.registeredDate
-        }
+        newClip.registeredAt = clip.registeredDate
         newClip.updatedAt = clip.updatedDate
 
         // Delete
@@ -434,5 +426,11 @@ extension ClipStorage: ClipStorageProtocol {
 
         realm.delete(tags)
         return .success(deleteTarget)
+    }
+
+    public func deleteAllTags() -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+        realm.delete(realm.objects(TagObject.self))
+        return .success(())
     }
 }
