@@ -1511,7 +1511,6 @@
 		2C523CF8254AEE5C0099F6DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				2C0B5C96254D459400FA43F8 /* Integrity */,
 				2C54462C254B1E110088C8BC /* ClipService */,
 				2C27279F24DED44D00FEF1BD /* WebImageResolver */,
 			);
@@ -1541,6 +1540,7 @@
 		2C54462C254B1E110088C8BC /* ClipService */ = {
 			isa = PBXGroup;
 			children = (
+				2C0B5C96254D459400FA43F8 /* Integrity */,
 				2C104106254D967C000DF7DE /* Transport */,
 				2C1040F3254D9651000DF7DE /* Command */,
 				2C1040F2254D964A000DF7DE /* Query */,
