@@ -6,7 +6,6 @@
 
 extension ClipObject {
     static func makeDefault(id: String,
-                            url: String,
                             description: String = "hoge",
                             items: [ClipItemObject] = [],
                             tags: [TagObject] = [],
@@ -16,7 +15,6 @@ extension ClipObject {
     {
         let obj = ClipObject()
         obj.id = id
-        obj.url = url
         obj.descriptionText = description
         items.forEach {
             obj.items.append($0)
@@ -33,6 +31,7 @@ extension ClipObject {
 
 extension ClipItemObject {
     static func makeDefault(id: String = "",
+                            url: String? = nil,
                             clipId: String = "",
                             clipIndex: Int = 0,
                             imageFileName: String = "",
@@ -42,6 +41,7 @@ extension ClipItemObject {
     {
         let obj = ClipItemObject()
         obj.id = id
+        obj.url = url
         obj.clipId = clipId
         obj.clipIndex = clipIndex
         obj.imageFileName = imageFileName
@@ -82,7 +82,6 @@ extension AlbumObject {
 
 extension ReferenceClipObject {
     static func makeDefault(id: String = "",
-                            url: String? = nil,
                             descriptionText: String? = nil,
                             tags: [ReferenceTagObject] = [],
                             isHidden: Bool = false,
@@ -91,7 +90,6 @@ extension ReferenceClipObject {
     {
         let obj = ReferenceClipObject()
         obj.id = id
-        obj.url = url
         obj.descriptionText = descriptionText
         tags.forEach {
             obj.tags.append($0)

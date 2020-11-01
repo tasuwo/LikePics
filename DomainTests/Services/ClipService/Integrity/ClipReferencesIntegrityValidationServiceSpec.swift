@@ -261,16 +261,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
-                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2")),
-                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                .makeDefault(id: "1", description: "my description 1"),
+                                .makeDefault(id: "2", description: "my description 2"),
+                                .makeDefault(id: "3", description: "my description 3"),
                             ])
                         }
                         referenceClipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
-                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: false),
-                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                                .makeDefault(id: "1", description: "my description 1", isDirty: false),
+                                .makeDefault(id: "2", description: "my description 2", isDirty: false),
+                                .makeDefault(id: "3", description: "my description 3", isDirty: false),
                             ])
                         }
                         service.validateAndFixIntegrityIfNeeded()
@@ -292,16 +292,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: false),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false),
+                                    .makeDefault(id: "1", description: "my description 1", isHidden: false),
+                                    .makeDefault(id: "2", description: "my description 2", isHidden: false),
+                                    .makeDefault(id: "3", description: "my description 3", isHidden: false),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false, isDirty: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: true, isDirty: true),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false, isDirty: false),
+                                    .makeDefault(id: "1", description: "my description 1", isHidden: false, isDirty: false),
+                                    .makeDefault(id: "2", description: "my new description 2", isHidden: true, isDirty: true),
+                                    .makeDefault(id: "3", description: "my description 3", isHidden: false, isDirty: false),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -322,21 +322,21 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: false),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false),
+                                    .makeDefault(id: "1", description: "my description 1", isHidden: false),
+                                    .makeDefault(id: "2", description: "my description 2", isHidden: false),
+                                    .makeDefault(id: "3", description: "my description 3", isHidden: false),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false, isDirty: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: true, isDirty: false),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false, isDirty: false),
+                                    .makeDefault(id: "1", description: "my description 1", isHidden: false, isDirty: false),
+                                    .makeDefault(id: "2", description: "my new description 2", isHidden: true, isDirty: false),
+                                    .makeDefault(id: "3", description: "my description 3", isHidden: false, isDirty: false),
                                 ])
                             }
                             referenceClipStorage.createHandler = { clip in
                                 expect(clip).to(equal(.makeDefault(id: "2",
-                                                                   url: URL(string: "https://localhost/new/2"),
+                                                                   description: "my description 2",
                                                                    isHidden: false,
                                                                    isDirty: false)))
 
@@ -361,25 +361,25 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
-                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2")),
-                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
-                                .makeDefault(id: "4", url: URL(string: "https://localhost/new/4")),
+                                .makeDefault(id: "1"),
+                                .makeDefault(id: "2"),
+                                .makeDefault(id: "3"),
+                                .makeDefault(id: "4"),
                             ])
                         }
                         referenceClipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
-                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                                .makeDefault(id: "1", isDirty: false),
+                                .makeDefault(id: "3", isDirty: false),
                             ])
                         }
                         referenceClipStorage.createHandler = { clip in
                             switch clip.id {
                             case "2":
-                                expect(clip).to(equal(.makeDefault(id: "2", url: URL(string: "https://localhost/new/2")!)))
+                                expect(clip).to(equal(.makeDefault(id: "2")))
 
                             case "4":
-                                expect(clip).to(equal(.makeDefault(id: "4", url: URL(string: "https://localhost/new/4")!)))
+                                expect(clip).to(equal(.makeDefault(id: "4")))
 
                             default:
                                 fail("Unexpected clip")
@@ -406,16 +406,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                    .makeDefault(id: "1"),
+                                    .makeDefault(id: "3"),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: true),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
-                                    .makeDefault(id: "4", url: URL(string: "https://localhost/new/4"), isDirty: true),
+                                    .makeDefault(id: "1", isDirty: false),
+                                    .makeDefault(id: "2", isDirty: true),
+                                    .makeDefault(id: "3", isDirty: false),
+                                    .makeDefault(id: "4", isDirty: true),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -436,16 +436,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                    .makeDefault(id: "1"),
+                                    .makeDefault(id: "3"),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
-                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: false),
-                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
-                                    .makeDefault(id: "4", url: URL(string: "https://localhost/new/4"), isDirty: false),
+                                    .makeDefault(id: "1", isDirty: false),
+                                    .makeDefault(id: "2", isDirty: false),
+                                    .makeDefault(id: "3", isDirty: false),
+                                    .makeDefault(id: "4", isDirty: false),
                                 ])
                             }
                             referenceClipStorage.deleteClipsHandler = { clipIds in
