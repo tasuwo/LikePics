@@ -189,8 +189,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
     public func cleanAllClips() -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
-        // TODO: 効率化
-        for clip in realm.objects(ReferenceClipObject.self) {
+        for clip in realm.objects(ReferenceClipObject.self).filter("isDirty = true") {
             clip.isDirty = false
         }
         return .success(())

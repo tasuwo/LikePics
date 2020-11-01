@@ -79,3 +79,39 @@ extension AlbumObject {
         return obj
     }
 }
+
+extension ReferenceClipObject {
+    static func makeDefault(id: String = "",
+                            url: String? = nil,
+                            descriptionText: String? = nil,
+                            tags: [ReferenceTagObject] = [],
+                            isHidden: Bool = false,
+                            registeredAt: Date = Date(timeIntervalSince1970: 0),
+                            isDirty: Bool = false) -> ReferenceClipObject
+    {
+        let obj = ReferenceClipObject()
+        obj.id = id
+        obj.url = url
+        obj.descriptionText = descriptionText
+        tags.forEach {
+            obj.tags.append($0)
+        }
+        obj.isHidden = isHidden
+        obj.registeredAt = registeredAt
+        obj.isDirty = isDirty
+        return obj
+    }
+}
+
+extension ReferenceTagObject {
+    static func makeDefault(id: String = "",
+                            name: String = "",
+                            isDirty: Bool = false) -> ReferenceTagObject
+    {
+        let obj = ReferenceTagObject()
+        obj.id = id
+        obj.name = name
+        obj.isDirty = isDirty
+        return obj
+    }
+}

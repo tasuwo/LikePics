@@ -12,6 +12,7 @@
 		21F6427C98F672FC692809BC /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */; };
 		25D157F00CE2CE137E028F2E /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DD982A953CB84789D6B8AF /* Pods_Domain.framework */; };
 		2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02174F2533704400AE4A43 /* Object+makeDefault.swift */; };
+		2C051278254E5740007964B7 /* ReferenceClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */; };
 		2C05969A25198C90008F11F5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C05969C25198C90008F11F5 /* Localizable.strings */; };
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
@@ -560,6 +561,7 @@
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
 		2C02174F2533704400AE4A43 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
+		2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageSpec.swift; sourceTree = "<group>"; };
 		2C05969B25198C90008F11F5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596A525198C95008F11F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -2103,6 +2105,7 @@
 			children = (
 				2CF332592507D327007EF072 /* ClipStorageSpec.swift */,
 				2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */,
+				2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -3602,6 +3605,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C051278254E5740007964B7 /* ReferenceClipStorageSpec.swift in Sources */,
 				2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */,
 				2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */,
 				2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */,
