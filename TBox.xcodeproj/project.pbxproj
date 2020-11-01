@@ -1101,13 +1101,13 @@
 			path = Command;
 			sourceTree = "<group>";
 		};
-		2C104106254D967C000DF7DE /* Transport */ = {
+		2C104106254D967C000DF7DE /* Persist */ = {
 			isa = PBXGroup;
 			children = (
 				2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */,
 				2C104107254D968E000DF7DE /* TemporaryClipsTransportService.swift */,
 			);
-			path = Transport;
+			path = Persist;
 			sourceTree = "<group>";
 		};
 		2C1524302532EAFA00C51847 /* Extensions */ = {
@@ -1527,7 +1527,7 @@
 			isa = PBXGroup;
 			children = (
 				2C0B5C96254D459400FA43F8 /* Integrity */,
-				2C104106254D967C000DF7DE /* Transport */,
+				2C104106254D967C000DF7DE /* Persist */,
 				2C1040F3254D9651000DF7DE /* Command */,
 				2C1040F2254D964A000DF7DE /* Query */,
 			);
