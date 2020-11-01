@@ -10,15 +10,18 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    var currentDataTask: URLSessionDataTask?
-
+    public var url: URL?
     public var image: UIImage? {
         didSet {
             guard let image = self.image else {
                 self.imageView.image = nil
                 return
             }
-            self.imageView.image = image
+            UIView.transition(with: self.imageView,
+                              duration: 0.2,
+                              options: .transitionCrossDissolve,
+                              animations: { self.imageView.image = image },
+                              completion: nil)
         }
     }
 

@@ -19,8 +19,6 @@ protocol ClipTargetFinderViewProtocol: AnyObject {
     func notifySavedImagesSuccessfully()
 }
 
-typealias OrderingSelectableImage = (index: Int, meta: ClipItemSource)
-
 public class ClipTargetFinderPresenter {
     enum PresenterError: Error {
         case failedToFindImages(WebImageUrlFinderError)
@@ -32,7 +30,7 @@ public class ClipTargetFinderPresenter {
     private static let maxDelayMs = 5000
     private static let incrementalDelayMs = 1000
 
-    private(set) var selectableImages: [ClipItemSource] = [] {
+    private(set) var selectableImages: [SelectableImage] = [] {
         didSet {
             self.selectedIndices = []
             self.view?.resetSelection()
@@ -64,13 +62,13 @@ public class ClipTargetFinderPresenter {
 
     // MARK: - Lifecycle
 
-    public init(url: URL,
-                clipStore: ClipStorable,
-                clipViewer: ClipViewable,
-                finder: WebImageUrlFinderProtocol,
-                currentDateResolver: @escaping () -> Date,
-                isEnabledOverwrite: Bool = false,
-                urlSession: URLSession = URLSession.shared)
+    init(url: URL,
+         clipStore: ClipStorable,
+         clipViewer: ClipViewable,
+         finder: WebImageUrlFinderProtocol,
+         currentDateResolver: @escaping () -> Date,
+         isEnabledOverwrite: Bool = false,
+         urlSession: URLSession = URLSession.shared)
     {
         self.url = url
         self.clipStore = clipStore
@@ -79,6 +77,22 @@ public class ClipTargetFinderPresenter {
         self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
         self.urlSession = urlSession
+    }
+
+    public convenience init(url: URL,
+                            clipStore: ClipStorable,
+                            clipViewer: ClipViewable,
+                            currentDateResolver: @escaping () -> Date,
+                            isEnabledOverwrite: Bool = false,
+                            urlSession: URLSession = URLSession.shared)
+    {
+        self.init(url: url,
+                  clipStore: clipStore,
+                  clipViewer: clipViewer,
+                  finder: WebImageUrlFinder(),
+                  currentDateResolver: currentDateResolver,
+                  isEnabledOverwrite: isEnabledOverwrite,
+                  urlSession: urlSession)
     }
 
     // MARK: - Methods
@@ -128,12 +142,8 @@ public class ClipTargetFinderPresenter {
         self.view?.startLoading()
 
         self.resolveImageUrls(at: self.url)
-            .flatMap { [weak self] urls -> AnyPublisher<[ClipItemSource], PresenterError> in
-                guard let self = self else {
-                    return Fail(error: PresenterError.internalError)
-                        .eraseToAnyPublisher()
-                }
-                return self.fetchImages(atUrls: urls)
+            .map { [weak self] sources in
+                self?.resolveImageSizes(atUrlSets: sources)
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -146,7 +156,7 @@ public class ClipTargetFinderPresenter {
                     break
                 }
             }, receiveValue: { [weak self] foundImages in
-                self?.selectableImages = foundImages
+                self?.selectableImages = foundImages ?? []
                 self?.view?.endLoading()
                 self?.view?.reloadList()
             })
@@ -156,12 +166,19 @@ public class ClipTargetFinderPresenter {
     func saveSelectedImages() {
         self.view?.startLoading()
 
-        let selections: [OrderingSelectableImage] = self.selectedIndices.enumerated()
+        let selections: [(index: Int, SelectableImage)] = self.selectedIndices.enumerated()
             .map { ($0.offset, self.selectableImages[$0.element]) }
 
-        self.save(target: selections)
-            .publisher
-            .eraseToAnyPublisher()
+        self.fetchImages(for: selections)
+            .flatMap { [weak self] sources -> AnyPublisher<Void, PresenterError> in
+                guard let self = self else {
+                    return Fail(error: PresenterError.internalError)
+                        .eraseToAnyPublisher()
+                }
+                return self.save(target: sources)
+                    .publisher
+                    .eraseToAnyPublisher()
+            }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -202,7 +219,7 @@ public class ClipTargetFinderPresenter {
 
     // MARK: Load Images
 
-    private func resolveImageUrls(at url: URL) -> Future<[URL], PresenterError> {
+    private func resolveImageUrls(at url: URL) -> Future<[WebImageUrlSet], PresenterError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
@@ -225,27 +242,44 @@ public class ClipTargetFinderPresenter {
         }
     }
 
-    private func fetchImages(atUrls urls: [URL]) -> AnyPublisher<[ClipItemSource], PresenterError> {
-        do {
-            let publishers: [AnyPublisher<ClipItemSource, Never>] = try urls
-                .map { [weak self] url in
-                    guard let self = self else { throw PresenterError.internalError }
-                    return ClipItemSource.make(by: url, using: self.urlSession)
+    private func resolveImageSizes(atUrlSets urlSets: [WebImageUrlSet]) -> [SelectableImage] {
+        return urlSets
+            .compactMap { urlSet in
+                guard let imageSource = CGImageSourceCreateWithURL(urlSet.url as CFURL, nil) else {
+                    return nil
                 }
-            return Publishers.MergeMany(publishers)
-                .filter({ $0.isValid })
-                .collect()
-                .mapError { _ in PresenterError.internalError }
-                .eraseToAnyPublisher()
-        } catch {
-            return Fail(error: PresenterError.internalError)
-                .eraseToAnyPublisher()
-        }
+                guard
+                    let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
+                    let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
+                    let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+                else {
+                    return nil
+                }
+                return SelectableImage(url: urlSet.url,
+                                       alternativeUrl: urlSet.alternativeUrl,
+                                       height: pixelHeight,
+                                       width: pixelWidth)
+            }
+            .filter { $0.isValid }
+    }
+
+    private func fetchImages(for selections: [(index: Int, image: SelectableImage)]) -> AnyPublisher<[(index: Int, ClipItemSource)], PresenterError> {
+        let publishers: [AnyPublisher<(index: Int, ClipItemSource), Never>] = selections
+            .compactMap { [weak self] selection in
+                guard let self = self else { return nil }
+                return ClipItemSource.make(by: selection.image, using: self.urlSession)
+                    .map { (selection.index, $0) }
+                    .eraseToAnyPublisher()
+            }
+        return Publishers.MergeMany(publishers)
+            .collect()
+            .mapError { _ in PresenterError.internalError }
+            .eraseToAnyPublisher()
     }
 
     // MARK: Save Images
 
-    private func save(target: [OrderingSelectableImage]) -> Result<Void, PresenterError> {
+    private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
         let clipId = UUID().uuidString
         let items = target.map {
@@ -253,7 +287,7 @@ public class ClipTargetFinderPresenter {
                      url: self.url,
                      clipId: clipId,
                      index: $0.index,
-                     source: $0.meta,
+                     source: $0.source,
                      currentDate: currentDate)
         }
         let clip = Clip(clipId: clipId,
@@ -261,7 +295,7 @@ public class ClipTargetFinderPresenter {
                         tags: [],
                         registeredDate: currentDate,
                         currentDate: currentDate)
-        let data = target.map { ($0.meta.fileName, $0.meta.data) }
+        let data = target.map { ($0.source.fileName, $0.source.data) }
 
         switch self.clipStore.create(clip: clip, withData: data, forced: false) {
         case .success:

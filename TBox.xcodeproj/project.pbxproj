@@ -21,6 +21,8 @@
 		2C0512A3254EECF9007964B7 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3C955E24DF9B0200471813 /* WebImageProviderPreset.swift */; };
 		2C0512A4254EECF9007964B7 /* WebImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8E24DF982800692301 /* WebImageProvider.swift */; };
 		2C0512B7254EED19007964B7 /* OnMainThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A724DED57D00FEF1BD /* OnMainThread.swift */; };
+		2C0512FA254EF0F1007964B7 /* WebImageUrlSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0512F9254EF0F1007964B7 /* WebImageUrlSet.swift */; };
+		2C051305254F00B2007964B7 /* SelectableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C051304254F00B2007964B7 /* SelectableImage.swift */; };
 		2C05969A25198C90008F11F5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C05969C25198C90008F11F5 /* Localizable.strings */; };
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
@@ -562,6 +564,8 @@
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
 		2C02174F2533704400AE4A43 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
 		2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageSpec.swift; sourceTree = "<group>"; };
+		2C0512F9254EF0F1007964B7 /* WebImageUrlSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlSet.swift; sourceTree = "<group>"; };
+		2C051304254F00B2007964B7 /* SelectableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableImage.swift; sourceTree = "<group>"; };
 		2C05969B25198C90008F11F5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596A525198C95008F11F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -1273,6 +1277,8 @@
 			children = (
 				2C3506EC25179545009248C6 /* ClipItemSource.swift */,
 				2C0B5CC8254D651C00FA43F8 /* TransferringClip.swift */,
+				2C0512F9254EF0F1007964B7 /* WebImageUrlSet.swift */,
+				2C051304254F00B2007964B7 /* SelectableImage.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -3361,6 +3367,8 @@
 				2C0512B7254EED19007964B7 /* OnMainThread.swift in Sources */,
 				2C6E09A024E6DD4400B541D9 /* ClipTargetFinderViewController.swift in Sources */,
 				2C0512A0254EECF9007964B7 /* WebImageProvidingService_Twitter.swift in Sources */,
+				2C0512FA254EF0F1007964B7 /* WebImageUrlSet.swift in Sources */,
+				2C051305254F00B2007964B7 /* SelectableImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

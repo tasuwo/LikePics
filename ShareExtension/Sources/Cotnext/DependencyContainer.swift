@@ -15,7 +15,6 @@ protocol ViewControllerFactory {
 class DependencyContainer {
     private let clipStore: ClipStorable
     private let clipViewer: ClipViewable
-    private let finder = WebImageUrlFinder()
     private let currentDateResolver = { Date() }
 
     init() throws {
@@ -43,7 +42,6 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipTargetFinderPresenter(url: url,
                                                   clipStore: self.clipStore,
                                                   clipViewer: self.clipViewer,
-                                                  finder: self.finder,
                                                   currentDateResolver: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }

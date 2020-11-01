@@ -7,25 +7,25 @@ import Erik
 import WebKit
 
 /// @mockable
-public protocol WebImageUrlFinderProtocol {
+protocol WebImageUrlFinderProtocol {
     var webView: WKWebView { get }
-    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void)
+    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void)
 }
 
-public class WebImageUrlFinder {
-    public let webView: WKWebView
+class WebImageUrlFinder {
+    let webView: WKWebView
     private let browser: Erik
 
     private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
-    public init(browserSize: CGSize) {
+    init(browserSize: CGSize) {
         self.webView = WKWebView(frame: .init(origin: .zero, size: browserSize))
         self.browser = Erik(webView: self.webView)
     }
 
-    public convenience init() {
+    convenience init() {
         self.init(browserSize: .init(width: 500, height: 1000))
     }
 
@@ -85,7 +85,7 @@ public class WebImageUrlFinder {
 extension WebImageUrlFinder: WebImageUrlFinderProtocol {
     // MARK: - WebImageUrlFinderProtocol
 
-    public func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
+    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Result<[WebImageUrlSet], WebImageUrlFinderError>) -> Void) {
         var preprocessedStep: AnyPublisher<Void, WebImageUrlFinderError>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = self.openPage(url: url)
@@ -117,13 +117,15 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                     break
                 }
             }, receiveValue: { document in
-                let imageUrls: [URL] = document
+                let imageUrls: [WebImageUrlSet] = document
                     .querySelectorAll("img")
                     .compactMap { $0["src"] }
                     .compactMap { URL(string: $0) }
                     .map {
-                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else { return $0 }
-                        return provider.resolveHighQualityImageUrl(of: $0) ?? $0
+                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
+                            return WebImageUrlSet(url: $0, alternativeUrl: nil)
+                        }
+                        return WebImageUrlSet(url: $0, alternativeUrl: provider.resolveHighQualityImageUrl(of: $0))
                     }
                 completion(.success(imageUrls))
             })

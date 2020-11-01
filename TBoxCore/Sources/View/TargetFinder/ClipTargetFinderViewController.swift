@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
@@ -13,6 +14,12 @@ public protocol ClipTargetFinderDelegate: AnyObject {
     func didFinish(_ viewController: ClipTargetFinderViewController)
 }
 
+protocol SelectableImageCellDataSource {
+    var url: URL { get }
+    var height: CGFloat { get }
+    var width: CGFloat { get }
+}
+
 public class ClipTargetFinderViewController: UIViewController {
     private let presenter: ClipTargetFinderPresenter
     private let emptyMessageView = EmptyMessageView()
@@ -21,6 +28,7 @@ public class ClipTargetFinderViewController: UIViewController {
     private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(reloadAction))
 
     private weak var delegate: ClipTargetFinderDelegate?
+    private var cancellableBag = Set<AnyCancellable>()
 
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
@@ -40,6 +48,51 @@ public class ClipTargetFinderViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Methods
+
+    // MARK: Downsampling
+
+    private static func calcScale(forSize source: CGSize, toFit destination: CGSize) -> CGFloat {
+        let widthScale = destination.width / source.width
+        let heightScale = destination.height / source.height
+        return min(widthScale, heightScale)
+    }
+
+    private static func calcDownsamplingSize(forOriginalSize imageSize: CGSize) -> CGSize {
+        let screenSize = UIScreen.main.bounds.size
+        let rotatedScreenSize = CGSize(width: UIScreen.main.bounds.size.height,
+                                       height: UIScreen.main.bounds.size.width)
+
+        let scaleToFitScreen = max(self.calcScale(forSize: imageSize, toFit: screenSize),
+                                   self.calcScale(forSize: imageSize, toFit: rotatedScreenSize))
+        let targetScale = min(1, scaleToFitScreen)
+
+        return imageSize.scaled(by: targetScale)
+    }
+
+    private static func downsampledImage(data: Data, to pointSize: CGSize) -> UIImage? {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+            return nil
+        }
+
+        let maxDimensionInPixels = max(pointSize.width, pointSize.height)
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+        ] as CFDictionary
+
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
+            return nil
+        }
+
+        return UIImage(cgImage: downsampledImage)
+    }
+
+    // MARK: Lifecycle
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -54,8 +107,6 @@ public class ClipTargetFinderViewController: UIViewController {
 
         self.presenter.findImages()
     }
-
-    // MARK: - Methods
 
     // MARK: NavigationBar
 
@@ -226,7 +277,22 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
         guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return cell }
 
         let meta = self.presenter.selectableImages[indexPath.row]
-        cell.image = meta.thumbnail
+        cell.url = meta.url
+
+        URLSession.shared
+            .dataTaskPublisher(for: self.presenter.selectableImages[indexPath.row].url)
+            .map { data, _ -> UIImage? in
+                let downsampleSize = Self.calcDownsamplingSize(forOriginalSize: CGSize(width: meta.width, height: meta.height))
+                return Self.downsampledImage(data: data, to: downsampleSize)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                // NOP
+            }, receiveValue: { image in
+                guard cell.url == meta.url else { return }
+                cell.image = image
+            })
+            .store(in: &self.cancellableBag)
 
         if let indexInSelection = self.presenter.selectedIndices.firstIndex(of: indexPath.row) {
             cell.selectionOrder = indexInSelection + 1
@@ -256,5 +322,11 @@ extension ClipTargetFinderViewController: EmptyMessageViewDelegate {
 
     public func didTapActionButton(_ view: EmptyMessageView) {
         self.presenter.findImages()
+    }
+}
+
+private extension CGSize {
+    func scaled(by scale: CGFloat) -> Self {
+        return .init(width: self.width * scale, height: self.height * scale)
     }
 }

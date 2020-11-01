@@ -235,7 +235,6 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
                                                   clipStore: self.clipStore,
                                                   clipViewer: self.clipViewer,
-                                                  finder: WebImageUrlFinder(),
                                                   currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
         let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)

@@ -56,7 +56,9 @@ extension WebImageProvidingService {
                                 .eraseToAnyPublisher()
                         }
 
-                        RootLogger.shared.write(ConsoleLog(level: .debug, message: "Twitter WebImage loading. Transition: \(state.label) => \(nextState.label)"))
+                        RootLogger.shared.write(ConsoleLog(level: .debug, message: """
+                        Twitter WebImage loading. Transition: \(state.label) => \(nextState.label)
+                        """))
 
                         switch nextState {
                         case .`init`:
@@ -101,7 +103,11 @@ extension WebImageProvidingService {
             }
 
             static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, WebImageUrlFinderError> {
-                return Future { promise in
+                return Future { [weak browser] promise in
+                    guard let browser = browser else {
+                        promise(.failure(.internalError))
+                        return
+                    }
                     browser.currentContent { document, error in
                         if let error = error {
                             promise(.failure(.networkError(error)))
@@ -214,8 +220,6 @@ extension WebImageProvidingService.Twitter {
     }
 
     public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
-        // TODO: URLが存在しなかった場合Fallbackする
-
         guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
             return nil
         }
