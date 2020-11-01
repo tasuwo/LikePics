@@ -6,10 +6,6 @@ name: Erik, nameSpecified:
 body: The MIT License (MIT…
 version: 5.0.0
 
-name: Erik, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.0.0
-
 name: Kanna, nameSpecified: 
 body: The MIT License (MIT…
 version: 5.2.3
@@ -17,14 +13,6 @@ version: 5.2.3
 name: Kanna, nameSpecified: 
 body: The MIT License (MIT…
 version: 5.2.3
-
-name: Kanna, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.2.3
-
-name: Kingfisher, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.15.6
 
 name: Kingfisher, nameSpecified: 
 body: The MIT License (MIT…

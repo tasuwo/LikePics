@@ -4,9 +4,7 @@
 
 import Combine
 @testable import Domain
-import Erik
 import UIKit
-import WebKit
 
 public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     public init() { }
@@ -928,103 +926,6 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         setCallCount += 1
         if let setHandler = setHandler {
             setHandler(showHiddenItems)
-        }
-    }
-}
-
-public class WebImageProviderMock: WebImageProvider {
-    public init() { }
-
-    public private(set) static var isProvidingCallCount = 0
-    public static var isProvidingHandler: ((URL) -> (Bool))?
-    public static func isProviding(url: URL) -> Bool {
-        isProvidingCallCount += 1
-        if let isProvidingHandler = isProvidingHandler {
-            return isProvidingHandler(url)
-        }
-        return false
-    }
-
-    public private(set) static var modifyUrlForProcessingCallCount = 0
-    public static var modifyUrlForProcessingHandler: ((URL) -> (URL))?
-    public static func modifyUrlForProcessing(_ url: URL) -> URL {
-        modifyUrlForProcessingCallCount += 1
-        if let modifyUrlForProcessingHandler = modifyUrlForProcessingHandler {
-            return modifyUrlForProcessingHandler(url)
-        }
-        return URL(fileURLWithPath: "")
-    }
-
-    public private(set) static var shouldPreprocessCallCount = 0
-    public static var shouldPreprocessHandler: ((URL) -> (Bool))?
-    public static func shouldPreprocess(for url: URL) -> Bool {
-        shouldPreprocessCallCount += 1
-        if let shouldPreprocessHandler = shouldPreprocessHandler {
-            return shouldPreprocessHandler(url)
-        }
-        return false
-    }
-
-    public private(set) static var preprocessCallCount = 0
-    public static var preprocessHandler: ((Erik, Document) -> (AnyPublisher<Void, WebImageUrlFinderError>))?
-    public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
-        preprocessCallCount += 1
-        if let preprocessHandler = preprocessHandler {
-            return preprocessHandler(browser, document)
-        }
-        fatalError("preprocessHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) static var resolveHighQualityImageUrlCallCount = 0
-    public static var resolveHighQualityImageUrlHandler: ((URL) -> (URL?))?
-    public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
-        resolveHighQualityImageUrlCallCount += 1
-        if let resolveHighQualityImageUrlHandler = resolveHighQualityImageUrlHandler {
-            return resolveHighQualityImageUrlHandler(url)
-        }
-        return nil
-    }
-
-    public private(set) static var shouldModifyRequestCallCount = 0
-    public static var shouldModifyRequestHandler: ((URL) -> (Bool))?
-    public static func shouldModifyRequest(for url: URL) -> Bool {
-        shouldModifyRequestCallCount += 1
-        if let shouldModifyRequestHandler = shouldModifyRequestHandler {
-            return shouldModifyRequestHandler(url)
-        }
-        return false
-    }
-
-    public private(set) static var modifyRequestCallCount = 0
-    public static var modifyRequestHandler: ((URLRequest) -> (URLRequest))?
-    public static func modifyRequest(_ request: URLRequest) -> URLRequest {
-        modifyRequestCallCount += 1
-        if let modifyRequestHandler = modifyRequestHandler {
-            return modifyRequestHandler(request)
-        }
-        fatalError("modifyRequestHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class WebImageUrlFinderProtocolMock: WebImageUrlFinderProtocol {
-    public init() { }
-    public init(webView: WKWebView) {
-        self._webView = webView
-    }
-
-    public private(set) var webViewSetCallCount = 0
-    private var _webView: WKWebView! { didSet { webViewSetCallCount += 1 } }
-    public var webView: WKWebView {
-        get { return _webView }
-        set { _webView = newValue }
-    }
-
-    public private(set) var findImageUrlsCallCount = 0
-    public var findImageUrlsHandler: ((URL, Int, @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) -> Void)?
-    public func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[URL], WebImageUrlFinderError>) -> Void) {
-        findImageUrlsCallCount += 1
-        if let findImageUrlsHandler = findImageUrlsHandler {
-            findImageUrlsHandler(url, milliseconds, completion)
         }
     }
 }

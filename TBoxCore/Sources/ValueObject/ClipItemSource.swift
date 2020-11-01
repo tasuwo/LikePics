@@ -31,7 +31,7 @@ struct ClipItemSource {
                 return Self.fallbackFileExtension
             }
         }()
-        let name = WebImageNameResolver.resolveFileName(from: self.url) ?? UUID().uuidString
+        let name = ImageNameResolver.resolveFileName(from: self.url) ?? UUID().uuidString
         return "\(name).\(ext)"
     }
 

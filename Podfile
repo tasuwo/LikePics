@@ -27,8 +27,6 @@ target 'Persistence' do
 end
 
 target 'Domain' do
-  pod 'Erik', '~> 5.0.0'
-
   target 'DomainTests' do
     inherit! :search_paths
     test_shared_pods
@@ -48,9 +46,7 @@ target 'TBoxUIKit' do
 end
 
 target 'TBoxCore' do
-end
-
-target 'TBoxUIKitCatalog' do
+  pod 'Erik', '~> 5.0.0'
 end
 
 post_install do |installer|

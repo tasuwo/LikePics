@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public enum WebImageNameResolver {
+public enum ImageNameResolver {
     public static func resolveFileName(from url: URL) -> String? {
         guard let lastComponent = url.pathComponents.last else {
             return nil
