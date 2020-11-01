@@ -163,10 +163,12 @@ public class ClipReferencesIntegrityValidationService {
         let extraClipIds = Set(referenceClips.keys)
             .subtracting(Set(clips.keys))
             .filter { referenceClips[$0]?.isDirty == false }
-        if case let .failure(error) = self.referenceClipStorage.deleteClips(having: Array(extraClipIds)) {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete extra clips: \(error.localizedDescription)
-            """))
+        if !extraClipIds.isEmpty {
+            if case let .failure(error) = self.referenceClipStorage.deleteClips(having: Array(extraClipIds)) {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to delete extra clips: \(error.localizedDescription)
+                """))
+            }
         }
 
         try self.referenceClipStorage.commitTransaction()

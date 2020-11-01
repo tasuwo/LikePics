@@ -60,6 +60,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         expect(referenceClipStorage.updateTagCallCount).to(equal(0))
                         expect(referenceClipStorage.createTagCallCount).to(equal(0))
                         expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                        expect(referenceClipStorage.createCallCount).to(equal(0))
                         expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                         expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                     }
@@ -91,6 +92,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                             expect(referenceClipStorage.updateTagCallCount).to(equal(0))
                             expect(referenceClipStorage.createTagCallCount).to(equal(0))
                             expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
                             expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                             expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                         }
@@ -132,11 +134,12 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                             }
                             service.validateAndFixIntegrityIfNeeded()
                         }
-                        it("整合のために修正する") {
+                        it("整合のためにタグを更新する") {
                             expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
                             expect(referenceClipStorage.updateTagCallCount).to(equal(2))
                             expect(referenceClipStorage.createTagCallCount).to(equal(0))
                             expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
                             expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                             expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                         }
@@ -180,6 +183,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         expect(referenceClipStorage.updateTagCallCount).to(equal(0))
                         expect(referenceClipStorage.createTagCallCount).to(equal(2))
                         expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                        expect(referenceClipStorage.createCallCount).to(equal(0))
                         expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                         expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                     }
@@ -210,6 +214,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                             expect(referenceClipStorage.updateTagCallCount).to(equal(0))
                             expect(referenceClipStorage.createTagCallCount).to(equal(0))
                             expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
                             expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                             expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                         }
@@ -243,6 +248,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                             expect(referenceClipStorage.updateTagCallCount).to(equal(0))
                             expect(referenceClipStorage.createTagCallCount).to(equal(0))
                             expect(referenceClipStorage.deleteTagsCallCount).to(equal(1))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
                             expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
                             expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
                         }
@@ -251,7 +257,215 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
             }
 
             describe("クリップ") {
-                // TODO:
+                context("クリップの整合性が取れている") {
+                    beforeEach {
+                        clipStorage.readAllClipsHandler = {
+                            return .success([
+                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
+                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2")),
+                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                            ])
+                        }
+                        referenceClipStorage.readAllClipsHandler = {
+                            return .success([
+                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
+                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: false),
+                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                            ])
+                        }
+                        service.validateAndFixIntegrityIfNeeded()
+                    }
+                    it("何もしない") {
+                        expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                        expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                        expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                        expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                        expect(referenceClipStorage.createCallCount).to(equal(0))
+                        expect(referenceClipStorage.deleteClipsCallCount).to(equal(0))
+                        expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                        expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                    }
+                }
+
+                context("内容が異なるクリップが存在する") {
+                    context("Dirtyフラグが立っている") {
+                        beforeEach {
+                            clipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: false),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false),
+                                ])
+                            }
+                            referenceClipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false, isDirty: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: true, isDirty: true),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false, isDirty: false),
+                                ])
+                            }
+                            service.validateAndFixIntegrityIfNeeded()
+                        }
+                        it("何もしない") {
+                            expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteClipsCallCount).to(equal(0))
+                            expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                        }
+                    }
+
+                    context("Dirtyフラグが立っていない") {
+                        beforeEach {
+                            clipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: false),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false),
+                                ])
+                            }
+                            referenceClipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isHidden: false, isDirty: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isHidden: true, isDirty: false),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isHidden: false, isDirty: false),
+                                ])
+                            }
+                            referenceClipStorage.createHandler = { clip in
+                                expect(clip).to(equal(.makeDefault(id: "2",
+                                                                   url: URL(string: "https://localhost/new/2"),
+                                                                   isHidden: false,
+                                                                   isDirty: false)))
+
+                                return .success(())
+                            }
+                            service.validateAndFixIntegrityIfNeeded()
+                        }
+                        it("整合のためにクリップを更新する") {
+                            expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(1))
+                            expect(referenceClipStorage.deleteClipsCallCount).to(equal(0))
+                            expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                        }
+                    }
+                }
+
+                context("クリップが不足している") {
+                    beforeEach {
+                        clipStorage.readAllClipsHandler = {
+                            return .success([
+                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
+                                .makeDefault(id: "2", url: URL(string: "https://localhost/new/2")),
+                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                .makeDefault(id: "4", url: URL(string: "https://localhost/new/4")),
+                            ])
+                        }
+                        referenceClipStorage.readAllClipsHandler = {
+                            return .success([
+                                .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
+                                .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                            ])
+                        }
+                        referenceClipStorage.createHandler = { clip in
+                            switch clip.id {
+                            case "2":
+                                expect(clip).to(equal(.makeDefault(id: "2", url: URL(string: "https://localhost/new/2")!)))
+
+                            case "4":
+                                expect(clip).to(equal(.makeDefault(id: "4", url: URL(string: "https://localhost/new/4")!)))
+
+                            default:
+                                fail("Unexpected clip")
+                            }
+
+                            return .success(())
+                        }
+                        service.validateAndFixIntegrityIfNeeded()
+                    }
+                    it("整合のためにクリップを作成する") {
+                        expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                        expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                        expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                        expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                        expect(referenceClipStorage.createCallCount).to(equal(2))
+                        expect(referenceClipStorage.deleteClipsCallCount).to(equal(0))
+                        expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                        expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                    }
+                }
+
+                context("余分なクリップが存在する") {
+                    context("Dirtyフラグが立っている") {
+                        beforeEach {
+                            clipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                ])
+                            }
+                            referenceClipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: true),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                                    .makeDefault(id: "4", url: URL(string: "https://localhost/new/4"), isDirty: true),
+                                ])
+                            }
+                            service.validateAndFixIntegrityIfNeeded()
+                        }
+                        it("何もしない") {
+                            expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteClipsCallCount).to(equal(0))
+                            expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                        }
+                    }
+
+                    context("Dirtyフラグが立っていない") {
+                        beforeEach {
+                            clipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1")),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3")),
+                                ])
+                            }
+                            referenceClipStorage.readAllClipsHandler = {
+                                return .success([
+                                    .makeDefault(id: "1", url: URL(string: "https://localhost/new/1"), isDirty: false),
+                                    .makeDefault(id: "2", url: URL(string: "https://localhost/new/2"), isDirty: false),
+                                    .makeDefault(id: "3", url: URL(string: "https://localhost/new/3"), isDirty: false),
+                                    .makeDefault(id: "4", url: URL(string: "https://localhost/new/4"), isDirty: false),
+                                ])
+                            }
+                            referenceClipStorage.deleteClipsHandler = { clipIds in
+                                expect(clipIds).to(equal(["2", "4"]))
+                                return .success(())
+                            }
+                            service.validateAndFixIntegrityIfNeeded()
+                        }
+                        it("整合のためにクリップを削除する") {
+                            expect(referenceClipStorage.beginTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.updateTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.createTagCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteTagsCallCount).to(equal(0))
+                            expect(referenceClipStorage.createCallCount).to(equal(0))
+                            expect(referenceClipStorage.deleteClipsCallCount).to(equal(1))
+                            expect(referenceClipStorage.commitTransactionCallCount).to(equal(2))
+                            expect(referenceClipStorage.cancelTransactionIfNeededCallCount).to(equal(0))
+                        }
+                    }
+                }
             }
         }
     }
