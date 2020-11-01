@@ -295,7 +295,7 @@ public enum ClipInformationLayoutFactory {
     }
 
     private static func headerProvider(delegate: ClipInformationSectionHeaderDelegate?) -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
-        return { collectionView, kind, indexPath -> UICollectionReusableView? in
+        return { [weak delegate] collectionView, kind, indexPath -> UICollectionReusableView? in
             let identifier: String
             switch ElementKind(rawValue: kind) {
             case .layoutHeader:

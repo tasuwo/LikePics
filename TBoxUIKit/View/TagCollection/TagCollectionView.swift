@@ -32,8 +32,9 @@ public class TagCollectionView: UICollectionView {
     // MARK: - Methods
 
     public static func cellProvider(dataSource: TagCollectionViewDataSource) -> (UICollectionView, IndexPath, Tag) -> UICollectionViewCell? {
-        return { collectionView, indexPath, tag -> UICollectionViewCell? in
+        return { [weak dataSource] collectionView, indexPath, tag -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
+            guard let dataSource = dataSource else { return dequeuedCell }
             guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
             cell.title = tag.name
