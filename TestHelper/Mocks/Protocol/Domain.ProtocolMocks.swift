@@ -475,14 +475,14 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) var deleteAllTagsCallCount = 0
-    public var deleteAllTagsHandler: (() -> (Result<Void, ClipStorageError>))?
-    public func deleteAllTags() -> Result<Void, ClipStorageError> {
-        deleteAllTagsCallCount += 1
-        if let deleteAllTagsHandler = deleteAllTagsHandler {
-            return deleteAllTagsHandler()
+    public private(set) var deleteAllCallCount = 0
+    public var deleteAllHandler: (() -> (Result<Void, ClipStorageError>))?
+    public func deleteAll() -> Result<Void, ClipStorageError> {
+        deleteAllCallCount += 1
+        if let deleteAllHandler = deleteAllHandler {
+            return deleteAllHandler()
         }
-        fatalError("deleteAllTagsHandler returns can't have a default value thus its handler must be set")
+        fatalError("deleteAllHandler returns can't have a default value thus its handler must be set")
     }
 }
 
@@ -523,6 +523,15 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
         deleteAllCallCount += 1
         if let deleteAllHandler = deleteAllHandler {
             try deleteAllHandler(clipId)
+        }
+    }
+
+    public private(set) var deleteAll1CallCount = 0
+    public var deleteAll1Handler: (() throws -> Void)?
+    public func deleteAll() throws {
+        deleteAll1CallCount += 1
+        if let deleteAll1Handler = deleteAll1Handler {
+            try deleteAll1Handler()
         }
     }
 
@@ -600,6 +609,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
             return readAllClipsHandler()
         }
         fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllDirtyClipsCallCount = 0
+    public var readAllDirtyClipsHandler: (() -> (Result<[ReferenceClip], ClipStorageError>))?
+    public func readAllDirtyClips() -> Result<[ReferenceClip], ClipStorageError> {
+        readAllDirtyClipsCallCount += 1
+        if let readAllDirtyClipsHandler = readAllDirtyClipsHandler {
+            return readAllDirtyClipsHandler()
+        }
+        fatalError("readAllDirtyClipsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var readAllTagsCallCount = 0
@@ -692,6 +711,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         fatalError("updateClipsHavingByUpdatingDirtyHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var cleanAllClipsCallCount = 0
+    public var cleanAllClipsHandler: (() -> (Result<Void, ClipStorageError>))?
+    public func cleanAllClips() -> Result<Void, ClipStorageError> {
+        cleanAllClipsCallCount += 1
+        if let cleanAllClipsHandler = cleanAllClipsHandler {
+            return cleanAllClipsHandler()
+        }
+        fatalError("cleanAllClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var deleteClipsCallCount = 0
     public var deleteClipsHandler: (([ReferenceClip.Identity]) -> (Result<Void, ClipStorageError>))?
     public func deleteClips(having ids: [ReferenceClip.Identity]) -> Result<Void, ClipStorageError> {
@@ -731,12 +760,13 @@ public class TemporaryClipsPersistServiceProtocolMock: TemporaryClipsPersistServ
     public init() { }
 
     public private(set) var persistIfNeededCallCount = 0
-    public var persistIfNeededHandler: (() -> Void)?
-    public func persistIfNeeded() {
+    public var persistIfNeededHandler: (() -> (Bool))?
+    public func persistIfNeeded() -> Bool {
         persistIfNeededCallCount += 1
         if let persistIfNeededHandler = persistIfNeededHandler {
-            persistIfNeededHandler()
+            return persistIfNeededHandler()
         }
+        return false
     }
 }
 

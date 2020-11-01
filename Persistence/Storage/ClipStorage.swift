@@ -457,4 +457,10 @@ extension ClipStorage: ClipStorageProtocol {
         realm.delete(realm.objects(TagObject.self))
         return .success(())
     }
+
+    public func deleteAll() -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+        realm.deleteAll()
+        return .success(())
+    }
 }

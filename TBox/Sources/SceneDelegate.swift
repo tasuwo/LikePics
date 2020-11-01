@@ -45,8 +45,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // TODO: 実行箇所を考える
-        self.dependencyContainer?.persistService.persistIfNeeded()
+        // TODO: 実行頻度を考える
+        if self.dependencyContainer?.persistService.persistIfNeeded() == false {
+            self.dependencyContainer?.integrityValidationService.validateAndFixIntegrityIfNeeded()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

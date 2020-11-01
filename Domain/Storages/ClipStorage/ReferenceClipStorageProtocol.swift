@@ -14,6 +14,7 @@ public protocol ReferenceClipStorageProtocol {
     // MARK: Read
 
     func readAllClips() -> Result<[ReferenceClip], ClipStorageError>
+    func readAllDirtyClips() -> Result<[ReferenceClip], ClipStorageError>
     func readAllTags() -> Result<[ReferenceTag], ClipStorageError>
     func readClip(havingUrl url: URL) -> Result<ReferenceClip?, ClipStorageError>
 
@@ -29,6 +30,7 @@ public protocol ReferenceClipStorageProtocol {
     func updateClips(having clipIds: [ReferenceClip.Identity], byDeletingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError>
     func updateClips(having clipIds: [ReferenceClip.Identity], byReplacingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError>
     func updateClips(having clipIds: [ReferenceClip.Identity], byUpdatingDirty isDirty: Bool) -> Result<Void, ClipStorageError>
+    func cleanAllClips() -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 

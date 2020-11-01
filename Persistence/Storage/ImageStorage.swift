@@ -79,6 +79,11 @@ extension ImageStorage: ImageStorageProtocol {
         try self.fileManager.removeItem(at: directory)
     }
 
+    public func deleteAll() throws {
+        try self.fileManager.removeItem(at: self.baseUrl)
+        try Self.createDirectoryIfNeeded(at: self.baseUrl, using: self.fileManager)
+    }
+
     public func moveImageFile(at url: URL, withName fileName: String, toClipHaving clipId: Clip.Identity) throws {
         let directory = self.buildTargetDirectoryUrl(for: clipId)
         guard self.fileManager.fileExists(atPath: url.path) else { return }

@@ -60,6 +60,14 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         return .success(Array(clips))
     }
 
+    public func readAllDirtyClips() -> Result<[ReferenceClip], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let clips = realm.objects(ReferenceClipObject.self)
+            .filter("isDirty = true")
+            .map { ReferenceClip.make(by: $0) }
+        return .success(Array(clips))
+    }
+
     public func readClip(havingUrl url: URL) -> Result<ReferenceClip?, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
 
@@ -175,6 +183,15 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
         for clip in clipIds.compactMap({ realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }) {
             clip.isDirty = isDirty
+        }
+        return .success(())
+    }
+
+    public func cleanAllClips() -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+        // TODO: 効率化
+        for clip in realm.objects(ReferenceClipObject.self) {
+            clip.isDirty = false
         }
         return .success(())
     }
