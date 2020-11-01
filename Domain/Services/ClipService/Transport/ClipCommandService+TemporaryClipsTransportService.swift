@@ -4,12 +4,12 @@
 
 import Common
 
-extension ClipCommandService: TemporaryClipsTransportService {
-    // MARK: - TemporaryClipsTransportService
+extension ClipCommandService: TemporaryClipsPersistServiceProtocol {
+    // MARK: - TemporaryClipsPersistServiceProtocol
 
     // TODO: 移行できなかったデータを捨てる
 
-    public func transportIfNeeded() {
+    public func persistIfNeeded() {
         self.queue.sync {
             guard self.takeExecutionLock() else {
                 self.logger.write(ConsoleLog(level: .info, message: """

@@ -33,7 +33,7 @@
 		2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */; };
 		2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */; };
 		2C0F9B4D2528EF9000235B25 /* ClipInformationLayoutHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */; };
-		2C1040E8254D9618000DF7DE /* TemporaryClipsTransportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporaryClipsTransportService.swift */; };
+		2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */; };
 		2C104108254D968E000DF7DE /* ClipCommandService+TemporaryClipsTransportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* ClipCommandService+TemporaryClipsTransportService.swift */; };
 		2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */; };
 		2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1524312532EB0A00C51847 /* Array+identifiable.swift */; };
@@ -584,7 +584,7 @@
 		2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
-		2C1040E7254D9618000DF7DE /* TemporaryClipsTransportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsTransportService.swift; sourceTree = "<group>"; };
+		2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsPersistServiceProtocol.swift; sourceTree = "<group>"; };
 		2C104107254D968E000DF7DE /* ClipCommandService+TemporaryClipsTransportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipCommandService+TemporaryClipsTransportService.swift"; sourceTree = "<group>"; };
 		2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationService.swift; sourceTree = "<group>"; };
 		2C1524312532EB0A00C51847 /* Array+identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+identifiable.swift"; sourceTree = "<group>"; };
@@ -1104,7 +1104,7 @@
 		2C104106254D967C000DF7DE /* Transport */ = {
 			isa = PBXGroup;
 			children = (
-				2C1040E7254D9618000DF7DE /* TemporaryClipsTransportService.swift */,
+				2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */,
 				2C104107254D968E000DF7DE /* ClipCommandService+TemporaryClipsTransportService.swift */,
 			);
 			path = Transport;
@@ -3446,7 +3446,7 @@
 				2C9EF6A4253DE55900CBF357 /* ThumbnailStorageProtocol.swift in Sources */,
 				2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */,
 				2C104108254D968E000DF7DE /* ClipCommandService+TemporaryClipsTransportService.swift in Sources */,
-				2C1040E8254D9618000DF7DE /* TemporaryClipsTransportService.swift in Sources */,
+				2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
 				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,
 				2C2727A324DED48500FEF1BD /* WebImageUrlFinder.swift in Sources */,

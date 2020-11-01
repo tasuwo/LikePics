@@ -63,7 +63,7 @@ class DependencyContainer {
 
     private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
 
-    let transportService: TemporaryClipsTransportService
+    let persistService: TemporaryClipsPersistServiceProtocol
     let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
 
     init() throws {
@@ -89,7 +89,7 @@ class DependencyContainer {
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
-        self.transportService = clipCommandService
+        self.persistService = clipCommandService
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                                                    referenceClipStorage: referenceClipStorage,
                                                                                    logger: logger,

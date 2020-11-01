@@ -46,7 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // TODO: 実行箇所を考える
-        self.dependencyContainer?.transportService.transportIfNeeded()
+        self.dependencyContainer?.persistService.persistIfNeeded()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

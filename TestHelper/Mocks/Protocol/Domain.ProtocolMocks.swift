@@ -727,15 +727,15 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     }
 }
 
-public class TemporaryClipsTransportServiceMock: TemporaryClipsTransportService {
+public class TemporaryClipsPersistServiceMock: TemporaryClipsPersistServiceProtocol {
     public init() { }
 
-    public private(set) var transportIfNeededCallCount = 0
-    public var transportIfNeededHandler: (() -> Void)?
-    public func transportIfNeeded() {
-        transportIfNeededCallCount += 1
-        if let transportIfNeededHandler = transportIfNeededHandler {
-            transportIfNeededHandler()
+    public private(set) var persistIfNeededCallCount = 0
+    public var persistIfNeededHandler: (() -> Void)?
+    public func persistIfNeeded() {
+        persistIfNeededCallCount += 1
+        if let persistIfNeededHandler = persistIfNeededHandler {
+            persistIfNeededHandler()
         }
     }
 }
