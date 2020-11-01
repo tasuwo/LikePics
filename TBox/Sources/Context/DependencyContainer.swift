@@ -74,9 +74,7 @@ class DependencyContainer {
         let clipStorage = try ClipStorage(config: .document, logger: logger)
         let tmpClipStorage = try ClipStorage(config: .group, logger: logger)
         let referenceClipStorage = try ReferenceClipStorage(config: .group, logger: logger)
-        let clipCommandService = ClipCommandService(temporaryClipStorage: tmpClipStorage,
-                                                    temporaryImageStorage: tmpImageStorage,
-                                                    clipStorage: clipStorage,
+        let clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                     referenceClipStorage: referenceClipStorage,
                                                     imageStorage: imageStorage,
                                                     thumbnailStorage: thumbnailStorage,
@@ -89,7 +87,13 @@ class DependencyContainer {
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
-        self.persistService = clipCommandService
+        self.persistService = TemporaryClipsPersistService(temporaryClipStorage: tmpClipStorage,
+                                                           temporaryImageStorage: tmpImageStorage,
+                                                           clipStorage: clipStorage,
+                                                           referenceClipStorage: referenceClipStorage,
+                                                           imageStorage: imageStorage,
+                                                           logger: logger,
+                                                           queue: self.clipCommandQueue)
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                                                    referenceClipStorage: referenceClipStorage,
                                                                                    logger: logger,

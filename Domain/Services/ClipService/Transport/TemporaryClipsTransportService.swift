@@ -4,22 +4,52 @@
 
 import Common
 
-extension ClipCommandService: TemporaryClipsPersistServiceProtocol {
+public class TemporaryClipsPersistService {
+    let temporaryClipStorage: ClipStorageProtocol
+    let temporaryImageStorage: ImageStorageProtocol
+    let clipStorage: ClipStorageProtocol
+    let referenceClipStorage: ReferenceClipStorageProtocol
+    let imageStorage: ImageStorageProtocol
+    let logger: TBoxLoggable
+    let queue: DispatchQueue
+
+    private(set) var isRunning: Bool = false
+
+    // MARK: - Lifecycle
+
+    public init(temporaryClipStorage: ClipStorageProtocol,
+                temporaryImageStorage: ImageStorageProtocol,
+                clipStorage: ClipStorageProtocol,
+                referenceClipStorage: ReferenceClipStorageProtocol,
+                imageStorage: ImageStorageProtocol,
+                logger: TBoxLoggable,
+                queue: DispatchQueue)
+    {
+        self.temporaryClipStorage = temporaryClipStorage
+        self.temporaryImageStorage = temporaryImageStorage
+        self.clipStorage = clipStorage
+        self.referenceClipStorage = referenceClipStorage
+        self.imageStorage = imageStorage
+        self.logger = logger
+        self.queue = queue
+    }
+}
+
+extension TemporaryClipsPersistService: TemporaryClipsPersistServiceProtocol {
     // MARK: - TemporaryClipsPersistServiceProtocol
 
     // TODO: 移行できなかったデータを捨てる
 
     public func persistIfNeeded() {
         self.queue.sync {
-            guard self.takeExecutionLock() else {
+            guard self.isRunning == false else {
                 self.logger.write(ConsoleLog(level: .info, message: """
                 Failed to take execution lock for transportation.
                 """))
                 return
             }
-            defer {
-                self.releaseExecutionLock()
-            }
+            self.isRunning = true
+            defer { self.isRunning = false }
 
             do {
                 let clips: [Clip]

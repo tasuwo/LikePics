@@ -5,8 +5,6 @@
 import Common
 
 public class ClipCommandService {
-    let temporaryClipStorage: ClipStorageProtocol
-    let temporaryImageStorage: ImageStorageProtocol
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: ImageStorageProtocol
@@ -18,38 +16,19 @@ public class ClipCommandService {
 
     // MARK: - Lifecycle
 
-    public init(temporaryClipStorage: ClipStorageProtocol,
-                temporaryImageStorage: ImageStorageProtocol,
-                clipStorage: ClipStorageProtocol,
+    public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 thumbnailStorage: ThumbnailStorageProtocol,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {
-        self.temporaryClipStorage = temporaryClipStorage
-        self.temporaryImageStorage = temporaryImageStorage
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
         self.queue = queue
-    }
-
-    // MARK: - Methods
-
-    func takeExecutionLock() -> Bool {
-        if self.isTransporting == false {
-            self.isTransporting = true
-            return true
-        } else {
-            return false
-        }
-    }
-
-    func releaseExecutionLock() {
-        self.isTransporting = false
     }
 }
 
