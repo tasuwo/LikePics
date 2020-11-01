@@ -21,7 +21,6 @@ protocol ClipPreviewPageBarButtonItemsPresenterDataSource: AnyObject {
 class ClipPreviewPageBarButtonItemsPresenter {
     enum Item {
         case spacer
-        case reload
         case deleteOnlyImageOrClip
         case deleteClip
         case openWeb
@@ -65,13 +64,10 @@ class ClipPreviewPageBarButtonItemsPresenter {
             self.toolBar?.hide()
             self.navigationBar?.setLeftBarItems([.back])
             self.navigationBar?.setRightBarItems([
-                .reload,
                 self.dataSource?.itemsCount(self) == 1 ? .deleteClip : .deleteOnlyImageOrClip
             ])
         } else {
             self.toolBar?.set([
-                .reload,
-                .spacer,
                 .openWeb,
                 .spacer,
                 .add,

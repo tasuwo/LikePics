@@ -13,6 +13,11 @@ protocol ClipItemPreviewViewProtocol: AnyObject {
 class ClipItemPreviewPresenter {
     let itemId: ClipItem.Identity
 
+    var itemUrl: URL? {
+        guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
+        return item.url
+    }
+
     private let query: ClipQuery
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol

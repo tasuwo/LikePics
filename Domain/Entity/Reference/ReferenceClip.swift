@@ -5,7 +5,6 @@
 // sourcery: AutoDefaultValue
 public struct ReferenceClip: Equatable {
     public let id: String
-    public let url: URL?
     public let description: String?
     public let tags: [ReferenceTag]
     public let isHidden: Bool
@@ -15,7 +14,6 @@ public struct ReferenceClip: Equatable {
     // MARK: - Lifecycle
 
     public init(id: String,
-                url: URL?,
                 description: String?,
                 tags: [ReferenceTag],
                 isHidden: Bool,
@@ -23,7 +21,6 @@ public struct ReferenceClip: Equatable {
                 isDirty: Bool = false)
     {
         self.id = id
-        self.url = url
         self.description = description
         self.tags = tags
         self.isHidden = isHidden

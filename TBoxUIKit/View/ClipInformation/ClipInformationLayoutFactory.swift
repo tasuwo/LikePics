@@ -374,11 +374,6 @@ public enum ClipInformationLayoutFactory {
     private static func createCells(for clip: Clip) -> [Item] {
         return [
             Item.Cell(id: UUID().uuidString,
-                      title: L10n.clipInformationViewLabelClipUrl,
-                      rightLabel: nil,
-                      bottomLabel: clip.url?.absoluteString,
-                      visibleSeparator: false),
-            Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipHide,
                       rightLabel: clip.isHidden
                           ? L10n.clipInformationViewAccessoryClipHideYes
@@ -404,6 +399,11 @@ public enum ClipInformationLayoutFactory {
                       title: L10n.clipInformationViewLabelClipItemUrl,
                       rightLabel: nil,
                       bottomLabel: clipItem.imageUrl?.absoluteString,
+                      visibleSeparator: false),
+            Item.Cell(id: UUID().uuidString,
+                      title: L10n.clipInformationViewLabelClipUrl,
+                      rightLabel: nil,
+                      bottomLabel: clipItem.url?.absoluteString,
                       visibleSeparator: false),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemRegisteredDate,

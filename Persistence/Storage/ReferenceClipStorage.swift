@@ -92,7 +92,6 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
         let obj = ReferenceClipObject()
         obj.id = clip.id
-        obj.url = clip.url?.absoluteString
         obj.descriptionText = clip.description
         clip.tags.forEach { tag in
             let tagObj = ReferenceTagObject()

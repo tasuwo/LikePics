@@ -9,7 +9,7 @@ extension ClipStorage.Configuration {
         let realmFileName = "clips.realm"
 
         var configuration = Realm.Configuration(
-            schemaVersion: 9,
+            schemaVersion: 10,
             migrationBlock: ClipStorageMigrationService.migrationBlock,
             deleteRealmIfMigrationNeeded: false,
             objectTypes: [

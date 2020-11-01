@@ -18,7 +18,6 @@ public struct TransferringClip {
     }
 
     public let id: String
-    public let url: URL?
     public let description: String?
     public let tags: [Tag]
     public let isHidden: Bool
@@ -27,14 +26,12 @@ public struct TransferringClip {
     // MARK: - Lifecycle
 
     public init(id: String,
-                url: URL?,
                 description: String?,
                 tags: [Tag],
                 isHidden: Bool,
                 registeredDate: Date)
     {
         self.id = id
-        self.url = url
         self.description = description
         self.tags = tags
         self.isHidden = isHidden

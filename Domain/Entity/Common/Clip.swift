@@ -5,7 +5,6 @@
 // sourcery: AutoDefaultValue
 public struct Clip: Equatable {
     public let id: String
-    public let url: URL?
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
@@ -32,7 +31,6 @@ public struct Clip: Equatable {
     // MARK: - Lifecycle
 
     public init(id: String,
-                url: URL?,
                 description: String?,
                 items: [ClipItem],
                 tags: [Tag],
@@ -41,7 +39,6 @@ public struct Clip: Equatable {
                 updatedDate: Date)
     {
         self.id = id
-        self.url = url
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
         self.tags = tags
@@ -54,7 +51,6 @@ public struct Clip: Equatable {
 
     public func updating(tags: [Tag]) -> Self {
         return .init(id: self.id,
-                     url: self.url,
                      description: self.description,
                      items: self.items,
                      tags: tags,
@@ -68,7 +64,6 @@ public struct Clip: Equatable {
             .filter { $0.offset != index }
             .map { $0.element }
         return .init(id: self.id,
-                     url: self.url,
                      description: self.description,
                      items: newItems,
                      tags: self.tags,

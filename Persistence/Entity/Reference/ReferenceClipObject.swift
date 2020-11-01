@@ -7,7 +7,6 @@ import RealmSwift
 
 final class ReferenceClipObject: Object {
     @objc dynamic var id: String = ""
-    @objc dynamic var url: String? = ""
     @objc dynamic var descriptionText: String?
     let tags = List<ReferenceTagObject>()
     @objc dynamic var isHidden: Bool = false
@@ -23,15 +22,7 @@ extension ReferenceClip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ReferenceClipObject) -> ReferenceClip {
-        let url: URL?
-        if let urlString = managedObject.url {
-            url = URL(string: urlString)
-        } else {
-            url = nil
-        }
-
         return .init(id: managedObject.id,
-                     url: url,
                      description: managedObject.descriptionText,
                      tags: managedObject.tags.map { ReferenceTag.make(by: $0) },
                      isHidden: managedObject.isHidden,

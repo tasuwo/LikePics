@@ -14,7 +14,6 @@ protocol ClipPreviewPageBarButtonItemsProviderDelegate: AnyObject {
     func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldRefetchClip(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider)
     func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider)
@@ -24,10 +23,6 @@ class ClipPreviewPageBarButtonItemsProvider {
     private lazy var flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
                                                     target: nil,
                                                     action: nil)
-    private lazy var reloadItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
-                                                  style: .plain,
-                                                  target: self,
-                                                  action: #selector(self.didTapRefetch))
     private lazy var deleteClipItem = UIBarButtonItem(barButtonSystemItem: .trash,
                                                       target: self,
                                                       action: #selector(self.didTapDeleteClip))
@@ -104,11 +99,6 @@ class ClipPreviewPageBarButtonItemsProvider {
     }
 
     @objc
-    private func didTapRefetch() {
-        self.delegate?.shouldRefetchClip(self)
-    }
-
-    @objc
     private func didTapOpenWeb() {
         self.delegate?.shouldOpenWeb(self)
     }
@@ -141,9 +131,6 @@ class ClipPreviewPageBarButtonItemsProvider {
         switch item {
         case .spacer:
             return self.flexibleItem
-
-        case .reload:
-            return self.reloadItem
 
         case .add:
             return self.addItem

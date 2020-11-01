@@ -60,7 +60,6 @@ extension ReferenceClipStorage: ClipViewable {
 
         case let .success(.some(clip)):
             return .success(.init(id: clip.id,
-                                  url: clip.url,
                                   description: clip.description,
                                   tags: clip.tags.map {
                                       TransferringClip.Tag(id: $0.id, name: $0.name)

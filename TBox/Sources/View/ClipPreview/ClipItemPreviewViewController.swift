@@ -16,6 +16,10 @@ class ClipItemPreviewViewController: UIViewController {
         return self.presenter.itemId
     }
 
+    var itemUrl: URL? {
+        return self.presenter.itemUrl
+    }
+
     @IBOutlet var previewView: ClipPreviewView!
 
     // MARK: - Lifecycle

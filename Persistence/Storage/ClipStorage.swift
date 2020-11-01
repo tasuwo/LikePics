@@ -95,15 +95,8 @@ extension ClipStorage: ClipStorageProtocol {
 
         var oldClip: ClipObject?
         if let duplicatedClip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.identity) {
-            if overwrite, duplicatedClip.url == clip.url?.absoluteString {
+            if overwrite {
                 oldClip = duplicatedClip
-            } else {
-                return .failure(.duplicated)
-            }
-        }
-        if let clipUrl = clip.url, let sameUrlClip = realm.objects(ClipObject.self).filter("url = '\(clipUrl)'").first {
-            if overwrite, sameUrlClip.id == clip.id {
-                // NOP
             } else {
                 return .failure(.duplicated)
             }
@@ -113,7 +106,6 @@ extension ClipStorage: ClipStorageProtocol {
 
         let newClip = ClipObject()
         newClip.id = clip.id
-        newClip.url = clip.url?.absoluteString
         newClip.descriptionText = clip.description
 
         clip.items.forEach { item in

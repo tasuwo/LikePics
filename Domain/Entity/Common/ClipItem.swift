@@ -5,6 +5,7 @@
 // sourcery: AutoDefaultValue
 public struct ClipItem: Equatable {
     public let id: String
+    public let url: URL?
     public let clipId: String
     public let clipIndex: Int
     public let imageFileName: String
@@ -16,6 +17,7 @@ public struct ClipItem: Equatable {
     // MARK: - Lifecycle
 
     public init(id: String,
+                url: URL?,
                 clipId: String,
                 clipIndex: Int,
                 imageFileName: String,
@@ -25,6 +27,7 @@ public struct ClipItem: Equatable {
                 updatedDate: Date)
     {
         self.id = id
+        self.url = url
         self.clipId = clipId
         self.clipIndex = clipIndex
         self.imageFileName = imageFileName

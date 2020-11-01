@@ -43,6 +43,18 @@ enum ClipStorageMigrationService {
             Self.migrateToV8(migration)
         } else if oldSchemaVersion < 9 {
             Self.migrateToV9(migration)
+        } else if oldSchemaVersion < 10 {
+            Self.migrateToV10(migration)
+        }
+    }
+
+    private static func migrateToV10(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+            let clipId = oldObject!["clipId"] as! String
+            migration.enumerateObjects(ofType: ClipObject.className()) { oldObject, _ in
+                guard oldObject!["id"] as! String == clipId else { return }
+                newObject!["url"] = oldObject!["url"]
+            }
         }
     }
 

@@ -66,7 +66,6 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 let referenceClip = ReferenceClip(id: createdClip.identity,
-                                                  url: createdClip.url,
                                                   description: createdClip.description,
                                                   tags: createdClip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
                                                   isHidden: createdClip.isHidden,

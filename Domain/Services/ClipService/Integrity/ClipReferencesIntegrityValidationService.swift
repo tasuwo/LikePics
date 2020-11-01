@@ -131,7 +131,6 @@ public class ClipReferencesIntegrityValidationService {
                 if referenceClip.isDirty { continue }
 
                 let expectedClip = ReferenceClip(id: clip.id,
-                                                 url: clip.url,
                                                  description: clip.description,
                                                  tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
                                                  isHidden: clip.isHidden,
@@ -147,7 +146,6 @@ public class ClipReferencesIntegrityValidationService {
                 }
             } else {
                 let newClip = ReferenceClip(id: clip.id,
-                                            url: clip.url,
                                             description: clip.description,
                                             tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
                                             isHidden: clip.isHidden,

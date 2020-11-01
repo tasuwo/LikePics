@@ -26,7 +26,6 @@ extension Album {
 extension Clip {
     static func makeDefault(
         id: String = "",
-        url: URL? = nil,
         description: String? = nil,
         items: [ClipItem] = [],
         tags: [Tag] = [],
@@ -36,7 +35,6 @@ extension Clip {
     ) -> Self {
         return .init(
             id: id,
-            url: url,
             description: description,
             items: items,
             tags: tags,
@@ -50,6 +48,7 @@ extension Clip {
 extension ClipItem {
     static func makeDefault(
         id: String = "",
+        url: URL? = nil,
         clipId: String = "",
         clipIndex: Int = 0,
         imageFileName: String = "",
@@ -60,6 +59,7 @@ extension ClipItem {
     ) -> Self {
         return .init(
             id: id,
+            url: url,
             clipId: clipId,
             clipIndex: clipIndex,
             imageFileName: imageFileName,
@@ -86,7 +86,6 @@ extension ImageSize {
 extension ReferenceClip {
     static func makeDefault(
         id: String = "",
-        url: URL? = nil,
         description: String? = nil,
         tags: [ReferenceTag] = [],
         isHidden: Bool = false,
@@ -95,7 +94,6 @@ extension ReferenceClip {
     ) -> Self {
         return .init(
             id: id,
-            url: url,
             description: description,
             tags: tags,
             isHidden: isHidden,

@@ -7,6 +7,7 @@ import RealmSwift
 
 final class ClipItemObject: Object {
     @objc dynamic var id: String = ""
+    @objc dynamic var url: String? = ""
     @objc dynamic var clipId: String = ""
     @objc dynamic var clipIndex: Int = 0
     @objc dynamic var imageFileName: String = ""
@@ -32,7 +33,15 @@ extension ClipItem: Persistable {
             imageUrl = nil
         }
 
+        let url: URL?
+        if let urlString = managedObject.url {
+            url = URL(string: urlString)
+        } else {
+            url = nil
+        }
+
         return ClipItem(id: managedObject.id,
+                        url: url,
                         clipId: managedObject.clipId,
                         clipIndex: managedObject.clipIndex,
                         imageFileName: managedObject.imageFileName,
