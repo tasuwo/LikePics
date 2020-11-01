@@ -112,6 +112,7 @@ extension ClipStorage: ClipStorageProtocol {
             let newClipItem = ClipItemObject()
 
             newClipItem.id = item.id
+            newClipItem.url = item.url?.absoluteString
             newClipItem.clipId = clip.id
             newClipItem.clipIndex = item.clipIndex
             newClipItem.imageFileName = item.imageFileName
