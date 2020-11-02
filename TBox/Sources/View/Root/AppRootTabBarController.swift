@@ -66,7 +66,7 @@ class AppRootTabBarController: UITabBarController {
         settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
                                                          image: UIImage(systemName: "gear"),
                                                          tag: 3)
-        tagListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.setting"
+        settingsViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
             topClipsListViewController,
