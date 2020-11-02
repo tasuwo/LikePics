@@ -20,6 +20,20 @@
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2C21415A254858D50013F486"
+               BuildableName = "TBoxUITests.xctest"
+               BlueprintName = "TBoxUITests"
+               ReferencedContainer = "container:TBox.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -75,16 +89,6 @@
                BlueprintIdentifier = "2C6E09CC24E8150500B541D9"
                BuildableName = "CommonTests.xctest"
                BlueprintName = "CommonTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C21415A254858D50013F486"
-               BuildableName = "TBoxUITests.xctest"
-               BlueprintName = "TBoxUITests"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </TestableReference>
