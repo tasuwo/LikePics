@@ -87,6 +87,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.dataSource = self
 
         self.setupAppearance()
+        self.setupAccessibilityIdentifiers()
         self.setupBar()
         self.setupGestureRecognizer()
 
@@ -104,6 +105,10 @@ class ClipPreviewPageViewController: UIPageViewController {
     private func setupAppearance() {
         self.navigationItem.title = ""
         self.modalTransitionStyle = .crossDissolve
+    }
+
+    private func setupAccessibilityIdentifiers() {
+        self.navigationController?.navigationBar.accessibilityIdentifier = "\(String(describing: Self.self)).navigationBar"
     }
 
     // MARK: Bar

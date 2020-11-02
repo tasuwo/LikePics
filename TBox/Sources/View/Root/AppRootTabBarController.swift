@@ -46,6 +46,8 @@ class AppRootTabBarController: UITabBarController {
         // let searchEntryViewController = self.factory.makeSearchEntryViewController()
         let settingsViewController = self.factory.makeSettingsViewController()
 
+        self.tabBar.accessibilityIdentifier = "AppRootTabBarController.tabBar"
+
         topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
                                                              image: UIImage(systemName: "house"),
                                                              tag: 0)

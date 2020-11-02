@@ -59,6 +59,7 @@ class ClipPreviewPageBarButtonItemsProvider {
 
     init(presenter: ClipPreviewPageBarButtonItemsPresenter) {
         self.presenter = presenter
+        self.setupAccessibilityIdentifiers()
     }
 
     // MARK: - Methods
@@ -150,6 +151,15 @@ class ClipPreviewPageBarButtonItemsProvider {
         case .info:
             return self.infoItem
         }
+    }
+
+    private func setupAccessibilityIdentifiers() {
+        self.deleteClipItem.accessibilityIdentifier = "\(String(describing: Self.self)).deleteClipItem"
+        self.deleteOnlyImageOrClipImage.accessibilityIdentifier = "\(String(describing: Self.self)).deleteOnlyImageOrClipImage"
+        self.openWebItem.accessibilityIdentifier = "\(String(describing: Self.self)).openWebItem"
+        self.addItem.accessibilityIdentifier = "\(String(describing: Self.self)).addItem"
+        self.backItem.accessibilityIdentifier = "\(String(describing: Self.self)).backItem"
+        self.infoItem.accessibilityIdentifier = "\(String(describing: Self.self)).infoItem"
     }
 }
 
