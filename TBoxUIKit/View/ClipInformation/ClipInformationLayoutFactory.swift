@@ -34,7 +34,7 @@ public enum ClipInformationLayoutFactory {
     enum Section: Int {
         case clipItemInformation
         case clipTag
-        case clipInformation
+        // case clipInformation
     }
 
     enum ItemType {
@@ -135,7 +135,7 @@ public enum ClipInformationLayoutFactory {
             case .clipTag:
                 return self.createTagsLayoutSection()
 
-            case .clipInformation, .clipItemInformation:
+            case /*.clipInformation,*/ .clipItemInformation:
                 return self.createRowsLayoutSection()
 
             case .none:
@@ -226,7 +226,7 @@ public enum ClipInformationLayoutFactory {
             case .clipTag:
                 return self.tagsSectionCellProvider()(collectionView, indexPath, item)
 
-            case .clipInformation, .clipItemInformation:
+            case /*.clipInformation,*/ .clipItemInformation:
                 return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
 
             case .none:
@@ -326,10 +326,10 @@ public enum ClipInformationLayoutFactory {
                 header.title = L10n.clipInformationViewSectionLabelTag
                 header.visibleAddButton = true
 
-            case .clipInformation:
-                header.identifier = "\(Section.clipInformation.rawValue)"
-                header.title = L10n.clipInformationViewSectionLabelClip
-                header.visibleAddButton = false
+            // case .clipInformation:
+            //     header.identifier = "\(Section.clipInformation.rawValue)"
+            //     header.title = L10n.clipInformationViewSectionLabelClip
+            //     header.visibleAddButton = false
 
             case .clipItemInformation:
                 header.identifier = "\(Section.clipItemInformation.rawValue)"
@@ -357,15 +357,15 @@ public enum ClipInformationLayoutFactory {
     static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.clipItemInformation])
-        snapshot.appendItems(self.createCells(for: info.item))
+        snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
         snapshot.appendSections([.clipTag])
         if info.clip.tags.isEmpty {
             snapshot.appendItems([.empty])
         } else {
             snapshot.appendItems(info.clip.tags.map { .tag($0) })
         }
-        snapshot.appendSections([.clipInformation])
-        snapshot.appendItems(self.createCells(for: info.clip))
+        // snapshot.appendSections([.clipInformation])
+        // snapshot.appendItems(self.createCells(for: info.clip))
         return snapshot
     }
 
@@ -393,7 +393,7 @@ public enum ClipInformationLayoutFactory {
         ].map { .row($0) }
     }
 
-    private static func createCells(for clipItem: ClipItem) -> [Item] {
+    private static func createCells(for clipItem: ClipItem, clip: Clip) -> [Item] {
         return [
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemUrl,
@@ -405,6 +405,13 @@ public enum ClipInformationLayoutFactory {
                       rightLabel: nil,
                       bottomLabel: clipItem.url?.absoluteString,
                       visibleSeparator: false),
+            Item.Cell(id: UUID().uuidString,
+                      title: L10n.clipInformationViewLabelClipHide,
+                      rightLabel: clip.isHidden
+                          ? L10n.clipInformationViewAccessoryClipHideYes
+                          : L10n.clipInformationViewAccessoryClipHideNo,
+                      bottomLabel: nil,
+                      visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemRegisteredDate,
                       rightLabel: self.format(clipItem.registeredDate),
