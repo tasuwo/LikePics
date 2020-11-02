@@ -2540,8 +2540,6 @@
 			buildConfigurationList = 2CA022A824DD9F5F00329251 /* Build configuration list for PBXNativeTarget "TBox" */;
 			buildPhases = (
 				45B4A4BC9CC82B7FF2DFE8F3 /* [CP] Check Pods Manifest.lock */,
-				2CFC5CF4250DEDD9001A02E4 /* SwiftGen */,
-				2CA022AE24DD9F6E00329251 /* SwiftFormat */,
 				2CA022AF24DD9F8300329251 /* SwiftLint */,
 				2C6C7A2C253B53D100A8A9B8 /* License plist */,
 				2CA0228524DD9F5E00329251 /* Sources */,
@@ -2634,9 +2632,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CF465792511045B00DF78E6 /* Build configuration list for PBXNativeTarget "TestHelper" */;
 			buildPhases = (
-				2C6C7A02253B4ED500A8A9B8 /* Sourcery */,
-				2C6C7A01253B4EAE00A8A9B8 /* mockolo */,
-				2C6C7A0B253B4F1E00A8A9B8 /* SwiftFormat */,
 				2CF4656B2511045B00DF78E6 /* Headers */,
 				2CF4656C2511045B00DF78E6 /* Sources */,
 				2CF4656D2511045B00DF78E6 /* Frameworks */,
@@ -2905,60 +2900,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ ${CONFIGURATION} == \"Debug\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/SnapshotSource\"\n    mkdir -p $bundlePath\n    cp -R \"${SRCROOT}/SnapshotData/AppGroupContainer\" $bundlePath\n    cp -R \"${SRCROOT}/SnapshotData/CacheContainer\" $bundlePath\nfi\n";
 		};
-		2C6C7A01253B4EAE00A8A9B8 /* mockolo */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = mockolo;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n./mockolo \\\n    --sourcedirs ../Persistence \\\n    --destination ../TestHelper/Mocks/Protocol/Persistence.ProtocolMocks.swift \\\n    --testable-imports Persistence\n\n./mockolo \\\n    --sourcedirs ../Domain \\\n    --destination ../TestHelper/Mocks/Protocol/Domain.ProtocolMocks.swift \\\n    --testable-imports Domain\n    \n./mockolo \\\n    --sourcedirs ../TBoxUIKit \\\n    --destination ../TestHelper/Mocks/Protocol/TBoxUIKit.ProtocolMocks.swift \\\n    --testable-imports TBoxUIKit\n\n./mockolo \\\n    --sourcedirs ../Common \\\n    --destination ../TestHelper/Mocks/Protocol/Common.ProtocolMocks.swift \\\n    --testable-imports Common\n";
-		};
-		2C6C7A02253B4ED500A8A9B8 /* Sourcery */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = Sourcery;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ ! -f \"${PROJECT_DIR}/templates/AutoDefaultValue.swifttemplate\" ]] || [[ ! -f \"${PROJECT_DIR}/templates/AutoDefaultValue.extension.swifttemplate\" ]]; then\n    curl -o \"${PROJECT_DIR}/templates/AutoDefaultValue.swifttemplate\" \\\n        \"https://raw.githubusercontent.com/tasuwo/SwiftTemplates/master/Templates/AutoDefaultValue.swifttemplate\"\n    curl -o \"${PROJECT_DIR}/templates/AutoDefaultValue.extension.swifttemplate\" \\\n        \"https://raw.githubusercontent.com/tasuwo/SwiftTemplates/master/Templates/AutoDefaultValue.extension.swifttemplate\"\nfi\n\nif [[ -f \"${PROJECT_DIR}/Pods/Sourcery/bin/sourcery\" ]]; then\n  \"${PROJECT_DIR}/Pods/Sourcery/bin/sourcery\" --config $PROJECT_DIR/.sourcery.yml\nelse\n  echo \"warning: Sourcery is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n\n";
-		};
-		2C6C7A0B253B4F1E00A8A9B8 /* SwiftFormat */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftFormat;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\nswift run -c release swiftformat --config $PROJECT_DIR/.swiftformat \"$SRCROOT\"\n";
-		};
 		2C6C7A2C253B53D100A8A9B8 /* License plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2977,24 +2918,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\" --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --config-path $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n\n\n";
 		};
-		2CA022AE24DD9F6E00329251 /* SwiftFormat */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftFormat;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\nswift run -c release swiftformat --config $PROJECT_DIR/.swiftformat \"$SRCROOT\"\n";
-		};
 		2CA022AF24DD9F8300329251 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3012,24 +2935,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\ncp $SRCROOT/.swiftlint.yml ./\nswift run -c release swiftlint\nrm .swiftlint.yml\n";
-		};
-		2CFC5CF4250DEDD9001A02E4 /* SwiftGen */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftGen;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
 		};
 		3F2CF011AAC6842F398F162D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
