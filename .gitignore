@@ -46,6 +46,3 @@ templates/*
 # scan temporary files
 **/fastlane/test_output
 
-## ScreenshotData
-ScreenshotData/*
-!ScreenshotData/.gitkeep
