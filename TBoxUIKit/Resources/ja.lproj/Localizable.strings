@@ -11,7 +11,7 @@
 "clip_information_view_context_menu_open" = "開く";
 "clip_information_view_context_menu_copy" = "コピー";
 
-"clip_information_view_section_label_tag" = "このクリップのタグ";
+"clip_information_view_section_label_tag" = "タグ";
 "clip_information_view_section_label_clip" = "このクリップの情報";
 "clip_information_view_section_label_clip_item" = "この画像の情報";
 
