@@ -18,9 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         #if DEBUG
-        if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
-            AppDataLoader.loadAppData()
-        }
+            if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
+                AppDataLoader.loadAppData()
+            }
         #endif
 
         do {

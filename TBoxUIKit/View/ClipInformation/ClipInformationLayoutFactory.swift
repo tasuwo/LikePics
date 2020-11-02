@@ -135,7 +135,7 @@ public enum ClipInformationLayoutFactory {
             case .clipTag:
                 return self.createTagsLayoutSection()
 
-            case /*.clipInformation,*/ .clipItemInformation:
+            case /* .clipInformation, */ .clipItemInformation:
                 return self.createRowsLayoutSection()
 
             case .none:
@@ -226,7 +226,7 @@ public enum ClipInformationLayoutFactory {
             case .clipTag:
                 return self.tagsSectionCellProvider()(collectionView, indexPath, item)
 
-            case /*.clipInformation,*/ .clipItemInformation:
+            case /* .clipInformation, */ .clipItemInformation:
                 return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
 
             case .none:
