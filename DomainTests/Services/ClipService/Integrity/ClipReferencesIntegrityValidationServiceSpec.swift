@@ -449,7 +449,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                                 ])
                             }
                             referenceClipStorage.deleteClipsHandler = { clipIds in
-                                expect(clipIds).to(equal(["2", "4"]))
+                                expect(Set(clipIds)).to(equal(Set(["2", "4"])))
                                 return .success(())
                             }
                             service.validateAndFixIntegrityIfNeeded()
