@@ -17,6 +17,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
+            AppDataLoader.loadAppData()
+        }
+        #endif
+
         do {
             let container = try DependencyContainer()
             self.dependencyContainer = container

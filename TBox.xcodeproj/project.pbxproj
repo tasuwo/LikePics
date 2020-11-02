@@ -27,8 +27,6 @@
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
 		2C0596CB251992C5008F11F5 /* AlbumSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596CA251992C5008F11F5 /* AlbumSelectionPresenter.swift */; };
-		2C08BBF8254859FD00A81B0B /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C08BBF7254859FD00A81B0B /* SnapshotHelper.swift */; };
-		2C08BC3B254880F000A81B0B /* UITestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C08BC3A254880F000A81B0B /* UITestHelper.swift */; };
 		2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */; };
 		2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */; };
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
@@ -59,6 +57,7 @@
 		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
 		2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236D72251A10D000AB5EDD /* ClipQuery.swift */; };
 		2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */; };
+		2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C25841D254FDCC300373A31 /* AppDataLoader.swift */; };
 		2C27D7B524E254A3006B5DA9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
 		2C27D7B624E254A3006B5DA9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */; };
@@ -254,6 +253,7 @@
 		2CE22D4B24E2A48C00449210 /* ClipPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */; };
 		2CEDB81C25452640007D9E02 /* EmptyMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */; };
 		2CEDB82625452650007D9E02 /* EmptyMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CEDB82525452650007D9E02 /* EmptyMessageView.xib */; };
+		2CEE8E4E254FC154004ED04A /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */; };
 		2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */; };
 		2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF332592507D327007EF072 /* ClipStorageSpec.swift */; };
 		2CF465742511045B00DF78E6 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CF465722511045B00DF78E6 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -571,8 +571,6 @@
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsProvider.swift; sourceTree = "<group>"; };
 		2C0596CA251992C5008F11F5 /* AlbumSelectionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumSelectionPresenter.swift; sourceTree = "<group>"; };
-		2C08BBF7254859FD00A81B0B /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = TBoxUIKitTests/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
-		2C08BC3A254880F000A81B0B /* UITestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestHelper.swift; sourceTree = "<group>"; };
 		2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewViewController.swift; sourceTree = "<group>"; };
 		2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewPresenter.swift; sourceTree = "<group>"; };
 		2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemPreviewViewController.xib; sourceTree = "<group>"; };
@@ -607,6 +605,7 @@
 		2C2289ED24FA15750026E24A /* PaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
 		2C236D72251A10D000AB5EDD /* ClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQuery.swift; sourceTree = "<group>"; };
 		2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmClipQuery.swift; sourceTree = "<group>"; };
+		2C25841D254FDCC300373A31 /* AppDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataLoader.swift; sourceTree = "<group>"; };
 		2C2727A224DED48500FEF1BD /* WebImageUrlFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlFinder.swift; sourceTree = "<group>"; };
 		2C2727A424DED4C600FEF1BD /* WebImageUrlFinderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlFinderError.swift; sourceTree = "<group>"; };
 		2C2727A724DED57D00FEF1BD /* OnMainThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnMainThread.swift; sourceTree = "<group>"; };
@@ -808,6 +807,7 @@
 		2CEDB82525452650007D9E02 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
 		2CEDB8472545561C007D9E02 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2CEDB84825455651007D9E02 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ja; path = ja.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
+		2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		2CF05ACC25409E2B00564A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2CF332592507D327007EF072 /* ClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageSpec.swift; sourceTree = "<group>"; };
 		2CF465702511045B00DF78E6 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1174,7 +1174,7 @@
 			isa = PBXGroup;
 			children = (
 				2C21415D254858D50013F486 /* TBoxUITests.swift */,
-				2C08BBF7254859FD00A81B0B /* SnapshotHelper.swift */,
+				2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */,
 				2C21415F254858D50013F486 /* Info.plist */,
 			);
 			path = TBoxUITests;
@@ -1207,6 +1207,14 @@
 				2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */,
 			);
 			path = Query;
+			sourceTree = "<group>";
+		};
+		2C25841C254FDCA200373A31 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				2C25841D254FDCC300373A31 /* AppDataLoader.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		2C27279F24DED44D00FEF1BD /* ImageInfoResolver */ = {
@@ -1529,14 +1537,6 @@
 				2C55D12624DFD1B000A43B8D /* ViewController */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		2C523D28254AEFCC0099F6DD /* Helper */ = {
-			isa = PBXGroup;
-			children = (
-				2C08BC3A254880F000A81B0B /* UITestHelper.swift */,
-			);
-			path = Helper;
 			sourceTree = "<group>";
 		};
 		2C54462C254B1E110088C8BC /* ClipService */ = {
@@ -2039,6 +2039,7 @@
 		2CA0228B24DD9F5E00329251 /* TBox */ = {
 			isa = PBXGroup;
 			children = (
+				2C25841C254FDCA200373A31 /* Helper */,
 				2C810D0124E04A6E00BC0FDF /* Resources */,
 				2C810D0224E04A8100BC0FDF /* Sources */,
 				2C99278D24DDD60C00672CA7 /* TBox.entitlements */,
@@ -2082,7 +2083,6 @@
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				2C523D28254AEFCC0099F6DD /* Helper */,
 				2C236DA1251A118400AB5EDD /* Query */,
 				2C99278A24DDCED700672CA7 /* Configuration */,
 				2C99275624DDC6DB00672CA7 /* Storage */,
@@ -2545,7 +2545,7 @@
 				2CA0228524DD9F5E00329251 /* Sources */,
 				2CA0228624DD9F5E00329251 /* Frameworks */,
 				2CA0228724DD9F5E00329251 /* Resources */,
-				2C08BC1E25487D8100A81B0B /* Copy Data For Snapshot */,
+				2CFF7D23254FD9EF00A1D545 /* Copy App Data */,
 				2CCECE2B24DDC0CB00ADFE54 /* Embed Frameworks */,
 				AD46BD4DC66BC1374E1B3611 /* [CP] Embed Pods Frameworks */,
 				2C9927A024DDD65E00672CA7 /* Embed App Extensions */,
@@ -2878,28 +2878,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2C08BC1E25487D8100A81B0B /* Copy Data For Snapshot */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/SnapshotData/AppGroupContainer",
-				"$(SRCROOT)/SnapshotData/CacheContainer",
-			);
-			name = "Copy Data For Snapshot";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(CONFIGURATION_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/SnapshotSource/AppGroupContainer",
-				"$(CONFIGURATION_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/SnapshotSource/CacheContainer",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ ${CONFIGURATION} == \"Debug\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/SnapshotSource\"\n    mkdir -p $bundlePath\n    cp -R \"${SRCROOT}/SnapshotData/AppGroupContainer\" $bundlePath\n    cp -R \"${SRCROOT}/SnapshotData/CacheContainer\" $bundlePath\nfi\n";
-		};
 		2C6C7A2C253B53D100A8A9B8 /* License plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2935,6 +2913,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd BuildTools\nSDKROOT=macosx\n\n# Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\n# swift package update\n\ncp $SRCROOT/.swiftlint.yml ./\nswift run -c release swiftlint\nrm .swiftlint.yml\n";
+		};
+		2CFF7D23254FD9EF00A1D545 /* Copy App Data */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy App Data";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ ${CONFIGURATION} == \"Debug\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n    cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n";
 		};
 		3F2CF011AAC6842F398F162D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3249,7 +3245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C21415E254858D50013F486 /* TBoxUITests.swift in Sources */,
-				2C08BBF8254859FD00A81B0B /* SnapshotHelper.swift in Sources */,
+				2CEE8E4E254FC154004ED04A /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3450,6 +3446,7 @@
 				2C5A4361251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */,
+				2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */,
 				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* TagSelectionPresenter.swift in Sources */,
 				2CB3CB482515F29C00BE06E5 /* ClipsListToolBarItemsPresenter.swift in Sources */,
@@ -3490,7 +3487,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C08BC3B254880F000A81B0B /* UITestHelper.swift in Sources */,
 				2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */,
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,

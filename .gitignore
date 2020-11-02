@@ -46,8 +46,6 @@ templates/*
 # scan temporary files
 **/fastlane/test_output
 
-## Snapshot
-SnapshotData/AppGroupContainer/*
-!SnapshotData/AppGroupContainer/.gitkeep
-SnapshotData/CacheContainer/*
-!SnapshotData/CacheContainer/.gitkeep
+## ScreenshotData
+ScreenshotData/*
+!ScreenshotData/.gitkeep
