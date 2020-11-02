@@ -37,6 +37,6 @@ class SettingsPresenter {
     func displayVersion() {
         // swiftlint:disable:next force_cast force_unwrapping
         let versionString = Bundle(for: Self.self).infoDictionary!["CFBundleShortVersionString"] as! String
-        self.view?.set(version: "\(versionString) (Beta)")
+        self.view?.set(version: "\(versionString)")
     }
 }
