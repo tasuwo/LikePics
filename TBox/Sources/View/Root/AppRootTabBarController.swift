@@ -49,18 +49,22 @@ class AppRootTabBarController: UITabBarController {
         topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
                                                              image: UIImage(systemName: "house"),
                                                              tag: 0)
+        topClipsListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.top"
         albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
                                                           image: UIImage(systemName: "square.stack"),
                                                           tag: 1)
+        albumListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.album"
         tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
                                                         image: UIImage(systemName: "tag"),
                                                         tag: 2)
+        tagListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.tag"
         // searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
         //                                                     image: UIImage(systemName: "magnifyingglass"),
         //                                                     tag: 3)
         settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
                                                          image: UIImage(systemName: "gear"),
                                                          tag: 3)
+        tagListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
             topClipsListViewController,
