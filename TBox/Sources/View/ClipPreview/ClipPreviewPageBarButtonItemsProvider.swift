@@ -75,8 +75,9 @@ class ClipPreviewPageBarButtonItemsProvider {
     // MARK: Privates
 
     @objc
-    private func didTapDeleteClip() {
+    private func didTapDeleteClip(item: UIBarButtonItem) {
         self.alertPresentable?.presentDeleteAlert(
+            at: item,
             deleteClipItemAction: nil,
             deleteClipAction: { [weak self] in
                 guard let self = self else { return }
@@ -86,8 +87,9 @@ class ClipPreviewPageBarButtonItemsProvider {
     }
 
     @objc
-    private func didTapDeleteOnlyImageOrClip() {
+    private func didTapDeleteOnlyImageOrClip(item: UIBarButtonItem) {
         self.alertPresentable?.presentDeleteAlert(
+            at: item,
             deleteClipItemAction: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.shouldDeleteClipImage(self)
@@ -105,8 +107,9 @@ class ClipPreviewPageBarButtonItemsProvider {
     }
 
     @objc
-    private func didTapAdd() {
+    private func didTapAdd(item: UIBarButtonItem) {
         self.alertPresentable?.presentAddAlert(
+            at: item,
             addToAlbumAction: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.shouldAddToAlbum(self)

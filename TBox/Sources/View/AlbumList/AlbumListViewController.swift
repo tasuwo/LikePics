@@ -257,6 +257,8 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
+        alert.popoverPresentationController?.sourceView = cell.deleteButtonPlacement
+
         self.present(alert, animated: true, completion: nil)
     }
 }

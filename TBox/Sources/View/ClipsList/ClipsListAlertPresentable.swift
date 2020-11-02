@@ -5,14 +5,14 @@
 import UIKit
 
 protocol ClipsListAlertPresentable: AnyObject {
-    func presentAddAlert(addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
-    func presentRemoveAlert(targetCount: Int, action: @escaping () -> Void)
-    func presentRemoveFromAlbumAlert(targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
-    func presentHideAlert(targetCount: Int, action: @escaping () -> Void)
+    func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
+    func presentRemoveAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
+    func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
+    func presentHideAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
 }
 
 extension ClipsListAlertPresentable where Self: UIViewController {
-    func presentAddAlert(addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void) {
+    func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         alert.addAction(.init(title: L10n.clipsListAlertForAddToAlbum, style: .default, handler: { _ in
@@ -25,10 +25,12 @@ extension ClipsListAlertPresentable where Self: UIViewController {
 
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
+        alert.popoverPresentationController?.barButtonItem = item
+
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentRemoveAlert(targetCount: Int, action: @escaping () -> Void) {
+    func presentRemoveAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForDeleteMessage,
                                       preferredStyle: .actionSheet)
@@ -39,10 +41,12 @@ extension ClipsListAlertPresentable where Self: UIViewController {
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
+        alert.popoverPresentationController?.barButtonItem = item
+
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentRemoveFromAlbumAlert(targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void) {
+    func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForDeleteInAlbumMessage,
                                       preferredStyle: .actionSheet)
@@ -55,10 +59,12 @@ extension ClipsListAlertPresentable where Self: UIViewController {
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
+        alert.popoverPresentationController?.barButtonItem = item
+
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentHideAlert(targetCount: Int, action: @escaping () -> Void) {
+    func presentHideAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForHideMessage,
                                       preferredStyle: .actionSheet)
@@ -68,6 +74,8 @@ extension ClipsListAlertPresentable where Self: UIViewController {
             action()
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.barButtonItem = item
 
         self.present(alert, animated: true, completion: nil)
     }

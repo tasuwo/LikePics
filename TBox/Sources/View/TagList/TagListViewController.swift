@@ -184,7 +184,7 @@ class TagListViewController: UIViewController {
     }
 
     @objc
-    func didTapDone() {
+    func didTapDone(item: UIBarButtonItem) {
         guard let count = self.collectionView.indexPathsForSelectedItems?.count else {
             self.logger.write(ConsoleLog(level: .error, message: "Invalid done action occurred."))
             return
@@ -204,6 +204,8 @@ class TagListViewController: UIViewController {
             self.presenter.delete(selectedTags)
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.barButtonItem = item
 
         self.present(alert, animated: true, completion: nil)
     }

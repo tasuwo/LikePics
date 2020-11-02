@@ -144,7 +144,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag) {
+    func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag, at placement: UIView) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipInformationViewAlertForDeleteTagMessage,
                                       preferredStyle: .actionSheet)
@@ -154,6 +154,8 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
             self?.presenter.removeTagFromClip(tag)
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.sourceView = placement
 
         self.present(alert, animated: true, completion: nil)
     }

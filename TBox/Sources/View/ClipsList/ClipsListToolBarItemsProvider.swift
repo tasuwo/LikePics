@@ -75,8 +75,9 @@ class ClipsListToolBarItemsProvider {
     // MARK: Privates
 
     @objc
-    private func didTapAddToAlbum() {
+    private func didTapAddToAlbum(item: UIBarButtonItem) {
         self.alertPresentable?.presentAddAlert(
+            at: item,
             addToAlbumAction: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.shouldAddToAlbum(self)
@@ -89,16 +90,17 @@ class ClipsListToolBarItemsProvider {
     }
 
     @objc
-    private func didTapRemove() {
-        self.alertPresentable?.presentRemoveAlert(targetCount: self.presenter.actionTargetCount) { [weak self] in
+    private func didTapRemove(item: UIBarButtonItem) {
+        self.alertPresentable?.presentRemoveAlert(at: item, targetCount: self.presenter.actionTargetCount) { [weak self] in
             guard let self = self else { return }
             self.delegate?.shouldDelete(self)
         }
     }
 
     @objc
-    private func didTapRemoveFromAlbum() {
+    private func didTapRemoveFromAlbum(item: UIBarButtonItem) {
         self.alertPresentable?.presentRemoveFromAlbumAlert(
+            at: item,
             targetCount: self.presenter.actionTargetCount,
             deleteAction: { [weak self] in
                 guard let self = self else { return }
@@ -112,8 +114,8 @@ class ClipsListToolBarItemsProvider {
     }
 
     @objc
-    private func didTapHide() {
-        self.alertPresentable?.presentHideAlert(targetCount: self.presenter.actionTargetCount) { [weak self] in
+    private func didTapHide(item: UIBarButtonItem) {
+        self.alertPresentable?.presentHideAlert(at: item, targetCount: self.presenter.actionTargetCount) { [weak self] in
             guard let self = self else { return }
             self.delegate?.shouldHide(self)
         }

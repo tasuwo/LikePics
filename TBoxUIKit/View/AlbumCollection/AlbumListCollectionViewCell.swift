@@ -43,6 +43,10 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var deleteButtonPlacement: UIView {
+        return self.deleteButton
+    }
+
     public weak var delegate: AlbumListCollectionViewCellDelegate?
 
     @IBOutlet var thumbnailImageView: UIImageView!
