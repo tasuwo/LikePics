@@ -5,7 +5,7 @@
 import RealmSwift
 
 extension ClipStorage.Configuration {
-    public static var document: ClipStorage.Configuration {
+    public static var appSupport: ClipStorage.Configuration {
         let realmFileName = "clips.realm"
 
         var configuration = Realm.Configuration(
@@ -20,9 +20,16 @@ extension ClipStorage.Configuration {
             ]
         )
 
-        if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            configuration.fileURL = directory
+        if let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            let destination = directory
                 .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+
+            if !FileManager.default.fileExists(atPath: destination.path) {
+                // swiftlint:disable:next force_try
+                try! FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true, attributes: nil)
+            }
+
+            configuration.fileURL = destination
                 .appendingPathComponent(realmFileName)
         } else {
             fatalError("Unable to resolve realm file url.")
