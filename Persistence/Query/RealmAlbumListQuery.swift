@@ -9,7 +9,7 @@ import RealmSwift
 class RealmAlbumListQuery {
     private var token: NotificationToken?
     private let results: Results<AlbumObject>
-    private var subject: CurrentValueSubject<[Album], Error>
+    private var subject: CurrentValueSubject<[Domain.Album], Error>
 
     // MARK: - Lifecycle
 
@@ -38,7 +38,7 @@ class RealmAlbumListQuery {
 extension RealmAlbumListQuery: AlbumListQuery {
     // MARK: - AlbumListQuery
 
-    var albums: CurrentValueSubject<[Album], Error> {
+    var albums: CurrentValueSubject<[Domain.Album], Error> {
         return self.subject
     }
 }

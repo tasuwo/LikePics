@@ -9,17 +9,17 @@ import RealmSwift
 class RealmAlbumQuery {
     private var token: NotificationToken?
     private let object: AlbumObject
-    private var subject: CurrentValueSubject<Album, Error>
+    private var subject: CurrentValueSubject<Domain.Album, Error>
 
     // MARK: - Lifecycle
 
     init(object: AlbumObject) {
         self.object = object
-        self.subject = .init(Album.make(by: object))
+        self.subject = .init(Domain.Album.make(by: object))
         self.token = self.object.observe { [weak self] (change: ObjectChange<AlbumObject>) in
             switch change {
             case let .change(object, _):
-                self?.subject.send(Album.make(by: object))
+                self?.subject.send(Domain.Album.make(by: object))
 
             case .deleted:
                 self?.subject.send(completion: .finished)
@@ -38,7 +38,7 @@ class RealmAlbumQuery {
 extension RealmAlbumQuery: AlbumQuery {
     // MARK: - AlbumQuery
 
-    var album: CurrentValueSubject<Album, Error> {
+    var album: CurrentValueSubject<Domain.Album, Error> {
         return self.subject
     }
 }

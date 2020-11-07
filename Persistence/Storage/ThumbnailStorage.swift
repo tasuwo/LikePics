@@ -79,20 +79,20 @@ public class ThumbnailStorage {
         try self.fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
     }
 
-    private func resolveCacheDirectoryUrl(forClipId clipId: Clip.Identity) -> URL {
+    private func resolveCacheDirectoryUrl(forClipId clipId: Domain.Clip.Identity) -> URL {
         return self.baseUrl.appendingPathComponent(clipId, isDirectory: true)
     }
 
-    private func resolveCacheImageFileUrl(fileName: String, clipId: Clip.Identity) -> URL {
+    private func resolveCacheImageFileUrl(fileName: String, clipId: Domain.Clip.Identity) -> URL {
         return self.resolveCacheDirectoryUrl(forClipId: clipId).appendingPathComponent(fileName, isDirectory: false)
     }
 
-    private func existsCache(named fileName: String, inClipHaving clipId: Clip.Identity) -> Bool {
+    private func existsCache(named fileName: String, inClipHaving clipId: Domain.Clip.Identity) -> Bool {
         let url = self.resolveCacheImageFileUrl(fileName: fileName, clipId: clipId)
         return self.fileManager.fileExists(atPath: url.path)
     }
 
-    private func readCache(named name: String, inClipHaving clipId: Clip.Identity) throws -> UIImage {
+    private func readCache(named name: String, inClipHaving clipId: Domain.Clip.Identity) throws -> UIImage {
         let fileUrl = self.resolveCacheImageFileUrl(fileName: name, clipId: clipId)
 
         guard let data = try? Data(contentsOf: fileUrl) else {

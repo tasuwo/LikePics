@@ -17,11 +17,11 @@ final class AlbumObject: Object {
     }
 }
 
-extension Album: Persistable {
+extension Domain.Album: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: AlbumObject) -> Album {
-        let clips = Array(managedObject.clips.map { Clip.make(by: $0) })
+    static func make(by managedObject: AlbumObject) -> Domain.Album {
+        let clips = Array(managedObject.clips.map { Domain.Clip.make(by: $0) })
         return .init(id: managedObject.id,
                      title: managedObject.title,
                      clips: clips,

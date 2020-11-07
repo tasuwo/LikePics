@@ -19,16 +19,16 @@ final class ClipObject: Object {
     }
 }
 
-extension Clip: Persistable {
+extension Domain.Clip: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: ClipObject) -> Clip {
-        let items = Array(managedObject.items.map { ClipItem.make(by: $0) })
+    static func make(by managedObject: ClipObject) -> Domain.Clip {
+        let items = Array(managedObject.items.map { Domain.ClipItem.make(by: $0) })
 
         return .init(id: managedObject.id,
                      description: managedObject.descriptionText,
                      items: items,
-                     tags: managedObject.tags.map { Tag.make(by: $0) },
+                     tags: managedObject.tags.map { Domain.Tag.make(by: $0) },
                      isHidden: managedObject.isHidden,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)

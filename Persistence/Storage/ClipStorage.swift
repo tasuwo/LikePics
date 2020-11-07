@@ -55,23 +55,23 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Read
 
-    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+    public func readAllClips() -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
         let clips = realm.objects(ClipObject.self)
-            .map { Clip.make(by: $0) }
+            .map { Domain.Clip.make(by: $0) }
         return .success(Array(clips))
     }
 
-    public func readAllTags() -> Result<[Tag], ClipStorageError> {
+    public func readAllTags() -> Result<[Domain.Tag], ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
         let tags = realm.objects(TagObject.self)
-            .map { Tag.make(by: $0) }
+            .map { Domain.Tag.make(by: $0) }
         return .success(Array(tags))
     }
 
     // MARK: Create
 
-    public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError> {
+    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Domain.Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
@@ -142,10 +142,10 @@ extension ClipStorage: ClipStorageProtocol {
         let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
         realm.add(newClip, update: updatePolicy)
 
-        return .success(Clip.make(by: newClip))
+        return .success(Domain.Clip.make(by: newClip))
     }
 
-    public func create(tagWithName name: String) -> Result<Tag, ClipStorageError> {
+    public func create(tagWithName name: String) -> Result<Domain.Tag, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         if !realm.objects(TagObject.self).filter("name = '\(name)'").isEmpty {
@@ -160,7 +160,7 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(.make(by: obj))
     }
 
-    public func create(albumWithTitle title: String) -> Result<Album, ClipStorageError> {
+    public func create(albumWithTitle title: String) -> Result<Domain.Album, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         if !realm.objects(AlbumObject.self).filter("title = '\(title)'").isEmpty {
@@ -174,12 +174,12 @@ extension ClipStorage: ClipStorageProtocol {
         obj.updatedAt = Date()
 
         realm.add(obj)
-        return .success(Album.make(by: obj))
+        return .success(Domain.Album.make(by: obj))
     }
 
     // MARK: Update
 
-    public func updateClips(having ids: [Clip.Identity], byHiding isHidden: Bool) -> Result<[Clip], ClipStorageError> {
+    public func updateClips(having ids: [Domain.Clip.Identity], byHiding isHidden: Bool) -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var clips: [ClipObject] = []
@@ -194,10 +194,10 @@ extension ClipStorage: ClipStorageProtocol {
             clipObj.isHidden = isHidden
             clipObj.updatedAt = Date()
         }
-        return .success(clips.map { Clip.make(by: $0) })
+        return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
-    public func updateClips(having clipIds: [Clip.Identity], byAddingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError> {
+    public func updateClips(having clipIds: [Domain.Clip.Identity], byAddingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var tags: [TagObject] = []
@@ -223,10 +223,10 @@ extension ClipStorage: ClipStorageProtocol {
             }
             clip.updatedAt = Date()
         }
-        return .success(clips.map { Clip.make(by: $0) })
+        return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
-    public func updateClips(having clipIds: [Clip.Identity], byDeletingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError> {
+    public func updateClips(having clipIds: [Domain.Clip.Identity], byDeletingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var tags: [TagObject] = []
@@ -252,10 +252,10 @@ extension ClipStorage: ClipStorageProtocol {
             }
             clip.updatedAt = Date()
         }
-        return .success(clips.map { Clip.make(by: $0) })
+        return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
-    public func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError> {
+    public func updateClips(having clipIds: [Domain.Clip.Identity], byReplacingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var tags: [TagObject] = []
@@ -279,10 +279,10 @@ extension ClipStorage: ClipStorageProtocol {
             tags.forEach { clip.tags.append($0) }
             clip.updatedAt = Date()
         }
-        return .success(clips.map { Clip.make(by: $0) })
+        return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
-    public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
@@ -313,7 +313,7 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(())
     }
 
-    public func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byDeletingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
@@ -343,7 +343,7 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(())
     }
 
-    public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Album, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, titleTo title: String) -> Result<Domain.Album, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         if realm.objects(AlbumObject.self).filter("title = '\(title)'").first != nil {
@@ -356,10 +356,10 @@ extension ClipStorage: ClipStorageProtocol {
 
         album.updatedAt = Date()
         album.title = title
-        return .success(Album.make(by: album))
+        return .success(Domain.Album.make(by: album))
     }
 
-    public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Tag, ClipStorageError> {
+    public func updateTag(having id: Domain.Tag.Identity, nameTo name: String) -> Result<Domain.Tag, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id) else {
@@ -367,12 +367,12 @@ extension ClipStorage: ClipStorageProtocol {
         }
 
         tag.name = name
-        return .success(Tag.make(by: tag))
+        return .success(Domain.Tag.make(by: tag))
     }
 
     // MARK: Delete
 
-    public func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError> {
+    public func deleteClips(having ids: [Domain.Clip.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var clipObjects: [ClipObject] = []
@@ -382,7 +382,7 @@ extension ClipStorage: ClipStorageProtocol {
             }
             clipObjects.append(clip)
         }
-        let removeTargets = clipObjects.map { Clip.make(by: $0) }
+        let removeTargets = clipObjects.map { Domain.Clip.make(by: $0) }
 
         // NOTE: Delete only found objects.
         let clipItems = clipObjects
@@ -395,13 +395,13 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(removeTargets)
     }
 
-    public func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError> {
+    public func deleteClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItem, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: id) else {
             return .failure(.notFound)
         }
-        let removeTarget = ClipItem.make(by: item)
+        let removeTarget = Domain.ClipItem.make(by: item)
 
         guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: item.clipId) else {
             return .failure(.notFound)
@@ -416,19 +416,19 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(removeTarget)
     }
 
-    public func deleteAlbum(having id: Album.Identity) -> Result<Album, ClipStorageError> {
+    public func deleteAlbum(having id: Domain.Album.Identity) -> Result<Domain.Album, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id) else {
             return .failure(.notFound)
         }
-        let removeTarget = Album.make(by: album)
+        let removeTarget = Domain.Album.make(by: album)
 
         realm.delete(album)
         return .success(removeTarget)
     }
 
-    public func deleteTags(having ids: [Tag.Identity]) -> Result<[Tag], ClipStorageError> {
+    public func deleteTags(having ids: [Domain.Tag.Identity]) -> Result<[Domain.Tag], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var tags: [TagObject] = []
@@ -439,7 +439,7 @@ extension ClipStorage: ClipStorageProtocol {
             tags.append(tag)
         }
 
-        let deleteTarget = Array(tags.map({ Tag.make(by: $0) }))
+        let deleteTarget = Array(tags.map({ Domain.Tag.make(by: $0) }))
 
         realm.delete(tags)
         return .success(deleteTarget)

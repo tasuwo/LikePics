@@ -9,17 +9,17 @@ import RealmSwift
 class RealmTagQuery {
     private var token: NotificationToken?
     private let object: TagObject
-    private var subject: CurrentValueSubject<Tag, Error>
+    private var subject: CurrentValueSubject<Domain.Tag, Error>
 
     // MARK: - Lifecycle
 
     init(object: TagObject) {
         self.object = object
-        self.subject = .init(Tag.make(by: object))
+        self.subject = .init(Domain.Tag.make(by: object))
         self.token = self.object.observe { [weak self] (change: ObjectChange<TagObject>) in
             switch change {
             case let .change(object, _):
-                self?.subject.send(Tag.make(by: object))
+                self?.subject.send(Domain.Tag.make(by: object))
 
             case .deleted:
                 self?.subject.send(completion: .finished)
@@ -38,7 +38,7 @@ class RealmTagQuery {
 extension RealmTagQuery: TagQuery {
     // MARK: - TagQuery
 
-    var tag: CurrentValueSubject<Tag, Error> {
+    var tag: CurrentValueSubject<Domain.Tag, Error> {
         return self.subject
     }
 }

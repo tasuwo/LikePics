@@ -9,17 +9,17 @@ import RealmSwift
 class RealmClipItemQuery {
     private var token: NotificationToken?
     private let object: ClipItemObject
-    private var subject: CurrentValueSubject<ClipItem, Error>
+    private var subject: CurrentValueSubject<Domain.ClipItem, Error>
 
     // MARK: - Lifecycle
 
     init(object: ClipItemObject) {
         self.object = object
-        self.subject = .init(ClipItem.make(by: object))
+        self.subject = .init(Domain.ClipItem.make(by: object))
         self.token = self.object.observe { [weak self] (change: ObjectChange<ClipItemObject>) in
             switch change {
             case let .change(object, _):
-                self?.subject.send(ClipItem.make(by: object))
+                self?.subject.send(Domain.ClipItem.make(by: object))
 
             case .deleted:
                 self?.subject.send(completion: .finished)
@@ -38,7 +38,7 @@ class RealmClipItemQuery {
 extension RealmClipItemQuery: ClipItemQuery {
     // MARK: - ClipItemQuery
 
-    var clipItem: CurrentValueSubject<ClipItem, Error> {
+    var clipItem: CurrentValueSubject<Domain.ClipItem, Error> {
         return self.subject
     }
 }

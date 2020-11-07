@@ -16,12 +16,12 @@ protocol ViewControllerFactory {
 
     // MARK: Preview
 
-    func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
-    func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController?
+    func makeClipPreviewViewController(clipId: Domain.Clip.Identity) -> UIViewController?
+    func makeClipItemPreviewViewController(clipId: Domain.Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController?
 
     // MARK: Information
 
-    func makeClipInformationViewController(clipId: Clip.Identity,
+    func makeClipInformationViewController(clipId: Domain.Clip.Identity,
                                            itemId: ClipItem.Identity,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
@@ -38,13 +38,13 @@ protocol ViewControllerFactory {
     // MARK: Album
 
     func makeAlbumListViewController() -> UIViewController?
-    func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?
+    func makeAlbumViewController(albumId: Domain.Album.Identity) -> UIViewController?
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Tag
 
     func makeTagListViewController() -> UIViewController?
-    func makeTagSelectionViewController(selectedTags: [Tag.Identity], context: Any?, delegate: TagSelectionPresenterDelegate) -> UIViewController?
+    func makeTagSelectionViewController(selectedTags: [Domain.Tag.Identity], context: Any?, delegate: TagSelectionPresenterDelegate) -> UIViewController?
 
     // MARK: Settings
 
@@ -138,7 +138,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController? {
+    func makeClipPreviewViewController(clipId: Domain.Clip.Identity) -> UIViewController? {
         let query: ClipQuery
         switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
@@ -176,7 +176,7 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
+    func makeClipItemPreviewViewController(clipId: Domain.Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
         let query: ClipQuery
         switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
@@ -200,7 +200,7 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipInformationViewController(clipId: Clip.Identity,
+    func makeClipInformationViewController(clipId: Domain.Clip.Identity,
                                            itemId: ClipItem.Identity,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
@@ -330,7 +330,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAlbumViewController(albumId: Album.Identity) -> UIViewController? {
+    func makeAlbumViewController(albumId: Domain.Album.Identity) -> UIViewController? {
         let query: AlbumQuery
         switch self.clipQueryService.queryAlbum(having: albumId) {
         case let .success(result):
@@ -408,7 +408,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeTagSelectionViewController(selectedTags: [Tag.Identity],
+    func makeTagSelectionViewController(selectedTags: [Domain.Tag.Identity],
                                         context: Any?,
                                         delegate: TagSelectionPresenterDelegate) -> UIViewController?
     {

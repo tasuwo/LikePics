@@ -22,10 +22,10 @@ final class ClipItemObject: Object {
     }
 }
 
-extension ClipItem: Persistable {
+extension Domain.ClipItem: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: ClipItemObject) -> ClipItem {
+    static func make(by managedObject: ClipItemObject) -> Domain.ClipItem {
         let imageUrl: URL?
         if let imageUrlString = managedObject.imageUrl {
             imageUrl = URL(string: imageUrlString)
@@ -40,15 +40,15 @@ extension ClipItem: Persistable {
             url = nil
         }
 
-        return ClipItem(id: managedObject.id,
-                        url: url,
-                        clipId: managedObject.clipId,
-                        clipIndex: managedObject.clipIndex,
-                        imageFileName: managedObject.imageFileName,
-                        imageUrl: imageUrl,
-                        imageSize: ImageSize(height: managedObject.imageHeight,
-                                             width: managedObject.imageWidth),
-                        registeredDate: managedObject.registeredAt,
-                        updatedDate: managedObject.updatedAt)
+        return Domain.ClipItem(id: managedObject.id,
+                               url: url,
+                               clipId: managedObject.clipId,
+                               clipIndex: managedObject.clipIndex,
+                               imageFileName: managedObject.imageFileName,
+                               imageUrl: imageUrl,
+                               imageSize: ImageSize(height: managedObject.imageHeight,
+                                                    width: managedObject.imageWidth),
+                               registeredDate: managedObject.registeredAt,
+                               updatedDate: managedObject.updatedAt)
     }
 }

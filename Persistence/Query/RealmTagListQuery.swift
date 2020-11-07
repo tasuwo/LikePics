@@ -9,7 +9,7 @@ import RealmSwift
 class RealmTagListQuery {
     private var token: NotificationToken?
     private let results: Results<TagObject>
-    private var subject: CurrentValueSubject<[Tag], Error>
+    private var subject: CurrentValueSubject<[Domain.Tag], Error>
 
     // MARK: - Lifecycle
 
@@ -38,7 +38,7 @@ class RealmTagListQuery {
 extension RealmTagListQuery: TagListQuery {
     // MARK: - TagListQuery
 
-    var tags: CurrentValueSubject<[Tag], Error> {
+    var tags: CurrentValueSubject<[Domain.Tag], Error> {
         return self.subject
     }
 }

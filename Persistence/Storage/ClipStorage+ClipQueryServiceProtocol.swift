@@ -10,14 +10,14 @@ import RealmSwift
 extension ClipStorage: ClipQueryServiceProtocol {
     // MARK: - ClipQueryServiceProtocol
 
-    public func readClip(havingUrl url: URL) -> Result<Clip?, ClipStorageError> {
+    public func readClip(havingUrl url: URL) -> Result<Domain.Clip?, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
 
         guard let clip = realm.objects(ClipObject.self).filter("url = '\(url.absoluteString)'").first else {
             return .success(nil)
         }
 
-        return .success(Clip.make(by: clip))
+        return .success(Domain.Clip.make(by: clip))
     }
 
     public func existsClip(havingUrl url: URL) -> Bool? {
@@ -30,7 +30,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
         return true
     }
 
-    public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
+    public func queryClip(having id: Domain.Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }
@@ -75,7 +75,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
         return .success(RealmClipsResultQuery(results: results))
     }
 
-    public func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError> {
+    public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }
@@ -87,7 +87,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
         return .success(RealmLinkingClipsQuery(results: tagObj.clips))
     }
 
-    public func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
+    public func queryAlbum(having id: Domain.Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else {
             return .failure(.internalError)
         }

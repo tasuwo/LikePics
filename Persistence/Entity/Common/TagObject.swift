@@ -15,10 +15,10 @@ final class TagObject: Object {
     }
 }
 
-extension Tag: Persistable {
+extension Domain.Tag: Persistable {
     // MARK: - Persistable
 
-    static func make(by managedObject: TagObject) -> Tag {
+    static func make(by managedObject: TagObject) -> Domain.Tag {
         return .init(id: managedObject.id, name: managedObject.name)
     }
 }
