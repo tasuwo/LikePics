@@ -206,6 +206,9 @@
 		2CB0712E250905290000E7E1 /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB0712D250905290000E7E1 /* TagCollectionViewCell.swift */; };
 		2CB071302509053D0000E7E1 /* TagCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB0712F2509053D0000E7E1 /* TagCollectionViewCell.xib */; };
 		2CB1B6222556BAB40026088A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1B6202556BAB40026088A /* Model.xcdatamodeld */; };
+		2CB1B6382556C7B30026088A /* Persistence.AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1B6352556C7B30026088A /* Persistence.AutoDefaultValue.generated.swift */; };
+		2CB1B6392556C7B30026088A /* Domain.AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1B6362556C7B30026088A /* Domain.AutoDefaultValue.generated.swift */; };
+		2CB1B63A2556C7B30026088A /* TBoxUIKit.AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1B6372556C7B30026088A /* TBoxUIKit.AutoDefaultValue.generated.swift */; };
 		2CB3CB1A2515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB192515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift */; };
 		2CB3CB342515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */; };
 		2CB3CB3E2515EFF900BE06E5 /* ClipsListAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */; };
@@ -258,12 +261,9 @@
 		2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */; };
 		2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF332592507D327007EF072 /* ClipStorageSpec.swift */; };
 		2CF465742511045B00DF78E6 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CF465722511045B00DF78E6 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2CF465772511045B00DF78E6 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CF465702511045B00DF78E6 /* TestHelper.framework */; };
-		2CF465782511045B00DF78E6 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CF465702511045B00DF78E6 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CF4657C2511046500DF78E6 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2CF4657D2511046A00DF78E6 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CF4657E2511046F00DF78E6 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
-		2CF465822511096700DF78E6 /* AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */; };
 		2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */; };
 		2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */; };
 		2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658A2511134300DF78E6 /* SettingsViewController.swift */; };
@@ -467,13 +467,6 @@
 			remoteGlobalIDString = 2CCECE1324DDC0CB00ADFE54;
 			remoteInfo = Persistence;
 		};
-		2CF465752511045B00DF78E6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2CF4656F2511045B00DF78E6;
-			remoteInfo = TestHelper;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -542,7 +535,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2CF465782511045B00DF78E6 /* TestHelper.framework in Embed Frameworks */,
 				2C6E099A24E6DD1A00B541D9 /* TBoxCore.framework in Embed Frameworks */,
 				2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */,
 				2C6E09DB24E8150500B541D9 /* Common.framework in Embed Frameworks */,
@@ -758,6 +750,9 @@
 		2CB0712D250905290000E7E1 /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 		2CB0712F2509053D0000E7E1 /* TagCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionViewCell.xib; sourceTree = "<group>"; };
 		2CB1B6212556BAB40026088A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		2CB1B6352556C7B30026088A /* Persistence.AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
+		2CB1B6362556C7B30026088A /* Domain.AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Domain.AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
+		2CB1B6372556C7B30026088A /* TBoxUIKit.AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
 		2CB3CB192515E06C00BE06E5 /* ClipsListNavigationItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListNavigationItemsPresenter.swift; sourceTree = "<group>"; };
 		2CB3CB332515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListToolBarItemsProvider.swift; sourceTree = "<group>"; };
 		2CB3CB3D2515EFF900BE06E5 /* ClipsListAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListAlertPresentable.swift; sourceTree = "<group>"; };
@@ -815,7 +810,6 @@
 		2CF465702511045B00DF78E6 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CF465722511045B00DF78E6 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
 		2CF465732511045B00DF78E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
 		2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorageProtocol.swift; sourceTree = "<group>"; };
 		2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorage.swift; sourceTree = "<group>"; };
 		2CF4658A2511134300DF78E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -960,7 +954,6 @@
 				2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */,
 				2C6E09DA24E8150500B541D9 /* Common.framework in Frameworks */,
 				2C8FD64224E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */,
-				2CF465772511045B00DF78E6 /* TestHelper.framework in Frameworks */,
 				EB2DA02CBD88EB7C2F01C67A /* Pods_TBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2149,7 +2142,9 @@
 		2CF465802511048F00DF78E6 /* Struct */ = {
 			isa = PBXGroup;
 			children = (
-				2CF465812511096700DF78E6 /* AutoDefaultValue.generated.swift */,
+				2CB1B6362556C7B30026088A /* Domain.AutoDefaultValue.generated.swift */,
+				2CB1B6352556C7B30026088A /* Persistence.AutoDefaultValue.generated.swift */,
+				2CB1B6372556C7B30026088A /* TBoxUIKit.AutoDefaultValue.generated.swift */,
 			);
 			path = Struct;
 			sourceTree = "<group>";
@@ -2562,7 +2557,6 @@
 				2C8FD64124E02DCE005887F9 /* PBXTargetDependency */,
 				2C6E099824E6DD1A00B541D9 /* PBXTargetDependency */,
 				2C6E09D924E8150500B541D9 /* PBXTargetDependency */,
-				2CF465762511045B00DF78E6 /* PBXTargetDependency */,
 			);
 			name = TBox;
 			productName = TBox;
@@ -3539,9 +3533,11 @@
 			files = (
 				2C6C7A22253B519E00A8A9B8 /* Persistence.ProtocolMocks.swift in Sources */,
 				2C6C7A21253B519E00A8A9B8 /* Common.ProtocolMocks.swift in Sources */,
+				2CB1B6382556C7B30026088A /* Persistence.AutoDefaultValue.generated.swift in Sources */,
 				2C6C7A20253B519E00A8A9B8 /* Domain.ProtocolMocks.swift in Sources */,
-				2CF465822511096700DF78E6 /* AutoDefaultValue.generated.swift in Sources */,
+				2CB1B6392556C7B30026088A /* Domain.AutoDefaultValue.generated.swift in Sources */,
 				2C6C7A23253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift in Sources */,
+				2CB1B63A2556C7B30026088A /* TBoxUIKit.AutoDefaultValue.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3669,11 +3665,6 @@
 			isa = PBXTargetDependency;
 			target = 2CCECE1324DDC0CB00ADFE54 /* Persistence */;
 			targetProxy = 2CCECE2724DDC0CB00ADFE54 /* PBXContainerItemProxy */;
-		};
-		2CF465762511045B00DF78E6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2CF4656F2511045B00DF78E6 /* TestHelper */;
-			targetProxy = 2CF465752511045B00DF78E6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

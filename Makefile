@@ -17,7 +17,21 @@ sourcery_generate: ## Sourceryによるモック自動生成を行う
 	curl -o "./templates/AutoDefaultValue.extension.swifttemplate" \
 		"https://raw.githubusercontent.com/tasuwo/SwiftTemplates/master/Templates/AutoDefaultValue.extension.swifttemplate"; \
 	fi
-	./Pods/Sourcery/bin/sourcery --config ./.sourcery.yml
+	./Pods/Sourcery/bin/sourcery \
+		--sources ./Domain \
+		--templates ./templates \
+		--output ./TestHelper/Mocks/Struct/Domain.AutoDefaultValue.generated.swift \
+		--args testable_import=Domain
+	./Pods/Sourcery/bin/sourcery \
+		--sources ./Persistence \
+		--templates ./templates \
+		--output ./TestHelper/Mocks/Struct/Persistence.AutoDefaultValue.generated.swift \
+		--args testable_import=Persistence
+	./Pods/Sourcery/bin/sourcery \
+		--sources ./TBoxUIKit \
+		--templates ./templates \
+		--output ./TestHelper/Mocks/Struct/TBoxUIKit.AutoDefaultValue.generated.swift \
+		--args testable_import=TBoxUIKit
 
 .PHONY: mockolo_generate
 mockolo_generate: ## mockoloによるモック自動生成を行う

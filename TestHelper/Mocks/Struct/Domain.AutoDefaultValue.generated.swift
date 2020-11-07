@@ -2,8 +2,6 @@
 // DO NOT EDIT
 
 @testable import Domain
-@testable import Persistence
-@testable import TBoxUIKit
 
 extension Album {
     static func makeDefault(
