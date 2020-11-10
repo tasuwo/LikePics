@@ -52,3 +52,24 @@ extension Domain.ClipItem: Persistable {
                                updatedDate: managedObject.updatedAt)
     }
 }
+
+extension Persistence.Item {
+    func map(to: Domain.ClipItem.Type, atIndex index: Int) -> Domain.ClipItem? {
+        guard let id = self.id?.uuidString,
+              let clip = self.clip?.map(to: Domain.Clip.self),
+              let createdDate = self.createdDate,
+              let updatedDate = self.updatedDate else {
+            return nil
+        }
+
+        return Domain.ClipItem(id: id,
+                               url: self.siteUrl,
+                               clipId: clip.id,
+                               clipIndex: index,
+                               imageFileName: self.imageFileName ?? "",
+                               imageUrl: self.imageUrl,
+                               imageSize: .init(height: self.imageHeight, width: self.imageWidth),
+                               registeredDate: createdDate,
+                               updatedDate: updatedDate)
+    }
+}

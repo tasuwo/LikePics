@@ -34,3 +34,30 @@ extension Domain.Clip: Persistable {
                      updatedDate: managedObject.updatedAt)
     }
 }
+
+extension Persistence.Clip {
+    func map(to type: Domain.Clip.Type) -> Domain.Clip? {
+        guard let id = self.id,
+              let createdDate = self.createdDate,
+              let updatedDate = self.updatedDate else {
+            return nil
+        }
+
+        let tags = self.tags?.allObjects
+          .compactMap { $0 as? Persistence.Tag }
+          .compactMap { $0.map(to: Domain.Tag.self) } ?? []
+
+        let items = self.items?
+          .compactMap { $0 as? Persistence.Item }
+          .enumerated()
+          .compactMap { $1.map(to: Domain.ClipItem.self, atIndex: $0) } ?? []
+
+        return Domain.Clip(id: id.uuidString,
+                           description: self.descriptionText,
+                           items: items,
+                           tags: tags,
+                           isHidden: self.isHidden,
+                           registeredDate: createdDate,
+                           updatedDate: updatedDate)
+    }
+}

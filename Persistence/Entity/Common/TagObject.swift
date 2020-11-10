@@ -22,3 +22,10 @@ extension Domain.Tag: Persistable {
         return .init(id: managedObject.id, name: managedObject.name)
     }
 }
+
+extension Persistence.Tag {
+    func map(to type: Domain.Tag.Type) -> Domain.Tag? {
+        guard let id = self.id, let name = self.name else { return nil }
+        return Domain.Tag(id: id.uuidString, name: name)
+    }
+}

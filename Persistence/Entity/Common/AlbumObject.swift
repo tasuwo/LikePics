@@ -29,3 +29,25 @@ extension Domain.Album: Persistable {
                      updatedDate: managedObject.updatedAt)
     }
 }
+
+extension Persistence.Album {
+    func map(to: Domain.Album.Type) -> Domain.Album? {
+        guard let id = self.id?.uuidString,
+              let title = self.title,
+              let createdDate = self.createdDate,
+              let updateDate = self.updatedDate else {
+            return nil
+        }
+
+        let clips = self.clips?
+          .compactMap { $0 as? Persistence.Clip }
+          .enumerated()
+          .compactMap { $1.map(to: Domain.Clip.self) } ?? []
+
+        return Domain.Album(id: id,
+                            title: title,
+                            clips: clips,
+                            registeredDate: createdDate,
+                            updatedDate: updateDate)
+    }
+}
