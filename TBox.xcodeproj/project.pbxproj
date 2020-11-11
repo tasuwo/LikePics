@@ -1702,6 +1702,43 @@
 			path = Realm;
 			sourceTree = "<group>";
 		};
+		2C6DD0F8255C3B8300E316A4 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				2C69CF3B24E43AAA0008C7AA /* Migration */,
+				2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */,
+				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
+				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		2C6DD0F9255C3B8F00E316A4 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */,
+				2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		2C6DD0FA255C3B9B00E316A4 /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2CBA2F92253890A500ECFF47 /* ImageStorage.swift */,
+				2C9EF6B6253DE70A00CBF357 /* ThumbnailStorage.swift */,
+			);
+			path = FileSystem;
+			sourceTree = "<group>";
+		};
+		2C6DD0FB255C3BB500E316A4 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
 		2C6E099324E6DD1A00B541D9 /* TBoxCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -1928,15 +1965,10 @@
 		2C99275624DDC6DB00672CA7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				2C69CF3B24E43AAA0008C7AA /* Migration */,
-				2CBA2F92253890A500ECFF47 /* ImageStorage.swift */,
-				2C9EF6B6253DE70A00CBF357 /* ThumbnailStorage.swift */,
-				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
-				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
-				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
-				2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */,
-				2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */,
-				2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */,
+				2C6DD0FB255C3BB500E316A4 /* UserDefaults */,
+				2C6DD0FA255C3B9B00E316A4 /* FileSystem */,
+				2C6DD0F9255C3B8F00E316A4 /* CoreData */,
+				2C6DD0F8255C3B8300E316A4 /* Realm */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
