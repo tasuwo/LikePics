@@ -131,6 +131,8 @@
 		2C6DD0C1255C225200E316A4 /* CoreDataClipItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0C0255C225200E316A4 /* CoreDataClipItemQuery.swift */; };
 		2C6DD0CC255C237C00E316A4 /* CoreDataTagQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0CB255C237C00E316A4 /* CoreDataTagQuery.swift */; };
 		2C6DD0D7255C24EC00E316A4 /* CoreDataTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0D6255C24EC00E316A4 /* CoreDataTagListQuery.swift */; };
+		2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */; };
+		2C6DD0ED255C2D4900E316A4 /* NewClipQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */; };
 		2C6E098C24E6D94F00B541D9 /* ShareNavigationRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */; };
 		2C6E099624E6DD1A00B541D9 /* TBoxCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C6E099424E6DD1A00B541D9 /* TBoxCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2C6E099924E6DD1A00B541D9 /* TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */; };
@@ -693,6 +695,8 @@
 		2C6DD0C0255C225200E316A4 /* CoreDataClipItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipItemQuery.swift; sourceTree = "<group>"; };
 		2C6DD0CB255C237C00E316A4 /* CoreDataTagQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTagQuery.swift; sourceTree = "<group>"; };
 		2C6DD0D6255C24EC00E316A4 /* CoreDataTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTagListQuery.swift; sourceTree = "<group>"; };
+		2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClipStorage.swift; sourceTree = "<group>"; };
+		2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClipQueryService.swift; sourceTree = "<group>"; };
 		2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareNavigationRootViewController.xib; sourceTree = "<group>"; };
 		2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6E099424E6DD1A00B541D9 /* TBoxCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBoxCore.h; sourceTree = "<group>"; };
@@ -1923,6 +1927,8 @@
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
 				2CD25B9B251E524600BEE210 /* ClipStorage+ClipQueryServiceProtocol.swift */,
 				2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */,
+				2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */,
+				2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -3517,6 +3523,7 @@
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
+				2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */,
 				2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */,
 				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
 				2C6DD0D7255C24EC00E316A4 /* CoreDataTagListQuery.swift in Sources */,
@@ -3539,6 +3546,7 @@
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C9EF6B7253DE70A00CBF357 /* ThumbnailStorage.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
+				2C6DD0ED255C2D4900E316A4 /* NewClipQueryService.swift in Sources */,
 				2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */,
 				2C6DD0CC255C237C00E316A4 /* CoreDataTagQuery.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
