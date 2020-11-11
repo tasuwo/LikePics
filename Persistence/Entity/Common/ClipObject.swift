@@ -50,8 +50,7 @@ extension Persistence.Clip {
 
         let items = self.items?
             .compactMap { $0 as? Persistence.Item }
-            .enumerated()
-            .compactMap { $1.map(to: Domain.ClipItem.self, atIndex: $0) } ?? []
+            .compactMap { $0.map(to: Domain.ClipItem.self) } ?? []
 
         return Domain.Clip(id: id.uuidString,
                            description: self.descriptionText,

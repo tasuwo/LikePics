@@ -22,8 +22,7 @@ class CoreDataClipItemQuery: NSObject {
         request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
 
         let currentItem = try context.fetch(request)
-            // TODO:
-            .compactMap { $0.map(to: Domain.ClipItem.self, atIndex: 0) }
+            .compactMap { $0.map(to: Domain.ClipItem.self) }
             // TODO:
             .first!
 
@@ -47,8 +46,7 @@ extension CoreDataClipItemQuery: NSFetchedResultsControllerDelegate {
     {
         let item: Domain.ClipItem? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
             .compactMap { controller.managedObjectContext.object(with: $0) as? Item }
-            // TODO: Indexの取得
-            .compactMap { $0.map(to: Domain.ClipItem.self, atIndex: 0) }
+            .compactMap { $0.map(to: Domain.ClipItem.self) }
             .first(where: { $0.identity == self.id })
         if let item = item {
             self.subject.send(item)
