@@ -1210,14 +1210,7 @@
 		2C236DA1251A118400AB5EDD /* Query */ = {
 			isa = PBXGroup;
 			children = (
-				2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */,
-				2CD25B3D251E4BEE00BEE210 /* RealmAlbumQuery.swift */,
-				2CD25B47251E4C6B00BEE210 /* RealmClipItemQuery.swift */,
-				2CD25B51251E4C9F00BEE210 /* RealmTagQuery.swift */,
-				2CD25B5B251E4CEE00BEE210 /* RealmClipsResultQuery.swift */,
-				2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */,
-				2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */,
-				2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */,
+				2C6DD0F7255C3B6100E316A4 /* Realm */,
 				2CFB118A255C1A5600451C15 /* CoreData */,
 			);
 			path = Query;
@@ -1692,6 +1685,21 @@
 				2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */,
 			);
 			path = WebImageProvider;
+			sourceTree = "<group>";
+		};
+		2C6DD0F7255C3B6100E316A4 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */,
+				2CD25B3D251E4BEE00BEE210 /* RealmAlbumQuery.swift */,
+				2CD25B47251E4C6B00BEE210 /* RealmClipItemQuery.swift */,
+				2CD25B51251E4C9F00BEE210 /* RealmTagQuery.swift */,
+				2CD25B5B251E4CEE00BEE210 /* RealmClipsResultQuery.swift */,
+				2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */,
+				2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */,
+				2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */,
+			);
+			path = Realm;
 			sourceTree = "<group>";
 		};
 		2C6E099324E6DD1A00B541D9 /* TBoxCore */ = {
