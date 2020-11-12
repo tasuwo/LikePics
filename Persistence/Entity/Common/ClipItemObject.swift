@@ -56,7 +56,7 @@ extension Domain.ClipItem: Persistable {
 extension Persistence.Item {
     func map(to: Domain.ClipItem.Type) -> Domain.ClipItem? {
         guard let id = self.id?.uuidString,
-            let clip = self.clip?.map(to: Domain.Clip.self),
+            let clipId = self.clip?.id?.uuidString,
             let createdDate = self.createdDate,
             let updatedDate = self.updatedDate
         else {
@@ -65,7 +65,7 @@ extension Persistence.Item {
 
         return Domain.ClipItem(id: id,
                                url: self.siteUrl,
-                               clipId: clip.id,
+                               clipId: clipId,
                                clipIndex: Int(self.index),
                                imageFileName: self.imageFileName ?? "",
                                imageUrl: self.imageUrl,
