@@ -14,17 +14,20 @@ class CoreDataClipItemQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, id: Domain.ClipItem.Identity) throws {
+    init?(id: Domain.ClipItem.Identity, context: NSManagedObjectContext) throws {
         self.id = id
 
         let request = NSFetchRequest<Item>(entityName: "Item")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
 
-        let currentItem = try context.fetch(request)
-            .compactMap { $0.map(to: Domain.ClipItem.self) }
-            // TODO:
-            .first!
+        guard let currentItem = try context
+            .fetch(request)
+            .compactMap({ $0.map(to: Domain.ClipItem.self) })
+            .first
+        else {
+            return nil
+        }
 
         self.subject = .init(currentItem)
         self.controller = NSFetchedResultsController(fetchRequest: request,

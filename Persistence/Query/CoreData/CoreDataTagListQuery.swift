@@ -13,7 +13,7 @@ class CoreDataTagListQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, request: NSFetchRequest<Tag>) throws {
+    init(request: NSFetchRequest<Tag>, context: NSManagedObjectContext) throws {
         let currentTags = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Tag.self) }
 

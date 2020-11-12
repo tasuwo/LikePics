@@ -14,17 +14,20 @@ class CoreDataTagQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, id: Domain.Tag.Identity) throws {
+    init?(id: Domain.Tag.Identity, context: NSManagedObjectContext) throws {
         self.id = id
 
         let request = NSFetchRequest<Tag>(entityName: "Tag")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
 
-        let currentTag = try context.fetch(request)
-            .compactMap { $0.map(to: Domain.Tag.self) }
-            // TODO:
-            .first!
+        guard let currentTag = try context
+            .fetch(request)
+            .compactMap({ $0.map(to: Domain.Tag.self) })
+            .first
+        else {
+            return nil
+        }
 
         self.subject = .init(currentTag)
         self.controller = NSFetchedResultsController(fetchRequest: request,

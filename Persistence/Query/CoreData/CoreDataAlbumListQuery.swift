@@ -13,7 +13,7 @@ class CoreDataAlbumListQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, request: NSFetchRequest<Album>) throws {
+    init(request: NSFetchRequest<Album>, context: NSManagedObjectContext) throws {
         let currentAlbums = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Album.self) }
 

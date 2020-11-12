@@ -14,17 +14,20 @@ class CoreDataAlbumQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, id: Domain.Album.Identity) throws {
+    init?(id: Domain.Album.Identity, context: NSManagedObjectContext) throws {
         self.id = id
 
         let request = NSFetchRequest<Album>(entityName: "Album")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
 
-        let currentAlbum = try context.fetch(request)
-            .compactMap { $0.map(to: Domain.Album.self) }
-            // TODO:
-            .first!
+        guard let currentAlbum = try context
+            .fetch(request)
+            .compactMap({ $0.map(to: Domain.Album.self) })
+            .first
+        else {
+            return nil
+        }
 
         self.subject = .init(currentAlbum)
         self.controller = NSFetchedResultsController(fetchRequest: request,

@@ -13,7 +13,7 @@ class CoreDataClipListQuery: NSObject {
 
     // MARK: - Lifecycle
 
-    init(context: NSManagedObjectContext, request: NSFetchRequest<Clip>) throws {
+    init(request: NSFetchRequest<Clip>, context: NSManagedObjectContext) throws {
         let currentClips = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Clip.self) }
 
