@@ -10,7 +10,8 @@ public enum PersistentContainerLoader {
     public static func load() -> NSPersistentContainer {
         let bundle = Bundle(for: Self.Class.self)
         guard let url = bundle.url(forResource: "Model", withExtension: "momd"),
-              let model = NSManagedObjectModel(contentsOf: url) else {
+            let model = NSManagedObjectModel(contentsOf: url)
+        else {
             fatalError("Unable to load Core Data Model")
         }
         return NSPersistentContainer(name: "Model", managedObjectModel: model)

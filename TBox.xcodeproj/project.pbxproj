@@ -266,6 +266,7 @@
 		2CEDB82625452650007D9E02 /* EmptyMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CEDB82525452650007D9E02 /* EmptyMessageView.xib */; };
 		2CEE8E4E254FC154004ED04A /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */; };
 		2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */; };
+		2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */; };
 		2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF332592507D327007EF072 /* ClipStorageSpec.swift */; };
 		2CF465742511045B00DF78E6 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CF465722511045B00DF78E6 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CF4657C2511046500DF78E6 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -821,6 +822,7 @@
 		2CEDB84825455651007D9E02 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ja; path = ja.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		2CF05ACC25409E2B00564A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
+		2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainerLoader.swift; sourceTree = "<group>"; };
 		2CF332592507D327007EF072 /* ClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageSpec.swift; sourceTree = "<group>"; };
 		2CF465702511045B00DF78E6 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CF465722511045B00DF78E6 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -1279,6 +1281,7 @@
 			isa = PBXGroup;
 			children = (
 				2C99275424DDC68100672CA7 /* Persistable.swift */,
+				2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */,
 				2CB1B6202556BAB40026088A /* Model.xcdatamodeld */,
 				2C1040DB254D9509000DF7DE /* Common */,
 				2C0B5CD4254D861000FA43F8 /* Reference */,
@@ -3555,6 +3558,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */,
 				2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */,
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
