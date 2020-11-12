@@ -14,7 +14,6 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private let clipStore: ClipStorable
-    private let clipViewer: ClipViewable
     private let currentDateResolver = { Date() }
 
     init() throws {
@@ -26,7 +25,6 @@ class DependencyContainer {
                                                      referenceClipStorage: referenceClipStorage,
                                                      imageStorage: imageStorage,
                                                      logger: logger)
-        self.clipViewer = referenceClipStorage
     }
 }
 
@@ -41,32 +39,9 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
         let presenter = ClipTargetFinderPresenter(url: url,
                                                   clipStore: self.clipStore,
-                                                  clipViewer: self.clipViewer,
                                                   currentDateResolver: currentDateResolver)
         return ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
     }
 }
 
 extension TemporaryClipCommandService: ClipStorable {}
-extension ReferenceClipStorage: ClipViewable {
-    // MARK: - ClipViewable
-
-    public func clip(havingUrl url: URL) -> Result<TransferringClip?, Error> {
-        switch self.readClip(havingUrl: url) {
-        case .success(.none):
-            return .success(nil)
-
-        case let .success(.some(clip)):
-            return .success(.init(id: clip.id,
-                                  description: clip.description,
-                                  tags: clip.tags.map {
-                                      TransferringClip.Tag(id: $0.id, name: $0.name)
-                                  },
-                                  isHidden: clip.isHidden,
-                                  registeredDate: clip.registeredDate))
-
-        case let .failure(error):
-            return .failure(error)
-        }
-    }
-}

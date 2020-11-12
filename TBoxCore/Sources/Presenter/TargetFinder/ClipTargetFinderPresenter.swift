@@ -55,7 +55,6 @@ public class ClipTargetFinderPresenter {
 
     private let url: URL
     private let clipStore: ClipStorable
-    private let clipViewer: ClipViewable
     private let finder: WebImageUrlFinderProtocol
     private let currentDateResolver: () -> Date
     private let urlSession: URLSession
@@ -64,7 +63,6 @@ public class ClipTargetFinderPresenter {
 
     init(url: URL,
          clipStore: ClipStorable,
-         clipViewer: ClipViewable,
          finder: WebImageUrlFinderProtocol,
          currentDateResolver: @escaping () -> Date,
          isEnabledOverwrite: Bool = false,
@@ -72,7 +70,6 @@ public class ClipTargetFinderPresenter {
     {
         self.url = url
         self.clipStore = clipStore
-        self.clipViewer = clipViewer
         self.finder = finder
         self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
@@ -81,14 +78,12 @@ public class ClipTargetFinderPresenter {
 
     public convenience init(url: URL,
                             clipStore: ClipStorable,
-                            clipViewer: ClipViewable,
                             currentDateResolver: @escaping () -> Date,
                             isEnabledOverwrite: Bool = false,
                             urlSession: URLSession = URLSession.shared)
     {
         self.init(url: url,
                   clipStore: clipStore,
-                  clipViewer: clipViewer,
                   finder: WebImageUrlFinder(),
                   currentDateResolver: currentDateResolver,
                   isEnabledOverwrite: isEnabledOverwrite,

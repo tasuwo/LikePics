@@ -54,7 +54,6 @@ protocol ViewControllerFactory {
 class DependencyContainer {
     private let clipQueryService: ClipQueryServiceProtocol
     private let clipCommandService: ClipCommandServiceProtocol
-    private let clipViewer: ClipViewable
     private let clipStore: ClipStorable
     private let imageStorage: ImageStorageProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
@@ -82,7 +81,6 @@ class DependencyContainer {
                                                     queue: self.clipCommandQueue)
         self.clipQueryService = clipStorage
         self.clipCommandService = clipCommandService
-        self.clipViewer = clipStorage
         self.clipStore = clipCommandService
         self.imageStorage = imageStorage
         self.thumbnailStorage = thumbnailStorage
@@ -234,7 +232,6 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
                                                   clipStore: self.clipStore,
-                                                  clipViewer: self.clipViewer,
                                                   currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
         let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
@@ -449,25 +446,3 @@ extension DependencyContainer: ViewControllerFactory {
 }
 
 extension ClipCommandService: ClipStorable {}
-extension ClipStorage: ClipViewable {
-    // MARK: - ClipViewable
-
-    public func clip(havingUrl url: URL) -> Result<TransferringClip?, Error> {
-        switch self.readClip(havingUrl: url) {
-        case .success(.none):
-            return .success(nil)
-
-        case let .success(.some(clip)):
-            return .success(.init(id: clip.id,
-                                  description: clip.description,
-                                  tags: clip.tags.map {
-                                      TransferringClip.Tag(id: $0.id, name: $0.name)
-                                  },
-                                  isHidden: clip.isHidden,
-                                  registeredDate: clip.registeredDate))
-
-        case let .failure(error):
-            return .failure(error)
-        }
-    }
-}

@@ -229,7 +229,6 @@
 		2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */; };
 		2CBA8432254C744000DA5045 /* ReferenceClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */; };
 		2CBA8451254C815000DA5045 /* ReferenceClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8450254C815000DA5045 /* ReferenceClipStorageMigrationService.swift */; };
-		2CBA848C254C8F6200DA5045 /* ClipViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA846E254C8AF800DA5045 /* ClipViewable.swift */; };
 		2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA84C1254C918900DA5045 /* ClipStorable.swift */; };
 		2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */; };
 		2CC0EB4C2518AAFF006D6DB4 /* SampleImageBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CC0EB4B2518AAFF006D6DB4 /* SampleImageBlack.png */; };
@@ -781,7 +780,6 @@
 		2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorage.swift; sourceTree = "<group>"; };
 		2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageProtocol.swift; sourceTree = "<group>"; };
 		2CBA8450254C815000DA5045 /* ReferenceClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageMigrationService.swift; sourceTree = "<group>"; };
-		2CBA846E254C8AF800DA5045 /* ClipViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipViewable.swift; sourceTree = "<group>"; };
 		2CBA84C1254C918900DA5045 /* ClipStorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorable.swift; sourceTree = "<group>"; };
 		2CC0EB412518A3C8006D6DB4 /* ImageStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageSpec.swift; sourceTree = "<group>"; };
 		2CC0EB4B2518AAFF006D6DB4 /* SampleImageBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SampleImageBlack.png; sourceTree = "<group>"; };
@@ -2131,7 +2129,6 @@
 			isa = PBXGroup;
 			children = (
 				2C051282254EECDB007964B7 /* WebImageResolver */,
-				2CBA846E254C8AF800DA5045 /* ClipViewable.swift */,
 				2CBA84C1254C918900DA5045 /* ClipStorable.swift */,
 			);
 			path = Services;
@@ -3328,7 +3325,6 @@
 				2C3506ED25179545009248C6 /* ClipItemSource.swift in Sources */,
 				2C051296254EECF3007964B7 /* WebImageUrlFinderError.swift in Sources */,
 				2CFC5D00250DF294001A02E4 /* String.swift in Sources */,
-				2CBA848C254C8F6200DA5045 /* ClipViewable.swift in Sources */,
 				2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */,
 				2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */,
 				2C0512A2254EECF9007964B7 /* WebImageProvidingService_Pixiv.swift in Sources */,
