@@ -64,29 +64,28 @@ class DependencyContainer {
     private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
 
     lazy var persistentContainer: NSPersistentContainer = {
-        let makeContainer = { () -> NSPersistentContainer in
-            let container = PersistentContainerLoader.load()
-            container.loadPersistentStores(completionHandler: { _, error in
-                if let error = error as NSError? {
-                    fatalError("Unresolved error \(error), \(error.userInfo)")
-                }
-            })
-            return container
-        }
-
-        if Thread.isMainThread {
-            return makeContainer()
-        } else {
-            return DispatchQueue.main.sync {
-                return makeContainer()
+        let container = PersistentContainerLoader.load()
+        container.loadPersistentStores(completionHandler: { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+        })
+        return container
+    }()
+
+    lazy var rootContext: NSManagedObjectContext = {
+        return self.clipCommandQueue.sync {
+            let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            context.persistentStoreCoordinator = self.persistentContainer.persistentStoreCoordinator
+            return context
         }
     }()
 
     lazy var queryContext: NSManagedObjectContext = {
         let makeContext = { () -> NSManagedObjectContext in
             let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            context.parent = self.persistentContainer.viewContext
+            context.parent = self.rootContext
+            context.automaticallyMergesChangesFromParent = true
             return context
         }
 
@@ -102,13 +101,13 @@ class DependencyContainer {
     lazy var commandContext: NSManagedObjectContext = {
         return self.clipCommandQueue.sync {
             let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            context.parent = self.persistentContainer.viewContext
+            context.parent = self.rootContext
             return context
         }
     }()
 
     lazy var clipStorage: ClipStorageProtocol = {
-        return NewClipStorage(masterContext: self.persistentContainer.viewContext,
+        return NewClipStorage(rootContext: self.rootContext,
                               context: self.commandContext)
     }()
 

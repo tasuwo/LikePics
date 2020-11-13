@@ -8,13 +8,13 @@ import CoreData
 import Domain
 
 public class NewClipStorage {
-    private let masterContext: NSManagedObjectContext
+    private let rootContext: NSManagedObjectContext
     private let context: NSManagedObjectContext
 
-    public init(masterContext: NSManagedObjectContext,
+    public init(rootContext: NSManagedObjectContext,
                 context: NSManagedObjectContext)
     {
-        self.masterContext = masterContext
+        self.rootContext = rootContext
         self.context = context
     }
 }
@@ -30,13 +30,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
     public func commitTransaction() throws {
         try self.context.save()
-        if Thread.isMainThread {
-            try self.masterContext.save()
-        } else {
-            try DispatchQueue.main.sync {
-                try self.masterContext.save()
-            }
-        }
+        try self.rootContext.save()
     }
 
     public func cancelTransactionIfNeeded() throws {
