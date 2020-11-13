@@ -38,6 +38,7 @@ class CoreDataTagQuery: NSObject {
         super.init()
 
         self.controller.delegate = self
+        try self.controller.performFetch()
     }
 }
 
