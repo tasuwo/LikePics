@@ -182,36 +182,259 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateClips(having ids: [Domain.Clip.Identity], byHiding: Bool) -> Result<[Domain.Clip], ClipStorageError> {
-        return .failure(.internalError)
+    public func updateClips(having ids: [Domain.Clip.Identity], byHiding isHidden: Bool) -> Result<[Domain.Clip], ClipStorageError> {
+        do {
+            var clips: [Clip] = []
+            for clipId in ids {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            clips.forEach { $0.isHidden = isHidden }
+
+            return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateClips(having clipIds: [Domain.Clip.Identity], byAddingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            var tags: [Tag] = []
+            for tagId in tagIds {
+                let request = NSFetchRequest<Tag>(entityName: "Tag")
+                request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
+                guard let tag = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                tags.append(tag)
+            }
+
+            var clips: [Clip] = []
+            for clipId in clipIds {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                var updated = false
+                for tag in tags {
+                    let tags = clip.mutableSetValue(forKey: "tags")
+                    guard !tags.contains(tag) else { continue }
+                    tags.add(tag)
+                    updated = true
+                }
+                if updated {
+                    clip.updatedDate = Date()
+                }
+            }
+            return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateClips(having clipIds: [Domain.Clip.Identity], byDeletingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            var tags: [Tag] = []
+            for tagId in tagIds {
+                let request = NSFetchRequest<Tag>(entityName: "Tag")
+                request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
+                guard let tag = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                tags.append(tag)
+            }
+
+            var clips: [Clip] = []
+            for clipId in clipIds {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                var updated = false
+                for tag in tags {
+                    let tags = clip.mutableSetValue(forKey: "tags")
+                    guard tags.contains(tag) else { continue }
+                    tags.remove(tag)
+                    updated = true
+                }
+                if updated {
+                    clip.updatedDate = Date()
+                }
+            }
+            return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateClips(having clipIds: [Domain.Clip.Identity], byReplacingTagsHaving tagIds: [Domain.Tag.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            var tags: [Tag] = []
+            for tagId in tagIds {
+                let request = NSFetchRequest<Tag>(entityName: "Tag")
+                request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
+                guard let tag = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                tags.append(tag)
+            }
+
+            var clips: [Clip] = []
+            for clipId in clipIds {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            for clip in clips {
+                let clipTags = clip.mutableSetValue(forKey: "tags")
+                clipTags.removeAllObjects()
+                tags.forEach { clipTags.add($0) }
+                clip.updatedDate = Date()
+            }
+            return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let request = NSFetchRequest<Album>(entityName: "Album")
+            request.predicate = NSPredicate(format: "id == %@", albumId as CVarArg)
+            guard let album = try self.context.fetch(request).first else {
+                return .failure(.notFound)
+            }
+
+            var clips: [Clip] = []
+            for clipId in clipIds {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            let albumClips = album.mutableOrderedSetValue(forKey: "clips")
+            for clip in clips {
+                guard !albumClips.contains(clip) else {
+                    return .failure(.duplicated)
+                }
+            }
+
+            album.updatedDate = Date()
+
+            for clip in clips {
+                if !albumClips.contains(clip) {
+                    albumClips.add(clip)
+                }
+            }
+
+            return .success(())
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateAlbum(having albumId: Domain.Album.Identity, byDeletingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let request = NSFetchRequest<Album>(entityName: "Album")
+            request.predicate = NSPredicate(format: "id == %@", albumId as CVarArg)
+            guard let album = try self.context.fetch(request).first else {
+                return .failure(.notFound)
+            }
+
+            var clips: [Clip] = []
+            for clipId in clipIds {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
+                guard let clip = try self.context.fetch(request).first else {
+                    return .failure(.notFound)
+                }
+                clips.append(clip)
+            }
+
+            let albumClips = album.mutableOrderedSetValue(forKey: "clips")
+            for clip in clips {
+                guard albumClips.contains(clip) else {
+                    return .failure(.notFound)
+                }
+            }
+
+            album.updatedDate = Date()
+            clips.forEach { albumClips.remove($0) }
+
+            return .success(())
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateAlbum(having albumId: Domain.Album.Identity, titleTo title: String) -> Result<Domain.Album, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let alreadyExists: Bool = try {
+                let request = NSFetchRequest<Tag>(entityName: "Album")
+                request.predicate = NSPredicate(format: "title == %@", title as CVarArg)
+                return try self.context.fetch(request).first != nil
+            }()
+            guard !alreadyExists else {
+                return .failure(.duplicated)
+            }
+
+            let request = NSFetchRequest<Album>(entityName: "Album")
+            request.predicate = NSPredicate(format: "id == %@", albumId as CVarArg)
+            guard let album = try self.context.fetch(request).first else {
+                return .failure(.notFound)
+            }
+            guard let result = album.map(to: Domain.Album.self) else {
+                return .failure(.internalError)
+            }
+
+            album.title = title
+            album.updatedDate = Date()
+
+            return .success(result)
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func updateTag(having id: Domain.Tag.Identity, nameTo name: String) -> Result<Domain.Tag, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let request = NSFetchRequest<Tag>(entityName: "Tag")
+            request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            guard let tag = try self.context.fetch(request).first else {
+                return .failure(.notFound)
+            }
+            guard let result = tag.map(to: Domain.Tag.self) else {
+                return .failure(.internalError)
+            }
+
+            tag.name = name
+
+            return .success(result)
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func deleteClips(having ids: [Domain.Clip.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
