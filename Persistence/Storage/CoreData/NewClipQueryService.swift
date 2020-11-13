@@ -14,10 +14,6 @@ public class NewClipQueryService {
 }
 
 extension NewClipQueryService: ClipQueryServiceProtocol {
-    public func readClip(havingUrl url: URL) -> Result<Domain.Clip?, ClipStorageError> {
-        return .failure(.internalError)
-    }
-
     public func queryClip(having id: Domain.Clip.Identity) -> Result<Domain.ClipQuery, ClipStorageError> {
         do {
             guard let query = try CoreDataClipQuery(id: id, context: self.context) else {
