@@ -36,7 +36,14 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let request = NSFetchRequest<Clip>(entityName: "Clip")
+            request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+            request.predicate = NSPredicate(format: "tags.@count == 0")
+            return .success(try CoreDataClipListQuery(request: request, context: self.context))
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError> {
@@ -44,7 +51,14 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            guard let query = try CoreDataClipListQuery(id: tag.id, context: self.context) else {
+                return .failure(.notFound)
+            }
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func queryAlbum(having id: Domain.Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
