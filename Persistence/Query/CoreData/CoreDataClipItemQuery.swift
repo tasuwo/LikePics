@@ -48,12 +48,14 @@ extension CoreDataClipItemQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        let item: Domain.ClipItem? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-            .compactMap { controller.managedObjectContext.object(with: $0) as? Item }
-            .compactMap { $0.map(to: Domain.ClipItem.self) }
-            .first(where: { $0.identity == self.id })
-        if let item = item {
-            self.subject.send(item)
+        controller.managedObjectContext.perform {
+            let item: Domain.ClipItem? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                .compactMap { controller.managedObjectContext.object(with: $0) as? Item }
+                .compactMap { $0.map(to: Domain.ClipItem.self) }
+                .first(where: { $0.identity == self.id })
+            if let item = item {
+                self.subject.send(item)
+            }
         }
     }
 }

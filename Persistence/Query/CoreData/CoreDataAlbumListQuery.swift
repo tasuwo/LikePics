@@ -36,10 +36,12 @@ extension CoreDataAlbumListQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        let albums: [Domain.Album] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-            .compactMap { controller.managedObjectContext.object(with: $0) as? Album }
-            .compactMap { $0.map(to: Domain.Album.self) }
-        self.subject.send(albums)
+        controller.managedObjectContext.perform {
+            let albums: [Domain.Album] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                .compactMap { controller.managedObjectContext.object(with: $0) as? Album }
+                .compactMap { $0.map(to: Domain.Album.self) }
+            self.subject.send(albums)
+        }
     }
 }
 

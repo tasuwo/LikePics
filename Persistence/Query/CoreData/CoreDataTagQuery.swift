@@ -48,12 +48,14 @@ extension CoreDataTagQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        let tag: Domain.Tag? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-            .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
-            .compactMap { $0.map(to: Domain.Tag.self) }
-            .first(where: { $0.identity == self.id })
-        if let tag = tag {
-            self.subject.send(tag)
+        controller.managedObjectContext.perform {
+            let tag: Domain.Tag? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
+                .compactMap { $0.map(to: Domain.Tag.self) }
+                .first(where: { $0.identity == self.id })
+            if let tag = tag {
+                self.subject.send(tag)
+            }
         }
     }
 }

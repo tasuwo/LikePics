@@ -36,10 +36,12 @@ extension CoreDataTagListQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        let tags: [Domain.Tag] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-            .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
-            .compactMap { $0.map(to: Domain.Tag.self) }
-        self.subject.send(tags)
+        controller.managedObjectContext.perform {
+            let tags: [Domain.Tag] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
+                .compactMap { $0.map(to: Domain.Tag.self) }
+            self.subject.send(tags)
+        }
     }
 }
 

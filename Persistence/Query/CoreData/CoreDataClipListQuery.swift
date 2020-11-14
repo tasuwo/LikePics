@@ -68,22 +68,24 @@ extension CoreDataClipListQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        switch self.context {
-        case .clipsRequest:
-            let clips: [Domain.Clip] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-                .compactMap { controller.managedObjectContext.object(with: $0) as? Clip }
-                .compactMap { $0.map(to: Domain.Clip.self) }
-            self.subject.send(clips)
-
-        case let .tagRelatedClipsRequest(tagId: id, _):
-            let tag: Tag? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-                .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
-                .first(where: { $0.id?.uuidString == id })
-            if let tag = tag {
-                let clips = tag.clips?.allObjects
-                    .compactMap { $0 as? Clip }
-                    .compactMap { $0.map(to: Domain.Clip.self) } ?? []
+        controller.managedObjectContext.perform {
+            switch self.context {
+            case .clipsRequest:
+                let clips: [Domain.Clip] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                    .compactMap { controller.managedObjectContext.object(with: $0) as? Clip }
+                    .compactMap { $0.map(to: Domain.Clip.self) }
                 self.subject.send(clips)
+
+            case let .tagRelatedClipsRequest(tagId: id, _):
+                let tag: Tag? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+                    .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
+                    .first(where: { $0.id?.uuidString == id })
+                if let tag = tag {
+                    let clips = tag.clips?.allObjects
+                        .compactMap { $0 as? Clip }
+                        .compactMap { $0.map(to: Domain.Clip.self) } ?? []
+                    self.subject.send(clips)
+                }
             }
         }
     }
