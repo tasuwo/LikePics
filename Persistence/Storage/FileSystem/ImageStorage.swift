@@ -34,7 +34,7 @@ public class ImageStorage {
     }
 
     private func buildTargetDirectoryUrl(for clipId: Domain.Clip.Identity) -> URL {
-        return self.baseUrl.appendingPathComponent(clipId, isDirectory: true)
+        return self.baseUrl.appendingPathComponent(clipId.uuidString, isDirectory: true)
     }
 
     private func buildImageFileUrl(name: String, clipId: Domain.Clip.Identity) -> URL {

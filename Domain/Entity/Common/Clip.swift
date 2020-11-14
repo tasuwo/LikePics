@@ -4,7 +4,7 @@
 
 // sourcery: AutoDefaultValue
 public struct Clip: Equatable {
-    public let id: String
+    public let id: UUID
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
@@ -30,7 +30,7 @@ public struct Clip: Equatable {
 
     // MARK: - Lifecycle
 
-    public init(id: String,
+    public init(id: UUID,
                 description: String?,
                 items: [ClipItem],
                 tags: [Tag],
@@ -74,9 +74,9 @@ public struct Clip: Equatable {
 }
 
 extension Clip: Identifiable {
-    public typealias Identity = String
+    public typealias Identity = UUID
 
-    public var identity: String {
+    public var identity: UUID {
         return self.id
     }
 }

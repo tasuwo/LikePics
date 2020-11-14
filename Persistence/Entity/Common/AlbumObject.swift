@@ -22,7 +22,8 @@ extension Domain.Album: Persistable {
 
     static func make(by managedObject: AlbumObject) -> Domain.Album {
         let clips = Array(managedObject.clips.map { Domain.Clip.make(by: $0) })
-        return .init(id: managedObject.id,
+        // swiftlint:disable:next force_unwrapping
+        return .init(id: UUID(uuidString: managedObject.id)!,
                      title: managedObject.title,
                      clips: clips,
                      registeredDate: managedObject.registeredAt,
@@ -32,7 +33,7 @@ extension Domain.Album: Persistable {
 
 extension Persistence.Album {
     func map(to: Domain.Album.Type) -> Domain.Album? {
-        guard let id = self.id?.uuidString,
+        guard let id = self.id,
             let title = self.title,
             let createdDate = self.createdDate,
             let updateDate = self.updatedDate

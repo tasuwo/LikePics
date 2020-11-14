@@ -4,13 +4,13 @@
 
 // sourcery: AutoDefaultValue
 public struct ReferenceTag: Equatable {
-    public let id: String
+    public let id: UUID
     public let name: String
     public let isDirty: Bool
 
     // MARK: - Lifecycle
 
-    public init(id: String, name: String, isDirty: Bool = false) {
+    public init(id: UUID, name: String, isDirty: Bool = false) {
         self.id = id
         self.name = name
         self.isDirty = isDirty

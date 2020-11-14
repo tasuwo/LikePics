@@ -80,7 +80,7 @@ public class ThumbnailStorage {
     }
 
     private func resolveCacheDirectoryUrl(forClipId clipId: Domain.Clip.Identity) -> URL {
-        return self.baseUrl.appendingPathComponent(clipId, isDirectory: true)
+        return self.baseUrl.appendingPathComponent(clipId.uuidString, isDirectory: true)
     }
 
     private func resolveCacheImageFileUrl(fileName: String, clipId: Domain.Clip.Identity) -> URL {

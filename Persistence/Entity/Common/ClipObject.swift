@@ -24,8 +24,8 @@ extension Domain.Clip: Persistable {
 
     static func make(by managedObject: ClipObject) -> Domain.Clip {
         let items = Array(managedObject.items.map { Domain.ClipItem.make(by: $0) })
-
-        return .init(id: managedObject.id,
+        // swiftlint:disable:next force_unwrapping
+        return .init(id: UUID(uuidString: managedObject.id)!,
                      description: managedObject.descriptionText,
                      items: items,
                      tags: managedObject.tags.map { Domain.Tag.make(by: $0) },
@@ -52,7 +52,7 @@ extension Persistence.Clip {
             .compactMap { $0 as? Persistence.Item }
             .compactMap { $0.map(to: Domain.ClipItem.self) } ?? []
 
-        return Domain.Clip(id: id.uuidString,
+        return Domain.Clip(id: id,
                            description: self.descriptionText,
                            items: items,
                            tags: tags,

@@ -61,7 +61,7 @@ enum ClipStorageMigrationService {
     private static func migrateToV9(_ migration: Migration) {
         let storage = try! ImageStorage(configuration: .document)
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, _ in
-            try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! String)
+            try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! UUID)
         }
     }
 
@@ -70,7 +70,7 @@ enum ClipStorageMigrationService {
         migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
             autoreleasepool {
                 let imageFileName = oldObject!["imageFileName"] as! String
-                let clipId = oldObject!["clipId"] as! String
+                let clipId = oldObject!["clipId"] as! UUID
 
                 let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)!
                 let image = UIImage(data: data)!

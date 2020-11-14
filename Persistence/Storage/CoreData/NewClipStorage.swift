@@ -75,7 +75,7 @@ extension NewClipStorage: ClipStorageProtocol {
                     }
                     let newTag = NSEntityDescription.insertNewObject(forEntityName: "Tag",
                                                                      into: self.context) as! Tag
-                    newTag.id = UUID(uuidString: tag.id)!
+                    newTag.id = tag.id
                     newTag.name = tag.name
                     newTag.isHidden = false
                     appendingTags.append(newTag)
@@ -99,16 +99,16 @@ extension NewClipStorage: ClipStorageProtocol {
 
             let newClip = NSEntityDescription.insertNewObject(forEntityName: "Clip",
                                                               into: self.context) as! Clip
-            newClip.id = UUID(uuidString: clip.id)!
+            newClip.id = clip.id
             newClip.descriptionText = clip.description
 
             let items: NSMutableOrderedSet = .init()
             clip.items.forEach { item in
                 let newItem = NSEntityDescription.insertNewObject(forEntityName: "Item",
                                                                   into: self.context) as! Item
-                newItem.id = UUID(uuidString: item.id)!
+                newItem.id = item.id
                 newItem.siteUrl = item.url
-                newItem.clipId = UUID(uuidString: clip.id)!
+                newItem.clipId = clip.id
                 newItem.index = Int64(item.clipIndex)
                 newItem.imageFileName = item.imageFileName
                 newItem.imageUrl = item.imageUrl

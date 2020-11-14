@@ -25,7 +25,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
             return .failure(.internalError)
         }
 
-        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: id) else {
+        guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: id.uuidString) else {
             return .failure(.notFound)
         }
 
@@ -70,7 +70,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
             return .failure(.internalError)
         }
 
-        guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) else {
+        guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity.uuidString) else {
             return .failure(.notFound)
         }
 
@@ -82,7 +82,7 @@ extension ClipStorage: ClipQueryServiceProtocol {
             return .failure(.internalError)
         }
 
-        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id) else {
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id.uuidString) else {
             return .failure(.notFound)
         }
 

@@ -40,9 +40,11 @@ extension Domain.ClipItem: Persistable {
             url = nil
         }
 
-        return Domain.ClipItem(id: managedObject.id,
+        // swiftlint:disable:next force_unwrapping
+        return Domain.ClipItem(id: UUID(uuidString: managedObject.id)!,
                                url: url,
-                               clipId: managedObject.clipId,
+                               // swiftlint:disable:next force_unwrapping
+                               clipId: UUID(uuidString: managedObject.clipId)!,
                                clipIndex: managedObject.clipIndex,
                                imageFileName: managedObject.imageFileName,
                                imageUrl: imageUrl,
@@ -55,8 +57,8 @@ extension Domain.ClipItem: Persistable {
 
 extension Persistence.Item {
     func map(to: Domain.ClipItem.Type) -> Domain.ClipItem? {
-        guard let id = self.id?.uuidString,
-            let clipId = self.clip?.id?.uuidString,
+        guard let id = self.id,
+            let clipId = self.clip?.id,
             let createdDate = self.createdDate,
             let updatedDate = self.updatedDate
         else {

@@ -20,7 +20,8 @@ extension ReferenceTag: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ReferenceTagObject) -> ReferenceTag {
-        return .init(id: managedObject.id,
+        // swiftlint:disable:next force_unwrapping
+        return .init(id: UUID(uuidString: managedObject.id)!,
                      name: managedObject.name,
                      isDirty: managedObject.isDirty)
     }

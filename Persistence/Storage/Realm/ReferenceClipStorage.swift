@@ -91,11 +91,11 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         let obj = ReferenceClipObject()
-        obj.id = clip.id
+        obj.id = clip.id.uuidString
         obj.descriptionText = clip.description
         clip.tags.forEach { tag in
             let tagObj = ReferenceTagObject()
-            tagObj.id = tag.id
+            tagObj.id = tag.id.uuidString
             tagObj.name = tag.name
             obj.tags.append(tagObj)
         }
@@ -112,7 +112,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         let obj = ReferenceTagObject()
-        obj.id = tag.id
+        obj.id = tag.id.uuidString
         obj.name = tag.name
         obj.isDirty = tag.isDirty
 
@@ -126,7 +126,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id)
+        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id.uuidString)
         tag?.name = name
 
         return .success(())
@@ -135,8 +135,8 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateClips(having clipIds: [ReferenceClip.Identity], byAddingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
-        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }
+        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
+        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0.uuidString) }
 
         for clip in clips {
             for tag in tags {
@@ -151,8 +151,8 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateClips(having clipIds: [ReferenceClip.Identity], byDeletingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
-        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }
+        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
+        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0.uuidString) }
 
         for clip in clips {
             for tag in tags {
@@ -167,8 +167,8 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateClips(having clipIds: [ReferenceClip.Identity], byReplacingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
-        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }
+        let tags = tagIds.compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
+        let clips = clipIds.compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0.uuidString) }
 
         for clip in clips {
             clip.tags.removeAll()
@@ -180,7 +180,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
     public func updateClips(having clipIds: [ReferenceClip.Identity], byUpdatingDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
-        for clip in clipIds.compactMap({ realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }) {
+        for clip in clipIds.compactMap({ realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0.uuidString) }) {
             clip.isDirty = isDirty
         }
         return .success(())
@@ -200,7 +200,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         ids
-            .compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0) }
+            .compactMap { realm.object(ofType: ReferenceClipObject.self, forPrimaryKey: $0.uuidString) }
             .forEach { realm.delete($0) }
 
         return .success(())
@@ -210,7 +210,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         ids
-            .compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
+            .compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
             .forEach { realm.delete($0) }
 
         return .success(())

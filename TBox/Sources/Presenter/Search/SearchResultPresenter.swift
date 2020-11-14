@@ -232,7 +232,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: self.selectedClips.ids, byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add tags (\(tagIds.joined(separator: ", "))) to clips. (code: \(error.rawValue))
+            Failed to add tags (\(tagIds.map({ $0.uuidString }).joined(separator: ", "))) to clips. (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
@@ -275,7 +275,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to replace tags (\(tagIds.joined(separator: ",")) of clip having \(clipId). (code: \(error.rawValue))
+            Failed to replace tags (\(tagIds.map({ $0.uuidString }).joined(separator: ",")) of clip having \(clipId). (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
         }

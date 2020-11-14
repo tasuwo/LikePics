@@ -4,7 +4,7 @@
 
 // sourcery: AutoDefaultValue
 public struct ReferenceClip: Equatable {
-    public let id: String
+    public let id: UUID
     public let description: String?
     public let tags: [ReferenceTag]
     public let isHidden: Bool
@@ -13,7 +13,7 @@ public struct ReferenceClip: Equatable {
 
     // MARK: - Lifecycle
 
-    public init(id: String,
+    public init(id: UUID,
                 description: String?,
                 tags: [ReferenceTag],
                 isHidden: Bool,

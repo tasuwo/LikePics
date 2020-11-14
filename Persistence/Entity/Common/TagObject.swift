@@ -19,13 +19,14 @@ extension Domain.Tag: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: TagObject) -> Domain.Tag {
-        return .init(id: managedObject.id, name: managedObject.name)
+        // swiftlint:disable:next force_unwrapping
+        return .init(id: UUID(uuidString: managedObject.id)!, name: managedObject.name)
     }
 }
 
 extension Persistence.Tag {
     func map(to type: Domain.Tag.Type) -> Domain.Tag? {
         guard let id = self.id, let name = self.name else { return nil }
-        return Domain.Tag(id: id.uuidString, name: name)
+        return Domain.Tag(id: id, name: name)
     }
 }

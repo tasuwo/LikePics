@@ -22,7 +22,7 @@ extension ReferenceClip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ReferenceClipObject) -> ReferenceClip {
-        return .init(id: managedObject.id,
+        return .init(id: UUID(uuidString: managedObject.id)!,
                      description: managedObject.descriptionText,
                      tags: managedObject.tags.map { ReferenceTag.make(by: $0) },
                      isHidden: managedObject.isHidden,

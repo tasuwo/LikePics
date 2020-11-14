@@ -4,7 +4,7 @@
 
 // sourcery: AutoDefaultValue
 public struct Album: Equatable {
-    public let id: String
+    public let id: UUID
     public let title: String
     public let clips: [Clip]
     public let registeredDate: Date
@@ -12,7 +12,7 @@ public struct Album: Equatable {
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, clips: [Clip], registeredDate: Date, updatedDate: Date) {
+    public init(id: UUID, title: String, clips: [Clip], registeredDate: Date, updatedDate: Date) {
         self.id = id
         self.title = title
         self.clips = clips
@@ -40,9 +40,9 @@ public struct Album: Equatable {
 }
 
 extension Album: Identifiable {
-    public typealias Identity = String
+    public typealias Identity = UUID
 
-    public var identity: String {
+    public var identity: UUID {
         return self.id
     }
 }

@@ -207,7 +207,7 @@ extension TemporaryClipsPersistService: TemporaryClipsPersistServiceProtocol {
             // TODO: 移行に失敗したクリップをエラーログに格納し、復旧できるようにする
             if persistentSkippedClipIds.isEmpty == false {
                 self.logger.write(ConsoleLog(level: .error, message: """
-                一部クリップの永続化に失敗した: \(persistentSkippedClipIds.joined(separator: ","))
+                一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
                 """))
             }
 

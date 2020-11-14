@@ -77,7 +77,7 @@ class ClipPreviewPagePresenter {
     func addTagsToClip(_ tagIds: Set<Tag.Identity>) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byAddingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add tags (\(tagIds.joined(separator: ", "))) to clip. (code: \(error.rawValue))
+            Failed to add tags (\(tagIds.map({ $0.uuidString }).joined(separator: ", "))) to clip. (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
         }

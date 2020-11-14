@@ -78,14 +78,14 @@ extension ClipStorage: ClipStorageProtocol {
 
         var appendingTags: [TagObject] = []
         for tag in clip.tags {
-            if let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity) {
+            if let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity.uuidString) {
                 appendingTags.append(tagObj)
             } else {
                 guard allowTagCreation else {
                     return .failure(.invalidParameter)
                 }
                 let newTag = TagObject()
-                newTag.id = tag.id
+                newTag.id = tag.id.uuidString
                 newTag.name = tag.name
                 appendingTags.append(newTag)
             }
@@ -94,7 +94,7 @@ extension ClipStorage: ClipStorageProtocol {
         // Check duplication
 
         var oldClip: ClipObject?
-        if let duplicatedClip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.identity) {
+        if let duplicatedClip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.identity.uuidString) {
             if overwrite {
                 oldClip = duplicatedClip
             } else {
@@ -105,15 +105,15 @@ extension ClipStorage: ClipStorageProtocol {
         // Prepare new objects
 
         let newClip = ClipObject()
-        newClip.id = clip.id
+        newClip.id = clip.id.uuidString
         newClip.descriptionText = clip.description
 
         clip.items.forEach { item in
             let newClipItem = ClipItemObject()
 
-            newClipItem.id = item.id
+            newClipItem.id = item.id.uuidString
             newClipItem.url = item.url?.absoluteString
-            newClipItem.clipId = clip.id
+            newClipItem.clipId = clip.id.uuidString
             newClipItem.clipIndex = item.clipIndex
             newClipItem.imageFileName = item.imageFileName
             newClipItem.imageUrl = item.imageUrl?.absoluteString
@@ -184,7 +184,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clips: [ClipObject] = []
         for id in ids {
-            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: id) else {
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: id.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clipObj)
@@ -202,7 +202,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var tags: [TagObject] = []
         for tagId in tagIds {
-            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else {
+            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId.uuidString) else {
                 return .failure(.notFound)
             }
             tags.append(tagObj)
@@ -210,7 +210,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clipObj)
@@ -231,7 +231,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var tags: [TagObject] = []
         for tagId in tagIds {
-            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else {
+            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId.uuidString) else {
                 return .failure(.notFound)
             }
             tags.append(tagObj)
@@ -239,7 +239,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clipObj)
@@ -260,7 +260,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var tags: [TagObject] = []
         for tagId in tagIds {
-            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId) else {
+            guard let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tagId.uuidString) else {
                 return .failure(.notFound)
             }
             tags.append(tagObj)
@@ -268,7 +268,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clipObj = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clipObj)
@@ -285,13 +285,13 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId.uuidString) else {
             return .failure(.notFound)
         }
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clip)
@@ -316,13 +316,13 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateAlbum(having albumId: Domain.Album.Identity, byDeletingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId.uuidString) else {
             return .failure(.notFound)
         }
 
         var clips: [ClipObject] = []
         for clipId in clipIds {
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clips.append(clip)
@@ -350,7 +350,7 @@ extension ClipStorage: ClipStorageProtocol {
             return .failure(.duplicated)
         }
 
-        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId) else {
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: albumId.uuidString) else {
             return .failure(.notFound)
         }
 
@@ -362,7 +362,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateTag(having id: Domain.Tag.Identity, nameTo name: String) -> Result<Domain.Tag, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id) else {
+        guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id.uuidString) else {
             return .failure(.notFound)
         }
 
@@ -377,7 +377,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var clipObjects: [ClipObject] = []
         for clipId in ids {
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
                 return .failure(.notFound)
             }
             clipObjects.append(clip)
@@ -398,7 +398,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func deleteClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItem, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: id) else {
+        guard let item = realm.object(ofType: ClipItemObject.self, forPrimaryKey: id.uuidString) else {
             return .failure(.notFound)
         }
         let removeTarget = Domain.ClipItem.make(by: item)
@@ -419,7 +419,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func deleteAlbum(having id: Domain.Album.Identity) -> Result<Domain.Album, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id) else {
+        guard let album = realm.object(ofType: AlbumObject.self, forPrimaryKey: id.uuidString) else {
             return .failure(.notFound)
         }
         let removeTarget = Domain.Album.make(by: album)
@@ -433,7 +433,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         var tags: [TagObject] = []
         for id in ids {
-            guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id) else {
+            guard let tag = realm.object(ofType: TagObject.self, forPrimaryKey: id.uuidString) else {
                 return .failure(.notFound)
             }
             tags.append(tag)

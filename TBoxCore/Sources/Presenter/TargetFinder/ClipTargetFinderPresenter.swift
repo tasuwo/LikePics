@@ -276,9 +276,9 @@ public class ClipTargetFinderPresenter {
 
     private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
-        let clipId = UUID().uuidString
+        let clipId = UUID()
         let items = target.map {
-            ClipItem(id: UUID().uuidString,
+            ClipItem(id: UUID(),
                      url: self.url,
                      clipId: clipId,
                      index: $0.index,
