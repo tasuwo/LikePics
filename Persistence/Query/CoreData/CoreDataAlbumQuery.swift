@@ -19,7 +19,7 @@ class CoreDataAlbumQuery: NSObject {
 
         let request = NSFetchRequest<Album>(entityName: "Album")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
 
         guard let currentAlbum = try context
             .fetch(request)

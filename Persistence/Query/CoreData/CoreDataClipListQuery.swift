@@ -38,7 +38,7 @@ class CoreDataClipListQuery: NSObject {
     init?(id: Domain.Tag.Identity, context: NSManagedObjectContext) throws {
         let request = NSFetchRequest<Tag>(entityName: "Tag")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
 
         guard let currentTag = try context.fetch(request).first else {
             return nil

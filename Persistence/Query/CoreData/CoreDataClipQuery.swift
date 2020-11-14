@@ -19,7 +19,7 @@ class CoreDataClipQuery: NSObject {
 
         let request = NSFetchRequest<Clip>(entityName: "Clip")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
 
         guard let currentClip = try context
             .fetch(request)

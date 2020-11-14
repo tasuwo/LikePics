@@ -28,7 +28,7 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
         do {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
-            request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
             return .success(try CoreDataClipListQuery(request: request, context: self.context))
         } catch {
             return .failure(.internalError)
@@ -38,7 +38,7 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
         do {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
-            request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
             request.predicate = NSPredicate(format: "tags.@count == 0")
             return .success(try CoreDataClipListQuery(request: request, context: self.context))
         } catch {
@@ -75,7 +75,7 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
         do {
             let request = NSFetchRequest<Album>(entityName: "Album")
-            request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
             return .success(try CoreDataAlbumListQuery(request: request, context: self.context))
         } catch {
             return .failure(.internalError)
@@ -85,7 +85,7 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
         do {
             let request = NSFetchRequest<Tag>(entityName: "Tag")
-            request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
             return .success(try CoreDataTagListQuery(request: request, context: self.context))
         } catch {
             return .failure(.internalError)
