@@ -159,6 +159,11 @@
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
 		2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */; };
 		2C79485C254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */; };
+		2C7C3A3F255F81EF00A98B30 /* FetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C3A3E255F81EF00A98B30 /* FetchRequest.swift */; };
+		2C7C3A53255F821F00A98B30 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C3A52255F821F00A98B30 /* FetchedResultsController.swift */; };
+		2C7C3A5E255F826600A98B30 /* RelationshipKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C3A5D255F826600A98B30 /* RelationshipKeyPath.swift */; };
+		2C7C3A69255F828700A98B30 /* RelationshipKeyPathsObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C3A68255F828700A98B30 /* RelationshipKeyPathsObserver.swift */; };
+		2C7C3A74255F830100A98B30 /* Set+NSManagedObject+UpdatedObjectIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7C3A73255F830100A98B30 /* Set+NSManagedObject+UpdatedObjectIds.swift */; };
 		2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */; };
 		2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -712,6 +717,11 @@
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationServiceSpec.swift; sourceTree = "<group>"; };
+		2C7C3A3E255F81EF00A98B30 /* FetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequest.swift; sourceTree = "<group>"; };
+		2C7C3A52255F821F00A98B30 /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
+		2C7C3A5D255F826600A98B30 /* RelationshipKeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationshipKeyPath.swift; sourceTree = "<group>"; };
+		2C7C3A68255F828700A98B30 /* RelationshipKeyPathsObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationshipKeyPathsObserver.swift; sourceTree = "<group>"; };
+		2C7C3A73255F830100A98B30 /* Set+NSManagedObject+UpdatedObjectIds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+NSManagedObject+UpdatedObjectIds.swift"; sourceTree = "<group>"; };
 		2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncategorizedCell.swift; sourceTree = "<group>"; };
 		2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncategorizedCell.xib; sourceTree = "<group>"; };
 		2C82CCC124DE5FED001E2F02 /* NSItemProvider+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Type.swift"; sourceTree = "<group>"; };
@@ -1831,6 +1841,26 @@
 			path = Integrity;
 			sourceTree = "<group>";
 		};
+		2C7C3A3C255F81D100A98B30 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2C7C3A3D255F81E000A98B30 /* RitchFetchRequest */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		2C7C3A3D255F81E000A98B30 /* RitchFetchRequest */ = {
+			isa = PBXGroup;
+			children = (
+				2C7C3A3E255F81EF00A98B30 /* FetchRequest.swift */,
+				2C7C3A52255F821F00A98B30 /* FetchedResultsController.swift */,
+				2C7C3A5D255F826600A98B30 /* RelationshipKeyPath.swift */,
+				2C7C3A68255F828700A98B30 /* RelationshipKeyPathsObserver.swift */,
+				2C7C3A73255F830100A98B30 /* Set+NSManagedObject+UpdatedObjectIds.swift */,
+			);
+			path = RitchFetchRequest;
+			sourceTree = "<group>";
+		};
 		2C810D0024E04A6600BC0FDF /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -2140,6 +2170,7 @@
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				2C7C3A3C255F81D100A98B30 /* Common */,
 				2C236DA1251A118400AB5EDD /* Query */,
 				2C99278A24DDCED700672CA7 /* Configuration */,
 				2C99275624DDC6DB00672CA7 /* Storage */,
@@ -3558,9 +3589,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C7C3A69255F828700A98B30 /* RelationshipKeyPathsObserver.swift in Sources */,
 				2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */,
 				2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */,
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
+				2C7C3A53255F821F00A98B30 /* FetchedResultsController.swift in Sources */,
+				2C7C3A5E255F826600A98B30 /* RelationshipKeyPath.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
 				2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */,
@@ -3589,6 +3623,7 @@
 				2C6DD0ED255C2D4900E316A4 /* NewClipQueryService.swift in Sources */,
 				2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */,
 				2C6DD0CC255C237C00E316A4 /* CoreDataTagQuery.swift in Sources */,
+				2C7C3A74255F830100A98B30 /* Set+NSManagedObject+UpdatedObjectIds.swift in Sources */,
 				2C99278C24DDCEF700672CA7 /* Constants.swift in Sources */,
 				2CD0E587255C20F1002DE383 /* CoreDataAlbumListQuery.swift in Sources */,
 				2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */,
@@ -3597,6 +3632,7 @@
 				2CD0E57C255C2043002DE383 /* CoreDataAlbumQuery.swift in Sources */,
 				2C3BD964254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift in Sources */,
 				2CB1B6222556BAB40026088A /* Model.xcdatamodeld in Sources */,
+				2C7C3A3F255F81EF00A98B30 /* FetchRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
