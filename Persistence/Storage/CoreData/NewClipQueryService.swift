@@ -52,10 +52,10 @@ extension NewClipQueryService: ClipQueryServiceProtocol {
 
     public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
         do {
-            guard let query = try CoreDataClipListQuery(id: tag.id, context: self.context) else {
-                return .failure(.notFound)
-            }
-            return .success(query)
+            let request = NSFetchRequest<Clip>(entityName: "Clip")
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+            request.predicate = NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", UUID(uuidString: tag.id)! as CVarArg)
+            return .success(try CoreDataClipListQuery(request: request, context: self.context))
         } catch {
             return .failure(.internalError)
         }
