@@ -8,53 +8,57 @@ import Domain
 import UIKit
 
 class CoreDataClipItemQuery: NSObject {
-    private let id: Domain.ClipItem.Identity
+    private let objectId: NSManagedObjectID
     private var subject: CurrentValueSubject<Domain.ClipItem, Error>
-    private let controller: NSFetchedResultsController<Item>
 
     // MARK: - Lifecycle
 
     init?(id: Domain.ClipItem.Identity, context: NSManagedObjectContext) throws {
-        self.id = id
-
         let request = NSFetchRequest<Item>(entityName: "Item")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Item.createdDate, ascending: true)]
 
-        guard let currentItem = try context
-            .fetch(request)
-            .compactMap({ $0.map(to: Domain.ClipItem.self) })
-            .first
+        guard let item = try context.fetch(request).first,
+            let domainItem = item.map(to: Domain.ClipItem.self)
         else {
             return nil
         }
 
-        self.subject = .init(currentItem)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
+        self.objectId = item.objectID
+        self.subject = .init(domainItem)
 
         super.init()
 
-        self.controller.delegate = self
-        try self.controller.performFetch()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(contextDidChangeNotification(notification:)),
+                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+                                               object: context)
     }
-}
 
-extension CoreDataClipItemQuery: NSFetchedResultsControllerDelegate {
-    // MARK: - NSFetchedResultsControllerDelegate
+    // MARK: - Methods
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
-    {
-        controller.managedObjectContext.perform {
-            let item: Domain.ClipItem? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-                .compactMap { controller.managedObjectContext.object(with: $0) as? Item }
-                .compactMap { $0.map(to: Domain.ClipItem.self) }
-                .first(where: { $0.identity == self.id })
-            if let item = item {
+    @objc
+    private func contextDidChangeNotification(notification: NSNotification) {
+        guard let context = notification.object as? NSManagedObjectContext else { return }
+        context.perform {
+            if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
+                objects.compactMap({ $0 as? Item }).contains(where: { $0.objectID == self.objectId })
+            {
+                self.subject.send(completion: .finished)
+                return
+            }
+            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
+                let item = object.map(to: Domain.ClipItem.self)
+            {
                 self.subject.send(item)
+                return
+            }
+            if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
+                let item = object.map(to: Domain.ClipItem.self)
+            {
+                self.subject.send(item)
+                return
             }
         }
     }

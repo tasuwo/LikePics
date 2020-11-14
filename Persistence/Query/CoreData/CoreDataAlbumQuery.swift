@@ -8,53 +8,57 @@ import Domain
 import UIKit
 
 class CoreDataAlbumQuery: NSObject {
-    private let id: Domain.Album.Identity
+    private let objectId: NSManagedObjectID
     private var subject: CurrentValueSubject<Domain.Album, Error>
-    private let controller: NSFetchedResultsController<Album>
 
     // MARK: - Lifecycle
 
     init?(id: Domain.Album.Identity, context: NSManagedObjectContext) throws {
-        self.id = id
-
         let request = NSFetchRequest<Album>(entityName: "Album")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
 
-        guard let currentAlbum = try context
-            .fetch(request)
-            .compactMap({ $0.map(to: Domain.Album.self) })
-            .first
+        guard let album = try context.fetch(request).first,
+            let domainAlbum = album.map(to: Domain.Album.self)
         else {
             return nil
         }
 
-        self.subject = .init(currentAlbum)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
+        self.objectId = album.objectID
+        self.subject = .init(domainAlbum)
 
         super.init()
 
-        self.controller.delegate = self
-        try self.controller.performFetch()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(contextDidChangeNotification(notification:)),
+                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+                                               object: context)
     }
-}
 
-extension CoreDataAlbumQuery: NSFetchedResultsControllerDelegate {
-    // MARK: - NSFetchedResultsControllerDelegate
+    // MARK: - Methods
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
-    {
-        controller.managedObjectContext.perform {
-            let album: Domain.Album? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-                .compactMap { controller.managedObjectContext.object(with: $0) as? Album }
-                .compactMap { $0.map(to: Domain.Album.self) }
-                .first(where: { $0.identity == self.id })
-            if let album = album {
+    @objc
+    private func contextDidChangeNotification(notification: NSNotification) {
+        guard let context = notification.object as? NSManagedObjectContext else { return }
+        context.perform {
+            if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
+                objects.compactMap({ $0 as? Album }).contains(where: { $0.objectID == self.objectId })
+            {
+                self.subject.send(completion: .finished)
+                return
+            }
+            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
+                let album = object.map(to: Domain.Album.self)
+            {
                 self.subject.send(album)
+                return
+            }
+            if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
+                let album = object.map(to: Domain.Album.self)
+            {
+                self.subject.send(album)
+                return
             }
         }
     }

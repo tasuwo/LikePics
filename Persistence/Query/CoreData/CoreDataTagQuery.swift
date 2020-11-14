@@ -8,53 +8,57 @@ import Domain
 import UIKit
 
 class CoreDataTagQuery: NSObject {
-    private let id: Domain.Tag.Identity
+    private let objectId: NSManagedObjectID
     private var subject: CurrentValueSubject<Domain.Tag, Error>
-    private let controller: NSFetchedResultsController<Tag>
 
     // MARK: - Lifecycle
 
     init?(id: Domain.Tag.Identity, context: NSManagedObjectContext) throws {
-        self.id = id
-
         let request = NSFetchRequest<Tag>(entityName: "Tag")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
 
-        guard let currentTag = try context
-            .fetch(request)
-            .compactMap({ $0.map(to: Domain.Tag.self) })
-            .first
+        guard let tag = try context.fetch(request).first,
+            let domainTag = tag.map(to: Domain.Tag.self)
         else {
             return nil
         }
 
-        self.subject = .init(currentTag)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
+        self.objectId = tag.objectID
+        self.subject = .init(domainTag)
 
         super.init()
 
-        self.controller.delegate = self
-        try self.controller.performFetch()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(contextDidChangeNotification(notification:)),
+                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+                                               object: context)
     }
-}
 
-extension CoreDataTagQuery: NSFetchedResultsControllerDelegate {
-    // MARK: - NSFetchedResultsControllerDelegate
+    // MARK: - Methods
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
-    {
-        controller.managedObjectContext.perform {
-            let tag: Domain.Tag? = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
-                .compactMap { controller.managedObjectContext.object(with: $0) as? Tag }
-                .compactMap { $0.map(to: Domain.Tag.self) }
-                .first(where: { $0.identity == self.id })
-            if let tag = tag {
+    @objc
+    private func contextDidChangeNotification(notification: NSNotification) {
+        guard let context = notification.object as? NSManagedObjectContext else { return }
+        context.perform {
+            if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
+                objects.compactMap({ $0 as? Tag }).contains(where: { $0.objectID == self.objectId })
+            {
+                self.subject.send(completion: .finished)
+                return
+            }
+            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
+                let tag = object.map(to: Domain.Tag.self)
+            {
                 self.subject.send(tag)
+                return
+            }
+            if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
+                let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
+                let tag = object.map(to: Domain.Tag.self)
+            {
+                self.subject.send(tag)
+                return
             }
         }
     }
