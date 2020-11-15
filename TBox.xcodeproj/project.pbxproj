@@ -53,6 +53,8 @@
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
+		2C1F29442560DDE000B89AE9 /* NewImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */; };
+		2C1F297D2560EF4200B89AE9 /* NewImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F297C2560EF4200B89AE9 /* NewImageStorageProtocol.swift */; };
 		2C21415E254858D50013F486 /* TBoxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C21415D254858D50013F486 /* TBoxUITests.swift */; };
 		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
 		2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236D72251A10D000AB5EDD /* ClipQuery.swift */; };
@@ -606,6 +608,8 @@
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
+		2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewImageStorage.swift; sourceTree = "<group>"; };
+		2C1F297C2560EF4200B89AE9 /* NewImageStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewImageStorageProtocol.swift; sourceTree = "<group>"; };
 		2C21415B254858D50013F486 /* TBoxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C21415D254858D50013F486 /* TBoxUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUITests.swift; sourceTree = "<group>"; };
 		2C21415F254858D50013F486 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1729,6 +1733,7 @@
 			children = (
 				2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */,
 				2C6DD0EC255C2D4900E316A4 /* NewClipQueryService.swift */,
+				2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -2076,6 +2081,7 @@
 			children = (
 				2C544604254B10270088C8BC /* ImageStorageProtocol.swift */,
 				2C9EF6A3253DE55900CBF357 /* ThumbnailStorageProtocol.swift */,
+				2C1F297C2560EF4200B89AE9 /* NewImageStorageProtocol.swift */,
 			);
 			path = ImageStorage;
 			sourceTree = "<group>";
@@ -3479,6 +3485,7 @@
 				2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
 				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,
+				2C1F297D2560EF4200B89AE9 /* NewImageStorageProtocol.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2C544605254B10270088C8BC /* ImageStorageProtocol.swift in Sources */,
@@ -3599,6 +3606,7 @@
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
 				2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */,
 				2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */,
+				2C1F29442560DDE000B89AE9 /* NewImageStorage.swift in Sources */,
 				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
 				2C6DD0D7255C24EC00E316A4 /* CoreDataTagListQuery.swift in Sources */,
 				2CD0E568255C1F54002DE383 /* CoreDataClipListQuery.swift in Sources */,

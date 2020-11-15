@@ -18,6 +18,10 @@
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Item" inverseName="clip" inverseEntity="Item"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="clips" inverseEntity="Tag"/>
     </entity>
+    <entity name="Image" representedClassName="Image" syncable="YES" codeGenerationType="class">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Item" representedClassName="Persistence.Item" syncable="YES" codeGenerationType="class">
         <attribute name="clipId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -41,6 +45,7 @@
     <elements>
         <element name="Album" positionX="-840.30078125" positionY="25.9140625" width="128" height="133"/>
         <element name="Clip" positionX="-637.5" positionY="6.46875" width="128" height="149"/>
+        <element name="Image" positionX="-630" positionY="81" width="128" height="59"/>
         <element name="Item" positionX="-440.71875" positionY="-71.8515625" width="128" height="209"/>
         <element name="Tag" positionX="-445.03515625" positionY="146.65625" width="128" height="103"/>
     </elements>

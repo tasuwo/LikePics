@@ -534,6 +534,71 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
+public class NewImageStorageProtocolMock: NewImageStorageProtocol {
+    public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionIfNeededCallCount = 0
+    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
+    public func cancelTransactionIfNeeded() throws {
+        cancelTransactionIfNeededCallCount += 1
+        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
+            try cancelTransactionIfNeededHandler()
+        }
+    }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((Data, UUID) throws -> Void)?
+    public func create(_ image: Data, id: UUID) throws {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            try createHandler(image, id)
+        }
+    }
+
+    public private(set) var deleteCallCount = 0
+    public var deleteHandler: ((UUID) throws -> Void)?
+    public func delete(having id: UUID) throws {
+        deleteCallCount += 1
+        if let deleteHandler = deleteHandler {
+            try deleteHandler(id)
+        }
+    }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: ((UUID) throws -> (Data?))?
+    public func read(having id: UUID) throws -> Data? {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return try readHandler(id)
+        }
+        return nil
+    }
+}
+
 public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {

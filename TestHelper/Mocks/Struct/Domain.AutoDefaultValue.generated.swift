@@ -5,7 +5,7 @@
 
 extension Album {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         title: String = "",
         clips: [Clip] = [],
         registeredDate: Date = Date(timeIntervalSince1970: 0),
@@ -23,7 +23,7 @@ extension Album {
 
 extension Clip {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         description: String? = nil,
         items: [ClipItem] = [],
         tags: [Tag] = [],
@@ -45,10 +45,11 @@ extension Clip {
 
 extension ClipItem {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         url: URL? = nil,
-        clipId: String = "",
+        clipId: UUID = UUID(),
         clipIndex: Int = 0,
+        imageId: UUID = UUID(),
         imageFileName: String = "",
         imageUrl: URL? = nil,
         imageSize: ImageSize = ImageSize.makeDefault(),
@@ -60,6 +61,7 @@ extension ClipItem {
             url: url,
             clipId: clipId,
             clipIndex: clipIndex,
+            imageId: imageId,
             imageFileName: imageFileName,
             imageUrl: imageUrl,
             imageSize: imageSize,
@@ -83,7 +85,7 @@ extension ImageSize {
 
 extension ReferenceClip {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         description: String? = nil,
         tags: [ReferenceTag] = [],
         isHidden: Bool = false,
@@ -103,7 +105,7 @@ extension ReferenceClip {
 
 extension ReferenceTag {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         name: String = "",
         isDirty: Bool = false
     ) -> Self {
@@ -117,7 +119,7 @@ extension ReferenceTag {
 
 extension Tag {
     static func makeDefault(
-        id: String = "",
+        id: UUID = UUID(),
         name: String = ""
     ) -> Self {
         return .init(
