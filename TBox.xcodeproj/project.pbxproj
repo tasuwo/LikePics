@@ -4117,7 +4117,7 @@
 			baseConfigurationReference = C2740163FECE2C35AB78008C /* Pods-ShareExtension.debugdev.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
@@ -4129,7 +4129,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev.ShareExtension";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev.ShareExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4566,7 +4566,7 @@
 			baseConfigurationReference = ABC42AAEE858F43497BC349C /* Pods-ShareExtension.releasedev.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
@@ -4578,7 +4578,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev.ShareExtension";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev.ShareExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
