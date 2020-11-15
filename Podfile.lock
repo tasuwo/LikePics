@@ -5,9 +5,6 @@ PODS:
   - Erik/Core (5.0.0):
     - Kanna
   - Kanna (5.2.3)
-  - Kingfisher (5.15.6):
-    - Kingfisher/Core (= 5.15.6)
-  - Kingfisher/Core (5.15.6)
   - LicensePlist (3.0.4)
   - Nimble (9.0.0)
   - Quick (3.0.0)
@@ -21,7 +18,6 @@ PODS:
 
 DEPENDENCIES:
   - Erik (~> 5.0.0)
-  - Kingfisher (~> 5.15.3)
   - LicensePlist (~> 3.0.4)
   - Nimble (~> 9.0.0)
   - Quick (~> 3.0.0)
@@ -33,7 +29,6 @@ SPEC REPOS:
   trunk:
     - Erik
     - Kanna
-    - Kingfisher
     - LicensePlist
     - Nimble
     - Quick
@@ -45,7 +40,6 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Erik: 660e6bc7fe68a0c17e0f50142ae2d8168426c22e
   Kanna: 113d111e95d7e903efe0c3eb7221f7635716084c
-  Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
   LicensePlist: 89acb246ba9345fdc2d3a91f04353c214f3d0bd4
   Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
@@ -54,6 +48,6 @@ SPEC CHECKSUMS:
   Sourcery: 928a146ea9b777fa64b0c6ce915c4128b4488cff
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
 
-PODFILE CHECKSUM: b790bbe228248dfdf8093a49f8d086b67f4542fd
+PODFILE CHECKSUM: ed4bfdb695b6be2a965b78a77fa9f0c222141d7c
 
 COCOAPODS: 1.10.0.rc.1

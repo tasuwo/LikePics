@@ -3,7 +3,6 @@
 //
 
 import Common
-import Kingfisher
 import UIKit
 
 public protocol ClipPreviewPageViewDelegate: AnyObject {
@@ -11,29 +10,12 @@ public protocol ClipPreviewPageViewDelegate: AnyObject {
 }
 
 public class ClipPreviewView: UIView {
-    public typealias Source = (imageFileUrl: URL, imageSize: CGSize, thumbnail: UIImage?)
+    public typealias Source = (image: UIImage, imageSize: CGSize)
 
     public var source: Source? {
         didSet {
             guard let source = self.source else { return }
-
-            self.imageView.kf.indicatorType = .activity
-            self.imageView.kf.setImage(
-                with: LocalFileImageDataProvider(fileURL: source.imageFileUrl),
-                placeholder: source.thumbnail,
-                options: [],
-                completionHandler: { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success:
-                        self.setupScale(forImageSize: source.imageSize, on: self.bounds.size)
-                        self.updateConstraints(forImageSize: source.imageSize, on: self.bounds)
-
-                    case let .failure(error):
-                        self.logger.write(ConsoleLog(level: .error, message: error.localizedDescription))
-                    }
-                }
-            )
+            self.imageView.image = source.image
         }
     }
 

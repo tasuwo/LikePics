@@ -37,8 +37,6 @@ target 'ShareExtension' do
 end
 
 target 'TBoxUIKit' do
-  pod 'Kingfisher', '~> 5.15.3'
-
   target 'TBoxUIKitTests' do
     inherit! :search_paths
     test_shared_pods

@@ -163,16 +163,6 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
-    public private(set) var readClipCallCount = 0
-    public var readClipHandler: ((URL) -> (Result<Clip?, ClipStorageError>))?
-    public func readClip(havingUrl url: URL) -> Result<Clip?, ClipStorageError> {
-        readClipCallCount += 1
-        if let readClipHandler = readClipHandler {
-            return readClipHandler(url)
-        }
-        fatalError("readClipHandler returns can't have a default value thus its handler must be set")
-    }
-
     public private(set) var queryClipCallCount = 0
     public var queryClipHandler: ((Clip.Identity) -> (Result<ClipQuery, ClipStorageError>))?
     public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
@@ -533,31 +523,12 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
         }
     }
 
-    public private(set) var moveImageFileCallCount = 0
-    public var moveImageFileHandler: ((URL, String, Clip.Identity) throws -> Void)?
-    public func moveImageFile(at url: URL, withName fileName: String, toClipHaving clipId: Clip.Identity) throws {
-        moveImageFileCallCount += 1
-        if let moveImageFileHandler = moveImageFileHandler {
-            try moveImageFileHandler(url, fileName, clipId)
-        }
-    }
-
     public private(set) var readImageCallCount = 0
     public var readImageHandler: ((String, Clip.Identity) throws -> (Data?))?
     public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data? {
         readImageCallCount += 1
         if let readImageHandler = readImageHandler {
             return try readImageHandler(name, clipId)
-        }
-        return nil
-    }
-
-    public private(set) var resolveImageFileUrlCallCount = 0
-    public var resolveImageFileUrlHandler: ((String, Clip.Identity) throws -> (URL?))?
-    public func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL? {
-        resolveImageFileUrlCallCount += 1
-        if let resolveImageFileUrlHandler = resolveImageFileUrlHandler {
-            return try resolveImageFileUrlHandler(name, clipId)
         }
         return nil
     }
@@ -881,13 +852,13 @@ public class ClipQueryMock: ClipQuery {
 
 public class TagListQueryMock: TagListQuery {
     public init() { }
-    public init(tags: CurrentValueSubject<[Tag], Error>) {
+    public init(tags: CurrentValueSubject<[Domain.Tag], Error>) {
         self._tags = tags
     }
 
     public private(set) var tagsSetCallCount = 0
-    private var _tags: CurrentValueSubject<[Tag], Error>! { didSet { tagsSetCallCount += 1 } }
-    public var tags: CurrentValueSubject<[Tag], Error> {
+    private var _tags: CurrentValueSubject<[Domain.Tag], Error>! { didSet { tagsSetCallCount += 1 } }
+    public var tags: CurrentValueSubject<[Domain.Tag], Error> {
         get { return _tags }
         set { _tags = newValue }
     }

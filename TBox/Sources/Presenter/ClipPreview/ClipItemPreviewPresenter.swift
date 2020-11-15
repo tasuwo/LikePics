@@ -49,18 +49,6 @@ class ClipItemPreviewPresenter {
 
     // MARK: - Methods
 
-    func resolveImageUrl() -> URL? {
-        guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
-        guard let url = try? self.imageStorage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId) else {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read image url for preview.
-            """))
-            self.view?.showErrorMessage(L10n.clipItemPreviewViewErrorAtReadImage)
-            return nil
-        }
-        return url
-    }
-
     func readThumbnailIfExists() -> UIImage? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
         return self.thumbnailStorage.readThumbnailIfExists(for: item)

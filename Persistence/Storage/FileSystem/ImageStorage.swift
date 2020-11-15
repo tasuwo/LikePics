@@ -84,30 +84,9 @@ extension ImageStorage: ImageStorageProtocol {
         try Self.createDirectoryIfNeeded(at: self.baseUrl, using: self.fileManager)
     }
 
-    public func moveImageFile(at url: URL, withName fileName: String, toClipHaving clipId: Domain.Clip.Identity) throws {
-        let directory = self.buildTargetDirectoryUrl(for: clipId)
-        guard self.fileManager.fileExists(atPath: url.path) else { return }
-
-        try Self.createDirectoryIfNeeded(at: directory, using: self.fileManager)
-
-        let targetUrl = self.buildImageFileUrl(name: fileName, clipId: clipId)
-
-        if self.fileManager.fileExists(atPath: targetUrl.path) {
-            try self.fileManager.removeItem(at: targetUrl)
-        }
-
-        try self.fileManager.moveItem(at: url, to: targetUrl)
-    }
-
     public func readImage(named name: String, inClipHaving clipId: Domain.Clip.Identity) throws -> Data? {
         let fileUrl = self.buildImageFileUrl(name: name, clipId: clipId)
         guard self.fileManager.fileExists(atPath: fileUrl.path) else { return nil }
         return try Data(contentsOf: fileUrl)
-    }
-
-    public func resolveImageFileUrl(named name: String, inClipHaving clipId: Domain.Clip.Identity) throws -> URL? {
-        let fileUrl = self.buildImageFileUrl(name: name, clipId: clipId)
-        guard self.fileManager.fileExists(atPath: fileUrl.path) else { return nil }
-        return fileUrl
     }
 }

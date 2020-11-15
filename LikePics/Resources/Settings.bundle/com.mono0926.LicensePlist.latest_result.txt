@@ -14,14 +14,6 @@ name: Kanna, nameSpecified:
 body: The MIT License (MIT…
 version: 5.2.3
 
-name: Kingfisher, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.15.6
-
-name: Kingfisher, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.15.6
-
 name: LicensePlist, nameSpecified: 
 body: MIT License
 

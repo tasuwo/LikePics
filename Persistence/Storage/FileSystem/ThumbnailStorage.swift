@@ -53,9 +53,9 @@ public class ThumbnailStorage {
 
     // MARK: - Methods
 
-    public static func downsampledImage(url: URL, to pointSize: CGSize) -> CGImage? {
+    public static func downsampledImage(data: Data, to pointSize: CGSize) -> CGImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
             return nil
         }
 
@@ -155,7 +155,7 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
         }
 
         self.downsamplingQueue.async {
-            guard let url = try? self.storage.resolveImageFileUrl(named: item.imageFileName, inClipHaving: item.clipId) else {
+            guard let data = try? self.storage.readImage(named: item.imageFileName, inClipHaving: item.clipId) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to resolve image file url. (name=\(item.imageFileName), clipId=\(item.clipId)
                 """))
@@ -165,9 +165,9 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
 
             let targetSize = Self.calcDownsamplingSize(for: item)
 
-            guard let downsampledImage = Self.downsampledImage(url: url, to: targetSize) else {
+            guard let downsampledImage = Self.downsampledImage(data: data, to: targetSize) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to downsampling image. (name=\(item.imageFileName), clipId=\(item.clipId), url=\(url.absoluteString), targetSize=\(targetSize)
+                Failed to downsampling image. (name=\(item.imageFileName), clipId=\(item.clipId), targetSize=\(targetSize)
                 """))
                 completion(nil)
                 return

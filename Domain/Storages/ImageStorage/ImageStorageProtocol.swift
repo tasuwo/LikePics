@@ -9,7 +9,5 @@ public protocol ImageStorageProtocol {
     func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws
     func deleteAll(inClipHaving clipId: Clip.Identity) throws
     func deleteAll() throws
-    func moveImageFile(at url: URL, withName fileName: String, toClipHaving clipId: Clip.Identity) throws
     func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data?
-    func resolveImageFileUrl(named name: String, inClipHaving clipId: Clip.Identity) throws -> URL?
 }

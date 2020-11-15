@@ -4,6 +4,5 @@
 
 import Common
 import Domain
-import Kingfisher
 @testable import TBoxUIKit
 import UIKit
