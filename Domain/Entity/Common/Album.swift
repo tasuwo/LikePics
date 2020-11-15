@@ -22,6 +22,14 @@ public struct Album: Equatable {
 
     // MARK: - Methods
 
+    public func removingHiddenClips() -> Album {
+        return .init(id: self.id,
+                     title: self.title,
+                     clips: self.clips.filter({ !$0.isHidden }),
+                     registeredDate: self.registeredDate,
+                     updatedDate: self.updatedDate)
+    }
+
     public func updatingTitle(to title: String) -> Self {
         return .init(id: self.id,
                      title: title,
