@@ -67,26 +67,26 @@ enum ClipStorageMigrationService {
     }
 
     private static func migrateToV9(_ migration: Migration) {
-        let storage = try! ImageStorage(configuration: .document)
-        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, _ in
-            try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! UUID)
-        }
+        // let storage = try! ImageStorage(configuration: .document)
+        // migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, _ in
+        //     try! storage.delete(fileName: oldObject!["thumbnailFileName"] as! String, inClipHaving: oldObject!["clipId"] as! UUID)
+        // }
     }
 
     private static func migrateToV8(_ migration: Migration) {
-        let storage = try! ImageStorage(configuration: .document)
-        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
-            autoreleasepool {
-                let imageFileName = oldObject!["imageFileName"] as! String
-                let clipId = oldObject!["clipId"] as! UUID
+        // let storage = try! ImageStorage(configuration: .document)
+        // migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+        //     autoreleasepool {
+        //         let imageFileName = oldObject!["imageFileName"] as! String
+        //         let clipId = oldObject!["clipId"] as! UUID
 
-                let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)!
-                let image = UIImage(data: data)!
+        //         let data = try! storage.readImage(named: imageFileName, inClipHaving: clipId)!
+        //         let image = UIImage(data: data)!
 
-                newObject!["imageHeight"] = image.size.height
-                newObject!["imageWidth"] = image.size.width
-            }
-        }
+        //         newObject!["imageHeight"] = image.size.height
+        //         newObject!["imageWidth"] = image.size.width
+        //     }
+        // }
     }
 
     private static func migrateToV7(_ migration: Migration) {

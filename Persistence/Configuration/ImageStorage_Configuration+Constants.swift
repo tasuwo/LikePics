@@ -3,30 +3,39 @@
 //
 
 extension ImageStorage.Configuration {
-    public static var document: ImageStorage.Configuration {
-        let targetUrl: URL = {
-            let directoryName: String = "images"
+    public enum Kind {
+        case document
+        case group
+    }
+
+    public static func resolve(for bundle: Bundle, kind: Kind) -> Self {
+        return .init(targetUrl: self.resolveUrl(for: bundle, kind: kind))
+    }
+
+    private static func resolveUrl(for bundle: Bundle, kind: Kind) -> URL {
+        let directoryName: String = "images"
+
+        guard let bundleIdentifier = bundle.bundleIdentifier else {
+            fatalError("Failed to resolve bundle identifier")
+        }
+
+        switch kind {
+        case .document:
             if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 return directory
-                    .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+                    .appendingPathComponent(bundleIdentifier, isDirectory: true)
                     .appendingPathComponent(directoryName, isDirectory: true)
             } else {
                 fatalError("Unable to resolve realm file url.")
             }
-        }()
-        return .init(targetUrl: targetUrl)
-    }
 
-    public static var group: ImageStorage.Configuration {
-        let targetUrl: URL = {
-            let directoryName: String = "images"
-            guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) else {
+        case .group:
+            guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") else {
                 fatalError("Failed to resolve images containing directory url.")
             }
             return directory
-                .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+                .appendingPathComponent(bundleIdentifier, isDirectory: true)
                 .appendingPathComponent(directoryName, isDirectory: true)
-        }()
-        return .init(targetUrl: targetUrl)
+        }
     }
 }

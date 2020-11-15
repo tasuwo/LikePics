@@ -90,10 +90,10 @@ class DependencyContainer {
     private(set) var persistService: TemporaryClipsPersistServiceProtocol!
 
     init() throws {
-        self.tmpImageStorage = try ImageStorage(configuration: .group)
+        self.tmpImageStorage = try ImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
         self.logger = RootLogger.shared
-        self.tmpClipStorage = try ClipStorage(config: .group, logger: self.logger)
-        self.referenceClipStorage = try ReferenceClipStorage(config: .group, logger: self.logger)
+        self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
+        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
 
         // MARK: Context
 
@@ -138,7 +138,7 @@ class DependencyContainer {
         self.clipQueryService = NewClipQueryService(context: self.queryContext)
         self.imageStorage = NewImageStorage(rootContext: self.rootContext, context: self.commandContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
-        self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService)
+        self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
 
         // MARK: Service
 

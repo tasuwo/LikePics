@@ -5,7 +5,7 @@
 import RealmSwift
 
 extension ReferenceClipStorage.Configuration {
-    public static var group: ReferenceClipStorage.Configuration {
+    public static func resolve(for bundle: Bundle) -> ReferenceClipStorage.Configuration {
         let realmFileName = "reference-clips.realm"
 
         var configuration = Realm.Configuration(
@@ -18,9 +18,13 @@ extension ReferenceClipStorage.Configuration {
             ]
         )
 
-        if let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier) {
+        guard let bundleIdentifier = bundle.bundleIdentifier else {
+            fatalError("Failed to resolve bundle identifier")
+        }
+
+        if let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") {
             configuration.fileURL = directory
-                .appendingPathComponent(Constants.bundleIdentifier, isDirectory: true)
+                .appendingPathComponent(bundleIdentifier, isDirectory: true)
                 .appendingPathComponent(realmFileName)
         } else {
             fatalError("Unable to resolve realm file url.")

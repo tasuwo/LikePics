@@ -35,22 +35,22 @@ public class ThumbnailStorage {
     // MARK: - Lifecycle
 
     init(queryService: NewImageQueryServiceProtocol,
+         configuration: Configuration,
          fileManager: FileManager = .default,
-         configuration: Configuration = .cache,
          logger: TBoxLoggable = RootLogger.shared) throws
     {
         self.queryService = queryService
-        self.fileManager = fileManager
         self.baseUrl = configuration.targetUrl
+        self.fileManager = fileManager
         self.logger = logger
 
         try self.createDirectoryIfNeeded(at: self.baseUrl)
     }
 
-    public convenience init(queryService: NewImageQueryServiceProtocol) throws {
+    public convenience init(queryService: NewImageQueryServiceProtocol, bundle: Bundle) throws {
         try self.init(queryService: queryService,
+                      configuration: .resolve(for: bundle),
                       fileManager: .default,
-                      configuration: .cache,
                       logger: RootLogger.shared)
     }
 

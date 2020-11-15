@@ -17,10 +17,19 @@ class DependencyContainer {
     private let currentDateResolver = { Date() }
 
     init() throws {
+        let mainBundleUrl = Bundle.main.bundleURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+        guard let mainBundle = Bundle(url: mainBundleUrl) else {
+            fatalError("Failed to resolve main bundle.")
+        }
+
         let logger = RootLogger.shared
-        let imageStorage = try ImageStorage(configuration: .group)
-        let referenceClipStorage = try ReferenceClipStorage(config: .group, logger: logger)
-        let clipStorage = try ClipStorage(config: .group, logger: logger)
+        let imageStorage = try ImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
+        let referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: mainBundle),
+                                                            logger: logger)
+        let clipStorage = try ClipStorage(config: .resolve(for: mainBundle, kind: .group),
+                                          logger: logger)
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
                                                      referenceClipStorage: referenceClipStorage,
                                                      imageStorage: imageStorage,
