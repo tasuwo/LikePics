@@ -50,7 +50,7 @@ extension NewImageStorage: NewImageStorageProtocol {
 
     // MARK: Delete
 
-    public func delete(having id: UUID) throws {
+    public func delete(having id: ImageContainer.Identity) throws {
         let request = NSFetchRequest<Image>(entityName: "Image")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let image = try self.context.fetch(request).first else { return }
@@ -59,9 +59,9 @@ extension NewImageStorage: NewImageStorageProtocol {
 
     // MARK: Read
 
-    public func read(having id: UUID) throws -> Data? {
+    public func exists(having id: ImageContainer.Identity) throws -> Bool {
         let request = NSFetchRequest<Image>(entityName: "Image")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        return try self.context.fetch(request).first?.data
+        return try self.context.count(for: request) > 0
     }
 }

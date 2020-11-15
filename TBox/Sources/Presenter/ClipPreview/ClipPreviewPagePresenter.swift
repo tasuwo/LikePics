@@ -66,7 +66,7 @@ class ClipPreviewPagePresenter {
 
     func removeClipItem(having itemId: ClipItem.Identity) {
         guard let item = self.clip.items.first(where: { $0.identity == itemId }) else { return }
-        if case let .failure(error) = self.clipCommandService.deleteClipItem(having: item.identity) {
+        if case let .failure(error) = self.clipCommandService.deleteClipItem(item) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to delete clip item having id \(itemId). (code: \(error.rawValue))
             """))

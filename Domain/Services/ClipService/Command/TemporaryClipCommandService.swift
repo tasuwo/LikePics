@@ -26,24 +26,17 @@ public class TemporaryClipCommandService {
 extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
     // MARK: - TemporaryClipCommandServiceProtocol
 
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {
-                guard data.count == Set(data.map { $0.fileName }).count else {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    ファイル名に重複が存在: \(data.map { $0.fileName }.joined(separator: ","))
-                    """))
-                    return .failure(.invalidParameter)
-                }
-
                 let containsFilesFor = { (item: ClipItem) in
-                    return data.contains(where: { $0.fileName == item.imageFileName })
+                    return containers.contains(where: { $0.id == item.imageId })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Clipに紐付けれた全Itemの画像データが揃っていない:
-                    - expected: \(clip.items.map { $0.imageFileName }.joined(separator: ","))
-                    - got: \(data.map { $0.fileName }.joined(separator: ","))
+                    - expected: \(clip.items.map { $0.id.uuidString }.joined(separator: ","))
+                    - got: \(containers.map { $0.id.uuidString }.joined(separator: ","))
                     """))
                     return .failure(.invalidParameter)
                 }
@@ -54,7 +47,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 let createdClip: Clip
                 switch self.clipStorage.create(clip: clip, allowTagCreation: true, overwrite: forced) {
                 case let .success(result):
-                    createdClip = result
+                    createdClip = result.new
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
@@ -85,7 +78,10 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 try? self.imageStorage.deleteAll(inClipHaving: createdClip.identity)
-                data.forEach { try? self.imageStorage.save($0.image, asName: $0.fileName, inClipHaving: createdClip.identity) }
+                containers.forEach { container in
+                    guard let item = clip.items.first(where: { $0.imageId == container.id }) else { return }
+                    try? self.imageStorage.save(container.data, asName: item.imageFileName, inClipHaving: createdClip.identity)
+                }
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()

@@ -9,7 +9,7 @@ public class TemporaryClipsPersistService {
     let temporaryImageStorage: ImageStorageProtocol
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
-    let imageStorage: ImageStorageProtocol
+    let imageStorage: NewImageStorageProtocol
     let logger: TBoxLoggable
     let queue: DispatchQueue
 
@@ -21,7 +21,7 @@ public class TemporaryClipsPersistService {
                 temporaryImageStorage: ImageStorageProtocol,
                 clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
-                imageStorage: ImageStorageProtocol,
+                imageStorage: NewImageStorageProtocol,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {
@@ -48,15 +48,18 @@ public class TemporaryClipsPersistService {
             try self.clipStorage.beginTransaction()
             try self.temporaryClipStorage.beginTransaction()
             try self.referenceClipStorage.beginTransaction()
+            try self.imageStorage.beginTransaction()
 
+            let oldClip: Clip?
             switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
-            case .success:
-                break
+            case let .success(result):
+                oldClip = result.old
 
             case let .failure(error):
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.temporaryClipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)
                 """))
@@ -71,6 +74,7 @@ public class TemporaryClipsPersistService {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.temporaryClipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時保存クリップの削除に失敗: \(error.localizedDescription)
                 """))
@@ -85,13 +89,16 @@ public class TemporaryClipsPersistService {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.temporaryClipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 参照クリップのisDirty更新に失敗: \(error.localizedDescription)
                 """))
                 return false
             }
 
-            try? self.imageStorage.deleteAll(inClipHaving: clip.identity)
+            oldClip?.items.forEach { item in
+                try? self.imageStorage.delete(having: item.imageId)
+            }
             for item in clip.items {
                 guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.identity) else {
                     // 画像が見つからなかった場合、どうしようもないためスキップに留める
@@ -102,7 +109,7 @@ public class TemporaryClipsPersistService {
                 }
                 // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
                 // 画像の移動に失敗した場合でも異常終了とはしない
-                try? self.imageStorage.save(data, asName: item.imageFileName, inClipHaving: item.clipId)
+                try? self.imageStorage.create(data, id: item.imageId)
                 try? self.temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.identity)
             }
             try? self.temporaryImageStorage.deleteAll(inClipHaving: clip.identity)
@@ -110,12 +117,14 @@ public class TemporaryClipsPersistService {
             try self.clipStorage.commitTransaction()
             try self.temporaryClipStorage.commitTransaction()
             try self.referenceClipStorage.commitTransaction()
+            try self.imageStorage.cancelTransactionIfNeeded()
 
             return true
         } catch {
             try? self.clipStorage.cancelTransactionIfNeeded()
             try? self.temporaryClipStorage.cancelTransactionIfNeeded()
             try? self.referenceClipStorage.cancelTransactionIfNeeded()
+            try? self.imageStorage.cancelTransactionIfNeeded()
             self.logger.write(ConsoleLog(level: .info, message: """
             一時画像の永続化中に例外が発生: \(error.localizedDescription)
             """))

@@ -13,13 +13,13 @@ public protocol NewImageStorageProtocol {
 
     // MARK: Create
 
-    func create(_ image: Data, id: UUID) throws
+    func create(_ image: Data, id: ImageContainer.Identity) throws
 
     // MARK: Delete
 
-    func delete(having id: UUID) throws
+    func delete(having id: ImageContainer.Identity) throws
 
     // MARK: Read
 
-    func read(having id: UUID) throws -> Data?
+    func exists(having id: ImageContainer.Identity) throws -> Bool
 }

@@ -277,22 +277,25 @@ public class ClipTargetFinderPresenter {
     private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
         let currentDate = self.currentDateResolver()
         let clipId = UUID()
-        let items = target.map {
-            ClipItem(id: UUID(),
-                     url: self.url,
-                     clipId: clipId,
-                     index: $0.index,
-                     source: $0.source,
-                     currentDate: currentDate)
+        let itemAndContainers: [(ClipItem, ImageContainer)] = target.map {
+            let imageId = UUID()
+            let item = ClipItem(id: UUID(),
+                                url: self.url,
+                                clipId: clipId,
+                                index: $0.index,
+                                imageId: imageId,
+                                source: $0.source,
+                                currentDate: currentDate)
+            let container = ImageContainer(id: imageId, data: $0.source.data)
+            return (item, container)
         }
         let clip = Clip(clipId: clipId,
-                        clipItems: items,
+                        clipItems: itemAndContainers.map { $0.0 },
                         tags: [],
                         registeredDate: currentDate,
                         currentDate: currentDate)
-        let data = target.map { ($0.source.fileName, $0.source.data) }
 
-        switch self.clipStore.create(clip: clip, withData: data, forced: false) {
+        switch self.clipStore.create(clip: clip, withContainers: itemAndContainers.map { $0.1 }, forced: false) {
         case .success:
             return .success(())
 
@@ -303,12 +306,12 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, source: ClipItemSource, currentDate: Date) {
+    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, source: ClipItemSource, currentDate: Date) {
         self.init(id: id,
                   url: url,
                   clipId: clipId,
                   clipIndex: index,
-                  imageId: UUID(),
+                  imageId: imageId,
                   imageFileName: source.fileName,
                   imageUrl: source.url,
                   imageSize: ImageSize(height: source.height, width: source.width),

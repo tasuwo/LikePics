@@ -4,5 +4,5 @@
 
 /// @mockable
 public protocol TemporaryClipCommandServiceProtocol {
-    func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError>
+    func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError>
 }

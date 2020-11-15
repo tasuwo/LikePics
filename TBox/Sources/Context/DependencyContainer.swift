@@ -10,6 +10,8 @@ import TBoxCore
 import TBoxUIKit
 import UIKit
 
+// swiftlint:disable implicitly_unwrapped_optional
+
 protocol ViewControllerFactory {
     // MARK: Top
 
@@ -54,14 +56,13 @@ protocol ViewControllerFactory {
 
 class DependencyContainer {
     private let tmpClipStorage: ClipStorageProtocol
-    private let imageStorage: ImageStorageProtocol
     private let tmpImageStorage: ImageStorageProtocol
-    private let thumbnailStorage: ThumbnailStorageProtocol
     private let referenceClipStorage: ReferenceClipStorageProtocol
     private let logger: TBoxLoggable
     private let userSettingsStorage: UserSettingsStorageProtocol = UserSettingsStorage()
 
     private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
+    private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
 
     lazy var persistentContainer: NSPersistentContainer = {
         let container = PersistentContainerLoader.load()
@@ -73,81 +74,91 @@ class DependencyContainer {
         return container
     }()
 
-    lazy var rootContext: NSManagedObjectContext = {
-        return self.clipCommandQueue.sync {
-            let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            context.persistentStoreCoordinator = self.persistentContainer.persistentStoreCoordinator
-            return context
-        }
-    }()
+    private var rootContext: NSManagedObjectContext!
+    private var queryContext: NSManagedObjectContext!
+    private var imageQueryContext: NSManagedObjectContext!
+    private var commandContext: NSManagedObjectContext!
 
-    lazy var queryContext: NSManagedObjectContext = {
-        let makeContext = { () -> NSManagedObjectContext in
-            let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            context.parent = self.rootContext
-            context.automaticallyMergesChangesFromParent = true
-            return context
-        }
+    private var clipStorage: ClipStorageProtocol!
+    private var clipQueryService: ClipQueryServiceProtocol!
+    private var imageStorage: NewImageStorageProtocol!
+    private var imageQueryService: NewImageQueryServiceProtocol!
+    private var thumbnailStorage: ThumbnailStorageProtocol!
 
-        if Thread.isMainThread {
-            return makeContext()
-        } else {
-            return DispatchQueue.main.sync {
-                return makeContext()
-            }
-        }
-    }()
-
-    lazy var commandContext: NSManagedObjectContext = {
-        return self.clipCommandQueue.sync {
-            let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            context.parent = self.rootContext
-            return context
-        }
-    }()
-
-    lazy var clipStorage: ClipStorageProtocol = {
-        return NewClipStorage(rootContext: self.rootContext,
-                              context: self.commandContext)
-    }()
-
-    lazy var clipQueryService: ClipQueryServiceProtocol = {
-        return NewClipQueryService(context: self.queryContext)
-    }()
-
-    lazy var clipCommandService: ClipCommandServiceProtocol & ClipStorable = {
-        return ClipCommandService(clipStorage: self.clipStorage,
-                                  referenceClipStorage: referenceClipStorage,
-                                  imageStorage: self.imageStorage,
-                                  thumbnailStorage: self.thumbnailStorage,
-                                  logger: logger,
-                                  queue: self.clipCommandQueue)
-    }()
-
-    lazy var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol = {
-        return ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
-                                                        referenceClipStorage: self.referenceClipStorage,
-                                                        logger: self.logger,
-                                                        queue: self.clipCommandQueue)
-    }()
-
-    lazy var persistService: TemporaryClipsPersistServiceProtocol = {
-        return TemporaryClipsPersistService(temporaryClipStorage: self.tmpClipStorage,
-                                            temporaryImageStorage: self.tmpImageStorage,
-                                            clipStorage: self.clipStorage,
-                                            referenceClipStorage: self.referenceClipStorage,
-                                            imageStorage: self.imageStorage,
-                                            logger: self.logger,
-                                            queue: self.clipCommandQueue)
-    }()
+    private var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
+    private(set) var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol!
+    private(set) var persistService: TemporaryClipsPersistServiceProtocol!
 
     init() throws {
-        self.thumbnailStorage = try ThumbnailStorage()
-        self.imageStorage = try ImageStorage(configuration: .document)
         self.tmpImageStorage = try ImageStorage(configuration: .group)
         self.logger = RootLogger.shared
         self.tmpClipStorage = try ClipStorage(config: .group, logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .group, logger: self.logger)
+
+        // MARK: Context
+
+        self.rootContext = self.clipCommandQueue.sync {
+            let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            context.persistentStoreCoordinator = self.persistentContainer.persistentStoreCoordinator
+            return context
+        }
+        self.queryContext = {
+            let makeContext = { () -> NSManagedObjectContext in
+                let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+                context.parent = self.rootContext
+                context.automaticallyMergesChangesFromParent = true
+                return context
+            }
+            if Thread.isMainThread {
+                return makeContext()
+            } else {
+                return DispatchQueue.main.sync {
+                    return makeContext()
+                }
+            }
+        }()
+        self.imageQueryContext = {
+            return self.imageQueryQueue.sync {
+                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                context.parent = self.rootContext
+                return context
+            }
+        }()
+        self.commandContext = {
+            return self.clipCommandQueue.sync {
+                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                context.parent = self.rootContext
+                return context
+            }
+        }()
+
+        // MARK: Storage/Query
+
+        self.clipStorage = NewClipStorage(rootContext: self.rootContext, context: self.commandContext)
+        self.clipQueryService = NewClipQueryService(context: self.queryContext)
+        self.imageStorage = NewImageStorage(rootContext: self.rootContext, context: self.commandContext)
+        self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
+        self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService)
+
+        // MARK: Service
+
+        self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
+                                                     referenceClipStorage: referenceClipStorage,
+                                                     imageStorage: self.imageStorage,
+                                                     thumbnailStorage: self.thumbnailStorage,
+                                                     logger: self.logger,
+                                                     queue: self.clipCommandQueue)
+        self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
+                                                                                   referenceClipStorage: self.referenceClipStorage,
+                                                                                   logger: self.logger,
+                                                                                   queue: self.clipCommandQueue)
+        self.persistService = TemporaryClipsPersistService(temporaryClipStorage: self.tmpClipStorage,
+                                                           temporaryImageStorage: self.tmpImageStorage,
+                                                           clipStorage: self.clipStorage,
+                                                           referenceClipStorage: self.referenceClipStorage,
+                                                           imageStorage: self.imageStorage,
+                                                           logger: self.logger,
+                                                           queue: self.clipCommandQueue)
     }
 }
 
@@ -241,7 +252,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let presenter = ClipItemPreviewPresenter(query: query,
                                                  itemId: itemId,
-                                                 imageStorage: self.imageStorage,
+                                                 imageQueryService: self.imageQueryService,
                                                  thumbnailStorage: self.thumbnailStorage,
                                                  logger: self.logger)
 

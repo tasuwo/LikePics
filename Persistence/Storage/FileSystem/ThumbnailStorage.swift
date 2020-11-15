@@ -21,7 +21,7 @@ public class ThumbnailStorage {
     enum StorageConfiguration {
     }
 
-    private let storage: ImageStorageProtocol
+    private let queryService: NewImageQueryServiceProtocol
     private let fileManager: FileManager
     private let baseUrl: URL
     private let logger: TBoxLoggable
@@ -34,12 +34,12 @@ public class ThumbnailStorage {
 
     // MARK: - Lifecycle
 
-    init(storage: ImageStorageProtocol,
+    init(queryService: NewImageQueryServiceProtocol,
          fileManager: FileManager = .default,
          configuration: Configuration = .cache,
          logger: TBoxLoggable = RootLogger.shared) throws
     {
-        self.storage = storage
+        self.queryService = queryService
         self.fileManager = fileManager
         self.baseUrl = configuration.targetUrl
         self.logger = logger
@@ -47,8 +47,11 @@ public class ThumbnailStorage {
         try self.createDirectoryIfNeeded(at: self.baseUrl)
     }
 
-    public convenience init() throws {
-        try self.init(storage: try ImageStorage(configuration: .document))
+    public convenience init(queryService: NewImageQueryServiceProtocol) throws {
+        try self.init(queryService: queryService,
+                      fileManager: .default,
+                      configuration: .cache,
+                      logger: RootLogger.shared)
     }
 
     // MARK: - Methods
@@ -155,7 +158,7 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
         }
 
         self.downsamplingQueue.async {
-            guard let data = try? self.storage.readImage(named: item.imageFileName, inClipHaving: item.clipId) else {
+            guard let data = try? self.queryService.read(having: item.imageId) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to resolve image file url. (name=\(item.imageFileName), clipId=\(item.clipId)
                 """))

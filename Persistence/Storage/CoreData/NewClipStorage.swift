@@ -59,7 +59,7 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Domain.Clip, ClipStorageError> {
+    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
         do {
             // Check parameters
 
@@ -94,6 +94,7 @@ extension NewClipStorage: ClipStorageProtocol {
                     return .failure(.duplicated)
                 }
             }
+            let domainOldClip = oldClip?.map(to: Domain.Clip.self)
 
             // Prepare new objects
 
@@ -110,6 +111,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 newItem.siteUrl = item.url
                 newItem.clipId = clip.id
                 newItem.index = Int64(item.clipIndex)
+                newItem.imageId = item.imageId
                 newItem.imageFileName = item.imageFileName
                 newItem.imageUrl = item.imageUrl
                 newItem.imageHeight = item.imageSize.height
@@ -134,7 +136,7 @@ extension NewClipStorage: ClipStorageProtocol {
                     self.context.delete(item)
                 }
 
-            return .success(newClip.map(to: Domain.Clip.self)!)
+            return .success((new: newClip.map(to: Domain.Clip.self)!, old: domainOldClip))
         } catch {
             return .failure(.internalError)
         }

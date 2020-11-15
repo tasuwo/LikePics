@@ -19,7 +19,7 @@ class ClipItemPreviewPresenter {
     }
 
     private let query: ClipQuery
-    private let imageStorage: ImageStorageProtocol
+    private let imageQueryService: NewImageQueryServiceProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
     private let logger: TBoxLoggable
 
@@ -36,13 +36,13 @@ class ClipItemPreviewPresenter {
 
     init(query: ClipQuery,
          itemId: ClipItem.Identity,
-         imageStorage: ImageStorageProtocol,
+         imageQueryService: NewImageQueryServiceProtocol,
          thumbnailStorage: ThumbnailStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.itemId = itemId
-        self.imageStorage = imageStorage
+        self.imageQueryService = imageQueryService
         self.thumbnailStorage = thumbnailStorage
         self.logger = logger
     }
@@ -57,7 +57,7 @@ class ClipItemPreviewPresenter {
     func readImageData() -> Data? {
         guard let item = self.query.clip.value.items.first(where: { $0.identity == self.itemId }) else { return nil }
         do {
-            return try self.imageStorage.readImage(named: item.imageFileName, inClipHaving: item.clipId)
+            return try self.imageQueryService.read(having: item.imageId)
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to read image for preview. \(error.localizedDescription)

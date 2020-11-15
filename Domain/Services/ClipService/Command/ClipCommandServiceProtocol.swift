@@ -6,7 +6,7 @@
 public protocol ClipCommandServiceProtocol {
     // MARK: Create
 
-    func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError>
+    func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError>
     func create(tagWithName name: String) -> Result<Void, ClipStorageError>
     func create(albumWithTitle: String) -> Result<Void, ClipStorageError>
 
@@ -24,13 +24,13 @@ public protocol ClipCommandServiceProtocol {
     // MARK: Delete
 
     func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError>
-    func deleteClipItem(having id: ClipItem.Identity) -> Result<Void, ClipStorageError>
+    func deleteClipItem(_ item: ClipItem) -> Result<Void, ClipStorageError>
     func deleteAlbum(having id: Album.Identity) -> Result<Void, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<Void, ClipStorageError>
 }
 
 extension ClipCommandServiceProtocol {
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
-        self.create(clip: clip, withData: data, forced: false)
+    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+        self.create(clip: clip, withContainers: containers, forced: false)
     }
 }

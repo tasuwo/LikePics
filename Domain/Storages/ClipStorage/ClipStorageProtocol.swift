@@ -18,7 +18,7 @@ public protocol ClipStorageProtocol {
 
     // MARK: Create
 
-    func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError>
+    func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Clip, old: Clip?), ClipStorageError>
     func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 

@@ -10,11 +10,11 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     public init() { }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, [(fileName: String, image: Data)], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((Clip, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
+    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
-            return createHandler(clip, data, forced)
+            return createHandler(clip, containers, forced)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
     }
@@ -130,11 +130,11 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     }
 
     public private(set) var deleteClipItemCallCount = 0
-    public var deleteClipItemHandler: ((ClipItem.Identity) -> (Result<Void, ClipStorageError>))?
-    public func deleteClipItem(having id: ClipItem.Identity) -> Result<Void, ClipStorageError> {
+    public var deleteClipItemHandler: ((ClipItem) -> (Result<Void, ClipStorageError>))?
+    public func deleteClipItem(_ item: ClipItem) -> Result<Void, ClipStorageError> {
         deleteClipItemCallCount += 1
         if let deleteClipItemHandler = deleteClipItemHandler {
-            return deleteClipItemHandler(id)
+            return deleteClipItemHandler(item)
         }
         fatalError("deleteClipItemHandler returns can't have a default value thus its handler must be set")
     }
@@ -314,8 +314,8 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, Bool, Bool) -> (Result<Clip, ClipStorageError>))?
-    public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Clip, ClipStorageError> {
+    public var createHandler: ((Clip, Bool, Bool) -> (Result<(new: Clip, old: Clip?), ClipStorageError>))?
+    public func create(clip: Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Clip, old: Clip?), ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip, allowTagCreation, overwrite)
@@ -534,6 +534,20 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
+public class NewImageQueryServiceProtocolMock: NewImageQueryServiceProtocol {
+    public init() { }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
+    public func read(having id: ImageContainer.Identity) throws -> Data? {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return try readHandler(id)
+        }
+        return nil
+    }
+}
+
 public class NewImageStorageProtocolMock: NewImageStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {
@@ -588,14 +602,14 @@ public class NewImageStorageProtocolMock: NewImageStorageProtocol {
         }
     }
 
-    public private(set) var readCallCount = 0
-    public var readHandler: ((UUID) throws -> (Data?))?
-    public func read(having id: UUID) throws -> Data? {
-        readCallCount += 1
-        if let readHandler = readHandler {
-            return try readHandler(id)
+    public private(set) var existsCallCount = 0
+    public var existsHandler: ((UUID) throws -> (Bool))?
+    public func exists(having id: UUID) throws -> Bool {
+        existsCallCount += 1
+        if let existsHandler = existsHandler {
+            return try existsHandler(id)
         }
-        return nil
+        return false
     }
 }
 
@@ -780,11 +794,11 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     public init() { }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, [(fileName: String, image: Data)], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: Clip, withData data: [(fileName: String, image: Data)], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((Clip, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
+    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
-            return createHandler(clip, data, forced)
+            return createHandler(clip, containers, forced)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
     }

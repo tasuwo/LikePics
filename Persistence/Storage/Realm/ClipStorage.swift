@@ -71,7 +71,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<Domain.Clip, ClipStorageError> {
+    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
@@ -101,6 +101,10 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.duplicated)
             }
         }
+        let domainOldClip: Domain.Clip? = {
+            guard let oldClip = oldClip else { return nil }
+            return Domain.Clip.make(by: oldClip)
+        }()
 
         // Prepare new objects
 
@@ -143,7 +147,7 @@ extension ClipStorage: ClipStorageProtocol {
         let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
         realm.add(newClip, update: updatePolicy)
 
-        return .success(Domain.Clip.make(by: newClip))
+        return .success((new: Domain.Clip.make(by: newClip), old: domainOldClip))
     }
 
     public func create(tagWithName name: String) -> Result<Domain.Tag, ClipStorageError> {
