@@ -566,8 +566,12 @@
 		0D9B4CE0202AABEC93AF1EBA /* Pods-ShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.release.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.release.xcconfig"; sourceTree = "<group>"; };
 		0F16F87DE69A7047A2EAAA8C /* Pods_ShareExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShareExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12564EAD0F90401A51C2FE68 /* Pods-DomainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.release.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.release.xcconfig"; sourceTree = "<group>"; };
+		127A7AE9EEEC280BA8E98289 /* Pods-TBoxTests.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxTests.debugdev.xcconfig"; path = "Target Support Files/Pods-TBoxTests/Pods-TBoxTests.debugdev.xcconfig"; sourceTree = "<group>"; };
 		14AA3644D517916EE7969F7C /* Pods-TBoxCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.debug.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.debug.xcconfig"; sourceTree = "<group>"; };
+		164CC7B723BD02B2A96BF08F /* Pods-Persistence.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.debugdev.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.debugdev.xcconfig"; sourceTree = "<group>"; };
 		17AEA78775707F22C6D414CD /* Pods-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1F7F7CACE611638313329A7B /* Pods-TBoxUIKit.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.debugdev.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.debugdev.xcconfig"; sourceTree = "<group>"; };
+		238C12E99CC06EE8A80F8072 /* Pods-PersistenceTests.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.releasedev.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.releasedev.xcconfig"; sourceTree = "<group>"; };
 		24CA5B0E25FD9F5FE520BB89 /* Pods-Persistence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.release.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.release.xcconfig"; sourceTree = "<group>"; };
 		2C02174F2533704400AE4A43 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
 		2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageSpec.swift; sourceTree = "<group>"; };
@@ -865,14 +869,21 @@
 		2CFC5D17250E3935001A02E4 /* ClipInformationPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentingAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debugdev.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debugdev.xcconfig"; sourceTree = "<group>"; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.release.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.release.xcconfig"; sourceTree = "<group>"; };
 		40C0EDB5E640F2A429804FCA /* Pods-ShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debug.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		4485BA038102576BB180BA86 /* Pods_PersistenceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PersistenceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		50191F16F2B643F75580C5E9 /* Pods-TBox.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.releasedev.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.releasedev.xcconfig"; sourceTree = "<group>"; };
+		56213ADC836A7F01F7D74457 /* Pods-Domain.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.debugdev.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.debugdev.xcconfig"; sourceTree = "<group>"; };
+		5E3EC5CAD67C8FB1A0E235FC /* Pods-TBoxCore.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.releasedev.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.releasedev.xcconfig"; sourceTree = "<group>"; };
+		628C3F187B328EF2675A0B73 /* Pods-PersistenceTests.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.debugdev.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.debugdev.xcconfig"; sourceTree = "<group>"; };
 		65700814FC5D4DB0F85CB23B /* Pods_TBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7042B94098BBB067736067 /* Pods-TBox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debug.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debug.xcconfig"; sourceTree = "<group>"; };
 		71166F63D2D8E937D8DECD09 /* Pods-TBoxUIKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.release.xcconfig"; sourceTree = "<group>"; };
+		7297B9D777DBCDAD249F5608 /* Pods-Domain.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.releasedev.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.releasedev.xcconfig"; sourceTree = "<group>"; };
+		75D8C7601609918389A1C1BD /* Pods-DomainTests.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.debugdev.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.debugdev.xcconfig"; sourceTree = "<group>"; };
 		76DD982A953CB84789D6B8AF /* Pods_Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7949BFC082CCFAA3EE5711D3 /* Pods_TBoxUIKitCatalog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitCatalog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B914625607732B7746F8370 /* Pods-TBoxUIKitCatalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitCatalog.debug.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog.debug.xcconfig"; sourceTree = "<group>"; };
@@ -882,12 +893,21 @@
 		9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D67630A6835BB2971C86FDA /* Pods-TBoxTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxTests.debug.xcconfig"; path = "Target Support Files/Pods-TBoxTests/Pods-TBoxTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A1FFBFA288AC339CD22D5C9D /* Pods-Persistence-PersistenceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence-PersistenceTests.debug.xcconfig"; path = "Target Support Files/Pods-Persistence-PersistenceTests/Pods-Persistence-PersistenceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A7B2F1107B32FB4D82427D54 /* Pods-TBoxUIKitTests.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitTests.debugdev.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests.debugdev.xcconfig"; sourceTree = "<group>"; };
+		ABC42AAEE858F43497BC349C /* Pods-ShareExtension.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.releasedev.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.releasedev.xcconfig"; sourceTree = "<group>"; };
+		B243C830DBD9188DEF75EC83 /* Pods-TBoxUIKitTests.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitTests.releasedev.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests.releasedev.xcconfig"; sourceTree = "<group>"; };
+		B65FAF6F3100A4C78410CC39 /* Pods-TBoxCore.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxCore.debugdev.xcconfig"; path = "Target Support Files/Pods-TBoxCore/Pods-TBoxCore.debugdev.xcconfig"; sourceTree = "<group>"; };
 		BA50072D2BFA30C156464A3B /* Pods-TBoxUIKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitTests.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitTests/Pods-TBoxUIKitTests.release.xcconfig"; sourceTree = "<group>"; };
+		BAA2D58A199F932384DDC6E9 /* Pods-DomainTests.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.releasedev.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.releasedev.xcconfig"; sourceTree = "<group>"; };
+		C2740163FECE2C35AB78008C /* Pods-ShareExtension.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debugdev.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debugdev.xcconfig"; sourceTree = "<group>"; };
+		C58B65C8CD85D20DFA4A495B /* Pods-Persistence.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.releasedev.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.releasedev.xcconfig"; sourceTree = "<group>"; };
 		D6C13F50ED40A4474A0D7CE1 /* Pods-TBoxUIKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.debug.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.debug.xcconfig"; sourceTree = "<group>"; };
 		DB1E5E3D9404A4CE8F2BDC41 /* Pods_DomainTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DomainTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFCC9F004481533F735A7FF8 /* Pods-TBoxUIKitCatalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKitCatalog.release.xcconfig"; path = "Target Support Files/Pods-TBoxUIKitCatalog/Pods-TBoxUIKitCatalog.release.xcconfig"; sourceTree = "<group>"; };
+		E118D1074F0BE487B8585C14 /* Pods-TBoxTests.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxTests.releasedev.xcconfig"; path = "Target Support Files/Pods-TBoxTests/Pods-TBoxTests.releasedev.xcconfig"; sourceTree = "<group>"; };
 		E4CA121B4576F8A1A3CE71B5 /* Pods-Persistence.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Persistence.debug.xcconfig"; path = "Target Support Files/Pods-Persistence/Pods-Persistence.debug.xcconfig"; sourceTree = "<group>"; };
 		E53A6F720BE737FA1BBEC165 /* Pods-PersistenceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PersistenceTests.release.xcconfig"; path = "Target Support Files/Pods-PersistenceTests/Pods-PersistenceTests.release.xcconfig"; sourceTree = "<group>"; };
+		EAC9415DCBBC445EFB935716 /* Pods-TBoxUIKit.releasedev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBoxUIKit.releasedev.xcconfig"; path = "Target Support Files/Pods-TBoxUIKit/Pods-TBoxUIKit.releasedev.xcconfig"; sourceTree = "<group>"; };
 		F1DB366F4D8BEE3ED57CF37A /* Pods-DomainTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DomainTests.debug.xcconfig"; path = "Target Support Files/Pods-DomainTests/Pods-DomainTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F57E45EA2B66B864981288F0 /* Pods-Domain.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.release.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.release.xcconfig"; sourceTree = "<group>"; };
 		F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2391,6 +2411,26 @@
 				3CF862702BFB70B93AD3E1F6 /* Pods-TBoxCore.release.xcconfig */,
 				7B914625607732B7746F8370 /* Pods-TBoxUIKitCatalog.debug.xcconfig */,
 				DFCC9F004481533F735A7FF8 /* Pods-TBoxUIKitCatalog.release.xcconfig */,
+				56213ADC836A7F01F7D74457 /* Pods-Domain.debugdev.xcconfig */,
+				7297B9D777DBCDAD249F5608 /* Pods-Domain.releasedev.xcconfig */,
+				75D8C7601609918389A1C1BD /* Pods-DomainTests.debugdev.xcconfig */,
+				BAA2D58A199F932384DDC6E9 /* Pods-DomainTests.releasedev.xcconfig */,
+				164CC7B723BD02B2A96BF08F /* Pods-Persistence.debugdev.xcconfig */,
+				C58B65C8CD85D20DFA4A495B /* Pods-Persistence.releasedev.xcconfig */,
+				628C3F187B328EF2675A0B73 /* Pods-PersistenceTests.debugdev.xcconfig */,
+				238C12E99CC06EE8A80F8072 /* Pods-PersistenceTests.releasedev.xcconfig */,
+				C2740163FECE2C35AB78008C /* Pods-ShareExtension.debugdev.xcconfig */,
+				ABC42AAEE858F43497BC349C /* Pods-ShareExtension.releasedev.xcconfig */,
+				2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */,
+				50191F16F2B643F75580C5E9 /* Pods-TBox.releasedev.xcconfig */,
+				B65FAF6F3100A4C78410CC39 /* Pods-TBoxCore.debugdev.xcconfig */,
+				5E3EC5CAD67C8FB1A0E235FC /* Pods-TBoxCore.releasedev.xcconfig */,
+				127A7AE9EEEC280BA8E98289 /* Pods-TBoxTests.debugdev.xcconfig */,
+				E118D1074F0BE487B8585C14 /* Pods-TBoxTests.releasedev.xcconfig */,
+				1F7F7CACE611638313329A7B /* Pods-TBoxUIKit.debugdev.xcconfig */,
+				EAC9415DCBBC445EFB935716 /* Pods-TBoxUIKit.releasedev.xcconfig */,
+				A7B2F1107B32FB4D82427D54 /* Pods-TBoxUIKitTests.debugdev.xcconfig */,
+				B243C830DBD9188DEF75EC83 /* Pods-TBoxUIKitTests.releasedev.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3838,6 +3878,910 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2C1F29CF2561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_GROUP = group.net.tasuwo.TBox.dev;
+				APP_NAME = LikePicsDev;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = DebugDev;
+		};
+		2C1F29D02561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBox/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
+				PRODUCT_NAME = LikePics;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugDev;
+		};
+		2C1F29D12561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 127A7AE9EEEC280BA8E98289 /* Pods-TBoxTests.debugdev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBoxTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = DebugDev;
+		};
+		2C1F29D22561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 164CC7B723BD02B2A96BF08F /* Pods-Persistence.debugdev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Persistence/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29D32561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 628C3F187B328EF2675A0B73 /* Pods-PersistenceTests.debugdev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = PersistenceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.PersistenceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = DebugDev;
+		};
+		2C1F29D42561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56213ADC836A7F01F7D74457 /* Pods-Domain.debugdev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Domain;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29D52561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 75D8C7601609918389A1C1BD /* Pods-DomainTests.debugdev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.DomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = DebugDev;
+		};
+		2C1F29D62561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2740163FECE2C35AB78008C /* Pods-ShareExtension.debugdev.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev.ShareExtension";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugDev;
+		};
+		2C1F29D72561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F7F7CACE611638313329A7B /* Pods-TBoxUIKit.debugdev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TBoxUIKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29D82561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7B2F1107B32FB4D82427D54 /* Pods-TBoxUIKitTests.debugdev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = DebugDev;
+		};
+		2C1F29D92561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B65FAF6F3100A4C78410CC39 /* Pods-TBoxCore.debugdev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TBoxCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29DA2561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Common/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Common;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29DB2561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = CommonTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.CommonTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = DebugDev;
+		};
+		2C1F29DC2561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TestHelper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TestHelper;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugDev;
+		};
+		2C1F29DD2561379F00B89AE9 /* DebugDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TBoxUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TBox;
+			};
+			name = DebugDev;
+		};
+		2C1F29DE256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_GROUP = group.net.tasuwo.TBox.dev;
+				APP_NAME = LikePicsDev;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseDev;
+		};
+		2C1F29DF256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50191F16F2B643F75580C5E9 /* Pods-TBox.releasedev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TBox/TBox.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBox/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
+				PRODUCT_NAME = LikePics;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E0256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E118D1074F0BE487B8585C14 /* Pods-TBoxTests.releasedev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBoxTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E1256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C58B65C8CD85D20DFA4A495B /* Pods-Persistence.releasedev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Persistence/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Persistence;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E2256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 238C12E99CC06EE8A80F8072 /* Pods-PersistenceTests.releasedev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = PersistenceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.PersistenceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E3256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7297B9D777DBCDAD249F5608 /* Pods-Domain.releasedev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Domain/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Domain;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E4256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BAA2D58A199F932384DDC6E9 /* Pods-DomainTests.releasedev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = DomainTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.DomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E5256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ABC42AAEE858F43497BC349C /* Pods-ShareExtension.releasedev.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev.ShareExtension";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E6256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAC9415DCBBC445EFB935716 /* Pods-TBoxUIKit.releasedev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TBoxUIKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E7256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B243C830DBD9188DEF75EC83 /* Pods-TBoxUIKitTests.releasedev.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUIKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E8256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5E3EC5CAD67C8FB1A0E235FC /* Pods-TBoxCore.releasedev.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TBoxCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29E9256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Common/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.Common;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29EA256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				INFOPLIST_FILE = CommonTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.CommonTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29EB256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RY2377PP7S;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TestHelper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TestHelper;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseDev;
+		};
+		2C1F29EC256137AE00B89AE9 /* ReleaseDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TBoxUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBoxUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TBox;
+			};
+			name = ReleaseDev;
+		};
 		2C214163254858D50013F486 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4343,6 +5287,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_GROUP = group.net.tasuwo.TBox;
+				APP_NAME = LikePics;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4396,6 +5342,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4406,6 +5353,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_GROUP = group.net.tasuwo.TBox;
+				APP_NAME = LikePics;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4451,6 +5400,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -4743,7 +5693,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C214163254858D50013F486 /* Debug */,
+				2C1F29DD2561379F00B89AE9 /* DebugDev */,
 				2C214164254858D50013F486 /* Release */,
+				2C1F29EC256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4752,7 +5704,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6E099B24E6DD1A00B541D9 /* Debug */,
+				2C1F29D92561379F00B89AE9 /* DebugDev */,
 				2C6E099C24E6DD1A00B541D9 /* Release */,
+				2C1F29E8256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4761,7 +5715,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6E09DD24E8150500B541D9 /* Debug */,
+				2C1F29DA2561379F00B89AE9 /* DebugDev */,
 				2C6E09DE24E8150500B541D9 /* Release */,
+				2C1F29E9256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4770,7 +5726,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6E09E024E8150500B541D9 /* Debug */,
+				2C1F29DB2561379F00B89AE9 /* DebugDev */,
 				2C6E09E124E8150500B541D9 /* Release */,
+				2C1F29EA256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4779,7 +5737,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C8FD64524E02DCE005887F9 /* Debug */,
+				2C1F29D72561379F00B89AE9 /* DebugDev */,
 				2C8FD64624E02DCE005887F9 /* Release */,
+				2C1F29E6256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4788,7 +5748,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C8FD64824E02DCE005887F9 /* Debug */,
+				2C1F29D82561379F00B89AE9 /* DebugDev */,
 				2C8FD64924E02DCE005887F9 /* Release */,
+				2C1F29E7256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4797,7 +5759,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C99277624DDC7D400672CA7 /* Debug */,
+				2C1F29D42561379F00B89AE9 /* DebugDev */,
 				2C99277724DDC7D400672CA7 /* Release */,
+				2C1F29E3256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4806,7 +5770,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C99277924DDC7D400672CA7 /* Debug */,
+				2C1F29D52561379F00B89AE9 /* DebugDev */,
 				2C99277A24DDC7D400672CA7 /* Release */,
+				2C1F29E4256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4815,7 +5781,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C99279E24DDD65E00672CA7 /* Debug */,
+				2C1F29D62561379F00B89AE9 /* DebugDev */,
 				2C99279F24DDD65E00672CA7 /* Release */,
+				2C1F29E5256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4824,7 +5792,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CA022A624DD9F5F00329251 /* Debug */,
+				2C1F29CF2561379F00B89AE9 /* DebugDev */,
 				2CA022A724DD9F5F00329251 /* Release */,
+				2C1F29DE256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4833,7 +5803,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CA022A924DD9F5F00329251 /* Debug */,
+				2C1F29D02561379F00B89AE9 /* DebugDev */,
 				2CA022AA24DD9F5F00329251 /* Release */,
+				2C1F29DF256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4842,7 +5814,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CA022AC24DD9F5F00329251 /* Debug */,
+				2C1F29D12561379F00B89AE9 /* DebugDev */,
 				2CA022AD24DD9F5F00329251 /* Release */,
+				2C1F29E0256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4851,7 +5825,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CCECE2C24DDC0CB00ADFE54 /* Debug */,
+				2C1F29D22561379F00B89AE9 /* DebugDev */,
 				2CCECE2D24DDC0CB00ADFE54 /* Release */,
+				2C1F29E1256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4860,7 +5836,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CCECE2E24DDC0CB00ADFE54 /* Debug */,
+				2C1F29D32561379F00B89AE9 /* DebugDev */,
 				2CCECE2F24DDC0CB00ADFE54 /* Release */,
+				2C1F29E2256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4869,7 +5847,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CF4657A2511045B00DF78E6 /* Debug */,
+				2C1F29DC2561379F00B89AE9 /* DebugDev */,
 				2CF4657B2511045B00DF78E6 /* Release */,
+				2C1F29EB256137AE00B89AE9 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

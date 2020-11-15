@@ -1,5 +1,10 @@
 git_url("git@github.com:tasuwo/certificates.git")
 storage_mode("git")
 type("development")
-app_identifier(["net.tasuwo.TBox", "net.tasuwo.TBox.ShareExtension"])
+app_identifier([
+    "net.tasuwo.TBox",
+    "net.tasuwo.TBox.dev",
+    "net.tasuwo.TBox.ShareExtension",
+    "net.tasuwo.TBox.dev.ShareExtension"
+])
 
