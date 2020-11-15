@@ -102,7 +102,7 @@ extension NewClipStorage: ClipStorageProtocol {
             newClip.id = clip.id
             newClip.descriptionText = clip.description
 
-            let items: NSMutableOrderedSet = .init()
+            let items = NSMutableSet()
             clip.items.forEach { item in
                 let newItem = NSEntityDescription.insertNewObject(forEntityName: "Item",
                                                                   into: self.context) as! Item
