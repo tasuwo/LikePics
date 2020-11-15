@@ -22,6 +22,7 @@ extension ReferenceClip: Persistable {
     // MARK: - Persistable
 
     static func make(by managedObject: ReferenceClipObject) -> ReferenceClip {
+        // swiftlint:disable:next force_unwrapping
         return .init(id: UUID(uuidString: managedObject.id)!,
                      description: managedObject.descriptionText,
                      tags: managedObject.tags.map { ReferenceTag.make(by: $0) },
