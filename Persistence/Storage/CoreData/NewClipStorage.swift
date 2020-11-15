@@ -105,7 +105,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
             let items = NSMutableSet()
             clip.items.forEach { item in
-                let newItem = NSEntityDescription.insertNewObject(forEntityName: "Item",
+                let newItem = NSEntityDescription.insertNewObject(forEntityName: "ClipItem",
                                                                   into: self.context) as! Item
                 newItem.id = item.id
                 newItem.siteUrl = item.url
@@ -121,7 +121,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
                 items.add(newItem)
             }
-            newClip.items = items
+            newClip.clipItems = items
             newClip.tags = NSSet(array: appendingTags)
 
             newClip.isHidden = clip.isHidden
@@ -130,7 +130,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
             // Delete
 
-            oldClip?.items?
+            oldClip?.clipItems?
                 .compactMap { $0 as? Item }
                 .forEach { item in
                     self.context.delete(item)
@@ -336,20 +336,29 @@ extension NewClipStorage: ClipStorageProtocol {
                 clips.append(clip)
             }
 
-            let albumClips = album.mutableOrderedSetValue(forKey: "clips")
-            for clip in clips {
-                guard !albumClips.contains(clip) else {
-                    return .failure(.duplicated)
-                }
-            }
+            let albumItems = album.mutableSetValue(forKey: "items")
 
+            let alreadyAdded = clips
+                .allSatisfy { clip in
+                    albumItems
+                        .compactMap { $0 as? AlbumItem }
+                        .contains { $0.clip == clip }
+                }
+            guard !alreadyAdded else { return .failure(.duplicated) }
+
+            let maxIndex = albumItems
+                .compactMap { $0 as? AlbumItem }
+                .max(by: { $0.index < $1.index })?
+                .index ?? 0
+            for (index, clip) in clips.enumerated() {
+                let albumItem = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem",
+                                                                    into: self.context) as! AlbumItem
+                albumItem.id = UUID()
+                albumItem.index = maxIndex + Int64(index + 1)
+                albumItem.clip = clip
+                albumItems.add(albumItem)
+            }
             album.updatedDate = Date()
-
-            for clip in clips {
-                if !albumClips.contains(clip) {
-                    albumClips.add(clip)
-                }
-            }
 
             return .success(())
         } catch {
@@ -375,15 +384,33 @@ extension NewClipStorage: ClipStorageProtocol {
                 clips.append(clip)
             }
 
-            let albumClips = album.mutableOrderedSetValue(forKey: "clips")
-            for clip in clips {
-                guard albumClips.contains(clip) else {
-                    return .failure(.notFound)
-                }
-            }
+            let albumItems = album.mutableSetValue(forKey: "items")
 
+            let alreadyAdded = clips
+                .allSatisfy { clip in
+                    albumItems
+                        .compactMap { $0 as? AlbumItem }
+                        .contains { $0.clip == clip }
+                }
+            guard alreadyAdded else { return .failure(.notFound) }
+
+            var currentIndex: Int64 = 1
+            albumItems
+                .compactMap { $0 as? AlbumItem }
+                .sorted(by: { $0.index < $1.index })
+                .forEach { albumItem in
+                    guard let clipId = albumItem.clip?.id else {
+                        self.context.delete(albumItem)
+                        return
+                    }
+                    if clipIds.contains(clipId) {
+                        self.context.delete(albumItem)
+                    } else {
+                        albumItem.index = currentIndex
+                        currentIndex += 1
+                    }
+                }
             album.updatedDate = Date()
-            clips.forEach { albumClips.remove($0) }
 
             return .success(())
         } catch {
@@ -462,7 +489,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
     public func deleteClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItem, ClipStorageError> {
         do {
-            let request = NSFetchRequest<Item>(entityName: "Item")
+            let request = NSFetchRequest<Item>(entityName: "ClipItem")
             request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
             guard let item = try self.context.fetch(request).first else {
                 return .failure(.notFound)
@@ -470,7 +497,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
             let removeTarget = item.map(to: Domain.ClipItem.self)!
 
-            guard let clipItems = item.clip?.items?.compactMap({ $0 as? Item }) else {
+            guard let clipItems = item.clip?.clipItems?.compactMap({ $0 as? Item }) else {
                 self.context.delete(item)
                 return .success(removeTarget)
             }

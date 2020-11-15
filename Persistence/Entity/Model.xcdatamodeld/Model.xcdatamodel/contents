@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName="Persistence.Album" syncable="YES" codeGenerationType="class">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="clips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Clip" inverseName="albums" inverseEntity="Clip"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlbumItem" inverseName="album" inverseEntity="AlbumItem"/>
+    </entity>
+    <entity name="AlbumItem" representedClassName="AlbumItem" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="items" inverseEntity="Album"/>
+        <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="albumItem" inverseEntity="Clip"/>
     </entity>
     <entity name="Clip" representedClassName="Persistence.Clip" syncable="YES" codeGenerationType="class">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -14,15 +20,11 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="clips" inverseEntity="Album"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Item" inverseName="clip" inverseEntity="Item"/>
+        <relationship name="albumItem" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlbumItem" inverseName="clip" inverseEntity="AlbumItem"/>
+        <relationship name="clipItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ClipItem" inverseName="clip" inverseEntity="ClipItem"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="clips" inverseEntity="Tag"/>
     </entity>
-    <entity name="Image" representedClassName="Image" syncable="YES" codeGenerationType="class">
-        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
-    </entity>
-    <entity name="Item" representedClassName="Persistence.Item" syncable="YES" codeGenerationType="class">
+    <entity name="ClipItem" representedClassName="Persistence.Item" syncable="YES" codeGenerationType="class">
         <attribute name="clipId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -34,7 +36,11 @@
         <attribute name="index" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="siteUrl" optional="YES" attributeType="URI"/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="items" inverseEntity="Clip"/>
+        <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="clipItems" inverseEntity="Clip"/>
+    </entity>
+    <entity name="Image" representedClassName="Image" syncable="YES" codeGenerationType="class">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
     </entity>
     <entity name="Tag" representedClassName="Persistence.Tag" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -43,10 +49,11 @@
         <relationship name="clips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Clip" inverseName="tags" inverseEntity="Clip"/>
     </entity>
     <elements>
-        <element name="Album" positionX="-840.30078125" positionY="25.9140625" width="128" height="119"/>
-        <element name="Clip" positionX="-637.5" positionY="6.46875" width="128" height="149"/>
-        <element name="Image" positionX="-630" positionY="81" width="128" height="59"/>
-        <element name="Item" positionX="-440.71875" positionY="-71.8515625" width="128" height="209"/>
-        <element name="Tag" positionX="-445.03515625" positionY="146.65625" width="128" height="103"/>
+        <element name="Album" positionX="-835.342529296875" positionY="-113.688232421875" width="128" height="133"/>
+        <element name="AlbumItem" positionX="-835.949951171875" positionY="66.85919189453125" width="128" height="103"/>
+        <element name="Clip" positionX="-651.5457763671875" positionY="-33.1494140625" width="128" height="149"/>
+        <element name="ClipItem" positionX="-449.522216796875" positionY="-108.0613098144532" width="128" height="223"/>
+        <element name="Image" positionX="-835.87353515625" positionY="187.7873535156249" width="128" height="59"/>
+        <element name="Tag" positionX="-450.0784912109375" positionY="143.0955200195312" width="128" height="103"/>
     </elements>
 </model>

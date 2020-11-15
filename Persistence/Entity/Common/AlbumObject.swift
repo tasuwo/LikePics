@@ -41,10 +41,12 @@ extension Persistence.Album {
             return nil
         }
 
-        let clips = self.clips?
-            .compactMap { $0 as? Persistence.Clip }
-            .enumerated()
-            .compactMap { $1.map(to: Domain.Clip.self) } ?? []
+        let clips = self.items?
+            .allObjects
+            .compactMap { $0 as? AlbumItem }
+            .sorted(by: { $0.index < $1.index })
+            .compactMap { $0.clip }
+            .compactMap { $0.map(to: Domain.Clip.self) } ?? []
 
         return Domain.Album(id: id,
                             title: title,

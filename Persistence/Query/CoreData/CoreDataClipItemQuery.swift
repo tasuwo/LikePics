@@ -14,7 +14,7 @@ class CoreDataClipItemQuery: NSObject {
     // MARK: - Lifecycle
 
     init?(id: Domain.ClipItem.Identity, context: NSManagedObjectContext) throws {
-        let request = NSFetchRequest<Item>(entityName: "Item")
+        let request = NSFetchRequest<Item>(entityName: "ClipItem")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let item = try context.fetch(request).first,

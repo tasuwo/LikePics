@@ -48,7 +48,7 @@ extension Persistence.Clip {
             .compactMap { $0 as? Persistence.Tag }
             .compactMap { $0.map(to: Domain.Tag.self) } ?? []
 
-        let items = self.items?
+        let items = self.clipItems?
             .compactMap { $0 as? Persistence.Item }
             .compactMap { $0.map(to: Domain.ClipItem.self) } ?? []
 
