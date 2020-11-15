@@ -45,6 +45,14 @@ enum ClipStorageMigrationService {
             Self.migrateToV9(migration)
         } else if oldSchemaVersion < 10 {
             Self.migrateToV10(migration)
+        } else if oldSchemaVersion < 11 {
+            Self.migrateToV11(migration)
+        }
+    }
+
+    private static func migrateToV11(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipItemObject.className()) { oldObject, newObject in
+            newObject!["imageId"] = UUID().uuidString
         }
     }
 

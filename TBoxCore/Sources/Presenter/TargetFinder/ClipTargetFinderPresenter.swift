@@ -308,6 +308,7 @@ extension ClipItem {
                   url: url,
                   clipId: clipId,
                   clipIndex: index,
+                  imageId: UUID(),
                   imageFileName: source.fileName,
                   imageUrl: source.url,
                   imageSize: ImageSize(height: source.height, width: source.width),

@@ -115,6 +115,7 @@ extension ClipStorage: ClipStorageProtocol {
             newClipItem.url = item.url?.absoluteString
             newClipItem.clipId = clip.id.uuidString
             newClipItem.clipIndex = item.clipIndex
+            newClipItem.imageId = item.imageId.uuidString
             newClipItem.imageFileName = item.imageFileName
             newClipItem.imageUrl = item.imageUrl?.absoluteString
             newClipItem.imageHeight = item.imageSize.height

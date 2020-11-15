@@ -10,6 +10,7 @@ final class ClipItemObject: Object {
     @objc dynamic var url: String? = ""
     @objc dynamic var clipId: String = ""
     @objc dynamic var clipIndex: Int = 0
+    @objc dynamic var imageId: String = ""
     @objc dynamic var imageFileName: String = ""
     @objc dynamic var imageUrl: String? = ""
     @objc dynamic var imageHeight: Double = 0
@@ -46,6 +47,8 @@ extension Domain.ClipItem: Persistable {
                                // swiftlint:disable:next force_unwrapping
                                clipId: UUID(uuidString: managedObject.clipId)!,
                                clipIndex: managedObject.clipIndex,
+                               // swiftlint:disable:next force_unwrapping
+                               imageId: UUID(uuidString: managedObject.imageId)!,
                                imageFileName: managedObject.imageFileName,
                                imageUrl: imageUrl,
                                imageSize: ImageSize(height: managedObject.imageHeight,
@@ -59,6 +62,7 @@ extension Persistence.Item {
     func map(to: Domain.ClipItem.Type) -> Domain.ClipItem? {
         guard let id = self.id,
             let clipId = self.clip?.id,
+            let imageId = self.imageId,
             let createdDate = self.createdDate,
             let updatedDate = self.updatedDate
         else {
@@ -69,6 +73,7 @@ extension Persistence.Item {
                                url: self.siteUrl,
                                clipId: clipId,
                                clipIndex: Int(self.index),
+                               imageId: imageId,
                                imageFileName: self.imageFileName ?? "",
                                imageUrl: self.imageUrl,
                                imageSize: .init(height: self.imageHeight, width: self.imageWidth),
