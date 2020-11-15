@@ -46,13 +46,6 @@ class CoreDataAlbumQuery: NSObject {
                 self.subject.send(completion: .finished)
                 return
             }
-            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
-                let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
-                let album = object.map(to: Domain.Album.self)
-            {
-                self.subject.send(album)
-                return
-            }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
                 let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
                 let album = object.map(to: Domain.Album.self)

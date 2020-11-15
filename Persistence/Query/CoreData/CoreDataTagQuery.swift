@@ -46,13 +46,6 @@ class CoreDataTagQuery: NSObject {
                 self.subject.send(completion: .finished)
                 return
             }
-            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
-                let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
-                let tag = object.map(to: Domain.Tag.self)
-            {
-                self.subject.send(tag)
-                return
-            }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
                 let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
                 let tag = object.map(to: Domain.Tag.self)

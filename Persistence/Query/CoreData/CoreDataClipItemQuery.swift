@@ -46,13 +46,6 @@ class CoreDataClipItemQuery: NSObject {
                 self.subject.send(completion: .finished)
                 return
             }
-            if let objects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
-                let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
-                let item = object.map(to: Domain.ClipItem.self)
-            {
-                self.subject.send(item)
-                return
-            }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
                 let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
                 let item = object.map(to: Domain.ClipItem.self)
