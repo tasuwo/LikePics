@@ -1,5 +1,5 @@
 use_frameworks!
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 def test_shared_pods
     pod 'Quick',         '~> 3.0.0'
@@ -52,7 +52,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
       config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'YES'
     end
   end
