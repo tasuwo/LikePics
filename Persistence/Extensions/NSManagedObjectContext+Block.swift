@@ -4,6 +4,8 @@
 
 import CoreData
 
+// swiftlint:disable untyped_error_in_catch
+
 extension NSManagedObjectContext {
     func sync<T>(execute work: @escaping () throws -> T) throws -> T {
         var result: T?
@@ -24,6 +26,7 @@ extension NSManagedObjectContext {
             throw error
         }
 
+        // swiftlint:disable:next force_unwrapping
         return result!
     }
 }
