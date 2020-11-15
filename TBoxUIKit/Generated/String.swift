@@ -20,7 +20,7 @@ internal enum L10n {
     internal static let clipInformationViewContextMenuOpen = L10n.tr("Localizable", "clip_information_view_context_menu_open")
     /// 画像のURL
     internal static let clipInformationViewImageUrlTitle = L10n.tr("Localizable", "clip_information_view_image_url_title")
-    /// このクリップを隠す
+    /// 隠す
     internal static let clipInformationViewLabelClipHide = L10n.tr("Localizable", "clip_information_view_label_clip_hide")
     /// 登録日
     internal static let clipInformationViewLabelClipItemRegisteredDate = L10n.tr("Localizable", "clip_information_view_label_clip_item_registered_date")
@@ -40,7 +40,7 @@ internal enum L10n {
     internal static let clipInformationViewSectionLabelClip = L10n.tr("Localizable", "clip_information_view_section_label_clip")
     /// この画像の情報
     internal static let clipInformationViewSectionLabelClipItem = L10n.tr("Localizable", "clip_information_view_section_label_clip_item")
-    /// このクリップのタグ
+    /// タグ
     internal static let clipInformationViewSectionLabelTag = L10n.tr("Localizable", "clip_information_view_section_label_tag")
     /// サイトのURL
     internal static let clipInformationViewSiteUrlTitle = L10n.tr("Localizable", "clip_information_view_site_url_title")
