@@ -2004,7 +2004,6 @@
 				2C99278424DDCAA100672CA7 /* Storages */,
 				2C523CF8254AEE5C0099F6DD /* Services */,
 				2C8AF8A324E3EE4200CB0642 /* ValueObject */,
-				2C236D71251A10C300AB5EDD /* Query */,
 				2C99277B24DDC7DA00672CA7 /* Entity */,
 				2C99276024DDC7D300672CA7 /* Domain.h */,
 				2C99276124DDC7D300672CA7 /* Info.plist */,
@@ -2027,6 +2026,7 @@
 				2C16050725207C6A00A39E58 /* Identifiable.swift */,
 				2C1040DD254D953D000DF7DE /* Common */,
 				2C1040DC254D9534000DF7DE /* Reference */,
+				2C236D71251A10C300AB5EDD /* Query */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
