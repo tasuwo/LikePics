@@ -39,7 +39,8 @@ class CoreDataClipQuery: NSObject {
     @objc
     private func contextDidChangeNotification(notification: NSNotification) {
         guard let context = notification.object as? NSManagedObjectContext else { return }
-        context.perform {
+        context.perform { [weak self] in
+            guard let self = self else { return }
             if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
                 objects.compactMap({ $0 as? Clip }).contains(where: { $0.objectID == self.objectId })
             {

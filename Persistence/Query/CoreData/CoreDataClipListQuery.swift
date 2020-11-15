@@ -36,7 +36,8 @@ extension CoreDataClipListQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        controller.managedObjectContext.perform {
+        controller.managedObjectContext.perform { [weak self] in
+            guard let self = self else { return }
             let clips: [Domain.Clip] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
                 .compactMap { controller.managedObjectContext.object(with: $0) as? Clip }
                 .compactMap { $0.map(to: Domain.Clip.self) }

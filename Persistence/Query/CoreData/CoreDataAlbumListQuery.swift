@@ -36,7 +36,8 @@ extension CoreDataAlbumListQuery: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
     {
-        controller.managedObjectContext.perform {
+        controller.managedObjectContext.perform { [weak self] in
+            guard let self = self else { return }
             let albums: [Domain.Album] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
                 .compactMap { controller.managedObjectContext.object(with: $0) as? Album }
                 .compactMap { $0.map(to: Domain.Album.self) }
