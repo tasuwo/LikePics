@@ -22,13 +22,6 @@ class AlbumListPresenter {
     private let logger: TBoxLoggable
 
     private var cancellableBag = Set<AnyCancellable>()
-    private var showHiddenItems: Bool = false {
-        didSet {
-            if oldValue != self.showHiddenItems {
-                self.view?.reload()
-            }
-        }
-    }
 
     private(set) var albums: [Album] = [] {
         didSet {
@@ -67,9 +60,14 @@ class AlbumListPresenter {
                 self?.logger.write(ConsoleLog(level: .error, message: "Unexpectedly finished observing at AlbumListView."))
             }, receiveValue: { [weak self] albums, showHiddenItems in
                 guard let self = self else { return }
-                self.albums = albums
-                    .sorted(by: { $0.registeredDate > $1.registeredDate })
-                self.showHiddenItems = showHiddenItems
+                if showHiddenItems {
+                    self.albums = albums
+                        .sorted(by: { $0.registeredDate > $1.registeredDate })
+                } else {
+                    self.albums = albums
+                        .sorted(by: { $0.registeredDate > $1.registeredDate })
+                        .map { $0.removingHiddenClips() }
+                }
             })
             .store(in: &self.cancellableBag)
     }
@@ -103,10 +101,6 @@ class AlbumListPresenter {
     }
 
     private func resolveThumbnailItem(for album: Album) -> ClipItem? {
-        if self.showHiddenItems {
-            return album.clips.first?.items.first
-        } else {
-            return album.clips.first(where: { !$0.isHidden })?.items.first
-        }
+        return album.clips.first?.items.first
     }
 }
