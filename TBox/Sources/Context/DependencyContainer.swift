@@ -64,7 +64,7 @@ class DependencyContainer {
     private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
     private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
 
-    lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: NSPersistentCloudKitContainer = {
         let container = PersistentContainerLoader.load()
         container.loadPersistentStores(completionHandler: { _, error in
             if let error = error as NSError? {

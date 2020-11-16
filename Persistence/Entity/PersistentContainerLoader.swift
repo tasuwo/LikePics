@@ -7,13 +7,13 @@ import CoreData
 public enum PersistentContainerLoader {
     class Class {}
 
-    public static func load() -> NSPersistentContainer {
+    public static func load() -> NSPersistentCloudKitContainer {
         let bundle = Bundle(for: Self.Class.self)
         guard let url = bundle.url(forResource: "Model", withExtension: "momd"),
             let model = NSManagedObjectModel(contentsOf: url)
         else {
             fatalError("Unable to load Core Data Model")
         }
-        return NSPersistentContainer(name: "Model", managedObjectModel: model)
+        return NSPersistentCloudKitContainer(name: "Model", managedObjectModel: model)
     }
 }
