@@ -71,11 +71,10 @@ class DependencyContainer {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        container.viewContext.automaticallyMergesChangesFromParent = true
         return container
     }()
 
-    private var rootContext: NSManagedObjectContext!
-    private var queryContext: NSManagedObjectContext!
     private var imageQueryContext: NSManagedObjectContext!
     private var commandContext: NSManagedObjectContext!
 
@@ -97,46 +96,24 @@ class DependencyContainer {
 
         // MARK: Context
 
-        self.rootContext = self.clipCommandQueue.sync {
-            let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            context.persistentStoreCoordinator = self.persistentContainer.persistentStoreCoordinator
-            return context
-        }
-        self.queryContext = {
-            let makeContext = { () -> NSManagedObjectContext in
-                let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-                context.parent = self.rootContext
-                context.automaticallyMergesChangesFromParent = true
-                return context
-            }
-            if Thread.isMainThread {
-                return makeContext()
-            } else {
-                return DispatchQueue.main.sync {
-                    return makeContext()
-                }
-            }
-        }()
         self.imageQueryContext = {
             return self.imageQueryQueue.sync {
-                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-                context.parent = self.rootContext
+                let context = self.persistentContainer.newBackgroundContext()
                 return context
             }
         }()
         self.commandContext = {
             return self.clipCommandQueue.sync {
-                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-                context.parent = self.rootContext
+                let context = self.persistentContainer.newBackgroundContext()
                 return context
             }
         }()
 
         // MARK: Storage/Query
 
-        self.clipStorage = NewClipStorage(rootContext: self.rootContext, context: self.commandContext)
-        self.clipQueryService = NewClipQueryService(context: self.queryContext)
-        self.imageStorage = NewImageStorage(rootContext: self.rootContext, context: self.commandContext)
+        self.clipStorage = NewClipStorage(context: self.commandContext)
+        self.clipQueryService = NewClipQueryService(context: self.persistentContainer.viewContext)
+        self.imageStorage = NewImageStorage(context: self.commandContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
         self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
 

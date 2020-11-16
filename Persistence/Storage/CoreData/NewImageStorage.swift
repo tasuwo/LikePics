@@ -6,15 +6,11 @@ import CoreData
 import Domain
 
 public class NewImageStorage {
-    private let rootContext: NSManagedObjectContext
     private let context: NSManagedObjectContext
 
     // MARK: - Lifecycle
 
-    public init(rootContext: NSManagedObjectContext,
-                context: NSManagedObjectContext)
-    {
-        self.rootContext = rootContext
+    public init(context: NSManagedObjectContext) {
         self.context = context
     }
 }
@@ -32,7 +28,6 @@ extension NewImageStorage: NewImageStorageProtocol {
 
     public func commitTransaction() throws {
         try self.context.save()
-        try self.rootContext.save()
     }
 
     public func cancelTransactionIfNeeded() throws {
