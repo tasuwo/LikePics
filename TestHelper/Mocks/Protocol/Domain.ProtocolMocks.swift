@@ -585,8 +585,8 @@ public class NewImageStorageProtocolMock: NewImageStorageProtocol {
     }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Data, UUID) throws -> Void)?
-    public func create(_ image: Data, id: UUID) throws {
+    public var createHandler: ((Data, ImageContainer.Identity) throws -> Void)?
+    public func create(_ image: Data, id: ImageContainer.Identity) throws {
         createCallCount += 1
         if let createHandler = createHandler {
             try createHandler(image, id)
@@ -594,8 +594,8 @@ public class NewImageStorageProtocolMock: NewImageStorageProtocol {
     }
 
     public private(set) var deleteCallCount = 0
-    public var deleteHandler: ((UUID) throws -> Void)?
-    public func delete(having id: UUID) throws {
+    public var deleteHandler: ((ImageContainer.Identity) throws -> Void)?
+    public func delete(having id: ImageContainer.Identity) throws {
         deleteCallCount += 1
         if let deleteHandler = deleteHandler {
             try deleteHandler(id)
@@ -603,8 +603,8 @@ public class NewImageStorageProtocolMock: NewImageStorageProtocol {
     }
 
     public private(set) var existsCallCount = 0
-    public var existsHandler: ((UUID) throws -> (Bool))?
-    public func exists(having id: UUID) throws -> Bool {
+    public var existsHandler: ((ImageContainer.Identity) throws -> (Bool))?
+    public func exists(having id: ImageContainer.Identity) throws -> Bool {
         existsCallCount += 1
         if let existsHandler = existsHandler {
             return try existsHandler(id)
