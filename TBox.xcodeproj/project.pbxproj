@@ -127,6 +127,7 @@
 		2C5A4361251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A4360251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift */; };
 		2C5EF1162563F7AC00610D96 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; platformFilter = ios; };
 		2C5EF1172563F7AC00610D96 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C5EF12625640C3700610D96 /* NewClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5EF12525640C3700610D96 /* NewClipStorageSpec.swift */; };
 		2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */; };
 		2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */; };
 		2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */; };
@@ -722,6 +723,7 @@
 		2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipsCollectionViewCell.xib; sourceTree = "<group>"; };
 		2C5A4360251588D400830D82 /* ClipsListNavigatoinItemsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsListNavigatoinItemsProvider.swift; sourceTree = "<group>"; };
+		2C5EF12525640C3700610D96 /* NewClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClipStorageSpec.swift; sourceTree = "<group>"; };
 		2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineUIButton.swift; sourceTree = "<group>"; };
 		2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryServiceProtocol.swift; sourceTree = "<group>"; };
@@ -1706,6 +1708,7 @@
 		2C5EF12325640C0300610D96 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				2C5EF12525640C3700610D96 /* NewClipStorageSpec.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -3730,6 +3733,7 @@
 			files = (
 				2C051278254E5740007964B7 /* ReferenceClipStorageSpec.swift in Sources */,
 				2CC0EB422518A3C8006D6DB4 /* ImageStorageSpec.swift in Sources */,
+				2C5EF12625640C3700610D96 /* NewClipStorageSpec.swift in Sources */,
 				2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */,
 				2CF3325A2507D327007EF072 /* ClipStorageSpec.swift in Sources */,
 			);
