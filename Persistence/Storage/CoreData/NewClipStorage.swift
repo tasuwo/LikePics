@@ -329,13 +329,10 @@ extension NewClipStorage: ClipStorageProtocol {
 
             let albumItems = album.mutableSetValue(forKey: "items")
 
-            let alreadyAdded = clips
-                .allSatisfy { clip in
-                    albumItems
-                        .compactMap { $0 as? AlbumItem }
-                        .contains { $0.clip == clip }
-                }
-            guard !alreadyAdded else { return .failure(.duplicated) }
+            guard albumItems.compactMap({ $0 as? AlbumItem }).allSatisfy({
+                guard let clip = $0.clip else { return true }
+                return clips.contains(clip) == false
+            }) else { return .failure(.duplicated) }
 
             let maxIndex = albumItems
                 .compactMap { $0 as? AlbumItem }
@@ -363,13 +360,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             let albumItems = album.mutableSetValue(forKey: "items")
 
-            let alreadyAdded = clips
-                .allSatisfy { clip in
-                    albumItems
-                        .compactMap { $0 as? AlbumItem }
-                        .contains { $0.clip == clip }
-                }
-            guard alreadyAdded else { return .failure(.notFound) }
+            guard clips.allSatisfy({ clip in
+                return albumItems.compactMap({ $0 as? AlbumItem }).contains(where: { $0.clip == clip })
+            }) else { return .failure(.notFound) }
 
             var currentIndex: Int64 = 1
             albumItems
