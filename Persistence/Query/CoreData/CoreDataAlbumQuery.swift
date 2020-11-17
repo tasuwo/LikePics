@@ -54,6 +54,19 @@ class CoreDataAlbumQuery: NSObject {
                 self.subject.send(album)
                 return
             }
+            if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
+                for clip in objects.compactMap({ $0 as? Clip }) {
+                    if let albumItem = clip.albumItem?
+                        .allObjects
+                        .compactMap({ $0 as? AlbumItem })
+                        .first(where: { $0.album?.objectID == self.objectId }),
+                        let album = albumItem.album
+                    {
+                        context.refresh(album, mergeChanges: true)
+                        return
+                    }
+                }
+            }
         }
     }
 }
