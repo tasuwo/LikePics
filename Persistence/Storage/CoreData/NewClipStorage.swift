@@ -434,12 +434,12 @@ extension NewClipStorage: ClipStorageProtocol {
             guard case let .success(item) = try self.fetchClipItem(for: id) else { return .failure(.notFound) }
             let removeTarget = item.map(to: Domain.ClipItem.self)!
 
-            guard let clipItems = item.clip?.clipItems?.compactMap({ $0 as? Item }) else {
+            guard let clipItems = item.clip?.clipItems?.compactMap({ $0 as? Item }).sorted(by: { $0.index < $1.index }) else {
                 self.context.delete(item)
                 return .success(removeTarget)
             }
 
-            var index: Int64 = 0
+            var index: Int64 = 1
             for clipItem in clipItems {
                 if clipItem.id == id {
                     self.context.delete(item)

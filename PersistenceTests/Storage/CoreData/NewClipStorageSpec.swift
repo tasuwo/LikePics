@@ -645,5 +645,182 @@ class NewClipStorageSpec: QuickSpec {
                 }
             }
         }
+
+        describe("deleteClips(having:)") {
+            beforeEach {
+                let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                clip.createdDate = Date(timeIntervalSince1970: 0)
+                clip.updatedDate = Date(timeIntervalSince1970: 0)
+
+                let item1 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                let item2 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+
+                clip.clipItems = NSSet(array: [item1, item2])
+
+                let albumItem = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                albumItem.clip = clip
+                albumItem.index = 1
+
+                let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                album.items = NSSet(array: [albumItem])
+
+                try! managedContext.save()
+
+                _ = service.deleteClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!])
+
+                try! managedContext.save()
+            }
+            it("Clipが削除される") {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let clips = try! managedContext.fetch(request)
+                expect(clips).to(haveCount(0))
+            }
+            it("ClipItemが削除される") {
+                let request = NSFetchRequest<Item>(entityName: "ClipItem")
+                let items = try! managedContext.fetch(request)
+                expect(items).to(haveCount(0))
+            }
+            it("AlbumItemが削除される") {
+                let request = NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
+                let items = try! managedContext.fetch(request)
+                expect(items).to(haveCount(0))
+            }
+            it("Albumは削除されない") {
+                let request = NSFetchRequest<Album>(entityName: "Album")
+                let albums = try! managedContext.fetch(request)
+                expect(albums).to(haveCount(1))
+                expect(albums.first?.items).to(haveCount(0))
+            }
+        }
+
+        describe("deleteClipItem(having:)") {
+            beforeEach {
+                let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+
+                let item1 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item1.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item1.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item1.createdDate = Date(timeIntervalSince1970: 0)
+                item1.updatedDate = Date(timeIntervalSince1970: 0)
+                item1.clip = clip
+                item1.index = 1
+                let item2 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                item2.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item2.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item2.createdDate = Date(timeIntervalSince1970: 0)
+                item2.updatedDate = Date(timeIntervalSince1970: 0)
+                item2.clip = clip
+                item2.index = 2
+                let item3 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+                item3.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item3.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item3.createdDate = Date(timeIntervalSince1970: 0)
+                item3.updatedDate = Date(timeIntervalSince1970: 0)
+                item3.clip = clip
+                item3.index = 3
+                let item4 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                item4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
+                item4.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item4.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                item4.createdDate = Date(timeIntervalSince1970: 0)
+                item4.updatedDate = Date(timeIntervalSince1970: 0)
+                item4.clip = clip
+                item4.index = 4
+
+                clip.clipItems = NSSet(array: [item1, item2, item3, item4])
+
+                try! managedContext.save()
+
+                _ = service.deleteClipItem(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)
+                _ = service.deleteClipItem(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!)
+
+                try! managedContext.save()
+            }
+            it("ClipItemが削除され、indexが更新される") {
+                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let clips = try! managedContext.fetch(request)
+                expect(clips).to(haveCount(1))
+                let clip = clips.first!
+                expect(clip.clipItems?.allObjects).to(haveCount(2))
+
+                guard let item2 = clip.clipItems?
+                    .allObjects
+                    .compactMap({ $0 as? Item })
+                    .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+                else {
+                    fail()
+                    return
+                }
+                expect(item2.index).to(equal(1))
+
+                guard let item4 = clip.clipItems?
+                    .allObjects
+                    .compactMap({ $0 as? Item })
+                    .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+                else {
+                    fail()
+                    return
+                }
+                expect(item4.index).to(equal(2))
+            }
+        }
+
+        describe("deleteAlbum(having:)") {
+            context("削除対象のアルバムが存在する") {
+                beforeEach {
+                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+
+                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item1.clip = clip1
+                    item1.index = 1
+                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item2.clip = clip2
+                    item2.index = 2
+                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item3.clip = clip3
+                    item3.index = 3
+
+                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    album.title = "hoge"
+                    album.createdDate = Date(timeIntervalSince1970: 0)
+                    album.updatedDate = Date(timeIntervalSince1970: 0)
+                    album.items = NSSet(array: [item1, item2, item3])
+
+                    try! managedContext.save()
+
+                    _ = service.deleteAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)
+                    try! managedContext.save()
+                }
+                it("Albumが削除される") {
+                    let request = NSFetchRequest<Album>(entityName: "Album")
+                    let items = try! managedContext.fetch(request)
+                    expect(items).to(haveCount(0))
+                }
+                it("AlbumItemが削除される") {
+                    let request = NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
+                    let items = try! managedContext.fetch(request)
+                    expect(items).to(haveCount(0))
+                }
+                it("Clipは削除されない") {
+                    let request = NSFetchRequest<Clip>(entityName: "Clip")
+                    let items = try! managedContext.fetch(request)
+                    expect(items).to(haveCount(3))
+                }
+            }
+        }
     }
 }
