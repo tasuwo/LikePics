@@ -5,7 +5,7 @@
 import CoreData
 import Domain
 
-public class NewClipQueryService {
+public class ClipQueryService {
     private let context: NSManagedObjectContext
 
     public init(context: NSManagedObjectContext) {
@@ -13,7 +13,7 @@ public class NewClipQueryService {
     }
 }
 
-extension NewClipQueryService: ClipQueryServiceProtocol {
+extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryClip(having id: Domain.Clip.Identity) -> Result<Domain.ClipQuery, ClipStorageError> {
         do {
             guard let query = try CoreDataClipQuery(id: id, context: self.context) else {

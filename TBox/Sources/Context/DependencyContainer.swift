@@ -112,7 +112,7 @@ class DependencyContainer {
         // MARK: Storage/Query
 
         self.clipStorage = NewClipStorage(context: self.commandContext)
-        self.clipQueryService = NewClipQueryService(context: self.persistentContainer.viewContext)
+        self.clipQueryService = ClipQueryService(context: self.persistentContainer.viewContext)
         self.imageStorage = NewImageStorage(context: self.commandContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
         self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
