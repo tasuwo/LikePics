@@ -18,10 +18,9 @@ class ImageStorageSpec: QuickSpec {
     override func spec() {
         var storage: ImageStorage!
         let sampleImage = UIImage(named: "SampleImageBlack", in: Bundle(for: Self.self), with: nil)!
-        let sampleImage2 = UIImage(named: "SampleImageGray", in: Bundle(for: Self.self), with: nil)!
-        let sampleClipId = "111222333hogehogefugafuga"
+        let sampleClipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6111")!
         let expectedClipDirectoryUrl = Self.testDirectory
-            .appendingPathComponent("111222333hogehogefugafuga", isDirectory: true)
+            .appendingPathComponent("E621E1F8-C36C-495A-93FC-0C247A3E6111", isDirectory: true)
 
         beforeSuite {
             if FileManager.default.fileExists(atPath: Self.testDirectory.path) {
@@ -208,122 +207,6 @@ class ImageStorageSpec: QuickSpec {
 
         describe("deleteAll()") {
             // TODO:
-        }
-
-        describe("moveImageFile(at:withName:toClipHaving:)") {
-            let sourceUrl: URL = Self.testDirectory2.appendingPathComponent("piyopiyo.png")
-
-            context("移動元のURLが存在する") {
-                beforeEach {
-                    FileManager.default.createFile(atPath: sourceUrl.path, contents: sampleImage2.pngData(), attributes: nil)
-                }
-
-                afterEach {
-                    try? FileManager.default.removeItem(at: sourceUrl)
-                }
-
-                context("新しいクリップに画像を移動する") {
-                    beforeEach {
-                        storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
-                        try! storage.moveImageFile(at: sourceUrl, withName: "popo.png", toClipHaving: sampleClipId)
-                    }
-
-                    afterEach {
-                        try? FileManager.default.removeItem(at: expectedClipDirectoryUrl)
-                    }
-
-                    it("クリップ用のディレクトリが作成されている") {
-                        expect(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path)).to(beTrue())
-                    }
-
-                    it("画像が保存されている") {
-                        let imageUrl = expectedClipDirectoryUrl
-                            .appendingPathComponent("popo.png", isDirectory: false)
-                        expect(FileManager.default.fileExists(atPath: imageUrl.path)).to(beTrue())
-                        expect(try! Data(contentsOf: imageUrl)).to(equal(sampleImage2.pngData()))
-                    }
-
-                    it("移動元のファイルが削除されている") {
-                        expect(FileManager.default.fileExists(atPath: sourceUrl.path)).to(beFalse())
-                    }
-                }
-
-                context("既存のクリップに画像を保存する") {
-                    beforeEach {
-                        storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
-                        try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
-                        try! storage.moveImageFile(at: sourceUrl, withName: "popo.png", toClipHaving: sampleClipId)
-                    }
-
-                    afterEach {
-                        try! FileManager.default.removeItem(at: expectedClipDirectoryUrl)
-                    }
-
-                    it("クリップ用のディレクトリが作成されている") {
-                        expect(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path)).to(beTrue())
-                    }
-
-                    it("画像が保存されている") {
-                        let firstImageUrl = expectedClipDirectoryUrl
-                            .appendingPathComponent("hogehoge.png", isDirectory: false)
-                        let secondImageUrl = expectedClipDirectoryUrl
-                            .appendingPathComponent("popo.png", isDirectory: false)
-
-                        expect(FileManager.default.fileExists(atPath: firstImageUrl.path)).to(beTrue())
-                        expect(FileManager.default.fileExists(atPath: secondImageUrl.path)).to(beTrue())
-                        expect(try! Data(contentsOf: firstImageUrl)).to(equal(sampleImage.pngData()))
-                        expect(try! Data(contentsOf: secondImageUrl)).to(equal(sampleImage2.pngData()))
-                    }
-
-                    it("移動元のファイルが削除されている") {
-                        expect(FileManager.default.fileExists(atPath: sourceUrl.path)).to(beFalse())
-                    }
-                }
-
-                context("重複して画像を保存する") {
-                    beforeEach {
-                        storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
-                        try! storage.save(sampleImage.pngData()!, asName: "popo.png", inClipHaving: sampleClipId)
-                        try! storage.moveImageFile(at: sourceUrl, withName: "popo.png", toClipHaving: sampleClipId)
-                    }
-
-                    afterEach {
-                        try! FileManager.default.removeItem(at: expectedClipDirectoryUrl)
-                    }
-
-                    it("クリップ用のディレクトリが作成されている") {
-                        expect(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path)).to(beTrue())
-                    }
-
-                    it("画像が上書きされている") {
-                        let imageUrl = expectedClipDirectoryUrl
-                            .appendingPathComponent("popo.png", isDirectory: false)
-                        expect(FileManager.default.fileExists(atPath: imageUrl.path)).to(beTrue())
-                        expect(try! Data(contentsOf: imageUrl)).to(equal(sampleImage2.pngData()))
-                    }
-                }
-            }
-            context("移動元のURLが存在しない") {
-                beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
-                    try! storage.moveImageFile(at: sourceUrl, withName: "popo.png", toClipHaving: sampleClipId)
-                }
-
-                afterEach {
-                    try? FileManager.default.removeItem(at: expectedClipDirectoryUrl)
-                }
-
-                it("クリップ用のディレクトリが作成されない") {
-                    expect(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path)).to(beFalse())
-                }
-
-                it("画像が保存されていない") {
-                    let imagePath = expectedClipDirectoryUrl
-                        .appendingPathComponent("popo.png", isDirectory: false)
-                        .path
-                    expect(FileManager.default.fileExists(atPath: imagePath)).to(beFalse())
-                }
-            }
         }
 
         describe("readImage(named:inClipHaving:)") {

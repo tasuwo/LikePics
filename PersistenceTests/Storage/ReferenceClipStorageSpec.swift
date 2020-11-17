@@ -29,11 +29,11 @@ class ReferenceClipStorageSpec: QuickSpec {
         describe("readAllDirtyClips()") {
             beforeEach {
                 try! realm.write {
-                    realm.add(ReferenceClipObject.makeDefault(id: "1", isDirty: true))
-                    realm.add(ReferenceClipObject.makeDefault(id: "2", isDirty: false))
-                    realm.add(ReferenceClipObject.makeDefault(id: "3", isDirty: true))
-                    realm.add(ReferenceClipObject.makeDefault(id: "4", isDirty: false))
-                    realm.add(ReferenceClipObject.makeDefault(id: "5", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E51", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E52", isDirty: false))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E53", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E54", isDirty: false))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E55", isDirty: true))
                 }
             }
             it("Dirtyなオブジェクトのみが取得できる") {
@@ -42,9 +42,9 @@ class ReferenceClipStorageSpec: QuickSpec {
                     return
                 }
                 expect(clips).to(equal([
-                    .makeDefault(id: "1", isDirty: true),
-                    .makeDefault(id: "3", isDirty: true),
-                    .makeDefault(id: "5", isDirty: true),
+                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, isDirty: true),
+                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, isDirty: true),
+                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")!, isDirty: true),
                 ]))
             }
         }
@@ -53,11 +53,11 @@ class ReferenceClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             beforeEach {
                 try! realm.write {
-                    realm.add(ReferenceClipObject.makeDefault(id: "1", isDirty: true))
-                    realm.add(ReferenceClipObject.makeDefault(id: "2", isDirty: false))
-                    realm.add(ReferenceClipObject.makeDefault(id: "3", isDirty: true))
-                    realm.add(ReferenceClipObject.makeDefault(id: "4", isDirty: false))
-                    realm.add(ReferenceClipObject.makeDefault(id: "5", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E51", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E52", isDirty: false))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E53", isDirty: true))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E54", isDirty: false))
+                    realm.add(ReferenceClipObject.makeDefault(id: "E621E1F8-C36C-495A-93FC-0C247A3E6E55", isDirty: true))
                 }
 
                 try! storage.beginTransaction()

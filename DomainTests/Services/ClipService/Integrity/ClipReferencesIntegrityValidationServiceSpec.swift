@@ -41,16 +41,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllTagsHandler = {
                             return .success([
-                                .makeDefault(id: "1", name: "hoge"),
-                                .makeDefault(id: "2", name: "fuga"),
-                                .makeDefault(id: "3", name: "piyo"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
                             ])
                         }
                         referenceClipStorage.readAllTagsHandler = {
                             return .success([
-                                .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                .makeDefault(id: "2", name: "fuga", isDirty: false),
-                                .makeDefault(id: "3", name: "piyo", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
                             ])
                         }
                         service.validateAndFixIntegrityIfNeeded()
@@ -71,18 +71,18 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge"),
-                                    .makeDefault(id: "2", name: "fuga"),
-                                    .makeDefault(id: "3", name: "piyo"),
-                                    .makeDefault(id: "4", name: "pue"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pue"),
                                 ])
                             }
                             referenceClipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                    .makeDefault(id: "2", name: "poe", isDirty: true),
-                                    .makeDefault(id: "3", name: "piyo", isDirty: false),
-                                    .makeDefault(id: "4", name: "wwww", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "poe", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "wwww", isDirty: true),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -102,28 +102,26 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge"),
-                                    .makeDefault(id: "2", name: "fuga"),
-                                    .makeDefault(id: "3", name: "piyo"),
-                                    .makeDefault(id: "4", name: "pue"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pue"),
                                 ])
                             }
                             referenceClipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                    .makeDefault(id: "2", name: "poe", isDirty: false),
-                                    .makeDefault(id: "3", name: "piyo", isDirty: false),
-                                    .makeDefault(id: "4", name: "wwww", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "poe", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "wwww", isDirty: false),
                                 ])
                             }
                             referenceClipStorage.updateTagHandler = { tagId, name in
                                 switch tagId {
-                                case "2":
-                                    expect(tagId).to(equal("2"))
+                                case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
                                     expect(name).to(equal("fuga"))
 
-                                case "4":
-                                    expect(tagId).to(equal("4"))
+                                case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
                                     expect(name).to(equal("pue"))
 
                                 default:
@@ -150,25 +148,25 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllTagsHandler = {
                             return .success([
-                                .makeDefault(id: "1", name: "hoge"),
-                                .makeDefault(id: "2", name: "fuga"),
-                                .makeDefault(id: "3", name: "piyo"),
-                                .makeDefault(id: "4", name: "pon"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon"),
                             ])
                         }
                         referenceClipStorage.readAllTagsHandler = {
                             return .success([
-                                .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                .makeDefault(id: "3", name: "piyo", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
                             ])
                         }
                         referenceClipStorage.createTagHandler = { tag in
                             switch tag.id {
-                            case "2":
-                                expect(tag).to(equal(.makeDefault(id: "2", name: "fuga", isDirty: false)))
+                            case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
+                                expect(tag).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga", isDirty: false)))
 
-                            case "4":
-                                expect(tag).to(equal(.makeDefault(id: "4", name: "pon", isDirty: false)))
+                            case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!:
+                                expect(tag).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon", isDirty: false)))
 
                             default:
                                 fail("Unexpected updation")
@@ -194,17 +192,17 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge"),
-                                    .makeDefault(id: "3", name: "piyo"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
                                 ])
                             }
                             referenceClipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "0", name: "pue", isDirty: true),
-                                    .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                    .makeDefault(id: "2", name: "fuga", isDirty: true),
-                                    .makeDefault(id: "3", name: "piyo", isDirty: false),
-                                    .makeDefault(id: "4", name: "pon", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!, name: "pue", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon", isDirty: true),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -224,21 +222,25 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", name: "hoge"),
-                                    .makeDefault(id: "3", name: "piyo"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
                                 ])
                             }
                             referenceClipStorage.readAllTagsHandler = {
                                 return .success([
-                                    .makeDefault(id: "0", name: "pue", isDirty: false),
-                                    .makeDefault(id: "1", name: "hoge", isDirty: false),
-                                    .makeDefault(id: "2", name: "fuga", isDirty: false),
-                                    .makeDefault(id: "3", name: "piyo", isDirty: false),
-                                    .makeDefault(id: "4", name: "pon", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!, name: "pue", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, name: "fuga", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon", isDirty: false),
                                 ])
                             }
                             referenceClipStorage.deleteTagsHandler = { tagIds in
-                                expect(Set(tagIds)).to(equal(Set(["0", "2", "4"])))
+                                expect(Set(tagIds)).to(equal(Set([
+                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!,
+                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!
+                                ])))
                                 return .success(())
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -261,16 +263,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", description: "my description 1"),
-                                .makeDefault(id: "2", description: "my description 2"),
-                                .makeDefault(id: "3", description: "my description 3"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my description 2"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3"),
                             ])
                         }
                         referenceClipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", description: "my description 1", isDirty: false),
-                                .makeDefault(id: "2", description: "my description 2", isDirty: false),
-                                .makeDefault(id: "3", description: "my description 3", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my description 2", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3", isDirty: false),
                             ])
                         }
                         service.validateAndFixIntegrityIfNeeded()
@@ -292,16 +294,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", description: "my description 1", isHidden: false),
-                                    .makeDefault(id: "2", description: "my description 2", isHidden: false),
-                                    .makeDefault(id: "3", description: "my description 3", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my description 2", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3", isHidden: false),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", description: "my description 1", isHidden: false, isDirty: false),
-                                    .makeDefault(id: "2", description: "my new description 2", isHidden: true, isDirty: true),
-                                    .makeDefault(id: "3", description: "my description 3", isHidden: false, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1", isHidden: false, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my new description 2", isHidden: true, isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3", isHidden: false, isDirty: false),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -322,20 +324,20 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", description: "my description 1", isHidden: false),
-                                    .makeDefault(id: "2", description: "my description 2", isHidden: false),
-                                    .makeDefault(id: "3", description: "my description 3", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my description 2", isHidden: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3", isHidden: false),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", description: "my description 1", isHidden: false, isDirty: false),
-                                    .makeDefault(id: "2", description: "my new description 2", isHidden: true, isDirty: false),
-                                    .makeDefault(id: "3", description: "my description 3", isHidden: false, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, description: "my description 1", isHidden: false, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, description: "my new description 2", isHidden: true, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, description: "my description 3", isHidden: false, isDirty: false),
                                 ])
                             }
                             referenceClipStorage.createHandler = { clip in
-                                expect(clip).to(equal(.makeDefault(id: "2",
+                                expect(clip).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
                                                                    description: "my description 2",
                                                                    isHidden: false,
                                                                    isDirty: false)))
@@ -361,25 +363,25 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1"),
-                                .makeDefault(id: "2"),
-                                .makeDefault(id: "3"),
-                                .makeDefault(id: "4"),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!),
                             ])
                         }
                         referenceClipStorage.readAllClipsHandler = {
                             return .success([
-                                .makeDefault(id: "1", isDirty: false),
-                                .makeDefault(id: "3", isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, isDirty: false),
+                                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, isDirty: false),
                             ])
                         }
                         referenceClipStorage.createHandler = { clip in
                             switch clip.id {
-                            case "2":
-                                expect(clip).to(equal(.makeDefault(id: "2")))
+                            case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
+                                expect(clip).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!)))
 
-                            case "4":
-                                expect(clip).to(equal(.makeDefault(id: "4")))
+                            case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!:
+                                expect(clip).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!)))
 
                             default:
                                 fail("Unexpected clip")
@@ -406,16 +408,16 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1"),
-                                    .makeDefault(id: "3"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", isDirty: false),
-                                    .makeDefault(id: "2", isDirty: true),
-                                    .makeDefault(id: "3", isDirty: false),
-                                    .makeDefault(id: "4", isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, isDirty: true),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, isDirty: true),
                                 ])
                             }
                             service.validateAndFixIntegrityIfNeeded()
@@ -436,20 +438,23 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                         beforeEach {
                             clipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1"),
-                                    .makeDefault(id: "3"),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!),
                                 ])
                             }
                             referenceClipStorage.readAllClipsHandler = {
                                 return .success([
-                                    .makeDefault(id: "1", isDirty: false),
-                                    .makeDefault(id: "2", isDirty: false),
-                                    .makeDefault(id: "3", isDirty: false),
-                                    .makeDefault(id: "4", isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, isDirty: false),
+                                    .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, isDirty: false),
                                 ])
                             }
                             referenceClipStorage.deleteClipsHandler = { clipIds in
-                                expect(Set(clipIds)).to(equal(Set(["2", "4"])))
+                                expect(Set(clipIds)).to(equal(Set([
+                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!
+                                ])))
                                 return .success(())
                             }
                             service.validateAndFixIntegrityIfNeeded()

@@ -34,6 +34,7 @@ extension ClipItemObject {
                             url: String? = nil,
                             clipId: String = "",
                             clipIndex: Int = 0,
+                            imageId: String = "",
                             imageFileName: String = "",
                             imageUrl: String = "",
                             registeredAt: Date = Date(timeIntervalSince1970: 0),
@@ -44,6 +45,7 @@ extension ClipItemObject {
         obj.url = url
         obj.clipId = clipId
         obj.clipIndex = clipIndex
+        obj.imageId = imageId
         obj.imageFileName = imageFileName
         obj.imageUrl = imageUrl
         obj.registeredAt = registeredAt
