@@ -7,6 +7,14 @@ import UIKit
 public class ClipsCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
+    override public var allowsMultipleSelection: Bool {
+        didSet {
+            self.visibleCells
+                .compactMap { $0 as? ClipsCollectionViewCell }
+                .forEach { $0.visibleSelectedMark = self.allowsMultipleSelection }
+        }
+    }
+
     // MARK: - Lifecycle
 
     override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
@@ -24,13 +32,6 @@ public class ClipsCollectionView: UICollectionView {
     }
 
     // MARK: - Methods
-
-    public func setEditing(_ editing: Bool, animated: Bool) {
-        self.visibleCells
-            .compactMap { $0 as? ClipsCollectionViewCell }
-            .forEach { $0.visibleSelectedMark = editing }
-        self.allowsMultipleSelection = editing
-    }
 
     private func registerCell() {
         self.register(ClipsCollectionViewCell.nib,

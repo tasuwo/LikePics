@@ -3,6 +3,7 @@
 //
 
 protocol ClipsListNavigationPresenterDataSource: AnyObject {
+    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool
     func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int
     func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int
 }
@@ -18,6 +19,8 @@ class ClipsListNavigationItemsPresenter {
         case selectAll
         case deselectAll
         case select(isEnabled: Bool)
+        case reorder
+        case done
 
         var isEnabled: Bool {
             switch self {
@@ -30,7 +33,23 @@ class ClipsListNavigationItemsPresenter {
         }
     }
 
-    private var isEditing: Bool = false {
+    enum State {
+        case `default`
+        case selecting
+        case reordering
+
+        var isEditing: Bool {
+            switch self {
+            case .selecting, .reordering:
+                return true
+
+            case .default:
+                return false
+            }
+        }
+    }
+
+    private var state: State = .default {
         didSet {
             self.updateItems()
         }
@@ -51,8 +70,8 @@ class ClipsListNavigationItemsPresenter {
 
     // MARK: - Methods
 
-    func setEditing(_ editing: Bool, animated: Bool) {
-        self.isEditing = editing
+    func set(_ state: State) {
+        self.state = state
     }
 
     func onUpdateSelection() {
@@ -71,11 +90,20 @@ class ClipsListNavigationItemsPresenter {
             return dataSource.clipsCount(self) > 0
         }()
 
-        if self.isEditing {
+        switch self.state {
+        case .default:
+            self.navigationBar?.setRightBarButtonItems([
+                (self.dataSource?.isReorderable(self) ?? false) ? .reorder : nil,
+                .select(isEnabled: isSelectable)
+            ].compactMap { $0 })
+            self.navigationBar?.setLeftBarButtonItems([])
+
+        case .selecting:
             self.navigationBar?.setRightBarButtonItems([.cancel])
             self.navigationBar?.setLeftBarButtonItems([isSelectedAll ? .deselectAll : .selectAll])
-        } else {
-            self.navigationBar?.setRightBarButtonItems([.select(isEnabled: isSelectable)])
+
+        case .reordering:
+            self.navigationBar?.setRightBarButtonItems([.done])
             self.navigationBar?.setLeftBarButtonItems([])
         }
     }

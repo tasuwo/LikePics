@@ -10,8 +10,8 @@ import UIKit
 protocol AlbumViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
+    func apply(_ state: AlbumPresenter.State)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
-    func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
 }
 
@@ -26,7 +26,9 @@ protocol AlbumPresenterProtocol {
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: AlbumViewProtocol)
-    func setEditing(_ editing: Bool)
+    func startEditing()
+    func startReordering()
+    func cancel()
     func select(clipId: Clip.Identity)
     func deselect(clipId: Clip.Identity)
     func selectAll()
@@ -43,9 +45,20 @@ protocol AlbumPresenterProtocol {
     func unhideClip(having id: Clip.Identity)
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity)
     func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity)
+    func reorderClips(_ clipIds: [Clip.Identity])
 }
 
 class AlbumPresenter {
+    enum State {
+        case `default`
+        case selecting
+        case reordering
+
+        var isEditing: Bool {
+            return self != .default
+        }
+    }
+
     private let query: AlbumQuery
     private let clipCommandService: ClipCommandServiceProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
@@ -82,11 +95,15 @@ class AlbumPresenter {
         }
     }
 
-    private var isEditing: Bool = false {
+    private var state: State = .default {
         didSet {
             self.selections = []
-            self.view?.setEditing(self.isEditing)
+            self.view?.apply(self.state)
         }
+    }
+
+    private var isEditing: Bool {
+        return self.state.isEditing
     }
 
     private weak var view: AlbumViewProtocol?
@@ -153,8 +170,16 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             .store(in: &self.storage)
     }
 
-    func setEditing(_ editing: Bool) {
-        self.isEditing = editing
+    func startEditing() {
+        self.state = .selecting
+    }
+
+    func startReordering() {
+        self.state = .reordering
+    }
+
+    func cancel() {
+        self.state = .default
     }
 
     func select(clipId: Clip.Identity) {
@@ -189,7 +214,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func hideSelectedClips() {
@@ -198,7 +223,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func unhideSelectedClips() {
@@ -207,7 +232,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func removeSelectedClipsFromAlbum() {
@@ -218,7 +243,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveClipsFromAlbum)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
@@ -229,7 +254,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
@@ -240,7 +265,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
         self.selections = []
-        self.isEditing = false
+        self.state = .default
     }
 
     func deleteClip(having id: Clip.Identity) {
@@ -281,10 +306,23 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipToAlbum)\n(\(error.makeErrorCode())")
         }
     }
+
+    func reorderClips(_ clipIds: [Clip.Identity]) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: self.album.id, byReorderingClipsHaving: clipIds) {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to reorder clips in album having id \(self.album.id). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipToAlbum)\n(\(error.makeErrorCode())")
+        }
+    }
 }
 
 extension AlbumPresenter: ClipsListNavigationPresenterDataSource {
     // MARK: - ClipsListNavigationPresenterDataSource
+
+    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool {
+        return true
+    }
 
     func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
         return self.clips.count

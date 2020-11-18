@@ -15,6 +15,8 @@
 "clips_list_right_bar_item_for_select_title" = "選択";
 "clips_list_right_bar_item_for_select_all_title" = "全て選択";
 "clips_list_right_bar_item_for_deselect_all_title" = "全て選択解除";
+"clips_list_right_bar_item_for_reorder" = "並び替え";
+"clips_list_right_bar_item_for_done" = "完了";
 "clips_list_alert_for_add_to_album" = "アルバムに追加する";
 "clips_list_alert_for_add_tag" = "タグを追加する";
 "clips_list_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";

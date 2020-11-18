@@ -377,6 +377,23 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
+    public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+                let result = self.clipStorage.updateAlbum(having: albumId, byReorderingClipsHaving: clipIds).map { _ in () }
+                try self.clipStorage.commitTransaction()
+                return result
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to update album. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {

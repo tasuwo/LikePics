@@ -133,9 +133,9 @@ class TopClipsListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.collectionView.setEditing(editing, animated: animated)
-        self.navigationItemsProvider.setEditing(editing, animated: animated)
+        self.collectionView.allowsMultipleSelection = editing
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
+        self.navigationItemsProvider.set(editing ? .selecting : .default)
     }
 }
 
@@ -300,6 +300,14 @@ extension TopClipsListViewController: ClipsListNavigationItemsProviderDelegate {
 
     func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.deselectAll()
+    }
+
+    func didTapReorderButton(_ provider: ClipsListNavigationItemsProvider) {
+        // NOP
+    }
+
+    func didTapDoneButton(_ provider: ClipsListNavigationItemsProvider) {
+        // NOP
     }
 }
 

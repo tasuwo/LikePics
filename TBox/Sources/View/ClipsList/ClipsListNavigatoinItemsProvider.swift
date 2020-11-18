@@ -11,6 +11,8 @@ protocol ClipsListNavigationItemsProviderDelegate: AnyObject {
     func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider)
     func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider)
     func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider)
+    func didTapReorderButton(_ provider: ClipsListNavigationItemsProvider)
+    func didTapDoneButton(_ provider: ClipsListNavigationItemsProvider)
 }
 
 class ClipsListNavigationItemsProvider {
@@ -18,6 +20,8 @@ class ClipsListNavigationItemsProvider {
     private let selectAllButton = RoundedButton()
     private let deselectAllButton = RoundedButton()
     private let selectButton = RoundedButton()
+    private let reorderButton = RoundedButton()
+    private let doneButton = RoundedButton()
 
     private let presenter: ClipsListNavigationItemsPresenter
 
@@ -37,8 +41,8 @@ class ClipsListNavigationItemsProvider {
 
     // MARK: - Methods
 
-    func setEditing(_ editing: Bool, animated: Bool) {
-        self.presenter.setEditing(editing, animated: animated)
+    func set(_ state: ClipsListNavigationItemsPresenter.State) {
+        self.presenter.set(state)
     }
 
     func onUpdateSelection() {
@@ -67,6 +71,16 @@ class ClipsListNavigationItemsProvider {
         self.delegate?.didTapDeselectAllButton(self)
     }
 
+    @objc
+    private func didTapReorder(_ sender: UIButton) {
+        self.delegate?.didTapReorderButton(self)
+    }
+
+    @objc
+    private func didTapDone(_ sender: UIButton) {
+        self.delegate?.didTapDoneButton(self)
+    }
+
     private func setupButtons() {
         self.cancelButton.setTitle(L10n.confirmAlertCancel, for: .normal)
         self.cancelButton.addTarget(self, action: #selector(self.didTapCancel), for: .touchUpInside)
@@ -79,6 +93,12 @@ class ClipsListNavigationItemsProvider {
 
         self.selectButton.setTitle(L10n.clipsListRightBarItemForSelectTitle, for: .normal)
         self.selectButton.addTarget(self, action: #selector(self.didTapEdit), for: .touchUpInside)
+
+        self.reorderButton.setTitle(L10n.clipsListRightBarItemForReorder, for: .normal)
+        self.reorderButton.addTarget(self, action: #selector(self.didTapReorder), for: .touchUpInside)
+
+        self.doneButton.setTitle(L10n.clipsListRightBarItemForDone, for: .normal)
+        self.doneButton.addTarget(self, action: #selector(self.didTapDone(_:)), for: .touchUpInside)
     }
 
     private func resolveCustomView(for item: ClipsListNavigationItemsPresenter.Item) -> UIView {
@@ -94,6 +114,12 @@ class ClipsListNavigationItemsProvider {
 
         case .select:
             return self.selectButton
+
+        case .reorder:
+            return self.reorderButton
+
+        case .done:
+            return self.doneButton
         }
     }
 }

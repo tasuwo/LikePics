@@ -294,6 +294,10 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {
     // MARK: - ClipsListNavigationPresenterDataSource
 
+    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool {
+        return false
+    }
+
     func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
         return self.clips.count
     }

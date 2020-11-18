@@ -97,6 +97,53 @@ class AlbumViewController: UIViewController {
 
         self.dataSource = .init(collectionView: self.collectionView,
                                 cellProvider: self.clipsListCollectionViewProvider.provideCell(collectionView:indexPath:clip:))
+
+        // Reorder settings
+
+        self.dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in
+            guard let self = self else { return false }
+            return self.isEditing
+        }
+
+        self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            guard let self = self else { return }
+            guard let clipIds = self.presenter.clips.applying(transaction.difference)?.map({ $0.id }) else { return }
+            self.presenter.reorderClips(clipIds)
+        }
+
+        self.collectionView.dragDelegate = self
+        self.collectionView.dropDelegate = self
+    }
+
+    private func createGridLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
+            let itemWidth: NSCollectionLayoutDimension = {
+                switch environment.traitCollection.horizontalSizeClass {
+                case .compact:
+                    return .fractionalWidth(0.5)
+
+                case .regular, .unspecified:
+                    return .fractionalWidth(0.25)
+
+                @unknown default:
+                    return .fractionalWidth(0.25)
+                }
+            }()
+            let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth,
+                                                  heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .fractionalWidth(itemWidth.dimension))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+
+            return section
+        }
+
+        return layout
     }
 
     // MARK: NavigationBar
@@ -130,16 +177,6 @@ class AlbumViewController: UIViewController {
 
         self.emptyMessageView.alpha = 0
     }
-
-    // MARK: UIViewController (Override)
-
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-
-        self.collectionView.setEditing(editing, animated: animated)
-        self.navigationItemsProvider.setEditing(editing, animated: animated)
-        self.toolBarItemsProvider.setEditing(editing, animated: animated)
-    }
 }
 
 extension AlbumViewController: AlbumViewProtocol {
@@ -163,6 +200,26 @@ extension AlbumViewController: AlbumViewProtocol {
         self.navigationItemsProvider.onUpdateSelection()
     }
 
+    func apply(_ state: AlbumPresenter.State) {
+        self.setEditing(state.isEditing, animated: true)
+
+        self.navigationItemsProvider.set(state.map(to: ClipsListNavigationItemsPresenter.State.self))
+        self.toolBarItemsProvider.setEditing(state == .selecting, animated: true)
+        self.navigationItem.hidesBackButton = state.isEditing
+
+        self.collectionView.dragInteractionEnabled = state == .reordering
+        self.collectionView.allowsMultipleSelection = state == .selecting
+        switch state {
+        case .reordering:
+            self.collectionView.setCollectionViewLayout(self.createGridLayout(), animated: true)
+
+        default:
+            let layout = ClipCollectionLayout()
+            layout.delegate = self.clipsListCollectionViewProvider
+            self.collectionView.setCollectionViewLayout(layout, animated: true)
+        }
+    }
+
     func apply(selection: Set<Clip>) {
         let indexPaths = selection
             .compactMap { self.dataSource.indexPath(for: $0) }
@@ -178,10 +235,6 @@ extension AlbumViewController: AlbumViewProtocol {
         }
         availability(true)
         self.present(viewController, animated: true, completion: nil)
-    }
-
-    func setEditing(_ editing: Bool) {
-        self.setEditing(editing, animated: true)
     }
 
     func showErrorMessage(_ message: String) {
@@ -292,11 +345,11 @@ extension AlbumViewController: ClipsListNavigationItemsProviderDelegate {
     // MARK: - ClipsListNavigationItemsProviderDelegate
 
     func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
-        self.presenter.setEditing(true)
+        self.presenter.startEditing()
     }
 
     func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider) {
-        self.presenter.setEditing(false)
+        self.presenter.cancel()
     }
 
     func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider) {
@@ -305,6 +358,14 @@ extension AlbumViewController: ClipsListNavigationItemsProviderDelegate {
 
     func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
         self.presenter.deselectAll()
+    }
+
+    func didTapReorderButton(_ provider: ClipsListNavigationItemsProvider) {
+        self.presenter.startReordering()
+    }
+
+    func didTapDoneButton(_ provider: ClipsListNavigationItemsProvider) {
+        self.presenter.cancel()
     }
 }
 
@@ -362,6 +423,48 @@ extension AlbumViewController: TagSelectionPresenterDelegate {
         } else {
             guard let clipId = context as? Clip.Identity else { return }
             self.presenter.addTags(having: tagIds, toClipHaving: clipId)
+        }
+    }
+}
+
+extension AlbumViewController: UICollectionViewDragDelegate {
+    // MARK: - UICollectionViewDragDelegate
+
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
+        let provider = NSItemProvider(object: item.id.uuidString as NSString)
+        let dragItem = UIDragItem(itemProvider: provider)
+        return [dragItem]
+    }
+}
+
+extension AlbumViewController: UICollectionViewDropDelegate {
+    // MARK: - UICollectionViewDropDelegate
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return self.isEditing
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        // NOP
+    }
+}
+
+private extension AlbumPresenter.State {
+    func map(to: ClipsListNavigationItemsPresenter.State.Type) -> ClipsListNavigationItemsPresenter.State {
+        switch self {
+        case .default:
+            return .default
+
+        case .reordering:
+            return .reordering
+
+        case .selecting:
+            return .selecting
         }
     }
 }

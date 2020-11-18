@@ -18,6 +18,7 @@ public protocol ClipCommandServiceProtocol {
     func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
+    func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Void, ClipStorageError>
     func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError>
 

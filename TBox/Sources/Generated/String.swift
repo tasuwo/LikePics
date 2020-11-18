@@ -154,6 +154,10 @@ internal enum L10n {
     internal static let clipsListErrorAtUnhideClips = L10n.tr("Localizable", "clips_list_error_at_unhide_clips")
     /// 全て選択解除
     internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
+    /// 完了
+    internal static let clipsListRightBarItemForDone = L10n.tr("Localizable", "clips_list_right_bar_item_for_done")
+    /// 並び替え
+    internal static let clipsListRightBarItemForReorder = L10n.tr("Localizable", "clips_list_right_bar_item_for_reorder")
     /// 全て選択
     internal static let clipsListRightBarItemForSelectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_all_title")
     /// 選択
