@@ -2,18 +2,21 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable force_cast force_unwrapping
+// swiftlint:disable force_cast force_unwrapping file_length
 
+import Common
 import CoreData
 import Domain
 
 public class NewClipStorage {
     private let context: NSManagedObjectContext
+    private let logger: TBoxLoggable
 
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext) {
+    public init(context: NSManagedObjectContext, logger: TBoxLoggable = RootLogger.shared) {
         self.context = context
+        self.logger = logger
     }
 
     // MARK: - Methods
@@ -22,6 +25,7 @@ public class NewClipStorage {
         let request = NSFetchRequest<Album>(entityName: "Album")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let album = try self.context.fetch(request).first else {
+            self.logger.write(ConsoleLog(level: .error, message: "Album not found (id=\(id.uuidString))"))
             return .failure(.notFound)
         }
         return .success(album)
@@ -31,6 +35,7 @@ public class NewClipStorage {
         let request = NSFetchRequest<Album>(entityName: "Album")
         request.predicate = NSPredicate(format: "title == %@", title as CVarArg)
         guard let album = try self.context.fetch(request).first else {
+            self.logger.write(ConsoleLog(level: .error, message: "Album not found (title=\(title))"))
             return .failure(.notFound)
         }
         return .success(album)
@@ -42,6 +47,7 @@ public class NewClipStorage {
             let request = NSFetchRequest<Tag>(entityName: "Tag")
             request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
             guard let tag = try self.context.fetch(request).first else {
+                self.logger.write(ConsoleLog(level: .error, message: "Tag not found (id=\(tagId.uuidString))"))
                 return .failure(.notFound)
             }
             tags.append(tag)
@@ -62,6 +68,7 @@ public class NewClipStorage {
         let request = NSFetchRequest<Tag>(entityName: "Tag")
         request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
         guard let tag = try self.context.fetch(request).first else {
+            self.logger.write(ConsoleLog(level: .error, message: "Tag not found (name=\(name))"))
             return .failure(.notFound)
         }
         return .success(tag)
@@ -73,6 +80,7 @@ public class NewClipStorage {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
             request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
             guard let clip = try self.context.fetch(request).first else {
+                self.logger.write(ConsoleLog(level: .error, message: "Clip not found (id=\(clipId.uuidString))"))
                 return .failure(.notFound)
             }
             clips.append(clip)
@@ -84,6 +92,7 @@ public class NewClipStorage {
         let request = NSFetchRequest<Item>(entityName: "ClipItem")
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let item = try self.context.fetch(request).first else {
+            self.logger.write(ConsoleLog(level: .error, message: "ClipItem not found (id=\(id.uuidString))"))
             return .failure(.notFound)
         }
         return .success(item)
@@ -114,6 +123,9 @@ extension NewClipStorage: ClipStorageProtocol {
                 .compactMap { $0.map(to: Domain.Clip.self) }
             return .success(clips)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read clips. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -125,6 +137,9 @@ extension NewClipStorage: ClipStorageProtocol {
                 .compactMap { $0.map(to: Domain.Tag.self) }
             return .success(tags)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read tags. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -141,6 +156,7 @@ extension NewClipStorage: ClipStorageProtocol {
                     appendingTags.append(tag)
                 } else {
                     guard allowTagCreation else {
+                        self.logger.write(ConsoleLog(level: .error, message: "Failed create clip. Creating tags not allowed."))
                         return .failure(.invalidParameter)
                     }
                     let newTag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: self.context) as! Tag
@@ -160,6 +176,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 if overwrite {
                     oldClip = duplicatedClip
                 } else {
+                    self.logger.write(ConsoleLog(level: .error, message: "Failed create clip. Duplicated clip. (id=\(clip.id.uuidString)"))
                     return .failure(.duplicated)
                 }
             }
@@ -205,13 +222,17 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success((new: newClip.map(to: Domain.Clip.self)!, old: domainOldClip))
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to create clip. (error=\(error.localizedDescription))"))
             return .failure(.internalError)
         }
     }
 
     public func create(tagWithName name: String) -> Result<Domain.Tag, ClipStorageError> {
         do {
-            guard case .failure = try self.fetchTag(for: name) else { return .failure(.duplicated) }
+            guard case .failure = try self.fetchTag(for: name) else {
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                return .failure(.duplicated)
+            }
 
             let tag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: self.context) as! Tag
             tag.id = UUID()
@@ -220,13 +241,17 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(tag.map(to: Domain.Tag.self)!)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. (error=\(error.localizedDescription))"))
             return .failure(.internalError)
         }
     }
 
     public func create(albumWithTitle title: String) -> Result<Domain.Album, ClipStorageError> {
         do {
-            guard case .failure = try self.fetchAlbum(for: title) else { return .failure(.duplicated) }
+            guard case .failure = try self.fetchAlbum(for: title) else {
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to create album. Duplicated."))
+                return .failure(.duplicated)
+            }
 
             let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
             album.id = UUID()
@@ -237,18 +262,23 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(album.map(to: Domain.Album.self)!)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to create album. (error=\(error.localizedDescription))"))
             return .failure(.internalError)
         }
     }
 
     public func updateClips(having ids: [Domain.Clip.Identity], byHiding isHidden: Bool) -> Result<[Domain.Clip], ClipStorageError> {
         do {
-            guard case let .success(clips) = try self.fetchClips(for: ids) else { return .failure(.notFound) }
+            guard case let .success(clips) = try self.fetchClips(for: ids) else {
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to update clips to \(isHidden ? "hide" : "show"). Not found."))
+                return .failure(.notFound)
+            }
 
             clips.forEach { $0.isHidden = isHidden }
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to update clips to \(isHidden ? "hide" : "show"). (error=\(error.localizedDescription))"))
             return .failure(.internalError)
         }
     }
@@ -275,6 +305,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add tags to clip. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -300,6 +333,9 @@ extension NewClipStorage: ClipStorageProtocol {
             }
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update clips. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -318,6 +354,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update clips. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -349,6 +388,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -384,6 +426,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -399,6 +444,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(result)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -412,6 +460,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(result)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update tag. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -425,6 +476,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(deleteTarget)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete clips. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -451,6 +505,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(removeTarget)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete clip item. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -464,6 +521,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(deleteTarget)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete album. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
@@ -477,6 +537,9 @@ extension NewClipStorage: ClipStorageProtocol {
 
             return .success(deleteTarget)
         } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to delete tags. (error=\(error.localizedDescription))
+            """))
             return .failure(.internalError)
         }
     }
