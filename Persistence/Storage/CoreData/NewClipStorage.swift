@@ -433,6 +433,34 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateAlbum(having albumId: Domain.Album.Identity, byReorderingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
+        do {
+            guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
+
+            let itemIds = album.items?
+                .allObjects
+                .compactMap { $0 as? AlbumItem }
+                .compactMap { $0.clip?.id } ?? []
+            guard Set(itemIds) == Set(clipIds) else { return .failure(.invalidParameter) }
+
+            var currentIndex: Int64 = 1
+            for clipId in clipIds {
+                guard let item = album.items?.compactMap({ $0 as? AlbumItem }).first(where: { $0.clip?.id == clipId }) else {
+                    continue
+                }
+                item.index = currentIndex
+                currentIndex += 1
+            }
+
+            return .success(())
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
     public func updateAlbum(having albumId: Domain.Album.Identity, titleTo title: String) -> Result<Domain.Album, ClipStorageError> {
         do {
             guard case .failure = try self.fetchAlbum(for: title) else { return .failure(.duplicated) }

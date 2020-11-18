@@ -30,6 +30,7 @@ public protocol ClipStorageProtocol {
     func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<[Clip], ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
+    func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Album, ClipStorageError>
     func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Tag, ClipStorageError>
 

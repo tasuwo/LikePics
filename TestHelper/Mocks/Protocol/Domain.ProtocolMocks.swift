@@ -403,6 +403,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("updateAlbumHavingHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateAlbumHavingByReorderingClipsHavingCallCount = 0
+    public var updateAlbumHavingByReorderingClipsHavingHandler: ((Album.Identity, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+        updateAlbumHavingByReorderingClipsHavingCallCount += 1
+        if let updateAlbumHavingByReorderingClipsHavingHandler = updateAlbumHavingByReorderingClipsHavingHandler {
+            return updateAlbumHavingByReorderingClipsHavingHandler(albumId, clipIds)
+        }
+        fatalError("updateAlbumHavingByReorderingClipsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateAlbumHavingTitleToCallCount = 0
     public var updateAlbumHavingTitleToHandler: ((Album.Identity, String) -> (Result<Album, ClipStorageError>))?
     public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Album, ClipStorageError> {

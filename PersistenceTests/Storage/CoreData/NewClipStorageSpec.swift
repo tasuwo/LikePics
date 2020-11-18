@@ -646,6 +646,194 @@ class NewClipStorageSpec: QuickSpec {
             }
         }
 
+        describe("updateAlbum(having:byReorderingClipsHaving:)") {
+            var result: Result<Void, ClipStorageError>!
+            context("並び替え対象のクリップが足りない") {
+                beforeEach {
+                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+                    let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
+
+                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item1.clip = clip1
+                    item1.index = 1
+                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item2.clip = clip2
+                    item2.index = 2
+                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item3.clip = clip3
+                    item3.index = 3
+                    let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item4.clip = clip4
+                    item4.index = 4
+
+                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    album.items = NSSet(array: [item1, item2, item3, item4])
+
+                    try! managedContext.save()
+
+                    result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                 byReorderingClipsHaving: [
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+                                                 ])
+                    try! managedContext.save()
+                }
+                it("エラーとなる") {
+                    guard case .failure(.invalidParameter) = result else {
+                        fail()
+                        return
+                    }
+                }
+            }
+            context("並び替え対象のクリップが一部存在しない") {
+                beforeEach {
+                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+                    let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
+
+                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item1.clip = clip1
+                    item1.index = 1
+                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item2.clip = clip2
+                    item2.index = 2
+                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item3.clip = clip3
+                    item3.index = 3
+                    let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    item4.clip = clip4
+                    item4.index = 4
+
+                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    album.items = NSSet(array: [item1, item2, item4])
+
+                    try! managedContext.save()
+
+                    result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                 byReorderingClipsHaving: [
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+                                                 ])
+                    try! managedContext.save()
+                }
+                it("エラーとなる") {
+                    guard case .failure(.invalidParameter) = result else {
+                        fail()
+                        return
+                    }
+                }
+            }
+            context("並び替え対象のクリップが全て存在する") {
+                context("並び替える") {
+                    beforeEach {
+                        let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                        let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+                        let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
+
+                        let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        item1.clip = clip1
+                        item1.index = 1
+                        let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        item2.clip = clip2
+                        item2.index = 2
+                        let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        item3.clip = clip3
+                        item3.index = 3
+                        let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        item4.clip = clip4
+                        item4.index = 4
+
+                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                        album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        album.items = NSSet(array: [item1, item2, item3, item4])
+
+                        try! managedContext.save()
+
+                        result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                     byReorderingClipsHaving: [
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+                                                     ])
+                        try! managedContext.save()
+                    }
+                    it("並び替えた順にindexが更新される") {
+                        guard case .success = result else {
+                            fail()
+                            return
+                        }
+                        let request = NSFetchRequest<Album>(entityName: "Album")
+                        request.predicate = NSPredicate(format: "id == %@",
+                                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+                        let album = try! managedContext.fetch(request).first!
+                        expect(album.items?.allObjects).to(haveCount(4))
+
+                        guard let item1 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item1.index).to(equal(1))
+
+                        guard let item2 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item2.index).to(equal(3))
+
+                        guard let item3 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item3.index).to(equal(2))
+
+                        guard let item4 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item4.index).to(equal(4))
+                    }
+                }
+            }
+        }
+
         describe("deleteClips(having:)") {
             beforeEach {
                 let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
