@@ -54,6 +54,18 @@ class CoreDataAlbumQuery: NSObject {
                 self.subject.send(album)
                 return
             }
+
+            // AlbumItemの更新を検知する
+            if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
+                for albumItem in objects.compactMap({ $0 as? AlbumItem }) {
+                    if let album = albumItem.album, album.objectID == self.objectId {
+                        context.refresh(album, mergeChanges: true)
+                        return
+                    }
+                }
+            }
+
+            // Clipの更新を検知する
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
                 for clip in objects.compactMap({ $0 as? Clip }) {
                     if let albumItem = clip.albumItem?
