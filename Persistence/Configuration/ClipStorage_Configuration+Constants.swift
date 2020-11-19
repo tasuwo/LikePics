@@ -31,7 +31,7 @@ extension ClipStorage.Configuration {
         switch kind {
         case .appSupport:
             return Realm.Configuration(
-                schemaVersion: 11,
+                schemaVersion: 12,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false,
                 objectTypes: [

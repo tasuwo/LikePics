@@ -889,6 +889,7 @@ class NewClipStorageSpec: QuickSpec {
             beforeEach {
                 let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
                 clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                clip.imagesSize = 12 + 34 + 56 + 78
 
                 let item1 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
                 item1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
@@ -896,6 +897,7 @@ class NewClipStorageSpec: QuickSpec {
                 item1.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item1.createdDate = Date(timeIntervalSince1970: 0)
                 item1.updatedDate = Date(timeIntervalSince1970: 0)
+                item1.imageSize = 12
                 item1.clip = clip
                 item1.index = 1
                 let item2 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
@@ -905,6 +907,7 @@ class NewClipStorageSpec: QuickSpec {
                 item2.createdDate = Date(timeIntervalSince1970: 0)
                 item2.updatedDate = Date(timeIntervalSince1970: 0)
                 item2.clip = clip
+                item2.imageSize = 34
                 item2.index = 2
                 let item3 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
                 item3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
@@ -913,6 +916,7 @@ class NewClipStorageSpec: QuickSpec {
                 item3.createdDate = Date(timeIntervalSince1970: 0)
                 item3.updatedDate = Date(timeIntervalSince1970: 0)
                 item3.clip = clip
+                item3.imageSize = 56
                 item3.index = 3
                 let item4 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
                 item4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
@@ -921,6 +925,7 @@ class NewClipStorageSpec: QuickSpec {
                 item4.createdDate = Date(timeIntervalSince1970: 0)
                 item4.updatedDate = Date(timeIntervalSince1970: 0)
                 item4.clip = clip
+                item4.imageSize = 78
                 item4.index = 4
 
                 clip.clipItems = NSSet(array: [item1, item2, item3, item4])
@@ -937,6 +942,7 @@ class NewClipStorageSpec: QuickSpec {
                 let clips = try! managedContext.fetch(request)
                 expect(clips).to(haveCount(1))
                 let clip = clips.first!
+                expect(clip.imagesSize).to(equal(34 + 78))
                 expect(clip.clipItems?.allObjects).to(haveCount(2))
 
                 guard let item2 = clip.clipItems?

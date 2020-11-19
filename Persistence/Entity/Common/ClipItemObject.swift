@@ -15,6 +15,7 @@ final class ClipItemObject: Object {
     @objc dynamic var imageUrl: String? = ""
     @objc dynamic var imageHeight: Double = 0
     @objc dynamic var imageWidth: Double = 0
+    @objc dynamic var imageDataSize: Int = 0
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()
 
@@ -53,6 +54,7 @@ extension Domain.ClipItem: Persistable {
                                imageUrl: imageUrl,
                                imageSize: ImageSize(height: managedObject.imageHeight,
                                                     width: managedObject.imageWidth),
+                               imageDataSize: managedObject.imageDataSize,
                                registeredDate: managedObject.registeredAt,
                                updatedDate: managedObject.updatedAt)
     }
@@ -77,6 +79,7 @@ extension Persistence.Item {
                                imageFileName: self.imageFileName ?? "",
                                imageUrl: self.imageUrl,
                                imageSize: .init(height: self.imageHeight, width: self.imageWidth),
+                               imageDataSize: Int(self.imageSize),
                                registeredDate: createdDate,
                                updatedDate: updatedDate)
     }

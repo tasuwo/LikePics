@@ -284,6 +284,7 @@ public class ClipTargetFinderPresenter {
                                 clipId: clipId,
                                 index: $0.index,
                                 imageId: imageId,
+                                imageDataSize: $0.source.data.count,
                                 source: $0.source,
                                 currentDate: currentDate)
             let container = ImageContainer(id: imageId, data: $0.source.data)
@@ -292,6 +293,7 @@ public class ClipTargetFinderPresenter {
         let clip = Clip(clipId: clipId,
                         clipItems: itemAndContainers.map { $0.0 },
                         tags: [],
+                        dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
                         registeredDate: currentDate,
                         currentDate: currentDate)
 
@@ -306,7 +308,7 @@ public class ClipTargetFinderPresenter {
 }
 
 extension ClipItem {
-    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, source: ClipItemSource, currentDate: Date) {
+    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
         self.init(id: id,
                   url: url,
                   clipId: clipId,
@@ -315,18 +317,20 @@ extension ClipItem {
                   imageFileName: source.fileName,
                   imageUrl: source.url,
                   imageSize: ImageSize(height: source.height, width: source.width),
+                  imageDataSize: imageDataSize,
                   registeredDate: currentDate,
                   updatedDate: currentDate)
     }
 }
 
 extension Clip {
-    init(clipId: Clip.Identity, clipItems: [ClipItem], tags: [Tag], registeredDate: Date, currentDate: Date) {
+    init(clipId: Clip.Identity, clipItems: [ClipItem], tags: [Tag], dataSize: Int, registeredDate: Date, currentDate: Date) {
         self.init(id: clipId,
                   description: nil,
                   items: clipItems,
                   tags: tags,
                   isHidden: false,
+                  dataSize: dataSize,
                   registeredDate: registeredDate,
                   updatedDate: currentDate)
     }

@@ -11,6 +11,7 @@ final class ClipObject: Object {
     let items = List<ClipItemObject>()
     let tags = List<TagObject>()
     @objc dynamic var isHidden: Bool = false
+    @objc dynamic var dataSize: Int = 0
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()
 
@@ -30,6 +31,7 @@ extension Domain.Clip: Persistable {
                      items: items,
                      tags: managedObject.tags.map { Domain.Tag.make(by: $0) },
                      isHidden: managedObject.isHidden,
+                     dataSize: managedObject.dataSize,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
@@ -57,6 +59,7 @@ extension Persistence.Clip {
                            items: items,
                            tags: tags,
                            isHidden: self.isHidden,
+                           dataSize: Int(self.imagesSize),
                            registeredDate: createdDate,
                            updatedDate: updatedDate)
     }

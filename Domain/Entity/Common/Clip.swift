@@ -10,6 +10,7 @@ public struct Clip: Equatable {
     public let items: [ClipItem]
     public let tags: [Tag]
     public let isHidden: Bool
+    public let dataSize: Int
     public let registeredDate: Date
     public let updatedDate: Date
 
@@ -35,6 +36,7 @@ public struct Clip: Equatable {
                 items: [ClipItem],
                 tags: [Tag],
                 isHidden: Bool,
+                dataSize: Int,
                 registeredDate: Date,
                 updatedDate: Date)
     {
@@ -43,6 +45,7 @@ public struct Clip: Equatable {
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
         self.tags = tags
         self.isHidden = isHidden
+        self.dataSize = dataSize
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
     }
@@ -55,6 +58,7 @@ public struct Clip: Equatable {
                      items: self.items,
                      tags: tags,
                      isHidden: self.isHidden,
+                     dataSize: self.dataSize,
                      registeredDate: self.registeredDate,
                      updatedDate: self.updatedDate)
     }
@@ -68,6 +72,7 @@ public struct Clip: Equatable {
                      items: newItems,
                      tags: self.tags,
                      isHidden: self.isHidden,
+                     dataSize: self.dataSize,
                      registeredDate: self.registeredDate,
                      updatedDate: self.updatedDate)
     }

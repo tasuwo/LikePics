@@ -522,14 +522,17 @@ extension NewClipStorage: ClipStorageProtocol {
             }
 
             var index: Int64 = 1
+            var count: Int64 = 0
             for clipItem in clipItems {
                 if clipItem.id == id {
                     self.context.delete(item)
                     continue
                 }
                 clipItem.index = index
+                count += clipItem.imageSize
                 index += 1
             }
+            item.clip?.imagesSize = count
 
             return .success(removeTarget)
         } catch {

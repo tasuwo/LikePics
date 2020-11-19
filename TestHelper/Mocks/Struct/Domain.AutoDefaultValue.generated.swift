@@ -28,6 +28,7 @@ extension Clip {
         items: [ClipItem] = [],
         tags: [Tag] = [],
         isHidden: Bool = false,
+        dataSize: Int = 0,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
@@ -37,6 +38,7 @@ extension Clip {
             items: items,
             tags: tags,
             isHidden: isHidden,
+            dataSize: dataSize,
             registeredDate: registeredDate,
             updatedDate: updatedDate
         )
@@ -53,6 +55,7 @@ extension ClipItem {
         imageFileName: String = "",
         imageUrl: URL? = nil,
         imageSize: ImageSize = ImageSize.makeDefault(),
+        imageDataSize: Int = 0,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
@@ -65,6 +68,7 @@ extension ClipItem {
             imageFileName: imageFileName,
             imageUrl: imageUrl,
             imageSize: imageSize,
+            imageDataSize: imageDataSize,
             registeredDate: registeredDate,
             updatedDate: updatedDate
         )
