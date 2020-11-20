@@ -6,7 +6,6 @@ import RealmSwift
 
 extension ClipStorage.Configuration {
     public enum Kind {
-        case appSupport
         case group
     }
 
@@ -19,9 +18,6 @@ extension ClipStorage.Configuration {
 
     private static func resolveRealmFileName(for kind: Kind) -> String {
         switch kind {
-        case .appSupport:
-            return "clips.realm"
-
         case .group:
             return "temporary-clips.realm"
         }
@@ -29,19 +25,6 @@ extension ClipStorage.Configuration {
 
     private static func resolveRealmConfiguration(for kind: Kind) -> Realm.Configuration {
         switch kind {
-        case .appSupport:
-            return Realm.Configuration(
-                schemaVersion: 12,
-                migrationBlock: ClipStorageMigrationService.migrationBlock,
-                deleteRealmIfMigrationNeeded: false,
-                objectTypes: [
-                    ClipObject.self,
-                    ClipItemObject.self,
-                    AlbumObject.self,
-                    TagObject.self
-                ]
-            )
-
         case .group:
             return Realm.Configuration(
                 schemaVersion: 0,
@@ -62,19 +45,6 @@ extension ClipStorage.Configuration {
         }
 
         switch kind {
-        case .appSupport:
-            guard let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-                fatalError("Unable to resolve ApplicationSupport directory url.")
-            }
-            let baseDirectory = directory
-                .appendingPathComponent(bundleIdentifier, isDirectory: true)
-            if !FileManager.default.fileExists(atPath: baseDirectory.path) {
-                // swiftlint:disable:next force_try
-                try! FileManager.default.createDirectory(at: baseDirectory, withIntermediateDirectories: true, attributes: nil)
-            }
-            return baseDirectory
-                .appendingPathComponent(realmFileName)
-
         case .group:
             guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") else {
                 fatalError("Failed to resolve images containing directory url.")
