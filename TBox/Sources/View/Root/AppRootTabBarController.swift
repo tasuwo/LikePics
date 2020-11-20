@@ -75,12 +75,16 @@ class AppRootTabBarController: UITabBarController {
             // searchEntryViewController,
             settingsViewController
         ]
+
+        self.updateAppearance()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
-        self.updateAppearance()
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.updateAppearance()
+        }, completion: nil)
     }
 
     // MARK: - Methods
@@ -98,6 +102,6 @@ class AppRootTabBarController: UITabBarController {
             return
         }
 
-        self.tabBar.isHidden = UIDevice.current.orientation.isLandscape
+        self.tabBar.isHidden = self.traitCollection.verticalSizeClass == .compact
     }
 }
