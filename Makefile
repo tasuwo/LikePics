@@ -3,7 +3,13 @@ update_buildtools: ## ビルド用ツール群を更新する
 	cd BuildTools; swift package update
 
 .PHONY: generate
-generate: swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
+generate: license_generate swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
+
+.PHONY: license_generate
+license_generate: ## ライセンスを自動生成する
+	 ./Pods/LicensePlist/license-plist \
+		 --output-path ./TBox/Resources/Settings.bundle \
+		 --config-path ./license_plist.yml
 
 .PHONY: swiftgen_generate
 swiftgen_generate: ## SwiftGenによるコード自動生成を実行する
