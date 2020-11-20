@@ -200,6 +200,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 newItem.imageUrl = item.imageUrl
                 newItem.imageHeight = item.imageSize.height
                 newItem.imageWidth = item.imageSize.width
+                newItem.imageSize = Int64(item.imageDataSize)
                 newItem.createdDate = item.registeredDate
                 newItem.updatedDate = item.updatedDate
 
@@ -208,6 +209,7 @@ extension NewClipStorage: ClipStorageProtocol {
             newClip.clipItems = items
             newClip.tags = NSSet(array: appendingTags)
 
+            newClip.imagesSize = Int64(clip.dataSize)
             newClip.isHidden = clip.isHidden
             newClip.createdDate = clip.registeredDate
             newClip.updatedDate = clip.updatedDate
