@@ -12,48 +12,6 @@ import UIKit
 
 // swiftlint:disable implicitly_unwrapped_optional
 
-protocol ViewControllerFactory {
-    // MARK: Top
-
-    func makeTopClipsListViewController() -> UIViewController?
-
-    // MARK: Preview
-
-    func makeClipPreviewViewController(clipId: Domain.Clip.Identity) -> UIViewController?
-    func makeClipItemPreviewViewController(clipId: Domain.Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController?
-
-    // MARK: Information
-
-    func makeClipInformationViewController(clipId: Domain.Clip.Identity,
-                                           itemId: ClipItem.Identity,
-                                           transitioningController: ClipInformationTransitioningControllerProtocol,
-                                           dataSource: ClipInformationViewDataSource) -> UIViewController?
-
-    // MARK: Selection
-
-    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
-
-    // MARK: Search
-
-    func makeSearchEntryViewController() -> UIViewController
-    func makeSearchResultViewController(context: SearchContext) -> UIViewController?
-
-    // MARK: Album
-
-    func makeAlbumListViewController() -> UIViewController?
-    func makeAlbumViewController(albumId: Domain.Album.Identity) -> UIViewController?
-    func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController?
-
-    // MARK: Tag
-
-    func makeTagListViewController() -> UIViewController?
-    func makeTagSelectionViewController(selectedTags: [Domain.Tag.Identity], context: Any?, delegate: TagSelectionPresenterDelegate) -> UIViewController?
-
-    // MARK: Settings
-
-    func makeSettingsViewController() -> UIViewController
-}
-
 class DependencyContainer {
     private let tmpClipStorage: ClipStorageProtocol
     private let tmpImageStorage: ImageStorageProtocol
