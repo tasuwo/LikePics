@@ -1205,6 +1205,7 @@
 			isa = PBXGroup;
 			children = (
 				2C3D649F2512E48B009C0749 /* UICollectionView+bind.swift */,
+				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1666,7 +1667,6 @@
 			isa = PBXGroup;
 			children = (
 				2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */,
-				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
 				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
 			);
 			path = Context;
