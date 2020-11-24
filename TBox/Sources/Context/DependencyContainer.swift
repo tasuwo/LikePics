@@ -13,14 +13,30 @@ import UIKit
 // swiftlint:disable implicitly_unwrapped_optional
 
 class DependencyContainer {
+    // MARK: - Properties
+
+    // MARK: Storage
+
+    private var clipStorage: ClipStorageProtocol!
     private let tmpClipStorage: ClipStorageProtocol
-    private let tmpImageStorage: ImageStorageProtocol
     private let referenceClipStorage: ReferenceClipStorageProtocol
-    private let logger: TBoxLoggable
+    private var imageStorage: NewImageStorageProtocol!
+    private let tmpImageStorage: ImageStorageProtocol
+    private var thumbnailStorage: ThumbnailStorageProtocol!
     private let userSettingsStorage: UserSettingsStorageProtocol = UserSettingsStorage()
 
-    private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
-    private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
+    // MARK: Service
+
+    private var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
+    private var clipQueryService: ClipQueryServiceProtocol!
+    private var imageQueryService: NewImageQueryServiceProtocol!
+    private(set) var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol!
+    private(set) var persistService: TemporaryClipsPersistServiceProtocol!
+
+    // MARK: Core Data
+
+    private var imageQueryContext: NSManagedObjectContext!
+    private var commandContext: NSManagedObjectContext!
 
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
         let container = PersistentContainerLoader.load()
@@ -40,18 +56,16 @@ class DependencyContainer {
         return container
     }()
 
-    private var imageQueryContext: NSManagedObjectContext!
-    private var commandContext: NSManagedObjectContext!
+    // MARK: Queue
 
-    private var clipStorage: ClipStorageProtocol!
-    private var clipQueryService: ClipQueryServiceProtocol!
-    private var imageStorage: NewImageStorageProtocol!
-    private var imageQueryService: NewImageQueryServiceProtocol!
-    private var thumbnailStorage: ThumbnailStorageProtocol!
+    private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
+    private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
 
-    private var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
-    private(set) var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol!
-    private(set) var persistService: TemporaryClipsPersistServiceProtocol!
+    // MARK: Logger
+
+    private let logger: TBoxLoggable
+
+    // MARK: - Lifecycle
 
     init() throws {
         self.tmpImageStorage = try ImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
