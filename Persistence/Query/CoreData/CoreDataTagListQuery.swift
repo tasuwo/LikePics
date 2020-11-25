@@ -8,8 +8,9 @@ import Domain
 import UIKit
 
 class CoreDataTagListQuery: NSObject {
+    private let request: NSFetchRequest<Tag>
     private var subject: CurrentValueSubject<[Domain.Tag], Error>
-    private let controller: NSFetchedResultsController<Tag>
+    private var controller: NSFetchedResultsController<Tag>?
 
     // MARK: - Lifecycle
 
@@ -17,16 +18,28 @@ class CoreDataTagListQuery: NSObject {
         let currentTags = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Tag.self) }
 
+        self.request = request
         self.subject = .init(currentTags)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
 
         super.init()
 
-        self.controller.delegate = self
-        try self.controller.performFetch()
+        self.setupQuery(for: context)
+    }
+
+    // MARK: - Methods
+
+    private func setupQuery(for context: NSManagedObjectContext) {
+        self.controller = NSFetchedResultsController(fetchRequest: self.request,
+                                                     managedObjectContext: context,
+                                                     sectionNameKeyPath: nil,
+                                                     cacheName: nil)
+        self.controller?.delegate = self
+
+        do {
+            try self.controller?.performFetch()
+        } catch {
+            self.subject.send(completion: .failure(error))
+        }
     }
 }
 
@@ -51,5 +64,13 @@ extension CoreDataTagListQuery: TagListQuery {
 
     var tags: CurrentValueSubject<[Domain.Tag], Error> {
         return self.subject
+    }
+}
+
+extension CoreDataTagListQuery: ViewContextObserver {
+    // MARK: - ViewContextObserver
+
+    func didReplaced(context: NSManagedObjectContext) {
+        self.setupQuery(for: context)
     }
 }

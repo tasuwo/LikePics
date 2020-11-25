@@ -28,13 +28,20 @@ class CoreDataClipItemQuery: NSObject {
 
         super.init()
 
+        self.setupQuery(for: context)
+    }
+
+    // MARK: - Methods
+
+    private func setupQuery(for context: NSManagedObjectContext) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: Notification.Name.NSManagedObjectContextObjectsDidChange,
+                                                  object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contextDidChangeNotification(notification:)),
                                                name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
                                                object: context)
     }
-
-    // MARK: - Methods
 
     @objc
     private func contextDidChangeNotification(notification: NSNotification) {
@@ -63,5 +70,13 @@ extension CoreDataClipItemQuery: ClipItemQuery {
 
     var clipItem: CurrentValueSubject<Domain.ClipItem, Error> {
         return self.subject
+    }
+}
+
+extension CoreDataClipItemQuery: ViewContextObserver {
+    // MARK: - ViewContextObserver
+
+    func didReplaced(context: NSManagedObjectContext) {
+        self.setupQuery(for: context)
     }
 }

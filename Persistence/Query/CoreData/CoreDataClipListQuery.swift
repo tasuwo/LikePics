@@ -8,8 +8,9 @@ import Domain
 import UIKit
 
 class CoreDataClipListQuery: NSObject {
+    private let request: NSFetchRequest<Clip>
     private var subject: CurrentValueSubject<[Domain.Clip], Error>
-    private let controller: NSFetchedResultsController<Clip>
+    private var controller: NSFetchedResultsController<Clip>?
 
     // MARK: - Lifecycle
 
@@ -17,16 +18,28 @@ class CoreDataClipListQuery: NSObject {
         let currentClips = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Clip.self) }
 
+        self.request = request
         self.subject = .init(currentClips)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
 
         super.init()
 
-        controller.delegate = self
-        try controller.performFetch()
+        self.setupQuery(for: context)
+    }
+
+    // MARK: - Methods
+
+    private func setupQuery(for context: NSManagedObjectContext) {
+        self.controller = NSFetchedResultsController(fetchRequest: self.request,
+                                                     managedObjectContext: context,
+                                                     sectionNameKeyPath: nil,
+                                                     cacheName: nil)
+        self.controller?.delegate = self
+
+        do {
+            try self.controller?.performFetch()
+        } catch {
+            self.subject.send(completion: .failure(error))
+        }
     }
 }
 
@@ -51,5 +64,13 @@ extension CoreDataClipListQuery: ClipListQuery {
 
     var clips: CurrentValueSubject<[Domain.Clip], Error> {
         return self.subject
+    }
+}
+
+extension CoreDataClipListQuery: ViewContextObserver {
+    // MARK: - ViewContextObserver
+
+    func didReplaced(context: NSManagedObjectContext) {
+        self.setupQuery(for: context)
     }
 }

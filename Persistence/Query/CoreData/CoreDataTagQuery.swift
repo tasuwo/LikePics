@@ -28,13 +28,20 @@ class CoreDataTagQuery: NSObject {
 
         super.init()
 
+        self.setupQuery(for: context)
+    }
+
+    // MARK: - Methods
+
+    private func setupQuery(for context: NSManagedObjectContext) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: Notification.Name.NSManagedObjectContextObjectsDidChange,
+                                                  object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contextDidChangeNotification(notification:)),
                                                name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
                                                object: context)
     }
-
-    // MARK: - Methods
 
     @objc
     private func contextDidChangeNotification(notification: NSNotification) {
@@ -63,5 +70,13 @@ extension CoreDataTagQuery: TagQuery {
 
     var tag: CurrentValueSubject<Domain.Tag, Error> {
         return self.subject
+    }
+}
+
+extension CoreDataTagQuery: ViewContextObserver {
+    // MARK: - ViewContextObserver
+
+    func didReplaced(context: NSManagedObjectContext) {
+        self.setupQuery(for: context)
     }
 }

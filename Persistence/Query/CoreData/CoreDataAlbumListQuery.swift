@@ -8,9 +8,10 @@ import Domain
 import UIKit
 
 class CoreDataAlbumListQuery: NSObject {
+    private let request: NSFetchRequest<Album>
     private var albumIds: Set<Domain.Album.Identity>
     private var subject: CurrentValueSubject<[Domain.Album], Error>
-    private let controller: NSFetchedResultsController<Album>
+    private var controller: NSFetchedResultsController<Album>?
 
     // MARK: - Lifecycle
 
@@ -18,25 +19,38 @@ class CoreDataAlbumListQuery: NSObject {
         let currentAlbums = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Album.self) }
 
+        self.request = request
         self.albumIds = Set(currentAlbums.map({ $0.id }))
         self.subject = .init(currentAlbums)
-        self.controller = NSFetchedResultsController(fetchRequest: request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
 
         super.init()
 
-        self.controller.delegate = self
-        try self.controller.performFetch()
+        self.setupQuery(for: context)
+    }
 
+    // MARK: - Methods
+
+    private func setupQuery(for context: NSManagedObjectContext) {
+        self.controller = NSFetchedResultsController(fetchRequest: self.request,
+                                                     managedObjectContext: context,
+                                                     sectionNameKeyPath: nil,
+                                                     cacheName: nil)
+        self.controller?.delegate = self
+
+        do {
+            try self.controller?.performFetch()
+        } catch {
+            self.subject.send(completion: .failure(error))
+        }
+
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+                                                  object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contextDidChangeNotification(notification:)),
                                                name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
                                                object: context)
     }
-
-    // MARK: - Methods
 
     @objc
     private func contextDidChangeNotification(notification: NSNotification) {
@@ -96,5 +110,13 @@ extension CoreDataAlbumListQuery: AlbumListQuery {
 
     var albums: CurrentValueSubject<[Domain.Album], Error> {
         return self.subject
+    }
+}
+
+extension CoreDataAlbumListQuery: ViewContextObserver {
+    // MARK: - ViewContextObserver
+
+    func didReplaced(context: NSManagedObjectContext) {
+        self.setupQuery(for: context)
     }
 }
