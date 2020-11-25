@@ -17,10 +17,10 @@ class DependencyContainer {
 
     // MARK: Storage
 
-    private var clipStorage: ClipStorageProtocol!
+    private var clipStorage: NewClipStorage!
     private let tmpClipStorage: ClipStorageProtocol
     private let referenceClipStorage: ReferenceClipStorageProtocol
-    private var imageStorage: NewImageStorageProtocol!
+    private var imageStorage: NewImageStorage!
     private let tmpImageStorage: ImageStorageProtocol
     private var thumbnailStorage: ThumbnailStorageProtocol!
     private let userSettingsStorage: UserSettingsStorageProtocol = UserSettingsStorage()
@@ -28,33 +28,16 @@ class DependencyContainer {
     // MARK: Service
 
     private var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
-    private var clipQueryService: ClipQueryServiceProtocol!
-    private var imageQueryService: NewImageQueryServiceProtocol!
+    private var clipQueryService: ClipQueryService!
+    private var imageQueryService: NewImageQueryService!
     private(set) var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol!
     private(set) var persistService: TemporaryClipsPersistServiceProtocol!
 
     // MARK: Core Data
 
+    private var persistentContainer: NSPersistentCloudKitContainer!
     private var imageQueryContext: NSManagedObjectContext!
     private var commandContext: NSManagedObjectContext!
-
-    lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = PersistentContainerLoader.load()
-
-        guard let description = container.persistentStoreDescriptions.first else {
-            fatalError("Failed to retrieve a persistent store description.")
-        }
-        description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-
-        container.loadPersistentStores(completionHandler: { _, error in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
-        container.viewContext.automaticallyMergesChangesFromParent = true
-
-        return container
-    }()
 
     // MARK: Queue
 
@@ -73,30 +56,7 @@ class DependencyContainer {
         self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
 
-        // MARK: Context
-
-        self.imageQueryContext = {
-            return self.imageQueryQueue.sync {
-                let context = self.persistentContainer.newBackgroundContext()
-                return context
-            }
-        }()
-        self.commandContext = {
-            return self.clipCommandQueue.sync {
-                let context = self.persistentContainer.newBackgroundContext()
-                return context
-            }
-        }()
-
-        // MARK: Storage/Query
-
-        self.clipStorage = NewClipStorage(context: self.commandContext)
-        self.clipQueryService = ClipQueryService(context: self.persistentContainer.viewContext)
-        self.imageStorage = NewImageStorage(context: self.commandContext)
-        self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
-        self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
-
-        // MARK: Service
+        try self.setupCoreDataStack(iCloudSyncEnabled: true, isInitial: true)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,
@@ -115,6 +75,67 @@ class DependencyContainer {
                                                            imageStorage: self.imageStorage,
                                                            logger: self.logger,
                                                            queue: self.clipCommandQueue)
+    }
+
+    // MARK: - Methods
+
+    func setupCoreDataStack(iCloudSyncEnabled: Bool, isInitial: Bool) throws {
+        let newContainer: NSPersistentCloudKitContainer = {
+            let container = PersistentContainerLoader.load()
+
+            guard let description = container.persistentStoreDescriptions.first else {
+                fatalError("Failed to retrieve a persistent store description.")
+            }
+            description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+
+            if !iCloudSyncEnabled {
+                description.cloudKitContainerOptions = nil
+            }
+
+            container.loadPersistentStores(completionHandler: { _, error in
+                if let error = error as NSError? {
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+            })
+            container.viewContext.automaticallyMergesChangesFromParent = true
+
+            return container
+        }()
+
+        let newImageQueryContext: NSManagedObjectContext = {
+            return self.imageQueryQueue.sync {
+                let context = newContainer.newBackgroundContext()
+                return context
+            }
+        }()
+
+        let newCommandContext: NSManagedObjectContext = {
+            return self.clipCommandQueue.sync {
+                let context = newContainer.newBackgroundContext()
+                return context
+            }
+        }()
+
+        self.persistentContainer = newContainer
+        self.imageQueryContext = newImageQueryContext
+        self.commandContext = newCommandContext
+
+        if isInitial {
+            self.clipStorage = NewClipStorage(context: newCommandContext)
+            self.imageStorage = NewImageStorage(context: newCommandContext)
+
+            self.clipQueryService = ClipQueryService(context: newContainer.viewContext)
+            self.imageQueryService = NewImageQueryService(context: newImageQueryContext)
+            self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
+        } else {
+            self.clipCommandQueue.sync {
+                self.clipStorage.context = newCommandContext
+                self.imageStorage.context = newCommandContext
+            }
+
+            self.clipQueryService.context = newContainer.viewContext
+            self.imageQueryService.context = newImageQueryContext
+        }
     }
 }
 
