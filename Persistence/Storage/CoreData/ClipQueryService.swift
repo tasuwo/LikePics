@@ -2,11 +2,18 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import CoreData
 import Domain
 
 public class ClipQueryService {
-    private let context: NSManagedObjectContext
+    public var context: NSManagedObjectContext {
+        didSet {
+            self.observers.forEach { $0.value?.didReplaced(context: self.context) }
+        }
+    }
+
+    private var observers: [WeakContainer<ViewContextObserver>] = []
 
     public init(context: NSManagedObjectContext) {
         self.context = context
@@ -19,6 +26,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             guard let query = try CoreDataClipQuery(id: id, context: self.context) else {
                 return .failure(.notFound)
             }
+            self.observers.append(.init(value: query))
             return .success(query)
         } catch {
             return .failure(.internalError)
@@ -29,7 +37,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
-            return .success(try CoreDataClipListQuery(request: request, context: self.context))
+            let query = try CoreDataClipListQuery(request: request, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
         } catch {
             return .failure(.internalError)
         }
@@ -40,7 +50,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
             request.predicate = NSPredicate(format: "tags.@count == 0")
-            return .success(try CoreDataClipListQuery(request: request, context: self.context))
+            let query = try CoreDataClipListQuery(request: request, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
         } catch {
             return .failure(.internalError)
         }
@@ -55,7 +67,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             let request = NSFetchRequest<Clip>(entityName: "Clip")
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
             request.predicate = NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", tag.id as CVarArg)
-            return .success(try CoreDataClipListQuery(request: request, context: self.context))
+            let query = try CoreDataClipListQuery(request: request, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
         } catch {
             return .failure(.internalError)
         }
@@ -66,6 +80,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             guard let query = try CoreDataAlbumQuery(id: id, context: self.context) else {
                 return .failure(.notFound)
             }
+            self.observers.append(.init(value: query))
             return .success(query)
         } catch {
             return .failure(.internalError)
@@ -76,7 +91,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let request = NSFetchRequest<Album>(entityName: "Album")
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
-            return .success(try CoreDataAlbumListQuery(request: request, context: self.context))
+            let query = try CoreDataAlbumListQuery(request: request, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
         } catch {
             return .failure(.internalError)
         }
@@ -86,7 +103,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let request = NSFetchRequest<Tag>(entityName: "Tag")
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
-            return .success(try CoreDataTagListQuery(request: request, context: self.context))
+            let query = try CoreDataTagListQuery(request: request, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
         } catch {
             return .failure(.internalError)
         }

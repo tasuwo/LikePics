@@ -9,7 +9,16 @@ import CoreData
 import Domain
 
 public class NewClipStorage {
-    private let context: NSManagedObjectContext
+    public var context: NSManagedObjectContext {
+        willSet {
+            self.context.perform { [weak self] in
+                if self?.context.hasChanges == true {
+                    self?.context.rollback()
+                }
+            }
+        }
+    }
+
     private let logger: TBoxLoggable
 
     // MARK: - Lifecycle
