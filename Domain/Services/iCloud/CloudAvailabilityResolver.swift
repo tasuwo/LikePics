@@ -6,6 +6,7 @@ import CloudKit
 
 public protocol CloudAvailabilityResolver {
     static func checkCloudAvailability(_ completion: @escaping (Result<Bool, Error>) -> Void)
+    static func resolveAccountId(_ completion: @escaping (Result<String?, Error>) -> Void)
 }
 
 public enum iCloudAvailabilityResolver: CloudAvailabilityResolver {
@@ -28,6 +29,22 @@ public enum iCloudAvailabilityResolver: CloudAvailabilityResolver {
             @unknown default:
                 fatalError("Unexpected status")
             }
+        }
+    }
+
+    public static func resolveAccountId(_ completion: @escaping (Result<String?, Error>) -> Void) {
+        CKContainer.default().fetchUserRecordID { id, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let id = id else {
+                completion(.success(nil))
+                return
+            }
+
+            completion(.success("\(id.zoneID.zoneName)-\(id.recordName)"))
         }
     }
 }
