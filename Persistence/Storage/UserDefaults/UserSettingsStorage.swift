@@ -9,7 +9,7 @@ import Domain
 public class UserSettingsStorage {
     enum Key: String {
         case showHiddenItems = "userSettingsShowHiddenItems"
-        case enabledICloudSync = "enabledICloudSync"
+        case enabledICloudSync = "userSettingsEnabledICloudSync"
     }
 
     private let userDefaults = UserDefaults.standard
