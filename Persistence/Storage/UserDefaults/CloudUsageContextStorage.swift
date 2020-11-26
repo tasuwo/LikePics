@@ -32,17 +32,15 @@ public class CloudUsageContextStorage {
 
 extension UserDefaults {
     @objc dynamic var cloudUsageContextLastLoggedInCloudAccountId: String? {
-        return self.string(forKey: UserSettingsStorage.Key.showHiddenItems.rawValue)
+        return self.string(forKey: CloudUsageContextStorage.Key.lastLoggedInCloudAccountId.rawValue)
     }
 }
 
 extension CloudUsageContextStorage: CloudUsageContextStorageProtocol {
     // MARK: - UserSettingsStorageProtocol
 
-    public var lastLoggedInCloudAccountId: AnyPublisher<String?, Never> {
-        return self.userDefaults
-            .publisher(for: \.cloudUsageContextLastLoggedInCloudAccountId)
-            .eraseToAnyPublisher()
+    public var lastLoggedInCloudAccountId: String? {
+        return self.userDefaults.cloudUsageContextLastLoggedInCloudAccountId
     }
 
     public func set(lastLoggedInCloudAccountId: String?) {

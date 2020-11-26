@@ -6,6 +6,6 @@ import Combine
 
 /// @mockable
 public protocol CloudUsageContextStorageProtocol {
-    var lastLoggedInCloudAccountId: AnyPublisher<String?, Never> { get }
+    var lastLoggedInCloudAccountId: String? { get }
     func set(lastLoggedInCloudAccountId: String?)
 }
