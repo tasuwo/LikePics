@@ -36,7 +36,7 @@ extension UserDefaults {
     }
 }
 
-extension CloudUsageContextStorage: CloudUsageContextProtocol {
+extension CloudUsageContextStorage: CloudUsageContextStorageProtocol {
     // MARK: - UserSettingsStorageProtocol
 
     public var lastLoggedInCloudAccountId: AnyPublisher<String?, Never> {
