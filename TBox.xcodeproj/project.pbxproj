@@ -49,6 +49,8 @@
 		2C1604F42520438400A39E58 /* TopClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */; };
 		2C1604FE2520448500A39E58 /* TopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */; };
 		2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16050725207C6A00A39E58 /* Identifiable.swift */; };
+		2C168D27256FE52B00080114 /* CloudUsageContextStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */; };
+		2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */; };
 		2C170BA0253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */; };
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
@@ -636,6 +638,8 @@
 		2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListPresenter.swift; sourceTree = "<group>"; };
 		2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
 		2C16050725207C6A00A39E58 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
+		2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorageProtocol.swift; sourceTree = "<group>"; };
+		2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorage.swift; sourceTree = "<group>"; };
 		2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
@@ -1831,6 +1835,7 @@
 			isa = PBXGroup;
 			children = (
 				2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */,
+				2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */,
 			);
 			path = UserDefaults;
 			sourceTree = "<group>";
@@ -2108,6 +2113,7 @@
 				2C9EF6A2253DE54500CBF357 /* ImageStorage */,
 				2C6C79CA253B409300A8A9B8 /* ClipStorage */,
 				2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */,
+				2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */,
 				2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */,
 			);
 			path = Storages;
@@ -3607,6 +3613,7 @@
 				2C1F299E2560FF2B00B89AE9 /* NewImageQueryService.swift in Sources */,
 				2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */,
 				2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */,
+				2C168D27256FE52B00080114 /* CloudUsageContextStorageProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3704,6 +3711,7 @@
 				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
 				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
+				2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */,
 				2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */,
 				2C0B5C83254D3FD600FA43F8 /* ThumbnailStorage_Configuration+Constants.swift in Sources */,
 				2C1F29AA2561007800B89AE9 /* NSManagedObjectContext+Block.swift in Sources */,
