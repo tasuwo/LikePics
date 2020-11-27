@@ -23,7 +23,10 @@ class DependencyContainer {
     private var imageStorage: NewImageStorage!
     private let tmpImageStorage: ImageStorageProtocol
     private var thumbnailStorage: ThumbnailStorageProtocol!
-    private let userSettingsStorage: UserSettingsStorageProtocol = UserSettingsStorage()
+    private let userSettingsStorage: UserSettingsStorageProtocol
+    private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
+
+    private let cloudAvailabilityHandler: CloudAvailabilityHandler
 
     // MARK: Service
 
@@ -55,6 +58,14 @@ class DependencyContainer {
         self.logger = RootLogger.shared
         self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
+
+        let userSettingsStorage = UserSettingsStorage()
+        let cloudUsageContextStorage = CloudUsageContextStorage()
+        self.userSettingsStorage = userSettingsStorage
+        self.cloudUsageContextStorage = cloudUsageContextStorage
+        self.cloudAvailabilityHandler = CloudAvailabilityHandler(userSettingsStorage: userSettingsStorage,
+                                                                 cloudUsageContextStorage: cloudUsageContextStorage,
+                                                                 cloudAvailabilityResolver: iCloudAvailabilityResolver.self)
 
         try self.setupCoreDataStack(iCloudSyncEnabled: true, isInitial: true)
 
@@ -486,7 +497,8 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
         let presenter = SettingsPresenter(storage: self.userSettingsStorage,
-                                          container: self)
+                                          container: self,
+                                          availabilityStore: self.cloudAvailabilityHandler)
         viewController.factory = self
         viewController.presenter = presenter
 

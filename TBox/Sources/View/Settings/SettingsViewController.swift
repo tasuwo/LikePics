@@ -43,8 +43,10 @@ class SettingsViewController: UITableViewController {
     }
 
     @IBAction func didChangeSyncICloud(_ sender: UISwitch) {
-        // TODO:
-        // self.presenter.set(isICloudSyncEnabled: sender.isOn)
+        guard self.presenter.set(isICloudSyncEnabled: sender.isOn) else {
+            sender.setOnSmoothly(!sender.isOn)
+            return
+        }
     }
 }
 
@@ -53,5 +55,14 @@ extension SettingsViewController: SettingsViewProtocol {
 
     func set(version: String) {
         self.versionLabel.text = version
+    }
+
+    func showICloudUnavailableMessage() {
+        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
+                                                message: L10n.errorIcloudUnavailableMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default, handler: nil)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }

@@ -952,16 +952,12 @@ public class ClipQueryMock: ClipQuery {
 
 public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProtocol {
     public init() { }
-    public init(lastLoggedInCloudAccountId: AnyPublisher<String?, Never>) {
-        self._lastLoggedInCloudAccountId = lastLoggedInCloudAccountId
+    public init(lastLoggedInCloudAccountId: String? = nil) {
+        self.lastLoggedInCloudAccountId = lastLoggedInCloudAccountId
     }
 
     public private(set) var lastLoggedInCloudAccountIdSetCallCount = 0
-    private var _lastLoggedInCloudAccountId: AnyPublisher<String?, Never>! { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
-    public var lastLoggedInCloudAccountId: AnyPublisher<String?, Never> {
-        get { return _lastLoggedInCloudAccountId }
-        set { _lastLoggedInCloudAccountId = newValue }
-    }
+    public var lastLoggedInCloudAccountId: String? { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
 
     public private(set) var setCallCount = 0
     public var setHandler: ((String?) -> Void)?

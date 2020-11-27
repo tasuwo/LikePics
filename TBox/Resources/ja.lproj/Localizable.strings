@@ -136,3 +136,8 @@
 "error_tag_delete" = "タグの削除に失敗しました";
 "error_tag_rename_default" = "クリップの更新に失敗しました";
 "error_tag_rename_duplicated" = "同じ名前のタグが既に存在します";
+
+// MARK: Setting
+
+"error_icloud_unavailable_title" = "iCloudによる同期ができません";
+"error_icloud_unavailable_message" = "iCloudアカウントでログインしているか確認してください";

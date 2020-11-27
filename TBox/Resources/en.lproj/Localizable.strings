@@ -142,3 +142,8 @@
 "error_tag_delete" = "Failed to delete tag.";
 "error_tag_search" = "Failed to search tag.";
 "error_tag_rename" = "Failed to rename tag.";
+
+// MARK: Setting
+
+"error_icloud_unavailable_title" = "iCloud Sync Unavailable";
+"error_icloud_unavailable_message" = "Check your iCloud account.";
