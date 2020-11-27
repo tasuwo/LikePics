@@ -139,6 +139,14 @@ class DependencyContainer {
     }
 }
 
+extension DependencyContainer: CoreDataStackContainer {
+    // MARK: - CoreDataStackContainer
+
+    func reloadStack(isICloudSyncEnabled: Bool) {
+        try! self.setupCoreDataStack(iCloudSyncEnabled: isICloudSyncEnabled, isInitial: false)
+    }
+}
+
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
