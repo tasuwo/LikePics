@@ -485,7 +485,8 @@ extension DependencyContainer: ViewControllerFactory {
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
-        let presenter = SettingsPresenter(storage: self.userSettingsStorage)
+        let presenter = SettingsPresenter(storage: self.userSettingsStorage,
+                                          container: self)
         viewController.factory = self
         viewController.presenter = presenter
 

@@ -15,6 +15,7 @@ class SettingsViewController: UITableViewController {
     var cancellableBag: Set<AnyCancellable> = .init()
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!
+    @IBOutlet var syncICloudSwitch: UISwitch!
     @IBOutlet var versionLabel: UILabel!
 
     // MARK: - Lifecycle
@@ -27,6 +28,11 @@ class SettingsViewController: UITableViewController {
         self.presenter.shouldShowHiddenItems
             .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
             .store(in: &self.cancellableBag)
+
+        self.presenter.shouldSyncICloudEnabled
+            .assign(to: \.isOn, on: self.syncICloudSwitch)
+            .store(in: &self.cancellableBag)
+
         self.presenter.displayVersion()
     }
 
@@ -34,6 +40,11 @@ class SettingsViewController: UITableViewController {
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {
         self.presenter.set(showHiddenItems: sender.isOn)
+    }
+
+    @IBAction func didChangeSyncICloud(_ sender: UISwitch) {
+        // TODO:
+        // self.presenter.set(isICloudSyncEnabled: sender.isOn)
     }
 }
 
