@@ -7,10 +7,12 @@
 //
 
 import Common
+import Domain
 import Persistence
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var cloudAvailabilityObserver: CloudAvailabilityObserver!
     var dependencyContainer: DependencyContainer?
     var window: UIWindow?
 
@@ -23,22 +25,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         #endif
 
-        do {
-            let container = try DependencyContainer()
-            self.dependencyContainer = container
+        let cloudUsageContextStorage = CloudUsageContextStorage()
+        let cloudAvailabilityResolver = CurrentICloudAccountResolver.self
+        let cloudAvailabilityObserver = CloudAvailabilityObserver(cloudUsageContextStorage: cloudUsageContextStorage,
+                                                                  cloudAvailabilityResolver: cloudAvailabilityResolver)
+        let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
+                                              cloudAvailabilityStore: cloudAvailabilityObserver)
 
-            let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = AppRootTabBarController(factory: container)
-            window.makeKeyAndVisible()
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = AppRootSetupViewController(presenter: presenter, launcher: self)
+        window.makeKeyAndVisible()
 
-            self.window = window
-
-            // TODO: 実行頻度を考える
-            container.integrityValidationService.validateAndFixIntegrityIfNeeded()
-        } catch {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
-            fatalError("Unable to launch app.")
-        }
+        self.window = window
+        self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
         self.setupAppearance()
     }
@@ -76,5 +75,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func setupAppearance() {
         UISwitch.appearance().onTintColor = Asset.likePicsSwitchClient.color
         self.window?.tintColor = Asset.likePicsRedClient.color
+    }
+}
+
+extension SceneDelegate: MainAppLauncher {
+    // MARK: - MainAppLauncher
+
+    func launch(by configuration: DependencyContainerConfiguration) {
+        do {
+            let container = try DependencyContainer(configuration: configuration,
+                                                    cloudAvailabilityObserver: self.cloudAvailabilityObserver)
+            self.dependencyContainer = container
+
+            let rootViewController = AppRootTabBarController(factory: container)
+
+            self.window?.rootViewController?.dismiss(animated: true) {
+                self.window?.rootViewController = rootViewController
+            }
+
+            // TODO: 実行頻度を考える
+            container.integrityValidationService.validateAndFixIntegrityIfNeeded()
+        } catch {
+            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
+            fatalError("Unable to launch app.")
+        }
     }
 }

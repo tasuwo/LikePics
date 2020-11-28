@@ -26,8 +26,6 @@ class DependencyContainer {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
-    private let cloudAvailabilityHandler: CloudAvailabilityObserver
-
     // MARK: Service
 
     private var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
@@ -41,6 +39,7 @@ class DependencyContainer {
     private var persistentContainer: NSPersistentCloudKitContainer!
     private var imageQueryContext: NSManagedObjectContext!
     private var commandContext: NSManagedObjectContext!
+    private let cloudAvailabilityObserver: CloudAvailabilityObserver
 
     // MARK: Queue
 
@@ -53,7 +52,7 @@ class DependencyContainer {
 
     // MARK: - Lifecycle
 
-    init() throws {
+    init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityObserver) throws {
         self.tmpImageStorage = try ImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
         self.logger = RootLogger.shared
         self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
@@ -63,10 +62,9 @@ class DependencyContainer {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self.userSettingsStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
-        self.cloudAvailabilityHandler = CloudAvailabilityObserver(cloudUsageContextStorage: cloudUsageContextStorage,
-                                                                  cloudAvailabilityResolver: CurrentICloudAccountResolver.self)
+        self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
-        try self.setupCoreDataStack(iCloudSyncEnabled: true, isInitial: true)
+        try self.setupCoreDataStack(iCloudSyncEnabled: configuration.isCloudSyncEnabled, isInitial: true)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,
@@ -146,14 +144,6 @@ class DependencyContainer {
             self.clipQueryService.context = newContainer.viewContext
             self.imageQueryService.context = newImageQueryContext
         }
-    }
-}
-
-extension DependencyContainer: CoreDataStackContainer {
-    // MARK: - CoreDataStackContainer
-
-    func reloadStack(isICloudSyncEnabled: Bool) {
-        try! self.setupCoreDataStack(iCloudSyncEnabled: isICloudSyncEnabled, isInitial: false)
     }
 }
 
@@ -496,8 +486,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
         let presenter = SettingsPresenter(storage: self.userSettingsStorage,
-                                          container: self,
-                                          availabilityStore: self.cloudAvailabilityHandler)
+                                          availabilityStore: self.cloudAvailabilityObserver)
         viewController.factory = self
         viewController.presenter = presenter
 

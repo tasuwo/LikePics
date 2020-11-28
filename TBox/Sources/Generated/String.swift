@@ -58,6 +58,14 @@ internal enum L10n {
     internal static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// アルバム内にクリップがありません
     internal static let albumViewEmptyTitle = L10n.tr("Localizable", "album_view_empty_title")
+    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。この端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
+    internal static let appRootSetupAccountChangedMessage = L10n.tr("Localizable", "app_root_setup_account_changed_message")
+    /// iCloudアカウントが異なります
+    internal static let appRootSetupAccountChangedTitle = L10n.tr("Localizable", "app_root_setup_account_changed_title")
+    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
+    internal static let appRootSetupUnavailableMessage = L10n.tr("Localizable", "app_root_setup_unavailable_message")
+    /// iCloudが利用できません
+    internal static let appRootSetupUnavailableTitle = L10n.tr("Localizable", "app_root_setup_unavailable_title")
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム

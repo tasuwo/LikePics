@@ -51,7 +51,6 @@
 		2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16050725207C6A00A39E58 /* Identifiable.swift */; };
 		2C168D27256FE52B00080114 /* CloudUsageContextStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */; };
 		2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */; };
-		2C168D4325713D4B00080114 /* CoreDataStackContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D4225713D4B00080114 /* CoreDataStackContainer.swift */; };
 		2C168D6A257148FC00080114 /* CloudAvailabilityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D14256FE1E400080114 /* CloudAvailabilityObserver.swift */; };
 		2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */; };
 		2C170BA0253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */; };
@@ -272,6 +271,11 @@
 		2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */; };
 		2CDA49D32516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */; };
 		2CDA49DD2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49DC2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift */; };
+		2CDF4EE42572399F0030342B /* CloudStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4EE32572399F0030342B /* CloudStack.swift */; };
+		2CDF4F05257240C20030342B /* CloudStackLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4ED1257223760030342B /* CloudStackLoader.swift */; };
+		2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */; };
+		2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F1825727DCF0030342B /* AppRootSetupPresenter.swift */; };
+		2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */; };
 		2CE014402562E72D00D15A57 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CE0143E2562E72D00D15A57 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CE014432562E72D00D15A57 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; };
 		2CE014442562E72D00D15A57 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -648,7 +652,6 @@
 		2C168D14256FE1E400080114 /* CloudAvailabilityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityObserver.swift; sourceTree = "<group>"; };
 		2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorageProtocol.swift; sourceTree = "<group>"; };
 		2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorage.swift; sourceTree = "<group>"; };
-		2C168D4225713D4B00080114 /* CoreDataStackContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStackContainer.swift; sourceTree = "<group>"; };
 		2C168D572571455700080114 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2C168D592571456800080114 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISwitch+setOnSmoothly.swift"; sourceTree = "<group>"; };
@@ -881,6 +884,11 @@
 		2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCloudAccountResolver.swift; sourceTree = "<group>"; };
 		2CDA49D22516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsPresenter.swift; sourceTree = "<group>"; };
 		2CDA49DC2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewAlertPresentable.swift; sourceTree = "<group>"; };
+		2CDF4ED1257223760030342B /* CloudStackLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CloudStackLoader.swift; path = ../../../TBox/Sources/Presenter/Root/CloudStackLoader.swift; sourceTree = "<group>"; };
+		2CDF4EE32572399F0030342B /* CloudStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStack.swift; sourceTree = "<group>"; };
+		2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootSetupViewController.swift; sourceTree = "<group>"; };
+		2CDF4F1825727DCF0030342B /* AppRootSetupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootSetupPresenter.swift; sourceTree = "<group>"; };
+		2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainerConfiguration.swift; sourceTree = "<group>"; };
 		2CE0143C2562E72D00D15A57 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE0143E2562E72D00D15A57 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
 		2CE0143F2562E72D00D15A57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1263,6 +1271,7 @@
 			isa = PBXGroup;
 			children = (
 				2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */,
+				2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */,
 				2C45D3FB24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift */,
 				2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */,
 			);
@@ -1691,8 +1700,8 @@
 			isa = PBXGroup;
 			children = (
 				2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */,
+				2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */,
 				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
-				2C168D4225713D4B00080114 /* CoreDataStackContainer.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -1700,6 +1709,7 @@
 		2C570B5C24E04FA400A1DC9F /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2CDF4ED0257223680030342B /* Root */,
 				2C3CCDAE24F2C4BF00FAC660 /* ClipsList */,
 				2C45D3F224EC1E490045B6D3 /* Search */,
 				2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */,
@@ -2290,8 +2300,18 @@
 				2C306D07257220F200947E77 /* CurrentICloudAccountResolver.swift */,
 				2C168D14256FE1E400080114 /* CloudAvailabilityObserver.swift */,
 				2CC5CA1F2571577F00B0472B /* CloudAvailabilityStore.swift */,
+				2CDF4EE32572399F0030342B /* CloudStack.swift */,
+				2CDF4ED1257223760030342B /* CloudStackLoader.swift */,
 			);
 			path = iCloud;
+			sourceTree = "<group>";
+		};
+		2CDF4ED0257223680030342B /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				2CDF4F1825727DCF0030342B /* AppRootSetupPresenter.swift */,
+			);
+			path = Root;
 			sourceTree = "<group>";
 		};
 		2CE0143D2562E72D00D15A57 /* TestHelper */ = {
@@ -3608,6 +3628,7 @@
 				2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */,
 				2C9EF6A4253DE55900CBF357 /* ThumbnailStorageProtocol.swift in Sources */,
 				2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */,
+				2CDF4F05257240C20030342B /* CloudStackLoader.swift in Sources */,
 				2C104108254D968E000DF7DE /* TemporaryClipsPersistService.swift in Sources */,
 				2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */,
 				2CC5CA162571576200B0472B /* CloudAvailability.swift in Sources */,
@@ -3622,6 +3643,7 @@
 				2CD25B1A251E46B800BEE210 /* AlbumListQuery.swift in Sources */,
 				2C35066C251780EC009248C6 /* ImageNameResolver.swift in Sources */,
 				2CF465842511115000DF78E6 /* UserSettingsStorageProtocol.swift in Sources */,
+				2CDF4EE42572399F0030342B /* CloudStack.swift in Sources */,
 				2C0B5C98254D469C00FA43F8 /* ClipReferencesIntegrityValidationServiceProtocol.swift in Sources */,
 				2CD25ADA251E450000BEE210 /* ClipItemQuery.swift in Sources */,
 				2C306CFE25721F2100947E77 /* CloudAccountIdentifier.swift in Sources */,
@@ -3676,6 +3698,7 @@
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */,
 				2CB3CB3E2515EFF900BE06E5 /* ClipsListAlertPresentable.swift in Sources */,
+				2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */,
 				2C45D40824EEBE020045B6D3 /* AlbumListPresenter.swift in Sources */,
 				2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2C45D3F624EC2FD00045B6D3 /* SearchResultPresenter.swift in Sources */,
@@ -3698,6 +3721,7 @@
 				2CB3CB482515F29C00BE06E5 /* ClipsListToolBarItemsPresenter.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */,
+				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
 				2CB3CB342515EEBC00BE06E5 /* ClipsListToolBarItemsProvider.swift in Sources */,
 				2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */,
 				2C0596CB251992C5008F11F5 /* AlbumSelectionPresenter.swift in Sources */,
@@ -3706,8 +3730,8 @@
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2CDA49DD2516F2A40043DC14 /* ClipItemPreviewAlertPresentable.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
+				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,
 				2CA22588252237ED00CE1A81 /* ClipsListCollectionViewProvider.swift in Sources */,
-				2C168D4325713D4B00080114 /* CoreDataStackContainer.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
 				2C1604F42520438400A39E58 /* TopClipsListPresenter.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,

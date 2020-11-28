@@ -12,8 +12,8 @@ protocol SettingsViewProtocol: AnyObject {
 
 class SettingsPresenter {
     private let storage: UserSettingsStorageProtocol
-    private let container: CoreDataStackContainer
     private let availabilityStore: CloudAvailabilityStore
+
     private var cancellableBag: Set<AnyCancellable> = .init()
 
     private(set) var shouldShowHiddenItems: CurrentValueSubject<Bool, Never>
@@ -24,11 +24,9 @@ class SettingsPresenter {
     // MARK: - Lifecycle
 
     init(storage: UserSettingsStorageProtocol,
-         container: CoreDataStackContainer,
          availabilityStore: CloudAvailabilityStore)
     {
         self.storage = storage
-        self.container = container
         self.availabilityStore = availabilityStore
         self.shouldShowHiddenItems = .init(false)
         self.shouldSyncICloudEnabled = .init(false)
@@ -40,8 +38,10 @@ class SettingsPresenter {
             .store(in: &self.cancellableBag)
 
         self.storage.enabledICloudSync
-            .sink(receiveValue: { [weak self] value in
-                self?.shouldSyncICloudEnabled.send(value)
+            .combineLatest(self.availabilityStore.state)
+            .sink(receiveValue: { [weak self] settingEnabled, availability in
+                let isOn = settingEnabled && availability.isAvailable
+                self?.shouldSyncICloudEnabled.send(isOn)
             })
             .store(in: &self.cancellableBag)
     }
@@ -54,7 +54,6 @@ class SettingsPresenter {
         switch self.availabilityStore.state.value {
         case .available:
             // TODO: 同期のオン/オフ時に必要に応じてユーザ向け案内文言を表示する
-            self.container.reloadStack(isICloudSyncEnabled: isICloudSyncEnabled)
             self.storage.set(enabledICloudSync: isICloudSyncEnabled)
             return true
 

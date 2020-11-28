@@ -6,6 +6,11 @@
   Copyright © 2020 Tasuku Tozawa. All rights reserved.
 */
 
+"app_root_setup_account_changed_title" = "iCloud Account Changed";
+"app_root_setup_account_changed_message" = "Data in this device would sync with new iCloud account data.";
+"app_root_setup_unavailable_title" = "iCloud Unavailable";
+"app_root_setup_unavailable_message" = "Data would sync after being iCloud available.";
+
 "app_root_tab_item_home" = "Home";
 "app_root_tab_item_album" = "Albums";
 "app_root_tab_item_tag" = "Tags";

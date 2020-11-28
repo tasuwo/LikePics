@@ -17,7 +17,12 @@ public class UserSettingsStorage {
 
     // MARK: - Lifecycle
 
-    public init() {}
+    public init() {
+        self.userDefaults.register(defaults: [
+            Self.Key.showHiddenItems.rawValue: false,
+            Self.Key.enabledICloudSync.rawValue: true
+        ])
+    }
 
     // MARK: - Methods
 
