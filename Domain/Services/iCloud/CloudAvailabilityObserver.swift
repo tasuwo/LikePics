@@ -28,6 +28,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
     private let cloudAvailabilityResolver: CurrentCloudAccountResolver.Type
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudAvailabilityObserver")
 
     private var cancellableBag: Set<AnyCancellable> = []
 
@@ -58,15 +59,17 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     private func update(by context: Context) {
         if case let .available(identifier: identifier) = context {
-            self.cloudUsageContextStorage.set(lastLoggedInCloudAccountId: identifier)
+            self.queue.sync {
+                self.cloudUsageContextStorage.set(lastLoggedInCloudAccountId: identifier)
+            }
         }
         self.state.send(context.availability)
     }
 
     private func resolveCurrentContext() -> Future<Context, Never> {
-        return Future { promise in
-            let lastIdentifier = self.cloudUsageContextStorage.lastLoggedInCloudAccountId
+        return Future { [unowned self] promise in
             self.cloudAvailabilityResolver.currentCloudAccount { result in
+                let lastIdentifier = self.queue.sync { self.cloudUsageContextStorage.lastLoggedInCloudAccountId }
                 switch result {
                 case let .success(identifier) where lastIdentifier == identifier || lastIdentifier == nil:
                     promise(.success(.available(identifier: identifier)))
