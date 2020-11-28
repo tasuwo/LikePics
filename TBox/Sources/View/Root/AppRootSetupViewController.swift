@@ -84,7 +84,7 @@ extension AppRootSetupViewController: AppRootSetupViewProtocol {
     }
 
     func confirmUnavailable() {
-        let alertController = UIAlertController(title: L10n.appRootSetupUnavailableTitle,
+        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                 message: L10n.errorIcloudUnavailableMessage,
                                                 preferredStyle: .alert)
         let okAction = UIAlertAction(title: L10n.confirmAlertOk,

@@ -57,12 +57,25 @@ extension SettingsViewController: SettingsViewProtocol {
         self.versionLabel.text = version
     }
 
-    func showICloudUnavailableMessage() {
-        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
-                                                message: L10n.errorIcloudUnavailableMessage,
-                                                preferredStyle: .alert)
+    func set(isICloudSyncEnabled: Bool) {
+        self.syncICloudSwitch.setOn(isICloudSyncEnabled, animated: true)
+    }
+
+    func show(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default, handler: nil)
         alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    func confirmToTurnOffICloudSync(confirmation: @escaping (Bool) -> Void) {
+        let alertController = UIAlertController(title: L10n.settingsConfirmIcloudSyncOffTitle,
+                                                message: L10n.settingsConfirmIcloudSyncOffMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in confirmation(true) }
+        let cancelAction = UIAlertAction(title: L10n.confirmAlertCancel, style: .cancel) { _ in confirmation(false) }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
 }

@@ -7,7 +7,9 @@ import Domain
 
 protocol SettingsViewProtocol: AnyObject {
     func set(version: String)
-    func showICloudUnavailableMessage()
+    func set(isICloudSyncEnabled: Bool)
+    func show(title: String, message: String)
+    func confirmToTurnOffICloudSync(confirmation: @escaping (Bool) -> Void)
 }
 
 class SettingsPresenter {
@@ -51,16 +53,31 @@ class SettingsPresenter {
     }
 
     func set(isICloudSyncEnabled: Bool) -> Bool {
-        switch self.availabilityStore.state.value {
-        case .available:
-            // TODO: 同期のオン/オフ時に必要に応じてユーザ向け案内文言を表示する
-            self.storage.set(enabledICloudSync: isICloudSyncEnabled)
-            return true
-
-        default:
-            self.view?.showICloudUnavailableMessage()
+        if self.availabilityStore.state.value == .unknown {
+            self.view?.show(title: L10n.errorIcloudDefaultTitle,
+                            message: L10n.errorIcloudDefaultMessage)
             return false
         }
+
+        if isICloudSyncEnabled, self.availabilityStore.state.value.isAvailable == false {
+            self.view?.show(title: L10n.errorIcloudUnavailableTitle,
+                            message: L10n.errorIcloudUnavailableMessage)
+            return false
+        }
+
+        if isICloudSyncEnabled {
+            self.storage.set(enabledICloudSync: true)
+        } else {
+            self.view?.confirmToTurnOffICloudSync { [weak self] isOk in
+                guard isOk else {
+                    self?.view?.set(isICloudSyncEnabled: true)
+                    return
+                }
+                self?.storage.set(enabledICloudSync: false)
+            }
+        }
+
+        return true
     }
 
     func displayVersion() {

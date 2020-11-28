@@ -62,10 +62,6 @@ internal enum L10n {
     internal static let appRootSetupAccountChangedMessage = L10n.tr("Localizable", "app_root_setup_account_changed_message")
     /// iCloudアカウントが異なります
     internal static let appRootSetupAccountChangedTitle = L10n.tr("Localizable", "app_root_setup_account_changed_title")
-    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
-    internal static let appRootSetupUnavailableMessage = L10n.tr("Localizable", "app_root_setup_unavailable_message")
-    /// iCloudが利用できません
-    internal static let appRootSetupUnavailableTitle = L10n.tr("Localizable", "app_root_setup_unavailable_title")
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム
@@ -176,9 +172,13 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
-    /// iCloudアカウントでログインしているか確認してください
+    /// しばらく時間を置いてから再度お試しください
+    internal static let errorIcloudDefaultMessage = L10n.tr("Localizable", "error_icloud_default_message")
+    /// iCloudが利用できません
+    internal static let errorIcloudDefaultTitle = L10n.tr("Localizable", "error_icloud_default_title")
+    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
     internal static let errorIcloudUnavailableMessage = L10n.tr("Localizable", "error_icloud_unavailable_message")
-    /// iCloudによる同期ができません
+    /// iCloudが利用できません
     internal static let errorIcloudUnavailableTitle = L10n.tr("Localizable", "error_icloud_unavailable_title")
     /// タグの追加に失敗しました
     internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
@@ -212,6 +212,10 @@ internal enum L10n {
     internal static let searchResultForUncategorizedEmptyTitle = L10n.tr("Localizable", "search_result_for_uncategorized_empty_title")
     /// 未分類
     internal static let searchResultTitleUncategorized = L10n.tr("Localizable", "search_result_title_uncategorized")
+    /// この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます
+    internal static let settingsConfirmIcloudSyncOffMessage = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_message")
+    /// iCloud同期をオフにしますか？
+    internal static let settingsConfirmIcloudSyncOffTitle = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_title")
     /// このタグの名前を入力してください
     internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
     /// タグ名

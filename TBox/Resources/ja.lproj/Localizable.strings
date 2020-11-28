@@ -8,8 +8,6 @@
 
 "app_root_setup_account_changed_title" = "iCloudアカウントが異なります";
 "app_root_setup_account_changed_message" = "以前利用していたiCloudアカウントと異なるアカウントでログインされています。この端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます";
-"app_root_setup_unavailable_title" = "iCloudが利用できません";
-"app_root_setup_unavailable_message" = "iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます";
 
 "app_root_tab_item_home" = "ホーム";
 "app_root_tab_item_album" = "アルバム";
@@ -105,6 +103,9 @@
 "adding_alert_action_save" = "保存";
 "adding_alert_action_cancel" = "キャンセル";
 
+"settings_confirm_icloud_sync_off_title" = "iCloud同期をオフにしますか？";
+"settings_confirm_icloud_sync_off_message" = "この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";
@@ -144,5 +145,7 @@
 
 // MARK: Setting
 
-"error_icloud_unavailable_title" = "iCloudによる同期ができません";
-"error_icloud_unavailable_message" = "iCloudアカウントでログインしているか確認してください";
+"error_icloud_default_title" = "iCloudが利用できません";
+"error_icloud_default_message" = "しばらく時間を置いてから再度お試しください";
+"error_icloud_unavailable_title" = "iCloudが利用できません";
+"error_icloud_unavailable_message" = "iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます";

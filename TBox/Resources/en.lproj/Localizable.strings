@@ -8,8 +8,6 @@
 
 "app_root_setup_account_changed_title" = "iCloud Account Changed";
 "app_root_setup_account_changed_message" = "Data in this device would sync with new iCloud account data.";
-"app_root_setup_unavailable_title" = "iCloud Unavailable";
-"app_root_setup_unavailable_message" = "Data would sync after being iCloud available.";
 
 "app_root_tab_item_home" = "Home";
 "app_root_tab_item_album" = "Albums";
@@ -105,6 +103,9 @@
 "adding_alert_action_save" = "Save";
 "adding_alert_action_cancel" = "Cancel";
 
+"settings_confirm_icloud_sync_off_title" = "Disable iCloud Sync";
+"settings_confirm_icloud_sync_off_message" = "Are you sure you want to disable iCloud sync?";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";
@@ -150,5 +151,7 @@
 
 // MARK: Setting
 
-"error_icloud_unavailable_title" = "iCloud Sync Unavailable";
-"error_icloud_unavailable_message" = "Check your iCloud account.";
+"error_icloud_default_title" = "iCloud Unavailable";
+"error_icloud_default_message" = "Please try again later.";
+"error_icloud_unavailable_title" = "iCloud Unavailable";
+"error_icloud_unavailable_message" = "Please sign in to iCloud or enable using iCloud for this app at device setting.";

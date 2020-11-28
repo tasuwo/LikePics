@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = "隠れたアイテムを表示する"; ObjectID = "0Vj-Ia-aAu"; */
+"0Vj-Ia-aAu.text" = "隠れたアイテムを表示する";
+
+/* Class = "UILabel"; text = "バージョン"; ObjectID = "5z0-WG-kPC"; */
+"5z0-WG-kPC.text" = "バージョン";
+
+/* Class = "UITableViewSection"; footerTitle = "他のiOS/iPadOSデバイスとデータを同期できます"; ObjectID = "AO9-Qh-TEP"; */
+"AO9-Qh-TEP.footerTitle" = "他のiOS/iPadOSデバイスとデータを同期できます";
+
+/* Class = "UITableViewSection"; headerTitle = "同期"; ObjectID = "AO9-Qh-TEP"; */
+"AO9-Qh-TEP.headerTitle" = "同期";
+
+/* Class = "UITableViewSection"; headerTitle = "表示設定"; ObjectID = "R8c-8b-MTp"; */
+"R8c-8b-MTp.headerTitle" = "表示設定";
+
+/* Class = "UILabel"; text = "iCloudで同期する"; ObjectID = "fFY-Xv-c8Z"; */
+"fFY-Xv-c8Z.text" = "iCloudで同期する";
+
+/* Class = "UILabel"; text = "0.0.0"; ObjectID = "lYZ-fG-1Da"; */
+"lYZ-fG-1Da.text" = "0.0.0";
+
+/* Class = "UITableViewSection"; headerTitle = "このアプリについて"; ObjectID = "wUN-Bm-c7d"; */
+"wUN-Bm-c7d.headerTitle" = "このアプリについて";
