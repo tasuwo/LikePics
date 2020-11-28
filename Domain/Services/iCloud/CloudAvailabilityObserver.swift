@@ -14,8 +14,11 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
         var availability: CloudAvailability {
             switch self {
-            case .available, .changedAccount:
-                return .available
+            case .available:
+                return .available(.none)
+
+            case .changedAccount:
+                return .available(.accountChanged)
 
             case .unavailable:
                 return .unavailable
@@ -23,7 +26,6 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
         }
     }
 
-    private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
     private let cloudAvailabilityResolver: CurrentCloudAccountResolver.Type
 
@@ -33,11 +35,9 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     // MARK: - Lifecycle
 
-    public init(userSettingsStorage: UserSettingsStorageProtocol,
-                cloudUsageContextStorage: CloudUsageContextStorageProtocol,
+    public init(cloudUsageContextStorage: CloudUsageContextStorageProtocol,
                 cloudAvailabilityResolver: CurrentCloudAccountResolver.Type)
     {
-        self.userSettingsStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
         self.cloudAvailabilityResolver = cloudAvailabilityResolver
 

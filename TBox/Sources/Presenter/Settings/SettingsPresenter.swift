@@ -40,10 +40,8 @@ class SettingsPresenter {
             .store(in: &self.cancellableBag)
 
         self.storage.enabledICloudSync
-            .combineLatest(self.availabilityStore.state)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] isICloudSyncEnabled, cloudAvailability in
-                let enabled = isICloudSyncEnabled && cloudAvailability == .available
-                self?.shouldSyncICloudEnabled.send(enabled)
+            .sink(receiveValue: { [weak self] value in
+                self?.shouldSyncICloudEnabled.send(value)
             })
             .store(in: &self.cancellableBag)
     }
