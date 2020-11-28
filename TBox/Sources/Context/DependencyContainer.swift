@@ -26,7 +26,7 @@ class DependencyContainer {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
-    private let cloudAvailabilityHandler: CloudAvailabilityHandler
+    private let cloudAvailabilityHandler: CloudAvailabilityObserver
 
     // MARK: Service
 
@@ -63,9 +63,9 @@ class DependencyContainer {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self.userSettingsStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
-        self.cloudAvailabilityHandler = CloudAvailabilityHandler(userSettingsStorage: userSettingsStorage,
-                                                                 cloudUsageContextStorage: cloudUsageContextStorage,
-                                                                 cloudAvailabilityResolver: iCloudAvailabilityResolver.self)
+        self.cloudAvailabilityHandler = CloudAvailabilityObserver(userSettingsStorage: userSettingsStorage,
+                                                                  cloudUsageContextStorage: cloudUsageContextStorage,
+                                                                  cloudAvailabilityResolver: CurrentICloudAccountResolver.self)
 
         try self.setupCoreDataStack(iCloudSyncEnabled: true, isInitial: true)
 

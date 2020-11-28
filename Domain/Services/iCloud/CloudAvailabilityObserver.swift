@@ -6,7 +6,7 @@
 
 import Combine
 
-public class CloudAvailabilityHandler: CloudAvailabilityStore {
+public class CloudAvailabilityObserver: CloudAvailabilityStore {
     public enum Context {
         case available(identifier: String)
         case unavailable
@@ -25,7 +25,7 @@ public class CloudAvailabilityHandler: CloudAvailabilityStore {
 
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
-    private let cloudAvailabilityResolver: CloudAvailabilityResolver.Type
+    private let cloudAvailabilityResolver: CurrentCloudAccountResolver.Type
 
     private var cancellableBag: Set<AnyCancellable> = []
 
@@ -35,7 +35,7 @@ public class CloudAvailabilityHandler: CloudAvailabilityStore {
 
     public init(userSettingsStorage: UserSettingsStorageProtocol,
                 cloudUsageContextStorage: CloudUsageContextStorageProtocol,
-                cloudAvailabilityResolver: CloudAvailabilityResolver.Type)
+                cloudAvailabilityResolver: CurrentCloudAccountResolver.Type)
     {
         self.userSettingsStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
@@ -66,7 +66,7 @@ public class CloudAvailabilityHandler: CloudAvailabilityStore {
     private func resolveCurrentContext() -> Future<Context, Never> {
         return Future { promise in
             let lastIdentifier = self.cloudUsageContextStorage.lastLoggedInCloudAccountId
-            self.cloudAvailabilityResolver.checkCloudAvailability { result in
+            self.cloudAvailabilityResolver.currentCloudAccount { result in
                 switch result {
                 case let .success(identifier) where lastIdentifier == identifier || lastIdentifier == nil:
                     promise(.success(.available(identifier: identifier)))
