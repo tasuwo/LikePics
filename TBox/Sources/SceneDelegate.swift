@@ -12,6 +12,8 @@ import Persistence
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var cloudStackLoader: CloudStackLoader?
+    // TODO: 受け渡しのための stored property なので、別の方法を考える
     var cloudAvailabilityObserver: CloudAvailabilityObserver!
     var dependencyContainer: DependencyContainer?
     var window: UIWindow?
@@ -92,6 +94,11 @@ extension SceneDelegate: MainAppLauncher {
             self.window?.rootViewController?.dismiss(animated: true) {
                 self.window?.rootViewController = rootViewController
             }
+
+            self.cloudStackLoader = container.makeCloudStackLoader()
+            self.cloudStackLoader?.observer = rootViewController
+
+            self.cloudStackLoader?.startObserveCloudAvailability()
 
             // TODO: 実行頻度を考える
             container.integrityValidationService.validateAndFixIntegrityIfNeeded()

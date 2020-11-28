@@ -34,6 +34,7 @@ class SettingsPresenter {
         self.shouldSyncICloudEnabled = .init(false)
 
         self.storage.showHiddenItems
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
                 self?.shouldShowHiddenItems.send(value)
             })
@@ -41,6 +42,7 @@ class SettingsPresenter {
 
         self.storage.enabledICloudSync
             .combineLatest(self.availabilityStore.state)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] settingEnabled, availability in
                 let isOn = settingEnabled && availability.isAvailable
                 self?.shouldSyncICloudEnabled.send(isOn)

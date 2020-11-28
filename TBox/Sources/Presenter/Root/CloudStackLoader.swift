@@ -4,7 +4,12 @@
 
 import Combine
 
-class CloudStackLoader {
+public protocol CloudStackLoaderObserver: AnyObject {
+    func didAccountChanged(_ loader: CloudStackLoader)
+    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader)
+}
+
+public class CloudStackLoader {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudAvailabilityStore: CloudAvailabilityStore
     private let cloudStack: CloudStack
@@ -12,11 +17,13 @@ class CloudStackLoader {
 
     private var cancellableBag = Set<AnyCancellable>()
 
+    public weak var observer: CloudStackLoaderObserver?
+
     // MARK: - Lifecycle
 
-    init(userSettingsStorage: UserSettingsStorageProtocol,
-         cloudAvailabilityStore: CloudAvailabilityStore,
-         cloudStack: CloudStack)
+    public init(userSettingsStorage: UserSettingsStorageProtocol,
+                cloudAvailabilityStore: CloudAvailabilityStore,
+                cloudStack: CloudStack)
     {
         self.userSettingsStorage = userSettingsStorage
         self.cloudAvailabilityStore = cloudAvailabilityStore
@@ -25,26 +32,50 @@ class CloudStackLoader {
 
     // MARK: - Methods
 
-    func startObserveCloudAvailability() {
+    public func startObserveCloudAvailability() {
         self.cloudAvailabilityStore.state
-            .combineLatest(self.userSettingsStorage.enabledICloudSync)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] availability, isICloudSyncEnabled in
-                self?.didUpdate(cloudAvailability: availability, userSettingEnabled: isICloudSyncEnabled)
-            })
+            .sink { [weak self] availability in
+                self?.queue.sync { self?.didUpdate(cloudAvailability: availability) }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.userSettingsStorage.enabledICloudSync
+            .sink { [weak self] isICloudSyncEnabled in
+                self?.queue.sync { self?.didUpdate(isICloudSyncEnabled: isICloudSyncEnabled) }
+            }
             .store(in: &self.cancellableBag)
     }
 
-    func didUpdate(cloudAvailability: CloudAvailability, userSettingEnabled: Bool) {
-        switch (userSettingEnabled, cloudAvailability) {
+    private func didUpdate(cloudAvailability: CloudAvailability) {
+        let enabledICloudSync = self.userSettingsStorage.readEnabledICloudSync()
+        switch (enabledICloudSync, cloudAvailability) {
         case (true, .available(.none)):
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
 
         case (true, .available(.accountChanged)):
-            // TODO: アラートを出す
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+            self.observer?.didAccountChanged(self)
+            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
 
         case (true, .unavailable):
-            // TODO: アラートを出す
+            self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
+            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+
+        case (true, .unknown):
+            break
+
+        case (false, _):
+            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+        }
+    }
+
+    private func didUpdate(isICloudSyncEnabled: Bool) {
+        let cloudAvailability = self.cloudAvailabilityStore.state.value
+        switch (isICloudSyncEnabled, cloudAvailability) {
+        case (true, .available):
+            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
+
+        case (true, .unavailable):
+            self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
 
         case (true, .unknown):

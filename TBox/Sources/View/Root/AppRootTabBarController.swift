@@ -3,6 +3,7 @@
 //
 
 import Common
+import Domain
 import TBoxUIKit
 import UIKit
 
@@ -103,5 +104,33 @@ class AppRootTabBarController: UITabBarController {
         }
 
         self.tabBar.isHidden = self.traitCollection.verticalSizeClass == .compact
+    }
+}
+
+extension AppRootTabBarController: CloudStackLoaderObserver {
+    // MARK: - CloudStackLoaderObserver
+
+    func didAccountChanged(_ loader: CloudStackLoader) {
+        DispatchQueue.main.async {
+            // TODO: 初回は出さない。文言をちゃんとする
+            let alertController = UIAlertController(title: "アカウント変更", message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: L10n.confirmAlertOk,
+                                         style: .default,
+                                         handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+
+    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
+        DispatchQueue.main.async {
+            // TODO: 初回は出さない。文言をちゃんとする
+            let alertController = UIAlertController(title: "無効化", message: nil, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: L10n.confirmAlertOk,
+                                         style: .default,
+                                         handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
 }
