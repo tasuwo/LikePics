@@ -8,6 +8,8 @@ import Combine
 public protocol UserSettingsStorageProtocol {
     var showHiddenItems: AnyPublisher<Bool, Never> { get }
     var enabledICloudSync: AnyPublisher<Bool, Never> { get }
+    func readShowHiddenItems() -> Bool
+    func readEnabledICloudSync() -> Bool
     func set(showHiddenItems: Bool)
     func set(enabledICloudSync: Bool)
 }

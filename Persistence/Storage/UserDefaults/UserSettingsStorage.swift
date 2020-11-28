@@ -65,6 +65,14 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
             .eraseToAnyPublisher()
     }
 
+    public func readShowHiddenItems() -> Bool {
+        return self.fetchShowHiddenItemsNonAtomically()
+    }
+
+    public func readEnabledICloudSync() -> Bool {
+        return self.fetchEnabledICloudSync()
+    }
+
     public func set(showHiddenItems: Bool) {
         self.queue.sync { self.setShowHiddenItemsNonAtomically(showHiddenItems) }
     }
