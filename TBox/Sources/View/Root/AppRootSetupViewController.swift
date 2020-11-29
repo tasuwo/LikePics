@@ -70,8 +70,8 @@ extension AppRootSetupViewController: AppRootSetupViewProtocol {
     }
 
     func confirmAccountChanged() {
-        let alertController = UIAlertController(title: L10n.appRootSetupAccountChangedTitle,
-                                                message: L10n.appRootSetupAccountChangedMessage,
+        let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
+                                                message: L10n.errorIcloudAccountChangedMessage,
                                                 preferredStyle: .alert)
         let okAction = UIAlertAction(title: L10n.confirmAlertOk,
                                      style: .default,

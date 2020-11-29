@@ -58,10 +58,6 @@ internal enum L10n {
     internal static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// アルバム内にクリップがありません
     internal static let albumViewEmptyTitle = L10n.tr("Localizable", "album_view_empty_title")
-    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。この端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
-    internal static let appRootSetupAccountChangedMessage = L10n.tr("Localizable", "app_root_setup_account_changed_message")
-    /// iCloudアカウントが異なります
-    internal static let appRootSetupAccountChangedTitle = L10n.tr("Localizable", "app_root_setup_account_changed_title")
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム
@@ -172,11 +168,15 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
+    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
+    internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
+    /// iCloudアカウントが異なります
+    internal static let errorIcloudAccountChangedTitle = L10n.tr("Localizable", "error_icloud_account_changed_title")
     /// しばらく時間を置いてから再度お試しください
     internal static let errorIcloudDefaultMessage = L10n.tr("Localizable", "error_icloud_default_message")
     /// iCloudが利用できません
     internal static let errorIcloudDefaultTitle = L10n.tr("Localizable", "error_icloud_default_title")
-    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
+    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。\niCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
     internal static let errorIcloudUnavailableMessage = L10n.tr("Localizable", "error_icloud_unavailable_message")
     /// iCloudが利用できません
     internal static let errorIcloudUnavailableTitle = L10n.tr("Localizable", "error_icloud_unavailable_title")

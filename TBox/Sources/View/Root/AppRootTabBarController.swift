@@ -112,8 +112,9 @@ extension AppRootTabBarController: CloudStackLoaderObserver {
 
     func didAccountChanged(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
-            // TODO: 初回は出さない。文言をちゃんとする
-            let alertController = UIAlertController(title: "アカウント変更", message: nil, preferredStyle: .alert)
+            let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
+                                                    message: L10n.errorIcloudAccountChangedMessage,
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: L10n.confirmAlertOk,
                                          style: .default,
                                          handler: nil)
@@ -124,8 +125,9 @@ extension AppRootTabBarController: CloudStackLoaderObserver {
 
     func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
-            // TODO: 初回は出さない。文言をちゃんとする
-            let alertController = UIAlertController(title: "無効化", message: nil, preferredStyle: .alert)
+            let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
+                                                    message: L10n.errorIcloudUnavailableMessage,
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: L10n.confirmAlertOk,
                                          style: .default,
                                          handler: nil)
