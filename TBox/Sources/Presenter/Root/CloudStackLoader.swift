@@ -34,12 +34,16 @@ public class CloudStackLoader {
 
     public func startObserveCloudAvailability() {
         self.cloudAvailabilityStore.state
+            // 初回起動時の分を除く
+            .dropFirst()
             .sink { [weak self] availability in
                 self?.queue.sync { self?.didUpdate(cloudAvailability: availability) }
             }
             .store(in: &self.cancellableBag)
 
         self.userSettingsStorage.enabledICloudSync
+            // 初回起動時の分を除く
+            .dropFirst()
             .sink { [weak self] isICloudSyncEnabled in
                 self?.queue.sync { self?.didUpdate(isICloudSyncEnabled: isICloudSyncEnabled) }
             }
@@ -53,12 +57,14 @@ public class CloudStackLoader {
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
 
         case (true, .available(.accountChanged)):
-            self.observer?.didAccountChanged(self)
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
+            // NOTE: アカウント変更の場合は、リロードの成否にかかわらず通知する
+            self.observer?.didAccountChanged(self)
 
         case (true, .unavailable):
-            self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+            if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
+                self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
+            }
 
         case (true, .unknown):
             break
@@ -75,8 +81,9 @@ public class CloudStackLoader {
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
 
         case (true, .unavailable):
-            self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+            if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
+                self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
+            }
 
         case (true, .unknown):
             break
@@ -86,8 +93,10 @@ public class CloudStackLoader {
         }
     }
 
-    private func reloadCloudStackIfNeeded(isCloudSyncEnabled: Bool) {
-        guard isCloudSyncEnabled != self.cloudStack.isCloudSyncEnabled else { return }
+    @discardableResult
+    private func reloadCloudStackIfNeeded(isCloudSyncEnabled: Bool) -> Bool {
+        guard isCloudSyncEnabled != self.cloudStack.isCloudSyncEnabled else { return false }
         self.cloudStack.reload(isCloudSyncEnabled: isCloudSyncEnabled)
+        return true
     }
 }
