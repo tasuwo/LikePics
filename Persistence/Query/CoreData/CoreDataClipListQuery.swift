@@ -8,17 +8,26 @@ import Domain
 import UIKit
 
 class CoreDataClipListQuery: NSObject {
-    private let request: NSFetchRequest<Clip>
+    typealias RequestFactory = () -> NSFetchRequest<Clip>
+
+    private let requestFactory: RequestFactory
     private var subject: CurrentValueSubject<[Domain.Clip], Error>
-    private var controller: NSFetchedResultsController<Clip>?
+    private var controller: NSFetchedResultsController<Clip>? {
+        willSet {
+            self.controller?.delegate = nil
+            self.controller = nil
+        }
+    }
 
     // MARK: - Lifecycle
 
-    init(request: NSFetchRequest<Clip>, context: NSManagedObjectContext) throws {
+    init(requestFactory: @escaping RequestFactory, context: NSManagedObjectContext) throws {
+        self.requestFactory = requestFactory
+
+        let request = requestFactory()
         let currentClips = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Clip.self) }
 
-        self.request = request
         self.subject = .init(currentClips)
 
         super.init()
@@ -29,16 +38,20 @@ class CoreDataClipListQuery: NSObject {
     // MARK: - Methods
 
     private func setupQuery(for context: NSManagedObjectContext) {
-        self.controller = NSFetchedResultsController(fetchRequest: self.request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
-        self.controller?.delegate = self
+        context.perform { [weak self] in
+            guard let self = self else { return }
 
-        do {
-            try self.controller?.performFetch()
-        } catch {
-            self.subject.send(completion: .failure(error))
+            self.controller = NSFetchedResultsController(fetchRequest: self.requestFactory(),
+                                                         managedObjectContext: context,
+                                                         sectionNameKeyPath: nil,
+                                                         cacheName: nil)
+            self.controller?.delegate = self
+
+            do {
+                try self.controller?.performFetch()
+            } catch {
+                self.subject.send(completion: .failure(error))
+            }
         }
     }
 }

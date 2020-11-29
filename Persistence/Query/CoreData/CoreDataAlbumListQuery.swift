@@ -8,18 +8,27 @@ import Domain
 import UIKit
 
 class CoreDataAlbumListQuery: NSObject {
-    private let request: NSFetchRequest<Album>
+    typealias RequestFactory = () -> NSFetchRequest<Album>
+
+    private let requestFactory: RequestFactory
     private var albumIds: Set<Domain.Album.Identity>
     private var subject: CurrentValueSubject<[Domain.Album], Error>
-    private var controller: NSFetchedResultsController<Album>?
+    private var controller: NSFetchedResultsController<Album>? {
+        willSet {
+            self.controller?.delegate = nil
+            self.controller = nil
+        }
+    }
 
     // MARK: - Lifecycle
 
-    init(request: NSFetchRequest<Album>, context: NSManagedObjectContext) throws {
+    init(requestFactory: @escaping RequestFactory, context: NSManagedObjectContext) throws {
+        self.requestFactory = requestFactory
+
+        let request = requestFactory()
         let currentAlbums = try context.fetch(request)
             .compactMap { $0.map(to: Domain.Album.self) }
 
-        self.request = request
         self.albumIds = Set(currentAlbums.map({ $0.id }))
         self.subject = .init(currentAlbums)
 
@@ -31,16 +40,20 @@ class CoreDataAlbumListQuery: NSObject {
     // MARK: - Methods
 
     private func setupQuery(for context: NSManagedObjectContext) {
-        self.controller = NSFetchedResultsController(fetchRequest: self.request,
-                                                     managedObjectContext: context,
-                                                     sectionNameKeyPath: nil,
-                                                     cacheName: nil)
-        self.controller?.delegate = self
+        context.perform { [weak self] in
+            guard let self = self else { return }
 
-        do {
-            try self.controller?.performFetch()
-        } catch {
-            self.subject.send(completion: .failure(error))
+            self.controller = NSFetchedResultsController(fetchRequest: self.requestFactory(),
+                                                         managedObjectContext: context,
+                                                         sectionNameKeyPath: nil,
+                                                         cacheName: nil)
+            self.controller?.delegate = self
+
+            do {
+                try self.controller?.performFetch()
+            } catch {
+                self.subject.send(completion: .failure(error))
+            }
         }
 
         NotificationCenter.default.removeObserver(self,
