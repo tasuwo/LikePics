@@ -32,7 +32,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     private var cancellableBag: Set<AnyCancellable> = []
 
-    public private(set) var state: CurrentValueSubject<CloudAvailability, Never>
+    public private(set) var state: CurrentValueSubject<CloudAvailability?, Never>
 
     // MARK: - Lifecycle
 
@@ -42,7 +42,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
         self.cloudUsageContextStorage = cloudUsageContextStorage
         self.cloudAvailabilityResolver = cloudAvailabilityResolver
 
-        self.state = .init(.unknown)
+        self.state = .init(nil)
 
         NotificationCenter
             .Publisher(center: .default, name: .CKAccountChanged)

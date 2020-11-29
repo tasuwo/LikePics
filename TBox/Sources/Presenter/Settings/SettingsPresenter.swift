@@ -44,7 +44,8 @@ class SettingsPresenter {
             .combineLatest(self.availabilityStore.state)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] settingEnabled, availability in
-                let isOn = settingEnabled && availability.isAvailable
+                // TODO: availability == nil の時にSwitchをローディング状態にする
+                let isOn = settingEnabled && availability?.isAvailable == true
                 self?.shouldSyncICloudEnabled.send(isOn)
             })
             .store(in: &self.cancellableBag)
@@ -55,13 +56,9 @@ class SettingsPresenter {
     }
 
     func set(isICloudSyncEnabled: Bool) -> Bool {
-        if self.availabilityStore.state.value == .unknown {
-            self.view?.show(title: L10n.errorIcloudDefaultTitle,
-                            message: L10n.errorIcloudDefaultMessage)
-            return false
-        }
+        guard let availability = self.availabilityStore.state.value else { return false }
 
-        if isICloudSyncEnabled, self.availabilityStore.state.value.isAvailable == false {
+        if isICloudSyncEnabled, availability == .unavailable {
             self.view?.show(title: L10n.errorIcloudUnavailableTitle,
                             message: L10n.errorIcloudUnavailableMessage)
             return false

@@ -5,7 +5,6 @@
 public enum CloudAvailability: Equatable {
     case available(Context)
     case unavailable
-    case unknown
 
     public enum Context: Equatable {
         case none
@@ -17,7 +16,7 @@ public enum CloudAvailability: Equatable {
         case .available:
             return true
 
-        case .unavailable, .unknown:
+        case .unavailable:
             return false
         }
     }

@@ -36,6 +36,7 @@ public class CloudStackLoader {
         self.cloudAvailabilityStore.state
             // 初回起動時の分を除く
             .dropFirst()
+            .compactMap { $0 }
             .sink { [weak self] availability in
                 self?.queue.sync { self?.didUpdate(cloudAvailability: availability) }
             }
@@ -66,16 +67,13 @@ public class CloudStackLoader {
                 self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
             }
 
-        case (true, .unknown):
-            break
-
         case (false, _):
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
         }
     }
 
     private func didUpdate(isICloudSyncEnabled: Bool) {
-        let cloudAvailability = self.cloudAvailabilityStore.state.value
+        guard let cloudAvailability = self.cloudAvailabilityStore.state.value else { return }
         switch (isICloudSyncEnabled, cloudAvailability) {
         case (true, .available):
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
@@ -84,9 +82,6 @@ public class CloudStackLoader {
             if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
                 self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
             }
-
-        case (true, .unknown):
-            break
 
         case (false, _):
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)

@@ -5,5 +5,5 @@
 import Combine
 
 public protocol CloudAvailabilityStore {
-    var state: CurrentValueSubject<CloudAvailability, Never> { get }
+    var state: CurrentValueSubject<CloudAvailability?, Never> { get }
 }

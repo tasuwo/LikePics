@@ -34,6 +34,7 @@ class AppRootSetupPresenter {
         self.view?.startLoading()
 
         self.cloudAvailabilityStore.state
+            .compactMap { $0 }
             .combineLatest(self.userSettingsStorage.enabledICloudSync)
             .sink { [weak self] availability, enabledICloudSync in
                 self?.didFetch(availability: availability, enabledICloudSync: enabledICloudSync)
@@ -50,15 +51,10 @@ class AppRootSetupPresenter {
     }
 
     private func didFetch(availability: CloudAvailability, enabledICloudSync: Bool) {
-        if case .unknown = availability { return }
-
         self.cancellableBag.first?.cancel()
         self.view?.endLoading()
 
         switch (enabledICloudSync, availability) {
-        case (_, .unknown):
-            break
-
         case (true, .available(.none)):
             self.view?.launchLikePics(by: .init(isCloudSyncEnabled: true))
 
