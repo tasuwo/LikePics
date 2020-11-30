@@ -107,6 +107,7 @@ class DependencyContainer {
                 fatalError("Failed to retrieve a persistent store description.")
             }
             description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
 
             if !iCloudSyncEnabled {
                 description.cloudKitContainerOptions = nil
