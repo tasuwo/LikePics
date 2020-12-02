@@ -180,6 +180,7 @@
 		2C8B30542528348C00A0A151 /* ClipInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B30532528348C00A0A151 /* ClipInformationCell.swift */; };
 		2C8B305E252834D200A0A151 /* ClipInformationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */; };
 		2C8B3070252834E900A0A151 /* ClipInformationViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */; };
+		2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8DD80C2577DA41005A03C0 /* CoreDataStack.swift */; };
 		2C8FA90E252837A6006CF26C /* ClipInformationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C8FA90D252837A6006CF26C /* ClipInformationCell.xib */; };
 		2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62624E02297005887F9 /* ClipItem.swift */; };
 		2C8FD63624E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
@@ -790,6 +791,7 @@
 		2C8B30532528348C00A0A151 /* ClipInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationCell.swift; sourceTree = "<group>"; };
 		2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewDelegate.swift; sourceTree = "<group>"; };
 		2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewDataSource.swift; sourceTree = "<group>"; };
+		2C8DD80C2577DA41005A03C0 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		2C8FA90D252837A6006CF26C /* ClipInformationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationCell.xib; sourceTree = "<group>"; };
 		2C8FD62624E02297005887F9 /* ClipItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItem.swift; sourceTree = "<group>"; };
 		2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1846,6 +1848,7 @@
 		2C6DD0F9255C3B8F00E316A4 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				2C8DD80C2577DA41005A03C0 /* CoreDataStack.swift */,
 				2C6DD0E1255C2D3F00E316A4 /* NewClipStorage.swift */,
 				2C6DD0EC255C2D4900E316A4 /* ClipQueryService.swift */,
 				2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */,
@@ -3796,6 +3799,7 @@
 				2CBA8408254C712300DA5045 /* ReferenceClipObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C9EF6B7253DE70A00CBF357 /* ThumbnailStorage.swift in Sources */,
+				2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
 				2C6DD0ED255C2D4900E316A4 /* ClipQueryService.swift in Sources */,
 				2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */,
