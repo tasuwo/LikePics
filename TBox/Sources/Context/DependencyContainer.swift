@@ -118,6 +118,7 @@ class DependencyContainer {
                     fatalError("Unresolved error \(error), \(error.userInfo)")
                 }
             })
+            container.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
             container.viewContext.automaticallyMergesChangesFromParent = true
 
             return container
@@ -126,6 +127,7 @@ class DependencyContainer {
         let newImageQueryContext: NSManagedObjectContext = {
             return self.imageQueryQueue.sync {
                 let context = newContainer.newBackgroundContext()
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 return context
             }
         }()
@@ -133,6 +135,7 @@ class DependencyContainer {
         let newCommandContext: NSManagedObjectContext = {
             return self.clipCommandQueue.sync {
                 let context = newContainer.newBackgroundContext()
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 return context
             }
         }()
