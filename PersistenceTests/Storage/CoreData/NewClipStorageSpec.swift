@@ -48,13 +48,13 @@ class NewClipStorageSpec: QuickSpec {
             context("追加対象のタグが全て存在") {
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -83,13 +83,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -119,13 +119,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -160,13 +160,13 @@ class NewClipStorageSpec: QuickSpec {
             context("削除対象のタグが全て存在") {
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -194,13 +194,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -228,13 +228,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -266,13 +266,13 @@ class NewClipStorageSpec: QuickSpec {
             context("置換対象のタグが全て存在") {
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -301,13 +301,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -336,13 +336,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag1 = Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: managedContext) as! Tag
+                        let tag2 = Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip = Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -375,19 +375,19 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("追加対象のクリップが追加済み") {
                 beforeEach {
-                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip1 = Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip2 = Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
-                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item1 = AlbumItem(context: managedContext)
                     item1.clip = clip1
                     item1.index = 1
-                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item2 = AlbumItem(context: managedContext)
                     item2.clip = clip2
                     item2.index = 2
 
-                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    let album = Album(context: managedContext)
                     album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     album.items = NSSet(array: [item1, item2])
 
@@ -410,12 +410,12 @@ class NewClipStorageSpec: QuickSpec {
             context("追加対象のクリップが未追加") {
                 context("クリップを初めて追加する") {
                     beforeEach {
-                        let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip1 = Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip2 = Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
-                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                        let album = Album(context: managedContext)
                         album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
 
                         try! managedContext.save()
@@ -457,23 +457,23 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("既に追加済みのクリップがある") {
                     beforeEach {
-                        let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip1 = Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip2 = Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip3 = Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip4 = Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                        let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item1 = AlbumItem(context: managedContext)
                         item1.clip = clip1
                         item1.index = 1
-                        let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item2 = AlbumItem(context: managedContext)
                         item2.clip = clip2
                         item2.index = 2
 
-                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                        let album = Album(context: managedContext)
                         album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         album.items = NSSet(array: [item1, item2])
 
@@ -521,29 +521,29 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("削除対象のクリップが一部存在しない") {
                 beforeEach {
-                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip1 = Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip2 = Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip3 = Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip4 = Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item1 = AlbumItem(context: managedContext)
                     item1.clip = clip1
                     item1.index = 1
-                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item2 = AlbumItem(context: managedContext)
                     item2.clip = clip2
                     item2.index = 2
-                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item3 = AlbumItem(context: managedContext)
                     item3.clip = clip3
                     item3.index = 3
-                    let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item4 = AlbumItem(context: managedContext)
                     item4.clip = clip4
                     item4.index = 4
 
-                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    let album = Album(context: managedContext)
                     album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     album.items = NSSet(array: [item1, item2, item4])
 
@@ -566,29 +566,29 @@ class NewClipStorageSpec: QuickSpec {
             context("削除対象のクリップが全て存在する") {
                 context("一部のクリップを削除する") {
                     beforeEach {
-                        let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip1 = Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip2 = Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip3 = Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip4 = Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                        let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item1 = AlbumItem(context: managedContext)
                         item1.clip = clip1
                         item1.index = 1
-                        let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item2 = AlbumItem(context: managedContext)
                         item2.clip = clip2
                         item2.index = 2
-                        let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item3 = AlbumItem(context: managedContext)
                         item3.clip = clip3
                         item3.index = 3
-                        let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item4 = AlbumItem(context: managedContext)
                         item4.clip = clip4
                         item4.index = 4
 
-                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                        let album = Album(context: managedContext)
                         album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         album.items = NSSet(array: [item1, item2, item3, item4])
 
@@ -650,29 +650,29 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("並び替え対象のクリップが足りない") {
                 beforeEach {
-                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip1 = Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip2 = Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip3 = Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip4 = Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item1 = AlbumItem(context: managedContext)
                     item1.clip = clip1
                     item1.index = 1
-                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item2 = AlbumItem(context: managedContext)
                     item2.clip = clip2
                     item2.index = 2
-                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item3 = AlbumItem(context: managedContext)
                     item3.clip = clip3
                     item3.index = 3
-                    let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item4 = AlbumItem(context: managedContext)
                     item4.clip = clip4
                     item4.index = 4
 
-                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    let album = Album(context: managedContext)
                     album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     album.items = NSSet(array: [item1, item2, item3, item4])
 
@@ -695,29 +695,29 @@ class NewClipStorageSpec: QuickSpec {
             }
             context("並び替え対象のクリップが一部存在しない") {
                 beforeEach {
-                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip1 = Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip2 = Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip3 = Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip4 = Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item1 = AlbumItem(context: managedContext)
                     item1.clip = clip1
                     item1.index = 1
-                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item2 = AlbumItem(context: managedContext)
                     item2.clip = clip2
                     item2.index = 2
-                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item3 = AlbumItem(context: managedContext)
                     item3.clip = clip3
                     item3.index = 3
-                    let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item4 = AlbumItem(context: managedContext)
                     item4.clip = clip4
                     item4.index = 4
 
-                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    let album = Album(context: managedContext)
                     album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     album.items = NSSet(array: [item1, item2, item4])
 
@@ -742,29 +742,29 @@ class NewClipStorageSpec: QuickSpec {
             context("並び替え対象のクリップが全て存在する") {
                 context("並び替える") {
                     beforeEach {
-                        let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip1 = Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip2 = Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip3 = Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                        let clip4 = Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
-                        let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item1 = AlbumItem(context: managedContext)
                         item1.clip = clip1
                         item1.index = 1
-                        let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item2 = AlbumItem(context: managedContext)
                         item2.clip = clip2
                         item2.index = 2
-                        let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item3 = AlbumItem(context: managedContext)
                         item3.clip = clip3
                         item3.index = 3
-                        let item4 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                        let item4 = AlbumItem(context: managedContext)
                         item4.clip = clip4
                         item4.index = 4
 
-                        let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                        let album = Album(context: managedContext)
                         album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         album.items = NSSet(array: [item1, item2, item3, item4])
 
@@ -836,23 +836,23 @@ class NewClipStorageSpec: QuickSpec {
 
         describe("deleteClips(having:)") {
             beforeEach {
-                let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                let clip = Clip(context: managedContext)
                 clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 clip.createdDate = Date(timeIntervalSince1970: 0)
                 clip.updatedDate = Date(timeIntervalSince1970: 0)
 
-                let item1 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item1 = Item(context: managedContext)
                 item1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                let item2 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item2 = Item(context: managedContext)
                 item2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
                 clip.clipItems = NSSet(array: [item1, item2])
 
-                let albumItem = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                let albumItem = AlbumItem(context: managedContext)
                 albumItem.clip = clip
                 albumItem.index = 1
 
-                let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                let album = Album(context: managedContext)
                 album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 album.items = NSSet(array: [albumItem])
 
@@ -887,11 +887,11 @@ class NewClipStorageSpec: QuickSpec {
 
         describe("deleteClipItem(having:)") {
             beforeEach {
-                let clip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                let clip = Clip(context: managedContext)
                 clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 clip.imagesSize = 12 + 34 + 56 + 78
 
-                let item1 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item1 = Item(context: managedContext)
                 item1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item1.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item1.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
@@ -900,7 +900,7 @@ class NewClipStorageSpec: QuickSpec {
                 item1.imageSize = 12
                 item1.clip = clip
                 item1.index = 1
-                let item2 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item2 = Item(context: managedContext)
                 item2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                 item2.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item2.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
@@ -909,7 +909,7 @@ class NewClipStorageSpec: QuickSpec {
                 item2.clip = clip
                 item2.imageSize = 34
                 item2.index = 2
-                let item3 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item3 = Item(context: managedContext)
                 item3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
                 item3.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item3.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
@@ -918,7 +918,7 @@ class NewClipStorageSpec: QuickSpec {
                 item3.clip = clip
                 item3.imageSize = 56
                 item3.index = 3
-                let item4 = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: managedContext) as! Item
+                let item4 = Item(context: managedContext)
                 item4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
                 item4.clipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 item4.imageId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
@@ -970,24 +970,24 @@ class NewClipStorageSpec: QuickSpec {
         describe("deleteAlbum(having:)") {
             context("削除対象のアルバムが存在する") {
                 beforeEach {
-                    let clip1 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip1 = Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip2 = Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: managedContext) as! Clip
+                    let clip3 = Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
 
-                    let item1 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item1 = AlbumItem(context: managedContext)
                     item1.clip = clip1
                     item1.index = 1
-                    let item2 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item2 = AlbumItem(context: managedContext)
                     item2.clip = clip2
                     item2.index = 2
-                    let item3 = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: managedContext) as! AlbumItem
+                    let item3 = AlbumItem(context: managedContext)
                     item3.clip = clip3
                     item3.index = 3
 
-                    let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: managedContext) as! Album
+                    let album = Album(context: managedContext)
                     album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     album.title = "hoge"
                     album.createdDate = Date(timeIntervalSince1970: 0)

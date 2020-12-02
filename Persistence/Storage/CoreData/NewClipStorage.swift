@@ -168,7 +168,7 @@ extension NewClipStorage: ClipStorageProtocol {
                         self.logger.write(ConsoleLog(level: .error, message: "Failed create clip. Creating tags not allowed."))
                         return .failure(.invalidParameter)
                     }
-                    let newTag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: self.context) as! Tag
+                    let newTag = Tag(context: self.context)
                     newTag.id = tag.id
                     newTag.name = tag.name
                     newTag.isHidden = false
@@ -193,13 +193,13 @@ extension NewClipStorage: ClipStorageProtocol {
 
             // Prepare new objects
 
-            let newClip = NSEntityDescription.insertNewObject(forEntityName: "Clip", into: self.context) as! Clip
+            let newClip = Clip(context: self.context)
             newClip.id = clip.id
             newClip.descriptionText = clip.description
 
             let items = NSMutableSet()
             clip.items.forEach { item in
-                let newItem = NSEntityDescription.insertNewObject(forEntityName: "ClipItem", into: self.context) as! Item
+                let newItem = Item(context: self.context)
                 newItem.id = item.id
                 newItem.siteUrl = item.url
                 newItem.clipId = clip.id
@@ -245,7 +245,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 return .failure(.duplicated)
             }
 
-            let tag = NSEntityDescription.insertNewObject(forEntityName: "Tag", into: self.context) as! Tag
+            let tag = Tag(context: self.context)
             tag.id = UUID()
             tag.name = name
             tag.isHidden = false
@@ -264,7 +264,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 return .failure(.duplicated)
             }
 
-            let album = NSEntityDescription.insertNewObject(forEntityName: "Album", into: self.context) as! Album
+            let album = Album(context: self.context)
             album.id = UUID()
             album.title = title
             album.createdDate = Date()
@@ -389,7 +389,7 @@ extension NewClipStorage: ClipStorageProtocol {
                 .max(by: { $0.index < $1.index })?
                 .index ?? 0
             for (index, clip) in clips.enumerated() {
-                let albumItem = NSEntityDescription.insertNewObject(forEntityName: "AlbumItem", into: self.context) as! AlbumItem
+                let albumItem = AlbumItem(context: self.context)
                 albumItem.id = UUID()
                 albumItem.index = maxIndex + Int64(index + 1)
                 albumItem.clip = clip
