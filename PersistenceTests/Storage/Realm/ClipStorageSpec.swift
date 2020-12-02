@@ -1339,7 +1339,8 @@ class ClipStorageSpec: QuickSpec {
                             }
                             expect(item).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                                                clipId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                                               clipIndex: 0)))
+                                                               clipIndex: 0,
+                                                               imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)))
                         }
                         it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
                             let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
@@ -1366,7 +1367,8 @@ class ClipStorageSpec: QuickSpec {
                             }
                             expect(item).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
                                                                clipId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                                               clipIndex: 1)))
+                                                               clipIndex: 1,
+                                                               imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)))
                         }
                         it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
                             let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })
@@ -1393,7 +1395,8 @@ class ClipStorageSpec: QuickSpec {
                             }
                             expect(item).to(equal(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
                                                                clipId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                                               clipIndex: 2)))
+                                                               clipIndex: 2,
+                                                               imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)))
                         }
                         it("Realmからアイテムが削除され、他アイテムのIndexが更新されている") {
                             let items = realm.objects(ClipItemObject.self).sorted(by: { $0.id < $1.id })

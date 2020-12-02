@@ -41,7 +41,8 @@ class ReferenceClipStorageSpec: QuickSpec {
                     fail("Unexpected failure")
                     return
                 }
-                expect(clips).to(equal([
+                expect(clips).to(haveCount(3))
+                expect(clips).to(contain([
                     .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, isDirty: true),
                     .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, isDirty: true),
                     .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")!, isDirty: true),

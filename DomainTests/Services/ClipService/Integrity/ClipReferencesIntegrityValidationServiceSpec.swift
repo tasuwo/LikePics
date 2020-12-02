@@ -121,7 +121,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                                 case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
                                     expect(name).to(equal("fuga"))
 
-                                case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!:
+                                case UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!:
                                     expect(name).to(equal("pue"))
 
                                 default:
