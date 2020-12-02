@@ -6,12 +6,14 @@
 public struct Tag: Equatable {
     public let id: UUID
     public let name: String
+    public let clipCount: Int?
 
     // MARK: - Lifecycle
 
-    public init(id: UUID, name: String) {
+    public init(id: UUID, name: String, clipCount: Int? = nil) {
         self.id = id
         self.name = name
+        self.clipCount = clipCount
     }
 }
 

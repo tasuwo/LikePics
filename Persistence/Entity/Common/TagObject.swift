@@ -27,6 +27,8 @@ extension Domain.Tag: Persistable {
 extension Persistence.Tag {
     func map(to type: Domain.Tag.Type) -> Domain.Tag? {
         guard let id = self.id, let name = self.name else { return nil }
-        return Domain.Tag(id: id, name: name)
+        return Domain.Tag(id: id,
+                          name: name,
+                          clipCount: Int(self.clipCount))
     }
 }
