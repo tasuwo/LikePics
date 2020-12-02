@@ -3,9 +3,7 @@
 //
 
 import Common
-import CoreData
 import Domain
-import Persistence
 import TBoxCore
 import TBoxUIKit
 import UIKit

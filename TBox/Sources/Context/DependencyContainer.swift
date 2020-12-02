@@ -7,39 +7,36 @@ import CoreData
 import Domain
 import Persistence
 import TBoxCore
-import TBoxUIKit
 import UIKit
-
-// swiftlint:disable implicitly_unwrapped_optional
 
 class DependencyContainer {
     // MARK: - Properties
 
     // MARK: Storage
 
-    var clipStorage: NewClipStorage!
+    let clipStorage: NewClipStorage
     let tmpClipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
-    var imageStorage: NewImageStorage!
+    let imageStorage: NewImageStorage
     let tmpImageStorage: ImageStorageProtocol
-    var thumbnailStorage: ThumbnailStorageProtocol!
+    let thumbnailStorage: ThumbnailStorageProtocol
     let userSettingsStorage: UserSettingsStorageProtocol
     let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
     // MARK: Service
 
-    var clipCommandService: (ClipCommandServiceProtocol & ClipStorable)!
-    var clipQueryService: ClipQueryService!
-    var imageQueryService: NewImageQueryService!
-    private(set) var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol!
-    private(set) var persistService: TemporaryClipsPersistServiceProtocol!
+    let clipCommandService: ClipCommandServiceProtocol & ClipStorable
+    let clipQueryService: ClipQueryService
+    let imageQueryService: NewImageQueryService
+    let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
+    let persistService: TemporaryClipsPersistServiceProtocol
 
     // MARK: Core Data
 
     let coreDataStack: CoreDataStack
-    var imageQueryContext: NSManagedObjectContext!
-    var commandContext: NSManagedObjectContext!
     let cloudAvailabilityObserver: CloudAvailabilityObserver
+    var imageQueryContext: NSManagedObjectContext
+    var commandContext: NSManagedObjectContext
 
     // MARK: Queue
 
@@ -65,17 +62,13 @@ class DependencyContainer {
         self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
         self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled)
-        self.coreDataStack.dependency = self
 
-        let newImageQueryContext = self.newImageQueryContext()
-        let newCommandContext = self.newCommandContext()
-
-        self.imageQueryContext = newImageQueryContext
-        self.commandContext = newCommandContext
-        self.clipStorage = NewClipStorage(context: newCommandContext)
-        self.imageStorage = NewImageStorage(context: newCommandContext)
+        self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
+        self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
+        self.clipStorage = NewClipStorage(context: self.commandContext)
+        self.imageStorage = NewImageStorage(context: self.commandContext)
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
-        self.imageQueryService = NewImageQueryService(context: newImageQueryContext)
+        self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
         self.thumbnailStorage = try ThumbnailStorage(queryService: self.imageQueryService, bundle: Bundle.main)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
@@ -95,6 +88,8 @@ class DependencyContainer {
                                                            imageStorage: self.imageStorage,
                                                            logger: self.logger,
                                                            queue: self.clipCommandQueue)
+
+        self.coreDataStack.dependency = self
     }
 
     // MARK: - Methods
@@ -104,32 +99,14 @@ class DependencyContainer {
                                 cloudAvailabilityStore: self.cloudAvailabilityObserver,
                                 cloudStack: self.coreDataStack)
     }
-
-    private func newImageQueryContext() -> NSManagedObjectContext {
-        return self.imageQueryQueue.sync {
-            let context = self.coreDataStack.newBackgroundContext
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            context.transactionAuthor = CoreDataStack.transactionAuthor
-            return context
-        }
-    }
-
-    private func newCommandContext() -> NSManagedObjectContext {
-        return self.clipCommandQueue.sync {
-            let context = self.coreDataStack.newBackgroundContext
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            context.transactionAuthor = CoreDataStack.transactionAuthor
-            return context
-        }
-    }
 }
 
 extension DependencyContainer: CoreDataStackDependency {
     // MARK: - CoreDataStackDependency
 
     func coreDataStack(_ coreDataStack: CoreDataStack, replaced container: NSPersistentCloudKitContainer) {
-        let newImageQueryContext = self.newImageQueryContext()
-        let newCommandContext = self.newCommandContext()
+        let newImageQueryContext = coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
+        let newCommandContext = coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
 
         self.imageQueryContext = newImageQueryContext
         self.commandContext = newCommandContext
@@ -145,3 +122,14 @@ extension DependencyContainer: CoreDataStackDependency {
 }
 
 extension ClipCommandService: ClipStorable {}
+
+extension CoreDataStack {
+    func newBackgroundContext(on queue: DispatchQueue) -> NSManagedObjectContext {
+        return queue.sync {
+            let context = self.newBackgroundContext
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            context.transactionAuthor = CoreDataStack.transactionAuthor
+            return context
+        }
+    }
+}
