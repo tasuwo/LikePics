@@ -1704,9 +1704,9 @@
 			isa = PBXGroup;
 			children = (
 				2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */,
+				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
 				2CDF4F4E2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift */,
 				2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */,
-				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
