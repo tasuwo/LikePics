@@ -2,10 +2,11 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
 protocol MainAppLauncher: AnyObject {
-    func launch(by configuration: DependencyContainerConfiguration)
+    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver)
 }
 
 class AppRootSetupViewController: UIViewController {
@@ -63,9 +64,9 @@ extension AppRootSetupViewController: AppRootSetupViewProtocol {
         }
     }
 
-    func launchLikePics(by configuration: DependencyContainerConfiguration) {
+    func launchLikePics(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
         DispatchQueue.main.async {
-            self.launcher?.launch(by: configuration)
+            self.launcher?.launch(configuration: configuration, observer: observer)
         }
     }
 

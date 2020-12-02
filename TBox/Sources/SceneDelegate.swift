@@ -13,8 +13,6 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var cloudStackLoader: CloudStackLoader?
-    // TODO: 受け渡しのための stored property なので、別の方法を考える
-    var cloudAvailabilityObserver: CloudAvailabilityObserver!
     var dependencyContainer: DependencyContainer?
     var window: UIWindow?
 
@@ -39,7 +37,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
 
         self.window = window
-        self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
         self.setupAppearance()
     }
@@ -83,10 +80,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
-    func launch(by configuration: DependencyContainerConfiguration) {
+    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
         do {
             let container = try DependencyContainer(configuration: configuration,
-                                                    cloudAvailabilityObserver: self.cloudAvailabilityObserver)
+                                                    cloudAvailabilityObserver: observer)
             self.dependencyContainer = container
 
             let rootViewController = AppRootTabBarController(factory: container)
