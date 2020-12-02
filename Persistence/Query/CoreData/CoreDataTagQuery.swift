@@ -14,7 +14,7 @@ class CoreDataTagQuery: NSObject {
     // MARK: - Lifecycle
 
     init?(id: Domain.Tag.Identity, context: NSManagedObjectContext) throws {
-        let request = NSFetchRequest<Tag>(entityName: "Tag")
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let tag = try context.fetch(request).first,

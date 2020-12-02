@@ -68,7 +68,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("追加でき、更新される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -104,7 +104,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("未追加のタグのみ追加され、更新される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -140,7 +140,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("更新されない") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -181,7 +181,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが削除され、更新される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -215,7 +215,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("追加済みのタグが削除され、更新される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -248,7 +248,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("更新されない") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -287,7 +287,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -322,7 +322,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -356,7 +356,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
@@ -428,7 +428,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("クリップが追加できる") {
-                        let request = NSFetchRequest<Album>(entityName: "Album")
+                        let request: NSFetchRequest<Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -487,7 +487,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("クリップが追加できる") {
-                        let request = NSFetchRequest<Album>(entityName: "Album")
+                        let request: NSFetchRequest<Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -606,7 +606,7 @@ class NewClipStorageSpec: QuickSpec {
                             fail()
                             return
                         }
-                        let request = NSFetchRequest<Album>(entityName: "Album")
+                        let request: NSFetchRequest<Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -633,12 +633,12 @@ class NewClipStorageSpec: QuickSpec {
                         expect(item4.index).to(equal(2))
                     }
                     it("AlbumItemも削除される") {
-                        let request = NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
+                        let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
                         let items = try! managedContext.fetch(request)
                         expect(items).to(haveCount(2))
                     }
                     it("Clipは削除されない") {
-                        let request = NSFetchRequest<Clip>(entityName: "Clip")
+                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                         let clips = try! managedContext.fetch(request)
                         expect(clips).to(haveCount(4))
                     }
@@ -784,7 +784,7 @@ class NewClipStorageSpec: QuickSpec {
                             fail()
                             return
                         }
-                        let request = NSFetchRequest<Album>(entityName: "Album")
+                        let request: NSFetchRequest<Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -863,22 +863,22 @@ class NewClipStorageSpec: QuickSpec {
                 try! managedContext.save()
             }
             it("Clipが削除される") {
-                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                 let clips = try! managedContext.fetch(request)
                 expect(clips).to(haveCount(0))
             }
             it("ClipItemが削除される") {
-                let request = NSFetchRequest<Item>(entityName: "ClipItem")
+                let request: NSFetchRequest<Item> = Item.fetchRequest()
                 let items = try! managedContext.fetch(request)
                 expect(items).to(haveCount(0))
             }
             it("AlbumItemが削除される") {
-                let request = NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
+                let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
                 let items = try! managedContext.fetch(request)
                 expect(items).to(haveCount(0))
             }
             it("Albumは削除されない") {
-                let request = NSFetchRequest<Album>(entityName: "Album")
+                let request: NSFetchRequest<Album> = Album.fetchRequest()
                 let albums = try! managedContext.fetch(request)
                 expect(albums).to(haveCount(1))
                 expect(albums.first?.items).to(haveCount(0))
@@ -938,7 +938,7 @@ class NewClipStorageSpec: QuickSpec {
                 try! managedContext.save()
             }
             it("ClipItemが削除され、indexが更新される") {
-                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                 let clips = try! managedContext.fetch(request)
                 expect(clips).to(haveCount(1))
                 let clip = clips.first!
@@ -1000,17 +1000,17 @@ class NewClipStorageSpec: QuickSpec {
                     try! managedContext.save()
                 }
                 it("Albumが削除される") {
-                    let request = NSFetchRequest<Album>(entityName: "Album")
+                    let request: NSFetchRequest<Album> = Album.fetchRequest()
                     let items = try! managedContext.fetch(request)
                     expect(items).to(haveCount(0))
                 }
                 it("AlbumItemが削除される") {
-                    let request = NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
+                    let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
                     let items = try! managedContext.fetch(request)
                     expect(items).to(haveCount(0))
                 }
                 it("Clipは削除されない") {
-                    let request = NSFetchRequest<Clip>(entityName: "Clip")
+                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                     let items = try! managedContext.fetch(request)
                     expect(items).to(haveCount(3))
                 }

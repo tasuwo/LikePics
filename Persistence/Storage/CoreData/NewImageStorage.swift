@@ -55,7 +55,7 @@ extension NewImageStorage: NewImageStorageProtocol {
     // MARK: Delete
 
     public func delete(having id: ImageContainer.Identity) throws {
-        let request = NSFetchRequest<Image>(entityName: "Image")
+        let request: NSFetchRequest<Image> = Image.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let image = try self.context.fetch(request).first else { return }
         self.context.delete(image)
@@ -64,7 +64,7 @@ extension NewImageStorage: NewImageStorageProtocol {
     // MARK: Read
 
     public func exists(having id: ImageContainer.Identity) throws -> Bool {
-        let request = NSFetchRequest<Image>(entityName: "Image")
+        let request: NSFetchRequest<Image> = Image.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         return try self.context.count(for: request) > 0
     }

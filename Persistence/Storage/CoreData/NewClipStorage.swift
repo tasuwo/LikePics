@@ -31,7 +31,7 @@ public class NewClipStorage {
     // MARK: - Methods
 
     private func fetchAlbum(for id: Domain.Album.Identity) throws -> Result<Album, ClipStorageError> {
-        let request = NSFetchRequest<Album>(entityName: "Album")
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let album = try self.context.fetch(request).first else {
             self.logger.write(ConsoleLog(level: .error, message: "Album not found (id=\(id.uuidString))"))
@@ -41,7 +41,7 @@ public class NewClipStorage {
     }
 
     private func fetchAlbum(for title: String) throws -> Result<Album, ClipStorageError> {
-        let request = NSFetchRequest<Album>(entityName: "Album")
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "title == %@", title as CVarArg)
         guard let album = try self.context.fetch(request).first else {
             self.logger.write(ConsoleLog(level: .error, message: "Album not found (title=\(title))"))
@@ -53,7 +53,7 @@ public class NewClipStorage {
     private func fetchTags(for ids: [Domain.Tag.Identity]) throws -> Result<[Tag], ClipStorageError> {
         var tags: [Tag] = []
         for tagId in ids {
-            let request = NSFetchRequest<Tag>(entityName: "Tag")
+            let request: NSFetchRequest<Tag> = Tag.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
             guard let tag = try self.context.fetch(request).first else {
                 self.logger.write(ConsoleLog(level: .error, message: "Tag not found (id=\(tagId.uuidString))"))
@@ -65,7 +65,7 @@ public class NewClipStorage {
     }
 
     private func fetchTag(for id: Domain.Tag.Identity) throws -> Result<Tag, ClipStorageError> {
-        let request = NSFetchRequest<Tag>(entityName: "Tag")
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let tag = try self.context.fetch(request).first else {
             return .failure(.notFound)
@@ -74,7 +74,7 @@ public class NewClipStorage {
     }
 
     private func fetchTag(for name: String) throws -> Result<Tag, ClipStorageError> {
-        let request = NSFetchRequest<Tag>(entityName: "Tag")
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
         guard let tag = try self.context.fetch(request).first else {
             self.logger.write(ConsoleLog(level: .error, message: "Tag not found (name=\(name))"))
@@ -86,7 +86,7 @@ public class NewClipStorage {
     private func fetchClips(for ids: [Domain.Clip.Identity]) throws -> Result<[Clip], ClipStorageError> {
         var clips: [Clip] = []
         for clipId in ids {
-            let request = NSFetchRequest<Clip>(entityName: "Clip")
+            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
             guard let clip = try self.context.fetch(request).first else {
                 self.logger.write(ConsoleLog(level: .error, message: "Clip not found (id=\(clipId.uuidString))"))
@@ -98,7 +98,7 @@ public class NewClipStorage {
     }
 
     private func fetchClipItem(for id: Domain.ClipItem.Identity) throws -> Result<Item, ClipStorageError> {
-        let request = NSFetchRequest<Item>(entityName: "ClipItem")
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let item = try self.context.fetch(request).first else {
             self.logger.write(ConsoleLog(level: .error, message: "ClipItem not found (id=\(id.uuidString))"))
@@ -127,7 +127,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
     public func readAllClips() -> Result<[Domain.Clip], ClipStorageError> {
         do {
-            let request = NSFetchRequest<Clip>(entityName: "Clip")
+            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             let clips = try self.context.fetch(request)
                 .compactMap { $0.map(to: Domain.Clip.self) }
             return .success(clips)
@@ -141,7 +141,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
     public func readAllTags() -> Result<[Domain.Tag], ClipStorageError> {
         do {
-            let request = NSFetchRequest<Tag>(entityName: "Tag")
+            let request: NSFetchRequest<Tag> = Tag.fetchRequest()
             let tags = try self.context.fetch(request)
                 .compactMap { $0.map(to: Domain.Tag.self) }
             return .success(tags)
@@ -159,7 +159,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
             var appendingTags: [Tag] = []
             for tag in clip.tags {
-                let request = NSFetchRequest<Tag>(entityName: "Tag")
+                let request: NSFetchRequest<Tag> = Tag.fetchRequest()
                 request.predicate = NSPredicate(format: "id == %@", tag.id as CVarArg)
                 if let tag = try self.context.fetch(request).first {
                     appendingTags.append(tag)
@@ -179,7 +179,7 @@ extension NewClipStorage: ClipStorageProtocol {
             // Check duplication
 
             var oldClip: Clip?
-            let request = NSFetchRequest<Clip>(entityName: "Clip")
+            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", clip.id as CVarArg)
             if let duplicatedClip = try self.context.fetch(request).first {
                 if overwrite {

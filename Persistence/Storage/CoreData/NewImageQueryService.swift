@@ -26,7 +26,7 @@ public class NewImageQueryService {
 extension NewImageQueryService: NewImageQueryServiceProtocol {
     public func read(having id: UUID) throws -> Data? {
         return try self.context.sync { [weak self] in
-            let request = NSFetchRequest<Image>(entityName: "Image")
+            let request: NSFetchRequest<Image> = Image.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
             return try self?.context.fetch(request).first?.data
         }

@@ -36,7 +36,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
-                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
                 return request
             }
@@ -51,7 +51,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
-                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
                 request.predicate = NSPredicate(format: "tags.@count == 0")
                 return request
@@ -71,7 +71,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
-                let request = NSFetchRequest<Clip>(entityName: "Clip")
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
                 request.predicate = NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", tag.id as CVarArg)
                 return request
@@ -99,7 +99,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
         do {
             let factory: CoreDataAlbumListQuery.RequestFactory = {
-                let request = NSFetchRequest<Album>(entityName: "Album")
+                let request: NSFetchRequest<Album> = Album.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
                 return request
             }
@@ -114,7 +114,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
         do {
             let factory: CoreDataTagListQuery.RequestFactory = {
-                let request = NSFetchRequest<Tag>(entityName: "Tag")
+                let request: NSFetchRequest<Tag> = Tag.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
                 return request
             }

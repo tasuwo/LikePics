@@ -14,7 +14,7 @@ class CoreDataAlbumQuery: NSObject {
     // MARK: - Lifecycle
 
     init?(id: Domain.Album.Identity, context: NSManagedObjectContext) throws {
-        let request = NSFetchRequest<Album>(entityName: "Album")
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let album = try context.fetch(request).first,
