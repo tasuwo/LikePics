@@ -31,6 +31,7 @@ public class CloudUsageContextStorage {
 }
 
 extension UserDefaults {
+    // swiftlint:disable:next identifier_name
     @objc dynamic var cloudUsageContextLastLoggedInCloudAccountId: String? {
         return self.string(forKey: CloudUsageContextStorage.Key.lastLoggedInCloudAccountId.rawValue)
     }

@@ -48,7 +48,6 @@ extension NewImageStorage: NewImageStorageProtocol {
     // MARK: Create
 
     public func create(_ image: Data, id: UUID) throws {
-        // swiftlint:disable:next force_cast
         let newImage = Image(context: self.context)
         newImage.id = id
         newImage.data = image
