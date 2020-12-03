@@ -103,7 +103,7 @@ public class CoreDataStack {
         self.notificationCenter.addObserver(self,
                                             selector: #selector(self.storeRemoteChange(_:)),
                                             name: .NSPersistentStoreRemoteChange,
-                                            object: self.persistentContainer)
+                                            object: self.persistentContainer.persistentStoreCoordinator)
     }
 
     // MARK: - Methods
@@ -136,14 +136,14 @@ public class CoreDataStack {
         self.historyQueue.addOperation {
             self.notificationCenter.removeObserver(self,
                                                    name: .NSPersistentStoreRemoteChange,
-                                                   object: self.persistentContainer)
+                                                   object: self.persistentContainer.persistentStoreCoordinator)
 
             let newPersistentContainer = Self.makeContainer(isICloudSyncEnabled: isICloudSyncEnabled)
 
             self.notificationCenter.addObserver(self,
                                                 selector: #selector(self.storeRemoteChange(_:)),
                                                 name: .NSPersistentStoreRemoteChange,
-                                                object: newPersistentContainer)
+                                                object: newPersistentContainer.persistentStoreCoordinator)
 
             self.persistentContainer = newPersistentContainer
             self.isICloudSyncEnabled = isICloudSyncEnabled
