@@ -32,17 +32,15 @@ extension NewImageStorage: NewImageStorageProtocol {
     }
 
     public func beginTransaction() throws {
-        // NOP
+        self.context.reset()
     }
 
     public func commitTransaction() throws {
         try self.context.save()
-        self.context.reset()
     }
 
     public func cancelTransactionIfNeeded() throws {
         self.context.rollback()
-        self.context.reset()
     }
 
     // MARK: Create
