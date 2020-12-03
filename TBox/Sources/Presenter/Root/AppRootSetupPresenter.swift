@@ -30,7 +30,7 @@ class AppRootSetupPresenter {
         self.cloudAvailabilityObserver = cloudAvailabilityStore
     }
 
-    func setup() {
+    func checkCloudAvailability() {
         self.view?.startLoading()
 
         self.cloudAvailabilityObserver.state

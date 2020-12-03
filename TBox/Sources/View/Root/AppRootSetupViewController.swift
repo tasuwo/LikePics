@@ -35,8 +35,12 @@ class AppRootSetupViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupAppearance()
+    }
 
-        self.presenter.setup()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.presenter.checkCloudAvailability()
     }
 
     private func setupAppearance() {
