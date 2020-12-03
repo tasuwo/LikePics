@@ -329,7 +329,7 @@ extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
 
     func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
         guard !self.selectedClips.isEmpty else { return }
-        guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], context: nil, delegate: self) else { return }
+        guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
