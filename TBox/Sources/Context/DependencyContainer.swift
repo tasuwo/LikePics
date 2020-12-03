@@ -25,11 +25,12 @@ class DependencyContainer {
 
     // MARK: Service
 
-    let clipCommandService: ClipCommandServiceProtocol & ClipStorable
+    let clipCommandService: ClipCommandService
     let clipQueryService: ClipQueryService
     let imageQueryService: NewImageQueryService
-    let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
+    let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporaryClipsPersistServiceProtocol
+    let cloudChangeDetecter: CloudKitChangeDetecter
 
     // MARK: Core Data
 
@@ -89,7 +90,11 @@ class DependencyContainer {
                                                            logger: self.logger,
                                                            queue: self.clipCommandQueue)
 
+        self.cloudChangeDetecter = CloudKitChangeDetecter()
+
         self.coreDataStack.dependency = self
+        self.cloudChangeDetecter.set(self.integrityValidationService)
+        self.cloudChangeDetecter.startObserve(self.coreDataStack)
     }
 
     // MARK: - Methods

@@ -111,3 +111,20 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
         }
     }
 }
+
+extension ClipReferencesIntegrityValidationService: RemoteChangeDetecterDelegate {
+    // MARK: - RemoteChangeDetecterDelegate
+
+    public func didDetectChangedTag(_ remoteChangeDetecter: RemoteChangeDetecter) {
+        self.queue.sync {
+            do {
+                try self.validateAndFixTagsIntegrityIfNeeded()
+            } catch {
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to fix integrity: \(error.localizedDescription)
+                """))
+            }
+        }
+    }
+}
