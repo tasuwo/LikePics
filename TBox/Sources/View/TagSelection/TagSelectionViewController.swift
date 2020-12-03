@@ -46,6 +46,10 @@ class TagSelectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // HACK: nibから読み込んでいるため初期サイズがnibに引きずられる
+        //       これによりCollectionViewのレイアウトが初回表示時にズレるのを防ぐ
+        self.view.frame = self.navigationController?.view.frame ?? self.view.frame
+
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupSearchBar()
@@ -73,9 +77,7 @@ class TagSelectionViewController: UIViewController {
 
     private func setupCollectionView() {
         self.collectionView.collectionViewLayout = self.createLayout()
-        self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
-        self.view.addSubview(self.collectionView)
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true

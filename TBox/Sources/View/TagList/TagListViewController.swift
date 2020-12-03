@@ -60,6 +60,10 @@ class TagListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // HACK: nibから読み込んでいるため初期サイズがnibに引きずられる
+        //       これによりCollectionViewのレイアウトが初回表示時にズレるのを防ぐ
+        self.view.frame = self.tabBarController?.view.frame ?? self.view.frame
+
         self.setupCollectionView()
         self.setupAppearance()
         self.updateNavigationBar(for: self.isEditing)

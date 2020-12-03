@@ -58,6 +58,10 @@ class AlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // HACK: nibから読み込んでいるため初期サイズがnibに引きずられる
+        //       これによりCollectionViewのレイアウトが初回表示時にズレるのを防ぐ
+        self.view.frame = self.navigationController?.view.frame ?? self.view.frame
+
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
