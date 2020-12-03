@@ -159,8 +159,8 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
 
         self.downsamplingQueue.async {
             guard let data = try? self.queryService.read(having: item.imageId) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to resolve image file url. (name=\(item.imageFileName), clipId=\(item.clipId)
+                self.logger.write(ConsoleLog(level: .debug, message: """
+                元画像ファイルの取得に失敗しました。iCloud同期前である可能性があります (name=\(item.imageFileName), clipId=\(item.clipId))
                 """))
                 completion(nil)
                 return
