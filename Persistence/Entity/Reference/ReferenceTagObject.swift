@@ -8,7 +8,6 @@ import RealmSwift
 final class ReferenceTagObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var name: String = ""
-    let clips = LinkingObjects(fromType: ReferenceClipObject.self, property: "tags")
     @objc dynamic var isDirty: Bool = false
 
     override static func primaryKey() -> String? {

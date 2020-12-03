@@ -93,84 +93,6 @@ public class ClipReferencesIntegrityValidationService {
 
         try self.referenceClipStorage.commitTransaction()
     }
-
-    private func validateAndFixClipsIntegrityIfNeeded() throws {
-        let referenceClips: [ReferenceClip.Identity: ReferenceClip]
-        switch self.referenceClipStorage.readAllClips() {
-        case let .success(result):
-            referenceClips = result.reduce(into: [ReferenceClip.Identity: ReferenceClip]()) { result, clip in
-                result[clip.identity] = clip
-            }
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read reference clips: \(error.localizedDescription)
-            """))
-            return
-        }
-
-        let clips: [Clip.Identity: Clip]
-        switch self.clipStorage.readAllClips() {
-        case let .success(result):
-            clips = result.reduce(into: [Clip.Identity: Clip]()) { result, clip in
-                result[clip.identity] = clip
-            }
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read clips: \(error.localizedDescription)
-            """))
-            return
-        }
-
-        try self.referenceClipStorage.beginTransaction()
-
-        for (clipId, clip) in clips {
-            if let referenceClip = referenceClips[clipId] {
-                // Dirtyフラグが立っていた場合、整合の対象から外す
-                if referenceClip.isDirty { continue }
-
-                let expectedClip = ReferenceClip(id: clip.id,
-                                                 description: clip.description,
-                                                 tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
-                                                 isHidden: clip.isHidden,
-                                                 registeredDate: clip.registeredDate)
-
-                // 同一であれば、整合性が保たれているとみなし、何もしない
-                if referenceClip == expectedClip { continue }
-
-                if case let .failure(error) = self.referenceClipStorage.create(clip: expectedClip) {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to create reference clip: \(error.localizedDescription)
-                    """))
-                }
-            } else {
-                let newClip = ReferenceClip(id: clip.id,
-                                            description: clip.description,
-                                            tags: clip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
-                                            isHidden: clip.isHidden,
-                                            registeredDate: clip.registeredDate)
-                if case let .failure(error) = self.referenceClipStorage.create(clip: newClip) {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to create reference clip: \(error.localizedDescription)
-                    """))
-                }
-            }
-        }
-
-        let extraClipIds = Set(referenceClips.keys)
-            .subtracting(Set(clips.keys))
-            .filter { referenceClips[$0]?.isDirty == false }
-        if !extraClipIds.isEmpty {
-            if case let .failure(error) = self.referenceClipStorage.deleteClips(having: Array(extraClipIds)) {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to delete extra clips: \(error.localizedDescription)
-                """))
-            }
-        }
-
-        try self.referenceClipStorage.commitTransaction()
-    }
 }
 
 extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValidationServiceProtocol {
@@ -180,7 +102,6 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
         self.queue.sync {
             do {
                 try self.validateAndFixTagsIntegrityIfNeeded()
-                try self.validateAndFixClipsIntegrityIfNeeded()
             } catch {
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """

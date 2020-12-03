@@ -87,26 +87,6 @@ extension ImageSize {
     }
 }
 
-extension ReferenceClip {
-    static func makeDefault(
-        id: UUID = UUID(),
-        description: String? = nil,
-        tags: [ReferenceTag] = [],
-        isHidden: Bool = false,
-        registeredDate: Date = Date(timeIntervalSince1970: 0),
-        isDirty: Bool = false
-    ) -> Self {
-        return .init(
-            id: id,
-            description: description,
-            tags: tags,
-            isHidden: isHidden,
-            registeredDate: registeredDate,
-            isDirty: isDirty
-        )
-    }
-}
-
 extension ReferenceTag {
     static func makeDefault(
         id: UUID = UUID(),
@@ -124,11 +104,13 @@ extension ReferenceTag {
 extension Tag {
     static func makeDefault(
         id: UUID = UUID(),
-        name: String = ""
+        name: String = "",
+        clipCount: Int? = nil
     ) -> Self {
         return .init(
             id: id,
-            name: name
+            name: name,
+            clipCount: clipCount
         )
     }
 }

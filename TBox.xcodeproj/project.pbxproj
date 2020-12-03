@@ -230,9 +230,7 @@
 		2CB6257A252A1126001C3368 /* TagCollectionEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */; };
 		2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */; };
 		2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F92253890A500ECFF47 /* ImageStorage.swift */; };
-		2CBA83E0254C6F7E00DA5045 /* ReferenceClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA83DF254C6F7E00DA5045 /* ReferenceClip.swift */; };
 		2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */; };
-		2CBA8408254C712300DA5045 /* ReferenceClipObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8407254C712300DA5045 /* ReferenceClipObject.swift */; };
 		2CBA8413254C71C600DA5045 /* ReferenceTagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */; };
 		2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */; };
 		2CBA8432254C744000DA5045 /* ReferenceClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */; };
@@ -843,9 +841,7 @@
 		2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionEmptyCell.swift; sourceTree = "<group>"; };
 		2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionEmptyCell.xib; sourceTree = "<group>"; };
 		2CBA2F92253890A500ECFF47 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
-		2CBA83DF254C6F7E00DA5045 /* ReferenceClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClip.swift; sourceTree = "<group>"; };
 		2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTag.swift; sourceTree = "<group>"; };
-		2CBA8407254C712300DA5045 /* ReferenceClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipObject.swift; sourceTree = "<group>"; };
 		2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTagObject.swift; sourceTree = "<group>"; };
 		2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorage.swift; sourceTree = "<group>"; };
 		2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageProtocol.swift; sourceTree = "<group>"; };
@@ -1168,7 +1164,6 @@
 		2C0B5CD4254D861000FA43F8 /* Reference */ = {
 			isa = PBXGroup;
 			children = (
-				2CBA8407254C712300DA5045 /* ReferenceClipObject.swift */,
 				2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */,
 			);
 			path = Reference;
@@ -1188,7 +1183,6 @@
 		2C1040DC254D9534000DF7DE /* Reference */ = {
 			isa = PBXGroup;
 			children = (
-				2CBA83DF254C6F7E00DA5045 /* ReferenceClip.swift */,
 				2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */,
 			);
 			path = Reference;
@@ -3655,7 +3649,6 @@
 				2C306CFE25721F2100947E77 /* CloudAccountIdentifier.swift in Sources */,
 				2CD25B08251E469B00BEE210 /* AlbumQuery.swift in Sources */,
 				2C3506B525178FD5009248C6 /* ImageExtensionResolver.swift in Sources */,
-				2CBA83E0254C6F7E00DA5045 /* ReferenceClip.swift in Sources */,
 				2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */,
 				2C1F29882560F7A800B89AE9 /* ImageContainer.swift in Sources */,
 				2CD25B24251E46EA00BEE210 /* TagQuery.swift in Sources */,
@@ -3792,7 +3785,6 @@
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */,
 				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
-				2CBA8408254C712300DA5045 /* ReferenceClipObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C9EF6B7253DE70A00CBF357 /* ThumbnailStorage.swift in Sources */,
 				2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */,

@@ -55,41 +55,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                let createdClip: Clip
                 let oldClip: Clip?
                 switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
                 case let .success(result):
-                    createdClip = result.new
                     oldClip = result.old
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     try? self.imageStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     クリップの保存に失敗: \(error.localizedDescription)
-                    """))
-                    return .failure(error)
-                }
-
-                let referenceClip = ReferenceClip(id: createdClip.identity,
-                                                  description: createdClip.description,
-                                                  tags: createdClip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
-                                                  isHidden: createdClip.isHidden,
-                                                  registeredDate: createdClip.registeredDate)
-                switch self.referenceClipStorage.create(clip: referenceClip) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    軽量クリップの保存に失敗: \(error.localizedDescription)
                     """))
                     return .failure(error)
                 }
@@ -102,13 +79,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 クリップの保存に失敗: \(error.localizedDescription)
@@ -206,7 +181,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
 
                 switch self.clipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds) {
                 case .success:
@@ -214,33 +188,17 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to update clips. (error=\(error.localizedDescription))
-                    """))
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     return .failure(error)
                 }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
@@ -253,7 +211,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
 
                 switch self.clipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds) {
                 case .success:
@@ -261,20 +218,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to update clips. (error=\(error.localizedDescription))
-                    """))
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
@@ -282,12 +225,10 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
@@ -300,7 +241,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
 
                 switch self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
                 case .success:
@@ -308,20 +248,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to update clips. (error=\(error.localizedDescription))
-                    """))
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
@@ -329,12 +255,10 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
@@ -464,7 +388,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
                 let clips: [Clip]
@@ -474,21 +397,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to delete clips. (error=\(error.localizedDescription))
-                    """))
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.deleteClips(having: ids) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     try? self.imageStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete clips. (error=\(error.localizedDescription))
@@ -501,7 +409,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     .allSatisfy { try self.imageStorage.exists(having: $0.imageId) }
                 guard existsFiles else {
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     try? self.imageStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete clips. No image files found.
@@ -514,13 +421,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     .forEach { try? self.imageStorage.delete(having: $0.imageId) }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to delete clips. (error=\(error.localizedDescription))

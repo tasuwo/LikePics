@@ -82,27 +82,6 @@ extension AlbumObject {
     }
 }
 
-extension ReferenceClipObject {
-    static func makeDefault(id: String = "",
-                            descriptionText: String? = nil,
-                            tags: [ReferenceTagObject] = [],
-                            isHidden: Bool = false,
-                            registeredAt: Date = Date(timeIntervalSince1970: 0),
-                            isDirty: Bool = false) -> ReferenceClipObject
-    {
-        let obj = ReferenceClipObject()
-        obj.id = id
-        obj.descriptionText = descriptionText
-        tags.forEach {
-            obj.tags.append($0)
-        }
-        obj.isHidden = isHidden
-        obj.registeredAt = registeredAt
-        obj.isDirty = isDirty
-        return obj
-    }
-}
-
 extension ReferenceTagObject {
     static func makeDefault(id: String = "",
                             name: String = "",

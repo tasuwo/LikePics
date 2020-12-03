@@ -21,7 +21,7 @@ class NewClipStorageSpec: QuickSpec {
         let container = NSPersistentContainer(name: "Model", managedObjectModel: model)
 
         let persistentStoreDescription = NSPersistentStoreDescription()
-        persistentStoreDescription.type = NSInMemoryStoreType
+        persistentStoreDescription.url = URL(fileURLWithPath: "/dev/null")
         container.persistentStoreDescriptions = [persistentStoreDescription]
 
         container.loadPersistentStores { _, error in

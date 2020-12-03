@@ -13,7 +13,6 @@ extension ReferenceClipStorage.Configuration {
             migrationBlock: ReferenceClipStorageMigrationService.migrationBlock,
             deleteRealmIfMigrationNeeded: false,
             objectTypes: [
-                ReferenceClipObject.self,
                 ReferenceTagObject.self
             ]
         )

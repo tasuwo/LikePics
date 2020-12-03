@@ -81,21 +81,6 @@ public class TemporaryClipsPersistService {
                 return false
             }
 
-            switch self.referenceClipStorage.updateClips(having: [clipId], byUpdatingDirty: false) {
-            case .success:
-                break
-
-            case let .failure(error):
-                try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.temporaryClipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                try? self.imageStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                参照クリップのisDirty更新に失敗: \(error.localizedDescription)
-                """))
-                return false
-            }
-
             oldClip?.items.forEach { item in
                 try? self.imageStorage.delete(having: item.imageId)
             }
@@ -150,17 +135,6 @@ public class TemporaryClipsPersistService {
             一時保存領域の画像群の削除に失敗: \(error.localizedDescription)
             """))
         }
-
-        // 正常に移行できなかったクリップのDirtyフラグを折り、整合性チェックに整合は任せる
-        do {
-            try self.referenceClipStorage.beginTransaction()
-            _ = self.referenceClipStorage.cleanAllClips()
-            try self.referenceClipStorage.commitTransaction()
-        } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            参照用クリップ群のDirtyフラグを折るのに失敗: \(error.localizedDescription)
-            """))
-        }
     }
 }
 
@@ -178,20 +152,6 @@ extension TemporaryClipsPersistService: TemporaryClipsPersistServiceProtocol {
             self.isRunning = true
             defer { self.isRunning = false }
 
-            let persistTargets: [Clip.Identity]
-            switch self.referenceClipStorage.readAllDirtyClips() {
-            case let .success(clips):
-                persistTargets = clips.map { $0.identity }
-
-            case let .failure(error):
-                self.logger.write(ConsoleLog(level: .error, message: """
-                参照クリップ群の読み取りに失敗: \(error.localizedDescription)
-                """))
-                return true
-            }
-
-            if persistTargets.isEmpty { return true }
-
             let temporaryClips: [Clip.Identity: Clip]
             switch self.temporaryClipStorage.readAllClips() {
             case let .success(clips):
@@ -207,7 +167,7 @@ extension TemporaryClipsPersistService: TemporaryClipsPersistServiceProtocol {
             }
 
             var persistentSkippedClipIds: [Clip.Identity] = []
-            for clipId in persistTargets {
+            for (clipId, _) in temporaryClips {
                 guard self.persist(clipId: clipId, in: temporaryClips) else {
                     persistentSkippedClipIds.append(clipId)
                     continue

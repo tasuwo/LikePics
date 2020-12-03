@@ -6,18 +6,15 @@ import Common
 
 public class TemporaryClipCommandService {
     private let clipStorage: ClipStorageProtocol
-    private let referenceClipStorage: ReferenceClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.TemporaryClipCommandService")
 
     public init(clipStorage: ClipStorageProtocol,
-                referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 logger: TBoxLoggable)
     {
         self.clipStorage = clipStorage
-        self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
         self.logger = logger
     }
@@ -42,7 +39,6 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.beginTransaction()
-                try self.referenceClipStorage.beginTransaction()
 
                 let createdClip: Clip
                 switch self.clipStorage.create(clip: clip, allowTagCreation: true, overwrite: forced) {
@@ -51,28 +47,8 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     一時クリップの保存に失敗: \(error.localizedDescription)
-                    """))
-                    return .failure(error)
-                }
-
-                let referenceClip = ReferenceClip(id: createdClip.identity,
-                                                  description: createdClip.description,
-                                                  tags: createdClip.tags.map { ReferenceTag(id: $0.id, name: $0.name) },
-                                                  isHidden: createdClip.isHidden,
-                                                  registeredDate: createdClip.registeredDate,
-                                                  isDirty: true)
-                switch self.referenceClipStorage.create(clip: referenceClip) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    軽量クリップの保存に失敗: \(error.localizedDescription)
                     """))
                     return .failure(error)
                 }
@@ -84,12 +60,10 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.commitTransaction()
-                try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時クリップの保存に失敗: \(error.localizedDescription)
                 """))

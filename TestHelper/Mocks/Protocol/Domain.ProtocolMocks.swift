@@ -669,26 +669,6 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         }
     }
 
-    public private(set) var readAllClipsCallCount = 0
-    public var readAllClipsHandler: (() -> (Result<[ReferenceClip], ClipStorageError>))?
-    public func readAllClips() -> Result<[ReferenceClip], ClipStorageError> {
-        readAllClipsCallCount += 1
-        if let readAllClipsHandler = readAllClipsHandler {
-            return readAllClipsHandler()
-        }
-        fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readAllDirtyClipsCallCount = 0
-    public var readAllDirtyClipsHandler: (() -> (Result<[ReferenceClip], ClipStorageError>))?
-    public func readAllDirtyClips() -> Result<[ReferenceClip], ClipStorageError> {
-        readAllDirtyClipsCallCount += 1
-        if let readAllDirtyClipsHandler = readAllDirtyClipsHandler {
-            return readAllDirtyClipsHandler()
-        }
-        fatalError("readAllDirtyClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
     public private(set) var readAllTagsCallCount = 0
     public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
     public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
@@ -699,34 +679,14 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
     }
 
-    public private(set) var readClipCallCount = 0
-    public var readClipHandler: ((URL) -> (Result<ReferenceClip?, ClipStorageError>))?
-    public func readClip(havingUrl url: URL) -> Result<ReferenceClip?, ClipStorageError> {
-        readClipCallCount += 1
-        if let readClipHandler = readClipHandler {
-            return readClipHandler(url)
-        }
-        fatalError("readClipHandler returns can't have a default value thus its handler must be set")
-    }
-
     public private(set) var createCallCount = 0
-    public var createHandler: ((ReferenceClip) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: ReferenceClip) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
+    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
-            return createHandler(clip)
+            return createHandler(tag)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var createTagCallCount = 0
-    public var createTagHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
-    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
-        createTagCallCount += 1
-        if let createTagHandler = createTagHandler {
-            return createTagHandler(tag)
-        }
-        fatalError("createTagHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateTagCallCount = 0
@@ -737,66 +697,6 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
             return updateTagHandler(id, name)
         }
         fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateClipsCallCount = 0
-    public var updateClipsHandler: (([ReferenceClip.Identity], [ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateClips(having clipIds: [ReferenceClip.Identity], byAddingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
-        updateClipsCallCount += 1
-        if let updateClipsHandler = updateClipsHandler {
-            return updateClipsHandler(clipIds, tagIds)
-        }
-        fatalError("updateClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateClipsHavingCallCount = 0
-    public var updateClipsHavingHandler: (([ReferenceClip.Identity], [ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateClips(having clipIds: [ReferenceClip.Identity], byDeletingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
-        updateClipsHavingCallCount += 1
-        if let updateClipsHavingHandler = updateClipsHavingHandler {
-            return updateClipsHavingHandler(clipIds, tagIds)
-        }
-        fatalError("updateClipsHavingHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateClipsHavingByReplacingTagsHavingCallCount = 0
-    public var updateClipsHavingByReplacingTagsHavingHandler: (([ReferenceClip.Identity], [ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateClips(having clipIds: [ReferenceClip.Identity], byReplacingTagsHaving tagIds: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
-        updateClipsHavingByReplacingTagsHavingCallCount += 1
-        if let updateClipsHavingByReplacingTagsHavingHandler = updateClipsHavingByReplacingTagsHavingHandler {
-            return updateClipsHavingByReplacingTagsHavingHandler(clipIds, tagIds)
-        }
-        fatalError("updateClipsHavingByReplacingTagsHavingHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateClipsHavingByUpdatingDirtyCallCount = 0
-    public var updateClipsHavingByUpdatingDirtyHandler: (([ReferenceClip.Identity], Bool) -> (Result<Void, ClipStorageError>))?
-    public func updateClips(having clipIds: [ReferenceClip.Identity], byUpdatingDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
-        updateClipsHavingByUpdatingDirtyCallCount += 1
-        if let updateClipsHavingByUpdatingDirtyHandler = updateClipsHavingByUpdatingDirtyHandler {
-            return updateClipsHavingByUpdatingDirtyHandler(clipIds, isDirty)
-        }
-        fatalError("updateClipsHavingByUpdatingDirtyHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var cleanAllClipsCallCount = 0
-    public var cleanAllClipsHandler: (() -> (Result<Void, ClipStorageError>))?
-    public func cleanAllClips() -> Result<Void, ClipStorageError> {
-        cleanAllClipsCallCount += 1
-        if let cleanAllClipsHandler = cleanAllClipsHandler {
-            return cleanAllClipsHandler()
-        }
-        fatalError("cleanAllClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var deleteClipsCallCount = 0
-    public var deleteClipsHandler: (([ReferenceClip.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func deleteClips(having ids: [ReferenceClip.Identity]) -> Result<Void, ClipStorageError> {
-        deleteClipsCallCount += 1
-        if let deleteClipsHandler = deleteClipsHandler {
-            return deleteClipsHandler(ids)
-        }
-        fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var deleteTagsCallCount = 0
