@@ -194,7 +194,3 @@ extension CoreDataStack: CloudStack {
         self.reloadStack(isICloudSyncEnabled: isCloudSyncEnabled)
     }
 }
-
-public extension Notification.Name {
-    static let didFindRelevantTransactions = Notification.Name("didFindRelevantTransactions")
-}

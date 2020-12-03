@@ -45,6 +45,7 @@
 		2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */; };
 		2C104108254D968E000DF7DE /* TemporaryClipsPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */; };
 		2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */; };
+		2C122AE12578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */; };
 		2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1524312532EB0A00C51847 /* Array+identifiable.swift */; };
 		2C1604F42520438400A39E58 /* TopClipsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */; };
 		2C1604FE2520448500A39E58 /* TopClipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */; };
@@ -645,6 +646,7 @@
 		2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsPersistServiceProtocol.swift; sourceTree = "<group>"; };
 		2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsPersistService.swift; sourceTree = "<group>"; };
 		2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationService.swift; sourceTree = "<group>"; };
+		2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification_Name+DidFindRelevantTransactions.swift"; sourceTree = "<group>"; };
 		2C1524312532EB0A00C51847 /* Array+identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+identifiable.swift"; sourceTree = "<group>"; };
 		2C1604F32520438300A39E58 /* TopClipsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListPresenter.swift; sourceTree = "<group>"; };
 		2C1604FD2520448500A39E58 /* TopClipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipsListViewController.swift; sourceTree = "<group>"; };
@@ -1227,6 +1229,14 @@
 				2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */,
 			);
 			path = Persist;
+			sourceTree = "<group>";
+		};
+		2C122ADF2578B3D200AD23B4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		2C1524302532EAFA00C51847 /* Extensions */ = {
@@ -2105,6 +2115,7 @@
 		2C99275F24DDC7D300672CA7 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2C122ADF2578B3D200AD23B4 /* Extensions */,
 				2C99278424DDCAA100672CA7 /* Storages */,
 				2C523CF8254AEE5C0099F6DD /* Services */,
 				2C8AF8A324E3EE4200CB0642 /* ValueObject */,
@@ -3621,6 +3632,7 @@
 				2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */,
 				2C306D08257220F200947E77 /* CurrentICloudAccountResolver.swift in Sources */,
 				2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */,
+				2C122AE12578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */,
 				2C6C79CC253B409F00A8A9B8 /* ClipStorageError.swift in Sources */,
 				2CD25AE4251E454500BEE210 /* ClipListQuery.swift in Sources */,
 				2CBA8432254C744000DA5045 /* ReferenceClipStorageProtocol.swift in Sources */,
