@@ -99,7 +99,6 @@
 		2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */; };
 		2C3ADF5C24EEE44C007C4AA0 /* AlbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */; };
 		2C3ADF5E24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3ADF5D24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift */; };
-		2C3ADF6124EEE6DF007C4AA0 /* AlbumSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C3ADF6024EEE6DF007C4AA0 /* AlbumSelectionViewController.xib */; };
 		2C3BD964254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */; };
 		2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */; };
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
@@ -711,7 +710,6 @@
 		2C3ADF5824EEE308007C4AA0 /* AlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumViewController.xib; sourceTree = "<group>"; };
 		2C3ADF5B24EEE44C007C4AA0 /* AlbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPresenter.swift; sourceTree = "<group>"; };
 		2C3ADF5D24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionViewController.swift; sourceTree = "<group>"; };
-		2C3ADF6024EEE6DF007C4AA0 /* AlbumSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumSelectionViewController.xib; sourceTree = "<group>"; };
 		2C3BD963254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		2C3C955C24DF9A2700471813 /* WebImageProvidingService_Pixiv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService_Pixiv.swift; sourceTree = "<group>"; };
@@ -1477,7 +1475,6 @@
 			isa = PBXGroup;
 			children = (
 				2C3ADF5D24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift */,
-				2C3ADF6024EEE6DF007C4AA0 /* AlbumSelectionViewController.xib */,
 			);
 			path = AlbumSelection;
 			sourceTree = "<group>";
@@ -3100,7 +3097,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */,
-				2C3ADF6124EEE6DF007C4AA0 /* AlbumSelectionViewController.xib in Resources */,
 				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
 				2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,

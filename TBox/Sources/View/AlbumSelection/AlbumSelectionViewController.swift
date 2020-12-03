@@ -25,7 +25,8 @@ class AlbumSelectionViewController: UIViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UITableViewDiffableDataSource<Section, Album>!
 
-    @IBOutlet var tableView: AlbumSelectionTableView!
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var tableView: AlbumSelectionTableView!
 
     // MARK: - Lifecycle
 
@@ -70,6 +71,10 @@ class AlbumSelectionViewController: UIViewController {
     // MARK: Table View
 
     private func setupTableView() {
+        self.tableView = AlbumSelectionTableView(frame: self.view.bounds, style: .plain)
+        self.tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.tableView.backgroundColor = Asset.backgroundClient.color
+        self.view.addSubview(self.tableView)
         self.tableView.delegate = self
         self.configureDataSource()
     }
