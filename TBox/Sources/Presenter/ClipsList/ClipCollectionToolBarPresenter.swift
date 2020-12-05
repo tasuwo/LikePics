@@ -2,33 +2,18 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-protocol ClipsListToolBarItemsPresenterDataSouce: AnyObject {
-    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int
+protocol ClipCollectionToolBarPresenterDataSource: AnyObject {
+    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int
 }
 
-protocol ClipsListToolBar: AnyObject {
+protocol ClipCollectionToolBar: AnyObject {
     func showToolBar()
     func hideToolBar()
-    func set(_ items: [ClipsListToolBarItemsPresenter.Item])
+    func set(_ items: [ClipCollection.ToolBarItem])
 }
 
-class ClipsListToolBarItemsPresenter {
-    enum Item {
-        case spacer
-        case add
-        case delete
-        case removeFromAlbum
-        case hide
-        case unhide
-    }
-
-    enum DisplayTarget {
-        case top
-        case album
-        case searchResult
-    }
-
-    private let target: DisplayTarget
+class ClipCollectionToolBarPresenter {
+    private let context: ClipCollection.Context
 
     private var isEditing: Bool = false {
         didSet {
@@ -40,18 +25,18 @@ class ClipsListToolBarItemsPresenter {
         self.dataSource?.selectedClipsCount(self) ?? 0
     }
 
-    weak var toolBar: ClipsListToolBar? {
+    weak var toolBar: ClipCollectionToolBar? {
         didSet {
             self.updateItems()
         }
     }
 
-    weak var dataSource: ClipsListToolBarItemsPresenterDataSouce?
+    weak var dataSource: ClipCollectionToolBarPresenterDataSource?
 
     // MARK: - Lifecycle
 
-    init(target: DisplayTarget, dataSource: ClipsListToolBarItemsPresenterDataSouce) {
-        self.target = target
+    init(context: ClipCollection.Context, dataSource: ClipCollectionToolBarPresenterDataSource) {
+        self.context = context
         self.dataSource = dataSource
     }
 
@@ -77,7 +62,7 @@ class ClipsListToolBarItemsPresenter {
             .spacer,
             .unhide,
             .spacer,
-            self.target == .album ? .removeFromAlbum : .delete
+            self.context.isAlbum ? .removeFromAlbum : .delete
         ])
     }
 }

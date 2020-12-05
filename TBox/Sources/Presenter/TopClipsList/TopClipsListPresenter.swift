@@ -287,10 +287,10 @@ extension TopClipsListPresenter: ClipCollectionNavigationBarPresenterDataSource 
     }
 }
 
-extension TopClipsListPresenter: ClipsListToolBarItemsPresenterDataSouce {
-    // MARK: - ClipsListToolBarItemsPresenterDataSouce
+extension TopClipsListPresenter: ClipCollectionToolBarPresenterDataSource {
+    // MARK: - ClipCollectionToolBarPresenterDataSource
 
-    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {
+    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
         return self.selections.count
     }
 }

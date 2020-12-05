@@ -33,7 +33,7 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .top, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
         let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
 
         let viewController = TopClipsListViewController(factory: self,
@@ -204,7 +204,7 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .searchResult, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
         let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
 
         return SearchResultViewController(factory: self,
@@ -260,7 +260,7 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .album, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: true), dataSource: presenter)
         let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
 
         return AlbumViewController(factory: self,

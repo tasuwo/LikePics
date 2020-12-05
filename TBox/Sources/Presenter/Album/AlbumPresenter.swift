@@ -343,10 +343,10 @@ extension AlbumPresenter: ClipCollectionNavigationBarPresenterDataSource {
     }
 }
 
-extension AlbumPresenter: ClipsListToolBarItemsPresenterDataSouce {
-    // MARK: - ClipsListToolBarItemsPresenterDataSouce
+extension AlbumPresenter: ClipCollectionToolBarPresenterDataSource {
+    // MARK: - ClipCollectionToolBarPresenterDataSource
 
-    func selectedClipsCount(_ presenter: ClipsListToolBarItemsPresenter) -> Int {
+    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
         return self.selections.count
     }
 }

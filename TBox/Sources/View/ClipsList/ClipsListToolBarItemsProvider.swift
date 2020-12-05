@@ -37,11 +37,11 @@ class ClipsListToolBarItemsProvider {
         }
     }
 
-    private let presenter: ClipsListToolBarItemsPresenter
+    private let presenter: ClipCollectionToolBarPresenter
 
     // MARK: - Lifecycle
 
-    init(presenter: ClipsListToolBarItemsPresenter) {
+    init(presenter: ClipCollectionToolBarPresenter) {
         self.presenter = presenter
 
         self.flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
@@ -126,7 +126,7 @@ class ClipsListToolBarItemsProvider {
         self.delegate?.shouldUnhide(self)
     }
 
-    private func resolveBarButtonItem(for item: ClipsListToolBarItemsPresenter.Item) -> UIBarButtonItem {
+    private func resolveBarButtonItem(for item: ClipCollection.ToolBarItem) -> UIBarButtonItem {
         switch item {
         case .spacer:
             return self.flexibleItem
@@ -149,8 +149,8 @@ class ClipsListToolBarItemsProvider {
     }
 }
 
-extension ClipsListToolBarItemsProvider: ClipsListToolBar {
-    // MARK: - ClipsListToolBar
+extension ClipsListToolBarItemsProvider: ClipCollectionToolBar {
+    // MARK: - ClipCollectionToolBar
 
     func showToolBar() {
         self.delegate?.shouldShowToolBar(self)
@@ -160,7 +160,7 @@ extension ClipsListToolBarItemsProvider: ClipsListToolBar {
         self.delegate?.shouldHideToolBar(self)
     }
 
-    func set(_ items: [ClipsListToolBarItemsPresenter.Item]) {
+    func set(_ items: [ClipCollection.ToolBarItem]) {
         self.delegate?.clipsListToolBarItemsProvider(self, shouldSetToolBarItems: items.map { self.resolveBarButtonItem(for: $0) })
     }
 }
