@@ -61,10 +61,35 @@ extension SettingsViewController: SettingsViewProtocol {
         self.syncICloudSwitch.setOn(isICloudSyncEnabled, animated: true)
     }
 
-    func show(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default, handler: nil)
+    func confirmToUnavailabilityICloudSync(shouldTurnOff: @escaping (Bool) -> Void) {
+        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
+                                                message: L10n.errorIcloudUnavailableMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in
+            shouldTurnOff(false)
+        }
+        let turnOffAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOffAction,
+                                          style: .cancel) { _ in
+            shouldTurnOff(true)
+        }
         alertController.addAction(okAction)
+        alertController.addAction(turnOffAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    func confirmToUnavailabilityICloudSync(shouldTurnOn: @escaping (Bool) -> Void) {
+        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
+                                                message: L10n.errorIcloudUnavailableMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in
+            shouldTurnOn(false)
+        }
+        let turnOnAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOnAction,
+                                          style: .cancel) { _ in
+            shouldTurnOn(true)
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(turnOnAction)
         self.present(alertController, animated: true, completion: nil)
     }
 

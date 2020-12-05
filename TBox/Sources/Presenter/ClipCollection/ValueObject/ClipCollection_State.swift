@@ -9,6 +9,7 @@ extension ClipCollection {
             case selecting
             case reordering
         }
+
         let clipsCount: Int
         let selectedClipsCount: Int
         let mode: Mode

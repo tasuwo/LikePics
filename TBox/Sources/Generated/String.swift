@@ -182,6 +182,10 @@ internal enum L10n {
     internal static let errorIcloudUnavailableMessage = L10n.tr("Localizable", "error_icloud_unavailable_message")
     /// iCloudが利用できません
     internal static let errorIcloudUnavailableTitle = L10n.tr("Localizable", "error_icloud_unavailable_title")
+    /// iCloud同期を利用しない
+    internal static let errorIcloudUnavailableTurnOffAction = L10n.tr("Localizable", "error_icloud_unavailable_turn_off_action")
+    /// iCloud同期を自動で有効にする
+    internal static let errorIcloudUnavailableTurnOnAction = L10n.tr("Localizable", "error_icloud_unavailable_turn_on_action")
     /// タグの追加に失敗しました
     internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
     /// 同名のタグを追加することはできません

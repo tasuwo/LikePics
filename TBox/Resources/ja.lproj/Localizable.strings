@@ -147,5 +147,7 @@
 "error_icloud_default_message" = "しばらく時間を置いてから再度お試しください";
 "error_icloud_unavailable_title" = "iCloudが利用できません";
 "error_icloud_unavailable_message" = "iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。\niCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます";
+"error_icloud_unavailable_turn_off_action" = "iCloud同期を利用しない";
+"error_icloud_unavailable_turn_on_action" = "iCloud同期を自動で有効にする";
 "error_icloud_account_changed_title" = "iCloudアカウントが異なります";
 "error_icloud_account_changed_message" = "以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます";
