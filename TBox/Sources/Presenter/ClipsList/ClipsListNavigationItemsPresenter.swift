@@ -19,12 +19,15 @@ class ClipsListNavigationItemsPresenter {
         case selectAll
         case deselectAll
         case select(isEnabled: Bool)
-        case reorder
+        case reorder(isEnabled: Bool)
         case done
 
         var isEnabled: Bool {
             switch self {
             case let .select(isEnabled):
+                return isEnabled
+
+            case let .reorder(isEnabled):
                 return isEnabled
 
             default:
@@ -89,11 +92,15 @@ class ClipsListNavigationItemsPresenter {
             guard let dataSource = self.dataSource else { return false }
             return dataSource.clipsCount(self) > 0
         }()
+        let isReorderable: Bool = {
+            guard let dataSource = self.dataSource else { return false }
+            return dataSource.clipsCount(self) > 1
+        }()
 
         switch self.state {
         case .default:
             self.navigationBar?.setRightBarButtonItems([
-                (self.dataSource?.isReorderable(self) ?? false) ? .reorder : nil,
+                (self.dataSource?.isReorderable(self) ?? false) ? .reorder(isEnabled: isReorderable) : nil,
                 .select(isEnabled: isSelectable)
             ].compactMap { $0 })
             self.navigationBar?.setLeftBarButtonItems([])
