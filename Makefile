@@ -75,45 +75,23 @@ swiftformat_format: ## SwiftFormatによるフォーマットを実行する
 
 .PHONY: extract_app_data_as_ja
 extract_app_data_as_ja: ## 起動中のSimulatorからAppDataをDLする
-	if [[ ! -e ./ScreenshotData/ja-JP/Documents/net.tasuwo.TBox ]]; then mkdir -p ./ScreenshotData/ja-JP/Documents/net.tasuwo.TBox; fi
-	cp -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm" \
-		./ScreenshotData/AppData/ja-JP/Documents/net.tasuwo.TBox/clips.realm
-	cp -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/images" \
-		./ScreenshotData/AppData/ja-JP/Documents/net.tasuwo.TBox/images
+	./scripts/app_container.sh net.tasuwo.TBox.dev ja-JP export
 
 .PHONY: overwrite_app_data_ja
 overwrite_app_data_ja: ## 起動中のSimulatorにAppDataを受け渡す
-	xcrun simctl terminate booted net.tasuwo.TBox
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.lock"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.management"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.note"
-	cp -Rf ./ScreenshotData/AppData/ja-JP/Documents/net.tasuwo.TBox/clips.realm \
-		"`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm"
-	cp -Rf ./ScreenshotData/AppData/ja-JP/Documents/net.tasuwo.TBox/images \
-		"`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox"
-	xcrun simctl launch booted net.tasuwo.TBox
+	xcrun simctl terminate booted net.tasuwo.TBox.dev
+	./scripts/app_container.sh net.tasuwo.TBox.dev ja-JP import
+	xcrun simctl launch booted net.tasuwo.TBox.dev
 
 .PHONY: extract_app_data_as_en
 extract_app_data_as_en: ## 起動中のSimulatorからAppDataをDLする
-	if [[ ! -e ./ScreenshotData/en-US/Documents/net.tasuwo.TBox ]]; then mkdir -p ./ScreenshotData/en-US/Documents/net.tasuwo.TBox; fi
-	cp -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm" \
-		./ScreenshotData/AppData/en-US/Documents/net.tasuwo.TBox/clips.realm
-	cp -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/images" \
-		./ScreenshotData/AppData/en-US/Documents/net.tasuwo.TBox/images
+	./scripts/app_container.sh net.tasuwo.TBox.dev en-US export
 
 .PHONY: overwirte_app_data_en
 overwirte_app_data_en: ## 起動中のSimulatorにAppDataを受け渡す
-	xcrun simctl terminate booted net.tasuwo.TBox
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.lock"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.management"
-	rm -Rf "`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm.note"
-	cp -Rf ./ScreenshotData/AppData/en-US/Documents/net.tasuwo.TBox/clips.realm \
-		"`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox/clips.realm"
-	cp -Rf ./ScreenshotData/AppData/en-US/Documents/net.tasuwo.TBox/images \
-		"`xcrun simctl get_app_container booted net.tasuwo.TBox data`/Documents/net.tasuwo.TBox"
-	xcrun simctl launch booted net.tasuwo.TBox
+	xcrun simctl terminate booted net.tasuwo.TBox.dev
+	./scripts/app_container.sh net.tasuwo.TBox.dev en-US import
+	xcrun simctl launch booted net.tasuwo.TBox.dev
 
 .PHONY: help
 help: ## ヘルプを表示する
