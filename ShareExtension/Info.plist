@@ -25,7 +25,15 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<string>TRUEPREDICATE</string>
+			<!-- <string>TRUEPREDICATE</string> -->
+            <dict>
+                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+                <integer>10</integer>
+                <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+                <integer>10</integer>
+                <key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
+                <integer>10</integer>
+            </dict>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
