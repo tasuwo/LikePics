@@ -1541,7 +1541,7 @@
 			path = ClipsList;
 			sourceTree = "<group>";
 		};
-		2C3CCDAE24F2C4BF00FAC660 /* ClipsList */ = {
+		2C3CCDAE24F2C4BF00FAC660 /* ClipCollection */ = {
 			isa = PBXGroup;
 			children = (
 				2C1E4432257B5A1900A067B1 /* ValueObject */,
@@ -1549,7 +1549,7 @@
 				2CB3CB472515F29C00BE06E5 /* ClipCollectionToolBarPresenter.swift */,
 				2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */,
 			);
-			path = ClipsList;
+			path = ClipCollection;
 			sourceTree = "<group>";
 		};
 		2C3CCDC424F40D8700FAC660 /* Common */ = {
@@ -1747,7 +1747,7 @@
 			isa = PBXGroup;
 			children = (
 				2CDF4ED0257223680030342B /* Root */,
-				2C3CCDAE24F2C4BF00FAC660 /* ClipsList */,
+				2C3CCDAE24F2C4BF00FAC660 /* ClipCollection */,
 				2C45D3F224EC1E490045B6D3 /* Search */,
 				2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */,
 				2C570B5D24E04FAB00A1DC9F /* TopClipsList */,
