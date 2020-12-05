@@ -41,7 +41,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                         clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                                         navigationItemsProvider: navigationItemsProvider,
                                                         toolBarItemsProvider: toolBarItemsProvider,
-                                                        menuBuilder: ClipsListCollectionMenuBuilder.self)
+                                                        menuBuilder: ClipCollectionMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -212,7 +212,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
-                                          menuBuilder: ClipsListCollectionMenuBuilder.self)
+                                          menuBuilder: ClipCollectionMenuBuilder.self)
     }
 
     func makeAlbumListViewController() -> UIViewController? {
@@ -268,7 +268,7 @@ extension DependencyContainer: ViewControllerFactory {
                                    clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
-                                   menuBuilder: ClipsListCollectionMenuBuilder.self)
+                                   menuBuilder: ClipCollectionMenuBuilder.self)
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {

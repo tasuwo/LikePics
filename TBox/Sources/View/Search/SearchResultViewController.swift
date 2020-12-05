@@ -19,7 +19,7 @@ class SearchResultViewController: UIViewController {
     private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
     private let navigationItemsProvider: ClipsListNavigationItemsProvider
     private let toolBarItemsProvider: ClipsListToolBarItemsProvider
-    private let menuBuilder: ClipsListCollectionMenuBuildable.Type
+    private let menuBuilder: ClipCollectionMenuBuildable.Type
     private let emptyMessageView = EmptyMessageView()
 
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -39,7 +39,7 @@ class SearchResultViewController: UIViewController {
          clipsListCollectionViewProvider: ClipsListCollectionViewProvider,
          navigationItemsProvider: ClipsListNavigationItemsProvider,
          toolBarItemsProvider: ClipsListToolBarItemsProvider,
-         menuBuilder: ClipsListCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable.Type)
     {
         self.factory = factory
         self.presenter = presenter
@@ -257,12 +257,12 @@ extension SearchResultViewController: ClipsListCollectionViewProviderDataSource 
         self.presenter.fetchImage(for: clipItem, completion: completion)
     }
 
-    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionMenuBuildable.Type {
+    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipCollectionMenuBuildable.Type {
         return self.menuBuilder
     }
 
-    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionContext? {
-        return nil
+    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipCollection.Context {
+        return .init(isAlbum: false)
     }
 }
 

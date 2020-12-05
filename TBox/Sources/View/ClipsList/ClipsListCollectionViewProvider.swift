@@ -11,8 +11,8 @@ protocol ClipsListCollectionViewProviderDataSource: AnyObject {
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip?
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage?
     func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
-    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionMenuBuildable.Type
-    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionContext?
+    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipCollectionMenuBuildable.Type
+    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipCollection.Context
 }
 
 protocol ClipsListCollectionViewProviderDelegate: AnyObject {
@@ -128,11 +128,11 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
     }
 
     private func makeActionProvider(for clip: Clip) -> UIContextMenuActionProvider {
-        guard let builder = self.dataSource?.clipsListCollectionMenuBuilder(self) else {
-            return { _ in return UIMenu() }
-        }
+        guard let dataSource = self.dataSource else { return { _ in return UIMenu() } }
 
-        let context = self.dataSource?.clipsListCollectionMenuContext(self)
+        let builder = dataSource.clipsListCollectionMenuBuilder(self)
+        let context = dataSource.clipsListCollectionMenuContext(self)
+
         let items = builder.build(for: clip, context: context).map {
             self.makeAction(from: $0, for: clip)
         }
@@ -142,7 +142,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
         }
     }
 
-    private func makeAction(from item: ClipsListCollectionMenuItem, for clip: Clip) -> UIAction {
+    private func makeAction(from item: ClipCollection.MenuItem, for clip: Clip) -> UIAction {
         switch item {
         case .addTag:
             return UIAction(title: L10n.clipsListContextMenuAddTag,
