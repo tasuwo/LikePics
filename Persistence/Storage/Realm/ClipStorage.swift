@@ -124,6 +124,7 @@ extension ClipStorage: ClipStorageProtocol {
             newClipItem.imageUrl = item.imageUrl?.absoluteString
             newClipItem.imageHeight = item.imageSize.height
             newClipItem.imageWidth = item.imageSize.width
+            newClipItem.imageDataSize = item.imageDataSize
             newClipItem.registeredAt = item.registeredDate
             newClipItem.updatedAt = item.updatedDate
 
@@ -132,6 +133,7 @@ extension ClipStorage: ClipStorageProtocol {
 
         appendingTags.forEach { newClip.tags.append($0) }
 
+        newClip.dataSize = clip.dataSize
         newClip.isHidden = clip.isHidden
         newClip.registeredAt = clip.registeredDate
         newClip.updatedAt = clip.updatedDate
