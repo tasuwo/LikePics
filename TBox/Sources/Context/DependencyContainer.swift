@@ -39,6 +39,8 @@ class DependencyContainer {
     var imageQueryContext: NSManagedObjectContext
     var commandContext: NSManagedObjectContext
 
+    let monitor: ICloudSyncMonitor
+
     // MARK: Queue
 
     let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
@@ -55,6 +57,8 @@ class DependencyContainer {
         self.logger = RootLogger.shared
         self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
+
+        self.monitor = ICloudSyncMonitor(logger: self.logger)
 
         let userSettingsStorage = UserSettingsStorage()
         let cloudUsageContextStorage = CloudUsageContextStorage()

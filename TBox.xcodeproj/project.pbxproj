@@ -60,6 +60,7 @@
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
+		2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */; };
 		2C1F29442560DDE000B89AE9 /* NewImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */; };
 		2C1F297D2560EF4200B89AE9 /* NewImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F297C2560EF4200B89AE9 /* NewImageStorageProtocol.swift */; };
 		2C1F29882560F7A800B89AE9 /* ImageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29872560F7A800B89AE9 /* ImageContainer.swift */; };
@@ -663,6 +664,7 @@
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
+		2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncMonitor.swift; sourceTree = "<group>"; };
 		2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewImageStorage.swift; sourceTree = "<group>"; };
 		2C1F297C2560EF4200B89AE9 /* NewImageStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewImageStorageProtocol.swift; sourceTree = "<group>"; };
 		2C1F29872560F7A800B89AE9 /* ImageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageContainer.swift; sourceTree = "<group>"; };
@@ -1854,6 +1856,7 @@
 				2C6DD0EC255C2D4900E316A4 /* ClipQueryService.swift */,
 				2C1F29432560DDE000B89AE9 /* NewImageStorage.swift */,
 				2C1F29922560FF1B00B89AE9 /* NewImageQueryService.swift */,
+				2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -3792,6 +3795,7 @@
 				2C0B5C78254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift in Sources */,
 				2C122AF32578BEFE00AD23B4 /* CloudKitChangeDetecter.swift in Sources */,
 				2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */,
+				2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */,
 				2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
 				2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */,
