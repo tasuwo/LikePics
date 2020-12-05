@@ -16,9 +16,9 @@ class SearchResultViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: SearchResultPresenterProtocol
-    private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
-    private let navigationItemsProvider: ClipsListNavigationItemsProvider
-    private let toolBarItemsProvider: ClipsListToolBarItemsProvider
+    private let clipCollectionProvider: ClipCollectionProvider
+    private let navigationItemsProvider: ClipCollectionNavigationBarProvider
+    private let toolBarItemsProvider: ClipCollectionToolBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
     private let emptyMessageView = EmptyMessageView()
 
@@ -36,14 +36,14 @@ class SearchResultViewController: UIViewController {
 
     init(factory: Factory,
          presenter: SearchResultPresenterProtocol,
-         clipsListCollectionViewProvider: ClipsListCollectionViewProvider,
-         navigationItemsProvider: ClipsListNavigationItemsProvider,
-         toolBarItemsProvider: ClipsListToolBarItemsProvider,
+         clipCollectionProvider: ClipCollectionProvider,
+         navigationItemsProvider: ClipCollectionNavigationBarProvider,
+         toolBarItemsProvider: ClipCollectionToolBarProvider,
          menuBuilder: ClipCollectionMenuBuildable.Type)
     {
         self.factory = factory
         self.presenter = presenter
-        self.clipsListCollectionViewProvider = clipsListCollectionViewProvider
+        self.clipCollectionProvider = clipCollectionProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
         self.menuBuilder = menuBuilder
@@ -83,22 +83,22 @@ class SearchResultViewController: UIViewController {
     // MARK: CollectionView
 
     private func setupCollectionView() {
-        self.clipsListCollectionViewProvider.delegate = self
-        self.clipsListCollectionViewProvider.dataSource = self
+        self.clipCollectionProvider.delegate = self
+        self.clipCollectionProvider.dataSource = self
 
         let layout = ClipCollectionLayout()
-        layout.delegate = self.clipsListCollectionViewProvider
+        layout.delegate = self.clipCollectionProvider
 
         self.collectionView = ClipsCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.backgroundClient.color
-        self.collectionView.delegate = self.clipsListCollectionViewProvider
+        self.collectionView.delegate = self.clipCollectionProvider
         self.collectionView.contentInsetAdjustmentBehavior = .always
 
         self.view.addSubview(collectionView)
 
         self.dataSource = .init(collectionView: self.collectionView,
-                                cellProvider: self.clipsListCollectionViewProvider.provideCell(collectionView:indexPath:clip:))
+                                cellProvider: self.clipCollectionProvider.provideCell(collectionView:indexPath:clip:))
     }
 
     // MARK: NavigationBar
@@ -238,46 +238,46 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
     }
 }
 
-extension SearchResultViewController: ClipsListCollectionViewProviderDataSource {
-    // MARK: - ClipsListCollectionViewProviderDataSource
+extension SearchResultViewController: ClipCollectionProviderDataSource {
+    // MARK: - ClipCollectionProviderDataSource
 
-    func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool {
+    func isEditing(_ provider: ClipCollectionProvider) -> Bool {
         return self.isEditing
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip? {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, clipFor indexPath: IndexPath) -> Clip? {
         return self.dataSource.itemIdentifier(for: indexPath)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage? {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage? {
         return self.presenter.readImageIfExists(for: clipItem)
     }
 
-    func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
+    func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.presenter.fetchImage(for: clipItem, completion: completion)
     }
 
-    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipCollectionMenuBuildable.Type {
+    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
         return self.menuBuilder
     }
 
-    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipCollection.Context {
+    func clipsListCollectionMenuContext(_ provider: ClipCollectionProvider) -> ClipCollection.Context {
         return .init(isAlbum: false)
     }
 }
 
-extension SearchResultViewController: ClipsListCollectionViewProviderDelegate {
-    // MARK: - ClipsListCollectionViewProviderDelegate
+extension SearchResultViewController: ClipCollectionProviderDelegate {
+    // MARK: - ClipCollectionProviderDelegate
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelect clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity) {
         self.presenter.select(clipId: clipId)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselect clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity) {
         self.presenter.deselect(clipId: clipId)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddTagsTo clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
         guard
             let clip = self.presenter.clips.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
@@ -287,86 +287,86 @@ extension SearchResultViewController: ClipsListCollectionViewProviderDelegate {
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddToAlbum clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity) {
         guard let viewController = self.factory.makeAlbumSelectionViewController(context: clipId, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldRemoveFromAlbum clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity) {
         // NOP
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity) {
         self.presenter.deleteClip(having: clipId)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity) {
         self.presenter.unhideClip(having: clipId)
     }
 
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
         self.presenter.hideClip(having: clipId)
     }
 }
 
-extension SearchResultViewController: ClipsListAlertPresentable {}
+extension SearchResultViewController: ClipCollectionAlertPresentable {}
 
-extension SearchResultViewController: ClipsListNavigationItemsProviderDelegate {
-    // MARK: - ClipsListNavigationItemsProviderDelegate
+extension SearchResultViewController: ClipCollectionNavigationBarProviderDelegate {
+    // MARK: - ClipCollectionNavigationBarProviderDelegate
 
-    func didTapEditButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
         self.presenter.setEditing(true)
     }
 
-    func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
         self.presenter.setEditing(false)
     }
 
-    func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
         self.presenter.selectAll()
     }
 
-    func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapDeselectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
         self.presenter.deselectAll()
     }
 
-    func didTapReorderButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
         // NOP
     }
 
-    func didTapDoneButton(_ provider: ClipsListNavigationItemsProvider) {
+    func didTapDoneButton(_ provider: ClipCollectionNavigationBarProvider) {
         // NOP
     }
 }
 
-extension SearchResultViewController: ClipsListToolBarItemsProviderDelegate {
-    // MARK: - ClipsListToolBarItemsProviderDelegate
+extension SearchResultViewController: ClipCollectionToolBarProviderDelegate {
+    // MARK: - ClipCollectionToolBarProviderDelegate
 
-    func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldAddToAlbum(_ provider: ClipCollectionToolBarProvider) {
         guard !self.selectedClips.isEmpty else { return }
         guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func shouldAddTags(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldAddTags(_ provider: ClipCollectionToolBarProvider) {
         guard !self.selectedClips.isEmpty else { return }
         guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func shouldRemoveFromAlbum(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider) {
         // NOP
     }
 
-    func shouldDelete(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldDelete(_ provider: ClipCollectionToolBarProvider) {
         self.presenter.deleteSelectedClips()
     }
 
-    func shouldHide(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldHide(_ provider: ClipCollectionToolBarProvider) {
         self.presenter.hideSelectedClips()
     }
 
-    func shouldUnhide(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
         self.presenter.unhideSelectedClips()
     }
 }

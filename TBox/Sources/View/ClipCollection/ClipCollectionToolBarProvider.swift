@@ -4,19 +4,19 @@
 
 import UIKit
 
-protocol ClipsListToolBarItemsProviderDelegate: AnyObject {
-    func clipsListToolBarItemsProvider(_ provider: ClipsListToolBarItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem])
-    func shouldHideToolBar(_ provider: ClipsListToolBarItemsProvider)
-    func shouldShowToolBar(_ provider: ClipsListToolBarItemsProvider)
-    func shouldAddToAlbum(_ provider: ClipsListToolBarItemsProvider)
-    func shouldAddTags(_ provider: ClipsListToolBarItemsProvider)
-    func shouldDelete(_ provider: ClipsListToolBarItemsProvider)
-    func shouldRemoveFromAlbum(_ provider: ClipsListToolBarItemsProvider)
-    func shouldHide(_ provider: ClipsListToolBarItemsProvider)
-    func shouldUnhide(_ provider: ClipsListToolBarItemsProvider)
+protocol ClipCollectionToolBarProviderDelegate: AnyObject {
+    func clipCollectionToolBarProvider(_ provider: ClipCollectionToolBarProvider, shouldSetToolBarItems items: [UIBarButtonItem])
+    func shouldHideToolBar(_ provider: ClipCollectionToolBarProvider)
+    func shouldShowToolBar(_ provider: ClipCollectionToolBarProvider)
+    func shouldAddToAlbum(_ provider: ClipCollectionToolBarProvider)
+    func shouldAddTags(_ provider: ClipCollectionToolBarProvider)
+    func shouldDelete(_ provider: ClipCollectionToolBarProvider)
+    func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider)
+    func shouldHide(_ provider: ClipCollectionToolBarProvider)
+    func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
 }
 
-class ClipsListToolBarItemsProvider {
+class ClipCollectionToolBarProvider {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var flexibleItem: UIBarButtonItem!
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -30,8 +30,8 @@ class ClipsListToolBarItemsProvider {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var unhideItem: UIBarButtonItem!
 
-    weak var alertPresentable: ClipsListAlertPresentable?
-    weak var delegate: ClipsListToolBarItemsProviderDelegate? {
+    weak var alertPresentable: ClipCollectionAlertPresentable?
+    weak var delegate: ClipCollectionToolBarProviderDelegate? {
         didSet {
             self.presenter.toolBar = self
         }
@@ -149,7 +149,7 @@ class ClipsListToolBarItemsProvider {
     }
 }
 
-extension ClipsListToolBarItemsProvider: ClipCollectionToolBar {
+extension ClipCollectionToolBarProvider: ClipCollectionToolBar {
     // MARK: - ClipCollectionToolBar
 
     func showToolBar() {
@@ -161,20 +161,20 @@ extension ClipsListToolBarItemsProvider: ClipCollectionToolBar {
     }
 
     func set(_ items: [ClipCollection.ToolBarItem]) {
-        self.delegate?.clipsListToolBarItemsProvider(self, shouldSetToolBarItems: items.map { self.resolveBarButtonItem(for: $0) })
+        self.delegate?.clipCollectionToolBarProvider(self, shouldSetToolBarItems: items.map { self.resolveBarButtonItem(for: $0) })
     }
 }
 
-extension ClipsListToolBarItemsProviderDelegate where Self: UIViewController {
-    func clipsListToolBarItemsProvider(_ provider: ClipsListToolBarItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem]) {
+extension ClipCollectionToolBarProviderDelegate where Self: UIViewController {
+    func clipCollectionToolBarProvider(_ provider: ClipCollectionToolBarProvider, shouldSetToolBarItems items: [UIBarButtonItem]) {
         self.setToolbarItems(items, animated: true)
     }
 
-    func shouldHideToolBar(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldHideToolBar(_ provider: ClipCollectionToolBarProvider) {
         self.navigationController?.setToolbarHidden(true, animated: true)
     }
 
-    func shouldShowToolBar(_ provider: ClipsListToolBarItemsProvider) {
+    func shouldShowToolBar(_ provider: ClipCollectionToolBarProvider) {
         self.navigationController?.setToolbarHidden(false, animated: true)
     }
 }

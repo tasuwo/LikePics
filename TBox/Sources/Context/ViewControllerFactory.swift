@@ -8,7 +8,7 @@ import TBoxUIKit
 import UIKit
 
 protocol ViewControllerFactory {
-    func makeTopClipsListViewController() -> UIViewController?
+    func makeTopClipCollectionViewController() -> UIViewController?
 
     func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
     func makeClipItemPreviewViewController(clipId: Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController?

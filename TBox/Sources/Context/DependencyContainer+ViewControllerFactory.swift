@@ -11,7 +11,7 @@ import UIKit
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeTopClipsListViewController() -> UIViewController? {
+    func makeTopClipCollectionViewController() -> UIViewController? {
         let query: ClipListQuery
         switch self.clipQueryService.queryAllClips() {
         case let .success(result):
@@ -19,29 +19,29 @@ extension DependencyContainer: ViewControllerFactory {
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to open TopClipsListView. (\(error.rawValue))
+            Failed to open TopClipCollectionView. (\(error.rawValue))
             """))
             return nil
         }
 
-        let presenter = TopClipsListPresenter(query: query,
-                                              clipService: self.clipCommandService,
-                                              cacheStorage: self.thumbnailStorage,
-                                              settingStorage: self.userSettingsStorage,
-                                              logger: self.logger)
+        let presenter = TopClipCollectionPresenter(query: query,
+                                                   clipService: self.clipCommandService,
+                                                   cacheStorage: self.thumbnailStorage,
+                                                   settingStorage: self.userSettingsStorage,
+                                                   logger: self.logger)
 
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
-        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
-        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
-        let viewController = TopClipsListViewController(factory: self,
-                                                        presenter: presenter,
-                                                        clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
-                                                        navigationItemsProvider: navigationItemsProvider,
-                                                        toolBarItemsProvider: toolBarItemsProvider,
-                                                        menuBuilder: ClipCollectionMenuBuilder.self)
+        let viewController = TopClipCollectionViewController(factory: self,
+                                                             presenter: presenter,
+                                                             clipCollectionProvider: ClipCollectionProvider(),
+                                                             navigationItemsProvider: navigationItemsProvider,
+                                                             toolBarItemsProvider: toolBarItemsProvider,
+                                                             menuBuilder: ClipCollectionMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -202,14 +202,14 @@ extension DependencyContainer: ViewControllerFactory {
                                               logger: self.logger)
 
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
-        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
-        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return SearchResultViewController(factory: self,
                                           presenter: presenter,
-                                          clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
+                                          clipCollectionProvider: ClipCollectionProvider(),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
                                           menuBuilder: ClipCollectionMenuBuilder.self)
@@ -258,14 +258,14 @@ extension DependencyContainer: ViewControllerFactory {
                                        logger: self.logger)
 
         let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
-        let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: true), dataSource: presenter)
-        let toolBarItemsProvider = ClipsListToolBarItemsProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return AlbumViewController(factory: self,
                                    presenter: presenter,
-                                   clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
+                                   clipCollectionProvider: ClipCollectionProvider(),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
                                    menuBuilder: ClipCollectionMenuBuilder.self)

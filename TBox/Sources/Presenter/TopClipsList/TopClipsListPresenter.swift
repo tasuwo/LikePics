@@ -13,7 +13,7 @@ enum ThumbnailLayer {
     case tertiary
 }
 
-protocol TopClipsListViewProtocol: AnyObject {
+protocol TopClipCollectionViewProtocol: AnyObject {
     func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
@@ -21,7 +21,7 @@ protocol TopClipsListViewProtocol: AnyObject {
     func showErrorMessage(_ message: String)
 }
 
-protocol TopClipsListPresenterProtocol {
+protocol TopClipCollectionPresenterProtocol {
     var clips: [Clip] { get }
     var previewingClip: Clip? { get }
 
@@ -30,7 +30,7 @@ protocol TopClipsListPresenterProtocol {
     func readImageIfExists(for clipItem: ClipItem) -> UIImage?
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
-    func setup(with view: TopClipsListViewProtocol)
+    func setup(with view: TopClipCollectionViewProtocol)
     func setEditing(_ editing: Bool)
     func select(clipId: Clip.Identity)
     func deselect(clipId: Clip.Identity)
@@ -49,7 +49,7 @@ protocol TopClipsListPresenterProtocol {
     func addClip(having clipId: Clip.Identity, toAlbumHaving albumId: Album.Identity)
 }
 
-class TopClipsListPresenter {
+class TopClipCollectionPresenter {
     private let query: ClipListQuery
     private let clipService: ClipCommandServiceProtocol
     private let cacheStorage: ThumbnailStorageProtocol
@@ -91,7 +91,7 @@ class TopClipsListPresenter {
         }
     }
 
-    private weak var view: TopClipsListViewProtocol?
+    private weak var view: TopClipCollectionViewProtocol?
 
     // MARK: - Lifecycle
 
@@ -109,8 +109,8 @@ class TopClipsListPresenter {
     }
 }
 
-extension TopClipsListPresenter: TopClipsListPresenterProtocol {
-    // MARK: - TopClipsListPresenterProtocol
+extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
+    // MARK: - TopClipCollectionPresenterProtocol
 
     func viewDidAppear() {
         self.previewingClipId = nil
@@ -124,7 +124,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
         self.cacheStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
-    func setup(with view: TopClipsListViewProtocol) {
+    func setup(with view: TopClipCollectionViewProtocol) {
         self.view = view
         self.query.clips
             .catch { _ -> AnyPublisher<[Clip], Never> in
@@ -271,7 +271,7 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 }
 
-extension TopClipsListPresenter: ClipCollectionNavigationBarPresenterDataSource {
+extension TopClipCollectionPresenter: ClipCollectionNavigationBarPresenterDataSource {
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
     func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
@@ -287,7 +287,7 @@ extension TopClipsListPresenter: ClipCollectionNavigationBarPresenterDataSource 
     }
 }
 
-extension TopClipsListPresenter: ClipCollectionToolBarPresenterDataSource {
+extension TopClipCollectionPresenter: ClipCollectionToolBarPresenterDataSource {
     // MARK: - ClipCollectionToolBarPresenterDataSource
 
     func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {

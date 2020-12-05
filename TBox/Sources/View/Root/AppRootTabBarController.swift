@@ -29,8 +29,8 @@ class AppRootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let topClipsListViewController = self.factory.makeTopClipsListViewController() else {
-            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipsListView."))
+        guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController() else {
+            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipCollectionView."))
             return
         }
 
@@ -96,8 +96,8 @@ class AppRootTabBarController: UITabBarController {
             return
         }
 
-        guard viewController is TopClipsListViewController
-            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is TopClipsListViewController }) ?? false
+        guard viewController is TopClipCollectionViewController
+            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is TopClipCollectionViewController }) ?? false
         else {
             self.tabBar.isHidden = false
             return

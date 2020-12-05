@@ -6,29 +6,29 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-protocol ClipsListCollectionViewProviderDataSource: AnyObject {
-    func isEditing(_ provider: ClipsListCollectionViewProvider) -> Bool
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip?
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage?
-    func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
-    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipCollectionMenuBuildable.Type
-    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipCollection.Context
+protocol ClipCollectionProviderDataSource: AnyObject {
+    func isEditing(_ provider: ClipCollectionProvider) -> Bool
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, clipFor indexPath: IndexPath) -> Clip?
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage?
+    func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
+    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type
+    func clipsListCollectionMenuContext(_ provider: ClipCollectionProvider) -> ClipCollection.Context
 }
 
-protocol ClipsListCollectionViewProviderDelegate: AnyObject {
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didSelect clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, didDeselect clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddTagsTo clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldAddToAlbum clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity)
-    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldRemoveFromAlbum clipId: Clip.Identity)
+protocol ClipCollectionProviderDelegate: AnyObject {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity)
 }
 
-class ClipsListCollectionViewProvider: NSObject {
-    weak var dataSource: ClipsListCollectionViewProviderDataSource?
-    weak var delegate: ClipsListCollectionViewProviderDelegate?
+class ClipCollectionProvider: NSObject {
+    weak var dataSource: ClipCollectionProviderDataSource?
+    weak var delegate: ClipCollectionProviderDelegate?
 
     func provideCell(collectionView: UICollectionView, indexPath: IndexPath, clip: Clip) -> UICollectionViewCell? {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
@@ -40,7 +40,7 @@ class ClipsListCollectionViewProvider: NSObject {
         cell.tertiaryImage = nil
 
         if let item = clip.primaryItem {
-            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
                 cell.primaryImage = image
             } else {
                 cell.primaryImage = nil
@@ -56,7 +56,7 @@ class ClipsListCollectionViewProvider: NSObject {
         }
 
         if let item = clip.secondaryItem {
-            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
                 cell.secondaryImage = image
             } else {
                 cell.secondaryImage = nil
@@ -72,7 +72,7 @@ class ClipsListCollectionViewProvider: NSObject {
         }
 
         if let item = clip.tertiaryItem {
-            if let image = self.dataSource?.clipsListCollectionViewProvider(self, imageFor: item) {
+            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
                 cell.tertiaryImage = image
             } else {
                 cell.tertiaryImage = nil
@@ -93,7 +93,7 @@ class ClipsListCollectionViewProvider: NSObject {
     }
 }
 
-extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
+extension ClipCollectionProvider: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -105,13 +105,13 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath) else { return }
-        self.delegate?.clipsListCollectionViewProvider(self, didSelect: clip.identity)
+        guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
+        self.delegate?.clipCollectionProvider(self, didSelect: clip.identity)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath) else { return }
-        self.delegate?.clipsListCollectionViewProvider(self, didDeselect: clip.identity)
+        guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
+        self.delegate?.clipCollectionProvider(self, didDeselect: clip.identity)
     }
 
     func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -119,7 +119,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard
-            let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath),
+            let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath),
             self.dataSource?.isEditing(self) == false
         else {
             return nil
@@ -149,7 +149,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "tag.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldAddTagsTo: clip.identity)
                 }
             }
 
@@ -158,7 +158,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldAddToAlbum: clip.identity)
                 }
             }
 
@@ -167,7 +167,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldUnhide: clip.identity)
                 }
             }
 
@@ -176,7 +176,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity)
                 }
             }
 
@@ -186,7 +186,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldRemoveFromAlbum: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldRemoveFromAlbum: clip.identity)
                 }
             }
 
@@ -196,18 +196,18 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity)
                 }
             }
         }
     }
 }
 
-extension ClipsListCollectionViewProvider: ClipsCollectionLayoutDelegate {
+extension ClipCollectionProvider: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard let clip = self.dataSource?.clipsListCollectionViewProvider(self, clipFor: indexPath) else { return .zero }
+        guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return .zero }
 
         switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
         case let (.some(item), .none, .none):

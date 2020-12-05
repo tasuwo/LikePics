@@ -6,8 +6,6 @@ import Common
 import Domain
 import RealmSwift
 
-// swiftlint:disable first_where
-
 public class ReferenceClipStorage {
     public struct Configuration {
         let realmConfiguration: Realm.Configuration

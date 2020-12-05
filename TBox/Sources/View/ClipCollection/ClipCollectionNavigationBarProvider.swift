@@ -6,16 +6,16 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-protocol ClipsListNavigationItemsProviderDelegate: AnyObject {
-    func didTapEditButton(_ provider: ClipsListNavigationItemsProvider)
-    func didTapCancelButton(_ provider: ClipsListNavigationItemsProvider)
-    func didTapSelectAllButton(_ provider: ClipsListNavigationItemsProvider)
-    func didTapDeselectAllButton(_ provider: ClipsListNavigationItemsProvider)
-    func didTapReorderButton(_ provider: ClipsListNavigationItemsProvider)
-    func didTapDoneButton(_ provider: ClipsListNavigationItemsProvider)
+protocol ClipCollectionNavigationBarProviderDelegate: AnyObject {
+    func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider)
+    func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider)
+    func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider)
+    func didTapDeselectAllButton(_ provider: ClipCollectionNavigationBarProvider)
+    func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider)
+    func didTapDoneButton(_ provider: ClipCollectionNavigationBarProvider)
 }
 
-class ClipsListNavigationItemsProvider {
+class ClipCollectionNavigationBarProvider {
     private let cancelButton = RoundedButton()
     private let selectAllButton = RoundedButton()
     private let deselectAllButton = RoundedButton()
@@ -25,7 +25,7 @@ class ClipsListNavigationItemsProvider {
 
     private let presenter: ClipCollectionNavigationBarPresenter
 
-    weak var delegate: ClipsListNavigationItemsProviderDelegate?
+    weak var delegate: ClipCollectionNavigationBarProviderDelegate?
     weak var navigationItem: UINavigationItem? {
         didSet {
             self.presenter.navigationBar = self
@@ -124,7 +124,7 @@ class ClipsListNavigationItemsProvider {
     }
 }
 
-extension ClipsListNavigationItemsProvider: ClipCollectionNavigationBar {
+extension ClipCollectionNavigationBarProvider: ClipCollectionNavigationBar {
     // MARK: - ClipCollectionNavigationBar
 
     func setRightBarButtonItems(_ items: [ClipCollection.NavigationItem]) {

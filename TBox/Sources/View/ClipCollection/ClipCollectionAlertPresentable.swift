@@ -4,14 +4,14 @@
 
 import UIKit
 
-protocol ClipsListAlertPresentable: AnyObject {
+protocol ClipCollectionAlertPresentable: AnyObject {
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
     func presentRemoveAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
     func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
     func presentHideAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
 }
 
-extension ClipsListAlertPresentable where Self: UIViewController {
+extension ClipCollectionAlertPresentable where Self: UIViewController {
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
