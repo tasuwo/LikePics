@@ -291,18 +291,18 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
     }
 }
 
-extension SearchResultPresenter: ClipsListNavigationPresenterDataSource {
-    // MARK: - ClipsListNavigationPresenterDataSource
+extension SearchResultPresenter: ClipCollectionNavigationBarPresenterDataSource {
+    // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
-    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool {
+    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
         return false
     }
 
-    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.clips.count
     }
 
-    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.selections.count
     }
 }

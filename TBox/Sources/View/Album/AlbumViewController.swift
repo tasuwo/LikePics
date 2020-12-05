@@ -210,7 +210,7 @@ extension AlbumViewController: AlbumViewProtocol {
     func apply(_ state: AlbumPresenter.State) {
         self.setEditing(state.isEditing, animated: true)
 
-        self.navigationItemsProvider.set(state.map(to: ClipsListNavigationItemsPresenter.State.self))
+        self.navigationItemsProvider.set(state.map(to: ClipCollectionNavigationBarPresenter.State.self))
         self.toolBarItemsProvider.setEditing(state == .selecting, animated: true)
         self.navigationItem.hidesBackButton = state.isEditing
 
@@ -474,7 +474,7 @@ extension AlbumViewController: UICollectionViewDropDelegate {
 }
 
 private extension AlbumPresenter.State {
-    func map(to: ClipsListNavigationItemsPresenter.State.Type) -> ClipsListNavigationItemsPresenter.State {
+    func map(to: ClipCollectionNavigationBarPresenter.State.Type) -> ClipCollectionNavigationBarPresenter.State {
         switch self {
         case .default:
             return .default

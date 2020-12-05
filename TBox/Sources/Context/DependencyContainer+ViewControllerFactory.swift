@@ -30,7 +30,7 @@ extension DependencyContainer: ViewControllerFactory {
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
-        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .top, dataSource: presenter)
@@ -201,7 +201,7 @@ extension DependencyContainer: ViewControllerFactory {
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
-        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .searchResult, dataSource: presenter)
@@ -257,7 +257,7 @@ extension DependencyContainer: ViewControllerFactory {
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 
-        let navigationItemsPresenter = ClipsListNavigationItemsPresenter(dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
         let navigationItemsProvider = ClipsListNavigationItemsProvider(presenter: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipsListToolBarItemsPresenter(target: .album, dataSource: presenter)

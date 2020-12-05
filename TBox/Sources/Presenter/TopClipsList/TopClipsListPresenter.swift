@@ -271,18 +271,18 @@ extension TopClipsListPresenter: TopClipsListPresenterProtocol {
     }
 }
 
-extension TopClipsListPresenter: ClipsListNavigationPresenterDataSource {
-    // MARK: - ClipsListNavigationPresenterDataSource
+extension TopClipsListPresenter: ClipCollectionNavigationBarPresenterDataSource {
+    // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
-    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool {
+    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
         return false
     }
 
-    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.clips.count
     }
 
-    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.selections.count
     }
 }

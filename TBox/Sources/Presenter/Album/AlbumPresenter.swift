@@ -327,18 +327,18 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     }
 }
 
-extension AlbumPresenter: ClipsListNavigationPresenterDataSource {
-    // MARK: - ClipsListNavigationPresenterDataSource
+extension AlbumPresenter: ClipCollectionNavigationBarPresenterDataSource {
+    // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
-    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool {
+    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
         return true
     }
 
-    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.clips.count
     }
 
-    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int {
+    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.selections.count
     }
 }

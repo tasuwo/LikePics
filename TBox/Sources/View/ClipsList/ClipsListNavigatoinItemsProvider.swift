@@ -23,7 +23,7 @@ class ClipsListNavigationItemsProvider {
     private let reorderButton = RoundedButton()
     private let doneButton = RoundedButton()
 
-    private let presenter: ClipsListNavigationItemsPresenter
+    private let presenter: ClipCollectionNavigationBarPresenter
 
     weak var delegate: ClipsListNavigationItemsProviderDelegate?
     weak var navigationItem: UINavigationItem? {
@@ -34,14 +34,14 @@ class ClipsListNavigationItemsProvider {
 
     // MARK: - Lifecycle
 
-    init(presenter: ClipsListNavigationItemsPresenter) {
+    init(presenter: ClipCollectionNavigationBarPresenter) {
         self.presenter = presenter
         self.setupButtons()
     }
 
     // MARK: - Methods
 
-    func set(_ state: ClipsListNavigationItemsPresenter.State) {
+    func set(_ state: ClipCollectionNavigationBarPresenter.State) {
         self.presenter.set(state)
     }
 
@@ -101,7 +101,7 @@ class ClipsListNavigationItemsProvider {
         self.doneButton.addTarget(self, action: #selector(self.didTapDone(_:)), for: .touchUpInside)
     }
 
-    private func resolveCustomView(for item: ClipsListNavigationItemsPresenter.Item) -> UIView {
+    private func resolveCustomView(for item: ClipCollection.NavigationItem) -> UIView {
         switch item {
         case .cancel:
             return self.cancelButton
@@ -124,10 +124,10 @@ class ClipsListNavigationItemsProvider {
     }
 }
 
-extension ClipsListNavigationItemsProvider: ClipsListNavigationBar {
-    // MARK: - ClipsListNavigationBar
+extension ClipsListNavigationItemsProvider: ClipCollectionNavigationBar {
+    // MARK: - ClipCollectionNavigationBar
 
-    func setRightBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item]) {
+    func setRightBarButtonItems(_ items: [ClipCollection.NavigationItem]) {
         self.navigationItem?.rightBarButtonItems = items
             .map {
                 let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))
@@ -136,7 +136,7 @@ extension ClipsListNavigationItemsProvider: ClipsListNavigationBar {
             }
     }
 
-    func setLeftBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item]) {
+    func setLeftBarButtonItems(_ items: [ClipCollection.NavigationItem]) {
         self.navigationItem?.leftBarButtonItems = items
             .map {
                 let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))

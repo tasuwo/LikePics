@@ -2,40 +2,18 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-protocol ClipsListNavigationPresenterDataSource: AnyObject {
-    func isReorderable(_ presenter: ClipsListNavigationItemsPresenter) -> Bool
-    func clipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int
-    func selectedClipsCount(_ presenter: ClipsListNavigationItemsPresenter) -> Int
+protocol ClipCollectionNavigationBarPresenterDataSource: AnyObject {
+    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool
+    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int
+    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int
 }
 
-protocol ClipsListNavigationBar: AnyObject {
-    func setRightBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item])
-    func setLeftBarButtonItems(_ items: [ClipsListNavigationItemsPresenter.Item])
+protocol ClipCollectionNavigationBar: AnyObject {
+    func setRightBarButtonItems(_ items: [ClipCollection.NavigationItem])
+    func setLeftBarButtonItems(_ items: [ClipCollection.NavigationItem])
 }
 
-class ClipsListNavigationItemsPresenter {
-    enum Item {
-        case cancel
-        case selectAll
-        case deselectAll
-        case select(isEnabled: Bool)
-        case reorder(isEnabled: Bool)
-        case done
-
-        var isEnabled: Bool {
-            switch self {
-            case let .select(isEnabled):
-                return isEnabled
-
-            case let .reorder(isEnabled):
-                return isEnabled
-
-            default:
-                return true
-            }
-        }
-    }
-
+class ClipCollectionNavigationBarPresenter {
     enum State {
         case `default`
         case selecting
@@ -58,8 +36,8 @@ class ClipsListNavigationItemsPresenter {
         }
     }
 
-    weak var dataSource: ClipsListNavigationPresenterDataSource?
-    weak var navigationBar: ClipsListNavigationBar? {
+    weak var dataSource: ClipCollectionNavigationBarPresenterDataSource?
+    weak var navigationBar: ClipCollectionNavigationBar? {
         didSet {
             self.updateItems()
         }
@@ -67,7 +45,7 @@ class ClipsListNavigationItemsPresenter {
 
     // MARK: - Lifecycle
 
-    init(dataSource: ClipsListNavigationPresenterDataSource) {
+    init(dataSource: ClipCollectionNavigationBarPresenterDataSource) {
         self.dataSource = dataSource
     }
 
