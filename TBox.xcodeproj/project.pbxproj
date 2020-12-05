@@ -296,6 +296,7 @@
 		2CE0146B2562E76300D15A57 /* Domain.AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1B6362556C7B30026088A /* Domain.AutoDefaultValue.generated.swift */; };
 		2CE22D4924E2A45A00449210 /* ClipPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE22D4824E2A45A00449210 /* ClipPreviewView.swift */; };
 		2CE22D4B24E2A48C00449210 /* ClipPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */; };
+		2CE42984257B65CF00BB4783 /* ClipCollection_State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE42983257B65CF00BB4783 /* ClipCollection_State.swift */; };
 		2CEDB81C25452640007D9E02 /* EmptyMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */; };
 		2CEDB82625452650007D9E02 /* EmptyMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CEDB82525452650007D9E02 /* EmptyMessageView.xib */; };
 		2CEE8E4E254FC154004ED04A /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */; };
@@ -911,6 +912,7 @@
 		2CE0143F2562E72D00D15A57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE22D4824E2A45A00449210 /* ClipPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewView.swift; sourceTree = "<group>"; };
 		2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipPreviewView.xib; sourceTree = "<group>"; };
+		2CE42983257B65CF00BB4783 /* ClipCollection_State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_State.swift; sourceTree = "<group>"; };
 		2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMessageView.swift; sourceTree = "<group>"; };
 		2CEDB82525452650007D9E02 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
 		2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
@@ -1309,6 +1311,7 @@
 				2C1E444F257B5A8F00A067B1 /* ClipCollection_Context.swift */,
 				2C1E4459257B5AC200A067B1 /* ClipCollection_NavigationItem.swift */,
 				2C1E4463257B5AE900A067B1 /* ClipCollection_ToolBarItem.swift */,
+				2CE42983257B65CF00BB4783 /* ClipCollection_State.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -3751,6 +3754,7 @@
 				2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
+				2CE42984257B65CF00BB4783 /* ClipCollection_State.swift in Sources */,
 				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
