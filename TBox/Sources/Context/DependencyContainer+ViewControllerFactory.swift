@@ -40,7 +40,8 @@ extension DependencyContainer: ViewControllerFactory {
                                                         presenter: presenter,
                                                         clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                                         navigationItemsProvider: navigationItemsProvider,
-                                                        toolBarItemsProvider: toolBarItemsProvider)
+                                                        toolBarItemsProvider: toolBarItemsProvider,
+                                                        menuBuilder: ClipsListCollectionMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -210,7 +211,8 @@ extension DependencyContainer: ViewControllerFactory {
                                           presenter: presenter,
                                           clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                           navigationItemsProvider: navigationItemsProvider,
-                                          toolBarItemsProvider: toolBarItemsProvider)
+                                          toolBarItemsProvider: toolBarItemsProvider,
+                                          menuBuilder: ClipsListCollectionMenuBuilder.self)
     }
 
     func makeAlbumListViewController() -> UIViewController? {
@@ -265,7 +267,8 @@ extension DependencyContainer: ViewControllerFactory {
                                    presenter: presenter,
                                    clipsListCollectionViewProvider: ClipsListCollectionViewProvider(),
                                    navigationItemsProvider: navigationItemsProvider,
-                                   toolBarItemsProvider: toolBarItemsProvider)
+                                   toolBarItemsProvider: toolBarItemsProvider,
+                                   menuBuilder: ClipsListCollectionMenuBuilder.self)
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {

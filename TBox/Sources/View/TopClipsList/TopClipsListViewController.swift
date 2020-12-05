@@ -20,6 +20,7 @@ class TopClipsListViewController: UIViewController {
     private let clipsListCollectionViewProvider: ClipsListCollectionViewProvider
     private let navigationItemsProvider: ClipsListNavigationItemsProvider
     private let toolBarItemsProvider: ClipsListToolBarItemsProvider
+    private let menuBuilder: ClipsListCollectionMenuBuildable.Type
 
     private let emptyMessageView = EmptyMessageView()
 
@@ -39,13 +40,15 @@ class TopClipsListViewController: UIViewController {
          presenter: TopClipsListPresenterProtocol,
          clipsListCollectionViewProvider: ClipsListCollectionViewProvider,
          navigationItemsProvider: ClipsListNavigationItemsProvider,
-         toolBarItemsProvider: ClipsListToolBarItemsProvider)
+         toolBarItemsProvider: ClipsListToolBarItemsProvider,
+         menuBuilder: ClipsListCollectionMenuBuildable.Type)
     {
         self.factory = factory
         self.presenter = presenter
         self.clipsListCollectionViewProvider = clipsListCollectionViewProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
+        self.menuBuilder = menuBuilder
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -239,6 +242,14 @@ extension TopClipsListViewController: ClipsListCollectionViewProviderDataSource 
 
     func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.presenter.fetchImage(for: clipItem, completion: completion)
+    }
+
+    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionMenuBuildable.Type {
+        return self.menuBuilder
+    }
+
+    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionContext? {
+        return nil
     }
 }
 

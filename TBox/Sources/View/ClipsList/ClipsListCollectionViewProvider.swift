@@ -11,6 +11,8 @@ protocol ClipsListCollectionViewProviderDataSource: AnyObject {
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, clipFor indexPath: IndexPath) -> Clip?
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, imageFor clipItem: ClipItem) -> UIImage?
     func requestImage(_ provider: ClipsListCollectionViewProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
+    func clipsListCollectionMenuBuilder(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionMenuBuildable.Type
+    func clipsListCollectionMenuContext(_ provider: ClipsListCollectionViewProvider) -> ClipsListCollectionContext?
 }
 
 protocol ClipsListCollectionViewProviderDelegate: AnyObject {
@@ -125,56 +127,63 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
     }
 
     private func makeActionProvider(for clip: Clip) -> UIContextMenuActionProvider {
-        let addTag = UIAction(title: L10n.clipsListContextMenuAddTag,
-                              image: UIImage(systemName: "tag.fill")) { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
-            }
-        }
-        let addToAlbum = UIAction(title: L10n.clipsListContextMenuAddToAlbum,
-                                  image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
-            }
+        guard let builder = self.dataSource?.clipsListCollectionMenuBuilder(self) else {
+            return { _ in return UIMenu() }
         }
 
-        let hideAction: UIAction
-        if clip.isHidden {
-            hideAction = UIAction(title: L10n.clipsListContextMenuUnhide,
-                                  image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+        let context = self.dataSource?.clipsListCollectionMenuContext(self)
+        let items = builder.build(for: clip, context: context).map {
+            self.makeAction(from: $0, for: clip)
+        }
+
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: items)
+        }
+    }
+
+    private func makeAction(from item: ClipsListCollectionMenuItem, for clip: Clip) -> UIAction {
+        switch item {
+        case .addTag:
+            return UIAction(title: L10n.clipsListContextMenuAddTag,
+                            image: UIImage(systemName: "tag.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
+                }
+            }
+        case .addToAlbum:
+            return UIAction(title: L10n.clipsListContextMenuAddToAlbum,
+                            image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
+                }
+            }
+        case .unhide:
+            return UIAction(title: L10n.clipsListContextMenuUnhide,
+                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
                 }
             }
-        } else {
-            hideAction = UIAction(title: L10n.clipsListContextMenuHide,
-                                  image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+        case .hide:
+            return UIAction(title: L10n.clipsListContextMenuHide,
+                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
                 }
             }
-        }
-
-        let delete = UIAction(title: L10n.clipsListContextMenuDelete,
-                              image: UIImage(systemName: "trash.fill"),
-                              attributes: .destructive) { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+        case .delete:
+            return UIAction(title: L10n.clipsListContextMenuDelete,
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldDelete: clip.identity)
+                }
             }
-        }
-
-        return { _ in
-            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [
-                addTag,
-                addToAlbum,
-                hideAction,
-                delete
-            ])
         }
     }
 }
