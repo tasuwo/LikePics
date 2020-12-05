@@ -330,10 +330,6 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 extension AlbumPresenter: ClipCollectionNavigationBarPresenterDataSource {
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
-    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
-        return true
-    }
-
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.clips.count
     }

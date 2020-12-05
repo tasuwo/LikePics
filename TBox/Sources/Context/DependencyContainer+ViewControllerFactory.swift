@@ -30,10 +30,12 @@ extension DependencyContainer: ViewControllerFactory {
                                                    settingStorage: self.userSettingsStorage,
                                                    logger: self.logger)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
+        let context = ClipCollection.Context(isAlbum: false)
+
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         let viewController = TopClipCollectionViewController(factory: self,
@@ -201,10 +203,12 @@ extension DependencyContainer: ViewControllerFactory {
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
+        let context = ClipCollection.Context(isAlbum: false)
+
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: false), dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return SearchResultViewController(factory: self,
@@ -257,10 +261,12 @@ extension DependencyContainer: ViewControllerFactory {
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(dataSource: presenter)
+        let context = ClipCollection.Context(isAlbum: true)
+
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: .init(isAlbum: true), dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return AlbumViewController(factory: self,

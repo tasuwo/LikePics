@@ -3,7 +3,6 @@
 //
 
 protocol ClipCollectionNavigationBarPresenterDataSource: AnyObject {
-    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int
 }
@@ -36,6 +35,8 @@ class ClipCollectionNavigationBarPresenter {
         }
     }
 
+    private let context: ClipCollection.Context
+
     weak var dataSource: ClipCollectionNavigationBarPresenterDataSource?
     weak var navigationBar: ClipCollectionNavigationBar? {
         didSet {
@@ -45,7 +46,10 @@ class ClipCollectionNavigationBarPresenter {
 
     // MARK: - Lifecycle
 
-    init(dataSource: ClipCollectionNavigationBarPresenterDataSource) {
+    init(context: ClipCollection.Context,
+         dataSource: ClipCollectionNavigationBarPresenterDataSource)
+    {
+        self.context = context
         self.dataSource = dataSource
     }
 
@@ -70,7 +74,7 @@ class ClipCollectionNavigationBarPresenter {
             guard let dataSource = self.dataSource else { return false }
             return dataSource.clipsCount(self) > 0
         }()
-        let isReorderable: Bool = {
+        let existsClips: Bool = {
             guard let dataSource = self.dataSource else { return false }
             return dataSource.clipsCount(self) > 1
         }()
@@ -78,7 +82,7 @@ class ClipCollectionNavigationBarPresenter {
         switch self.state {
         case .default:
             self.navigationBar?.setRightBarButtonItems([
-                (self.dataSource?.isReorderable(self) ?? false) ? .reorder(isEnabled: isReorderable) : nil,
+                context.isAlbum ? .reorder(isEnabled: existsClips) : nil,
                 .select(isEnabled: isSelectable)
             ].compactMap { $0 })
             self.navigationBar?.setLeftBarButtonItems([])

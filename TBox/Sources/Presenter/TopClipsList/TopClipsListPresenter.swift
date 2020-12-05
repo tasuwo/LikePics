@@ -274,10 +274,6 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
 extension TopClipCollectionPresenter: ClipCollectionNavigationBarPresenterDataSource {
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
-    func isReorderable(_ presenter: ClipCollectionNavigationBarPresenter) -> Bool {
-        return false
-    }
-
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
         return self.clips.count
     }
