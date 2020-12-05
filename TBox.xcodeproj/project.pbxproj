@@ -3226,7 +3226,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ ${CONFIGURATION} == \"Debug\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n    cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n";
+			shellScript = "if [[ ${CONFIGURATION} == \"DebugDev\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n    cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n";
 		};
 		3F2CF011AAC6842F398F162D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
