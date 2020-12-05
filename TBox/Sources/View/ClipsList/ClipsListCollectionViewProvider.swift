@@ -23,6 +23,7 @@ protocol ClipsListCollectionViewProviderDelegate: AnyObject {
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity)
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldUnhide clipId: Clip.Identity)
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldHide clipId: Clip.Identity)
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldRemoveFromAlbum clipId: Clip.Identity)
 }
 
 class ClipsListCollectionViewProvider: NSObject {
@@ -151,6 +152,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldAddTagsTo: clip.identity)
                 }
             }
+
         case .addToAlbum:
             return UIAction(title: L10n.clipsListContextMenuAddToAlbum,
                             image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
@@ -159,6 +161,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldAddToAlbum: clip.identity)
                 }
             }
+
         case .unhide:
             return UIAction(title: L10n.clipsListContextMenuUnhide,
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
@@ -167,6 +170,7 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldUnhide: clip.identity)
                 }
             }
+
         case .hide:
             return UIAction(title: L10n.clipsListContextMenuHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
@@ -175,6 +179,17 @@ extension ClipsListCollectionViewProvider: UICollectionViewDelegate {
                     self.delegate?.clipsListCollectionViewProvider(self, shouldHide: clip.identity)
                 }
             }
+
+        case .removeFromAlbum:
+            return UIAction(title: L10n.clipsListContextMenuRemoveFromAlbum,
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipsListCollectionViewProvider(self, shouldRemoveFromAlbum: clip.identity)
+                }
+            }
+
         case .delete:
             return UIAction(title: L10n.clipsListContextMenuDelete,
                             image: UIImage(systemName: "trash.fill"),

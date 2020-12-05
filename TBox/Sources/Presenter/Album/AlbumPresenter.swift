@@ -41,6 +41,7 @@ protocol AlbumPresenterProtocol {
     func addSelectedClipsToAlbum(_ albumId: Album.Identity)
 
     func deleteClip(having id: Clip.Identity)
+    func removeFromAlbum(clipHaving id: Clip.Identity)
     func hideClip(having id: Clip.Identity)
     func unhideClip(having id: Clip.Identity)
     func addTags(having tagIds: Set<Tag.Identity>, toClipHaving clipId: Clip.Identity)
@@ -272,6 +273,15 @@ extension AlbumPresenter: AlbumPresenterProtocol {
         if case let .failure(error) = self.clipCommandService.deleteClips(having: [id]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clip having id \(id). (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClip)\n(\(error.makeErrorCode())")
+        }
+    }
+
+    func removeFromAlbum(clipHaving id: Clip.Identity) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: self.album.identity, byDeletingClipsHaving: [id]) {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to remove clip from album having id \(self.album.identity). (code: \(error.rawValue))
+            """))
+            self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveClipsFromAlbum)\n(\(error.makeErrorCode())")
         }
     }
 

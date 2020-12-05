@@ -126,6 +126,8 @@ internal enum L10n {
     internal static let clipsListContextMenuDelete = L10n.tr("Localizable", "clips_list_context_menu_delete")
     /// 隠す
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
+    /// アルバムから削除
+    internal static let clipsListContextMenuRemoveFromAlbum = L10n.tr("Localizable", "clips_list_context_menu_remove_from_album")
     /// 表示する
     internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
     /// アルバムへの追加に失敗しました

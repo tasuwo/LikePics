@@ -341,6 +341,10 @@ extension AlbumViewController: ClipsListCollectionViewProviderDelegate {
         self.present(viewController, animated: true, completion: nil)
     }
 
+    func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldRemoveFromAlbum clipId: Clip.Identity) {
+        self.presenter.removeFromAlbum(clipHaving: clipId)
+    }
+
     func clipsListCollectionViewProvider(_ provider: ClipsListCollectionViewProvider, shouldDelete clipId: Clip.Identity) {
         self.presenter.deleteClip(having: clipId)
     }

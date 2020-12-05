@@ -30,6 +30,7 @@
 "clips_list_context_menu_add_to_album" = "アルバムへ追加";
 "clips_list_context_menu_hide" = "隠す";
 "clips_list_context_menu_unhide" = "表示する";
+"clips_list_context_menu_remove_from_album" = "アルバムから削除";
 "clips_list_context_menu_delete" = "削除";
 
 "top_clip_view_empty_title" = "クリップがありません";

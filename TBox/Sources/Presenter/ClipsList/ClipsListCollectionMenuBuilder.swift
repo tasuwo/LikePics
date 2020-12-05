@@ -9,6 +9,7 @@ enum ClipsListCollectionMenuItem {
     case addToAlbum
     case hide
     case unhide
+    case removeFromAlbum
     case delete
 }
 
@@ -28,7 +29,7 @@ enum ClipsListCollectionMenuBuilder: ClipsListCollectionMenuBuildable {
             .addTag,
             context == .album ? nil : .addToAlbum,
             clip.isHidden ? .unhide : .hide,
-            .delete
+            context == .album ? .removeFromAlbum : .delete
         ].compactMap { $0 }
     }
 }
