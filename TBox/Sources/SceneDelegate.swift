@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         #if DEBUG
             if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
                 AppDataLoader.loadAppData()
+                UserSettingsStorage().set(enabledICloudSync: false)
             }
         #endif
 
