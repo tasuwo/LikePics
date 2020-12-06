@@ -79,7 +79,6 @@
 		2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */; };
 		2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C25841D254FDCC300373A31 /* AppDataLoader.swift */; };
 		2C27D7B524E254A3006B5DA9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
-		2C27D7B624E254A3006B5DA9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */; };
 		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
@@ -160,13 +159,9 @@
 		2C6E09A124E6DD4B00B541D9 /* ClipTargetFinderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2AB06724DF00B0007E2B18 /* ClipTargetFinderViewController.xib */; };
 		2C6E09A224E6DD5A00B541D9 /* ClipTargetFinderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06524DEFAF1007E2B18 /* ClipTargetFinderPresenter.swift */; };
 		2C6E09A324E6DDA900B541D9 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
-		2C6E09A424E6DDA900B541D9 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09A724E6DDB400B541D9 /* TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */; };
-		2C6E09A824E6DDB400B541D9 /* TBoxCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09AB24E6DDC000B541D9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
-		2C6E09AC24E6DDC000B541D9 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09B024E6DDD300B541D9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
-		2C6E09B124E6DDD300B541D9 /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09B824E8101900B541D9 /* Localizable.strings */; };
 		2C6E09CE24E8150500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09D524E8150500B541D9 /* CommonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6E09D424E8150500B541D9 /* CommonTests.swift */; };
@@ -174,14 +169,12 @@
 		2C6E09DA24E8150500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09DB24E8150500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
-		2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
 		2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */; };
 		2C79485C254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C79485B254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift */; };
 		2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7EEA02252F76A3005E3E46 /* UncategorizedCell.swift */; };
 		2C7EEA0D252F76B2005E3E46 /* UncategorizedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */; };
 		2C82CCB724DDD770001E2F02 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
-		2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */; };
 		2C86CC5024E12E2D0091A89E /* ClipPreviewPagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4F24E12E2D0091A89E /* ClipPreviewPagePresenter.swift */; };
 		2C8AF8A524E3EE4F00CB0642 /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */; };
@@ -211,7 +204,6 @@
 		2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99277C24DDC7E600672CA7 /* Clip.swift */; };
 		2C99277E24DDC85C00672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
-		2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99278524DDCAAC00672CA7 /* ClipStorageProtocol.swift */; };
 		2C99279C24DDD65E00672CA7 /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2C99279224DDD65E00672CA7 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */; };
@@ -515,17 +507,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2C27D7B924E254A3006B5DA9 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2C27D7B624E254A3006B5DA9 /* Domain.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2C5EF11A2563F7AC00610D96 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -533,43 +514,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2C5EF1172563F7AC00610D96 /* Persistence.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2C6E09AF24E6DDC100B541D9 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2C6E09E624E8158500B541D9 /* Common.framework in Embed Frameworks */,
-				2C6E09B124E6DDD300B541D9 /* TBoxUIKit.framework in Embed Frameworks */,
-				2C6E09AC24E6DDC000B541D9 /* Domain.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2C82CCBB24DDD770001E2F02 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2C82CCB824DDD770001E2F02 /* Domain.framework in Embed Frameworks */,
-				2C6E09A824E6DDB400B541D9 /* TBoxCore.framework in Embed Frameworks */,
-				2C6E09A424E6DDA900B541D9 /* Persistence.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2C99278224DDC85C00672CA7 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2C99277F24DDC85C00672CA7 /* Domain.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2666,7 +2610,6 @@
 				2C6E098E24E6DD1A00B541D9 /* Sources */,
 				2C6E098F24E6DD1A00B541D9 /* Frameworks */,
 				2C6E099024E6DD1A00B541D9 /* Resources */,
-				2C6E09AF24E6DDC100B541D9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2726,7 +2669,6 @@
 				2C8FD62924E02DCE005887F9 /* Sources */,
 				2C8FD62A24E02DCE005887F9 /* Frameworks */,
 				2C8FD62B24E02DCE005887F9 /* Resources */,
-				2C27D7B924E254A3006B5DA9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2807,7 +2749,6 @@
 				2C99278E24DDD65E00672CA7 /* Sources */,
 				2C99278F24DDD65E00672CA7 /* Frameworks */,
 				2C99279024DDD65E00672CA7 /* Resources */,
-				2C82CCBB24DDD770001E2F02 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2880,7 +2821,6 @@
 				2CCECE1024DDC0CB00ADFE54 /* Sources */,
 				2CCECE1124DDC0CB00ADFE54 /* Frameworks */,
 				2CCECE1224DDC0CB00ADFE54 /* Resources */,
-				2C99278224DDC85C00672CA7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
