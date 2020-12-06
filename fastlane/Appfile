@@ -3,6 +3,4 @@ apple_id("kamuhata.you@gmail.com") # Your Apple email address
 
 itc_team_id("117778229") # App Store Connect Team ID
 team_id("RY2377PP7S") # Developer Portal Team ID
-
-# For more information about the Appfile, see:
-#     https://docs.fastlane.tools/advanced/#appfile
+team_name("Tasuku Tozawa")

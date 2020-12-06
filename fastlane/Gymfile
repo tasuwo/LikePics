@@ -1,0 +1,15 @@
+workspace("./TBox.xcworkspace")
+scheme("TBox")
+sdk("iphoneos")
+output_directory("./build")
+include_bitcode(false)
+clean(true)
+
+for_lane :release do
+  configuration("Release")
+  export_method("app-store")
+  include_bitcode(true)
+
+  output_name("tbox.ipa")
+end
+
