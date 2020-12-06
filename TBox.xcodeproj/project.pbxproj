@@ -285,8 +285,6 @@
 		2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */; };
 		2CDF4F4F2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F4E2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift */; };
 		2CE014402562E72D00D15A57 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CE0143E2562E72D00D15A57 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2CE014432562E72D00D15A57 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; };
-		2CE014442562E72D00D15A57 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CE0145C2562E75F00D15A57 /* Common.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1D253B519E00A8A9B8 /* Common.ProtocolMocks.swift */; };
 		2CE0145D2562E75F00D15A57 /* Persistence.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1E253B519E00A8A9B8 /* Persistence.ProtocolMocks.swift */; };
 		2CE0145E2562E75F00D15A57 /* TBoxUIKit.ProtocolMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C7A1F253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift */; };
@@ -514,13 +512,6 @@
 			remoteGlobalIDString = 2CCECE1324DDC0CB00ADFE54;
 			remoteInfo = Persistence;
 		};
-		2CE014412562E72D00D15A57 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2CA0228124DD9F5E00329251 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2CE0143B2562E72D00D15A57;
-			remoteInfo = TestHelper;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -600,7 +591,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2CE014442562E72D00D15A57 /* TestHelper.framework in Embed Frameworks */,
 				2C6E099A24E6DD1A00B541D9 /* TBoxCore.framework in Embed Frameworks */,
 				2C99277424DDC7D400672CA7 /* Domain.framework in Embed Frameworks */,
 				2C6E09DB24E8150500B541D9 /* Common.framework in Embed Frameworks */,
@@ -1081,7 +1071,6 @@
 				2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */,
 				2C6E09DA24E8150500B541D9 /* Common.framework in Frameworks */,
 				2C8FD64224E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */,
-				2CE014432562E72D00D15A57 /* TestHelper.framework in Frameworks */,
 				EB2DA02CBD88EB7C2F01C67A /* Pods_TBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2856,7 +2845,6 @@
 				2C8FD64124E02DCE005887F9 /* PBXTargetDependency */,
 				2C6E099824E6DD1A00B541D9 /* PBXTargetDependency */,
 				2C6E09D924E8150500B541D9 /* PBXTargetDependency */,
-				2CE014422562E72D00D15A57 /* PBXTargetDependency */,
 			);
 			name = TBox;
 			productName = TBox;
@@ -4011,11 +3999,6 @@
 			isa = PBXTargetDependency;
 			target = 2CCECE1324DDC0CB00ADFE54 /* Persistence */;
 			targetProxy = 2CCECE2724DDC0CB00ADFE54 /* PBXContainerItemProxy */;
-		};
-		2CE014422562E72D00D15A57 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2CE0143B2562E72D00D15A57 /* TestHelper */;
-			targetProxy = 2CE014412562E72D00D15A57 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
