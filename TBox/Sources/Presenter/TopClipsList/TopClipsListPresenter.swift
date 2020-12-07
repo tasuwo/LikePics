@@ -14,7 +14,6 @@ enum ThumbnailLayer {
 }
 
 protocol TopClipCollectionViewProtocol: AnyObject {
-    func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func setEditing(_ editing: Bool)
@@ -22,7 +21,7 @@ protocol TopClipCollectionViewProtocol: AnyObject {
 }
 
 protocol TopClipCollectionPresenterProtocol {
-    var clips: [Clip] { get }
+    var clips: CurrentValueSubject<[Clip], Error> { get }
     var previewingClip: Clip? { get }
 
     func viewDidAppear()
@@ -58,23 +57,19 @@ class TopClipCollectionPresenter {
 
     private var storage = Set<AnyCancellable>()
 
-    private(set) var clips: [Clip] = [] {
-        didSet {
-            self.view?.apply(clips)
-        }
-    }
+    private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
 
     private var previewingClipId: Clip.Identity?
 
     var previewingClip: Clip? {
         guard let id = self.previewingClipId else { return nil }
-        return self.clips.first(where: { $0.identity == id })
+        return self.clips.value.first(where: { $0.identity == id })
     }
 
     private var selectedClips: [Clip] {
         return self.selections
             .compactMap { selection in
-                return self.clips.first(where: { selection == $0.identity })
+                return self.clips.value.first(where: { selection == $0.identity })
             }
     }
 
@@ -139,12 +134,13 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
             }, receiveValue: { [weak self] clips, showHiddenItems in
                 guard let self = self else { return }
 
-                self.clips = clips
+                let newClips = clips
                     .filter({ clip in
                         guard showHiddenItems else { return !clip.isHidden }
                         return true
                     })
                     .sorted(by: { $0.registeredDate > $1.registeredDate })
+                self.clips.send(newClips)
 
                 self.isEditing = false
                 self.selections = []
@@ -170,7 +166,7 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
 
     func selectAll() {
         guard self.isEditing else { return }
-        self.selections = Set(self.clips.map { $0.identity })
+        self.selections = Set(self.clips.value.map { $0.identity })
     }
 
     func deselect(clipId: Clip.Identity) {
@@ -275,7 +271,7 @@ extension TopClipCollectionPresenter: ClipCollectionNavigationBarPresenterDataSo
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.clips.count
+        return self.clips.value.count
     }
 
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {

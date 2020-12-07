@@ -8,7 +8,6 @@ import Domain
 import UIKit
 
 protocol SearchResultViewProtocol: AnyObject {
-    func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func setEditing(_ editing: Bool)
@@ -35,7 +34,7 @@ enum SearchContext {
 }
 
 protocol SearchResultPresenterProtocol {
-    var clips: [Clip] { get }
+    var clips: CurrentValueSubject<[Clip], Error> { get }
     var context: SearchContext { get }
     var previewingClip: Clip? { get }
 
@@ -74,23 +73,19 @@ class SearchResultPresenter {
 
     let context: SearchContext
 
-    private(set) var clips: [Clip] = [] {
-        didSet {
-            self.view?.apply(clips)
-        }
-    }
+    private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
 
     private var previewingClipId: Clip.Identity?
 
     var previewingClip: Clip? {
         guard let id = self.previewingClipId else { return nil }
-        return self.clips.first(where: { $0.identity == id })
+        return self.clips.value.first(where: { $0.identity == id })
     }
 
     private var selectedClips: [Clip] {
         return self.selections
             .compactMap { selection in
-                return self.clips.first(where: { selection == $0.identity })
+                return self.clips.value.first(where: { selection == $0.identity })
             }
     }
 
@@ -157,16 +152,17 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
             }, receiveValue: { [weak self] clips, showHiddenItems in
                 guard let self = self else { return }
 
-                self.clips = clips
+                let newClips = clips
                     .filter({ clip in
                         guard showHiddenItems else { return !clip.isHidden }
                         return true
                     })
                     .sorted(by: { $0.registeredDate > $1.registeredDate })
+                self.clips.send(newClips)
 
-                let newClips = Set(self.clips.map { $0.identity })
-                if !self.selections.isSubset(of: newClips) {
-                    self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
+                let newClipIds = Set(self.clips.value.map { $0.identity })
+                if !self.selections.isSubset(of: newClipIds) {
+                    self.selections = self.selections.subtracting(self.selections.subtracting(newClipIds))
                 }
             })
             .store(in: &self.storage)
@@ -190,7 +186,7 @@ extension SearchResultPresenter: SearchResultPresenterProtocol {
 
     func selectAll() {
         guard self.isEditing else { return }
-        self.selections = Set(self.clips.map { $0.identity })
+        self.selections = Set(self.clips.value.map { $0.identity })
     }
 
     func deselect(clipId: Clip.Identity) {
@@ -295,7 +291,7 @@ extension SearchResultPresenter: ClipCollectionNavigationBarPresenterDataSource 
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.clips.count
+        return self.clips.value.count
     }
 
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {

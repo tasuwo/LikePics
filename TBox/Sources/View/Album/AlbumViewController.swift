@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
@@ -26,6 +27,7 @@ class AlbumViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
     var collectionView: ClipsCollectionView!
+    private var cancellableBag: Set<AnyCancellable> = .init()
 
     var selectedClips: [Clip] {
         return self.collectionView.indexPathsForSelectedItems?
@@ -71,6 +73,8 @@ class AlbumViewController: UIViewController {
         self.setupEmptyMessage()
 
         self.presenter.setup(with: self)
+
+        self.bind(to: self.presenter)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -84,6 +88,32 @@ class AlbumViewController: UIViewController {
     }
 
     // MARK: - Methods
+
+    // MARK: Bind
+
+    private func bind(to presenter: AlbumPresenterProtocol) {
+        self.presenter.clips
+            .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
+            .store(in: &self.cancellableBag)
+    }
+
+    private func apply(_ clips: [Clip]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(clips)
+
+        if !clips.isEmpty {
+            self.emptyMessageView.alpha = 0
+        }
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard clips.isEmpty else { return }
+            UIView.animate(withDuration: 0.2) {
+                self?.emptyMessageView.alpha = 1
+            }
+        }
+
+        self.navigationItemsProvider.onUpdateSelection()
+    }
 
     // MARK: CollectionView
 
@@ -114,7 +144,9 @@ class AlbumViewController: UIViewController {
 
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             guard let self = self else { return }
-            guard let clipIds = self.presenter.clips.applying(transaction.difference)?.map({ $0.id }) else { return }
+            guard let clipIds = self.presenter.clips.value
+                .applying(transaction.difference)?
+                .map({ $0.id }) else { return }
             self.presenter.reorderClips(clipIds)
         }
 
@@ -188,24 +220,6 @@ class AlbumViewController: UIViewController {
 
 extension AlbumViewController: AlbumViewProtocol {
     // MARK: - AlbumViewProtocol
-
-    func apply(_ clips: [Clip]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(clips)
-
-        if !clips.isEmpty {
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard clips.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
-            }
-        }
-
-        self.navigationItemsProvider.onUpdateSelection()
-    }
 
     func apply(_ state: AlbumPresenter.State) {
         self.setEditing(state.isEditing, animated: true)
@@ -328,7 +342,7 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
         guard
-            let clip = self.presenter.clips.first(where: { $0.identity == clipId }),
+            let clip = self.presenter.clips.value.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
         else {
             return

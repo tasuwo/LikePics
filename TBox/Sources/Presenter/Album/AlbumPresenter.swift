@@ -8,7 +8,6 @@ import Domain
 import UIKit
 
 protocol AlbumViewProtocol: AnyObject {
-    func apply(_ clips: [Clip])
     func apply(selection: Set<Clip>)
     func apply(_ state: AlbumPresenter.State)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
@@ -17,7 +16,7 @@ protocol AlbumViewProtocol: AnyObject {
 
 protocol AlbumPresenterProtocol {
     var album: Album { get }
-    var clips: [Clip] { get }
+    var clips: CurrentValueSubject<[Clip], Error> { get }
     var previewingClip: Clip? { get }
 
     func viewDidAppear()
@@ -70,23 +69,19 @@ class AlbumPresenter {
 
     private(set) var album: Album
 
-    private(set) var clips: [Clip] = [] {
-        didSet {
-            self.view?.apply(clips)
-        }
-    }
+    private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
 
     private var previewingClipId: Clip.Identity?
 
     var previewingClip: Clip? {
         guard let id = self.previewingClipId else { return nil }
-        return self.clips.first(where: { $0.identity == id })
+        return self.clips.value.first(where: { $0.identity == id })
     }
 
     private var selectedClips: [Clip] {
         return self.selections
             .compactMap { selection in
-                return self.clips.first(where: { selection == $0.identity })
+                return self.clips.value.first(where: { selection == $0.identity })
             }
     }
 
@@ -156,16 +151,17 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
                 self.album = album
 
-                self.clips = album
+                let newClips = album
                     .clips
                     .filter({ clip in
                         guard showHiddenItems else { return !clip.isHidden }
                         return true
                     })
+                self.clips.send(newClips)
 
-                let newClips = Set(self.clips.map { $0.identity })
-                if !self.selections.isSubset(of: newClips) {
-                    self.selections = self.selections.subtracting(self.selections.subtracting(newClips))
+                let newClipIds = Set(self.clips.value.map { $0.identity })
+                if !self.selections.isSubset(of: newClipIds) {
+                    self.selections = self.selections.subtracting(self.selections.subtracting(newClipIds))
                 }
             })
             .store(in: &self.storage)
@@ -197,7 +193,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func selectAll() {
         guard self.isEditing else { return }
-        self.selections = Set(self.clips.map { $0.identity })
+        self.selections = Set(self.clips.value.map { $0.identity })
     }
 
     func deselect(clipId: Clip.Identity) {
@@ -331,7 +327,7 @@ extension AlbumPresenter: ClipCollectionNavigationBarPresenterDataSource {
     // MARK: - ClipCollectionNavigationBarPresenterDataSource
 
     func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.clips.count
+        return self.clips.value.count
     }
 
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
