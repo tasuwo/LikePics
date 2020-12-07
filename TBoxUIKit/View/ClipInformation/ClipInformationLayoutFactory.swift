@@ -396,7 +396,7 @@ public enum ClipInformationLayoutFactory {
                       title: L10n.clipInformationViewLabelClipUrl,
                       rightLabel: nil,
                       bottomLabel: clipItem.url?.absoluteString,
-                      visibleSeparator: false),
+                      visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipHide,
                       rightLabel: clip.isHidden
