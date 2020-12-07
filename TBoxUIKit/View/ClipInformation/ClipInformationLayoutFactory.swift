@@ -32,9 +32,8 @@ public enum ClipInformationLayoutFactory {
     }
 
     enum Section: Int {
-        case clipItemInformation
-        case clipTag
-        // case clipInformation
+        case info
+        case tag
     }
 
     enum ItemType {
@@ -132,10 +131,10 @@ public enum ClipInformationLayoutFactory {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
-            case .clipTag:
+            case .tag:
                 return self.createTagsLayoutSection()
 
-            case /* .clipInformation, */ .clipItemInformation:
+            case .info:
                 return self.createRowsLayoutSection()
 
             case .none:
@@ -223,10 +222,10 @@ public enum ClipInformationLayoutFactory {
     {
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
-            case .clipTag:
+            case .tag:
                 return self.tagsSectionCellProvider()(collectionView, indexPath, item)
 
-            case /* .clipInformation, */ .clipItemInformation:
+            case .info:
                 return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
 
             case .none:
@@ -321,18 +320,13 @@ public enum ClipInformationLayoutFactory {
             header.delegate = delegate
 
             switch Section(rawValue: indexPath.section) {
-            case .clipTag:
-                header.identifier = "\(Section.clipTag.rawValue)"
+            case .tag:
+                header.identifier = "\(Section.tag.rawValue)"
                 header.title = L10n.clipInformationViewSectionLabelTag
                 header.visibleAddButton = true
 
-            // case .clipInformation:
-            //     header.identifier = "\(Section.clipInformation.rawValue)"
-            //     header.title = L10n.clipInformationViewSectionLabelClip
-            //     header.visibleAddButton = false
-
-            case .clipItemInformation:
-                header.identifier = "\(Section.clipItemInformation.rawValue)"
+            case .info:
+                header.identifier = "\(Section.info.rawValue)"
                 header.title = L10n.clipInformationViewSectionLabelClipItem
                 header.visibleAddButton = false
 
@@ -356,16 +350,14 @@ public enum ClipInformationLayoutFactory {
 
     static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.clipItemInformation])
+        snapshot.appendSections([.info])
         snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
-        snapshot.appendSections([.clipTag])
+        snapshot.appendSections([.tag])
         if info.clip.tags.isEmpty {
             snapshot.appendItems([.empty])
         } else {
             snapshot.appendItems(info.clip.tags.map { .tag($0) })
         }
-        // snapshot.appendSections([.clipInformation])
-        // snapshot.appendItems(self.createCells(for: info.clip))
         return snapshot
     }
 

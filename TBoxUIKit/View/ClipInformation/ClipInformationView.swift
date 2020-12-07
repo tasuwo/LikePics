@@ -200,7 +200,7 @@ extension ClipInformationView: ClipInformationSectionHeaderDelegate {
         guard let identifier = header.identifier,
             let number = Int(identifier),
             let section = Factory.Section(rawValue: number),
-            case .clipTag = section
+            case .tag = section
         else {
             return
         }
