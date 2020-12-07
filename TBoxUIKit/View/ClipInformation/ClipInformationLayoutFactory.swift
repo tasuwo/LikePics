@@ -32,8 +32,8 @@ public enum ClipInformationLayoutFactory {
     }
 
     enum Section: Int {
-        case info
         case tag
+        case info
     }
 
     enum ItemType {
@@ -350,14 +350,14 @@ public enum ClipInformationLayoutFactory {
 
     static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.info])
-        snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
         snapshot.appendSections([.tag])
         if info.clip.tags.isEmpty {
             snapshot.appendItems([.empty])
         } else {
             snapshot.appendItems(info.clip.tags.map { .tag($0) })
         }
+        snapshot.appendSections([.info])
+        snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
         return snapshot
     }
 
