@@ -334,18 +334,6 @@ extension TopClipCollectionViewModel {
     }
 }
 
-extension TopClipCollectionViewModel: ClipCollectionNavigationBarPresenterDataSource {
-    // MARK: - ClipCollectionNavigationBarPresenterDataSource
-
-    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.clips.value.count
-    }
-
-    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.selections.value.count
-    }
-}
-
 extension TopClipCollectionViewModel: ClipCollectionToolBarPresenterDataSource {
     // MARK: - ClipCollectionToolBarPresenterDataSource
 

@@ -10,14 +10,14 @@ import UIKit
 
 class TopClipCollectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = TopClipCollectionViewModelType
+    typealias Dependency = TopClipCollectionViewModelType & ClipCollectionViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let viewModel: TopClipCollectionViewModelType
+    private let viewModel: TopClipCollectionViewModelType & ClipCollectionViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
@@ -35,7 +35,7 @@ class TopClipCollectionViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: TopClipCollectionViewModelType,
+         viewModel: TopClipCollectionViewModelType & ClipCollectionViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
@@ -95,8 +95,6 @@ class TopClipCollectionViewController: UIViewController {
                     guard clips.isEmpty else { return }
                     self?.emptyMessageView.alpha = 1
                 }
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -110,8 +108,6 @@ class TopClipCollectionViewController: UIViewController {
                     }
                     .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
                 self.collectionView.applySelection(at: indexPaths)
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -140,6 +136,8 @@ class TopClipCollectionViewController: UIViewController {
                 self.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
+
+        self.navigationItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     // MARK: CollectionView
@@ -169,7 +167,6 @@ class TopClipCollectionViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationItemsProvider.delegate = self
-        self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
     // MARK: ToolBar
@@ -203,7 +200,6 @@ class TopClipCollectionViewController: UIViewController {
 
         self.collectionView.allowsMultipleSelection = editing
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
-        self.navigationItemsProvider.set(editing ? .selecting : .none)
     }
 }
 
@@ -401,3 +397,5 @@ extension TopClipCollectionViewController: TagSelectionPresenterDelegate {
         }
     }
 }
+
+extension TopClipCollectionViewController: ClipCollectionViewProtocol {}

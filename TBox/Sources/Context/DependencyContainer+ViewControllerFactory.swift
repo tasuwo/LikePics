@@ -31,8 +31,8 @@ extension DependencyContainer: ViewControllerFactory {
 
         let context = ClipCollection.Context(isAlbum: false)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
-        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
@@ -204,8 +204,8 @@ extension DependencyContainer: ViewControllerFactory {
 
         let context = ClipCollection.Context(isAlbum: false)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
-        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
@@ -262,8 +262,8 @@ extension DependencyContainer: ViewControllerFactory {
 
         let context = ClipCollection.Context(isAlbum: true)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
-        let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
+        let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
         let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)

@@ -400,18 +400,6 @@ extension AlbumViewModel {
     }
 }
 
-extension AlbumViewModel: ClipCollectionNavigationBarPresenterDataSource {
-    // MARK: - ClipCollectionNavigationBarPresenterDataSource
-
-    func clipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.clips.value.count
-    }
-
-    func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.selections.value.count
-    }
-}
-
 extension AlbumViewModel: ClipCollectionToolBarPresenterDataSource {
     // MARK: - ClipCollectionToolBarPresenterDataSource
 

@@ -10,14 +10,14 @@ import UIKit
 
 class SearchResultViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = SearchResultViewModelType
+    typealias Dependency = SearchResultViewModelType & ClipCollectionViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let viewModel: SearchResultViewModelType
+    private let viewModel: SearchResultViewModelType & ClipCollectionViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
@@ -39,7 +39,7 @@ class SearchResultViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: SearchResultViewModelType,
+         viewModel: SearchResultViewModelType & ClipCollectionViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
@@ -101,8 +101,6 @@ class SearchResultViewController: UIViewController {
                         self?.emptyMessageView.alpha = 1
                     }
                 }
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -116,8 +114,6 @@ class SearchResultViewController: UIViewController {
                     }
                     .compactMap { self.dataSource.indexPath(for: $0) }
                 self.collectionView.applySelection(at: indexPaths)
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -156,6 +152,8 @@ class SearchResultViewController: UIViewController {
                 self.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
+
+        self.navigationItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     // MARK: CollectionView
@@ -183,7 +181,6 @@ class SearchResultViewController: UIViewController {
 
     private func setupNavigationBar() {
         self.navigationItemsProvider.delegate = self
-        self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
     // MARK: ToolBar
@@ -216,7 +213,6 @@ class SearchResultViewController: UIViewController {
 
         self.collectionView.allowsMultipleSelection = editing
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
-        self.navigationItemsProvider.set(editing ? .selecting : .none)
     }
 }
 
@@ -414,3 +410,5 @@ extension SearchResultViewController: TagSelectionPresenterDelegate {
         }
     }
 }
+
+extension SearchResultViewController: ClipCollectionViewProtocol {}

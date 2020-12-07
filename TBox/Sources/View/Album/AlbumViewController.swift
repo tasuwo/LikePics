@@ -10,14 +10,14 @@ import UIKit
 
 class AlbumViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = AlbumViewModelType
+    typealias Dependency = AlbumViewModelType & ClipCollectionViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let viewModel: AlbumViewModelType
+    private let viewModel: AlbumViewModelType & ClipCollectionViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
@@ -41,7 +41,7 @@ class AlbumViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: AlbumViewModelType,
+         viewModel: AlbumViewModelType & ClipCollectionViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
@@ -111,8 +111,6 @@ class AlbumViewController: UIViewController {
                         self?.emptyMessageView.alpha = 1
                     }
                 }
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -126,8 +124,6 @@ class AlbumViewController: UIViewController {
                     }
                     .compactMap { self.dataSource.indexPath(for: $0) }
                 self.collectionView.applySelection(at: indexPaths)
-
-                self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
@@ -179,10 +175,11 @@ class AlbumViewController: UIViewController {
                 self.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
+
+        self.navigationItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     private func apply(_ operation: ClipCollection.Operation) {
-        self.navigationItemsProvider.set(operation)
         self.toolBarItemsProvider.setEditing(operation == .selecting, animated: true)
 
         switch operation {
@@ -271,7 +268,6 @@ class AlbumViewController: UIViewController {
     private func setupNavigationBar() {
         self.title = self.viewModel.outputs.album.value?.title
         self.navigationItemsProvider.delegate = self
-        self.navigationItemsProvider.navigationItem = self.navigationItem
     }
 
     // MARK: ToolBar
@@ -520,3 +516,5 @@ extension AlbumViewController: UICollectionViewDropDelegate {
         // NOP
     }
 }
+
+extension AlbumViewController: ClipCollectionViewProtocol {}

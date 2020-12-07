@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 import TBoxUIKit
 import UIKit
@@ -16,6 +17,8 @@ protocol ClipCollectionNavigationBarProviderDelegate: AnyObject {
 }
 
 class ClipCollectionNavigationBarProvider {
+    typealias Dependency = ClipCollectionNavigationBarViewModelType
+
     private let cancelButton = RoundedButton()
     private let selectAllButton = RoundedButton()
     private let deselectAllButton = RoundedButton()
@@ -23,33 +26,72 @@ class ClipCollectionNavigationBarProvider {
     private let reorderButton = RoundedButton()
     private let doneButton = RoundedButton()
 
-    private let presenter: ClipCollectionNavigationBarPresenter
+    private let viewModel: Dependency
+
+    private var cancellableBag: Set<AnyCancellable> = .init()
 
     weak var delegate: ClipCollectionNavigationBarProviderDelegate?
-    weak var navigationItem: UINavigationItem? {
-        didSet {
-            self.presenter.navigationBar = self
-        }
-    }
 
     // MARK: - Lifecycle
 
-    init(presenter: ClipCollectionNavigationBarPresenter) {
-        self.presenter = presenter
+    init(viewModel: ClipCollectionNavigationBarViewModelType) {
+        self.viewModel = viewModel
         self.setupButtons()
     }
 
     // MARK: - Methods
 
-    func set(_ operation: ClipCollection.Operation) {
-        self.presenter.set(operation)
-    }
-
-    func onUpdateSelection() {
-        self.presenter.onUpdateSelection()
+    func bind(view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
+        self.bind(dependency: self.viewModel, view: view, viewModel: viewModel)
     }
 
     // MARK: Privates
+
+    private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
+        // MARK: Inputs
+
+        viewModel.clips
+            .map { $0.count }
+            .sink { dependency.inputs.clipsCount.send($0) }
+            .store(in: &self.cancellableBag)
+
+        viewModel.selections
+            .map { $0.count }
+            .sink { dependency.inputs.selectedClipsCount.send($0) }
+            .store(in: &self.cancellableBag)
+
+        viewModel.operation
+            .sink { dependency.inputs.operation.send($0) }
+            .store(in: &self.cancellableBag)
+
+        // MARK: Outputs
+
+        dependency.outputs.leftItems
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] items in
+                items.compactMap { leftItem -> UIBarButtonItem? in
+                    guard let self = self else { return nil }
+                    let item = UIBarButtonItem(customView: self.resolveCustomView(for: leftItem))
+                    item.isEnabled = leftItem.isEnabled
+                    return item
+                }
+            }
+            .assign(to: \.leftBarButtonItems, on: view.navigationItem)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.rightItems
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] items in
+                items.compactMap { rightItem -> UIBarButtonItem? in
+                    guard let self = self else { return nil }
+                    let item = UIBarButtonItem(customView: self.resolveCustomView(for: rightItem))
+                    item.isEnabled = rightItem.isEnabled
+                    return item
+                }
+            }
+            .assign(to: \.rightBarButtonItems, on: view.navigationItem)
+            .store(in: &self.cancellableBag)
+    }
 
     @objc
     private func didTapEdit(_ sender: UIButton) {
@@ -121,27 +163,5 @@ class ClipCollectionNavigationBarProvider {
         case .done:
             return self.doneButton
         }
-    }
-}
-
-extension ClipCollectionNavigationBarProvider: ClipCollectionNavigationBar {
-    // MARK: - ClipCollectionNavigationBar
-
-    func setRightBarButtonItems(_ items: [ClipCollection.NavigationItem]) {
-        self.navigationItem?.rightBarButtonItems = items
-            .map {
-                let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))
-                item.isEnabled = $0.isEnabled
-                return item
-            }
-    }
-
-    func setLeftBarButtonItems(_ items: [ClipCollection.NavigationItem]) {
-        self.navigationItem?.leftBarButtonItems = items
-            .map {
-                let item = UIBarButtonItem(customView: self.resolveCustomView(for: $0))
-                item.isEnabled = $0.isEnabled
-                return item
-            }
     }
 }
