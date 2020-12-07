@@ -398,6 +398,12 @@ public enum ClipInformationLayoutFactory {
                       bottomLabel: clipItem.url?.absoluteString,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
+                      title: L10n.clipInformationViewLabelClipItemSize,
+                      rightLabel: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
+                                                            countStyle: .binary),
+                      bottomLabel: nil,
+                      visibleSeparator: true),
+            Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipHide,
                       rightLabel: clip.isHidden
                           ? L10n.clipInformationViewAccessoryClipHideYes

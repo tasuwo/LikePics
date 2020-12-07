@@ -85,7 +85,7 @@ extension SettingsViewController: SettingsViewProtocol {
             shouldTurnOn(false)
         }
         let turnOnAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOnAction,
-                                          style: .cancel) { _ in
+                                         style: .cancel) { _ in
             shouldTurnOn(true)
         }
         alertController.addAction(okAction)
