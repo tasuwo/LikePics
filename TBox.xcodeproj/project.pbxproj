@@ -243,6 +243,7 @@
 		2CC5CA202571577F00B0472B /* CloudAvailabilityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5CA1F2571577F00B0472B /* CloudAvailabilityStore.swift */; };
 		2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */; };
 		2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */; };
+		2CCC1432257FC54C0061C212 /* Publisher+assignNotRetain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -807,6 +808,7 @@
 		2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentationAnimator.swift; sourceTree = "<group>"; };
 		2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSelectionViewController.xib; sourceTree = "<group>"; };
 		2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableTagsStorage.swift; sourceTree = "<group>"; };
+		2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+assignNotRetain.swift"; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
 		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1874,6 +1876,7 @@
 		2C6E09C624E8150400B541D9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2CCC1430257FC53E0061C212 /* Extension */,
 				2CFC5D0D250E17EA001A02E4 /* ErrorCode */,
 				2CFC5D01250E0C95001A02E4 /* Logger */,
 				2C6E09C724E8150400B541D9 /* Common.h */,
@@ -2243,6 +2246,14 @@
 				2CBA84C1254C918900DA5045 /* ClipStorable.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		2CCC1430257FC53E0061C212 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		2CCECE1524DDC0CB00ADFE54 /* Persistence */ = {
@@ -3507,6 +3518,7 @@
 				2CFC5D08250E119F001A02E4 /* ConsoleLogger.swift in Sources */,
 				2CFC5D06250E1136001A02E4 /* ConsoleLog.swift in Sources */,
 				2CFC5D0F250E17F6001A02E4 /* ErrorCodeSource.swift in Sources */,
+				2CCC1432257FC54C0061C212 /* Publisher+assignNotRetain.swift in Sources */,
 				2CFC5D03250E0CBA001A02E4 /* RootLogger.swift in Sources */,
 				2CFC5D0A250E16EA001A02E4 /* TBoxLoggable.swift in Sources */,
 				2CFC5D0C250E1700001A02E4 /* TBoxLog.swift in Sources */,
