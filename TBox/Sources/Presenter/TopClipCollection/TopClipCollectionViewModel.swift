@@ -5,7 +5,6 @@
 import Combine
 import Common
 import Domain
-import UIKit
 
 protocol TopClipCollectionViewModelInputs {
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
