@@ -117,7 +117,7 @@ class TopClipCollectionViewController: UIViewController {
 
         self.viewModel.outputs.operation
             .map { $0.isEditing }
-            .sink { [weak self] isEditing in self?.setEditing(isEditing, animated: true) }
+            .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
         self.viewModel.outputs.errorMessage
