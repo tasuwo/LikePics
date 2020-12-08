@@ -7,12 +7,6 @@ import Common
 import Domain
 import UIKit
 
-enum ThumbnailLayer {
-    case primary
-    case secondary
-    case tertiary
-}
-
 protocol TopClipCollectionViewProtocol: AnyObject {
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func setEditing(_ editing: Bool)
