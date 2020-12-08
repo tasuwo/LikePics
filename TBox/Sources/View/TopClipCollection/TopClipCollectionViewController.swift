@@ -86,6 +86,10 @@ class TopClipCollectionViewController: UIViewController {
         self.presenter.clips
             .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
             .store(in: &self.cancellableBag)
+
+        self.presenter.selections
+            .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
+            .store(in: &self.cancellableBag)
     }
 
     private func apply(_ clips: [Clip]) {
@@ -100,6 +104,17 @@ class TopClipCollectionViewController: UIViewController {
             guard clips.isEmpty else { return }
             self?.emptyMessageView.alpha = 1
         }
+
+        self.navigationItemsProvider.onUpdateSelection()
+    }
+
+    private func apply(selection: Set<Clip.Identity>) {
+        let indexPaths = selection
+            .compactMap { [weak self] identity in
+                self?.presenter.clips.value.first(where: { $0.identity == identity })
+            }
+            .compactMap { self.dataSource.indexPath(for: $0) }
+        self.collectionView.applySelection(at: indexPaths)
 
         self.navigationItemsProvider.onUpdateSelection()
     }
@@ -171,14 +186,6 @@ class TopClipCollectionViewController: UIViewController {
 
 extension TopClipCollectionViewController: TopClipCollectionViewProtocol {
     // MARK: - TopClipCollectionViewProtocol
-
-    func apply(selection: Set<Clip>) {
-        let indexPaths = selection
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
-
-        self.navigationItemsProvider.onUpdateSelection()
-    }
 
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void) {
         guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {

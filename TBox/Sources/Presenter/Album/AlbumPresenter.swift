@@ -8,7 +8,6 @@ import Domain
 import UIKit
 
 protocol AlbumViewProtocol: AnyObject {
-    func apply(selection: Set<Clip>)
     func apply(_ state: AlbumPresenter.State)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func showErrorMessage(_ message: String)
@@ -17,6 +16,7 @@ protocol AlbumViewProtocol: AnyObject {
 protocol AlbumPresenterProtocol {
     var album: Album { get }
     var clips: CurrentValueSubject<[Clip], Error> { get }
+    var selections: CurrentValueSubject<Set<Clip.Identity>, Error> { get }
     var previewingClip: Clip? { get }
 
     func viewDidAppear()
@@ -70,6 +70,7 @@ class AlbumPresenter {
     private(set) var album: Album
 
     private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
+    private(set) var selections: CurrentValueSubject<Set<Clip.Identity>, Error> = .init([])
 
     private var previewingClipId: Clip.Identity?
 
@@ -79,21 +80,15 @@ class AlbumPresenter {
     }
 
     private var selectedClips: [Clip] {
-        return self.selections
+        return self.selections.value
             .compactMap { selection in
                 return self.clips.value.first(where: { selection == $0.identity })
             }
     }
 
-    private var selections: Set<Clip.Identity> = .init() {
-        didSet {
-            self.view?.apply(selection: Set(self.selectedClips))
-        }
-    }
-
     private var state: State = .default {
         didSet {
-            self.selections = []
+            self.deselectAll()
             self.view?.apply(self.state)
         }
     }
@@ -160,8 +155,8 @@ extension AlbumPresenter: AlbumPresenterProtocol {
                 self.clips.send(newClips)
 
                 let newClipIds = Set(self.clips.value.map { $0.identity })
-                if !self.selections.isSubset(of: newClipIds) {
-                    self.selections = self.selections.subtracting(self.selections.subtracting(newClipIds))
+                if !self.selections.value.isSubset(of: newClipIds) {
+                    self.selections.send(self.selections.value.subtracting(self.selections.value.subtracting(newClipIds)))
                 }
             })
             .store(in: &self.storage)
@@ -181,9 +176,9 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func select(clipId: Clip.Identity) {
         if self.isEditing {
-            self.selections.insert(clipId)
+            self.selections.send(self.selections.value.union(Set([clipId])))
         } else {
-            self.selections = Set([clipId])
+            self.selections.send(Set([clipId]))
             self.view?.presentPreview(forClipId: clipId) { [weak self] isAvailable in
                 guard isAvailable else { return }
                 self?.previewingClipId = clipId
@@ -193,16 +188,16 @@ extension AlbumPresenter: AlbumPresenterProtocol {
 
     func selectAll() {
         guard self.isEditing else { return }
-        self.selections = Set(self.clips.value.map { $0.identity })
+        self.selections.send(Set(self.clips.value.map { $0.identity }))
     }
 
     func deselect(clipId: Clip.Identity) {
-        guard self.selections.contains(clipId) else { return }
-        self.selections.remove(clipId)
+        guard self.selections.value.contains(clipId) else { return }
+        self.selections.send(self.selections.value.subtracting(Set([clipId])))
     }
 
     func deselectAll() {
-        self.selections = []
+        self.selections.send([])
     }
 
     func deleteSelectedClips() {
@@ -210,7 +205,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
@@ -219,7 +214,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
@@ -228,7 +223,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
@@ -239,7 +234,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveClipsFromAlbum)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
@@ -250,18 +245,18 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
-        if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
+        if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections.value)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.state = .default
     }
 
@@ -331,7 +326,7 @@ extension AlbumPresenter: ClipCollectionNavigationBarPresenterDataSource {
     }
 
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.selections.count
+        return self.selections.value.count
     }
 }
 
@@ -339,6 +334,6 @@ extension AlbumPresenter: ClipCollectionToolBarPresenterDataSource {
     // MARK: - ClipCollectionToolBarPresenterDataSource
 
     func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
-        return self.selections.count
+        return self.selections.value.count
     }
 }

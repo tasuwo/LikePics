@@ -14,7 +14,6 @@ enum ThumbnailLayer {
 }
 
 protocol TopClipCollectionViewProtocol: AnyObject {
-    func apply(selection: Set<Clip>)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func setEditing(_ editing: Bool)
     func showErrorMessage(_ message: String)
@@ -22,6 +21,8 @@ protocol TopClipCollectionViewProtocol: AnyObject {
 
 protocol TopClipCollectionPresenterProtocol {
     var clips: CurrentValueSubject<[Clip], Error> { get }
+    var selections: CurrentValueSubject<Set<Clip.Identity>, Error> { get }
+
     var previewingClip: Clip? { get }
 
     func viewDidAppear()
@@ -58,6 +59,7 @@ class TopClipCollectionPresenter {
     private var storage = Set<AnyCancellable>()
 
     private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
+    private(set) var selections: CurrentValueSubject<Set<Clip.Identity>, Error> = .init([])
 
     private var previewingClipId: Clip.Identity?
 
@@ -67,21 +69,15 @@ class TopClipCollectionPresenter {
     }
 
     private var selectedClips: [Clip] {
-        return self.selections
+        return self.selections.value
             .compactMap { selection in
                 return self.clips.value.first(where: { selection == $0.identity })
             }
     }
 
-    private var selections: Set<Clip.Identity> = .init() {
-        didSet {
-            self.view?.apply(selection: Set(self.selectedClips))
-        }
-    }
-
     private var isEditing: Bool = false {
         didSet {
-            self.selections = []
+            self.deselectAll()
             self.view?.setEditing(self.isEditing)
         }
     }
@@ -143,7 +139,7 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
                 self.clips.send(newClips)
 
                 self.isEditing = false
-                self.selections = []
+                self.deselectAll()
             })
             .store(in: &self.storage)
     }
@@ -154,9 +150,9 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
 
     func select(clipId: Clip.Identity) {
         if self.isEditing {
-            self.selections.insert(clipId)
+            self.selections.send(self.selections.value.union(Set([clipId])))
         } else {
-            self.selections = Set([clipId])
+            self.selections.send(Set([clipId]))
             self.view?.presentPreview(forClipId: clipId) { [weak self] isAvailable in
                 guard isAvailable else { return }
                 self?.previewingClipId = clipId
@@ -166,16 +162,16 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
 
     func selectAll() {
         guard self.isEditing else { return }
-        self.selections = Set(self.clips.value.map { $0.identity })
+        self.selections.send(Set(self.clips.value.map { $0.identity }))
     }
 
     func deselect(clipId: Clip.Identity) {
-        guard self.selections.contains(clipId) else { return }
-        self.selections.remove(clipId)
+        guard self.selections.value.contains(clipId) else { return }
+        self.selections.send(self.selections.value.subtracting(Set([clipId])))
     }
 
     func deselectAll() {
-        self.selections = []
+        self.selections.send([])
     }
 
     func deleteSelectedClips() {
@@ -183,7 +179,7 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to delete clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.isEditing = false
     }
 
@@ -192,7 +188,7 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to hide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.isEditing = false
     }
 
@@ -201,7 +197,7 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to unhide clips. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.isEditing = false
     }
 
@@ -212,18 +208,18 @@ extension TopClipCollectionPresenter: TopClipCollectionPresenterProtocol {
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.isEditing = false
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
-        if case let .failure(error) = self.clipService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections)) {
+        if case let .failure(error) = self.clipService.updateAlbum(having: albumId, byAddingClipsHaving: Array(self.selections.value)) {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
             """))
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
-        self.selections = []
+        self.deselectAll()
         self.isEditing = false
     }
 
@@ -275,7 +271,7 @@ extension TopClipCollectionPresenter: ClipCollectionNavigationBarPresenterDataSo
     }
 
     func selectedClipsCount(_ presenter: ClipCollectionNavigationBarPresenter) -> Int {
-        return self.selections.count
+        return self.selections.value.count
     }
 }
 
@@ -283,6 +279,6 @@ extension TopClipCollectionPresenter: ClipCollectionToolBarPresenterDataSource {
     // MARK: - ClipCollectionToolBarPresenterDataSource
 
     func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
-        return self.selections.count
+        return self.selections.value.count
     }
 }

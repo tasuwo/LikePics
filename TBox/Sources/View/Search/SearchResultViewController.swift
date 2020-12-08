@@ -90,6 +90,10 @@ class SearchResultViewController: UIViewController {
         self.presenter.clips
             .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
             .store(in: &self.cancellableBag)
+
+        self.presenter.selections
+            .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
+            .store(in: &self.cancellableBag)
     }
 
     private func apply(_ clips: [Clip]) {
@@ -106,6 +110,17 @@ class SearchResultViewController: UIViewController {
                 self?.emptyMessageView.alpha = 1
             }
         }
+
+        self.navigationItemsProvider.onUpdateSelection()
+    }
+
+    func apply(selection: Set<Clip.Identity>) {
+        let indexPaths = selection
+            .compactMap { [weak self] identity in
+                self?.presenter.clips.value.first(where: { $0.identity == identity })
+            }
+            .compactMap { self.dataSource.indexPath(for: $0) }
+        self.collectionView.applySelection(at: indexPaths)
 
         self.navigationItemsProvider.onUpdateSelection()
     }
@@ -185,14 +200,6 @@ class SearchResultViewController: UIViewController {
 
 extension SearchResultViewController: SearchResultViewProtocol {
     // MARK: - SearchResultViewProtocol
-
-    func apply(selection: Set<Clip>) {
-        let indexPaths = selection
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
-
-        self.navigationItemsProvider.onUpdateSelection()
-    }
 
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isSucceeded: Bool) -> Void) {
         guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
