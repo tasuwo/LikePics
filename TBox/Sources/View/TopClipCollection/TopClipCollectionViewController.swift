@@ -80,7 +80,7 @@ class TopClipCollectionViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        self.viewModel.outputs.clips
+        dependency.outputs.clips
             .sink { _ in } receiveValue: { [weak self] clips in
                 guard let self = self else { return }
 
@@ -100,27 +100,27 @@ class TopClipCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        self.viewModel.outputs.selections
+        dependency.outputs.selections
             .sink { [weak self] selection in
                 guard let self = self else { return }
 
                 let indexPaths = selection
-                    .compactMap { [weak self] identity in
-                        self?.viewModel.outputs.clips.value.first(where: { $0.identity == identity })
+                    .compactMap { identity in
+                        dependency.outputs.clips.value.first(where: { $0.identity == identity })
                     }
-                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
                 self.collectionView.applySelection(at: indexPaths)
 
                 self.navigationItemsProvider.onUpdateSelection()
             }
             .store(in: &self.cancellableBag)
 
-        self.viewModel.outputs.operation
+        dependency.outputs.operation
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
-        self.viewModel.outputs.errorMessage
+        dependency.outputs.errorMessage
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -129,7 +129,7 @@ class TopClipCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        self.viewModel.outputs.presentPreview
+        dependency.outputs.presentPreview
             .sink { [weak self] clipId, completion in
                 guard let self = self else { return }
                 guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {

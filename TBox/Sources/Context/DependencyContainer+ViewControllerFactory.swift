@@ -156,7 +156,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSearchResultViewController(context: SearchContext) -> UIViewController? {
+    func makeSearchResultViewController(context: ClipCollection.SearchContext) -> UIViewController? {
         let query: ClipListQuery
         switch context {
         case let .keywords(values):
@@ -171,7 +171,7 @@ extension DependencyContainer: ViewControllerFactory {
                 return nil
             }
 
-        case let .tag(value):
+        case let .tag(.categorized(value)):
             switch self.clipQueryService.queryClips(tagged: value) {
             case let .success(result):
                 query = result
@@ -183,7 +183,7 @@ extension DependencyContainer: ViewControllerFactory {
                 return nil
             }
 
-        case .uncategorized:
+        case .tag(.uncategorized):
             switch self.clipQueryService.queryUncategorizedClips() {
             case let .success(result):
                 query = result
@@ -196,27 +196,27 @@ extension DependencyContainer: ViewControllerFactory {
             }
         }
 
-        let presenter = SearchResultPresenter(context: context,
+        let viewModel = SearchResultViewModel(context: context,
                                               query: query,
-                                              clipCommandService: self.clipCommandService,
-                                              cacheStorage: self.thumbnailStorage,
+                                              clipService: self.clipCommandService,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
         let context = ClipCollection.Context(isAlbum: false)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return SearchResultViewController(factory: self,
-                                          presenter: presenter,
+                                          viewModel: viewModel,
                                           clipCollectionProvider: ClipCollectionProvider(),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
-                                          menuBuilder: ClipCollectionMenuBuilder.self)
+                                          menuBuilder: ClipCollectionMenuBuilder.self,
+                                          thumbnailStorage: self.thumbnailStorage)
     }
 
     func makeAlbumListViewController() -> UIViewController? {

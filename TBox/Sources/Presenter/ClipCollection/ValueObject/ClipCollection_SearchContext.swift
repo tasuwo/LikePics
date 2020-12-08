@@ -2,10 +2,12 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
+
 extension ClipCollection {
     enum SearchContext {
         enum Tag {
-            case named(String)
+            case categorized(Domain.Tag)
             case uncategorized
         }
 
@@ -17,8 +19,8 @@ extension ClipCollection {
             case let .keywords(value):
                 return value.joined(separator: ", ")
 
-            case let .tag(.named(name)):
-                return name
+            case let .tag(.categorized(tag)):
+                return tag.name
 
             case .tag(.uncategorized):
                 return L10n.searchResultTitleUncategorized

@@ -8,7 +8,7 @@ import Domain
 
 protocol TagListViewProtocol: AnyObject {
     func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool)
-    func search(with context: SearchContext)
+    func search(with context: ClipCollection.SearchContext)
     func showErrorMessage(_ message: String)
     func endEditing()
 }
@@ -72,7 +72,7 @@ class TagListPresenter {
     }
 
     func select(_ tag: Tag) {
-        self.view?.search(with: .tag(tag))
+        self.view?.search(with: .tag(.categorized(tag)))
     }
 
     func delete(_ tags: [Tag]) {

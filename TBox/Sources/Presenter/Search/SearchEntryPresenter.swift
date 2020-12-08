@@ -7,7 +7,7 @@ import Domain
 
 protocol SearchEntryViewProtocol: AnyObject {
     func showErrorMassage(_ message: String)
-    func search(with context: SearchContext)
+    func search(with context: ClipCollection.SearchContext)
 }
 
 class SearchEntryPresenter {

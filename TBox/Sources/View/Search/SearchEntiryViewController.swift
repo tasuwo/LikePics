@@ -67,7 +67,7 @@ extension SearchEntryViewController: SearchEntryViewProtocol {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func search(with context: SearchContext) {
+    func search(with context: ClipCollection.SearchContext) {
         guard let viewController = self.factory.makeSearchResultViewController(context: context) else {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
             return

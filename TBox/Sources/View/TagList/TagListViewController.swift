@@ -293,7 +293,7 @@ extension TagListViewController: TagListViewProtocol {
         }
     }
 
-    func search(with context: SearchContext) {
+    func search(with context: ClipCollection.SearchContext) {
         guard let viewController = self.factory.makeSearchResultViewController(context: context) else {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
             return
@@ -424,7 +424,7 @@ extension TagListViewController: UncategorizedCellDelegate {
     // MARK: - UncategorizedCellDelegate
 
     func didTap(_ cell: UncategorizedCell) {
-        guard let viewController = self.factory.makeSearchResultViewController(context: .uncategorized) else {
+        guard let viewController = self.factory.makeSearchResultViewController(context: .tag(.uncategorized)) else {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
             return
         }

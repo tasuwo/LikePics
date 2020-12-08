@@ -21,7 +21,7 @@ protocol ViewControllerFactory {
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
 
     func makeSearchEntryViewController() -> UIViewController
-    func makeSearchResultViewController(context: SearchContext) -> UIViewController?
+    func makeSearchResultViewController(context: ClipCollection.SearchContext) -> UIViewController?
 
     func makeAlbumListViewController() -> UIViewController?
     func makeAlbumViewController(albumId: Album.Identity) -> UIViewController?

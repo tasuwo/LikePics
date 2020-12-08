@@ -10,19 +10,21 @@ import UIKit
 
 class SearchResultViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = SearchResultViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let presenter: SearchResultPresenterProtocol
+    private let viewModel: SearchResultViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
-    private let emptyMessageView = EmptyMessageView()
+    private let thumbnailStorage: ThumbnailStorageProtocol
 
+    private let emptyMessageView = EmptyMessageView()
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -37,18 +39,20 @@ class SearchResultViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: SearchResultPresenterProtocol,
+         viewModel: SearchResultViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable.Type,
+         thumbnailStorage: ThumbnailStorageProtocol)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.clipCollectionProvider = clipCollectionProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
         self.menuBuilder = menuBuilder
+        self.thumbnailStorage = thumbnailStorage
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,68 +65,97 @@ class SearchResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupAppearance()
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
         self.setupEmptyMessage()
 
-        self.presenter.setup(with: self)
-
-        self.bind(to: self.presenter)
+        self.bind(to: viewModel)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.presenter.viewDidAppear()
+        self.viewModel.inputs.viewDidAppear.send(())
     }
 
     // MARK: - Methods
 
-    private func setupAppearance() {
-        self.title = self.presenter.context.title
-    }
-
     // MARK: Bind
 
-    func bind(to presenter: SearchResultPresenterProtocol) {
-        self.presenter.clips
-            .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
+    func bind(to dependency: Dependency) {
+        dependency.outputs.clips
+            .sink { [weak self] clips in
+                guard let self = self else { return }
+
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(clips)
+
+                if !clips.isEmpty {
+                    self.emptyMessageView.alpha = 0
+                }
+                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                    guard clips.isEmpty else { return }
+                    UIView.animate(withDuration: 0.2) {
+                        self?.emptyMessageView.alpha = 1
+                    }
+                }
+
+                self.navigationItemsProvider.onUpdateSelection()
+            }
             .store(in: &self.cancellableBag)
 
-        self.presenter.selections
-            .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
+        dependency.outputs.selections
+            .sink { [weak self] selection in
+                guard let self = self else { return }
+
+                let indexPaths = selection
+                    .compactMap { [weak self] identity in
+                        self?.viewModel.outputs.clips.value.first(where: { $0.identity == identity })
+                    }
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                self.collectionView.applySelection(at: indexPaths)
+
+                self.navigationItemsProvider.onUpdateSelection()
+            }
             .store(in: &self.cancellableBag)
-    }
 
-    private func apply(_ clips: [Clip]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(clips)
+        dependency.outputs.operation
+            .map { $0.isEditing }
+            .assignNoRetain(to: \.isEditing, on: self)
+            .store(in: &self.cancellableBag)
 
-        if !clips.isEmpty {
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard clips.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
+        dependency.outputs.title
+            .map { $0 as String? }
+            .assignNoRetain(to: \.title, on: self)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.emptyMessage
+            .map { $0 as String? }
+            .assign(to: \.title, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
-        }
+            .store(in: &self.cancellableBag)
 
-        self.navigationItemsProvider.onUpdateSelection()
-    }
-
-    func apply(selection: Set<Clip.Identity>) {
-        let indexPaths = selection
-            .compactMap { [weak self] identity in
-                self?.presenter.clips.value.first(where: { $0.identity == identity })
+        dependency.outputs.presentPreview
+            .sink { [weak self] clipId, completion in
+                guard let self = self else { return }
+                guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
+                    completion(false)
+                    return
+                }
+                completion(true)
+                self.present(viewController, animated: true, completion: nil)
             }
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
-
-        self.navigationItemsProvider.onUpdateSelection()
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: CollectionView
@@ -170,17 +203,6 @@ class SearchResultViewController: UIViewController {
         self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
 
-        switch self.presenter.context {
-        case let .keywords(keywords):
-            self.emptyMessageView.title = L10n.searchResultForKeywordsEmptyTitle(keywords.joined(separator: " "))
-
-        case let .tag(tag):
-            self.emptyMessageView.title = L10n.searchResultForTagEmptyTitle(tag.name)
-
-        case .uncategorized:
-            self.emptyMessageView.title = L10n.searchResultForUncategorizedEmptyTitle
-        }
-
         self.emptyMessageView.isMessageHidden = true
         self.emptyMessageView.isActionButtonHidden = true
 
@@ -198,34 +220,11 @@ class SearchResultViewController: UIViewController {
     }
 }
 
-extension SearchResultViewController: SearchResultViewProtocol {
-    // MARK: - SearchResultViewProtocol
-
-    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isSucceeded: Bool) -> Void) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
-            availability(false)
-            return
-        }
-        availability(true)
-        self.present(viewController, animated: true, completion: nil)
-    }
-
-    func setEditing(_ editing: Bool) {
-        self.setEditing(editing, animated: true)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-
 extension SearchResultViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var previewingClip: Clip? {
-        return self.presenter.previewingClip
+        return self.viewModel.outputs.previewingClip
     }
 
     var previewingCell: ClipsCollectionViewCell? {
@@ -269,11 +268,11 @@ extension SearchResultViewController: ClipCollectionProviderDataSource {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage? {
-        return self.presenter.readImageIfExists(for: clipItem)
+        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        self.presenter.fetchImage(for: clipItem, completion: completion)
+        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
@@ -289,16 +288,16 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
     // MARK: - ClipCollectionProviderDelegate
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity) {
-        self.presenter.select(clipId: clipId)
+        self.viewModel.inputs.select.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity) {
-        self.presenter.deselect(clipId: clipId)
+        self.viewModel.inputs.deselect.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
         guard
-            let clip = self.presenter.clips.value.first(where: { $0.identity == clipId }),
+            let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
         else {
             return
@@ -316,15 +315,15 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity) {
-        self.presenter.deleteClip(having: clipId)
+        self.viewModel.inputs.delete.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity) {
-        self.presenter.unhideClip(having: clipId)
+        self.viewModel.inputs.unhide.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
-        self.presenter.hideClip(having: clipId)
+        self.viewModel.inputs.hide.send(clipId)
     }
 }
 
@@ -334,19 +333,19 @@ extension SearchResultViewController: ClipCollectionNavigationBarProviderDelegat
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.setEditing(true)
+        self.viewModel.inputs.operation.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.setEditing(false)
+        self.viewModel.inputs.operation.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.selectAll()
+        self.viewModel.inputs.selectAll.send(())
     }
 
     func didTapDeselectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.deselectAll()
+        self.viewModel.inputs.deselectAll.send(())
     }
 
     func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
@@ -378,15 +377,15 @@ extension SearchResultViewController: ClipCollectionToolBarProviderDelegate {
     }
 
     func shouldDelete(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.deleteSelectedClips()
+        self.viewModel.inputs.deleteSelections.send(())
     }
 
     func shouldHide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.hideSelectedClips()
+        self.viewModel.inputs.hideSelections.send(())
     }
 
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.unhideSelectedClips()
+        self.viewModel.inputs.unhideSelections.send(())
     }
 }
 
@@ -395,10 +394,10 @@ extension SearchResultViewController: AlbumSelectionPresenterDelegate {
 
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addSelectedClipsToAlbum(albumId)
+            self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addClip(having: clipId, toAlbumHaving: albumId)
+            self.viewModel.inputs.addToAlbum.send((albumId, clipId))
         }
     }
 }
@@ -408,10 +407,10 @@ extension SearchResultViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addTagsToSelectedClips(tagIds)
+            self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addTags(having: tagIds, toClipHaving: clipId)
+            self.viewModel.inputs.addTags.send((tagIds, clipId))
         }
     }
 }
