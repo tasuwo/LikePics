@@ -24,26 +24,26 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = TopClipCollectionPresenter(query: query,
+        let viewModel = TopClipCollectionViewModel(query: query,
                                                    clipService: self.clipCommandService,
-                                                   cacheStorage: self.thumbnailStorage,
                                                    settingStorage: self.userSettingsStorage,
                                                    logger: self.logger)
 
         let context = ClipCollection.Context(isAlbum: false)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         let viewController = TopClipCollectionViewController(factory: self,
-                                                             presenter: presenter,
+                                                             viewModel: viewModel,
                                                              clipCollectionProvider: ClipCollectionProvider(),
                                                              navigationItemsProvider: navigationItemsProvider,
                                                              toolBarItemsProvider: toolBarItemsProvider,
-                                                             menuBuilder: ClipCollectionMenuBuilder.self)
+                                                             menuBuilder: ClipCollectionMenuBuilder.self,
+                                                             thumbnailStorage: self.thumbnailStorage)
 
         return UINavigationController(rootViewController: viewController)
     }

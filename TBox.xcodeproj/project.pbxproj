@@ -49,7 +49,7 @@
 		2C122AFD2578C0FC00AD23B4 /* RemoteChangeDetecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AFC2578C0FC00AD23B4 /* RemoteChangeDetecter.swift */; };
 		2C122B072578C19100AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */; };
 		2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1524312532EB0A00C51847 /* Array+identifiable.swift */; };
-		2C1604F42520438400A39E58 /* TopClipCollectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* TopClipCollectionPresenter.swift */; };
+		2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604F32520438300A39E58 /* TopClipCollectionViewModel.swift */; };
 		2C1604FE2520448500A39E58 /* TopClipCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1604FD2520448500A39E58 /* TopClipCollectionViewController.swift */; };
 		2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16050725207C6A00A39E58 /* Identifiable.swift */; };
 		2C168D27256FE52B00080114 /* CloudUsageContextStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */; };
@@ -593,7 +593,7 @@
 		2C122AF22578BEFE00AD23B4 /* CloudKitChangeDetecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitChangeDetecter.swift; sourceTree = "<group>"; };
 		2C122AFC2578C0FC00AD23B4 /* RemoteChangeDetecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteChangeDetecter.swift; sourceTree = "<group>"; };
 		2C1524312532EB0A00C51847 /* Array+identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+identifiable.swift"; sourceTree = "<group>"; };
-		2C1604F32520438300A39E58 /* TopClipCollectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipCollectionPresenter.swift; sourceTree = "<group>"; };
+		2C1604F32520438300A39E58 /* TopClipCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipCollectionViewModel.swift; sourceTree = "<group>"; };
 		2C1604FD2520448500A39E58 /* TopClipCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClipCollectionViewController.swift; sourceTree = "<group>"; };
 		2C16050725207C6A00A39E58 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		2C168D14256FE1E400080114 /* CloudAvailabilityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityObserver.swift; sourceTree = "<group>"; };
@@ -1704,7 +1704,7 @@
 		2C570B5D24E04FAB00A1DC9F /* TopClipCollection */ = {
 			isa = PBXGroup;
 			children = (
-				2C1604F32520438300A39E58 /* TopClipCollectionPresenter.swift */,
+				2C1604F32520438300A39E58 /* TopClipCollectionViewModel.swift */,
 			);
 			path = TopClipCollection;
 			sourceTree = "<group>";
@@ -3711,7 +3711,7 @@
 				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,
 				2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
-				2C1604F42520438400A39E58 /* TopClipCollectionPresenter.swift in Sources */,
+				2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */,
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,

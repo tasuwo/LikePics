@@ -10,46 +10,45 @@ import UIKit
 
 class TopClipCollectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = TopClipCollectionViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let presenter: TopClipCollectionPresenterProtocol
+    private let viewModel: TopClipCollectionViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
+    private let thumbnailStorage: ThumbnailStorageProtocol
 
     private let emptyMessageView = EmptyMessageView()
-
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
-    internal var collectionView: ClipsCollectionView!
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var collectionView: ClipsCollectionView!
 
-    var selectedClips: [Clip] {
-        return self.collectionView.indexPathsForSelectedItems?
-            .compactMap { self.dataSource.itemIdentifier(for: $0) } ?? []
-    }
+    private var cancellableBag: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: TopClipCollectionPresenterProtocol,
+         viewModel: TopClipCollectionViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable.Type,
+         thumbnailStorage: ThumbnailStorageProtocol)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.clipCollectionProvider = clipCollectionProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
         self.menuBuilder = menuBuilder
+        self.thumbnailStorage = thumbnailStorage
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,56 +66,80 @@ class TopClipCollectionViewController: UIViewController {
         self.setupToolBar()
         self.setupEmptyMessage()
 
-        self.presenter.setup(with: self)
-
-        self.bind(to: self.presenter)
+        self.bind(to: viewModel)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.presenter.viewDidAppear()
+        self.viewModel.inputs.viewDidAppear.send(())
     }
 
     // MARK: - Methods
 
     // MARK: Bind
 
-    private func bind(to presenter: TopClipCollectionPresenterProtocol) {
-        self.presenter.clips
-            .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
-            .store(in: &self.cancellableBag)
+    private func bind(to dependency: Dependency) {
+        self.viewModel.outputs.clips
+            .sink { _ in } receiveValue: { [weak self] clips in
+                guard let self = self else { return }
 
-        self.presenter.selections
-            .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
-            .store(in: &self.cancellableBag)
-    }
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(clips)
 
-    private func apply(_ clips: [Clip]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(clips)
+                if !clips.isEmpty {
+                    self.emptyMessageView.alpha = 0
+                }
+                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                    guard clips.isEmpty else { return }
+                    self?.emptyMessageView.alpha = 1
+                }
 
-        if !clips.isEmpty {
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard clips.isEmpty else { return }
-            self?.emptyMessageView.alpha = 1
-        }
-
-        self.navigationItemsProvider.onUpdateSelection()
-    }
-
-    private func apply(selection: Set<Clip.Identity>) {
-        let indexPaths = selection
-            .compactMap { [weak self] identity in
-                self?.presenter.clips.value.first(where: { $0.identity == identity })
+                self.navigationItemsProvider.onUpdateSelection()
             }
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
+            .store(in: &self.cancellableBag)
 
-        self.navigationItemsProvider.onUpdateSelection()
+        self.viewModel.outputs.selections
+            .sink { [weak self] selection in
+                guard let self = self else { return }
+
+                let indexPaths = selection
+                    .compactMap { [weak self] identity in
+                        self?.viewModel.outputs.clips.value.first(where: { $0.identity == identity })
+                    }
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                self.collectionView.applySelection(at: indexPaths)
+
+                self.navigationItemsProvider.onUpdateSelection()
+            }
+            .store(in: &self.cancellableBag)
+
+        self.viewModel.outputs.operation
+            .map { $0.isEditing }
+            .sink { [weak self] isEditing in self?.setEditing(isEditing, animated: true) }
+            .store(in: &self.cancellableBag)
+
+        self.viewModel.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.viewModel.outputs.presentPreview
+            .sink { [weak self] clipId, completion in
+                guard let self = self else { return }
+                guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
+                    completion(false)
+                    return
+                }
+                completion(true)
+                self.present(viewController, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: CollectionView
@@ -184,34 +207,11 @@ class TopClipCollectionViewController: UIViewController {
     }
 }
 
-extension TopClipCollectionViewController: TopClipCollectionViewProtocol {
-    // MARK: - TopClipCollectionViewProtocol
-
-    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
-            availability(false)
-            return
-        }
-        availability(true)
-        self.present(viewController, animated: true, completion: nil)
-    }
-
-    func setEditing(_ editing: Bool) {
-        self.setEditing(editing, animated: true)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-
 extension TopClipCollectionViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var previewingClip: Clip? {
-        return self.presenter.previewingClip
+        return self.viewModel.outputs.previewingClip
     }
 
     var previewingCell: ClipsCollectionViewCell? {
@@ -255,11 +255,11 @@ extension TopClipCollectionViewController: ClipCollectionProviderDataSource {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage? {
-        return self.presenter.readImageIfExists(for: clipItem)
+        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        self.presenter.fetchImage(for: clipItem, completion: completion)
+        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
@@ -275,16 +275,16 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
     // MARK: - ClipCollectionProviderDelegate
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity) {
-        self.presenter.select(clipId: clipId)
+        self.viewModel.inputs.select.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity) {
-        self.presenter.deselect(clipId: clipId)
+        self.viewModel.inputs.deselect.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
         guard
-            let clip = self.presenter.clips.value.first(where: { $0.identity == clipId }),
+            let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
         else {
             return
@@ -302,15 +302,15 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity) {
-        self.presenter.deleteClip(having: clipId)
+        self.viewModel.inputs.delete.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity) {
-        self.presenter.unhideClip(having: clipId)
+        self.viewModel.inputs.unhide.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
-        self.presenter.hideClip(having: clipId)
+        self.viewModel.inputs.hide.send(clipId)
     }
 }
 
@@ -320,19 +320,19 @@ extension TopClipCollectionViewController: ClipCollectionNavigationBarProviderDe
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.setEditing(true)
+        self.viewModel.inputs.operation.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.setEditing(false)
+        self.viewModel.inputs.operation.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.selectAll()
+        self.viewModel.inputs.selectAll.send(())
     }
 
     func didTapDeselectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.deselectAll()
+        self.viewModel.inputs.deselectAll.send(())
     }
 
     func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
@@ -348,13 +348,13 @@ extension TopClipCollectionViewController: ClipCollectionToolBarProviderDelegate
     // MARK: - ClipCollectionToolBarProviderDelegate
 
     func shouldAddToAlbum(_ provider: ClipCollectionToolBarProvider) {
-        guard !self.selectedClips.isEmpty else { return }
+        guard !self.viewModel.outputs.selections.value.isEmpty else { return }
         guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipCollectionToolBarProvider) {
-        guard !self.selectedClips.isEmpty else { return }
+        guard !self.viewModel.outputs.selections.value.isEmpty else { return }
         guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: [], context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
@@ -364,15 +364,15 @@ extension TopClipCollectionViewController: ClipCollectionToolBarProviderDelegate
     }
 
     func shouldDelete(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.deleteSelectedClips()
+        self.viewModel.inputs.deleteSelections.send(())
     }
 
     func shouldHide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.hideSelectedClips()
+        self.viewModel.inputs.hideSelections.send(())
     }
 
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.unhideSelectedClips()
+        self.viewModel.inputs.unhideSelections.send(())
     }
 }
 
@@ -381,10 +381,10 @@ extension TopClipCollectionViewController: AlbumSelectionPresenterDelegate {
 
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addSelectedClipsToAlbum(albumId)
+            self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addClip(having: clipId, toAlbumHaving: albumId)
+            self.viewModel.inputs.addToAlbum.send((albumId, clipId))
         }
     }
 }
@@ -394,10 +394,10 @@ extension TopClipCollectionViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addTagsToSelectedClips(tagIds)
+            self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addTags(having: tagIds, toClipHaving: clipId)
+            self.viewModel.inputs.addTags.send((tagIds, clipId))
         }
     }
 }
