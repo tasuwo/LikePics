@@ -1336,6 +1336,30 @@
 			path = Animator;
 			sourceTree = "<group>";
 		};
+		2C29434F257FE228000E95EA /* NavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				2CB3CB192515E06C00BE06E5 /* ClipCollectionNavigationBarViewModel.swift */,
+			);
+			path = NavigationBar;
+			sourceTree = "<group>";
+		};
+		2C294350257FE231000E95EA /* ToolBar */ = {
+			isa = PBXGroup;
+			children = (
+				2CB3CB472515F29C00BE06E5 /* ClipCollectionToolBarPresenter.swift */,
+			);
+			path = ToolBar;
+			sourceTree = "<group>";
+		};
+		2C294351257FE23B000E95EA /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		2C29789B24EEF19700FBA531 /* TextEditAlert */ = {
 			isa = PBXGroup;
 			children = (
@@ -1490,9 +1514,9 @@
 			isa = PBXGroup;
 			children = (
 				2C1E4432257B5A1900A067B1 /* ValueObject */,
-				2CB3CB192515E06C00BE06E5 /* ClipCollectionNavigationBarViewModel.swift */,
-				2CB3CB472515F29C00BE06E5 /* ClipCollectionToolBarPresenter.swift */,
-				2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */,
+				2C29434F257FE228000E95EA /* NavigationBar */,
+				2C294350257FE231000E95EA /* ToolBar */,
+				2C294351257FE23B000E95EA /* Menu */,
 				2CE4299F257B746300BB4783 /* ClipCollectionViewModelType.swift */,
 				2C294341257FDFF7000E95EA /* ClipCollectionViewProtocol.swift */,
 			);
