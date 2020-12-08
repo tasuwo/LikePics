@@ -255,26 +255,26 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = AlbumPresenter(query: query,
-                                       clipCommandService: self.clipCommandService,
-                                       thumbnailStorage: self.thumbnailStorage,
+        let viewModel = AlbumViewModel(query: query,
+                                       clipService: self.clipCommandService,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 
         let context = ClipCollection.Context(isAlbum: true)
 
-        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: presenter)
+        let navigationItemsPresenter = ClipCollectionNavigationBarPresenter(context: context, dataSource: viewModel)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(presenter: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: presenter)
+        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
         let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
 
         return AlbumViewController(factory: self,
-                                   presenter: presenter,
+                                   viewModel: viewModel,
                                    clipCollectionProvider: ClipCollectionProvider(),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
-                                   menuBuilder: ClipCollectionMenuBuilder.self)
+                                   menuBuilder: ClipCollectionMenuBuilder.self,
+                                   thumbnailStorage: self.thumbnailStorage)
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {

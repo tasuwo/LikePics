@@ -10,19 +10,21 @@ import UIKit
 
 class AlbumViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = AlbumViewModelType
 
     enum Section {
         case main
     }
 
     private let factory: Factory
-    private let presenter: AlbumPresenterProtocol
+    private let viewModel: AlbumViewModelType
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
-    private let emptyMessageView = EmptyMessageView()
+    private let thumbnailStorage: ThumbnailStorageProtocol
 
+    private let emptyMessageView = EmptyMessageView()
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -39,18 +41,20 @@ class AlbumViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: AlbumPresenterProtocol,
+         viewModel: AlbumViewModelType,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable.Type,
+         thumbnailStorage: ThumbnailStorageProtocol)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.clipCollectionProvider = clipCollectionProvider
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
         self.menuBuilder = menuBuilder
+        self.thumbnailStorage = thumbnailStorage
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -72,15 +76,13 @@ class AlbumViewController: UIViewController {
         self.setupToolBar()
         self.setupEmptyMessage()
 
-        self.presenter.setup(with: self)
-
-        self.bind(to: self.presenter)
+        self.bind(to: viewModel)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.presenter.viewDidAppear()
+        self.viewModel.inputs.viewDidAppear.send(())
     }
 
     @IBAction func didTapAlbumView(_ sender: UITapGestureRecognizer) {
@@ -91,67 +93,95 @@ class AlbumViewController: UIViewController {
 
     // MARK: Bind
 
-    private func bind(to presenter: AlbumPresenterProtocol) {
-        self.presenter.clips
-            .sink { _ in } receiveValue: { [weak self] clips in self?.apply(clips) }
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.clips
+            .sink { [weak self] clips in
+                guard let self = self else { return }
+
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(clips)
+
+                if !clips.isEmpty {
+                    self.emptyMessageView.alpha = 0
+                }
+                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                    guard clips.isEmpty else { return }
+                    UIView.animate(withDuration: 0.2) {
+                        self?.emptyMessageView.alpha = 1
+                    }
+                }
+
+                self.navigationItemsProvider.onUpdateSelection()
+            }
             .store(in: &self.cancellableBag)
 
-        self.presenter.selections
-            .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
+        dependency.outputs.selections
+            .sink { [weak self] selection in
+                guard let self = self else { return }
+
+                let indexPaths = selection
+                    .compactMap { identity in
+                        dependency.outputs.clips.value.first(where: { $0.identity == identity })
+                    }
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                self.collectionView.applySelection(at: indexPaths)
+
+                self.navigationItemsProvider.onUpdateSelection()
+            }
             .store(in: &self.cancellableBag)
 
-        self.presenter.operation
+        dependency.outputs.operation
             .sink { [weak self] operation in self?.apply(operation) }
             .store(in: &self.cancellableBag)
 
-        self.presenter.operation
+        dependency.outputs.operation
+            .map { $0.isEditing }
+            .assignNoRetain(to: \.isEditing, on: self)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.operation
             .map { $0.isEditing }
             .assign(to: \.hidesBackButton, on: navigationItem)
             .store(in: &self.cancellableBag)
 
-        self.presenter.operation
+        dependency.outputs.operation
             .map { $0 == .reordering }
             .assign(to: \.dragInteractionEnabled, on: collectionView)
             .store(in: &self.cancellableBag)
 
-        self.presenter.operation
+        dependency.outputs.operation
             .map { $0 == .selecting }
             .assign(to: \.allowsMultipleSelection, on: collectionView)
             .store(in: &self.cancellableBag)
-    }
 
-    private func apply(_ clips: [Clip]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(clips)
+        dependency.outputs.title
+            .assignNoRetain(to: \.title, on: self)
+            .store(in: &self.cancellableBag)
 
-        if !clips.isEmpty {
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard clips.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
-        }
+            .store(in: &self.cancellableBag)
 
-        self.navigationItemsProvider.onUpdateSelection()
-    }
-
-    private func apply(selection: Set<Clip.Identity>) {
-        let indexPaths = selection
-            .compactMap { [weak self] identity in
-                self?.presenter.clips.value.first(where: { $0.identity == identity })
+        dependency.outputs.presentPreview
+            .sink { [weak self] clipId, completion in
+                guard let self = self else { return }
+                guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
+                    completion(false)
+                    return
+                }
+                completion(true)
+                self.present(viewController, animated: true, completion: nil)
             }
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
-
-        self.navigationItemsProvider.onUpdateSelection()
+            .store(in: &self.cancellableBag)
     }
 
     private func apply(_ operation: ClipCollection.Operation) {
-        self.setEditing(operation.isEditing, animated: true)
-
         self.navigationItemsProvider.set(operation)
         self.toolBarItemsProvider.setEditing(operation == .selecting, animated: true)
 
@@ -195,10 +225,10 @@ class AlbumViewController: UIViewController {
 
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             guard let self = self else { return }
-            guard let clipIds = self.presenter.clips.value
+            guard let clipIds = self.viewModel.outputs.clips.value
                 .applying(transaction.difference)?
                 .map({ $0.id }) else { return }
-            self.presenter.reorderClips(clipIds)
+            self.viewModel.inputs.reorder.send(clipIds)
         }
 
         self.collectionView.dragDelegate = self
@@ -239,7 +269,7 @@ class AlbumViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.title = self.presenter.album.title
+        self.title = self.viewModel.outputs.album.value?.title
         self.navigationItemsProvider.delegate = self
         self.navigationItemsProvider.navigationItem = self.navigationItem
     }
@@ -269,30 +299,11 @@ class AlbumViewController: UIViewController {
     }
 }
 
-extension AlbumViewController: AlbumViewProtocol {
-    // MARK: - AlbumViewProtocol
-
-    func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isSucceeded: Bool) -> Void) {
-        guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
-            availability(false)
-            return
-        }
-        availability(true)
-        self.present(viewController, animated: true, completion: nil)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-
 extension AlbumViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var previewingClip: Clip? {
-        return self.presenter.previewingClip
+        return self.viewModel.outputs.previewingClip
     }
 
     var previewingCell: ClipsCollectionViewCell? {
@@ -336,11 +347,11 @@ extension AlbumViewController: ClipCollectionProviderDataSource {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage? {
-        return self.presenter.readImageIfExists(for: clipItem)
+        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
     }
 
     func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        self.presenter.fetchImage(for: clipItem, completion: completion)
+        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
@@ -356,16 +367,16 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     // MARK: - ClipCollectionProviderDelegate
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity) {
-        self.presenter.select(clipId: clipId)
+        self.viewModel.inputs.select.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity) {
-        self.presenter.deselect(clipId: clipId)
+        self.viewModel.inputs.deselect.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
         guard
-            let clip = self.presenter.clips.value.first(where: { $0.identity == clipId }),
+            let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
         else {
             return
@@ -379,19 +390,19 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity) {
-        self.presenter.removeFromAlbum(clipHaving: clipId)
+        self.viewModel.inputs.removeFromAlbum.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity) {
-        self.presenter.deleteClip(having: clipId)
+        self.viewModel.inputs.delete.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity) {
-        self.presenter.unhideClip(having: clipId)
+        self.viewModel.inputs.unhide.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
-        self.presenter.hideClip(having: clipId)
+        self.viewModel.inputs.hide.send(clipId)
     }
 }
 
@@ -401,27 +412,27 @@ extension AlbumViewController: ClipCollectionNavigationBarProviderDelegate {
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.operation.send(.selecting)
+        self.viewModel.inputs.operation.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.operation.send(.none)
+        self.viewModel.inputs.operation.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.selectAll()
+        self.viewModel.inputs.selectAll.send(())
     }
 
     func didTapDeselectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.deselectAll()
+        self.viewModel.inputs.deselectAll.send(())
     }
 
     func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.operation.send(.reordering)
+        self.viewModel.inputs.operation.send(.reordering)
     }
 
     func didTapDoneButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.operation.send(.none)
+        self.viewModel.inputs.operation.send(.none)
     }
 }
 
@@ -441,19 +452,19 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
     }
 
     func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.removeSelectedClipsFromAlbum()
+        self.viewModel.inputs.removeSelectionsFromAlbum.send(())
     }
 
     func shouldDelete(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.deleteSelectedClips()
+        self.viewModel.inputs.deleteSelections.send(())
     }
 
     func shouldHide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.hideSelectedClips()
+        self.viewModel.inputs.hideSelections.send(())
     }
 
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
-        self.presenter.unhideSelectedClips()
+        self.viewModel.inputs.unhideSelections.send(())
     }
 }
 
@@ -462,10 +473,10 @@ extension AlbumViewController: AlbumSelectionPresenterDelegate {
 
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addSelectedClipsToAlbum(albumId)
+            self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addClip(having: clipId, toAlbumHaving: albumId)
+            self.viewModel.inputs.addToAlbum.send((albumId, clipId))
         }
     }
 }
@@ -475,10 +486,10 @@ extension AlbumViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
         if self.isEditing {
-            self.presenter.addTagsToSelectedClips(tagIds)
+            self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.presenter.addTags(having: tagIds, toClipHaving: clipId)
+            self.viewModel.inputs.addTags.send((tagIds, clipId))
         }
     }
 }
