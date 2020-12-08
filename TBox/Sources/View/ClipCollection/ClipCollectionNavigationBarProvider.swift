@@ -41,8 +41,8 @@ class ClipCollectionNavigationBarProvider {
 
     // MARK: - Methods
 
-    func set(_ state: ClipCollectionNavigationBarPresenter.State) {
-        self.presenter.set(state)
+    func set(_ operation: ClipCollection.Operation) {
+        self.presenter.set(operation)
     }
 
     func onUpdateSelection() {

@@ -7,5 +7,14 @@ extension ClipCollection {
         case none
         case selecting
         case reordering
+
+        var isEditing: Bool {
+            switch self {
+            case .none:
+                return false
+            case .selecting, .reordering:
+                return true
+            }
+        }
     }
 }

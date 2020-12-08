@@ -180,7 +180,7 @@ class TopClipCollectionViewController: UIViewController {
 
         self.collectionView.allowsMultipleSelection = editing
         self.toolBarItemsProvider.setEditing(editing, animated: animated)
-        self.navigationItemsProvider.set(editing ? .selecting : .default)
+        self.navigationItemsProvider.set(editing ? .selecting : .none)
     }
 }
 

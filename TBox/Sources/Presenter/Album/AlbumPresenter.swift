@@ -8,15 +8,16 @@ import Domain
 import UIKit
 
 protocol AlbumViewProtocol: AnyObject {
-    func apply(_ state: AlbumPresenter.State)
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isAvailable: Bool) -> Void)
     func showErrorMessage(_ message: String)
 }
 
 protocol AlbumPresenterProtocol {
-    var album: Album { get }
     var clips: CurrentValueSubject<[Clip], Error> { get }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Error> { get }
+    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
+
+    var album: Album { get }
     var previewingClip: Clip? { get }
 
     func viewDidAppear()
@@ -25,9 +26,6 @@ protocol AlbumPresenterProtocol {
     func fetchImage(for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
 
     func setup(with view: AlbumViewProtocol)
-    func startEditing()
-    func startReordering()
-    func cancel()
     func select(clipId: Clip.Identity)
     func deselect(clipId: Clip.Identity)
     func selectAll()
@@ -49,16 +47,6 @@ protocol AlbumPresenterProtocol {
 }
 
 class AlbumPresenter {
-    enum State {
-        case `default`
-        case selecting
-        case reordering
-
-        var isEditing: Bool {
-            return self != .default
-        }
-    }
-
     private let query: AlbumQuery
     private let clipCommandService: ClipCommandServiceProtocol
     private let thumbnailStorage: ThumbnailStorageProtocol
@@ -71,6 +59,7 @@ class AlbumPresenter {
 
     private(set) var clips: CurrentValueSubject<[Clip], Error> = .init([])
     private(set) var selections: CurrentValueSubject<Set<Clip.Identity>, Error> = .init([])
+    private(set) var operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
 
     private var previewingClipId: Clip.Identity?
 
@@ -86,15 +75,8 @@ class AlbumPresenter {
             }
     }
 
-    private var state: State = .default {
-        didSet {
-            self.deselectAll()
-            self.view?.apply(self.state)
-        }
-    }
-
     private var isEditing: Bool {
-        return self.state.isEditing
+        return self.operation.value != .none
     }
 
     private weak var view: AlbumViewProtocol?
@@ -162,18 +144,6 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             .store(in: &self.storage)
     }
 
-    func startEditing() {
-        self.state = .selecting
-    }
-
-    func startReordering() {
-        self.state = .reordering
-    }
-
-    func cancel() {
-        self.state = .default
-    }
-
     func select(clipId: Clip.Identity) {
         if self.isEditing {
             self.selections.send(self.selections.value.union(Set([clipId])))
@@ -206,7 +176,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtDeleteClips)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func hideSelectedClips() {
@@ -215,7 +185,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtHideClips)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func unhideSelectedClips() {
@@ -224,7 +194,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtUnhideClips)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func removeSelectedClipsFromAlbum() {
@@ -235,7 +205,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtRemoveClipsFromAlbum)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func addTagsToSelectedClips(_ tagIds: Set<Tag.Identity>) {
@@ -246,7 +216,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddTagsToClips)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func addSelectedClipsToAlbum(_ albumId: Album.Identity) {
@@ -257,7 +227,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
             self.view?.showErrorMessage("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
         }
         self.deselectAll()
-        self.state = .default
+        self.operation.send(.none)
     }
 
     func deleteClip(having id: Clip.Identity) {

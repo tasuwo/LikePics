@@ -13,23 +13,7 @@ protocol ClipCollectionNavigationBar: AnyObject {
 }
 
 class ClipCollectionNavigationBarPresenter {
-    enum State {
-        case `default`
-        case selecting
-        case reordering
-
-        var isEditing: Bool {
-            switch self {
-            case .selecting, .reordering:
-                return true
-
-            case .default:
-                return false
-            }
-        }
-    }
-
-    private var state: State = .default {
+    private var operation: ClipCollection.Operation = .none {
         didSet {
             self.updateItems()
         }
@@ -55,8 +39,8 @@ class ClipCollectionNavigationBarPresenter {
 
     // MARK: - Methods
 
-    func set(_ state: State) {
-        self.state = state
+    func set(_ operation: ClipCollection.Operation) {
+        self.operation = operation
     }
 
     func onUpdateSelection() {
@@ -79,8 +63,8 @@ class ClipCollectionNavigationBarPresenter {
             return dataSource.clipsCount(self) > 1
         }()
 
-        switch self.state {
-        case .default:
+        switch self.operation {
+        case .none:
             self.navigationBar?.setRightBarButtonItems([
                 context.isAlbum ? .reorder(isEnabled: existsClips) : nil,
                 .select(isEnabled: isSelectable)

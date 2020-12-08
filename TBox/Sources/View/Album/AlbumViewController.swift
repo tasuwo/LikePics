@@ -99,6 +99,25 @@ class AlbumViewController: UIViewController {
         self.presenter.selections
             .sink { _ in } receiveValue: { [weak self] selection in self?.apply(selection: selection) }
             .store(in: &self.cancellableBag)
+
+        self.presenter.operation
+            .sink { [weak self] operation in self?.apply(operation) }
+            .store(in: &self.cancellableBag)
+
+        self.presenter.operation
+            .map { $0.isEditing }
+            .assign(to: \.hidesBackButton, on: navigationItem)
+            .store(in: &self.cancellableBag)
+
+        self.presenter.operation
+            .map { $0 == .reordering }
+            .assign(to: \.dragInteractionEnabled, on: collectionView)
+            .store(in: &self.cancellableBag)
+
+        self.presenter.operation
+            .map { $0 == .selecting }
+            .assign(to: \.allowsMultipleSelection, on: collectionView)
+            .store(in: &self.cancellableBag)
     }
 
     private func apply(_ clips: [Clip]) {
@@ -128,6 +147,23 @@ class AlbumViewController: UIViewController {
         self.collectionView.applySelection(at: indexPaths)
 
         self.navigationItemsProvider.onUpdateSelection()
+    }
+
+    private func apply(_ operation: ClipCollection.Operation) {
+        self.setEditing(operation.isEditing, animated: true)
+
+        self.navigationItemsProvider.set(operation)
+        self.toolBarItemsProvider.setEditing(operation == .selecting, animated: true)
+
+        switch operation {
+        case .reordering:
+            self.collectionView.setCollectionViewLayout(self.createGridLayout(), animated: true)
+
+        default:
+            let layout = ClipCollectionLayout()
+            layout.delegate = self.clipCollectionProvider
+            self.collectionView.setCollectionViewLayout(layout, animated: true)
+        }
     }
 
     // MARK: CollectionView
@@ -235,26 +271,6 @@ class AlbumViewController: UIViewController {
 
 extension AlbumViewController: AlbumViewProtocol {
     // MARK: - AlbumViewProtocol
-
-    func apply(_ state: AlbumPresenter.State) {
-        self.setEditing(state.isEditing, animated: true)
-
-        self.navigationItemsProvider.set(state.map(to: ClipCollectionNavigationBarPresenter.State.self))
-        self.toolBarItemsProvider.setEditing(state == .selecting, animated: true)
-        self.navigationItem.hidesBackButton = state.isEditing
-
-        self.collectionView.dragInteractionEnabled = state == .reordering
-        self.collectionView.allowsMultipleSelection = state == .selecting
-        switch state {
-        case .reordering:
-            self.collectionView.setCollectionViewLayout(self.createGridLayout(), animated: true)
-
-        default:
-            let layout = ClipCollectionLayout()
-            layout.delegate = self.clipCollectionProvider
-            self.collectionView.setCollectionViewLayout(layout, animated: true)
-        }
-    }
 
     func presentPreview(forClipId clipId: Clip.Identity, availability: @escaping (_ isSucceeded: Bool) -> Void) {
         guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
@@ -385,11 +401,11 @@ extension AlbumViewController: ClipCollectionNavigationBarProviderDelegate {
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.startEditing()
+        self.presenter.operation.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.cancel()
+        self.presenter.operation.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
@@ -401,11 +417,11 @@ extension AlbumViewController: ClipCollectionNavigationBarProviderDelegate {
     }
 
     func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.startReordering()
+        self.presenter.operation.send(.reordering)
     }
 
     func didTapDoneButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.presenter.cancel()
+        self.presenter.operation.send(.none)
     }
 }
 
@@ -491,20 +507,5 @@ extension AlbumViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         // NOP
-    }
-}
-
-private extension AlbumPresenter.State {
-    func map(to: ClipCollectionNavigationBarPresenter.State.Type) -> ClipCollectionNavigationBarPresenter.State {
-        switch self {
-        case .default:
-            return .default
-
-        case .reordering:
-            return .reordering
-
-        case .selecting:
-            return .selecting
-        }
     }
 }
