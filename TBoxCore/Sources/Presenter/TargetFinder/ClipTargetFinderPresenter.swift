@@ -114,8 +114,10 @@ public class ClipTargetFinderPresenter {
         self.view?.startLoading()
 
         self.resolveImageUrls(at: self.url)
-            .map { [weak self] sources in
-                self?.resolveImageSizes(atUrlSets: sources)
+            .map { sources in
+                sources
+                    .compactMap { SelectableImage(urlSet: $0) }
+                    .filter { $0.isValid }
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -128,7 +130,7 @@ public class ClipTargetFinderPresenter {
                     break
                 }
             }, receiveValue: { [weak self] foundImages in
-                self?.selectableImages = foundImages ?? []
+                self?.selectableImages = foundImages
                 self?.view?.endLoading()
                 self?.view?.reloadList()
             })
@@ -212,27 +214,6 @@ public class ClipTargetFinderPresenter {
                 self.urlFinderDelayMs += Self.incrementalDelayMs
             }
         }
-    }
-
-    private func resolveImageSizes(atUrlSets urlSets: [WebImageUrlSet]) -> [SelectableImage] {
-        return urlSets
-            .compactMap { urlSet in
-                guard let imageSource = CGImageSourceCreateWithURL(urlSet.url as CFURL, nil) else {
-                    return nil
-                }
-                guard
-                    let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
-                    let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
-                    let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
-                else {
-                    return nil
-                }
-                return SelectableImage(url: urlSet.url,
-                                       alternativeUrl: urlSet.alternativeUrl,
-                                       height: pixelHeight,
-                                       width: pixelWidth)
-            }
-            .filter { $0.isValid }
     }
 
     private func fetchImages(for selections: [(index: Int, image: SelectableImage)]) -> AnyPublisher<[(index: Int, ClipItemSource)], PresenterError> {

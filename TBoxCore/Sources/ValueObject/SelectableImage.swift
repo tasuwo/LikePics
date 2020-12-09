@@ -3,6 +3,7 @@
 //
 
 import CoreGraphics
+import ImageIO
 
 struct SelectableImage: SelectableImageCellDataSource {
     let url: URL
@@ -15,5 +16,26 @@ struct SelectableImage: SelectableImageCellDataSource {
             && self.width != 0
             && self.height > 10
             && self.width > 10
+    }
+
+    // MARK: - Lifecycle
+
+    init?(urlSet: WebImageUrlSet) {
+        guard let imageSource = CGImageSourceCreateWithURL(urlSet.url as CFURL, nil) else {
+            return nil
+        }
+
+        guard
+            let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
+            let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
+            let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+        else {
+            return nil
+        }
+
+        self.url = urlSet.url
+        self.alternativeUrl = urlSet.alternativeUrl
+        self.height = pixelHeight
+        self.width = pixelWidth
     }
 }
