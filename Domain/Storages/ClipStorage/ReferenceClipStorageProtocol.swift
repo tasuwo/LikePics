@@ -13,6 +13,7 @@ public protocol ReferenceClipStorageProtocol {
 
     // MARK: Read
 
+    func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError>
     func readAllTags() -> Result<[ReferenceTag], ClipStorageError>
 
     // MARK: Create

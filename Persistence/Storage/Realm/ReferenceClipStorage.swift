@@ -51,6 +51,14 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
     // MARK: Read
 
+    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let tags = realm.objects(ReferenceTagObject.self)
+            .filter { $0.isDirty }
+            .map { ReferenceTag.make(by: $0) }
+        return .success(Array(tags))
+    }
+
     public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
         let tags = realm.objects(ReferenceTagObject.self)
