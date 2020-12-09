@@ -93,30 +93,6 @@ public class ClipTargetFinderPresenter {
 
     // MARK: - Methods
 
-    // MARK: Util
-
-    private static func resolveErrorMessage(_ error: PresenterError) -> String {
-        switch error {
-        case .failedToFindImages(.internalError):
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
-
-        case .failedToFindImages(.networkError):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-
-        case .failedToFindImages(.timeout):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-
-        case .failedToDownloadImages:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
-
-        case .failedToSave:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
-
-        case .internalError:
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
-        }
-    }
-
     // MARK: Internal
 
     func attachWebView(to view: UIView) {
@@ -146,7 +122,7 @@ public class ClipTargetFinderPresenter {
                 switch completion {
                 case let .failure(error):
                     self?.view?.endLoading()
-                    self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
+                    self?.view?.show(errorMessage: error.displayableMessage)
 
                 case .finished:
                     break
@@ -180,7 +156,7 @@ public class ClipTargetFinderPresenter {
                 switch completion {
                 case let .failure(error):
                     self?.view?.endLoading()
-                    self?.view?.show(errorMessage: Self.resolveErrorMessage(error))
+                    self?.view?.show(errorMessage: error.displayableMessage)
 
                 case .finished:
                     break
@@ -283,6 +259,30 @@ public class ClipTargetFinderPresenter {
 
         case let .failure(error):
             return .failure(.failedToSave(error))
+        }
+    }
+}
+
+extension ClipTargetFinderPresenter.PresenterError {
+    var displayableMessage: String {
+        switch self {
+        case .failedToFindImages(.internalError):
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+
+        case .failedToFindImages(.networkError):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
+
+        case .failedToFindImages(.timeout):
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
+
+        case .failedToDownloadImages:
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
+
+        case .failedToSave:
+            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
+
+        case .internalError:
+            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
         }
     }
 }
