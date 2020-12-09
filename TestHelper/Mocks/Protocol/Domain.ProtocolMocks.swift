@@ -669,6 +669,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         }
     }
 
+    public private(set) var readAllDirtyTagsCallCount = 0
+    public var readAllDirtyTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
+        readAllDirtyTagsCallCount += 1
+        if let readAllDirtyTagsHandler = readAllDirtyTagsHandler {
+            return readAllDirtyTagsHandler()
+        }
+        fatalError("readAllDirtyTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var readAllTagsCallCount = 0
     public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
     public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
@@ -710,6 +720,20 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     }
 }
 
+public class TemporariesPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
+    public init() { }
+
+    public private(set) var persistIfNeededCallCount = 0
+    public var persistIfNeededHandler: (() -> (Bool))?
+    public func persistIfNeeded() -> Bool {
+        persistIfNeededCallCount += 1
+        if let persistIfNeededHandler = persistIfNeededHandler {
+            return persistIfNeededHandler()
+        }
+        return false
+    }
+}
+
 public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
     public init() { }
 
@@ -721,20 +745,6 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
             return createHandler(clip, containers, forced)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class TemporaryClipsPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
-    public init() { }
-
-    public private(set) var persistIfNeededCallCount = 0
-    public var persistIfNeededHandler: (() -> (Bool))?
-    public func persistIfNeeded() -> Bool {
-        persistIfNeededCallCount += 1
-        if let persistIfNeededHandler = persistIfNeededHandler {
-            return persistIfNeededHandler()
-        }
-        return false
     }
 }
 
