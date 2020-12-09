@@ -10,8 +10,8 @@ protocol ClipCollectionToolBarViewModelType {
 }
 
 protocol ClipCollectionToolBarViewModelInputs {
-    var selectedClipsCount: PassthroughSubject<Int, Never> { get }
-    var operation: PassthroughSubject<ClipCollection.Operation, Never> { get }
+    var selectedClipsCount: CurrentValueSubject<Int, Never> { get }
+    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
 }
 
 protocol ClipCollectionToolBarViewModelOutputs {
@@ -33,8 +33,8 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
 
     // MARK: ClipCollectionToolBarViewModelInputs
 
-    var selectedClipsCount: PassthroughSubject<Int, Never> = .init()
-    var operation: PassthroughSubject<ClipCollection.Operation, Never> = .init()
+    var selectedClipsCount: CurrentValueSubject<Int, Never> = .init(0)
+    var operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
 
     // MARK: ClipCollectionToolBarViewModelOutputs
 

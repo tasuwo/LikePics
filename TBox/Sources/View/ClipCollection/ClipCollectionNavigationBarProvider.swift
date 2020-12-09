@@ -68,26 +68,18 @@ class ClipCollectionNavigationBarProvider {
 
         dependency.outputs.leftItems
             .receive(on: DispatchQueue.main)
-            .map { [weak self] items in
-                items.compactMap { leftItem -> UIBarButtonItem? in
-                    guard let self = self else { return nil }
-                    let item = UIBarButtonItem(customView: self.resolveCustomView(for: leftItem))
-                    item.isEnabled = leftItem.isEnabled
-                    return item
-                }
+            .compactMap { [weak self] items in
+                guard let self = self else { return nil }
+                return items.compactMap { self.makeBarButtonItem(for: $0) }
             }
             .assign(to: \.leftBarButtonItems, on: view.navigationItem)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
             .receive(on: DispatchQueue.main)
-            .map { [weak self] items in
-                items.compactMap { rightItem -> UIBarButtonItem? in
-                    guard let self = self else { return nil }
-                    let item = UIBarButtonItem(customView: self.resolveCustomView(for: rightItem))
-                    item.isEnabled = rightItem.isEnabled
-                    return item
-                }
+            .compactMap { [weak self] items in
+                guard let self = self else { return nil }
+                return items.compactMap { self.makeBarButtonItem(for: $0) }
             }
             .assign(to: \.rightBarButtonItems, on: view.navigationItem)
             .store(in: &self.cancellableBag)
@@ -143,25 +135,30 @@ class ClipCollectionNavigationBarProvider {
         self.doneButton.addTarget(self, action: #selector(self.didTapDone(_:)), for: .touchUpInside)
     }
 
-    private func resolveCustomView(for item: ClipCollection.NavigationItem) -> UIView {
-        switch item {
-        case .cancel:
-            return self.cancelButton
+    private func makeBarButtonItem(for navigationItem: ClipCollection.NavigationItem) -> UIBarButtonItem {
+        let customView: UIView = {
+            switch navigationItem {
+            case .cancel:
+                return self.cancelButton
 
-        case .selectAll:
-            return self.selectAllButton
+            case .selectAll:
+                return self.selectAllButton
 
-        case .deselectAll:
-            return self.deselectAllButton
+            case .deselectAll:
+                return self.deselectAllButton
 
-        case .select:
-            return self.selectButton
+            case .select:
+                return self.selectButton
 
-        case .reorder:
-            return self.reorderButton
+            case .reorder:
+                return self.reorderButton
 
-        case .done:
-            return self.doneButton
-        }
+            case .done:
+                return self.doneButton
+            }
+        }()
+        let item = UIBarButtonItem(customView: customView)
+        item.isEnabled = navigationItem.isEnabled
+        return item
     }
 }

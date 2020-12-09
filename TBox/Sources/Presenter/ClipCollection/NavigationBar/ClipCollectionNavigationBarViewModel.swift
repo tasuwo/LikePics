@@ -10,9 +10,9 @@ protocol ClipCollectionNavigationBarViewModelType {
 }
 
 protocol ClipCollectionNavigationBarViewModelInputs {
-    var clipsCount: PassthroughSubject<Int, Never> { get }
-    var selectedClipsCount: PassthroughSubject<Int, Never> { get }
-    var operation: PassthroughSubject<ClipCollection.Operation, Never> { get }
+    var clipsCount: CurrentValueSubject<Int, Never> { get }
+    var selectedClipsCount: CurrentValueSubject<Int, Never> { get }
+    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
 }
 
 protocol ClipCollectionNavigationBarViewModelOutputs {
@@ -33,14 +33,14 @@ class ClipCollectionNavigationBarViewModel: ClipCollectionNavigationBarViewModel
 
     // MARK: ClipCollectionNavigationBarViewModelInputs
 
-    let clipsCount: PassthroughSubject<Int, Never>
-    let selectedClipsCount: PassthroughSubject<Int, Never>
-    let operation: PassthroughSubject<ClipCollection.Operation, Never>
+    let clipsCount: CurrentValueSubject<Int, Never> = .init(0)
+    let selectedClipsCount: CurrentValueSubject<Int, Never> = .init(0)
+    let operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
 
     // MARK: ClipCollectionNavigationBarViewModelOutputs
 
-    let leftItems: CurrentValueSubject<[ClipCollection.NavigationItem], Never>
-    let rightItems: CurrentValueSubject<[ClipCollection.NavigationItem], Never>
+    let leftItems: CurrentValueSubject<[ClipCollection.NavigationItem], Never> = .init([])
+    let rightItems: CurrentValueSubject<[ClipCollection.NavigationItem], Never> = .init([])
 
     // MARK: Privates
 
@@ -51,17 +51,6 @@ class ClipCollectionNavigationBarViewModel: ClipCollectionNavigationBarViewModel
 
     init(context: ClipCollection.Context) {
         self.context = context
-
-        // MARK: Inputs
-
-        self.operation = .init()
-        self.clipsCount = .init()
-        self.selectedClipsCount = .init()
-
-        // MARK: Outputs
-
-        self.leftItems = .init([])
-        self.rightItems = .init([])
 
         // MARK: Bind
 

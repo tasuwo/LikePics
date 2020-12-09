@@ -34,7 +34,6 @@ class ClipCollectionToolBarProvider {
     weak var delegate: ClipCollectionToolBarProviderDelegate?
 
     private let viewModel: ClipCollectionToolBarViewModel
-
     private var cancellableBag: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle

@@ -143,16 +143,6 @@ extension AlbumViewModel {
     }
 
     private func bindOutputs() {
-        self.query.album
-            .eraseToAnyPublisher()
-            .sink { [weak self] _ in
-                // TODO: 画面を閉じる
-                self?.album.send(nil)
-            } receiveValue: { [weak self] album in
-                self?.album.send(album)
-            }
-            .store(in: &self.cancellableBag)
-
         self.album
             .compactMap { $0 }
             .combineLatest(self.settingStorage.showHiddenItems)
@@ -179,12 +169,22 @@ extension AlbumViewModel {
             })
             .store(in: &self.cancellableBag)
 
-        self.operation
-            .sink { [weak self] _ in self?.deselectAll.send(()) }
-            .store(in: &self.cancellableBag)
-
         self.album
             .sink { [weak self] album in self?.title.send(album?.title) }
+            .store(in: &self.cancellableBag)
+
+        self.query.album
+            .eraseToAnyPublisher()
+            .sink { [weak self] _ in
+                // TODO: 画面を閉じる
+                self?.album.send(nil)
+            } receiveValue: { [weak self] album in
+                self?.album.send(album)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.operation
+            .sink { [weak self] _ in self?.deselectAll.send(()) }
             .store(in: &self.cancellableBag)
     }
 
