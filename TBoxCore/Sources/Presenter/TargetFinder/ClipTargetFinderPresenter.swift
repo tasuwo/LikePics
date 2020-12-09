@@ -55,37 +55,38 @@ public class ClipTargetFinderPresenter {
 
     private let url: URL
     private let clipStore: ClipStorable
+    private let clipBuilder: ClipBuildable
     private let finder: WebImageUrlFinderProtocol
-    private let currentDateResolver: () -> Date
     private let urlSession: URLSession
 
     // MARK: - Lifecycle
 
     init(url: URL,
          clipStore: ClipStorable,
+         clipBuilder: ClipBuildable,
          finder: WebImageUrlFinderProtocol,
-         currentDateResolver: @escaping () -> Date,
          isEnabledOverwrite: Bool = false,
          urlSession: URLSession = URLSession.shared)
     {
         self.url = url
         self.clipStore = clipStore
+        self.clipBuilder = clipBuilder
         self.finder = finder
-        self.currentDateResolver = currentDateResolver
         self.isEnabledOverwrite = isEnabledOverwrite
         self.urlSession = urlSession
     }
 
     public convenience init(url: URL,
                             clipStore: ClipStorable,
-                            currentDateResolver: @escaping () -> Date,
                             isEnabledOverwrite: Bool = false,
                             urlSession: URLSession = URLSession.shared)
     {
         self.init(url: url,
                   clipStore: clipStore,
+                  clipBuilder: ClipBuilder(url: url,
+                                           currentDateResolver: { Date() },
+                                           uuidIssuer: { UUID() }),
                   finder: WebImageUrlFinder(),
-                  currentDateResolver: currentDateResolver,
                   isEnabledOverwrite: isEnabledOverwrite,
                   urlSession: urlSession)
     }
@@ -275,63 +276,13 @@ public class ClipTargetFinderPresenter {
     // MARK: Save Images
 
     private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
-        let currentDate = self.currentDateResolver()
-        let clipId = UUID()
-        let itemAndContainers: [(ClipItem, ImageContainer)] = target.map {
-            let imageId = UUID()
-            let item = ClipItem(id: UUID(),
-                                url: self.url,
-                                clipId: clipId,
-                                index: $0.index,
-                                imageId: imageId,
-                                imageDataSize: $0.source.data.count,
-                                source: $0.source,
-                                currentDate: currentDate)
-            let container = ImageContainer(id: imageId, data: $0.source.data)
-            return (item, container)
-        }
-        let clip = Clip(clipId: clipId,
-                        clipItems: itemAndContainers.map { $0.0 },
-                        tags: [],
-                        dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
-                        registeredDate: currentDate,
-                        currentDate: currentDate)
-
-        switch self.clipStore.create(clip: clip, withContainers: itemAndContainers.map { $0.1 }, forced: false) {
+        let result = self.clipBuilder.build(sources: target)
+        switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())
 
         case let .failure(error):
             return .failure(.failedToSave(error))
         }
-    }
-}
-
-extension ClipItem {
-    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
-        self.init(id: id,
-                  url: url,
-                  clipId: clipId,
-                  clipIndex: index,
-                  imageId: imageId,
-                  imageFileName: source.fileName,
-                  imageUrl: source.url,
-                  imageSize: ImageSize(height: source.height, width: source.width),
-                  imageDataSize: imageDataSize,
-                  registeredDate: currentDate,
-                  updatedDate: currentDate)
-    }
-}
-
-extension Clip {
-    init(clipId: Clip.Identity, clipItems: [ClipItem], tags: [Tag], dataSize: Int, registeredDate: Date, currentDate: Date) {
-        self.init(id: clipId,
-                  description: nil,
-                  items: clipItems,
-                  tags: tags,
-                  isHidden: false,
-                  dataSize: dataSize,
-                  registeredDate: registeredDate,
-                  updatedDate: currentDate)
     }
 }

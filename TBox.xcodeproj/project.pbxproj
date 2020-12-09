@@ -231,6 +231,7 @@
 		2CB62570252A1119001C3368 /* TagCollectionEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */; };
 		2CB6257A252A1126001C3368 /* TagCollectionEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */; };
 		2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */; };
+		2CB8C5C02580F9D300FC812B /* ClipBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8C5BF2580F9D300FC812B /* ClipBuilder.swift */; };
 		2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F92253890A500ECFF47 /* ImageStorage.swift */; };
 		2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */; };
 		2CBA8413254C71C600DA5045 /* ReferenceTagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */; };
@@ -797,6 +798,7 @@
 		2CB60583257FD15F00F7579F /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionEmptyCell.swift; sourceTree = "<group>"; };
 		2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionEmptyCell.xib; sourceTree = "<group>"; };
+		2CB8C5BF2580F9D300FC812B /* ClipBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBuilder.swift; sourceTree = "<group>"; };
 		2CBA2F92253890A500ECFF47 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
 		2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTag.swift; sourceTree = "<group>"; };
 		2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTagObject.swift; sourceTree = "<group>"; };
@@ -2274,6 +2276,7 @@
 			children = (
 				2C051282254EECDB007964B7 /* WebImageResolver */,
 				2CBA84C1254C918900DA5045 /* ClipStorable.swift */,
+				2CB8C5BF2580F9D300FC812B /* ClipBuilder.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3527,6 +3530,7 @@
 				2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */,
 				2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */,
 				2C0512A2254EECF9007964B7 /* WebImageProvidingService_Pixiv.swift in Sources */,
+				2CB8C5C02580F9D300FC812B /* ClipBuilder.swift in Sources */,
 				2C0512A3254EECF9007964B7 /* WebImageProviderPreset.swift in Sources */,
 				2C0512A1254EECF9007964B7 /* WebImageProvidingService.swift in Sources */,
 				2C6E09A224E6DD5A00B541D9 /* ClipTargetFinderPresenter.swift in Sources */,

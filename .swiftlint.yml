@@ -66,7 +66,7 @@ opt_in_rules:
   - sorted_first_last
   - sorted_imports
   - static_operator
-  - strict_fileprivate
+  # - strict_fileprivate
   - strong_iboutlet
   - switch_case_on_newline
   # - trailing_closure

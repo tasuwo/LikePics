@@ -144,7 +144,6 @@ extension DependencyContainer: ViewControllerFactory {
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController {
         let presenter = ClipTargetFinderPresenter(url: clipUrl,
                                                   clipStore: self.clipCommandService,
-                                                  currentDateResolver: { Date() },
                                                   isEnabledOverwrite: isOverwrite)
         let viewController = ClipTargetFinderViewController(presenter: presenter, delegate: delegate)
         return UINavigationController(rootViewController: viewController)
