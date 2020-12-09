@@ -10,6 +10,10 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// キャンセル
+    internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
+    /// 保存
+    internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
     /// いいえ
     internal static let clipInformationViewAccessoryClipHideNo = L10n.tr("Localizable", "clip_information_view_accessory_clip_hide_no")
     /// はい

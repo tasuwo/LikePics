@@ -98,9 +98,6 @@
 "album_selection_view_empty_message" = "You can collect clips into an album";
 "album_selection_view_empty_action_title" = "Add your first Album";
 
-"adding_alert_action_save" = "Save";
-"adding_alert_action_cancel" = "Cancel";
-
 "settings_confirm_icloud_sync_off_title" = "Disable iCloud Sync";
 "settings_confirm_icloud_sync_off_message" = "Are you sure you want to disable iCloud sync?";
 

@@ -29,3 +29,6 @@
 "clip_information_view_label_clip_item_updated_date" = "Modified";
 
 "uncategorized_cell_title" = "Uncategorized clips";
+
+"adding_alert_action_save" = "Save";
+"adding_alert_action_cancel" = "Cancel";

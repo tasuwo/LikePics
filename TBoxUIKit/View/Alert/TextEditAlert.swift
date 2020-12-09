@@ -4,22 +4,28 @@
 
 import UIKit
 
-class TextEditAlert: NSObject {
-    typealias Validator = (String?) -> Bool
+public class TextEditAlert: NSObject {
+    public typealias Validator = (String?) -> Bool
 
-    enum Action {
+    public enum Action {
         case saved(text: String)
         case cancelled
         case error
     }
 
-    struct Configuration {
-        let title: String?
-        let message: String?
-        let placeholder: String
+    public struct Configuration {
+        public let title: String?
+        public let message: String?
+        public let placeholder: String
+
+        public init(title: String?, message: String?, placeholder: String) {
+            self.title = title
+            self.message = message
+            self.placeholder = placeholder
+        }
     }
 
-    class Context {
+    private class Context {
         weak var alert: UIAlertController?
         weak var saveAction: UIAlertAction?
         let validator: Validator?
@@ -45,7 +51,7 @@ class TextEditAlert: NSObject {
         }
     }
 
-    var isPresenting: Bool {
+    public var isPresenting: Bool {
         self.context != nil
     }
 
@@ -54,16 +60,16 @@ class TextEditAlert: NSObject {
 
     // MARK: - Lifecycle
 
-    init(configuration: Configuration) {
+    public init(configuration: Configuration) {
         self.configuration = configuration
     }
 
     // MARK: - Methods
 
-    func present(withText text: String?,
-                 on baseView: UIViewController,
-                 validator: Validator? = nil,
-                 completion: @escaping (Action) -> Void)
+    public func present(withText text: String?,
+                        on baseView: UIViewController,
+                        validator: Validator? = nil,
+                        completion: @escaping (Action) -> Void)
     {
         let alert = UIAlertController(title: self.configuration.title,
                                       message: self.configuration.message,
@@ -109,11 +115,11 @@ class TextEditAlert: NSObject {
 extension TextEditAlert: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.context?.isTextValid ?? true
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         RunLoop.main.perform { [weak self] in
             self?.context?.performValidation()
         }

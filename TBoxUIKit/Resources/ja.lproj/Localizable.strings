@@ -29,3 +29,6 @@
 "clip_information_view_label_clip_item_updated_date" = "更新日";
 
 "uncategorized_cell_title" = "未分類のクリップを閲覧する";
+
+"adding_alert_action_save" = "保存";
+"adding_alert_action_cancel" = "キャンセル";

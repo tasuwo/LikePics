@@ -10,10 +10,6 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-    /// キャンセル
-    internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
-    /// 保存
-    internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
     /// このアルバムの名前を入力してください
     internal static let albumListViewAlertForAddMessage = L10n.tr("Localizable", "album_list_view_alert_for_add_message")
     /// アルバム名
