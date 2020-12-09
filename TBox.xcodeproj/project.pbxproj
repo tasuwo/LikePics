@@ -273,6 +273,12 @@
 		2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B7F251E512F00BEE210 /* TagListQuery.swift */; };
 		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
+		2CD6732225812CD600007CCF /* TemporariesPersistServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */; };
+		2CD6734925812F2E00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CD6735625812F4B00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CD6736D25812F7F00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CD6738325812FAA00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CD6739725812FCB00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */; };
 		2CD893B1256D5C6000EACB80 /* ViewContextObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */; };
 		2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */; };
@@ -549,6 +555,61 @@
 				2C6E09DB24E8150500B541D9 /* Common.framework in Embed Frameworks */,
 				2C8FD64324E02DCE005887F9 /* TBoxUIKit.framework in Embed Frameworks */,
 				2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CD6733C25812F0C00007CCF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2CD6734925812F2E00007CCF /* TestHelper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CD6735525812F3700007CCF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2CD6735625812F4B00007CCF /* TestHelper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CD6736125812F6700007CCF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				2CD6736D25812F7F00007CCF /* TestHelper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CD6737825812F8800007CCF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2CD6738325812FAA00007CCF /* TestHelper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CD6738D25812FB300007CCF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2CD6739725812FCB00007CCF /* TestHelper.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -846,6 +907,7 @@
 		2CD25B7F251E512F00BEE210 /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
 		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
+		2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceSpec.swift; sourceTree = "<group>"; };
 		2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContextObserver.swift; sourceTree = "<group>"; };
 		2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCloudAccountResolver.swift; sourceTree = "<group>"; };
@@ -1984,6 +2046,7 @@
 		2C794859254DD2B200A4E15D /* ClipService */ = {
 			isa = PBXGroup;
 			children = (
+				2CD6732025812CC700007CCF /* Persist */,
 				2C79485A254DD2BB00A4E15D /* Integrity */,
 			);
 			path = ClipService;
@@ -2358,6 +2421,14 @@
 				2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */,
 			);
 			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
+		2CD6732025812CC700007CCF /* Persist */ = {
+			isa = PBXGroup;
+			children = (
+				2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */,
+			);
+			path = Persist;
 			sourceTree = "<group>";
 		};
 		2CD893BA256EAD1E00EACB80 /* iCloud */ = {
@@ -2739,6 +2810,7 @@
 				2C6E09C924E8150500B541D9 /* Sources */,
 				2C6E09CA24E8150500B541D9 /* Frameworks */,
 				2C6E09CB24E8150500B541D9 /* Resources */,
+				2CD6738D25812FB300007CCF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2780,6 +2852,7 @@
 				2C8FD63224E02DCE005887F9 /* Frameworks */,
 				2C8FD63324E02DCE005887F9 /* Resources */,
 				CA97FCD39D1FC7AD293364C1 /* [CP] Embed Pods Frameworks */,
+				2CD6737825812F8800007CCF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2820,6 +2893,7 @@
 				2C99276324DDC7D400672CA7 /* Frameworks */,
 				2C99276424DDC7D400672CA7 /* Resources */,
 				4198D8ECD7C97439419ED01E /* [CP] Embed Pods Frameworks */,
+				2CD6733C25812F0C00007CCF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2892,6 +2966,7 @@
 				2CA0229C24DD9F5F00329251 /* Frameworks */,
 				2CA0229D24DD9F5F00329251 /* Resources */,
 				6F488116FD57FD7585796F9A /* [CP] Embed Pods Frameworks */,
+				2CD6735525812F3700007CCF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2932,6 +3007,7 @@
 				2CCECE1924DDC0CB00ADFE54 /* Frameworks */,
 				2CCECE1A24DDC0CB00ADFE54 /* Resources */,
 				C97449C24BA43DB389F1CAC0 /* [CP] Embed Pods Frameworks */,
+				2CD6736125812F6700007CCF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3739,6 +3815,7 @@
 				2C3506C82517911B009248C6 /* ImageExtensionResolverSpec.swift in Sources */,
 				2C79485C254DD2CC00A4E15D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */,
 				2C35068725178125009248C6 /* ImageNameResolverSpec.swift in Sources */,
+				2CD6732225812CD600007CCF /* TemporariesPersistServiceSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
