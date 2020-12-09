@@ -333,11 +333,3 @@ extension TopClipCollectionViewModel {
             .store(in: &self.cancellableBag)
     }
 }
-
-extension TopClipCollectionViewModel: ClipCollectionToolBarPresenterDataSource {
-    // MARK: - ClipCollectionToolBarPresenterDataSource
-
-    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
-        return self.selections.value.count
-    }
-}

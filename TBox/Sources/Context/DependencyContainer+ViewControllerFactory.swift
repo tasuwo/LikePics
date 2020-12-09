@@ -34,8 +34,8 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
-        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsViewModel = ClipCollectionToolBarViewModel(context: context)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(viewModel: toolBarItemsViewModel)
 
         let viewController = TopClipCollectionViewController(factory: self,
                                                              viewModel: viewModel,
@@ -207,8 +207,8 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
-        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsViewModel = ClipCollectionToolBarViewModel(context: context)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(viewModel: toolBarItemsViewModel)
 
         return SearchResultViewController(factory: self,
                                           viewModel: viewModel,
@@ -265,8 +265,8 @@ extension DependencyContainer: ViewControllerFactory {
         let navigationItemsPresenter = ClipCollectionNavigationBarViewModel(context: context)
         let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsPresenter)
 
-        let toolBarItemsPresenter = ClipCollectionToolBarPresenter(context: context, dataSource: viewModel)
-        let toolBarItemsProvider = ClipCollectionToolBarProvider(presenter: toolBarItemsPresenter)
+        let toolBarItemsViewModel = ClipCollectionToolBarViewModel(context: context)
+        let toolBarItemsProvider = ClipCollectionToolBarProvider(viewModel: toolBarItemsViewModel)
 
         return AlbumViewController(factory: self,
                                    viewModel: viewModel,

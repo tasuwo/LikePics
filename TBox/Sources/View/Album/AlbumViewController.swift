@@ -177,11 +177,10 @@ class AlbumViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         self.navigationItemsProvider.bind(view: self, viewModel: dependency)
+        self.toolBarItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     private func apply(_ operation: ClipCollection.Operation) {
-        self.toolBarItemsProvider.setEditing(operation == .selecting, animated: true)
-
         switch operation {
         case .reordering:
             self.collectionView.setCollectionViewLayout(self.createGridLayout(), animated: true)

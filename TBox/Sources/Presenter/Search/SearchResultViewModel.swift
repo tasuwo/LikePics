@@ -359,11 +359,3 @@ extension SearchResultViewModel {
             .store(in: &self.cancellableBag)
     }
 }
-
-extension SearchResultViewModel: ClipCollectionToolBarPresenterDataSource {
-    // MARK: - ClipCollectionToolBarPresenterDataSource
-
-    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
-        return self.selections.value.count
-    }
-}

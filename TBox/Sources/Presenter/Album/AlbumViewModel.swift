@@ -399,11 +399,3 @@ extension AlbumViewModel {
             .store(in: &self.cancellableBag)
     }
 }
-
-extension AlbumViewModel: ClipCollectionToolBarPresenterDataSource {
-    // MARK: - ClipCollectionToolBarPresenterDataSource
-
-    func selectedClipsCount(_ presenter: ClipCollectionToolBarPresenter) -> Int {
-        return self.selections.value.count
-    }
-}

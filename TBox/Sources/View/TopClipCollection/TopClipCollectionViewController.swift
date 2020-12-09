@@ -138,6 +138,7 @@ class TopClipCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         self.navigationItemsProvider.bind(view: self, viewModel: dependency)
+        self.toolBarItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     // MARK: CollectionView
@@ -197,9 +198,7 @@ class TopClipCollectionViewController: UIViewController {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-
         self.collectionView.allowsMultipleSelection = editing
-        self.toolBarItemsProvider.setEditing(editing, animated: animated)
     }
 }
 
