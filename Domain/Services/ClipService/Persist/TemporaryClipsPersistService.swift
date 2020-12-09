@@ -36,6 +36,27 @@ public class TemporaryClipsPersistService {
 
     // MARK: - Methods
 
+    private func beginTransaction() throws {
+        try self.clipStorage.beginTransaction()
+        try self.temporaryClipStorage.beginTransaction()
+        try self.referenceClipStorage.beginTransaction()
+        try self.imageStorage.beginTransaction()
+    }
+
+    private func cancelTransaction() throws {
+        try self.clipStorage.cancelTransactionIfNeeded()
+        try self.temporaryClipStorage.cancelTransactionIfNeeded()
+        try self.referenceClipStorage.cancelTransactionIfNeeded()
+        try self.imageStorage.cancelTransactionIfNeeded()
+    }
+
+    private func commitTransaction() throws {
+        try self.clipStorage.commitTransaction()
+        try self.temporaryClipStorage.commitTransaction()
+        try self.referenceClipStorage.commitTransaction()
+        try self.imageStorage.cancelTransactionIfNeeded()
+    }
+
     private func persist(clipId: Clip.Identity, in temporaryClips: [Clip.Identity: Clip]) -> Bool {
         do {
             guard let clip = temporaryClips[clipId] else {
@@ -45,10 +66,7 @@ public class TemporaryClipsPersistService {
                 return false
             }
 
-            try self.clipStorage.beginTransaction()
-            try self.temporaryClipStorage.beginTransaction()
-            try self.referenceClipStorage.beginTransaction()
-            try self.imageStorage.beginTransaction()
+            try self.beginTransaction()
 
             let oldClip: Clip?
             switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
@@ -56,10 +74,7 @@ public class TemporaryClipsPersistService {
                 oldClip = result.old
 
             case let .failure(error):
-                try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.temporaryClipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                try? self.imageStorage.cancelTransactionIfNeeded()
+                try? self.cancelTransaction()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)
                 """))
@@ -71,10 +86,7 @@ public class TemporaryClipsPersistService {
                 break
 
             case let .failure(error):
-                try? self.clipStorage.cancelTransactionIfNeeded()
-                try? self.temporaryClipStorage.cancelTransactionIfNeeded()
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                try? self.imageStorage.cancelTransactionIfNeeded()
+                try? self.cancelTransaction()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一時保存クリップの削除に失敗: \(error.localizedDescription)
                 """))
@@ -99,17 +111,11 @@ public class TemporaryClipsPersistService {
             }
             try? self.temporaryImageStorage.deleteAll(inClipHaving: clip.identity)
 
-            try self.clipStorage.commitTransaction()
-            try self.temporaryClipStorage.commitTransaction()
-            try self.referenceClipStorage.commitTransaction()
-            try self.imageStorage.cancelTransactionIfNeeded()
+            try self.commitTransaction()
 
             return true
         } catch {
-            try? self.clipStorage.cancelTransactionIfNeeded()
-            try? self.temporaryClipStorage.cancelTransactionIfNeeded()
-            try? self.referenceClipStorage.cancelTransactionIfNeeded()
-            try? self.imageStorage.cancelTransactionIfNeeded()
+            try? self.cancelTransaction()
             self.logger.write(ConsoleLog(level: .info, message: """
             一時画像の永続化中に例外が発生: \(error.localizedDescription)
             """))
