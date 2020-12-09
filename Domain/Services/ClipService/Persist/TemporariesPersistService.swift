@@ -4,7 +4,7 @@
 
 import Common
 
-public class TemporaryClipsPersistService {
+public class TemporariesPersistService {
     let temporaryClipStorage: ClipStorageProtocol
     let temporaryImageStorage: ImageStorageProtocol
     let clipStorage: ClipStorageProtocol
@@ -144,8 +144,8 @@ public class TemporaryClipsPersistService {
     }
 }
 
-extension TemporaryClipsPersistService: TemporaryClipsPersistServiceProtocol {
-    // MARK: - TemporaryClipsPersistServiceProtocol
+extension TemporariesPersistService: TemporariesPersistServiceProtocol {
+    // MARK: - TemporariesPersistServiceProtocol
 
     public func persistIfNeeded() -> Bool {
         self.queue.sync {

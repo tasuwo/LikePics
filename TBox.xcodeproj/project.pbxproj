@@ -42,8 +42,8 @@
 		2C0F9B312528AD0A00235B25 /* ClipInformationSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ClipInformationSectionHeader.xib */; };
 		2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */; };
 		2C0F9B4D2528EF9000235B25 /* ClipInformationLayoutHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */; };
-		2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */; };
-		2C104108254D968E000DF7DE /* TemporaryClipsPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */; };
+		2C1040E8254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */; };
+		2C104108254D968E000DF7DE /* TemporariesPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* TemporariesPersistService.swift */; };
 		2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */; };
 		2C122AF32578BEFE00AD23B4 /* CloudKitChangeDetecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AF22578BEFE00AD23B4 /* CloudKitChangeDetecter.swift */; };
 		2C122AFD2578C0FC00AD23B4 /* RemoteChangeDetecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AFC2578C0FC00AD23B4 /* RemoteChangeDetecter.swift */; };
@@ -594,8 +594,8 @@
 		2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
-		2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsPersistServiceProtocol.swift; sourceTree = "<group>"; };
-		2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipsPersistService.swift; sourceTree = "<group>"; };
+		2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceProtocol.swift; sourceTree = "<group>"; };
+		2C104107254D968E000DF7DE /* TemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistService.swift; sourceTree = "<group>"; };
 		2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationService.swift; sourceTree = "<group>"; };
 		2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification_Name+DidFindRelevantTransactions.swift"; sourceTree = "<group>"; };
 		2C122AF22578BEFE00AD23B4 /* CloudKitChangeDetecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitChangeDetecter.swift; sourceTree = "<group>"; };
@@ -1193,8 +1193,8 @@
 		2C104106254D967C000DF7DE /* Persist */ = {
 			isa = PBXGroup;
 			children = (
-				2C1040E7254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift */,
-				2C104107254D968E000DF7DE /* TemporaryClipsPersistService.swift */,
+				2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */,
+				2C104107254D968E000DF7DE /* TemporariesPersistService.swift */,
 			);
 			path = Persist;
 			sourceTree = "<group>";
@@ -3697,8 +3697,8 @@
 				2C9EF6A4253DE55900CBF357 /* ThumbnailStorageProtocol.swift in Sources */,
 				2C544654254B21980088C8BC /* ClipCommandService.swift in Sources */,
 				2CDF4F05257240C20030342B /* CloudStackLoader.swift in Sources */,
-				2C104108254D968E000DF7DE /* TemporaryClipsPersistService.swift in Sources */,
-				2C1040E8254D9618000DF7DE /* TemporaryClipsPersistServiceProtocol.swift in Sources */,
+				2C104108254D968E000DF7DE /* TemporariesPersistService.swift in Sources */,
+				2C1040E8254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift in Sources */,
 				2CC5CA162571576200B0472B /* CloudAvailability.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
 				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,

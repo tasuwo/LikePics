@@ -724,7 +724,7 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     }
 }
 
-public class TemporaryClipsPersistServiceProtocolMock: TemporaryClipsPersistServiceProtocol {
+public class TemporaryClipsPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
     public init() { }
 
     public private(set) var persistIfNeededCallCount = 0

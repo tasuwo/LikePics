@@ -29,7 +29,7 @@ class DependencyContainer {
     let clipQueryService: ClipQueryService
     let imageQueryService: NewImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
-    let persistService: TemporaryClipsPersistServiceProtocol
+    let persistService: TemporariesPersistServiceProtocol
     let cloudChangeDetecter: CloudKitChangeDetecter
 
     // MARK: Core Data
@@ -86,13 +86,13 @@ class DependencyContainer {
                                                                                    referenceClipStorage: self.referenceClipStorage,
                                                                                    logger: self.logger,
                                                                                    queue: self.clipCommandQueue)
-        self.persistService = TemporaryClipsPersistService(temporaryClipStorage: self.tmpClipStorage,
-                                                           temporaryImageStorage: self.tmpImageStorage,
-                                                           clipStorage: self.clipStorage,
-                                                           referenceClipStorage: self.referenceClipStorage,
-                                                           imageStorage: self.imageStorage,
-                                                           logger: self.logger,
-                                                           queue: self.clipCommandQueue)
+        self.persistService = TemporariesPersistService(temporaryClipStorage: self.tmpClipStorage,
+                                                        temporaryImageStorage: self.tmpImageStorage,
+                                                        clipStorage: self.clipStorage,
+                                                        referenceClipStorage: self.referenceClipStorage,
+                                                        imageStorage: self.imageStorage,
+                                                        logger: self.logger,
+                                                        queue: self.clipCommandQueue)
 
         self.cloudChangeDetecter = CloudKitChangeDetecter()
 

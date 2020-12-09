@@ -3,6 +3,6 @@
 //
 
 /// @mockable
-public protocol TemporaryClipsPersistServiceProtocol {
+public protocol TemporariesPersistServiceProtocol {
     func persistIfNeeded() -> Bool
 }
