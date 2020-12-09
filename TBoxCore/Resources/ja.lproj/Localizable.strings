@@ -20,3 +20,14 @@
 "clip_target_finder_view_empty_title" = "画像が見つかりませんでした";
 "clip_target_finder_view_empty_message" = "保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります";
 "clip_target_finder_view_empty_action_title" = "もう一度試す";
+
+"tag_list_view_alert_for_add_title" = "新規タグ";
+"tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
+"tag_list_view_alert_for_add_placeholder" = "タグ名";
+
+"tag_list_view_empty_title" = "タグがありません";
+"tag_list_view_empty_message" = "クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます";
+"tag_list_view_empty_action_title" = "はじめてのタグを追加する";
+
+"error_tag_add_default" = "タグの追加に失敗しました";
+"error_tag_add_duplicated" = "同名のタグを追加することはできません";

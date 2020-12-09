@@ -123,6 +123,7 @@
 		2C45D40D24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C45D40C24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib */; };
 		2C45D40F24EEBF620045B6D3 /* AlbumListCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40E24EEBF620045B6D3 /* AlbumListCollectionView.swift */; };
 		2C4D6C3F25811C97006FB988 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D6C3E25811C97006FB988 /* TextEditAlert.swift */; };
+		2C4D6C8125812349006FB988 /* TagCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D6C8025812349006FB988 /* TagCommandServiceProtocol.swift */; };
 		2C50D436253226D0008A422C /* AlbumSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C50D435253226D0008A422C /* AlbumSelectionCell.swift */; };
 		2C50D448253226DF008A422C /* AlbumSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C50D447253226DF008A422C /* AlbumSelectionCell.xib */; };
 		2C50D452253228CA008A422C /* AlbumSelectionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C50D451253228CA008A422C /* AlbumSelectionTableView.swift */; };
@@ -233,6 +234,9 @@
 		2CB6257A252A1126001C3368 /* TagCollectionEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */; };
 		2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */; };
 		2CB8C5C02580F9D300FC812B /* ClipBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8C5BF2580F9D300FC812B /* ClipBuilder.swift */; };
+		2CB8C5E6258101E200FC812B /* TagSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8C5E5258101E200FC812B /* TagSelectionViewController.swift */; };
+		2CB8C5F42581028200FC812B /* TagSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB8C5F32581028200FC812B /* TagSelectionViewController.xib */; };
+		2CB8C6042581050400FC812B /* TagSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8C6032581050400FC812B /* TagSelectionViewModel.swift */; };
 		2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F92253890A500ECFF47 /* ImageStorage.swift */; };
 		2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */; };
 		2CBA8413254C71C600DA5045 /* ReferenceTagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */; };
@@ -684,6 +688,7 @@
 		2C45D40C24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumListCollectionViewCell.xib; sourceTree = "<group>"; };
 		2C45D40E24EEBF620045B6D3 /* AlbumListCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionView.swift; sourceTree = "<group>"; };
 		2C4D6C3E25811C97006FB988 /* TextEditAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlert.swift; sourceTree = "<group>"; };
+		2C4D6C8025812349006FB988 /* TagCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C50D435253226D0008A422C /* AlbumSelectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionCell.swift; sourceTree = "<group>"; };
 		2C50D447253226DF008A422C /* AlbumSelectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumSelectionCell.xib; sourceTree = "<group>"; };
 		2C50D451253228CA008A422C /* AlbumSelectionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionTableView.swift; sourceTree = "<group>"; };
@@ -800,6 +805,9 @@
 		2CB6256F252A1119001C3368 /* TagCollectionEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionEmptyCell.swift; sourceTree = "<group>"; };
 		2CB62579252A1126001C3368 /* TagCollectionEmptyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionEmptyCell.xib; sourceTree = "<group>"; };
 		2CB8C5BF2580F9D300FC812B /* ClipBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBuilder.swift; sourceTree = "<group>"; };
+		2CB8C5E5258101E200FC812B /* TagSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionViewController.swift; sourceTree = "<group>"; };
+		2CB8C5F32581028200FC812B /* TagSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSelectionViewController.xib; sourceTree = "<group>"; };
+		2CB8C6032581050400FC812B /* TagSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionViewModel.swift; sourceTree = "<group>"; };
 		2CBA2F92253890A500ECFF47 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
 		2CBA83EA254C6FA000DA5045 /* ReferenceTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTag.swift; sourceTree = "<group>"; };
 		2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTagObject.swift; sourceTree = "<group>"; };
@@ -1608,6 +1616,22 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
+		2C4D6C7E25812331006FB988 /* TagService */ = {
+			isa = PBXGroup;
+			children = (
+				2C4D6C7F2581233D006FB988 /* Command */,
+			);
+			path = TagService;
+			sourceTree = "<group>";
+		};
+		2C4D6C7F2581233D006FB988 /* Command */ = {
+			isa = PBXGroup;
+			children = (
+				2C4D6C8025812349006FB988 /* TagCommandServiceProtocol.swift */,
+			);
+			path = Command;
+			sourceTree = "<group>";
+		};
 		2C50D434253226B4008A422C /* AlbumSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1644,6 +1668,7 @@
 			children = (
 				2CD893BA256EAD1E00EACB80 /* iCloud */,
 				2C54462C254B1E110088C8BC /* ClipService */,
+				2C4D6C7E25812331006FB988 /* TagService */,
 				2C27279F24DED44D00FEF1BD /* ImageInfoResolver */,
 			);
 			path = Services;
@@ -1892,6 +1917,7 @@
 		2C6E099E24E6DD3100B541D9 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2CB8C601258104EC00FC812B /* TagSelection */,
 				2C3CCDAC24F2C4AB00FAC660 /* TargetFinder */,
 			);
 			path = Presenter;
@@ -1900,6 +1926,7 @@
 		2C6E099F24E6DD3700B541D9 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2CB8C602258104F200FC812B /* TagSelection */,
 				2C3CCDAB24F2C49C00FAC660 /* TargetFinder */,
 			);
 			path = View;
@@ -2269,6 +2296,23 @@
 				2C7EEA0C252F76B2005E3E46 /* UncategorizedCell.xib */,
 			);
 			path = TagCollection;
+			sourceTree = "<group>";
+		};
+		2CB8C601258104EC00FC812B /* TagSelection */ = {
+			isa = PBXGroup;
+			children = (
+				2CB8C6032581050400FC812B /* TagSelectionViewModel.swift */,
+			);
+			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2CB8C602258104F200FC812B /* TagSelection */ = {
+			isa = PBXGroup;
+			children = (
+				2CB8C5E5258101E200FC812B /* TagSelectionViewController.swift */,
+				2CB8C5F32581028200FC812B /* TagSelectionViewController.xib */,
+			);
+			path = TagSelection;
 			sourceTree = "<group>";
 		};
 		2CBA8482254C8F4E00DA5045 /* Services */ = {
@@ -3029,6 +3073,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C6E09A124E6DD4B00B541D9 /* ClipTargetFinderViewController.xib in Resources */,
+				2CB8C5F42581028200FC812B /* TagSelectionViewController.xib in Resources */,
 				2C369AA4254577E800462097 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3527,11 +3572,13 @@
 				2C3506ED25179545009248C6 /* ClipItemSource.swift in Sources */,
 				2C051296254EECF3007964B7 /* WebImageUrlFinderError.swift in Sources */,
 				2CFC5D00250DF294001A02E4 /* String.swift in Sources */,
+				2CB8C6042581050400FC812B /* TagSelectionViewModel.swift in Sources */,
 				2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */,
 				2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */,
 				2C0512A2254EECF9007964B7 /* WebImageProvidingService_Pixiv.swift in Sources */,
 				2CB8C5C02580F9D300FC812B /* ClipBuilder.swift in Sources */,
 				2C0512A3254EECF9007964B7 /* WebImageProviderPreset.swift in Sources */,
+				2CB8C5E6258101E200FC812B /* TagSelectionViewController.swift in Sources */,
 				2C0512A1254EECF9007964B7 /* WebImageProvidingService.swift in Sources */,
 				2C6E09A224E6DD5A00B541D9 /* ClipTargetFinderPresenter.swift in Sources */,
 				2C05128C254EECEF007964B7 /* WebImageUrlFinder.swift in Sources */,
@@ -3638,6 +3685,7 @@
 			files = (
 				2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */,
 				2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */,
+				2C4D6C8125812349006FB988 /* TagCommandServiceProtocol.swift in Sources */,
 				2C306D08257220F200947E77 /* CurrentICloudAccountResolver.swift in Sources */,
 				2C122AFD2578C0FC00AD23B4 /* RemoteChangeDetecter.swift in Sources */,
 				2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */,

@@ -20,3 +20,14 @@
 "clip_target_finder_view_empty_title" = "No images found";
 "clip_target_finder_view_empty_message" = "There might be no available images in the web site or the connection might be bad.";
 "clip_target_finder_view_empty_action_title" = "Retry";
+
+"tag_list_view_alert_for_add_title" = "New Tag";
+"tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
+"tag_list_view_alert_for_add_placeholder" = "Name";
+
+"tag_list_view_empty_title" = "No tags";
+"tag_list_view_empty_message" = "If you classify clips by tags, you can list the clips categorized with specific tag later.";
+"tag_list_view_empty_action_title" = "Add your first Tag";
+
+"error_tag_add_default" = "Failed to add tag.";
+"error_tag_add_duplicated" = "Duplicated tag name.";

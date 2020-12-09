@@ -38,6 +38,22 @@ internal enum L10n {
     internal static let clipTargetFinderViewOverwriteAlertOk = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_ok")
     /// 画像を選択
     internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
+    /// タグの追加に失敗しました
+    internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
+    /// 同名のタグを追加することはできません
+    internal static let errorTagAddDuplicated = L10n.tr("Localizable", "error_tag_add_duplicated")
+    /// このタグの名前を入力してください
+    internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
+    /// タグ名
+    internal static let tagListViewAlertForAddPlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_add_placeholder")
+    /// 新規タグ
+    internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
+    /// はじめてのタグを追加する
+    internal static let tagListViewEmptyActionTitle = L10n.tr("Localizable", "tag_list_view_empty_action_title")
+    /// クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます
+    internal static let tagListViewEmptyMessage = L10n.tr("Localizable", "tag_list_view_empty_message")
+    /// タグがありません
+    internal static let tagListViewEmptyTitle = L10n.tr("Localizable", "tag_list_view_empty_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
