@@ -185,6 +185,7 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
                 self.logger.write(ConsoleLog(level: .error, message: """
                 一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
                 """))
+                return false
             }
 
             self.cleanTemporaryArea()
