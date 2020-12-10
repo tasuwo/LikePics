@@ -70,7 +70,7 @@ opt_in_rules:
   - strong_iboutlet
   - switch_case_on_newline
   # - trailing_closure
-  - type_contents_order
+  # - type_contents_order
   - unavailable_function
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture

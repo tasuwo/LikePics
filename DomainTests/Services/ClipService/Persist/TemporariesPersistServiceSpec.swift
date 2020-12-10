@@ -3,10 +3,10 @@
 //
 
 import Common
+@testable import Domain
 import Nimble
 import Quick
 @testable import TestHelper
-@testable import Domain
 
 class TemporariesPersistServiceSpec: QuickSpec {
     override func spec() {

@@ -10,7 +10,6 @@ import UIKit
 
 public protocol ClipTargetFinderDelegate: AnyObject {
     func didCancel(_ viewController: ClipTargetFinderViewController)
-
     func didFinish(_ viewController: ClipTargetFinderViewController)
 }
 
@@ -21,26 +20,32 @@ protocol SelectableImageCellDataSource {
 }
 
 public class ClipTargetFinderViewController: UIViewController {
-    private let presenter: ClipTargetFinderPresenter
+    typealias Dependency = ClipTargetFinderViewModelType
+
+    private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
+                                                target: self,
+                                                action: #selector(saveAction))
+    private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"),
+                                                  style: .plain,
+                                                  target: self,
+                                                  action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
-
-    private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveAction))
-    private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(reloadAction))
-
-    private weak var delegate: ClipTargetFinderDelegate?
-    private var cancellableBag = Set<AnyCancellable>()
-
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
+    private let viewModel: ClipTargetFinderViewModelType
+
+    private var cancellableBag = Set<AnyCancellable>()
+    private weak var delegate: ClipTargetFinderDelegate?
+
     // MARK: - Lifecycle
 
-    public init(presenter: ClipTargetFinderPresenter, delegate: ClipTargetFinderDelegate) {
-        self.presenter = presenter
+    public init(viewModel: ClipTargetFinderViewModelType,
+                delegate: ClipTargetFinderDelegate)
+    {
+        self.viewModel = viewModel
         self.delegate = delegate
         super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -50,53 +55,10 @@ public class ClipTargetFinderViewController: UIViewController {
 
     // MARK: - Methods
 
-    // MARK: Downsampling
-
-    private static func calcScale(forSize source: CGSize, toFit destination: CGSize) -> CGFloat {
-        let widthScale = destination.width / source.width
-        let heightScale = destination.height / source.height
-        return min(widthScale, heightScale)
-    }
-
-    private static func calcDownsamplingSize(forOriginalSize imageSize: CGSize) -> CGSize {
-        let screenSize = UIScreen.main.bounds.size
-        let rotatedScreenSize = CGSize(width: UIScreen.main.bounds.size.height,
-                                       height: UIScreen.main.bounds.size.width)
-
-        let scaleToFitScreen = max(self.calcScale(forSize: imageSize, toFit: screenSize),
-                                   self.calcScale(forSize: imageSize, toFit: rotatedScreenSize))
-        let targetScale = min(1, scaleToFitScreen)
-
-        return imageSize.scaled(by: targetScale)
-    }
-
-    private static func downsampledImage(data: Data, to pointSize: CGSize) -> UIImage? {
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
-            return nil
-        }
-
-        let maxDimensionInPixels = max(pointSize.width, pointSize.height)
-        let downsampleOptions = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ] as CFDictionary
-
-        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
-            return nil
-        }
-
-        return UIImage(cgImage: downsampledImage)
-    }
-
     // MARK: Lifecycle
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-
-        self.presenter.attachWebView(to: self.view)
 
         if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
             layout.delegate = self
@@ -105,7 +67,74 @@ public class ClipTargetFinderViewController: UIViewController {
         self.setupNavigationBar()
         self.setupEmptyMessage()
 
-        self.presenter.findImages()
+        self.bind(to: viewModel)
+
+        self.viewModel.inputs.viewLoaded.send(self.view)
+        self.viewModel.inputs.startedFindingImage.send(())
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        self.emptyMessageView.isHidden = true
+        self.indicator.hidesWhenStopped = true
+
+        dependency.outputs.isLoading
+            .sink { [weak self] isLoading in
+                isLoading
+                    ? self?.indicator.startAnimating()
+                    : self?.indicator.stopAnimating()
+            }
+            .store(in: &self.cancellableBag)
+        dependency.outputs.isReloadItemEnabled
+            .assign(to: \.isEnabled, on: self.itemReload)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.isDoneItemEnabled
+            .assign(to: \.isEnabled, on: self.itemDone)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.isCollectionViewHidden
+            .assign(to: \.isHidden, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.emptyMessageViewAlpha
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.images
+            .sink { [weak self] _ in self?.collectionView.reloadData() }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.selectedIndices
+            .sink { [weak self] indices in
+                guard let self = self else { return }
+
+                indices.enumerated().forEach { idx, index in
+                    guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? ClipSelectionCollectionViewCell else { return }
+                    cell.selectionOrder = idx + 1
+                }
+
+                self.collectionView.indexPathsForSelectedItems?
+                    .filter { !indices.contains($0.row) }
+                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: L10n.clipTargetFinderViewErrorAlertTitle,
+                                              message: message,
+                                              preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.clipTargetFinderViewErrorAlertOk,
+                                      style: .default,
+                                      handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.didFinish
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.delegate?.didFinish(self)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: NavigationBar
@@ -124,12 +153,12 @@ public class ClipTargetFinderViewController: UIViewController {
 
     @objc
     private func saveAction() {
-        self.presenter.saveSelectedImages()
+        self.viewModel.inputs.saveImages.send(())
     }
 
     @objc
     private func reloadAction() {
-        self.presenter.findImages()
+        self.viewModel.inputs.startedFindingImage.send(())
     }
 
     // MARK: EmptyMessage
@@ -151,112 +180,27 @@ public class ClipTargetFinderViewController: UIViewController {
     }
 }
 
-extension ClipTargetFinderViewController: ClipTargetFinderViewProtocol {
-    // MARK: - ClipTargetFinderViewProtocol
-
-    func startLoading() {
-        self.emptyMessageView.alpha = 0
-        self.indicator.startAnimating()
-        self.indicator.isHidden = false
-        self.itemReload.isEnabled = false
-    }
-
-    func endLoading() {
-        self.indicator.isHidden = true
-        self.indicator.stopAnimating()
-        self.itemReload.isEnabled = true
-    }
-
-    func reloadList() {
-        if self.presenter.selectableImages.isEmpty {
-            self.collectionView.isHidden = true
-            self.emptyMessageView.alpha = 1
-        } else {
-            self.collectionView.isHidden = false
-            self.emptyMessageView.alpha = 0
-        }
-        self.collectionView.reloadData()
-    }
-
-    func showConfirmationForOverwrite() {
-        let alert = UIAlertController(title: "",
-                                      message: L10n.clipTargetFinderViewOverwriteAlertBody,
-                                      preferredStyle: .alert)
-
-        alert.addAction(
-            .init(title: L10n.clipTargetFinderViewOverwriteAlertCancel,
-                  style: .cancel,
-                  handler: { [weak self] _ in
-                      guard let self = self else { return }
-                      self.delegate?.didCancel(self)
-                  })
-        )
-
-        alert.addAction(
-            .init(title: L10n.clipTargetFinderViewOverwriteAlertOk,
-                  style: .default,
-                  handler: { [weak self] _ in
-                      self?.presenter.enableOverwrite()
-                      self?.presenter.findImages()
-                  })
-        )
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func show(errorMessage: String) {
-        let alert = UIAlertController(title: L10n.clipTargetFinderViewErrorAlertTitle,
-                                      message: errorMessage,
-                                      preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.clipTargetFinderViewErrorAlertOk,
-                              style: .default,
-                              handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func updateSelectionOrder(at index: Int, to order: Int) {
-        guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? ClipSelectionCollectionViewCell else { return }
-        cell.selectionOrder = order
-    }
-
-    func updateDoneButton(isEnabled: Bool) {
-        self.itemDone.isEnabled = isEnabled
-    }
-
-    func resetSelection() {
-        self.collectionView.indexPathsForSelectedItems?
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-        self.collectionView.visibleCells
-            .compactMap { $0 as? ClipSelectionCollectionViewCell }
-            .forEach { $0.selectionOrder = nil }
-    }
-
-    func notifySavedImagesSuccessfully() {
-        self.delegate?.didFinish(self)
-    }
-}
-
 extension ClipTargetFinderViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.selectableImages.indices.contains(indexPath.row)
+        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.selectableImages.indices.contains(indexPath.row)
+        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return self.presenter.selectableImages.indices.contains(indexPath.row)
+        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.presenter.selectItem(at: indexPath.row)
+        self.viewModel.inputs.select.send(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        self.presenter.deselectItem(at: indexPath.row)
+        self.viewModel.inputs.deselect.send(indexPath.row)
     }
 }
 
@@ -268,33 +212,32 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.presenter.selectableImages.count
+        return self.viewModel.outputs.images.value.count
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
-        guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return cell }
+        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row) else { return cell }
 
-        let meta = self.presenter.selectableImages[indexPath.row]
+        let meta = self.viewModel.outputs.images.value[indexPath.row]
         cell.url = meta.url
 
         URLSession.shared
-            .dataTaskPublisher(for: self.presenter.selectableImages[indexPath.row].url)
+            .dataTaskPublisher(for: self.viewModel.outputs.images.value[indexPath.row].url)
             .map { data, _ -> UIImage? in
-                let downsampleSize = Self.calcDownsamplingSize(forOriginalSize: CGSize(width: meta.width, height: meta.height))
-                return Self.downsampledImage(data: data, to: downsampleSize)
+                let downsampleSize = ImageUtility.calcDownsamplingSize(forOriginalSize: CGSize(width: meta.width, height: meta.height))
+                return ImageUtility.downsampledImage(data: data, to: downsampleSize)
             }
+            .catch { _ in Just(nil) }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                // NOP
-            }, receiveValue: { image in
+            .sink { image in
                 guard cell.url == meta.url else { return }
                 cell.image = image
-            })
+            }
             .store(in: &self.cancellableBag)
 
-        if let indexInSelection = self.presenter.selectedIndices.firstIndex(of: indexPath.row) {
+        if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
             cell.selectionOrder = indexInSelection + 1
         }
 
@@ -306,9 +249,9 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard self.presenter.selectableImages.indices.contains(indexPath.row) else { return .zero }
-        let imageHeight = self.presenter.selectableImages[indexPath.row].height
-        let imageWidth = self.presenter.selectableImages[indexPath.row].width
+        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row) else { return .zero }
+        let imageHeight = self.viewModel.outputs.images.value[indexPath.row].height
+        let imageWidth = self.viewModel.outputs.images.value[indexPath.row].width
         return width * CGFloat(imageHeight / imageWidth)
     }
 
@@ -321,12 +264,6 @@ extension ClipTargetFinderViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     public func didTapActionButton(_ view: EmptyMessageView) {
-        self.presenter.findImages()
-    }
-}
-
-private extension CGSize {
-    func scaled(by scale: CGFloat) -> Self {
-        return .init(width: self.width * scale, height: self.height * scale)
+        self.viewModel.inputs.startedFindingImage.send(())
     }
 }

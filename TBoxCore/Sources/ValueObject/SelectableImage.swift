@@ -5,7 +5,7 @@
 import CoreGraphics
 import ImageIO
 
-struct SelectableImage: SelectableImageCellDataSource {
+public struct SelectableImage: SelectableImageCellDataSource {
     let url: URL
     let alternativeUrl: URL?
     let height: CGFloat

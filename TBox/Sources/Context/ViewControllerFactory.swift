@@ -18,7 +18,7 @@ protocol ViewControllerFactory {
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
 
-    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate, isOverwrite: Bool) -> UIViewController
+    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate) -> UIViewController
 
     func makeSearchEntryViewController() -> UIViewController
     func makeSearchResultViewController(context: ClipCollection.SearchContext) -> UIViewController?
