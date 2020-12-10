@@ -1776,7 +1776,6 @@
 		2C55D12524DFD19300A43B8D /* ClipsCollection */ = {
 			isa = PBXGroup;
 			children = (
-				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
 				2C570B6524E0505F00A1DC9F /* ClipsCollectionView.swift */,
 				2C570B6C24E067D200A1DC9F /* ClipsCollectionViewCell.swift */,
 				2C570B6E24E06AFD00A1DC9F /* ClipsCollectionViewCell.xib */,
@@ -2468,6 +2467,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE1C0F5258266A800A8FA07 /* GridLayout.swift */,
+				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
