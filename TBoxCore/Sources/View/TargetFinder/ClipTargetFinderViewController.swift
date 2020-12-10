@@ -31,7 +31,9 @@ public class ClipTargetFinderViewController: UIViewController {
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
     @IBOutlet var collectionView: ClipSelectionCollectionView!
+    @IBOutlet var tagPreviewCollectionView: UICollectionView!
     @IBOutlet var indicator: UIActivityIndicatorView!
+    @IBOutlet var tagPreviewViewHeight: NSLayoutConstraint!
 
     private let viewModel: ClipTargetFinderViewModelType
 
@@ -100,6 +102,15 @@ public class ClipTargetFinderViewController: UIViewController {
             .store(in: &self.cancellableBag)
         dependency.outputs.images
             .sink { [weak self] _ in self?.collectionView.reloadData() }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.previewViewHeight
+            .sink { [weak self] height in
+                self?.tagPreviewViewHeight.constant = height
+                UIView.animate(withDuration: 0.2) {
+                    self?.view.layoutIfNeeded()
+                }
+            }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selectedIndices
