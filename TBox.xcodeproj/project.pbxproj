@@ -218,7 +218,9 @@
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
 		2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */; };
 		2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */; };
+		2CA9DBE12584325A00D88ED4 /* ClipTargetFinderSelectedTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBE02584325A00D88ED4 /* ClipTargetFinderSelectedTagsViewController.swift */; };
 		2CA9DBEB258598E700D88ED4 /* UIView+ConstraintFittingIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */; };
+		2CA9DBF5258599F700D88ED4 /* ClipTargetFinderSelectedTagsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBF4258599F700D88ED4 /* ClipTargetFinderSelectedTagsViewModel.swift */; };
 		2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */; };
 		2CABB5B0250E5105007B7F88 /* ClipInformationTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */; };
 		2CB0712C250904E90000E7E1 /* TagCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB0712B250904E90000E7E1 /* TagCollectionView.swift */; };
@@ -851,7 +853,9 @@
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLinkingClipsQuery.swift; sourceTree = "<group>"; };
 		2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionProvider.swift; sourceTree = "<group>"; };
+		2CA9DBE02584325A00D88ED4 /* ClipTargetFinderSelectedTagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetFinderSelectedTagsViewController.swift; sourceTree = "<group>"; };
 		2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintFittingIn.swift"; sourceTree = "<group>"; };
+		2CA9DBF4258599F700D88ED4 /* ClipTargetFinderSelectedTagsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTargetFinderSelectedTagsViewModel.swift; sourceTree = "<group>"; };
 		2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationDismissalAnimator.swift; sourceTree = "<group>"; };
 		2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		2CB0712B250904E90000E7E1 /* TagCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionView.swift; sourceTree = "<group>"; };
@@ -1557,6 +1561,7 @@
 			children = (
 				2C2AB05F24DEF7BA007E2B18 /* ClipTargetFinderViewController.swift */,
 				2C2AB06724DF00B0007E2B18 /* ClipTargetFinderViewController.xib */,
+				2CA9DBE02584325A00D88ED4 /* ClipTargetFinderSelectedTagsViewController.swift */,
 			);
 			path = TargetFinder;
 			sourceTree = "<group>";
@@ -1565,6 +1570,7 @@
 			isa = PBXGroup;
 			children = (
 				2C2AB06524DEFAF1007E2B18 /* ClipTargetFinderViewModel.swift */,
+				2CA9DBF4258599F700D88ED4 /* ClipTargetFinderSelectedTagsViewModel.swift */,
 			);
 			path = TargetFinder;
 			sourceTree = "<group>";
@@ -3679,6 +3685,8 @@
 				2C0512A4254EECF9007964B7 /* WebImageProvider.swift in Sources */,
 				2C0512B7254EED19007964B7 /* OnMainThread.swift in Sources */,
 				2C6E09A024E6DD4400B541D9 /* ClipTargetFinderViewController.swift in Sources */,
+				2CA9DBF5258599F700D88ED4 /* ClipTargetFinderSelectedTagsViewModel.swift in Sources */,
+				2CA9DBE12584325A00D88ED4 /* ClipTargetFinderSelectedTagsViewController.swift in Sources */,
 				2C0512A0254EECF9007964B7 /* WebImageProvidingService_Twitter.swift in Sources */,
 				2C0512FA254EF0F1007964B7 /* WebImageUrlSet.swift in Sources */,
 				2C051305254F00B2007964B7 /* SelectableImage.swift in Sources */,

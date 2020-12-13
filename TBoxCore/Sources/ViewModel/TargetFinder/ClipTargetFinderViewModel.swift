@@ -34,8 +34,6 @@ public protocol ClipTargetFinderViewModelOutputs {
     var isCollectionViewHidden: CurrentValueSubject<Bool, Never> { get }
     var emptyMessageViewAlpha: CurrentValueSubject<CGFloat, Never> { get }
 
-    var previewViewHeight: CurrentValueSubject<CGFloat, Never> { get }
-
     var didFinish: PassthroughSubject<Void, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
 }
@@ -80,8 +78,6 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     public var isCollectionViewHidden: CurrentValueSubject<Bool, Never> = .init(false)
     public var emptyMessageViewAlpha: CurrentValueSubject<CGFloat, Never> = .init(0)
-
-    public var previewViewHeight: CurrentValueSubject<CGFloat, Never> = .init(0)
 
     public var didFinish: PassthroughSubject<Void, Never> = .init()
     public var errorMessage: PassthroughSubject<String, Never> = .init()
@@ -196,11 +192,6 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.images
             .map { $0.isEmpty ? 1 : 0 }
             .sink { [weak self] alpha in self?.emptyMessageViewAlpha.send(alpha) }
-            .store(in: &self.cancellableBag)
-
-        self.selectedIndices
-            .map { $0.isEmpty ? 0 : 150 }
-            .sink { [weak self] height in self?.previewViewHeight.send(height) }
             .store(in: &self.cancellableBag)
     }
 

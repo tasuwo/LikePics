@@ -31,11 +31,13 @@ public class ClipTargetFinderViewController: UIViewController {
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
     @IBOutlet var collectionView: ClipSelectionCollectionView!
-    @IBOutlet var tagPreviewCollectionView: UICollectionView!
+    @IBOutlet var selectedTagListContainer: UIView!
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var tagPreviewViewHeight: NSLayoutConstraint!
 
     private let viewModel: ClipTargetFinderViewModelType
+
+    private let selectedTagViewController: ClipTargetFinderSelectedTagsViewController
 
     private var cancellableBag = Set<AnyCancellable>()
     private weak var delegate: ClipTargetFinderDelegate?
@@ -43,11 +45,15 @@ public class ClipTargetFinderViewController: UIViewController {
     // MARK: - Lifecycle
 
     public init(viewModel: ClipTargetFinderViewModelType,
+                tagsViewModel: ClipTargetFinderSelectedTagsViewModelType,
                 delegate: ClipTargetFinderDelegate)
     {
         self.viewModel = viewModel
         self.delegate = delegate
+        self.selectedTagViewController = ClipTargetFinderSelectedTagsViewController(viewModel: tagsViewModel)
         super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
+
+        self.addChild(self.selectedTagViewController)
     }
 
     @available(*, unavailable)
@@ -61,6 +67,10 @@ public class ClipTargetFinderViewController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+
+        self.selectedTagViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.selectedTagListContainer.addSubview(self.selectedTagViewController.view)
+        NSLayoutConstraint.activate(self.selectedTagListContainer.constraints(fittingIn: self.selectedTagViewController.view))
 
         if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
             layout.delegate = self
@@ -102,15 +112,6 @@ public class ClipTargetFinderViewController: UIViewController {
             .store(in: &self.cancellableBag)
         dependency.outputs.images
             .sink { [weak self] _ in self?.collectionView.reloadData() }
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.previewViewHeight
-            .sink { [weak self] height in
-                self?.tagPreviewViewHeight.constant = height
-                UIView.animate(withDuration: 0.2) {
-                    self?.view.layoutIfNeeded()
-                }
-            }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selectedIndices

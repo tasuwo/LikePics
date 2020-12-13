@@ -12,8 +12,8 @@
             <connections>
                 <outlet property="collectionView" destination="p6W-aQ-rTk" id="ku2-Z1-w7B"/>
                 <outlet property="indicator" destination="ib4-SI-9D4" id="ubB-TK-fWA"/>
-                <outlet property="tagPreviewCollectionView" destination="eBp-SP-j8U" id="JOm-Ma-qGT"/>
-                <outlet property="tagPreviewViewHeight" destination="Ohj-AY-bXD" id="AID-zF-xHi"/>
+                <outlet property="selectedTagListContainer" destination="4bG-OH-b30" id="BM2-CP-rUy"/>
+                <outlet property="tagPreviewViewHeight" destination="OQt-ZV-i6d" id="9ms-jU-aQF"/>
                 <outlet property="view" destination="iN0-l3-epB" id="IXN-k4-hcW"/>
             </connections>
         </placeholder>
@@ -23,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="p6W-aQ-rTk" customClass="ClipSelectionCollectionView" customModule="TBoxUIKit">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="712"/>
+                    <rect key="frame" x="0.0" y="172" width="414" height="724"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Kzj-wX-yED">
                         <size key="itemSize" width="128" height="128"/>
@@ -39,32 +39,26 @@
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ib4-SI-9D4">
                     <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
                 </activityIndicatorView>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="eBp-SP-j8U">
-                    <rect key="frame" x="0.0" y="712" width="414" height="150"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bG-OH-b30" userLabel="Tag Container">
+                    <rect key="frame" x="0.0" y="44" width="414" height="128"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="150" id="Ohj-AY-bXD"/>
+                        <constraint firstAttribute="height" constant="128" id="OQt-ZV-i6d"/>
                     </constraints>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="09M-py-yL5">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
-                </collectionView>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="eBp-SP-j8U" firstAttribute="top" secondItem="p6W-aQ-rTk" secondAttribute="bottom" id="0hU-mp-Vj4"/>
-                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="31g-Ey-5Aq"/>
-                <constraint firstAttribute="trailing" secondItem="p6W-aQ-rTk" secondAttribute="trailing" id="3aJ-WG-fMu"/>
-                <constraint firstItem="p6W-aQ-rTk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Dvb-uH-Zml"/>
-                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="O49-7H-Huu"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="eBp-SP-j8U" secondAttribute="bottom" id="bcC-KH-QjP"/>
-                <constraint firstItem="p6W-aQ-rTk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="go8-3I-VHa"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="eBp-SP-j8U" secondAttribute="trailing" id="lZj-2A-bOf"/>
-                <constraint firstItem="eBp-SP-j8U" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="sSK-74-bAd"/>
+                <constraint firstItem="4bG-OH-b30" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="7Fg-uV-wtQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="p6W-aQ-rTk" secondAttribute="trailing" id="DMo-yB-K2i"/>
+                <constraint firstItem="4bG-OH-b30" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Kcm-Qs-AdW"/>
+                <constraint firstItem="p6W-aQ-rTk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Maq-1B-Fgt"/>
+                <constraint firstItem="p6W-aQ-rTk" firstAttribute="top" secondItem="4bG-OH-b30" secondAttribute="bottom" id="PUM-6d-BLG"/>
+                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="iib-Cg-wKN"/>
+                <constraint firstAttribute="bottom" secondItem="p6W-aQ-rTk" secondAttribute="bottom" id="oKZ-oF-uvV"/>
+                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="zL8-Gy-b9X"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="4bG-OH-b30" secondAttribute="trailing" id="zfa-lR-k3k"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="152.67857142857142"/>
         </view>
