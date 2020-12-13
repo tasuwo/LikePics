@@ -23,7 +23,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     var contentViewHeight: CurrentValueSubject<CGFloat, Never> = .init(0)
 
     private let factory: Factory
-    private let viewModel: ClipTargetFinderSelectedTagsViewModelType
+    let viewModel: ClipTargetFinderSelectedTagsViewModelType
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var collectionView: UICollectionView!

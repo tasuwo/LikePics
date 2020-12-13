@@ -157,6 +157,12 @@ public class ClipTargetFinderViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
+        self.selectedTagViewController.viewModel.outputs.tags
+            .sink { [weak self] tags in
+                self?.viewModel.inputs.selectedTags.send(tags)
+            }
+            .store(in: &self.cancellableBag)
+
         self.selectedTagViewController.contentViewHeight
             // HACK: CollectionView更新後即座に `layoutIfNeeded` を呼び出すとクラッシュするため、その回避
             .debounce(for: 0.1, scheduler: RunLoop.main)

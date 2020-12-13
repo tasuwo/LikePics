@@ -20,6 +20,8 @@ public protocol ClipTargetFinderViewModelInputs {
 
     var select: PassthroughSubject<Int, Never> { get }
     var deselect: PassthroughSubject<Int, Never> { get }
+
+    var selectedTags: PassthroughSubject<[Tag], Never> { get }
 }
 
 public protocol ClipTargetFinderViewModelOutputs {
@@ -66,6 +68,8 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     public var select: PassthroughSubject<Int, Never> = .init()
     public var deselect: PassthroughSubject<Int, Never> = .init()
 
+    public var selectedTags: PassthroughSubject<[Tag], Never> = .init()
+
     // MARK: ClipTargetFinderViewModelOutputs
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
@@ -87,6 +91,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     private static let maxDelayMs = 5000
     private static let incrementalDelayMs = 1000
 
+    private var tags: [Tag] = []
     private var urlFinderDelayMs: Int = 0
     private var cancellableBag = Set<AnyCancellable>()
 
@@ -165,6 +170,12 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.deselect
             .sink { [weak self] index in
                 self?.deselectItem(at: index)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.selectedTags
+            .sink { [weak self] tags in
+                self?.tags = tags
             }
             .store(in: &self.cancellableBag)
 
@@ -311,7 +322,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     // MARK: Save Images
 
     private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
-        let result = self.clipBuilder.build(sources: target)
+        let result = self.clipBuilder.build(sources: target, tags: self.tags)
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())
