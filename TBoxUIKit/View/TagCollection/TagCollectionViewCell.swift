@@ -37,10 +37,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var visibleDeleteButton: Bool = false {
-        didSet {
-            self.deleteButton.isHidden = !self.visibleDeleteButton
-            self.deleteButtonSeparator.isHidden = !self.visibleDeleteButton
+    public var visibleDeleteButton: Bool {
+        get {
+            return !self.deleteButtonContainer.isHidden
+        }
+        set {
+            self.deleteButtonContainer.isHidden = !newValue
         }
     }
 
@@ -52,8 +54,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet var iconImage: UIImageView!
     @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var deleteButton: UIButton!
-    @IBOutlet var deleteButtonSeparator: UIView!
+    @IBOutlet var deleteButtonContainer: UIView!
 
     public weak var delegate: TagCollectionViewCellDelegate?
 

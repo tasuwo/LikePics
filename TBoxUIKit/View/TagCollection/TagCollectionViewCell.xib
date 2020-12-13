@@ -11,31 +11,43 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="A4w-oc-zVg" customClass="TagCollectionViewCell" customModule="TBoxUIKit" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="242" height="75"/>
+            <rect key="frame" x="0.0" y="0.0" width="242" height="41"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="T9b-bK-tsg">
-                <rect key="frame" x="0.0" y="0.0" width="242" height="75"/>
+                <rect key="frame" x="0.0" y="0.0" width="242" height="41"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tow-5c-AKX">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="74"/>
+                        <rect key="frame" x="0.0" y="0.0" width="242" height="41"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGi-OV-WPW">
-                                <rect key="frame" x="0.0" y="0.0" width="167" height="74"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGi-OV-WPW" userLabel="Body Container">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="41"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
-                                        <rect key="frame" x="8" y="8" width="151" height="58"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
+                                        <rect key="frame" x="8" y="8" width="184" height="25"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Bt0-iq-WPi">
-                                                <rect key="frame" x="0.0" y="0.0" width="58" height="59"/>
-                                                <color key="tintColor" systemColor="labelColor"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
+                                                <rect key="frame" x="0.0" y="0.0" width="16" height="25"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Bt0-iq-WPi">
+                                                        <rect key="frame" x="0.0" y="4.5" width="16" height="17"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="16" id="59i-Pz-bBQ"/>
+                                                            <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="height" multiplier="1:1" id="Hju-m5-d5b"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="16" id="59i-Pz-bBQ"/>
-                                                    <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="height" multiplier="1:1" id="Hju-m5-d5b"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Bt0-iq-WPi" secondAttribute="trailing" id="SIj-oK-OmZ"/>
+                                                    <constraint firstItem="Bt0-iq-WPi" firstAttribute="centerY" secondItem="rdG-Yc-CjJ" secondAttribute="centerY" id="eg5-AA-KjO"/>
+                                                    <constraint firstItem="Bt0-iq-WPi" firstAttribute="leading" secondItem="rdG-Yc-CjJ" secondAttribute="leading" id="fDA-0c-blw"/>
+                                                    <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="width" id="ji1-RQ-09U"/>
                                                 </constraints>
-                                            </imageView>
+                                            </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="58" y="0.0" width="93" height="58"/>
+                                                <rect key="frame" x="20" y="0.0" width="164" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -55,23 +67,38 @@
                                     <constraint firstItem="8yL-J5-f6z" firstAttribute="top" secondItem="bGi-OV-WPW" secondAttribute="top" constant="8" id="b8N-e2-QJc"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmd-1C-BuX" userLabel="Separator">
-                                <rect key="frame" x="167" y="0.0" width="1" height="74"/>
-                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j6Q-YR-0Lx" userLabel="Delete Button Container">
+                                <rect key="frame" x="200" y="0.0" width="42" height="41"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmd-1C-BuX" userLabel="Separator">
+                                        <rect key="frame" x="0.0" y="0.0" width="1" height="41"/>
+                                        <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="8rY-ZY-JNS"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7PG-Ds-8Lx" userLabel="Delete Button">
+                                        <rect key="frame" x="0.0" y="-0.5" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="42" id="K6j-GX-Qho"/>
+                                            <constraint firstAttribute="width" secondItem="7PG-Ds-8Lx" secondAttribute="height" multiplier="1:1" id="Pok-m9-S1o"/>
+                                        </constraints>
+                                        <state key="normal" image="xmark" catalog="system"/>
+                                        <connections>
+                                            <action selector="tapDeleteButton:" destination="A4w-oc-zVg" eventType="touchUpInside" id="DwM-ln-bIV"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="1" id="8rY-ZY-JNS"/>
+                                    <constraint firstItem="7PG-Ds-8Lx" firstAttribute="centerY" secondItem="j6Q-YR-0Lx" secondAttribute="centerY" id="Bcu-53-vUx"/>
+                                    <constraint firstAttribute="bottom" secondItem="hmd-1C-BuX" secondAttribute="bottom" priority="999" id="cos-HW-nNA"/>
+                                    <constraint firstItem="hmd-1C-BuX" firstAttribute="leading" secondItem="j6Q-YR-0Lx" secondAttribute="leading" id="j4c-4y-HaL"/>
+                                    <constraint firstAttribute="trailing" secondItem="7PG-Ds-8Lx" secondAttribute="trailing" priority="999" id="jQr-fN-aR1"/>
+                                    <constraint firstItem="7PG-Ds-8Lx" firstAttribute="leading" secondItem="j6Q-YR-0Lx" secondAttribute="leading" id="ohq-Bm-0Ck"/>
+                                    <constraint firstItem="hmd-1C-BuX" firstAttribute="top" secondItem="j6Q-YR-0Lx" secondAttribute="top" id="zGn-Wb-lNA"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7PG-Ds-8Lx">
-                                <rect key="frame" x="168" y="0.0" width="74" height="74"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="7PG-Ds-8Lx" secondAttribute="height" multiplier="1:1" id="YlT-gR-z92"/>
-                                </constraints>
-                                <state key="normal" image="xmark" catalog="system"/>
-                                <connections>
-                                    <action selector="tapDeleteButton:" destination="A4w-oc-zVg" eventType="touchUpInside" id="DwM-ln-bIV"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
@@ -84,14 +111,13 @@
                     <constraint firstAttribute="trailing" secondItem="Tow-5c-AKX" secondAttribute="trailing" id="iZl-fw-nRr"/>
                 </constraints>
             </collectionViewCellContentView>
-            <size key="customSize" width="242" height="75"/>
+            <size key="customSize" width="242" height="41"/>
             <connections>
-                <outlet property="deleteButton" destination="7PG-Ds-8Lx" id="STY-E0-l3F"/>
-                <outlet property="deleteButtonSeparator" destination="hmd-1C-BuX" id="9WR-fx-q66"/>
+                <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
                 <outlet property="iconImage" destination="Bt0-iq-WPi" id="bDi-Oe-Lrv"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
-            <point key="canvasLocation" x="163.768115942029" y="74.665178571428569"/>
+            <point key="canvasLocation" x="163.768115942029" y="63.28125"/>
         </collectionViewCell>
     </objects>
     <resources>

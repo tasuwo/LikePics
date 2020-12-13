@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qXL-ON-mWt">
-                        <rect key="frame" x="8" y="8" width="176" height="34"/>
+                        <rect key="frame" x="8" y="2" width="176" height="46"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                         <state key="normal" title="Button"/>
                         <connections>
@@ -28,10 +28,8 @@
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="qXL-ON-mWt" secondAttribute="trailing" constant="8" id="2RN-hq-SkQ"/>
                     <constraint firstItem="qXL-ON-mWt" firstAttribute="leading" secondItem="0F8-gO-hqU" secondAttribute="leading" constant="8" id="8qm-IM-w5k"/>
-                    <constraint firstAttribute="bottom" secondItem="qXL-ON-mWt" secondAttribute="bottom" constant="8" id="Djy-YL-d8q"/>
-                    <constraint firstItem="qXL-ON-mWt" firstAttribute="top" secondItem="0F8-gO-hqU" secondAttribute="top" constant="8" id="LfC-mn-Vdn"/>
-                    <constraint firstItem="qXL-ON-mWt" firstAttribute="centerY" secondItem="0F8-gO-hqU" secondAttribute="centerY" id="Uy9-aU-pRJ"/>
-                    <constraint firstItem="qXL-ON-mWt" firstAttribute="centerX" secondItem="0F8-gO-hqU" secondAttribute="centerX" id="tCO-Uy-7zf"/>
+                    <constraint firstAttribute="bottom" secondItem="qXL-ON-mWt" secondAttribute="bottom" constant="2" id="Djy-YL-d8q"/>
+                    <constraint firstItem="qXL-ON-mWt" firstAttribute="top" secondItem="0F8-gO-hqU" secondAttribute="top" constant="2" id="LfC-mn-Vdn"/>
                 </constraints>
             </collectionViewCellContentView>
             <size key="customSize" width="192" height="50"/>
