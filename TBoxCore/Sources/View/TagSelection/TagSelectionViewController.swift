@@ -191,6 +191,8 @@ public class TagSelectionViewController: UIViewController {
     // MARK: EmptyMessage
 
     private func setupEmptyMessage() {
+        self.emptyMessageView.isHidden = true
+
         self.view.addSubview(self.emptyMessageView)
         self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
