@@ -37,8 +37,11 @@ public class TagCollectionView: UICollectionView {
             guard let dataSource = dataSource else { return dequeuedCell }
             guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
-            cell.title = "\(tag.name) (\(tag.clipCount ?? 0))"
+            cell.title = tag.name
             cell.displayMode = dataSource.displayMode(collectionView)
+            if let clipCount = tag.clipCount {
+                cell.count = clipCount
+            }
 
             return cell
         }

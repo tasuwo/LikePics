@@ -4,6 +4,10 @@
 
 import UIKit
 
+public protocol TagCollectionViewCellDelegate: AnyObject {
+    func didTapDeleteButton(_ cell: TagCollectionViewCell)
+}
+
 public class TagCollectionViewCell: UICollectionViewCell {
     public enum DisplayMode {
         case normal
@@ -16,17 +20,34 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     public var title: String? {
-        get {
-            self.titleLabel.text
+        didSet {
+            self.updateLabel()
         }
-        set {
-            self.titleLabel.text = newValue
+    }
+
+    public var count: Int? {
+        didSet {
+            self.updateLabel()
         }
     }
 
     public var displayMode: DisplayMode = .checkAtSelect {
         didSet {
             self.updateForDisplayMode()
+        }
+    }
+
+    public var visibleDeleteButton: Bool = false {
+        didSet {
+            self.deleteButton.isHidden = !self.visibleDeleteButton
+            self.deleteButtonSeparator.isHidden = !self.visibleDeleteButton
+        }
+    }
+
+    var visibleIcon: Bool = false {
+        didSet {
+            self.iconImage.isHidden = !self.visibleIcon
+            self.iconSpacer.isHidden = !self.visibleIcon
         }
     }
 
@@ -37,7 +58,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     @IBOutlet var iconImage: UIImageView!
+    @IBOutlet var iconSpacer: UIView!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var deleteButtonSeparator: UIView!
+
+    public weak var delegate: TagCollectionViewCellDelegate?
 
     // MARK: - Methods
 
@@ -61,8 +87,14 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    @IBAction func tapDeleteButton(_ sender: UIButton) {
+        self.delegate?.didTapDeleteButton(self)
+    }
+
     func setupAppearance() {
         self.layer.cornerCurve = .continuous
+
+        self.visibleDeleteButton = false
 
         self.updateRadius()
         self.updateColors()
@@ -70,7 +102,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     func updateRadius() {
-        self.layer.cornerRadius = self.bounds.size.height / 2
+        self.layer.cornerRadius = self.bounds.size.height / 4
     }
 
     func updateColors() {
@@ -81,6 +113,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
+            self.visibleIcon = true
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemGreen
@@ -88,6 +121,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         case (.deletion, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
+            self.visibleIcon = true
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemRed
@@ -95,17 +129,30 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         case (.deletion, false):
             self.iconImage.image = UIImage(systemName: "minus.circle.fill")
+            self.visibleIcon = true
             self.iconImage.tintColor = .systemRed
             self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
-            self.layer.borderWidth = 2
+            self.layer.borderWidth = 1
 
         default:
-            self.iconImage.image = UIImage(systemName: "tag.fill")
+            self.visibleIcon = false
             self.iconImage.tintColor = UIColor.label
             self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
-            self.layer.borderWidth = 2
+            self.layer.borderWidth = 1
+        }
+    }
+
+    func updateLabel() {
+        guard let title = self.title else {
+            self.titleLabel.text = nil
+            return
+        }
+        if let count = self.count {
+            self.titleLabel.text = "# \(title) (\(count))"
+        } else {
+            self.titleLabel.text = "# \(title)"
         }
     }
 }
