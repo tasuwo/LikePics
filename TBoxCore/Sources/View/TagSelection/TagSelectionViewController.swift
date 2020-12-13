@@ -7,6 +7,10 @@ import Domain
 import TBoxUIKit
 import UIKit
 
+public protocol TagSelectionViewControllerDelegate: AnyObject {
+    func didSelectTags(tags: [Tag])
+}
+
 public class TagSelectionViewController: UIViewController {
     typealias Dependency = TagSelectionViewModelType
 
@@ -29,10 +33,15 @@ public class TagSelectionViewController: UIViewController {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: TagCollectionView!
 
+    private weak var delegate: TagSelectionViewControllerDelegate?
+
     // MARK: - Lifecycle
 
-    public init(viewModel: TagSelectionViewModelType) {
+    public init(viewModel: TagSelectionViewModelType,
+                delegate: TagSelectionViewControllerDelegate)
+    {
         self.viewModel = viewModel
+        self.delegate = delegate
         super.init(nibName: "TagSelectionViewController", bundle: Bundle(for: Self.self))
     }
 
@@ -104,17 +113,31 @@ public class TagSelectionViewController: UIViewController {
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &self.cancellableBag)
+
+        dependency.outputs.selections
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .sink { [weak self] selection in
+                guard let self = self else { return }
+                let indexPaths = selection
+                    .compactMap { identity in
+                        dependency.outputs.tags.value.first(where: { $0.identity == identity })
+                    }
+                    .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
+                self.collectionView.applySelection(at: indexPaths)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Navigation Bar
 
     private func setupNavigationBar() {
-        // TODO: タイトルの追加
+        self.navigationItem.title = L10n.tagSelectionViewTitle
 
         let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
         let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.didTapSave))
 
-        self.navigationItem.rightBarButtonItems = [addItem, saveItem]
+        self.navigationItem.leftBarButtonItems = [addItem]
+        self.navigationItem.rightBarButtonItems = [saveItem]
     }
 
     @objc
@@ -124,7 +147,9 @@ public class TagSelectionViewController: UIViewController {
 
     @objc
     func didTapSave() {
-        // TODO:
+        self.dismiss(animated: true) {
+            self.delegate?.didSelectTags(tags: self.viewModel.outputs.selectedTags)
+        }
     }
 
     // MARK: Collection View

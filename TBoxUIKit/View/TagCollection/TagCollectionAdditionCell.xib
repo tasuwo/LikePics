@@ -18,6 +18,7 @@
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qXL-ON-mWt">
                         <rect key="frame" x="8" y="8" width="176" height="34"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                         <state key="normal" title="Button"/>
                         <connections>
                             <action selector="tapAdditionButton:" destination="p0M-r0-35G" eventType="touchUpInside" id="82v-4N-Ds5"/>

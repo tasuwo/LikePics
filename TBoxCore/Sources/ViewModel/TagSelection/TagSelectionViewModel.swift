@@ -20,8 +20,11 @@ public protocol TagSelectionViewModelInputs {
 
 public protocol TagSelectionViewModelOutputs {
     var tags: CurrentValueSubject<[Tag], Never> { get }
+    var selections: CurrentValueSubject<Set<Tag.Identity>, Never> { get }
     var filteredTags: CurrentValueSubject<[Tag], Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
+
+    var selectedTags: [Tag] { get }
 }
 
 public class TagSelectionViewModel: TagSelectionViewModelType,
@@ -45,8 +48,15 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     // MARK: TagSelectionViewModelOutputs
 
     public let tags: CurrentValueSubject<[Tag], Never> = .init([])
+    public let selections: CurrentValueSubject<Set<Tag.Identity>, Never>
     public let filteredTags: CurrentValueSubject<[Tag], Never> = .init([])
     public let errorMessage: PassthroughSubject<String, Never> = .init()
+
+    public var selectedTags: [Tag] {
+        return self.selections.value.compactMap { selection in
+            self.tags.value.first(where: { $0.identity == selection })
+        }
+    }
 
     // MARK: Privates
 
@@ -59,12 +69,14 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     // MARK: - Lifecycle
 
     public init(query: TagListQuery,
+                selectedTags: Set<Tag.Identity>,
                 commandService: TagCommandServiceProtocol,
                 logger: TBoxLoggable)
     {
         self.query = query
         self.commandService = commandService
         self.logger = logger
+        self.selections = .init(selectedTags)
 
         self.bind()
     }
@@ -103,6 +115,20 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                     """))
                     self.errorMessage.send(L10n.errorTagAddDefault)
                 }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.select
+            .sink { [weak self] tagId in
+                guard let self = self else { return }
+                self.selections.send(self.selections.value.union(Set([tagId])))
+            }
+            .store(in: &self.cancellableBag)
+
+        self.deselect
+            .sink { [weak self] tagId in
+                guard let self = self else { return }
+                self.selections.send(self.selections.value.subtracting(Set([tagId])))
             }
             .store(in: &self.cancellableBag)
     }

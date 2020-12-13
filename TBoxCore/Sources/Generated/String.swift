@@ -56,6 +56,8 @@ internal enum L10n {
     internal static let tagListViewEmptyMessage = L10n.tr("Localizable", "tag_list_view_empty_message")
     /// タグがありません
     internal static let tagListViewEmptyTitle = L10n.tr("Localizable", "tag_list_view_empty_title")
+    /// タグを選択
+    internal static let tagSelectionViewTitle = L10n.tr("Localizable", "tag_selection_view_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

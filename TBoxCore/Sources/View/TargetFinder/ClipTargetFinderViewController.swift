@@ -20,6 +20,7 @@ protocol SelectableImageCellDataSource {
 }
 
 public class ClipTargetFinderViewController: UIViewController {
+    typealias Factory = ViewControllerFactory
     typealias Dependency = ClipTargetFinderViewModelType
 
     private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
@@ -35,6 +36,7 @@ public class ClipTargetFinderViewController: UIViewController {
     @IBOutlet var indicator: UIActivityIndicatorView!
     @IBOutlet var tagPreviewViewHeight: NSLayoutConstraint!
 
+    private let factory: Factory
     private let viewModel: ClipTargetFinderViewModelType
 
     private let selectedTagViewController: ClipTargetFinderSelectedTagsViewController
@@ -44,13 +46,16 @@ public class ClipTargetFinderViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    public init(viewModel: ClipTargetFinderViewModelType,
+    public init(factory: ViewControllerFactory,
+                viewModel: ClipTargetFinderViewModelType,
                 tagsViewModel: ClipTargetFinderSelectedTagsViewModelType,
                 delegate: ClipTargetFinderDelegate)
     {
+        self.factory = factory
         self.viewModel = viewModel
         self.delegate = delegate
-        self.selectedTagViewController = ClipTargetFinderSelectedTagsViewController(viewModel: tagsViewModel)
+        self.selectedTagViewController = ClipTargetFinderSelectedTagsViewController(factory: factory,
+                                                                                    viewModel: tagsViewModel)
         super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
 
         self.addChild(self.selectedTagViewController)

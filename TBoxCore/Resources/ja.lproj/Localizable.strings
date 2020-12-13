@@ -22,6 +22,8 @@
 "clip_target_finder_view_empty_message" = "保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります";
 "clip_target_finder_view_empty_action_title" = "もう一度試す";
 
+"tag_selection_view_title" = "タグを選択";
+
 "tag_list_view_alert_for_add_title" = "新規タグ";
 "tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
 "tag_list_view_alert_for_add_placeholder" = "タグ名";

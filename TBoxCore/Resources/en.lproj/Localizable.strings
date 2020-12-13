@@ -22,6 +22,8 @@
 "clip_target_finder_view_empty_message" = "There might be no available images in the web site or the connection might be bad.";
 "clip_target_finder_view_empty_action_title" = "Retry";
 
+"tag_selection_view_title" = "Select Tags";
+
 "tag_list_view_alert_for_add_title" = "New Tag";
 "tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
 "tag_list_view_alert_for_add_placeholder" = "Name";

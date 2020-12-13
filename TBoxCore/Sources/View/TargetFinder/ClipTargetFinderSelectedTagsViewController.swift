@@ -8,6 +8,7 @@ import TBoxUIKit
 import UIKit
 
 class ClipTargetFinderSelectedTagsViewController: UIViewController {
+    typealias Factory = ViewControllerFactory
     typealias Dependency = ClipTargetFinderSelectedTagsViewModelType
 
     enum Section {
@@ -19,6 +20,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         case tag(Tag)
     }
 
+    private let factory: Factory
     private let viewModel: ClipTargetFinderSelectedTagsViewModelType
 
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -29,7 +31,10 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(viewModel: ClipTargetFinderSelectedTagsViewModelType) {
+    init(factory: Factory,
+         viewModel: ClipTargetFinderSelectedTagsViewModelType)
+    {
+        self.factory = factory
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -137,6 +142,17 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionAdditionCellD
     // MARK: - TagCollectionAdditionCellDelegate
 
     func didTap(_ cell: TagCollectionAdditionCell) {
-        // TODO: タグの追加
+        guard let parent = self.parent else { return }
+        let nextVC = self.factory.makeTagSelectionViewController(selectedTags: Set(self.viewModel.outputs.tags.value.map({ $0.identity })),
+                                                                 delegate: self)
+        parent.present(nextVC, animated: true, completion: nil)
+    }
+}
+
+extension ClipTargetFinderSelectedTagsViewController: TagSelectionViewControllerDelegate {
+    // MARK: - TagSelectionViewControllerDelegate
+
+    func didSelectTags(tags: [Tag]) {
+        self.viewModel.inputs.replace.send(tags)
     }
 }

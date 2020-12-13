@@ -12,6 +12,7 @@ public protocol ClipTargetFinderSelectedTagsViewModelType {
 
 public protocol ClipTargetFinderSelectedTagsViewModelInputs {
     var delete: PassthroughSubject<Tag, Never> { get }
+    var replace: PassthroughSubject<[Tag], Never> { get }
 }
 
 public protocol ClipTargetFinderSelectedTagsViewModelOutputs {

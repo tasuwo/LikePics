@@ -142,12 +142,8 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate) -> UIViewController {
-        let viewModel = ClipTargetFinderViewModel(url: clipUrl,
-                                                  clipStore: self.clipCommandService)
-        let viewController = ClipTargetFinderViewController(viewModel: viewModel,
-                                                            tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
-                                                            delegate: delegate)
-        return UINavigationController(rootViewController: viewController)
+        // TODO:
+        return UIViewController()
     }
 
     func makeSearchEntryViewController() -> UIViewController {
