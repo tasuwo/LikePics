@@ -218,6 +218,7 @@
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
 		2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */; };
 		2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */; };
+		2CA9DBEB258598E700D88ED4 /* UIView+ConstraintFittingIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */; };
 		2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */; };
 		2CABB5B0250E5105007B7F88 /* ClipInformationTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */; };
 		2CB0712C250904E90000E7E1 /* TagCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB0712B250904E90000E7E1 /* TagCollectionView.swift */; };
@@ -850,6 +851,7 @@
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLinkingClipsQuery.swift; sourceTree = "<group>"; };
 		2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionProvider.swift; sourceTree = "<group>"; };
+		2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintFittingIn.swift"; sourceTree = "<group>"; };
 		2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationDismissalAnimator.swift; sourceTree = "<group>"; };
 		2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		2CB0712B250904E90000E7E1 /* TagCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionView.swift; sourceTree = "<group>"; };
@@ -2185,6 +2187,7 @@
 			isa = PBXGroup;
 			children = (
 				2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */,
+				2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3749,6 +3752,7 @@
 				2C170BA0253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift in Sources */,
 				2C0F9B152528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift in Sources */,
 				2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */,
+				2CA9DBEB258598E700D88ED4 /* UIView+ConstraintFittingIn.swift in Sources */,
 				2CEDB81C25452640007D9E02 /* EmptyMessageView.swift in Sources */,
 				2C51D45A24E2290E006811F6 /* ClipPreviewDismissalAnimator.swift in Sources */,
 				2CE1C0F6258266A800A8FA07 /* GridLayout.swift in Sources */,
