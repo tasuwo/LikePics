@@ -133,10 +133,11 @@ public class TagSelectionViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.tagSelectionViewTitle
 
-        let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
+        // let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
         let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.didTapSave))
 
-        self.navigationItem.leftBarButtonItems = [addItem]
+        // TODO: タグ追加機能の実装
+        // self.navigationItem.leftBarButtonItems = [addItem]
         self.navigationItem.rightBarButtonItems = [saveItem]
     }
 

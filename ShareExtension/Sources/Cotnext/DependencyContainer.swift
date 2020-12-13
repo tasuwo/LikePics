@@ -9,6 +9,13 @@ import Persistence
 import TBoxCore
 import UIKit
 
+// TODO: 正規の実装に切り替え
+struct DummyCommandService: TagCommandServiceProtocol {
+    func create(tagWithName name: String) -> Result<Void, TagCommandServiceError> {
+        return .failure(.internalError)
+    }
+}
+
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
@@ -17,6 +24,7 @@ protocol ViewControllerFactory {
 class DependencyContainer {
     private let logger: TBoxLoggable
     private let clipStore: ClipStorable
+    private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }
 
     init() throws {
@@ -34,6 +42,9 @@ class DependencyContainer {
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
                                                      imageStorage: imageStorage,
                                                      logger: self.logger)
+
+        self.tagQueryService = try ReferenceTagQueryService(config: .resolve(for: mainBundle),
+                                                            logger: self.logger)
     }
 }
 
@@ -57,29 +68,20 @@ extension DependencyContainer: TBoxCore.ViewControllerFactory {
     func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
                                         delegate: TagSelectionViewControllerDelegate) -> UIViewController
     {
-        let vc = TagSelectionViewController(viewModel: TagSelectionViewModel(query: DummyQuery(),
-                                                                             selectedTags: selectedTags,
-                                                                             commandService: DummyCommandService(),
-                                                                             logger: self.logger),
-                                            delegate: delegate)
-        return UINavigationController(rootViewController: vc)
+        switch self.tagQueryService.queryTags() {
+        case let .success(query):
+            let vc = TagSelectionViewController(viewModel: TagSelectionViewModel(query: query,
+                                                                                 selectedTags: selectedTags,
+                                                                                 commandService: DummyCommandService(),
+                                                                                 logger: self.logger),
+                                                delegate: delegate)
+            return UINavigationController(rootViewController: vc)
+
+        case .failure:
+            // TODO:
+            fatalError()
+        }
     }
 }
 
 extension TemporaryClipCommandService: ClipStorable {}
-
-// TODO: 正規の実装に切り替え
-struct DummyQuery: TagListQuery {
-    var tags: CurrentValueSubject<[Domain.Tag], Error> = .init([
-        .init(id: UUID(), name: "hoge"),
-        .init(id: UUID(), name: "fuga"),
-        .init(id: UUID(), name: "piyo"),
-    ])
-}
-
-// TODO: 正規の実装に切り替え
-struct DummyCommandService: TagCommandServiceProtocol {
-    func create(tagWithName name: String) -> Result<Void, TagCommandServiceError> {
-        return .failure(.internalError)
-    }
-}

@@ -224,6 +224,9 @@
 		2CA9DC2E25860E8F00D88ED4 /* TagCollectionAdditionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CA9DC2D25860E8F00D88ED4 /* TagCollectionAdditionCell.xib */; };
 		2CA9DC3925861AEC00D88ED4 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC3825861AEC00D88ED4 /* ViewControllerFactory.swift */; };
 		2CA9DC522586216700D88ED4 /* UICollectionView+ApplySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D649F2512E48B009C0749 /* UICollectionView+ApplySelection.swift */; };
+		2CA9DC5C258626F000D88ED4 /* ReferenceTagQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC5B258626F000D88ED4 /* ReferenceTagQueryService.swift */; };
+		2CA9DC672586276200D88ED4 /* TagQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC662586276200D88ED4 /* TagQueryServiceProtocol.swift */; };
+		2CA9DC812586281200D88ED4 /* RealmReferenceTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC802586281200D88ED4 /* RealmReferenceTagListQuery.swift */; };
 		2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */; };
 		2CABB5B0250E5105007B7F88 /* ClipInformationTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */; };
 		2CB0712C250904E90000E7E1 /* TagCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB0712B250904E90000E7E1 /* TagCollectionView.swift */; };
@@ -862,6 +865,9 @@
 		2CA9DC1B25860DDF00D88ED4 /* TagCollectionAdditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionAdditionCell.swift; sourceTree = "<group>"; };
 		2CA9DC2D25860E8F00D88ED4 /* TagCollectionAdditionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionAdditionCell.xib; sourceTree = "<group>"; };
 		2CA9DC3825861AEC00D88ED4 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
+		2CA9DC5B258626F000D88ED4 /* ReferenceTagQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTagQueryService.swift; sourceTree = "<group>"; };
+		2CA9DC662586276200D88ED4 /* TagQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagQueryServiceProtocol.swift; sourceTree = "<group>"; };
+		2CA9DC802586281200D88ED4 /* RealmReferenceTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmReferenceTagListQuery.swift; sourceTree = "<group>"; };
 		2CABB5AD250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationDismissalAnimator.swift; sourceTree = "<group>"; };
 		2CABB5AF250E5105007B7F88 /* ClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		2CB0712B250904E90000E7E1 /* TagCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionView.swift; sourceTree = "<group>"; };
@@ -1698,6 +1704,7 @@
 		2C4D6C7E25812331006FB988 /* TagService */ = {
 			isa = PBXGroup;
 			children = (
+				2CA9DC652586275200D88ED4 /* Query */,
 				2C4D6C7F2581233D006FB988 /* Command */,
 			);
 			path = TagService;
@@ -1937,6 +1944,7 @@
 				2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */,
 				2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */,
 				2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */,
+				2CA9DC802586281200D88ED4 /* RealmReferenceTagListQuery.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -1946,6 +1954,7 @@
 			children = (
 				2C69CF3B24E43AAA0008C7AA /* Migration */,
 				2CBA8426254C73E400DA5045 /* ReferenceClipStorage.swift */,
+				2CA9DC5B258626F000D88ED4 /* ReferenceTagQueryService.swift */,
 				2C99275724DDC6E600672CA7 /* ClipStorage.swift */,
 			);
 			path = Realm;
@@ -2373,6 +2382,14 @@
 				2CA9DC3825861AEC00D88ED4 /* ViewControllerFactory.swift */,
 			);
 			path = Context;
+			sourceTree = "<group>";
+		};
+		2CA9DC652586275200D88ED4 /* Query */ = {
+			isa = PBXGroup;
+			children = (
+				2CA9DC662586276200D88ED4 /* TagQueryServiceProtocol.swift */,
+			);
+			path = Query;
 			sourceTree = "<group>";
 		};
 		2CB0712A250904A80000E7E1 /* TagCollection */ = {
@@ -3826,6 +3843,7 @@
 				2C1040E8254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift in Sources */,
 				2CC5CA162571576200B0472B /* CloudAvailability.swift in Sources */,
 				2CF5ABB124FB47D10084695F /* Tag.swift in Sources */,
+				2CA9DC672586276200D88ED4 /* TagQueryServiceProtocol.swift in Sources */,
 				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,
 				2C1F297D2560EF4200B89AE9 /* NewImageStorageProtocol.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
@@ -3984,6 +4002,7 @@
 				2C0B5C78254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift in Sources */,
 				2C122AF32578BEFE00AD23B4 /* CloudKitChangeDetecter.swift in Sources */,
 				2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */,
+				2CA9DC5C258626F000D88ED4 /* ReferenceTagQueryService.swift in Sources */,
 				2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */,
 				2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
@@ -3997,6 +4016,7 @@
 				2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */,
 				2C6DD0CC255C237C00E316A4 /* CoreDataTagQuery.swift in Sources */,
 				2C1F29932560FF1B00B89AE9 /* NewImageQueryService.swift in Sources */,
+				2CA9DC812586281200D88ED4 /* RealmReferenceTagListQuery.swift in Sources */,
 				2C122B072578C19100AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */,
 				2CD0E587255C20F1002DE383 /* CoreDataAlbumListQuery.swift in Sources */,
 				2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */,
