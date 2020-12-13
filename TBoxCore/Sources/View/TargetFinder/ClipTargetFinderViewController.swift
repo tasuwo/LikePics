@@ -33,8 +33,8 @@ public class ClipTargetFinderViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     @IBOutlet var collectionView: ClipSelectionCollectionView!
     @IBOutlet var selectedTagListContainer: UIView!
+    @IBOutlet var selectedTagListContainerHeight: NSLayoutConstraint!
     @IBOutlet var indicator: UIActivityIndicatorView!
-    @IBOutlet var tagPreviewViewHeight: NSLayoutConstraint!
 
     private let factory: Factory
     private let viewModel: ClipTargetFinderViewModelType
@@ -154,6 +154,17 @@ public class ClipTargetFinderViewController: UIViewController {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.delegate?.didFinish(self)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.selectedTagViewController.contentViewHeight
+            // HACK: CollectionView更新後即座に `layoutIfNeeded` を呼び出すとクラッシュするため、その回避
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .sink { [weak self] height in
+                self?.selectedTagListContainerHeight.constant = height
+                UIView.animate(withDuration: 0.2) { [weak self] in
+                    self?.view.layoutIfNeeded()
+                }
             }
             .store(in: &self.cancellableBag)
     }

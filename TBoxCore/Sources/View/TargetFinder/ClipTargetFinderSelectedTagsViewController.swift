@@ -20,6 +20,8 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         case tag(Tag)
     }
 
+    var contentViewHeight: CurrentValueSubject<CGFloat, Never> = .init(0)
+
     private let factory: Factory
     private let viewModel: ClipTargetFinderSelectedTagsViewModelType
 
@@ -28,6 +30,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     private var cancellableBag = Set<AnyCancellable>()
+    private var observation: NSKeyValueObservation?
 
     // MARK: - Lifecycle
 
@@ -61,9 +64,17 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems([.addition] + tags.map({ .tag($0) }))
-                self?.dataSource.apply(snapshot, animatingDifferences: true)
+                // NOTE: contentViewHeightがタイミングによって正確に取得できない問題を解消するためにアニメーションはOFF
+                self?.dataSource.apply(snapshot, animatingDifferences: false)
             }
             .store(in: &self.cancellableBag)
+
+        self.observation = self.collectionView
+            .observe(\.contentSize,
+                     options: [.new]) { [weak self] _, change in
+                guard let newHeight = change.newValue?.height else { return }
+                self?.contentViewHeight.send(newHeight)
+            }
     }
 
     private func setupCollectionView() {

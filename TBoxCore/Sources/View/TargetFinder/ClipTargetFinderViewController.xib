@@ -13,7 +13,7 @@
                 <outlet property="collectionView" destination="p6W-aQ-rTk" id="ku2-Z1-w7B"/>
                 <outlet property="indicator" destination="ib4-SI-9D4" id="ubB-TK-fWA"/>
                 <outlet property="selectedTagListContainer" destination="4bG-OH-b30" id="BM2-CP-rUy"/>
-                <outlet property="tagPreviewViewHeight" destination="OQt-ZV-i6d" id="9ms-jU-aQF"/>
+                <outlet property="selectedTagListContainerHeight" destination="OQt-ZV-i6d" id="9ms-jU-aQF"/>
                 <outlet property="view" destination="iN0-l3-epB" id="IXN-k4-hcW"/>
             </connections>
         </placeholder>
