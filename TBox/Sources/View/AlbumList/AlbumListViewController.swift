@@ -72,7 +72,7 @@ class AlbumListViewController: UIViewController {
     private func setupCollectionView() {
         self.collectionView = AlbumListCollectionView(frame: self.view.bounds, collectionViewLayout: self.createLayout())
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.view.addSubview(collectionView)
         self.collectionView.delegate = self
         self.configureDataSource()

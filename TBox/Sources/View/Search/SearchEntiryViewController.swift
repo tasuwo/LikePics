@@ -39,7 +39,7 @@ class SearchEntryViewController: UIViewController {
 
     private func setupAppearance() {
         self.title = L10n.searchEntryViewTitle
-        self.view.backgroundColor = Asset.backgroundClient.color
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
     }
 
     // MARK: NavigationBar

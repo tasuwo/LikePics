@@ -73,8 +73,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func setupAppearance() {
-        UISwitch.appearance().onTintColor = Asset.likePicsSwitchClient.color
-        self.window?.tintColor = Asset.likePicsRedClient.color
+        UISwitch.appearance().onTintColor = Asset.Color.likePicsSwitchClient.color
+        self.window?.tintColor = Asset.Color.likePicsRedClient.color
     }
 }
 

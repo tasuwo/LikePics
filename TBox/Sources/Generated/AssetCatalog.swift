@@ -19,9 +19,11 @@ internal typealias AssetColorTypeAlias = ColorAsset.Color
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
-    internal static let backgroundClient = ColorAsset(name: "background_client")
-    internal static let likePicsRedClient = ColorAsset(name: "like_pics_red_client")
-    internal static let likePicsSwitchClient = ColorAsset(name: "like_pics_switch_client")
+    internal enum Color {
+        internal static let backgroundClient = ColorAsset(name: "background_client")
+        internal static let likePicsRedClient = ColorAsset(name: "like_pics_red_client")
+        internal static let likePicsSwitchClient = ColorAsset(name: "like_pics_switch_client")
+    }
 }
 
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

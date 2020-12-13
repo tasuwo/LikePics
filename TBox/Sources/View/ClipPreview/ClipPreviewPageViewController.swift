@@ -36,7 +36,7 @@ class ClipPreviewPageViewController: UIPageViewController {
             UIView.animate(withDuration: 0.2) {
                 self.navigationController?.toolbar.isHidden = self.isFullscreen
                 self.navigationController?.navigationBar.isHidden = self.isFullscreen
-                self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.backgroundClient.color
+                self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.Color.backgroundClient.color
             }
         }
     }

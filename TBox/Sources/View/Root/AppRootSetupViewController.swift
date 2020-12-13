@@ -44,7 +44,7 @@ class AppRootSetupViewController: UIViewController {
     }
 
     private func setupAppearance() {
-        self.view.backgroundColor = Asset.backgroundClient.color
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
 
         self.view.addSubview(self.indicator)
         self.indicator.translatesAutoresizingMaskIntoConstraints = false

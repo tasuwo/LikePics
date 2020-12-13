@@ -73,7 +73,7 @@ class AlbumSelectionViewController: UIViewController {
     private func setupTableView() {
         self.tableView = AlbumSelectionTableView(frame: self.view.bounds, style: .plain)
         self.tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.tableView.backgroundColor = Asset.backgroundClient.color
+        self.tableView.backgroundColor = Asset.Color.backgroundClient.color
         self.view.addSubview(self.tableView)
         self.tableView.delegate = self
         self.configureDataSource()

@@ -8,7 +8,7 @@ public class RoundedButton: UIButton {
     override public var isEnabled: Bool {
         didSet {
             self.backgroundColor = isEnabled
-                ? Asset.likePicsRed.color
+                ? Asset.Color.likePicsRed.color
                 : UIColor.systemGray
         }
     }

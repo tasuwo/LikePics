@@ -11,33 +11,35 @@
 
 // Deprecated typealiases
 @available(*, deprecated, renamed: "ColorAsset.Color", message: "This typealias will be removed in SwiftGen 7.0")
-internal typealias AssetColorTypeAlias = ColorAsset.Color
+public typealias AssetColorTypeAlias = ColorAsset.Color
 
 // swiftlint:disable superfluous_disable_command file_length implicit_return
 
 // MARK: - Asset Catalogs
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-internal enum Asset {
-    internal static let background = ColorAsset(name: "background")
-    internal static let likePicsRed = ColorAsset(name: "like_pics_red")
+public enum Asset {
+    public enum Color {
+        public static let background = ColorAsset(name: "background")
+        public static let likePicsRed = ColorAsset(name: "like_pics_red")
+    }
 }
 
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
 // MARK: - Implementation Details
 
-internal final class ColorAsset {
-    internal fileprivate(set) var name: String
+public final class ColorAsset {
+    public fileprivate(set) var name: String
 
     #if os(macOS)
-        internal typealias Color = NSColor
+        public typealias Color = NSColor
     #elseif os(iOS) || os(tvOS) || os(watchOS)
-        internal typealias Color = UIColor
+        public typealias Color = UIColor
     #endif
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
-    internal private(set) lazy var color: Color = {
+    public private(set) lazy var color: Color = {
         guard let color = Color(asset: self) else {
             fatalError("Unable to load color asset named \(name).")
         }
@@ -49,7 +51,7 @@ internal final class ColorAsset {
     }
 }
 
-internal extension ColorAsset.Color {
+public extension ColorAsset.Color {
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
     convenience init?(asset: ColorAsset) {
         let bundle = BundleToken.bundle

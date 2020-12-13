@@ -27,7 +27,7 @@ class ClipPreviewViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = Asset.backgroundClient.color
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
     }
 }
 

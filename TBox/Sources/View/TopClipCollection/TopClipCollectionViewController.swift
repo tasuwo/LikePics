@@ -152,7 +152,7 @@ class TopClipCollectionViewController: UIViewController {
 
         self.collectionView = ClipsCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.collectionView.delegate = self.clipCollectionProvider
         self.collectionView.contentInsetAdjustmentBehavior = .always
 

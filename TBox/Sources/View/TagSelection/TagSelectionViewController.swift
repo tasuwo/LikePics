@@ -77,7 +77,7 @@ class TagSelectionViewController: UIViewController {
 
     private func setupCollectionView() {
         self.collectionView.collectionViewLayout = self.createLayout()
-        self.collectionView.backgroundColor = Asset.backgroundClient.color
+        self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true
