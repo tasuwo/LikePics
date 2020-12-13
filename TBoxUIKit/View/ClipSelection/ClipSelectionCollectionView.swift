@@ -24,6 +24,16 @@ public class ClipSelectionCollectionView: UICollectionView {
         self.setupAppearance()
     }
 
+    override public var contentSize: CGSize {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+
+    override public var intrinsicContentSize: CGSize {
+        return .init(width: UIView.noIntrinsicMetric, height: self.contentSize.height)
+    }
+
     // MARK: - Methods
 
     private func registerCell() {
