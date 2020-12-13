@@ -115,7 +115,8 @@ public class TagSelectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selections
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            // DataSourceのアニメーションを少し待つ
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { [weak self] selection in
                 guard let self = self else { return }
                 let indexPaths = selection
