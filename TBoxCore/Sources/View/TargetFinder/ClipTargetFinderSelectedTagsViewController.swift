@@ -73,6 +73,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         NSLayoutConstraint.activate(self.collectionView.constraints(fittingIn: self.view))
 
+        self.collectionView.backgroundColor = Asset.Color.background.color
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true

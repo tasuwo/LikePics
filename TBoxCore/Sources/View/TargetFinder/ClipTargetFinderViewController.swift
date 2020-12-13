@@ -81,6 +81,8 @@ public class ClipTargetFinderViewController: UIViewController {
             layout.delegate = self
         }
 
+        self.setupAppearance()
+        self.setupCollectionView()
         self.setupNavigationBar()
         self.setupEmptyMessage()
 
@@ -90,12 +92,14 @@ public class ClipTargetFinderViewController: UIViewController {
         self.viewModel.inputs.startedFindingImage.send(())
     }
 
+    private func setupAppearance() {
+        self.indicator.hidesWhenStopped = true
+        self.view.backgroundColor = Asset.Color.background.color
+    }
+
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        self.emptyMessageView.isHidden = true
-        self.indicator.hidesWhenStopped = true
-
         dependency.outputs.isLoading
             .sink { [weak self] isLoading in
                 isLoading
@@ -154,6 +158,12 @@ public class ClipTargetFinderViewController: UIViewController {
             .store(in: &self.cancellableBag)
     }
 
+    // MARK: CollectionView
+
+    private func setupCollectionView() {
+        self.collectionView.backgroundColor = Asset.Color.background.color
+    }
+
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
@@ -182,6 +192,9 @@ public class ClipTargetFinderViewController: UIViewController {
 
     private func setupEmptyMessage() {
         self.view.addSubview(self.emptyMessageView)
+
+        self.emptyMessageView.isHidden = true
+
         self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
