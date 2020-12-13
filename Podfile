@@ -8,8 +8,8 @@ end
 
 target 'TBox' do
   pod 'LicensePlist', '~> 3.0.4'
-  pod 'SwiftGen', '~> 6.0'
-  pod 'Sourcery', '~> 1.0'
+  pod 'SwiftGen', '~> 6.4.0'
+  pod 'Sourcery', '~> 1.0.2'
 
   target 'TBoxTests' do
     inherit! :search_paths
