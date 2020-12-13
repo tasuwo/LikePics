@@ -180,6 +180,14 @@ extension TagSelectionViewController: TagCollectionViewDataSource {
     public func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
         return .checkAtSelect
     }
+
+    public func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
+        return false
+    }
+
+    public func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
+        return nil
+    }
 }
 
 extension TagSelectionViewController: UICollectionViewDelegate {

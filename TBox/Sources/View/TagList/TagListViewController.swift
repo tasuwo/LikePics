@@ -318,6 +318,14 @@ extension TagListViewController: TagCollectionViewDataSource {
     func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
         return self.isEditing ? .deletion : .normal
     }
+
+    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
+        return false
+    }
+
+    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
+        return nil
+    }
 }
 
 extension TagListViewController: UICollectionViewDelegate {

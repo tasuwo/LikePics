@@ -7,6 +7,8 @@ import UIKit
 
 public protocol TagCollectionViewDataSource: AnyObject {
     func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode
+    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool
+    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate?
 }
 
 public class TagCollectionView: UICollectionView {
@@ -42,6 +44,8 @@ public class TagCollectionView: UICollectionView {
             if let clipCount = tag.clipCount {
                 cell.count = clipCount
             }
+            cell.visibleDeleteButton = dataSource.visibleDeleteButton(collectionView)
+            cell.delegate = dataSource.delegate(collectionView)
 
             return cell
         }

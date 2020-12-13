@@ -87,6 +87,14 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewDataSourc
     public func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
         return .normal
     }
+
+    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
+        return true
+    }
+
+    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
+        return self
+    }
 }
 
 extension ClipTargetFinderSelectedTagsViewController: UICollectionViewDelegate {
@@ -106,5 +114,12 @@ extension ClipTargetFinderSelectedTagsViewController: UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         print(indexPath)
+    }
+}
+
+extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
     }
 }
