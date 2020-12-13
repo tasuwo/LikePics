@@ -14,12 +14,17 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         case main
     }
 
+    enum Cell: Hashable, Equatable {
+        case addition
+        case tag(Tag)
+    }
+
     private let viewModel: ClipTargetFinderSelectedTagsViewModelType
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var collectionView: UICollectionView!
     // swiftlint:disable:next implicitly_unwrapped_optional
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
@@ -48,9 +53,9 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         dependency.outputs.tags
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tags in
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Cell>()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(tags)
+                snapshot.appendItems([.addition] + tags.map({ .tag($0) }))
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &self.cancellableBag)
@@ -58,7 +63,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
 
     private func setupCollectionView() {
         self.collectionView = TagCollectionView(frame: self.view.bounds,
-                                                collectionViewLayout: self.createLayout())
+                                                collectionViewLayout: Self.createLayout())
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.collectionView)
         NSLayoutConstraint.activate(self.collectionView.constraints(fittingIn: self.view))
@@ -66,11 +71,32 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true
-        self.dataSource = .init(collectionView: self.collectionView,
-                                cellProvider: TagCollectionView.cellProvider(dataSource: self))
+        self.dataSource = .init(collectionView: self.collectionView, cellProvider: self.cellProvider())
     }
 
-    private func createLayout() -> UICollectionViewLayout {
+    private func cellProvider() -> (UICollectionView, IndexPath, Cell) -> UICollectionViewCell? {
+        return { [weak self] collectionView, indexPath, item -> UICollectionViewCell? in
+            switch item {
+            case .addition:
+                let configuration = TagCollectionView.CellConfiguration.Addition(title: L10n.clipTargetFinderViewAdditionTitle,
+                                                                                 delegate: self)
+                return TagCollectionView.provideCell(collectionView: collectionView,
+                                                     indexPath: indexPath,
+                                                     configuration: .addition(configuration))
+
+            case let .tag(value):
+                let configuration = TagCollectionView.CellConfiguration.Tag(tag: value,
+                                                                            displayMode: .normal,
+                                                                            visibleDeleteButton: true,
+                                                                            delegate: self)
+                return TagCollectionView.provideCell(collectionView: collectionView,
+                                                     indexPath: indexPath,
+                                                     configuration: .tag(configuration))
+            }
+        }
+    }
+
+    private static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
             let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(4))
             let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
@@ -78,22 +104,6 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
             return section
         }
         return layout
-    }
-}
-
-extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewDataSource {
-    // MARK: - TagCollectionViewDataSource
-
-    public func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
-        return .normal
-    }
-
-    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
-        return true
-    }
-
-    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
-        return self
     }
 }
 
@@ -114,10 +124,19 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewCellDeleg
 
     func didTapDeleteButton(_ cell: TagCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.dataSource.itemIdentifier(for: indexPath)
+            let item = self.dataSource.itemIdentifier(for: indexPath),
+            case let .tag(tag) = item
         else {
             return
         }
-        self.viewModel.inputs.delete.send(item)
+        self.viewModel.inputs.delete.send(tag)
+    }
+}
+
+extension ClipTargetFinderSelectedTagsViewController: TagCollectionAdditionCellDelegate {
+    // MARK: - TagCollectionAdditionCellDelegate
+
+    func didTap(_ cell: TagCollectionAdditionCell) {
+        // TODO: タグの追加
     }
 }

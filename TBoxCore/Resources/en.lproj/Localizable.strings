@@ -7,6 +7,7 @@
 */
 
 "clip_target_finder_view_title" = "Select Image";
+"clip_target_finder_view_addition_title" = "Add Tags";
 "clip_target_finder_view_overwrite_alert_body" = "This url is already clipped. Overwrite it?";
 "clip_target_finder_view_overwrite_alert_ok" = "OK";
 "clip_target_finder_view_overwrite_alert_cancel" = "Cancel";

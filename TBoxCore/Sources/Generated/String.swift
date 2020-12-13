@@ -10,6 +10,8 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// タグを追加
+    internal static let clipTargetFinderViewAdditionTitle = L10n.tr("Localizable", "clip_target_finder_view_addition_title")
     /// もう一度試す
     internal static let clipTargetFinderViewEmptyActionTitle = L10n.tr("Localizable", "clip_target_finder_view_empty_action_title")
     /// 保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります

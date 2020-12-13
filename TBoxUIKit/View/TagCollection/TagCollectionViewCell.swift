@@ -142,6 +142,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 1
         }
+
+        self.updateLabel()
     }
 
     func updateLabel() {
@@ -149,6 +151,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.titleLabel.text = nil
             return
         }
+
+        if self.visibleIcon {
+            self.titleLabel.text = title
+            return
+        }
+
         if let count = self.count {
             self.titleLabel.text = "# \(title) (\(count))"
         } else {

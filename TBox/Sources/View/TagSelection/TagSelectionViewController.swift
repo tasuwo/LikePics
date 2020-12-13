@@ -81,8 +81,19 @@ class TagSelectionViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true
-        self.dataSource = .init(collectionView: self.collectionView,
-                                cellProvider: TagCollectionView.cellProvider(dataSource: self))
+        self.dataSource = .init(collectionView: self.collectionView, cellProvider: self.cellProvider())
+    }
+
+    private func cellProvider() -> (UICollectionView, IndexPath, Tag) -> UICollectionViewCell? {
+        return { collectionView, indexPath, item -> UICollectionViewCell? in
+            let configuration = TagCollectionView.CellConfiguration.Tag(tag: item,
+                                                                        displayMode: .checkAtSelect,
+                                                                        visibleDeleteButton: false,
+                                                                        delegate: nil)
+            return TagCollectionView.provideCell(collectionView: collectionView,
+                                                 indexPath: indexPath,
+                                                 configuration: .tag(configuration))
+        }
     }
 
     private func createLayout() -> UICollectionViewLayout {
@@ -186,22 +197,6 @@ extension TagSelectionViewController: TagSelectionViewProtocol {
 
     func close() {
         self.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension TagSelectionViewController: TagCollectionViewDataSource {
-    // MARK: - TagCollectionViewDataSource
-
-    func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
-        return .checkAtSelect
-    }
-
-    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
-        return false
-    }
-
-    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
-        return nil
     }
 }
 

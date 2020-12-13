@@ -5,15 +5,66 @@
 import Domain
 import UIKit
 
-public protocol TagCollectionViewDataSource: AnyObject {
-    func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode
-    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool
-    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate?
-}
-
 public class TagCollectionView: UICollectionView {
-    public static let cellIdentifier = "Cell"
     public static let interItemSpacing: CGFloat = 8
+
+    public enum CellType {
+        case addition
+        case tag
+
+        var identifier: String {
+            switch self {
+            case .addition:
+                return "tag-addition"
+
+            case .tag:
+                return "tag"
+            }
+        }
+    }
+
+    public enum CellConfiguration {
+        public struct Addition {
+            public let title: String
+            public weak var delegate: TagCollectionAdditionCellDelegate?
+
+            public init(title: String, delegate: TagCollectionAdditionCellDelegate?) {
+                self.title = title
+                self.delegate = delegate
+            }
+        }
+
+        public struct Tag {
+            public let tag: Domain.Tag
+            public let displayMode: TagCollectionViewCell.DisplayMode
+            public let visibleDeleteButton: Bool
+            public weak var delegate: TagCollectionViewCellDelegate?
+
+            public init(tag: Domain.Tag,
+                        displayMode: TagCollectionViewCell.DisplayMode,
+                        visibleDeleteButton: Bool,
+                        delegate: TagCollectionViewCellDelegate?)
+            {
+                self.tag = tag
+                self.displayMode = displayMode
+                self.visibleDeleteButton = visibleDeleteButton
+                self.delegate = delegate
+            }
+        }
+
+        case addition(Addition)
+        case tag(Self.Tag)
+
+        var type: CellType {
+            switch self {
+            case .addition:
+                return .addition
+
+            case .tag:
+                return .tag
+            }
+        }
+    }
 
     // MARK: - Lifecycle
 
@@ -33,19 +84,32 @@ public class TagCollectionView: UICollectionView {
 
     // MARK: - Methods
 
-    public static func cellProvider(dataSource: TagCollectionViewDataSource) -> (UICollectionView, IndexPath, Tag) -> UICollectionViewCell? {
-        return { [weak dataSource] collectionView, indexPath, tag -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionView.cellIdentifier, for: indexPath)
-            guard let dataSource = dataSource else { return dequeuedCell }
+    public static func provideCell(collectionView: UICollectionView,
+                                   indexPath: IndexPath,
+                                   configuration: CellConfiguration) -> UICollectionViewCell?
+    {
+        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: configuration.type.identifier,
+                                                              for: indexPath)
+
+        switch configuration {
+        case let .addition(config):
+            guard let cell = dequeuedCell as? TagCollectionAdditionCell else { return dequeuedCell }
+
+            cell.title = config.title
+            cell.delegate = config.delegate
+
+            return cell
+
+        case let .tag(config):
             guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
 
-            cell.title = tag.name
-            cell.displayMode = dataSource.displayMode(collectionView)
-            if let clipCount = tag.clipCount {
+            cell.title = config.tag.name
+            cell.displayMode = config.displayMode
+            if let clipCount = config.tag.clipCount {
                 cell.count = clipCount
             }
-            cell.visibleDeleteButton = dataSource.visibleDeleteButton(collectionView)
-            cell.delegate = dataSource.delegate(collectionView)
+            cell.visibleDeleteButton = config.visibleDeleteButton
+            cell.delegate = config.delegate
 
             return cell
         }
@@ -79,8 +143,8 @@ public class TagCollectionView: UICollectionView {
     }
 
     private func registerCell() {
-        self.register(TagCollectionViewCell.nib,
-                      forCellWithReuseIdentifier: Self.cellIdentifier)
+        self.register(TagCollectionViewCell.nib, forCellWithReuseIdentifier: CellType.tag.identifier)
+        self.register(TagCollectionAdditionCell.nib, forCellWithReuseIdentifier: CellType.addition.identifier)
     }
 
     private func setupAppearance() {

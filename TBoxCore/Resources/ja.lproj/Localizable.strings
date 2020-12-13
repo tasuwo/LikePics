@@ -7,6 +7,7 @@
 */
 
 "clip_target_finder_view_title" = "画像を選択";
+"clip_target_finder_view_addition_title" = "タグを追加";
 "clip_target_finder_view_overwrite_alert_body" = "既にクリップ済みのURLです。上書きしますか？";
 "clip_target_finder_view_overwrite_alert_ok" = "OK";
 "clip_target_finder_view_overwrite_alert_cancel" = "キャンセル";

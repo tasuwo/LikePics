@@ -153,7 +153,13 @@ class TagListViewController: UIViewController {
             guard let self = self else { return nil }
             switch item {
             case let .tag(tag):
-                return TagCollectionView.cellProvider(dataSource: self)(collectionView, indexPath, tag)
+                let configuration = TagCollectionView.CellConfiguration.Tag(tag: tag,
+                                                                            displayMode: self.isEditing ? .deletion : .normal,
+                                                                            visibleDeleteButton: false,
+                                                                            delegate: nil)
+                return TagCollectionView.provideCell(collectionView: collectionView,
+                                                     indexPath: indexPath,
+                                                     configuration: .tag(configuration))
 
             case .uncategorized:
                 let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: Self.uncategorizedCellIdentifier, for: indexPath)
@@ -309,22 +315,6 @@ extension TagListViewController: TagListViewProtocol {
 
     func endEditing() {
         self.setEditing(false, animated: true)
-    }
-}
-
-extension TagListViewController: TagCollectionViewDataSource {
-    // MARK: - TagCollectionViewDataSource
-
-    func displayMode(_ collectionView: UICollectionView) -> TagCollectionViewCell.DisplayMode {
-        return self.isEditing ? .deletion : .normal
-    }
-
-    func visibleDeleteButton(_ collectionView: UICollectionView) -> Bool {
-        return false
-    }
-
-    func delegate(_ collectionView: UICollectionView) -> TagCollectionViewCellDelegate? {
-        return nil
     }
 }
 
