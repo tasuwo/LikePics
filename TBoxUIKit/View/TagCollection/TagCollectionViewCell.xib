@@ -34,15 +34,8 @@
                                                     <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="height" multiplier="1:1" id="Hju-m5-d5b"/>
                                                 </constraints>
                                             </imageView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RxU-C6-WVw" userLabel="Spacer">
-                                                <rect key="frame" x="58" y="0.0" width="8" height="58"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="8" id="P6c-N7-lHm"/>
-                                                </constraints>
-                                            </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="66" y="0.0" width="85" height="58"/>
+                                                <rect key="frame" x="58" y="0.0" width="93" height="58"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -54,7 +47,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="8yL-J5-f6z" secondAttribute="bottom" constant="8" id="4kV-Lq-OqQ"/>
                                     <constraint firstItem="8yL-J5-f6z" firstAttribute="leading" secondItem="bGi-OV-WPW" secondAttribute="leading" constant="8" id="59b-Wa-yFV"/>
@@ -80,6 +73,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
                 </subviews>
                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -95,7 +89,6 @@
                 <outlet property="deleteButton" destination="7PG-Ds-8Lx" id="STY-E0-l3F"/>
                 <outlet property="deleteButtonSeparator" destination="hmd-1C-BuX" id="9WR-fx-q66"/>
                 <outlet property="iconImage" destination="Bt0-iq-WPi" id="bDi-Oe-Lrv"/>
-                <outlet property="iconSpacer" destination="RxU-C6-WVw" id="BeX-k0-eJg"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
             <point key="canvasLocation" x="163.768115942029" y="74.665178571428569"/>

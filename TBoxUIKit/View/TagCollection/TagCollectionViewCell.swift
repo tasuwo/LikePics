@@ -44,13 +44,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var visibleIcon: Bool = false {
-        didSet {
-            self.iconImage.isHidden = !self.visibleIcon
-            self.iconSpacer.isHidden = !self.visibleIcon
-        }
-    }
-
     override public var isSelected: Bool {
         didSet {
             self.updateForDisplayMode()
@@ -58,7 +51,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
     }
 
     @IBOutlet var iconImage: UIImageView!
-    @IBOutlet var iconSpacer: UIView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var deleteButton: UIButton!
     @IBOutlet var deleteButtonSeparator: UIView!
@@ -113,7 +105,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
-            self.visibleIcon = true
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemGreen
@@ -121,7 +112,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         case (.deletion, true):
             self.iconImage.image = UIImage(systemName: "checkmark")
-            self.visibleIcon = true
             self.iconImage.tintColor = UIColor.white
             self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemRed
@@ -129,14 +119,13 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         case (.deletion, false):
             self.iconImage.image = UIImage(systemName: "minus.circle.fill")
-            self.visibleIcon = true
             self.iconImage.tintColor = .systemRed
             self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 1
 
         default:
-            self.visibleIcon = false
+            self.iconImage.image = UIImage(systemName: "tag.fill")
             self.iconImage.tintColor = UIColor.label
             self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
@@ -151,16 +140,10 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.titleLabel.text = nil
             return
         }
-
-        if self.visibleIcon {
-            self.titleLabel.text = title
-            return
-        }
-
         if let count = self.count {
-            self.titleLabel.text = "# \(title) (\(count))"
+            self.titleLabel.text = "\(title) (\(count))"
         } else {
-            self.titleLabel.text = "# \(title)"
+            self.titleLabel.text = title
         }
     }
 }
