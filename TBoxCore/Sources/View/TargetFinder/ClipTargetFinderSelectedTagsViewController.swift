@@ -101,19 +101,11 @@ extension ClipTargetFinderSelectedTagsViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return false
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print(indexPath)
+        return false
     }
 }
 
@@ -121,5 +113,11 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewCellDeleg
     // MARK: - TagCollectionViewCellDelegate
 
     func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let item = self.dataSource.itemIdentifier(for: indexPath)
+        else {
+            return
+        }
+        self.viewModel.inputs.delete.send(item)
     }
 }

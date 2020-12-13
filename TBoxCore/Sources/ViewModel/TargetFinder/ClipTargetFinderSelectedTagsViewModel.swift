@@ -10,7 +10,9 @@ public protocol ClipTargetFinderSelectedTagsViewModelType {
     var outputs: ClipTargetFinderSelectedTagsViewModelOutputs { get }
 }
 
-public protocol ClipTargetFinderSelectedTagsViewModelInputs {}
+public protocol ClipTargetFinderSelectedTagsViewModelInputs {
+    var delete: PassthroughSubject<Tag, Never> { get }
+}
 
 public protocol ClipTargetFinderSelectedTagsViewModelOutputs {
     var tags: CurrentValueSubject<[Tag], Never> { get }
@@ -29,9 +31,18 @@ public class ClipTargetFinderSelectedTagsViewModel: ClipTargetFinderSelectedTags
 
     // MARK: ClipTargetFinderSelectedTagsViewModelInputs
 
+    public var delete: PassthroughSubject<Tag, Never> = .init()
+    public var replace: PassthroughSubject<[Tag], Never> = .init()
+
     // MARK: ClipTargetFinderSelectedTagsViewModelOutputs
 
     public var tags: CurrentValueSubject<[Tag], Never> = .init([])
+
+    // MARK: Privates
+
+    public var cancellableBag: Set<AnyCancellable> = .init()
+
+    // MARK: - Lifecycle
 
     public init() {
         self.bind()
@@ -40,6 +51,23 @@ public class ClipTargetFinderSelectedTagsViewModel: ClipTargetFinderSelectedTags
     // MARK: - Methods
 
     private func bind() {
-        self.tags.send([.init(id: UUID(), name: "hoge")])
+        // MARK: Inputs
+
+        self.delete
+            .sink { [weak self] tag in
+                guard var newTags = self?.tags.value,
+                    let index = newTags.firstIndex(of: tag) else { return }
+                newTags.remove(at: index)
+                self?.tags.send(newTags)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.replace
+            .sink { [weak self] tags in
+                self?.tags.send(tags)
+            }
+            .store(in: &self.cancellableBag)
+
+        // MARK: Outputs
     }
 }
