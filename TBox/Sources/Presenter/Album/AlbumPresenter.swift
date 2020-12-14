@@ -144,7 +144,7 @@ extension AlbumPresenter: AlbumPresenterProtocol {
     func setup(with view: AlbumViewProtocol) {
         self.view = view
         self.query.album
-            .assertNoFailure() // TODO:
+            .catch { _ in Just(nil) }
             .eraseToAnyPublisher()
             .combineLatest(self.settingStorage.showHiddenItems)
             .sink(receiveCompletion: { [weak self] _ in

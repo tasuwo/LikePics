@@ -66,20 +66,19 @@ extension DependencyContainer: ViewControllerFactory {
 
 extension DependencyContainer: TBoxCore.ViewControllerFactory {
     func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
-                                        delegate: TagSelectionViewControllerDelegate) -> UIViewController
+                                        delegate: TagSelectionViewControllerDelegate) -> UIViewController?
     {
         switch self.tagQueryService.queryTags() {
         case let .success(query):
-            let vc = TagSelectionViewController(viewModel: TagSelectionViewModel(query: query,
-                                                                                 selectedTags: selectedTags,
-                                                                                 commandService: DummyCommandService(),
-                                                                                 logger: self.logger),
-                                                delegate: delegate)
-            return UINavigationController(rootViewController: vc)
+            let viewModel = TagSelectionViewModel(query: query,
+                                                  selectedTags: selectedTags,
+                                                  commandService: DummyCommandService(),
+                                                  logger: self.logger)
+            let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
+            return UINavigationController(rootViewController: viewController)
 
         case .failure:
-            // TODO:
-            fatalError()
+            return nil
         }
     }
 }

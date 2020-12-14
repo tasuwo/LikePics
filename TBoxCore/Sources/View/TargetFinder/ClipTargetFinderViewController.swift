@@ -117,7 +117,7 @@ public class ClipTargetFinderViewController: UIViewController {
             .assign(to: \.isEnabled, on: self.itemDone)
             .store(in: &self.cancellableBag)
 
-        // TODO: 将来的にScrollViewをCollectionViewnに置き換える
+        // TODO: 将来的にScrollViewをCollectionViewに置き換える
         dependency.outputs.isCollectionViewHidden
             .assign(to: \.isHidden, on: self.baseScrollView)
             .store(in: &self.cancellableBag)

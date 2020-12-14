@@ -10,7 +10,7 @@ public extension UIView {
             self.topAnchor.constraint(equalTo: view.topAnchor),
             self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             self.leftAnchor.constraint(equalTo: view.leftAnchor),
-            self.rightAnchor.constraint(equalTo: view.rightAnchor),
+            self.rightAnchor.constraint(equalTo: view.rightAnchor)
         ]
     }
 }

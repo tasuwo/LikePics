@@ -7,5 +7,5 @@ import UIKit
 
 public protocol ViewControllerFactory {
     func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>,
-                                        delegate: TagSelectionViewControllerDelegate) -> UIViewController
+                                        delegate: TagSelectionViewControllerDelegate) -> UIViewController?
 }

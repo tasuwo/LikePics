@@ -12,6 +12,7 @@ extension ClipCollection {
             switch self {
             case .none:
                 return false
+
             case .selecting, .reordering:
                 return true
             }

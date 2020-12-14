@@ -141,11 +141,6 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipTargetCollectionViewController(clipUrl: URL, delegate: ClipTargetFinderDelegate) -> UIViewController {
-        // TODO:
-        return UIViewController()
-    }
-
     func makeSearchEntryViewController() -> UIViewController {
         let presenter = SearchEntryPresenter()
         let viewController = SearchEntryViewController(factory: self, presenter: presenter)

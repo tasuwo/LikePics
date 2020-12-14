@@ -45,6 +45,7 @@ extension RealmReferenceTagListQuery: TagListQuery {
 
 private extension Domain.Tag {
     static func make(by tag: ReferenceTagObject) -> Self {
+        // swiftlint:disable:next force_unwrapping
         return .init(id: UUID(uuidString: tag.id)!, name: tag.name)
     }
 }
