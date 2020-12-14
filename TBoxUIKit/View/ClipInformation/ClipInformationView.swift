@@ -104,7 +104,8 @@ public class ClipInformationView: UIView {
                 button.addTarget(self, action: #selector(self.didTapUrl(_:)), for: .touchUpInside)
                 button.addInteraction(UIContextMenuInteraction(delegate: self))
             },
-            delegate: self
+            tagCellDelegate: self,
+            sectionHeaderDelegate: self
         )
     }
 
@@ -137,23 +138,11 @@ extension ClipInformationView: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return false
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let item = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
-        switch item {
-        case let .tag(value):
-            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            self.delegate?.clipInformationView(self, didSelectTag: value, at: cell)
-
-        case .row, .empty:
-            break
-        }
+        return false
     }
 }
 
@@ -205,6 +194,23 @@ extension ClipInformationView: ClipInformationSectionHeaderDelegate {
             return
         }
         self.delegate?.didTapAddTagButton(self)
+    }
+}
+
+extension ClipInformationView: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    public func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let item = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+        switch item {
+        case let .tag(value):
+            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+            self.delegate?.clipInformationView(self, didSelectTag: value, at: cell)
+
+        case .row, .empty:
+            break
+        }
     }
 }
 

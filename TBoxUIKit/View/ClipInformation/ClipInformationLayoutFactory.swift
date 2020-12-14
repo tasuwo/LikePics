@@ -218,12 +218,13 @@ public enum ClipInformationLayoutFactory {
 
     static func makeDataSource(for collectionView: UICollectionView,
                                configureUrlLink: @escaping (UIButton) -> Void,
-                               delegate: ClipInformationSectionHeaderDelegate?) -> DataSource
+                               tagCellDelegate: TagCollectionViewCellDelegate?,
+                               sectionHeaderDelegate: ClipInformationSectionHeaderDelegate?) -> DataSource
     {
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
             case .tag:
-                return self.tagsSectionCellProvider()(collectionView, indexPath, item)
+                return self.tagsSectionCellProvider(delegate: tagCellDelegate)(collectionView, indexPath, item)
 
             case .info:
                 return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
@@ -233,13 +234,13 @@ public enum ClipInformationLayoutFactory {
             }
         }
 
-        dataSource.supplementaryViewProvider = self.headerProvider(delegate: delegate)
+        dataSource.supplementaryViewProvider = self.headerProvider(delegate: sectionHeaderDelegate)
 
         return dataSource
     }
 
-    private static func tagsSectionCellProvider() -> DataSource.CellProvider {
-        return { collectionView, indexPath, item -> UICollectionViewCell? in
+    private static func tagsSectionCellProvider(delegate: TagCollectionViewCellDelegate?) -> DataSource.CellProvider {
+        return { [weak delegate] collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
 
@@ -255,6 +256,9 @@ public enum ClipInformationLayoutFactory {
                 guard case let .tag(tag) = item else { return cell }
                 cell.title = tag.name
                 cell.displayMode = .normal
+                cell.visibleDeleteButton = true
+                cell.delegate = delegate
+
                 return cell
 
             default:
