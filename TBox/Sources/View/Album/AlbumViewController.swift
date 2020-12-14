@@ -16,13 +16,28 @@ class AlbumViewController: UIViewController {
         case main
     }
 
+    // MARK: - Properties
+
+    // MARK: Factory
+
     private let factory: Factory
+
+    // MARK: ViewModel
+
     private let viewModel: AlbumViewModelType & ClipCollectionViewModelType
+
+    // MARK: Provider
+
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
-    private let menuBuilder: ClipCollectionMenuBuildable.Type
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
+    private let menuBuilder: ClipCollectionMenuBuildable.Type
+
+    // MARK: Storage
+
     private let thumbnailStorage: ThumbnailStorageProtocol
+
+    // MARK: View
 
     private let emptyMessageView = EmptyMessageView()
     // swiftlint:disable:next implicitly_unwrapped_optional
