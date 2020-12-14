@@ -71,16 +71,14 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         self.observation = self.collectionView
-            .observe(\.contentSize,
-                     options: [.new]) { [weak self] _, change in
+            .observe(\.contentSize, options: [.new]) { [weak self] _, change in
                 guard let newHeight = change.newValue?.height else { return }
                 self?.contentViewHeight.send(newHeight)
             }
     }
 
     private func setupCollectionView() {
-        self.collectionView = TagCollectionView(frame: self.view.bounds,
-                                                collectionViewLayout: Self.createLayout())
+        self.collectionView = TagCollectionView(frame: self.view.bounds, collectionViewLayout: Self.createLayout())
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.collectionView)
         NSLayoutConstraint.activate(self.collectionView.constraints(fittingIn: self.view))
