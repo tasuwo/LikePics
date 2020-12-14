@@ -10,6 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClipTargetFinderViewController" customModule="TBoxCore" customModuleProvider="target">
             <connections>
+                <outlet property="baseScrollView" destination="QwW-gK-c74" id="WTG-93-6eK"/>
                 <outlet property="collectionView" destination="p6W-aQ-rTk" id="ku2-Z1-w7B"/>
                 <outlet property="indicator" destination="ib4-SI-9D4" id="ubB-TK-fWA"/>
                 <outlet property="selectedTagListContainer" destination="4bG-OH-b30" id="BM2-CP-rUy"/>

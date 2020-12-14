@@ -35,6 +35,7 @@ public class ClipTargetFinderViewController: UIViewController {
     @IBOutlet var selectedTagListContainer: UIView!
     @IBOutlet var selectedTagListContainerHeight: NSLayoutConstraint!
     @IBOutlet var indicator: UIActivityIndicatorView!
+    @IBOutlet var baseScrollView: UIScrollView!
 
     private let factory: Factory
     private let viewModel: ClipTargetFinderViewModelType
@@ -107,18 +108,24 @@ public class ClipTargetFinderViewController: UIViewController {
                     : self?.indicator.stopAnimating()
             }
             .store(in: &self.cancellableBag)
+
         dependency.outputs.isReloadItemEnabled
             .assign(to: \.isEnabled, on: self.itemReload)
             .store(in: &self.cancellableBag)
+
         dependency.outputs.isDoneItemEnabled
             .assign(to: \.isEnabled, on: self.itemDone)
             .store(in: &self.cancellableBag)
+
+        // TODO: 将来的にScrollViewをCollectionViewnに置き換える
         dependency.outputs.isCollectionViewHidden
-            .assign(to: \.isHidden, on: self.collectionView)
+            .assign(to: \.isHidden, on: self.baseScrollView)
             .store(in: &self.cancellableBag)
+
         dependency.outputs.emptyMessageViewAlpha
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
+
         dependency.outputs.images
             .sink { [weak self] _ in self?.collectionView.reloadData() }
             .store(in: &self.cancellableBag)
