@@ -95,10 +95,10 @@ class SearchResultViewController: UIViewController {
                 if !clips.isEmpty {
                     self.emptyMessageView.alpha = 0
                 }
-                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
                     guard clips.isEmpty else { return }
                     UIView.animate(withDuration: 0.2) {
-                        self?.emptyMessageView.alpha = 1
+                        self.emptyMessageView.alpha = 1
                     }
                 }
             }
@@ -109,8 +109,8 @@ class SearchResultViewController: UIViewController {
                 guard let self = self else { return }
 
                 let indexPaths = selection
-                    .compactMap { [weak self] identity in
-                        self?.viewModel.outputs.clips.value.first(where: { $0.identity == identity })
+                    .compactMap { identity in
+                        self.viewModel.outputs.clips.value.first(where: { $0.identity == identity })
                     }
                     .compactMap { self.dataSource.indexPath(for: $0) }
                 self.collectionView.applySelection(at: indexPaths)

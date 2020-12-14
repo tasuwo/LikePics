@@ -119,10 +119,10 @@ class AlbumViewController: UIViewController {
                 if !clips.isEmpty {
                     self.emptyMessageView.alpha = 0
                 }
-                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
                     guard clips.isEmpty else { return }
                     UIView.animate(withDuration: 0.2) {
-                        self?.emptyMessageView.alpha = 1
+                        self.emptyMessageView.alpha = 1
                     }
                 }
             }

@@ -198,9 +198,9 @@ extension SearchResultViewModel {
                     self.selections.send(self.selections.value.union(Set([clipId])))
                 } else {
                     self.selections.send(Set([clipId]))
-                    self.presentPreview.send((clipId, { [weak self] isSucceeded in
+                    self.presentPreview.send((clipId, { isSucceeded in
                         guard isSucceeded else { return }
-                        self?.previewingClipId = clipId
+                        self.previewingClipId = clipId
                     }))
                 }
             }
