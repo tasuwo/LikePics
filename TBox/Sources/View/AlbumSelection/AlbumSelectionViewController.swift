@@ -122,10 +122,7 @@ class AlbumSelectionViewController: UIViewController {
     private func setupEmptyMessage() {
         self.view.addSubview(self.emptyMessageView)
         self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
-        self.emptyMessageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-        self.emptyMessageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        self.emptyMessageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        self.emptyMessageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        NSLayoutConstraint.activate(self.emptyMessageView.constraints(fittingIn: self.view.safeAreaLayoutGuide))
 
         self.emptyMessageView.title = L10n.albumListViewEmptyTitle
         self.emptyMessageView.message = L10n.albumListViewEmptyMessage
