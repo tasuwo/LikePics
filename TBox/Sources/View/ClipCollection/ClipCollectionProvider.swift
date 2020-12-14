@@ -114,9 +114,6 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         self.delegate?.clipCollectionProvider(self, didDeselect: clip.identity)
     }
 
-    func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-    }
-
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard
             let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath),
@@ -124,7 +121,23 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         else {
             return nil
         }
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: clip))
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil, actionProvider: self.makeActionProvider(for: clip))
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    private func makeTargetedPreview(for configuration: UIContextMenuConfiguration, collectionView: UICollectionView) -> UITargetedPreview? {
+        guard let identifier = configuration.identifier as? NSIndexPath else { return nil }
+        guard let cell = collectionView.cellForItem(at: identifier as IndexPath) else { return nil }
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        return UITargetedPreview(view: cell, parameters: parameters)
     }
 
     private func makeActionProvider(for clip: Clip) -> UIContextMenuActionProvider {
