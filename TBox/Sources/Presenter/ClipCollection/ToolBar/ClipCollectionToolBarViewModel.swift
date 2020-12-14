@@ -59,7 +59,7 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
             .store(in: &self.cancellableBag)
 
         self.operation
-            .map { $0.isEditing }
+            .map { $0 == .selecting }
             .sink { [weak self] isEditing in self?.isHidden.send(!isEditing) }
             .store(in: &self.cancellableBag)
 
