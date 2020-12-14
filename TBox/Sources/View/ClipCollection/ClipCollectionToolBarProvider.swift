@@ -66,14 +66,14 @@ class ClipCollectionToolBarProvider {
         // MARK: Outputs
 
         dependency.outputs.isHidden
-            .sink { view.navigationController?.setToolbarHidden($0, animated: true) }
+            .sink { [weak view] isHidden in view?.navigationController?.setToolbarHidden(isHidden, animated: true) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.items
             .map { [weak self] items in
                 items.compactMap { self?.resolveBarButtonItem(for: $0) }
             }
-            .sink { view.setToolbarItems($0, animated: true) }
+            .sink { [weak view] items in view?.setToolbarItems(items, animated: true) }
             .store(in: &self.cancellableBag)
     }
 
