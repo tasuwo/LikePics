@@ -210,6 +210,7 @@ extension AlbumViewModel {
 
         self.bindSelectOperations()
         self.bindClipOperations()
+        self.bindAlbumOperations()
     }
 
     private func bindSelectOperations() {
