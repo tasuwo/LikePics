@@ -478,6 +478,12 @@ extension AlbumViewController: UICollectionViewDragDelegate {
         let dragItem = UIDragItem(itemProvider: provider)
         return [dragItem]
     }
+
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
+    }
 }
 
 extension AlbumViewController: UICollectionViewDropDelegate {
@@ -493,6 +499,12 @@ extension AlbumViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         // NOP
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
     }
 }
 
