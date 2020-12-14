@@ -118,11 +118,13 @@ public class ClipTargetFinderViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         // TODO: 将来的にScrollViewをCollectionViewに置き換える
-        dependency.outputs.isCollectionViewHidden
+        dependency.outputs.displayCollectionView
+            .map { !$0 }
             .assign(to: \.isHidden, on: self.baseScrollView)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.emptyMessageViewAlpha
+        dependency.outputs.displayEmptyMessage
+            .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
@@ -216,8 +218,6 @@ public class ClipTargetFinderViewController: UIViewController {
 
     private func setupEmptyMessage() {
         self.view.addSubview(self.emptyMessageView)
-
-        self.emptyMessageView.isHidden = true
 
         self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(self.emptyMessageView.constraints(fittingIn: self.view.safeAreaLayoutGuide))

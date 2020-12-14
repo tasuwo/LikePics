@@ -33,8 +33,8 @@ public protocol ClipTargetFinderViewModelOutputs {
     var isReloadItemEnabled: CurrentValueSubject<Bool, Never> { get }
     var isDoneItemEnabled: CurrentValueSubject<Bool, Never> { get }
 
-    var isCollectionViewHidden: CurrentValueSubject<Bool, Never> { get }
-    var emptyMessageViewAlpha: CurrentValueSubject<CGFloat, Never> { get }
+    var displayCollectionView: CurrentValueSubject<Bool, Never> { get }
+    var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
 
     var didFinish: PassthroughSubject<Void, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
@@ -80,8 +80,8 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     public var isReloadItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
     public var isDoneItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
-    public var isCollectionViewHidden: CurrentValueSubject<Bool, Never> = .init(false)
-    public var emptyMessageViewAlpha: CurrentValueSubject<CGFloat, Never> = .init(0)
+    public var displayCollectionView: CurrentValueSubject<Bool, Never> = .init(true)
+    public var displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(true)
 
     public var didFinish: PassthroughSubject<Void, Never> = .init()
     public var errorMessage: PassthroughSubject<String, Never> = .init()
@@ -196,13 +196,14 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
             .store(in: &self.cancellableBag)
 
         self.images
-            .map { $0.isEmpty }
-            .sink { [weak self] isEmpty in self?.isCollectionViewHidden.send(isEmpty) }
+            .map { !$0.isEmpty }
+            .sink { [weak self] isEmpty in self?.displayCollectionView.send(isEmpty) }
             .store(in: &self.cancellableBag)
 
         self.images
-            .map { $0.isEmpty ? 1 : 0 }
-            .sink { [weak self] alpha in self?.emptyMessageViewAlpha.send(alpha) }
+            .combineLatest(isLoading)
+            .map { images, isLoading in images.isEmpty && !isLoading }
+            .sink { [weak self] isHidden in self?.displayEmptyMessage.send(isHidden) }
             .store(in: &self.cancellableBag)
     }
 
