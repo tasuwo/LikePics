@@ -67,7 +67,6 @@ class ClipCollectionNavigationBarProvider {
         // MARK: Outputs
 
         dependency.outputs.leftItems
-            .receive(on: DispatchQueue.main)
             .compactMap { [weak self] items in
                 guard let self = self else { return nil }
                 return items.compactMap { self.makeBarButtonItem(for: $0) }
@@ -76,7 +75,6 @@ class ClipCollectionNavigationBarProvider {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
-            .receive(on: DispatchQueue.main)
             .compactMap { [weak self] items in
                 guard let self = self else { return nil }
                 return items.compactMap { self.makeBarButtonItem(for: $0) }
