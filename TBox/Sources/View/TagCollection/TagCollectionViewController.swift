@@ -2,13 +2,15 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
 import UIKit
 
-class TagListViewController: UIViewController {
+class TagCollectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = TagCollectionViewModelType
 
     enum Section: Int {
         case uncategorized
@@ -23,7 +25,7 @@ class TagListViewController: UIViewController {
     private static let uncategorizedCellIdentifier = "uncategorized"
 
     private let factory: Factory
-    private let presenter: TagListPresenter
+    private let viewModel: TagCollectionViewModel
     private let logger: TBoxLoggable
     private let emptyMessageView = EmptyMessageView()
     private lazy var addAlertContainer = TextEditAlert(
@@ -41,15 +43,18 @@ class TagListViewController: UIViewController {
     @IBOutlet var collectionView: TagCollectionView!
     @IBOutlet var searchBar: UISearchBar!
 
+    private var cancellableBag = Set<AnyCancellable>()
+
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TagListPresenter, logger: TBoxLoggable) {
+    init(factory: Factory,
+         viewModel: TagCollectionViewModel,
+         logger: TBoxLoggable)
+    {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.logger = logger
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -66,13 +71,11 @@ class TagListViewController: UIViewController {
 
         self.setupCollectionView()
         self.setupAppearance()
-        self.updateNavigationBar(for: self.isEditing)
+        self.setupNavigationBar()
         self.setupSearchBar()
         self.setupEmptyMessage()
 
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-
-        self.presenter.setup()
+        self.bind(to: viewModel)
     }
 
     // MARK: - Methods
@@ -88,10 +91,70 @@ class TagListViewController: UIViewController {
             validator: {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
-                guard case let .saved(text: tag) = action else { return }
-                self?.presenter.addTag(tag)
+                guard case let .saved(text: tagName) = action else { return }
+                self?.viewModel.inputs.created.send(tagName)
             }
         )
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.filteredTags
+            .receive(on: DispatchQueue.main)
+            .combineLatest(dependency.outputs.displayUncategorizedTag)
+            .sink { [weak self] tags, displayUncategorizedTag in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+                snapshot.appendSections([.uncategorized])
+                snapshot.appendItems(displayUncategorizedTag ? [.uncategorized] : [])
+                snapshot.appendSections([.main])
+                snapshot.appendItems(tags.map { .tag($0) })
+                self?.dataSource.apply(snapshot, animatingDifferences: true)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displaySearchBar
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .map { !$0 }
+            .assign(to: \.isHidden, on: self.searchBar)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.displayCollectionView
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .map { !$0 }
+            .assign(to: \.isHidden, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.displayEmptyMessageView
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.searchBarCleared
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.searchBar.resignFirstResponder()
+                self?.searchBar.text = nil
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.tagViewOpened
+            .sink { [weak self] tag in
+                guard let self = self else { return }
+                guard let viewController = self.factory.makeSearchResultViewController(context: .tag(.categorized(tag))) else {
+                    RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
+                    return
+                }
+                self.show(viewController, sender: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Collection View
@@ -172,60 +235,14 @@ class TagListViewController: UIViewController {
 
     // MARK: NavigationBar
 
-    private func updateNavigationBar(for isEditing: Bool) {
-        if isEditing {
-            let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.didTapCancel))
-            let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
-            self.navigationItem.leftBarButtonItem = cancelItem
-            self.navigationItem.rightBarButtonItem = doneItem
-        } else {
-            let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
-            let deleteItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.didTapDelete))
-            self.navigationItem.leftBarButtonItem = addItem
-            self.navigationItem.rightBarButtonItem = deleteItem
-        }
+    private func setupNavigationBar() {
+        let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
+        self.navigationItem.leftBarButtonItem = addItem
     }
 
     @objc
     func didTapAdd() {
         self.startAddingTag()
-    }
-
-    @objc
-    func didTapDone(item: UIBarButtonItem) {
-        guard let count = self.collectionView.indexPathsForSelectedItems?.count else {
-            self.logger.write(ConsoleLog(level: .error, message: "Invalid done action occurred."))
-            return
-        }
-
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.tagListViewAlertForDeleteMessage,
-                                      preferredStyle: .actionSheet)
-
-        alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction(count), style: .destructive, handler: { [weak self] _ in
-            guard let self = self, let indices = self.collectionView.indexPathsForSelectedItems else { return }
-            let selectedTags = indices
-                .compactMap { (index: IndexPath) -> Item? in self.dataSource.itemIdentifier(for: index) }
-                .compactMap { (item: Item) -> Tag? in
-                    if case let .tag(tag) = item { return tag } else { return nil }
-                }
-            self.presenter.delete(selectedTags)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        alert.popoverPresentationController?.barButtonItem = item
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @objc
-    func didTapCancel() {
-        self.setEditing(false, animated: true)
-    }
-
-    @objc
-    func didTapDelete() {
-        self.setEditing(true, animated: true)
     }
 
     // MARK: SearchBar
@@ -249,73 +266,9 @@ class TagListViewController: UIViewController {
 
         self.emptyMessageView.alpha = 0
     }
-
-    // MARK: UIViewController (Override)
-
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-
-        self.updateNavigationBar(for: editing)
-
-        self.collectionView
-            .visibleCells
-            .map { $0 as? TagCollectionViewCell }
-            .forEach { $0?.displayMode = editing ? .deletion : .normal }
-        self.collectionView
-            .indexPathsForSelectedItems?
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-        self.collectionView.allowsMultipleSelection = editing
-    }
 }
 
-extension TagListViewController: TagListViewProtocol {
-    // MARK: - TagListViewProtocol
-
-    func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.uncategorized])
-        snapshot.appendItems(isFiltered ? [] : [.uncategorized])
-        snapshot.appendSections([.main])
-        snapshot.appendItems(tags.map { .tag($0) })
-
-        if !isEmpty {
-            self.searchBar.isHidden = false
-            self.collectionView.isHidden = false
-            self.emptyMessageView.alpha = 0
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard isEmpty else { return }
-            self?.navigationItem.rightBarButtonItem?.isEnabled = false
-            self?.searchBar.isHidden = true
-            self?.collectionView.isHidden = true
-            self?.emptyMessageView.alpha = 1
-            self?.searchBar.resignFirstResponder()
-            self?.searchBar.text = nil
-            self?.presenter.performQuery("")
-        }
-    }
-
-    func search(with context: ClipCollection.SearchContext) {
-        guard let viewController = self.factory.makeSearchResultViewController(context: context) else {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open SearchResultViewController."))
-            return
-        }
-        self.show(viewController, sender: nil)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func endEditing() {
-        self.setEditing(false, animated: true)
-    }
-}
-
-extension TagListViewController: UICollectionViewDelegate {
+extension TagCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -330,7 +283,7 @@ extension TagListViewController: UICollectionViewDelegate {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
             if !self.isEditing {
-                self.presenter.select(tag)
+                self.viewModel.inputs.selected.send(tag)
             }
 
         case .uncategorized:
@@ -358,7 +311,7 @@ extension TagListViewController: UICollectionViewDelegate {
         }
         let delete = UIAction(title: L10n.tagListViewContextMenuActionDelete,
                               image: UIImage(systemName: "trash.fill")) { [weak self] _ in
-            self?.presenter.delete([tag])
+            self?.viewModel.inputs.deleted.send([tag])
         }
         let update = UIAction(title: L10n.tagListViewContextMenuActionUpdate,
                               image: UIImage(systemName: "text.cursor")) { [weak self] _ in
@@ -370,7 +323,7 @@ extension TagListViewController: UICollectionViewDelegate {
                     $0 != tag.name && $0?.isEmpty != true
                 }, completion: { action in
                     guard case let .saved(text: name) = action else { return }
-                    self.presenter.updateTag(having: tag.identity, nameTo: name)
+                    self.viewModel.updateTag(having: tag.identity, nameTo: name)
                 }
             )
         }
@@ -380,20 +333,20 @@ extension TagListViewController: UICollectionViewDelegate {
     }
 }
 
-extension TagListViewController: UISearchBarDelegate {
+extension TagCollectionViewController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform { [weak self] in
             guard let text = self?.searchBar.text else { return }
-            self?.presenter.performQuery(text)
+            self?.viewModel.inputs.inputtedQuery.send(text)
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
             guard let text = self?.searchBar.text else { return }
-            self?.presenter.performQuery(text)
+            self?.viewModel.inputs.inputtedQuery.send(text)
         }
         return true
     }
@@ -415,7 +368,7 @@ extension TagListViewController: UISearchBarDelegate {
     }
 }
 
-extension TagListViewController: UncategorizedCellDelegate {
+extension TagCollectionViewController: UncategorizedCellDelegate {
     // MARK: - UncategorizedCellDelegate
 
     func didTap(_ cell: UncategorizedCell) {
@@ -427,7 +380,7 @@ extension TagListViewController: UncategorizedCellDelegate {
     }
 }
 
-extension TagListViewController: EmptyMessageViewDelegate {
+extension TagCollectionViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     func didTapActionButton(_ view: EmptyMessageView) {

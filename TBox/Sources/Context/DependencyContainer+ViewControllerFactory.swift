@@ -306,10 +306,10 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = TagListPresenter(query: query,
-                                         clipCommandService: self.clipCommandService,
-                                         logger: self.logger)
-        let viewController = TagListViewController(factory: self, presenter: presenter, logger: self.logger)
+        let viewModel = TagCollectionViewModel(query: query,
+                                               clipCommandService: self.clipCommandService,
+                                               logger: self.logger)
+        let viewController = TagCollectionViewController(factory: self, viewModel: viewModel, logger: self.logger)
 
         return UINavigationController(rootViewController: viewController)
     }

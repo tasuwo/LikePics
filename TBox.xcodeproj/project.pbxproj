@@ -329,9 +329,9 @@
 		2CFB118C255C1A6400451C15 /* CoreDataClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
-		2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */; };
-		2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */; };
-		2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */; };
+		2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEC250DA8E0001A02E4 /* TagCollectionViewController.swift */; };
+		2CFC5CF0250DA919001A02E4 /* TagCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CEF250DA919001A02E4 /* TagCollectionViewModel.swift */; };
+		2CFC5CF2250DAA8C001A02E4 /* TagCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF1250DAA8C001A02E4 /* TagCollectionViewController.xib */; };
 		2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF6250DEFF7001A02E4 /* String.swift */; };
 		2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */; };
 		2CFC5CFC250DF20A001A02E4 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */; };
@@ -966,9 +966,9 @@
 		2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipQuery.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
-		2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListViewController.swift; sourceTree = "<group>"; };
-		2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListPresenter.swift; sourceTree = "<group>"; };
-		2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagListViewController.xib; sourceTree = "<group>"; };
+		2CFC5CEC250DA8E0001A02E4 /* TagCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewController.swift; sourceTree = "<group>"; };
+		2CFC5CEF250DA919001A02E4 /* TagCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewModel.swift; sourceTree = "<group>"; };
+		2CFC5CF1250DAA8C001A02E4 /* TagCollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionViewController.xib; sourceTree = "<group>"; };
 		2CFC5CF6250DEFF7001A02E4 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2CFC5CF9250DF1A9001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		2CFC5CFB250DF20A001A02E4 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
@@ -2094,7 +2094,7 @@
 				2C45D3ED24EACA780045B6D3 /* Search */,
 				2C570B6024E04FEF00A1DC9F /* TopClipCollection */,
 				2C45D40324EEB3F30045B6D3 /* AlbumList */,
-				2CFC5CEB250DA8D0001A02E4 /* TagList */,
+				2CFC5CEB250DA8D0001A02E4 /* TagCollection */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2C2C9EF5250BCE7B0020715B /* ClipInformation */,
 				2C3ADF5F24EEE6C5007C4AA0 /* AlbumSelection */,
@@ -2597,19 +2597,19 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		2CFC5CEB250DA8D0001A02E4 /* TagList */ = {
+		2CFC5CEB250DA8D0001A02E4 /* TagCollection */ = {
 			isa = PBXGroup;
 			children = (
-				2CFC5CEC250DA8E0001A02E4 /* TagListViewController.swift */,
-				2CFC5CF1250DAA8C001A02E4 /* TagListViewController.xib */,
+				2CFC5CEC250DA8E0001A02E4 /* TagCollectionViewController.swift */,
+				2CFC5CF1250DAA8C001A02E4 /* TagCollectionViewController.xib */,
 			);
-			path = TagList;
+			path = TagCollection;
 			sourceTree = "<group>";
 		};
 		2CFC5CEE250DA906001A02E4 /* TagList */ = {
 			isa = PBXGroup;
 			children = (
-				2CFC5CEF250DA919001A02E4 /* TagListPresenter.swift */,
+				2CFC5CEF250DA919001A02E4 /* TagCollectionViewModel.swift */,
 			);
 			path = TagList;
 			sourceTree = "<group>";
@@ -3286,7 +3286,7 @@
 				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
 				2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
-				2CFC5CF2250DAA8C001A02E4 /* TagListViewController.xib in Resources */,
+				2CFC5CF2250DAA8C001A02E4 /* TagCollectionViewController.xib in Resources */,
 				2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */,
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
@@ -3922,13 +3922,13 @@
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2CDA49D32516EF400043DC14 /* ClipPreviewPageBarButtonItemsPresenter.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
-				2CFC5CED250DA8E0001A02E4 /* TagListViewController.swift in Sources */,
+				2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
-				2CFC5CF0250DA919001A02E4 /* TagListPresenter.swift in Sources */,
+				2CFC5CF0250DA919001A02E4 /* TagCollectionViewModel.swift in Sources */,
 				2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */,
 				2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */,
 				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
