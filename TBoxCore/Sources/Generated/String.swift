@@ -12,26 +12,34 @@ import Foundation
 internal enum L10n {
     /// タグを追加
     internal static let clipTargetFinderViewAdditionTitle = L10n.tr("Localizable", "clip_target_finder_view_addition_title")
-    /// もう一度試す
-    internal static let clipTargetFinderViewEmptyActionTitle = L10n.tr("Localizable", "clip_target_finder_view_empty_action_title")
-    /// 保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります
-    internal static let clipTargetFinderViewEmptyMessage = L10n.tr("Localizable", "clip_target_finder_view_empty_message")
-    /// 画像が見つかりませんでした
-    internal static let clipTargetFinderViewEmptyTitle = L10n.tr("Localizable", "clip_target_finder_view_empty_title")
-    /// 画像のダウンロードに失敗しました。時間をおいて再度お試しください
-    internal static let clipTargetFinderViewErrorAlertBodyFailedToDownloadImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_download_images")
-    /// 保存可能な画像が見つからなかったため、クリップできません
-    internal static let clipTargetFinderViewErrorAlertBodyFailedToFindImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_find_images")
-    /// タイムアウトしました。保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。通信環境の良い場所で再度お試しください
-    internal static let clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_find_images_timeout")
-    /// 画像の保存に失敗しました。クリップをやり直してください
-    internal static let clipTargetFinderViewErrorAlertBodyFailedToSaveImages = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_failed_to_save_images")
-    /// 問題が発生しました。クリップをやり直してください
-    internal static let clipTargetFinderViewErrorAlertBodyInternalError = L10n.tr("Localizable", "clip_target_finder_view_error_alert_body_internal_error")
     /// OK
-    internal static let clipTargetFinderViewErrorAlertOk = L10n.tr("Localizable", "clip_target_finder_view_error_alert_ok")
-    /// エラー
-    internal static let clipTargetFinderViewErrorAlertTitle = L10n.tr("Localizable", "clip_target_finder_view_error_alert_title")
+    internal static let clipTargetFinderViewDownloadErrorAction = L10n.tr("Localizable", "clip_target_finder_view_download_error_action")
+    /// 保存時に問題が発生しました。後ほどもう一度お試しください
+    internal static let clipTargetFinderViewDownloadErrorFailedToDownloadBody = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_download_body")
+    /// 保存に失敗しました
+    internal static let clipTargetFinderViewDownloadErrorFailedToDownloadTitle = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_download_title")
+    /// 画像のダウンロードに失敗しました。通信環境を確認し、後ほどもう一度お試しください
+    internal static let clipTargetFinderViewDownloadErrorFailedToSaveBody = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_save_body")
+    /// ダウンロードできませんでした
+    internal static let clipTargetFinderViewDownloadErrorFailedToSaveTitle = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_save_title")
+    /// もう一度試す
+    internal static let clipTargetFinderViewLoadingErrorAction = L10n.tr("Localizable", "clip_target_finder_view_loading_error_action")
+    /// 通信環境の良い状態でもう一度お試しください
+    internal static let clipTargetFinderViewLoadingErrorConnectionMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_connection_message")
+    /// 通信に失敗しました
+    internal static let clipTargetFinderViewLoadingErrorConnectionTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_connection_title")
+    /// もう一度お試しください
+    internal static let clipTargetFinderViewLoadingErrorInternalMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_message")
+    /// 画像の探索に失敗しました
+    internal static let clipTargetFinderViewLoadingErrorInternalTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_title")
+    /// ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください
+    internal static let clipTargetFinderViewLoadingErrorNotFoundMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_message")
+    /// 画像が見つかりませんでした
+    internal static let clipTargetFinderViewLoadingErrorNotFoundTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_title")
+    /// ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください
+    internal static let clipTargetFinderViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_message")
+    /// 画像が見つかりませんでした
+    internal static let clipTargetFinderViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_title")
     /// 既にクリップ済みのURLです。上書きしますか？
     internal static let clipTargetFinderViewOverwriteAlertBody = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_body")
     /// キャンセル

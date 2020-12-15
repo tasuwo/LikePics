@@ -37,18 +37,40 @@ public protocol ClipTargetFinderViewModelOutputs {
     var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
 
     var didFinish: PassthroughSubject<Void, Never> { get }
-    var errorMessage: PassthroughSubject<String, Never> { get }
+
+    var emptyErrorTitle: CurrentValueSubject<String?, Never> { get }
+    var emptyErrorMessage: CurrentValueSubject<String?, Never> { get }
+
+    var displayAlert: PassthroughSubject<(title: String, body: String), Never> { get }
 }
 
 public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     ClipTargetFinderViewModelInputs,
     ClipTargetFinderViewModelOutputs
 {
-    enum PresenterError: Error {
-        case failedToFindImages(WebImageUrlFinderError)
-        case failedToDownloadImages
-        case failedToSave(ClipStorageError)
+    enum LoadingError: Error {
+        case networkError(Error)
+        case timeout
         case internalError
+        case notFound
+
+        init(finderError: WebImageUrlFinderError) {
+            switch finderError {
+            case .internalError:
+                self = .internalError
+
+            case .timeout:
+                self = .timeout
+
+            case let .networkError(error):
+                self = .networkError(error)
+            }
+        }
+    }
+
+    enum DownloadError: Error {
+        case failedToSave(ClipStorageError)
+        case failedToDownloadImage
     }
 
     // MARK: - Properties
@@ -84,7 +106,11 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     public var displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(true)
 
     public var didFinish: PassthroughSubject<Void, Never> = .init()
-    public var errorMessage: PassthroughSubject<String, Never> = .init()
+
+    public let emptyErrorTitle: CurrentValueSubject<String?, Never> = .init(nil)
+    public let emptyErrorMessage: CurrentValueSubject<String?, Never> = .init(nil)
+
+    public let displayAlert: PassthroughSubject<(title: String, body: String), Never> = .init()
 
     // MARK: Privates
 
@@ -203,15 +229,15 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.images
             .combineLatest(isLoading)
             .map { images, isLoading in images.isEmpty && !isLoading }
-            .sink { [weak self] isHidden in self?.displayEmptyMessage.send(isHidden) }
+            .sink { [weak self] display in self?.displayEmptyMessage.send(display) }
             .store(in: &self.cancellableBag)
     }
 
     private func findImages() {
+        self.isLoading.send(true)
+
         self.images.send([])
         self.selectedIndices.send([])
-
-        self.isLoading.send(true)
 
         self.resolveImageUrls(at: self.url)
             .map { sources in
@@ -219,19 +245,25 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
                     .compactMap { SelectableImage(urlSet: $0) }
                     .filter { $0.isValid }
             }
-            .receive(on: DispatchQueue.main)
+            .tryFilter {
+                if $0.isEmpty { throw LoadingError.notFound }
+                return true
+            }
+            .mapError { $0 as? LoadingError ?? LoadingError.internalError }
             .sink { [weak self] completion in
                 switch completion {
                 case let .failure(error):
+                    self?.emptyErrorTitle.send(error.displayTitle)
+                    self?.emptyErrorMessage.send(error.displayMessage)
                     self?.isLoading.send(false)
-                    self?.errorMessage.send(error.displayableMessage)
 
                 case .finished:
-                    break
+                    self?.emptyErrorTitle.send(nil)
+                    self?.emptyErrorMessage.send(nil)
+                    self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] foundImages in
                 self?.images.send(foundImages)
-                self?.isLoading.send(false)
             }
             .store(in: &self.cancellableBag)
     }
@@ -243,9 +275,9 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
             .map { ($0.offset, self.images.value[$0.element]) }
 
         self.fetchImages(for: selections)
-            .flatMap { [weak self] sources -> AnyPublisher<Void, PresenterError> in
+            .flatMap { [weak self] sources -> AnyPublisher<Void, DownloadError> in
                 guard let self = self else {
-                    return Fail(error: PresenterError.internalError)
+                    return Fail(error: DownloadError.failedToDownloadImage)
                         .eraseToAnyPublisher()
                 }
                 return self.save(target: sources)
@@ -253,19 +285,17 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
                     .eraseToAnyPublisher()
             }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case let .failure(error):
+                    self?.displayAlert.send((error.displayTitle, error.displayMessage))
                     self?.isLoading.send(false)
-                    self?.errorMessage.send(error.displayableMessage)
 
                 case .finished:
-                    break
+                    self?.isLoading.send(false)
+                    self?.didFinish.send(())
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.isLoading.send(false)
-                self?.didFinish.send(())
-            })
+            } receiveValue: { _ in }
             .store(in: &self.cancellableBag)
     }
 
@@ -283,7 +313,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     // MARK: Load Images
 
-    private func resolveImageUrls(at url: URL) -> Future<[WebImageUrlSet], PresenterError> {
+    private func resolveImageUrls(at url: URL) -> Future<[WebImageUrlSet], LoadingError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
@@ -296,7 +326,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
                     promise(.success(urls))
 
                 case let .failure(error):
-                    promise(.failure(.failedToFindImages(error)))
+                    promise(.failure(.init(finderError: error)))
                 }
             }
 
@@ -306,7 +336,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         }
     }
 
-    private func fetchImages(for selections: [(index: Int, image: SelectableImage)]) -> AnyPublisher<[(index: Int, ClipItemSource)], PresenterError> {
+    private func fetchImages(for selections: [(index: Int, image: SelectableImage)]) -> AnyPublisher<[(index: Int, ClipItemSource)], DownloadError> {
         let publishers: [AnyPublisher<(index: Int, ClipItemSource), Never>] = selections
             .compactMap { [weak self] selection in
                 guard let self = self else { return nil }
@@ -316,13 +346,13 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
             }
         return Publishers.MergeMany(publishers)
             .collect()
-            .mapError { _ in PresenterError.internalError }
+            .mapError { _ in DownloadError.failedToDownloadImage }
             .eraseToAnyPublisher()
     }
 
     // MARK: Save Images
 
-    private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, PresenterError> {
+    private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, DownloadError> {
         let result = self.clipBuilder.build(sources: target, tags: self.tags)
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
@@ -334,26 +364,58 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     }
 }
 
-extension ClipTargetFinderViewModel.PresenterError {
-    var displayableMessage: String {
+extension ClipTargetFinderViewModel.LoadingError {
+    var displayTitle: String {
         switch self {
-        case .failedToFindImages(.internalError):
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+        case .notFound:
+            return L10n.clipTargetFinderViewLoadingErrorNotFoundTitle
 
-        case .failedToFindImages(.networkError):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-
-        case .failedToFindImages(.timeout):
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToFindImagesTimeout
-
-        case .failedToDownloadImages:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToDownloadImages
-
-        case .failedToSave:
-            return L10n.clipTargetFinderViewErrorAlertBodyFailedToSaveImages
+        case .networkError:
+            return L10n.clipTargetFinderViewLoadingErrorConnectionTitle
 
         case .internalError:
-            return L10n.clipTargetFinderViewErrorAlertBodyInternalError
+            return L10n.clipTargetFinderViewLoadingErrorInternalTitle
+
+        case .timeout:
+            return L10n.clipTargetFinderViewLoadingErrorTimeoutTitle
+        }
+    }
+
+    var displayMessage: String {
+        switch self {
+        case .notFound:
+            return L10n.clipTargetFinderViewLoadingErrorNotFoundMessage
+
+        case .networkError:
+            return L10n.clipTargetFinderViewLoadingErrorConnectionMessage
+
+        case .internalError:
+            return L10n.clipTargetFinderViewLoadingErrorInternalMessage
+
+        case .timeout:
+            return L10n.clipTargetFinderViewLoadingErrorTimeoutMessage
+        }
+    }
+}
+
+extension ClipTargetFinderViewModel.DownloadError {
+    var displayTitle: String {
+        switch self {
+        case .failedToDownloadImage:
+            return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadTitle
+
+        case .failedToSave:
+            return L10n.clipTargetFinderViewDownloadErrorFailedToSaveTitle
+        }
+    }
+
+    var displayMessage: String {
+        switch self {
+        case .failedToDownloadImage:
+            return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadBody
+
+        case .failedToSave:
+            return L10n.clipTargetFinderViewDownloadErrorFailedToSaveBody
         }
     }
 }

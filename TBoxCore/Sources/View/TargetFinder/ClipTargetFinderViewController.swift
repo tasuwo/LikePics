@@ -147,14 +147,17 @@ public class ClipTargetFinderViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
-            .sink { [weak self] message in
-                let alert = UIAlertController(title: L10n.clipTargetFinderViewErrorAlertTitle,
-                                              message: message,
-                                              preferredStyle: .alert)
-                alert.addAction(.init(title: L10n.clipTargetFinderViewErrorAlertOk,
-                                      style: .default,
-                                      handler: nil))
+        dependency.outputs.emptyErrorTitle
+            .assign(to: \.title, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.emptyErrorMessage
+            .assign(to: \.message, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayAlert
+            .sink { [weak self] title, message in
+                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.clipTargetFinderViewOverwriteAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
@@ -222,9 +225,9 @@ public class ClipTargetFinderViewController: UIViewController {
         self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(self.emptyMessageView.constraints(fittingIn: self.view.safeAreaLayoutGuide))
 
-        self.emptyMessageView.title = L10n.clipTargetFinderViewEmptyTitle
-        self.emptyMessageView.message = L10n.clipTargetFinderViewEmptyMessage
-        self.emptyMessageView.actionButtonTitle = L10n.clipTargetFinderViewEmptyActionTitle
+        self.emptyMessageView.title = nil
+        self.emptyMessageView.message = nil
+        self.emptyMessageView.actionButtonTitle = L10n.clipTargetFinderViewLoadingErrorAction
         self.emptyMessageView.delegate = self
 
         self.emptyMessageView.alpha = 0

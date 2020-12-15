@@ -11,16 +11,22 @@
 "clip_target_finder_view_overwrite_alert_body" = "既にクリップ済みのURLです。上書きしますか？";
 "clip_target_finder_view_overwrite_alert_ok" = "OK";
 "clip_target_finder_view_overwrite_alert_cancel" = "キャンセル";
-"clip_target_finder_view_error_alert_title" = "エラー";
-"clip_target_finder_view_error_alert_ok" = "OK";
-"clip_target_finder_view_error_alert_body_failed_to_find_images_timeout" = "タイムアウトしました。保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。通信環境の良い場所で再度お試しください";
-"clip_target_finder_view_error_alert_body_failed_to_find_images" = "保存可能な画像が見つからなかったため、クリップできません";
-"clip_target_finder_view_error_alert_body_failed_to_download_images" = "画像のダウンロードに失敗しました。時間をおいて再度お試しください";
-"clip_target_finder_view_error_alert_body_failed_to_save_images" = "画像の保存に失敗しました。クリップをやり直してください";
-"clip_target_finder_view_error_alert_body_internal_error" = "問題が発生しました。クリップをやり直してください";
-"clip_target_finder_view_empty_title" = "画像が見つかりませんでした";
-"clip_target_finder_view_empty_message" = "保存可能な画像が存在しないか、通信環境の問題で取得に時間がかかっている可能性があります";
-"clip_target_finder_view_empty_action_title" = "もう一度試す";
+
+"clip_target_finder_view_loading_error_not_found_title" = "画像が見つかりませんでした";
+"clip_target_finder_view_loading_error_not_found_message" = "ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください";
+"clip_target_finder_view_loading_error_connection_title" = "通信に失敗しました";
+"clip_target_finder_view_loading_error_connection_message" = "通信環境の良い状態でもう一度お試しください";
+"clip_target_finder_view_loading_error_internal_title" = "画像の探索に失敗しました";
+"clip_target_finder_view_loading_error_internal_message" = "もう一度お試しください";
+"clip_target_finder_view_loading_error_timeout_title" = "画像が見つかりませんでした";
+"clip_target_finder_view_loading_error_timeout_message" = "ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください";
+"clip_target_finder_view_loading_error_action" = "もう一度試す";
+
+"clip_target_finder_view_download_error_failed_to_save_title" = "ダウンロードできませんでした";
+"clip_target_finder_view_download_error_failed_to_save_body" = "画像のダウンロードに失敗しました。通信環境を確認し、後ほどもう一度お試しください";
+"clip_target_finder_view_download_error_failed_to_download_title" = "保存に失敗しました";
+"clip_target_finder_view_download_error_failed_to_download_body" = "保存時に問題が発生しました。後ほどもう一度お試しください";
+"clip_target_finder_view_download_error_action" = "OK";
 
 "tag_selection_view_title" = "タグを選択";
 
