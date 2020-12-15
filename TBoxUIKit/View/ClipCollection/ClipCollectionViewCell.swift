@@ -6,6 +6,34 @@ import Domain
 import UIKit
 
 public class ClipCollectionViewCell: UICollectionViewCell {
+    public enum Image {
+        case loaded(UIImage)
+        case loading
+        case failedToLoad
+        case noImage
+
+        var isLoaded: Bool {
+            switch self {
+            case .loaded:
+                return true
+
+            default:
+                return false
+            }
+        }
+
+        var isLoading: Bool {
+            switch self {
+            // NOTE: failedToLoad は、iCloud同期前でデータが読めていない可能性を考慮し、ロード中とする
+            case .loading, .failedToLoad:
+                return true
+
+            default:
+                return false
+            }
+        }
+    }
+
     public static var nib: UINib {
         return UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self))
     }
@@ -17,56 +45,68 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public var identifier: Clip.Identity?
 
-    public var primaryImage: UIImage? {
-        get {
-            self.primaryImageView.image
-        }
-        set {
-            self.primaryImageView.isHidden = (newValue == nil)
-            self.primaryImageShadowView.isHidden = (newValue == nil)
-            self.primaryImageView.removeAspectRatioConstraint()
+    public var primaryImage: Image? {
+        didSet {
+            defer { self.updateOverallOverlayView() }
 
-            if let image = newValue {
-                self.primaryImageView.addAspectRatioConstraint(image: image)
+            // nil が代入されることはない想定
+            guard let primaryImage = self.primaryImage else { return }
+
+            self.primaryImageView.isHidden = !primaryImage.isLoaded
+            self.primaryImageShadowView.isHidden = !primaryImage.isLoaded
+
+            self.primaryImageView.removeAspectRatioConstraint()
+            guard case let .loaded(image) = primaryImage else {
+                self.primaryImageView.image = nil
+                return
             }
 
-            self.primaryImageView.image = newValue
+            self.primaryImageView.addAspectRatioConstraint(image: image)
+            self.primaryImageView.image = image
         }
     }
 
-    public var secondaryImage: UIImage? {
-        get {
-            self.secondaryImageView.image
-        }
-        set {
-            self.secondaryImageView.isHidden = (newValue == nil)
-            self.secondaryImageShadowView.isHidden = (newValue == nil)
-            self.secondaryImageOverlayView.isHidden = (newValue == nil)
+    public var secondaryImage: Image? {
+        didSet {
+            defer { self.updateOverallOverlayView() }
+
+            // nil が代入されることはない想定
+            guard let secondaryImage = self.secondaryImage else { return }
+
+            self.secondaryImageView.isHidden = !secondaryImage.isLoaded
+            self.secondaryImageShadowView.isHidden = !secondaryImage.isLoaded
+            self.secondaryImageOverlayView.isHidden = !secondaryImage.isLoaded
 
             self.secondaryImageView.removeAspectRatioConstraint()
-            if let image = newValue {
-                self.secondaryImageView.addAspectRatioConstraint(image: image)
+            guard case let .loaded(image) = secondaryImage else {
+                self.secondaryImageView.image = nil
+                return
             }
 
-            self.secondaryImageView.image = newValue
+            self.secondaryImageView.addAspectRatioConstraint(image: image)
+            self.secondaryImageView.image = image
         }
     }
 
-    public var tertiaryImage: UIImage? {
-        get {
-            self.tertiaryImageView.image
-        }
-        set {
-            self.tertiaryImageView.isHidden = (newValue == nil)
-            self.tertiaryImageShadowView.isHidden = (newValue == nil)
-            self.tertiaryImageOverlayView.isHidden = (newValue == nil)
+    public var tertiaryImage: Image? {
+        didSet {
+            defer { self.updateOverallOverlayView() }
+
+            // nil が代入されることはない想定
+            guard let tertiaryImage = self.tertiaryImage else { return }
+
+            self.tertiaryImageView.isHidden = !tertiaryImage.isLoaded
+            self.tertiaryImageShadowView.isHidden = !tertiaryImage.isLoaded
+            self.tertiaryImageOverlayView.isHidden = !tertiaryImage.isLoaded
 
             self.tertiaryImageView.removeAspectRatioConstraint()
-            if let image = newValue {
-                self.tertiaryImageView.addAspectRatioConstraint(image: image)
+            guard case let .loaded(image) = tertiaryImage else {
+                self.tertiaryImageView.image = nil
+                return
             }
 
-            self.tertiaryImageView.image = newValue
+            self.tertiaryImageView.addAspectRatioConstraint(image: image)
+            self.tertiaryImageView.image = image
         }
     }
 
@@ -74,6 +114,24 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         didSet {
             self.updateOverallOverlayView()
         }
+    }
+
+    public var isLoading: Bool {
+        guard let primaryImage = self.primaryImage,
+            let secondaryImage = self.secondaryImage,
+            let tertiaryImage = self.tertiaryImage
+        else {
+            return true
+        }
+        return primaryImage.isLoading
+            || secondaryImage.isLoading
+            || tertiaryImage.isLoading
+            // NOTE: iCloud同期はEntity単位で行われ、Relationが欠けている可能性がある
+            //       その場合、primaryImage が nil になり得る
+            //       primaryImage が nil の Clip はあり得ないため、ロード中状態とする
+            // NOTE: secondary, tertiary が未ロードのケースは、未ロードなのか？本当に存在しないのか？
+            //       判定できないため、考慮しない
+            || !primaryImage.isLoaded
     }
 
     override public var isSelected: Bool {
@@ -120,6 +178,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var imagesContainerView: UIView!
 
     @IBOutlet var overallOverlayView: UIView!
+    @IBOutlet var selectionMark: UIView!
+    @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: - Methods
 
@@ -187,14 +247,19 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         self.clipsToBounds = false
         self.layer.masksToBounds = false
 
+        self.indicator.hidesWhenStopped = true
+
         self.updateOverallOverlayView()
     }
 
     private func updateOverallOverlayView() {
-        guard self.visibleSelectedMark else {
-            self.overallOverlayView.isHidden = true
-            return
+        self.overallOverlayView.isHidden = !((self.isSelected && self.visibleSelectedMark) || self.isLoading)
+        self.selectionMark.isHidden = !(self.visibleSelectedMark && !self.isLoading)
+
+        if self.isLoading {
+            self.indicator.startAnimating()
+        } else {
+            self.indicator.stopAnimating()
         }
-        self.overallOverlayView.isHidden = !self.isSelected
     }
 }

@@ -111,10 +111,15 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="MUZ-FQ-RAF">
+                                <rect key="frame" x="80" y="140" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="MUZ-FQ-RAF" firstAttribute="centerX" secondItem="qJb-u8-3T5" secondAttribute="centerX" id="8PT-kX-TGv"/>
                             <constraint firstAttribute="trailing" secondItem="3SE-fc-NHX" secondAttribute="trailing" constant="12" id="9Jd-La-e4r"/>
+                            <constraint firstItem="MUZ-FQ-RAF" firstAttribute="centerY" secondItem="qJb-u8-3T5" secondAttribute="centerY" id="QK9-Qe-bE7"/>
                             <constraint firstItem="3SE-fc-NHX" firstAttribute="top" secondItem="qJb-u8-3T5" secondAttribute="top" constant="12" id="Y1B-Fd-pky"/>
                         </constraints>
                         <string key="userLabel">Overall Overlay View
@@ -136,12 +141,14 @@
             <size key="customSize" width="197" height="317"/>
             <connections>
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
+                <outlet property="indicator" destination="MUZ-FQ-RAF" id="OKh-c3-twc"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
                 <outlet property="primaryImageShadowView" destination="BLd-da-g0k" id="09h-HO-fYW"/>
                 <outlet property="primaryImageView" destination="wfu-ls-oyC" id="JbO-ZO-ycy"/>
                 <outlet property="secondaryImageOverlayView" destination="3ey-X5-ub9" id="gkO-b7-8xj"/>
                 <outlet property="secondaryImageShadowView" destination="fe7-GE-hL3" id="2hk-ZA-eUV"/>
                 <outlet property="secondaryImageView" destination="Sxz-Ec-Mu0" id="tx3-hV-Wt0"/>
+                <outlet property="selectionMark" destination="3SE-fc-NHX" id="ctZ-15-Yf8"/>
                 <outlet property="tertiaryImageOverlayView" destination="Dyn-sy-3hs" id="6r0-ft-f5q"/>
                 <outlet property="tertiaryImageShadowView" destination="E64-VG-nTI" id="vhA-Zz-hGZ"/>
                 <outlet property="tertiaryImageView" destination="Sd1-hN-MSQ" id="6gt-cH-TxQ"/>

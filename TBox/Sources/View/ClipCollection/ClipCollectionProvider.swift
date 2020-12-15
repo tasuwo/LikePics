@@ -41,50 +41,62 @@ class ClipCollectionProvider: NSObject {
 
         if let item = clip.primaryItem {
             if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.primaryImage = image
+                cell.primaryImage = .loaded(image)
             } else {
-                cell.primaryImage = nil
+                cell.primaryImage = .loading
                 self.dataSource?.requestImage(self, for: item) { image in
                     DispatchQueue.main.async {
                         guard cell.identifier == clip.identity else { return }
-                        cell.primaryImage = image
+                        if let image = image {
+                            cell.primaryImage = .loaded(image)
+                        } else {
+                            cell.primaryImage = .failedToLoad
+                        }
                     }
                 }
             }
         } else {
-            cell.primaryImage = nil
+            cell.primaryImage = .noImage
         }
 
         if let item = clip.secondaryItem {
             if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.secondaryImage = image
+                cell.secondaryImage = .loaded(image)
             } else {
-                cell.secondaryImage = nil
+                cell.secondaryImage = .loading
                 self.dataSource?.requestImage(self, for: item) { image in
                     DispatchQueue.main.async {
                         guard cell.identifier == clip.identity else { return }
-                        cell.secondaryImage = image
+                        if let image = image {
+                            cell.secondaryImage = .loaded(image)
+                        } else {
+                            cell.secondaryImage = .failedToLoad
+                        }
                     }
                 }
             }
         } else {
-            cell.secondaryImage = nil
+            cell.secondaryImage = .noImage
         }
 
         if let item = clip.tertiaryItem {
             if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.tertiaryImage = image
+                cell.tertiaryImage = .loaded(image)
             } else {
-                cell.tertiaryImage = nil
+                cell.tertiaryImage = .loading
                 self.dataSource?.requestImage(self, for: item) { image in
                     DispatchQueue.main.async {
                         guard cell.identifier == clip.identity else { return }
-                        cell.tertiaryImage = image
+                        if let image = image {
+                            cell.tertiaryImage = .loaded(image)
+                        } else {
+                            cell.tertiaryImage = .failedToLoad
+                        }
                     }
                 }
             }
         } else {
-            cell.tertiaryImage = nil
+            cell.tertiaryImage = .noImage
         }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false
@@ -97,11 +109,13 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
+        return !cell.isLoading
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
+        return !cell.isLoading
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
