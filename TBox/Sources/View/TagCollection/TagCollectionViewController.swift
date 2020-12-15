@@ -297,11 +297,27 @@ extension TagCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
+            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
 
         default:
             return nil
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    private func makeTargetedPreview(for configuration: UIContextMenuConfiguration, collectionView: UICollectionView) -> UITargetedPreview? {
+        guard let identifier = configuration.identifier as? NSIndexPath else { return nil }
+        guard let cell = collectionView.cellForItem(at: identifier as IndexPath) else { return nil }
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        return UITargetedPreview(view: cell, parameters: parameters)
     }
 
     private func makeActionProvider(for tag: Tag) -> UIContextMenuActionProvider {
