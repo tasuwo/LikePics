@@ -28,7 +28,7 @@ class TopClipCollectionViewController: UIViewController {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     // swiftlint:disable:next implicitly_unwrapped_optional
-    private var collectionView: ClipsCollectionView!
+    private var collectionView: ClipCollectionView!
 
     private var cancellableBag: Set<AnyCancellable> = .init()
 
@@ -150,7 +150,7 @@ class TopClipCollectionViewController: UIViewController {
         let layout = ClipCollectionLayout()
         layout.delegate = self.clipCollectionProvider
 
-        self.collectionView = ClipsCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
+        self.collectionView = ClipCollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.collectionView.delegate = self.clipCollectionProvider
@@ -206,14 +206,14 @@ extension TopClipCollectionViewController: ClipPreviewPresentingViewController {
         return self.viewModel.outputs.previewingClip
     }
 
-    var previewingCell: ClipsCollectionViewCell? {
+    var previewingCell: ClipCollectionViewCell? {
         guard
             let clip = self.previewingClip,
             let indexPath = self.dataSource.indexPath(for: clip)
         else {
             return nil
         }
-        return self.collectionView.cellForItem(at: indexPath) as? ClipsCollectionViewCell
+        return self.collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
     }
 
     func displayOnScreenPreviewingCellIfNeeded() {

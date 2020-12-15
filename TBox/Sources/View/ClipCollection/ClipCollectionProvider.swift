@@ -31,8 +31,8 @@ class ClipCollectionProvider: NSObject {
     weak var delegate: ClipCollectionProviderDelegate?
 
     func provideCell(collectionView: UICollectionView, indexPath: IndexPath, clip: Clip) -> UICollectionViewCell? {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipsCollectionView.cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipsCollectionViewCell else { return dequeuedCell }
+        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipCollectionView.cellIdentifier, for: indexPath)
+        guard let cell = dequeuedCell as? ClipCollectionViewCell else { return dequeuedCell }
 
         cell.identifier = clip.identity
 
@@ -228,12 +228,12 @@ extension ClipCollectionProvider: ClipsCollectionLayoutDelegate {
 
         case let (.some(item), .some, .none):
             return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
-                + ClipsCollectionViewCell.secondaryStickingOutMargin
+                + ClipCollectionViewCell.secondaryStickingOutMargin
 
         case let (.some(item), .some, .some):
             return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))
-                + ClipsCollectionViewCell.secondaryStickingOutMargin
-                + ClipsCollectionViewCell.tertiaryStickingOutMargin
+                + ClipCollectionViewCell.secondaryStickingOutMargin
+                + ClipCollectionViewCell.tertiaryStickingOutMargin
 
         case let (.some(item), _, _):
             return width * (CGFloat(item.imageSize.height) / CGFloat(item.imageSize.width))

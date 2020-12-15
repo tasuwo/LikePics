@@ -29,7 +29,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
 
     // MARK: - ClipPreviewAnimatorDataSource
 
-    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipsCollectionViewCell? {
+    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipCollectionViewCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
         viewController.displayOnScreenPreviewingCellIfNeeded()
         return viewController.previewingCell

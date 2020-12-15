@@ -5,9 +5,9 @@
 import Domain
 import UIKit
 
-public class ClipsCollectionViewCell: UICollectionViewCell {
+public class ClipCollectionViewCell: UICollectionViewCell {
     public static var nib: UINib {
-        return UINib(nibName: "ClipsCollectionViewCell", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
     public static let secondaryStickingOutMargin: CGFloat = 20

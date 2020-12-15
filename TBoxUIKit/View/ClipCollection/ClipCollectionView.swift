@@ -4,13 +4,13 @@
 
 import UIKit
 
-public class ClipsCollectionView: UICollectionView {
+public class ClipCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
     override public var allowsMultipleSelection: Bool {
         didSet {
             self.visibleCells
-                .compactMap { $0 as? ClipsCollectionViewCell }
+                .compactMap { $0 as? ClipCollectionViewCell }
                 .forEach { $0.visibleSelectedMark = self.allowsMultipleSelection }
         }
     }
@@ -34,7 +34,7 @@ public class ClipsCollectionView: UICollectionView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(ClipsCollectionViewCell.nib,
+        self.register(ClipCollectionViewCell.nib,
                       forCellWithReuseIdentifier: Self.cellIdentifier)
     }
 

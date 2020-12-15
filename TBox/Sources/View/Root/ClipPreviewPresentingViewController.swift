@@ -8,6 +8,6 @@ import UIKit
 
 protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingClip: Clip? { get }
-    var previewingCell: ClipsCollectionViewCell? { get }
+    var previewingCell: ClipCollectionViewCell? { get }
     func displayOnScreenPreviewingCellIfNeeded()
 }

@@ -56,12 +56,12 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         presentingView.addSubview(backgroundView)
 
         let animatingView = UIView()
-        ClipsCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
+        ClipCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
         animatingView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         presentingView.insertSubview(animatingView, aboveSubview: backgroundView)
 
         let animatingImageView = UIImageView(image: fromImage)
-        ClipsCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = animatingView.bounds
         animatingView.addSubview(animatingImageView)
 
@@ -84,10 +84,10 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = 0
-        cornerAnimation.toValue = ClipsCollectionViewCell.cornerRadius
-        animatingView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
+        cornerAnimation.toValue = ClipCollectionViewCell.cornerRadius
+        animatingView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
         animatingView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
-        animatingImageView.layer.cornerRadius = ClipsCollectionViewCell.cornerRadius
+        animatingImageView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(
