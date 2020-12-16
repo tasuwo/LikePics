@@ -17,23 +17,22 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>0.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>0.1.0</string>
+	<string>0.2.0</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-            <!-- <string>TRUEPREDICATE</string> -->
-            <dict>
-                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-                <integer>10</integer>
-                <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-                <integer>10</integer>
-                <key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
-                <integer>10</integer>
-            </dict>
+			<dict>
+				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+				<integer>10</integer>
+				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<integer>10</integer>
+				<key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
+				<integer>10</integer>
+			</dict>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
