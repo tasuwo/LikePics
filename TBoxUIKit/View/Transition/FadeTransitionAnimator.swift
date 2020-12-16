@@ -54,6 +54,7 @@ extension FadeTransitionAnimator: FadeTransitionAnimatorProtocol {
                 from.view.alpha = 0
             },
             completion: { _ in
+                from.view.alpha = 1
                 if isInteractive {
                     transitionContext.finishInteractiveTransition()
                 }
