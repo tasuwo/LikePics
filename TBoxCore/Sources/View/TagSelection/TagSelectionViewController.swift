@@ -129,7 +129,7 @@ public class TagSelectionViewController: UIViewController {
         self.navigationItem.title = L10n.tagSelectionViewTitle
 
         // let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
-        let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.didTapSave))
+        let saveItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
 
         // TODO: タグ追加機能の実装
         // self.navigationItem.leftBarButtonItems = [addItem]
@@ -142,7 +142,7 @@ public class TagSelectionViewController: UIViewController {
     }
 
     @objc
-    func didTapSave() {
+    func didTapDone() {
         self.dismiss(animated: true) {
             self.delegate?.didSelectTags(tags: self.viewModel.outputs.selectedTags)
         }
