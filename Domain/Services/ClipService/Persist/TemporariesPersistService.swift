@@ -57,6 +57,40 @@ public class TemporariesPersistService {
         try self.imageStorage.cancelTransactionIfNeeded()
     }
 
+    private func persistTemporaryClips() -> Bool {
+        let temporaryClips: [Clip.Identity: Clip]
+        switch self.temporaryClipStorage.readAllClips() {
+        case let .success(clips):
+            temporaryClips = clips.reduce(into: [Clip.Identity: Clip]()) { result, clip in
+                result[clip.identity] = clip
+            }
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            一時クリップ群の読み取りに失敗: \(error.localizedDescription)
+            """))
+            return true
+        }
+
+        var persistentSkippedClipIds: [Clip.Identity] = []
+        for (clipId, _) in temporaryClips {
+            guard self.persist(clipId: clipId, in: temporaryClips) else {
+                persistentSkippedClipIds.append(clipId)
+                continue
+            }
+        }
+
+        // TODO: 移行に失敗したクリップをエラーログに格納し、復旧できるようにする
+        if persistentSkippedClipIds.isEmpty == false {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
+            """))
+            return false
+        }
+
+        return true
+    }
+
     private func persist(clipId: Clip.Identity, in temporaryClips: [Clip.Identity: Clip]) -> Bool {
         do {
             guard let clip = temporaryClips[clipId] else {
@@ -123,6 +157,81 @@ public class TemporariesPersistService {
         }
     }
 
+    private func persistDirtyTags() -> Bool {
+        do {
+            let dirtyTags: [ReferenceTag]
+            switch self.referenceClipStorage.readAllDirtyTags() {
+            case let .success(tags):
+                dirtyTags = tags
+
+            case let .failure(error):
+                self.logger.write(ConsoleLog(level: .error, message: """
+                DirtyTagの取得に失敗: \(error.localizedDescription)
+                """))
+                return false
+            }
+
+            try self.beginTransaction()
+
+            var persistedTags: [ReferenceTag] = []
+            var duplicatedTags: [ReferenceTag] = []
+            for dirtyTag in dirtyTags {
+                switch self.clipStorage.create(dirtyTag.map(to: Tag.self)) {
+                case .success:
+                    persistedTags.append(dirtyTag)
+
+                case .failure(.duplicated):
+                    duplicatedTags.append(dirtyTag)
+
+                case let .failure(error):
+                    try self.cancelTransaction()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Dirtyタグの取得に失敗: \(error.localizedDescription)
+                    """))
+                    return false
+                }
+            }
+
+            if !persistedTags.isEmpty {
+                switch self.referenceClipStorage.updateTags(having: persistedTags.map { $0.id }, toDirty: false) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try self.cancelTransaction()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Dirtyフラグの更新に失敗: \(error.localizedDescription)
+                    """))
+                    return false
+                }
+            }
+
+            if !duplicatedTags.isEmpty {
+                switch self.referenceClipStorage.deleteTags(having: duplicatedTags.map { $0.id }) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try self.cancelTransaction()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    重複したDirtyタグの削除に失敗: \(error.localizedDescription)
+                    """))
+                    return false
+                }
+            }
+
+            try self.commitTransaction()
+
+            return true
+        } catch {
+            try? self.cancelTransaction()
+            self.logger.write(ConsoleLog(level: .info, message: """
+            DirtyTagの永続化中に例外が発生: \(error.localizedDescription)
+            """))
+            return false
+        }
+    }
+
     private func cleanTemporaryArea() {
         do {
             try self.temporaryClipStorage.beginTransaction()
@@ -158,39 +267,12 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
             self.isRunning = true
             defer { self.isRunning = false }
 
-            let temporaryClips: [Clip.Identity: Clip]
-            switch self.temporaryClipStorage.readAllClips() {
-            case let .success(clips):
-                temporaryClips = clips.reduce(into: [Clip.Identity: Clip]()) { result, clip in
-                    result[clip.identity] = clip
-                }
-
-            case let .failure(error):
-                self.logger.write(ConsoleLog(level: .error, message: """
-                一時クリップ群の読み取りに失敗: \(error.localizedDescription)
-                """))
-                return true
-            }
-
-            var persistentSkippedClipIds: [Clip.Identity] = []
-            for (clipId, _) in temporaryClips {
-                guard self.persist(clipId: clipId, in: temporaryClips) else {
-                    persistentSkippedClipIds.append(clipId)
-                    continue
-                }
-            }
-
-            // TODO: 移行に失敗したクリップをエラーログに格納し、復旧できるようにする
-            if persistentSkippedClipIds.isEmpty == false {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
-                """))
-                return false
-            }
+            guard self.persistDirtyTags() else { return false }
+            guard self.persistTemporaryClips() else { return false }
 
             self.cleanTemporaryArea()
 
-            return persistentSkippedClipIds.isEmpty
+            return true
         }
     }
 }
