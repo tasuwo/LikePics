@@ -9,6 +9,7 @@ import Nimble
 import Quick
 
 @testable import Persistence
+@testable import TestHelper
 
 class NewClipStorageSpec: QuickSpec {
     func coreDataStack() -> NSPersistentContainer {
@@ -42,6 +43,113 @@ class NewClipStorageSpec: QuickSpec {
             container = self.coreDataStack()
             managedContext = container.newBackgroundContext()
             service = NewClipStorage(context: managedContext)
+        }
+
+        describe("create(clip:overwrite:)") {
+            context("overwrite==true") {
+                context("同一IDの既存のクリップが存在しない") {
+                    // TODO:
+                }
+                context("同一IDの既存のクリップが存在する") {
+                    // TODO:
+                    it("正常に保存できる") {
+                    }
+                    it("古いClipItem群は削除される") {
+                    }
+                }
+            }
+
+            context("overwrite==false") {
+                context("同一IDの既存のクリップが存在しない") {
+                    // TODO:
+                }
+                context("同一IDの既存のクリップが存在する") {
+                    // TODO:
+                    it("エラーとなる") {
+                    }
+                }
+            }
+
+            context("IDが同一の既存のタグが存在する") {
+                beforeEach {
+                    let tag = Tag(context: managedContext)
+                    tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    tag.name = "hoge"
+                    try! managedContext.save()
+
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
+                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "fuga")
+                    ]), overwrite: true)
+                }
+                it("既存のタグを付与したクリップが保存される") {
+                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+                    let clip = try! managedContext.fetch(request).first!
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    expect(tags).to(haveCount(1))
+                    expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!))
+                    expect(tags!.first!.name).to(equal("hoge"))
+                }
+                it("新規にタグは作成されない") {
+                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let tags = try! managedContext.fetch(request)
+                    expect(tags).to(haveCount(1))
+                }
+            }
+
+            context("IDは異なるが名前が同一の既存のタグが存在する") {
+                beforeEach {
+                    let tag = Tag(context: managedContext)
+                    tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")
+                    tag.name = "hoge"
+                    try! managedContext.save()
+
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
+                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
+                    ]), overwrite: true)
+                }
+                it("既存のタグを付与したクリップが保存される") {
+                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+                    let clip = try! managedContext.fetch(request).first!
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    expect(tags).to(haveCount(1))
+                    expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")!))
+                    expect(tags!.first!.name).to(equal("hoge"))
+                }
+                it("新規にタグは作成されない") {
+                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let tags = try! managedContext.fetch(request)
+                    expect(tags).to(haveCount(1))
+                }
+            }
+
+            context("ID/名前が同一の既存のタグが存在しない") {
+                beforeEach {
+                    let tag = Tag(context: managedContext)
+                    tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")
+                    tag.name = "fuga"
+                    try! managedContext.save()
+
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
+                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
+                    ]), overwrite: true)
+                }
+                it("既存のタグを付与したクリップが保存される") {
+                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+                    let clip = try! managedContext.fetch(request).first!
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    expect(tags).to(haveCount(1))
+                    expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!))
+                    expect(tags!.first!.name).to(equal("hoge"))
+                }
+                it("タグが新規に作成される") {
+                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let tags = try! managedContext.fetch(request)
+                    expect(tags).to(haveCount(2))
+                }
+            }
         }
 
         describe("updateClips(having:byAddingTagsHaving:)") {
