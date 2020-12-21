@@ -9,13 +9,6 @@ import Persistence
 import TBoxCore
 import UIKit
 
-// TODO: 正規の実装に切り替え
-struct DummyCommandService: TagCommandServiceProtocol {
-    func create(tagWithName name: String) -> Result<Void, TagCommandServiceError> {
-        return .failure(.internalError)
-    }
-}
-
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
@@ -26,6 +19,7 @@ class DependencyContainer {
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }
+    private let tagCommandService: TagCommandService
 
     init() throws {
         let mainBundleUrl = Bundle.main.bundleURL
@@ -39,12 +33,18 @@ class DependencyContainer {
         let imageStorage = try ImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
         let clipStorage = try ClipStorage(config: .resolve(for: mainBundle, kind: .group),
                                           logger: self.logger)
+        let referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: mainBundle),
+                                                            logger: self.logger)
+
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
                                                      imageStorage: imageStorage,
                                                      logger: self.logger)
 
         self.tagQueryService = try ReferenceTagQueryService(config: .resolve(for: mainBundle),
                                                             logger: self.logger)
+
+        self.tagCommandService = TagCommandService(storage: referenceClipStorage,
+                                                   logger: self.logger)
     }
 }
 
@@ -72,7 +72,7 @@ extension DependencyContainer: TBoxCore.ViewControllerFactory {
         case let .success(query):
             let viewModel = TagSelectionViewModel(query: query,
                                                   selectedTags: selectedTags,
-                                                  commandService: DummyCommandService(),
+                                                  commandService: self.tagCommandService,
                                                   logger: self.logger)
             let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
             return UINavigationController(rootViewController: viewController)

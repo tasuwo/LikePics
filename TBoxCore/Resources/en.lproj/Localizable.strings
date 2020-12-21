@@ -40,3 +40,5 @@
 
 "error_tag_add_default" = "Failed to add tag.";
 "error_tag_add_duplicated" = "Duplicated tag name.";
+
+"confirm_alert_ok" = "OK";

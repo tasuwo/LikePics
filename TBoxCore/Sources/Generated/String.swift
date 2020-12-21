@@ -48,6 +48,8 @@ internal enum L10n {
     internal static let clipTargetFinderViewOverwriteAlertOk = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_ok")
     /// 画像を選択
     internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
+    /// OK
+    internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// タグの追加に失敗しました
     internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
     /// 同名のタグを追加することはできません

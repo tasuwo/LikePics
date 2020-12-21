@@ -121,6 +121,15 @@ public class TagSelectionViewController: UIViewController {
                 self?.collectionView.applySelection(at: indexPaths)
             }
             .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Navigation Bar
@@ -128,11 +137,10 @@ public class TagSelectionViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.tagSelectionViewTitle
 
-        // let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
+        let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
         let saveItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
 
-        // TODO: タグ追加機能の実装
-        // self.navigationItem.leftBarButtonItems = [addItem]
+        self.navigationItem.leftBarButtonItems = [addItem]
         self.navigationItem.rightBarButtonItems = [saveItem]
     }
 

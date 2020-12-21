@@ -27,6 +27,7 @@
 		2C0596AF25198D8E008F11F5 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596AE25198D8E008F11F5 /* String.swift */; };
 		2C0596B925199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */; };
 		2C0596CB251992C5008F11F5 /* AlbumSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0596CA251992C5008F11F5 /* AlbumSelectionPresenter.swift */; };
+		2C0AD7CC2590ECE50060720E /* TagCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0AD7CB2590ECE50060720E /* TagCommandService.swift */; };
 		2C0B119324E2ABB90054016C /* ClipItemPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */; };
 		2C0B119524E2AC270054016C /* ClipItemPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */; };
 		2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */; };
@@ -649,6 +650,7 @@
 		2C0596AE25198D8E008F11F5 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C0596B825199250008F11F5 /* ClipPreviewPageBarButtonItemsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarButtonItemsProvider.swift; sourceTree = "<group>"; };
 		2C0596CA251992C5008F11F5 /* AlbumSelectionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumSelectionPresenter.swift; sourceTree = "<group>"; };
+		2C0AD7CB2590ECE50060720E /* TagCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCommandService.swift; sourceTree = "<group>"; };
 		2C0B119224E2ABB90054016C /* ClipItemPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewViewController.swift; sourceTree = "<group>"; };
 		2C0B119424E2AC270054016C /* ClipItemPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemPreviewPresenter.swift; sourceTree = "<group>"; };
 		2C0B119624E2AC8E0054016C /* ClipItemPreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemPreviewViewController.xib; sourceTree = "<group>"; };
@@ -1203,6 +1205,14 @@
 				2C6C7A1F253B519E00A8A9B8 /* TBoxUIKit.ProtocolMocks.swift */,
 			);
 			path = Protocol;
+			sourceTree = "<group>";
+		};
+		2C0AD7CA2590ECD60060720E /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2C0AD7CB2590ECE50060720E /* TagCommandService.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		2C0B5C96254D459400FA43F8 /* Integrity */ = {
@@ -1764,6 +1774,7 @@
 		2C523D0B254AEEF50099F6DD /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				2C0AD7CA2590ECD60060720E /* Service */,
 				2C369A872545773000462097 /* Generated */,
 				2C523CE3254AEE110099F6DD /* Extensions */,
 				2C35C13024E4DE1400871C87 /* Cotnext */,
@@ -3896,6 +3907,7 @@
 				2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */,
 				2C523D15254AEF090099F6DD /* NSItemProvider+Type.swift in Sources */,
 				2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */,
+				2C0AD7CC2590ECE50060720E /* TagCommandService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

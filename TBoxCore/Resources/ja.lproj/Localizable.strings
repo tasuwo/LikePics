@@ -40,3 +40,5 @@
 
 "error_tag_add_default" = "タグの追加に失敗しました";
 "error_tag_add_duplicated" = "同名のタグを追加することはできません";
+
+"confirm_alert_ok" = "OK";

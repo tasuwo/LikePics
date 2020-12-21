@@ -71,6 +71,14 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
+        if realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: tag.id.uuidString) != nil {
+            return .failure(.duplicated)
+        }
+
+        if realm.objects(ReferenceTagObject.self).filter("name = '\(tag.name)'").isEmpty == false {
+            return .failure(.duplicated)
+        }
+
         let obj = ReferenceTagObject()
         obj.id = tag.id.uuidString
         obj.name = tag.name
