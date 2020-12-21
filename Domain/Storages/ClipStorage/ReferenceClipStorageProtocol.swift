@@ -23,6 +23,7 @@ public protocol ReferenceClipStorageProtocol {
     // MARK: Update
 
     func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError>
+    func updateTag(having id: ReferenceTag.Identity, toDirty isDirty: Bool) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 
