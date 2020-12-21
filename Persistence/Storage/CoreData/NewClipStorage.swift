@@ -153,27 +153,34 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
+    public func create(clip: Domain.Clip, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
         do {
             // Check parameters
 
             var appendingTags: [Tag] = []
             for tag in clip.tags {
-                let request: NSFetchRequest<Tag> = Tag.fetchRequest()
-                request.predicate = NSPredicate(format: "id == %@", tag.id as CVarArg)
-                if let tag = try self.context.fetch(request).first {
+                // IDが同一の既存のタグがあれば、そちらを利用する
+                let requestById: NSFetchRequest<Tag> = Tag.fetchRequest()
+                requestById.predicate = NSPredicate(format: "id == %@", tag.id as CVarArg)
+                if let tag = try self.context.fetch(requestById).first {
                     appendingTags.append(tag)
-                } else {
-                    guard allowTagCreation else {
-                        self.logger.write(ConsoleLog(level: .error, message: "Failed create clip. Creating tags not allowed."))
-                        return .failure(.invalidParameter)
-                    }
-                    let newTag = Tag(context: self.context)
-                    newTag.id = tag.id
-                    newTag.name = tag.name
-                    newTag.isHidden = false
-                    appendingTags.append(newTag)
+                    continue
                 }
+
+                // 名前が同一の既存のタグがあれば、そちらを利用する
+                let requestByName: NSFetchRequest<Tag> = Tag.fetchRequest()
+                requestByName.predicate = NSPredicate(format: "name == %@", tag.name as CVarArg)
+                if let tag = try self.context.fetch(requestByName).first {
+                    appendingTags.append(tag)
+                    continue
+                }
+
+                // ID or 名前が同一のタグが存在しなければ、タグを新たに作成する
+                let newTag = Tag(context: self.context)
+                newTag.id = tag.id
+                newTag.name = tag.name
+                newTag.isHidden = false
+                appendingTags.append(newTag)
             }
 
             // Check duplication
@@ -220,7 +227,7 @@ extension NewClipStorage: ClipStorageProtocol {
 
             newClip.imagesSize = Int64(clip.dataSize)
             newClip.isHidden = clip.isHidden
-            newClip.createdDate = clip.registeredDate
+            newClip.createdDate = oldClip?.createdDate ?? clip.registeredDate
             newClip.updatedDate = clip.updatedDate
 
             // Delete

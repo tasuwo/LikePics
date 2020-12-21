@@ -58,7 +58,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.imageStorage.beginTransaction()
 
                 let oldClip: Clip?
-                switch self.clipStorage.create(clip: clip, allowTagCreation: false, overwrite: true) {
+                switch self.clipStorage.create(clip: clip, overwrite: true) {
                 case let .success(result):
                     oldClip = result.old
 

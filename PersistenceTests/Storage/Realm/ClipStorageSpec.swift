@@ -45,7 +45,6 @@ class ClipStorageSpec: QuickSpec {
                         registeredDate: Date(timeIntervalSince1970: 0),
                         updatedDate: Date(timeIntervalSince1970: 1000)
                     ),
-                    allowTagCreation: false,
                     overwrite: true
                 )
                 try! clipStorage.commitTransaction()

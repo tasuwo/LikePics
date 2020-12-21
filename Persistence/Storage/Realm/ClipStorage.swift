@@ -71,24 +71,30 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Domain.Clip, allowTagCreation: Bool, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
+    public func create(clip: Domain.Clip, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
 
         var appendingTags: [TagObject] = []
         for tag in clip.tags {
+            // IDが同一の既存のタグがあれば、そちらを利用する
             if let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity.uuidString) {
                 appendingTags.append(tagObj)
-            } else {
-                guard allowTagCreation else {
-                    return .failure(.invalidParameter)
-                }
-                let newTag = TagObject()
-                newTag.id = tag.id.uuidString
-                newTag.name = tag.name
-                appendingTags.append(newTag)
+                continue
             }
+
+            // 名前が同一の既存のタグがあれば、そちらを利用する
+            if let tagObj = realm.objects(TagObject.self).filter("name = '\(tag.name)'").first {
+                appendingTags.append(tagObj)
+                continue
+            }
+
+            // ID or 名前が同一のタグが存在しなければ、タグを新たに作成する
+            let newTag = TagObject()
+            newTag.id = tag.id.uuidString
+            newTag.name = tag.name
+            appendingTags.append(newTag)
         }
 
         // Check duplication
