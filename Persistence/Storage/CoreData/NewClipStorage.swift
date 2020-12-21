@@ -264,6 +264,30 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func create(_ tag: Domain.Tag) -> Result<Domain.Tag, ClipStorageError> {
+        do {
+            guard case .failure = try self.fetchTag(for: tag.id) else {
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                return .failure(.duplicated)
+            }
+
+            guard case .failure = try self.fetchTag(for: tag.name) else {
+                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                return .failure(.duplicated)
+            }
+
+            let newTag = Tag(context: self.context)
+            newTag.id = tag.id
+            newTag.name = tag.name
+            newTag.isHidden = false
+
+            return .success(tag)
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. (error=\(error.localizedDescription))"))
+            return .failure(.internalError)
+        }
+    }
+
     public func create(albumWithTitle title: String) -> Result<Domain.Album, ClipStorageError> {
         do {
             guard case .failure = try self.fetchAlbum(for: title) else {

@@ -173,6 +173,25 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(.make(by: obj))
     }
 
+    public func create(_ tag: Domain.Tag) -> Result<Domain.Tag, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+
+        if realm.object(ofType: TagObject.self, forPrimaryKey: tag.id.uuidString) != nil {
+            return .failure(.duplicated)
+        }
+
+        if realm.objects(TagObject.self).filter("name = '\(tag.name)'").isEmpty == false {
+            return .failure(.duplicated)
+        }
+
+        let obj = TagObject()
+        obj.id = tag.id.uuidString
+        obj.name = tag.name
+
+        realm.add(obj)
+        return .success(.make(by: obj))
+    }
+
     public func create(albumWithTitle title: String) -> Result<Domain.Album, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 

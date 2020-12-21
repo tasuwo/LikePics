@@ -343,6 +343,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("createTagWithNameHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var createTagCallCount = 0
+    public var createTagHandler: ((Tag) -> (Result<Tag, ClipStorageError>))?
+    public func create(_ tag: Tag) -> Result<Tag, ClipStorageError> {
+        createTagCallCount += 1
+        if let createTagHandler = createTagHandler {
+            return createTagHandler(tag)
+        }
+        fatalError("createTagHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var createAlbumWithTitleCallCount = 0
     public var createAlbumWithTitleHandler: ((String) -> (Result<Album, ClipStorageError>))?
     public func create(albumWithTitle: String) -> Result<Album, ClipStorageError> {

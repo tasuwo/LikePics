@@ -20,6 +20,7 @@ public protocol ClipStorageProtocol {
 
     func create(clip: Clip, overwrite: Bool) -> Result<(new: Clip, old: Clip?), ClipStorageError>
     func create(tagWithName name: String) -> Result<Tag, ClipStorageError>
+    func create(_ tag: Tag) -> Result<Tag, ClipStorageError>
     func create(albumWithTitle: String) -> Result<Album, ClipStorageError>
 
     // MARK: Update
