@@ -719,6 +719,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateTagsCallCount = 0
+    public var updateTagsHandler: (([ReferenceTag.Identity], Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
+        updateTagsCallCount += 1
+        if let updateTagsHandler = updateTagsHandler {
+            return updateTagsHandler(ids, isDirty)
+        }
+        fatalError("updateTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var deleteTagsCallCount = 0
     public var deleteTagsHandler: (([ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
     public func deleteTags(having ids: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
