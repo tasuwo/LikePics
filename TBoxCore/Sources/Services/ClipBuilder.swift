@@ -9,11 +9,11 @@ protocol ClipBuildable {
 }
 
 struct ClipBuilder {
-    private let url: URL
+    private let url: URL?
     private let currentDateResolver: () -> Date
     private let uuidIssuer: () -> UUID
 
-    init(url: URL,
+    init(url: URL?,
          currentDateResolver: @escaping () -> Date,
          uuidIssuer: @escaping () -> UUID)
     {
@@ -66,7 +66,7 @@ private extension Clip {
 }
 
 private extension ClipItem {
-    init(id: ClipItem.Identity, url: URL, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
+    init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
         self.init(id: id,
                   url: url,
                   clipId: clipId,

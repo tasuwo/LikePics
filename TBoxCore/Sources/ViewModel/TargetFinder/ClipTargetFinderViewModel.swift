@@ -48,26 +48,6 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     ClipTargetFinderViewModelInputs,
     ClipTargetFinderViewModelOutputs
 {
-    enum LoadingError: Error {
-        case networkError(Error)
-        case timeout
-        case internalError
-        case notFound
-
-        init(finderError: WebImageUrlFinderError) {
-            switch finderError {
-            case .internalError:
-                self = .internalError
-
-            case .timeout:
-                self = .timeout
-
-            case let .networkError(error):
-                self = .networkError(error)
-            }
-        }
-    }
-
     enum DownloadError: Error {
         case failedToSave(ClipStorageError)
         case failedToDownloadImage(ImageLoaderError)
@@ -116,51 +96,44 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     // MARK: Privates
 
-    private static let maxDelayMs = 5000
-    private static let incrementalDelayMs = 1000
-
     private var tags: [Tag] = []
-    private var urlFinderDelayMs: Int = 0
     private var cancellableBag = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
-    private let url: URL
     private let clipStore: ClipStorable
     private let clipBuilder: ClipBuildable
-    private let finder: WebImageUrlFinderProtocol
+    private let provider: ImageSourceProvider
     private let imageLoader: ImageLoaderProtocol
     private let urlSession: URLSession
 
     // MARK: - Lifecycle
 
-    init(url: URL,
-         clipStore: ClipStorable,
+    init(clipStore: ClipStorable,
          clipBuilder: ClipBuildable,
-         finder: WebImageUrlFinderProtocol,
+         provider: ImageSourceProvider,
          imageLoader: ImageLoaderProtocol,
          urlSession: URLSession = URLSession.shared)
     {
-        self.url = url
         self.clipStore = clipStore
         self.clipBuilder = clipBuilder
-        self.finder = finder
+        self.provider = provider
         self.imageLoader = imageLoader
         self.urlSession = urlSession
 
         self.bind()
     }
 
-    public convenience init(url: URL,
+    public convenience init(url: URL?,
                             clipStore: ClipStorable,
+                            provider: ImageSourceProvider,
                             urlSession: URLSession = URLSession.shared)
     {
-        self.init(url: url,
-                  clipStore: clipStore,
+        self.init(clipStore: clipStore,
                   clipBuilder: ClipBuilder(url: url,
                                            currentDateResolver: { Date() },
                                            uuidIssuer: { UUID() }),
-                  finder: WebImageUrlFinder(),
+                  provider: provider,
                   imageLoader: ImageLoader(),
                   urlSession: urlSession)
     }
@@ -175,9 +148,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.viewLoaded
             .sink { [weak self] view in
                 guard let self = self else { return }
-                // HACK: Add WebView to view hierarchy for loading page.
-                view.addSubview(self.finder.webView)
-                self.finder.webView.isHidden = true
+                self.provider.viewDidLoad.send(view)
             }
             .store(in: &self.cancellableBag)
 
@@ -245,17 +216,8 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.images.send([])
         self.selectedIndices.send([])
 
-        self.resolveImageUrls(at: self.url)
-            .map { sources in
-                sources
-                    .compactMap { ImageSource(urlSet: $0) }
-                    .filter { $0.isValid }
-            }
-            .tryFilter {
-                if $0.isEmpty { throw LoadingError.notFound }
-                return true
-            }
-            .mapError { $0 as? LoadingError ?? LoadingError.internalError }
+        self.provider.resolveSources()
+            .map { sources in sources.filter { $0.isValid } }
             .sink { [weak self] completion in
                 switch completion {
                 case let .failure(error):
@@ -319,29 +281,6 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     // MARK: Load Images
 
-    private func resolveImageUrls(at url: URL) -> Future<[WebImageUrlSet], LoadingError> {
-        return Future { [weak self] promise in
-            guard let self = self else {
-                promise(.failure(.internalError))
-                return
-            }
-
-            self.finder.findImageUrls(inWebSiteAt: url, delay: self.urlFinderDelayMs) { result in
-                switch result {
-                case let .success(urls):
-                    promise(.success(urls))
-
-                case let .failure(error):
-                    promise(.failure(.init(finderError: error)))
-                }
-            }
-
-            if self.urlFinderDelayMs < Self.maxDelayMs {
-                self.urlFinderDelayMs += Self.incrementalDelayMs
-            }
-        }
-    }
-
     private func fetchImages(for selections: [(index: Int, source: ImageSource)]) -> AnyPublisher<[ClipItemSource], DownloadError> {
         let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
             .map { [weak self] selection in
@@ -382,7 +321,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     }
 }
 
-extension ClipTargetFinderViewModel.LoadingError {
+extension ImageSourceProviderError {
     var displayTitle: String {
         switch self {
         case .notFound:

@@ -58,7 +58,9 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
         return ClipTargetFinderViewController(factory: self,
-                                              viewModel: ClipTargetFinderViewModel(url: url, clipStore: self.clipStore),
+                                              viewModel: ClipTargetFinderViewModel(url: url,
+                                                                                   clipStore: self.clipStore,
+                                                                                   provider: WebImageSourceProvider(url: url)),
                                               tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
                                               delegate: delegate)
     }
