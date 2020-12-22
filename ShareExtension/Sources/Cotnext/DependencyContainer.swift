@@ -12,6 +12,7 @@ import UIKit
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
+    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
 }
 
 class DependencyContainer {
@@ -61,6 +62,15 @@ extension DependencyContainer: ViewControllerFactory {
                                               viewModel: ClipTargetFinderViewModel(url: url,
                                                                                    clipStore: self.clipStore,
                                                                                    provider: WebImageSourceProvider(url: url)),
+                                              tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
+                                              delegate: delegate)
+    }
+
+    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
+        return ClipTargetFinderViewController(factory: self,
+                                              viewModel: ClipTargetFinderViewModel(url: nil,
+                                                                                   clipStore: self.clipStore,
+                                                                                   provider: RawImageSourceProvider(imageDataSet: data)),
                                               tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
                                               delegate: delegate)
     }

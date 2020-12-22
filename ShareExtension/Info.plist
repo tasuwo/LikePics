@@ -32,6 +32,8 @@
 				<integer>10</integer>
 				<key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
 				<integer>10</integer>
+                <key>NSExtensionActivationSupportsImageWithMaxCount</key>
+                <integer>9999</integer>
 			</dict>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
