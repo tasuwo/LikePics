@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import MobileCoreServices
 import UIKit
 
@@ -51,14 +52,14 @@ extension NSItemProvider {
         }
     }
 
-    public func resolveImage(completion: @escaping (Result<UIImage, NSItemProviderResolutionError>) -> Void) {
+    public func resolveImage(completion: @escaping (Result<Data, NSItemProviderResolutionError>) -> Void) {
         if self.isImage {
             self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { item, _ in
                 guard let imageUrl = item as? URL else {
                     completion(.failure(.invalidType))
                     return
                 }
-                guard let image = self.fetchImage(fromUrl: imageUrl) else {
+                guard let image = self.fetchImageData(fromUrl: imageUrl) else {
                     completion(.failure(.internalError))
                     return
                 }
@@ -70,7 +71,7 @@ extension NSItemProvider {
                     completion(.failure(.invalidType))
                     return
                 }
-                guard let image = self.fetchImage(fromUrl: url) else {
+                guard let image = self.fetchImageData(fromUrl: url) else {
                     completion(.failure(.internalError))
                     return
                 }
@@ -81,13 +82,30 @@ extension NSItemProvider {
         }
     }
 
-    private func fetchImage(fromUrl url: URL) -> UIImage? {
-        guard let imageData = try? Data(contentsOf: url) else {
-            return nil
+    private func fetchImageData(fromUrl url: URL) -> Data? {
+        guard let imageData = try? Data(contentsOf: url) else { return nil }
+        return imageData
+    }
+}
+
+extension NSItemProvider {
+    func resolveUrl() -> Future<URL, NSItemProviderResolutionError> {
+        return Future { [weak self] promise in
+            guard let self = self else {
+                promise(.failure(.internalError))
+                return
+            }
+            self.resolveUrl { promise($0) }
         }
-        guard let image = UIImage(data: imageData) else {
-            return nil
+    }
+
+    func resolveImage() -> Future<Data, NSItemProviderResolutionError> {
+        return Future { [weak self] promise in
+            guard let self = self else {
+                promise(.failure(.internalError))
+                return
+            }
+            self.resolveImage { promise($0) }
         }
-        return image
     }
 }
