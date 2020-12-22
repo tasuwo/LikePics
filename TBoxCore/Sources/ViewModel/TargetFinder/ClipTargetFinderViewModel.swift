@@ -27,7 +27,7 @@ public protocol ClipTargetFinderViewModelInputs {
 public protocol ClipTargetFinderViewModelOutputs {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
-    var images: CurrentValueSubject<[SelectableImage], Never> { get }
+    var images: CurrentValueSubject<[ImageSource], Never> { get }
     var selectedIndices: CurrentValueSubject<[Int], Never> { get }
 
     var isReloadItemEnabled: CurrentValueSubject<Bool, Never> { get }
@@ -70,7 +70,9 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     enum DownloadError: Error {
         case failedToSave(ClipStorageError)
-        case failedToDownloadImage
+        case failedToDownloadImage(ImageLoaderError)
+        case failedToCreateClipItemSource(ClipItemSource.InitializeError)
+        case internalError
     }
 
     // MARK: - Properties
@@ -96,7 +98,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    public var images: CurrentValueSubject<[SelectableImage], Never> = .init([])
+    public var images: CurrentValueSubject<[ImageSource], Never> = .init([])
     public var selectedIndices: CurrentValueSubject<[Int], Never> = .init([])
 
     public var isReloadItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
@@ -127,6 +129,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     private let clipStore: ClipStorable
     private let clipBuilder: ClipBuildable
     private let finder: WebImageUrlFinderProtocol
+    private let imageLoader: ImageLoaderProtocol
     private let urlSession: URLSession
 
     // MARK: - Lifecycle
@@ -135,12 +138,14 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
          clipStore: ClipStorable,
          clipBuilder: ClipBuildable,
          finder: WebImageUrlFinderProtocol,
+         imageLoader: ImageLoaderProtocol,
          urlSession: URLSession = URLSession.shared)
     {
         self.url = url
         self.clipStore = clipStore
         self.clipBuilder = clipBuilder
         self.finder = finder
+        self.imageLoader = imageLoader
         self.urlSession = urlSession
 
         self.bind()
@@ -156,6 +161,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
                                            currentDateResolver: { Date() },
                                            uuidIssuer: { UUID() }),
                   finder: WebImageUrlFinder(),
+                  imageLoader: ImageLoader(),
                   urlSession: urlSession)
     }
 
@@ -242,7 +248,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         self.resolveImageUrls(at: self.url)
             .map { sources in
                 sources
-                    .compactMap { SelectableImage(urlSet: $0) }
+                    .compactMap { ImageSource(urlSet: $0) }
                     .filter { $0.isValid }
             }
             .tryFilter {
@@ -271,16 +277,16 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
     private func saveSelectedImages() {
         self.isLoading.send(true)
 
-        let selections: [(index: Int, SelectableImage)] = self.selectedIndices.value.enumerated()
+        let selections: [(index: Int, ImageSource)] = self.selectedIndices.value.enumerated()
             .map { ($0.offset, self.images.value[$0.element]) }
 
         self.fetchImages(for: selections)
             .flatMap { [weak self] sources -> AnyPublisher<Void, DownloadError> in
                 guard let self = self else {
-                    return Fail(error: DownloadError.failedToDownloadImage)
+                    return Fail(error: DownloadError.internalError)
                         .eraseToAnyPublisher()
                 }
-                return self.save(target: sources)
+                return self.save(sources: sources)
                     .publisher
                     .eraseToAnyPublisher()
             }
@@ -336,24 +342,36 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
         }
     }
 
-    private func fetchImages(for selections: [(index: Int, image: SelectableImage)]) -> AnyPublisher<[(index: Int, ClipItemSource)], DownloadError> {
-        let publishers: [AnyPublisher<(index: Int, ClipItemSource), Never>] = selections
-            .compactMap { [weak self] selection in
-                guard let self = self else { return nil }
-                return ClipItemSource.make(by: selection.image, using: self.urlSession)
-                    .map { (selection.index, $0) }
+    private func fetchImages(for selections: [(index: Int, source: ImageSource)]) -> AnyPublisher<[ClipItemSource], DownloadError> {
+        let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
+            .map { [weak self] selection in
+                guard let self = self else {
+                    return Fail(error: DownloadError.internalError)
+                        .eraseToAnyPublisher()
+                }
+                return self.imageLoader.load(from: selection.source)
+                    .mapError { DownloadError.failedToDownloadImage($0) }
+                    .tryMap { try ClipItemSource(index: selection.index, result: $0) }
+                    .mapError { err in
+                        if let error = err as? DownloadError {
+                            return error
+                        } else if let error = err as? ClipItemSource.InitializeError {
+                            return DownloadError.failedToCreateClipItemSource(error)
+                        } else {
+                            return DownloadError.internalError
+                        }
+                    }
                     .eraseToAnyPublisher()
             }
         return Publishers.MergeMany(publishers)
             .collect()
-            .mapError { _ in DownloadError.failedToDownloadImage }
             .eraseToAnyPublisher()
     }
 
     // MARK: Save Images
 
-    private func save(target: [(index: Int, source: ClipItemSource)]) -> Result<Void, DownloadError> {
-        let result = self.clipBuilder.build(sources: target, tags: self.tags)
+    private func save(sources: [ClipItemSource]) -> Result<Void, DownloadError> {
+        let result = self.clipBuilder.build(sources: sources, tags: self.tags)
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())
@@ -404,7 +422,7 @@ extension ClipTargetFinderViewModel.DownloadError {
         case .failedToDownloadImage:
             return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadTitle
 
-        case .failedToSave:
+        default:
             return L10n.clipTargetFinderViewDownloadErrorFailedToSaveTitle
         }
     }
@@ -414,7 +432,7 @@ extension ClipTargetFinderViewModel.DownloadError {
         case .failedToDownloadImage:
             return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadBody
 
-        case .failedToSave:
+        default:
             return L10n.clipTargetFinderViewDownloadErrorFailedToSaveBody
         }
     }

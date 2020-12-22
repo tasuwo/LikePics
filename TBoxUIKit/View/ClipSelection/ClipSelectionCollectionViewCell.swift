@@ -10,7 +10,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var url: URL?
+    public var id: UUID?
     public var image: UIImage? {
         didSet {
             guard let image = self.image else {

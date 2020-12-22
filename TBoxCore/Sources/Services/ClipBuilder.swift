@@ -5,7 +5,7 @@
 import Domain
 
 protocol ClipBuildable {
-    func build(sources: [(index: Int, source: ClipItemSource)], tags: [Tag]) -> (Clip, [ImageContainer])
+    func build(sources: [ClipItemSource], tags: [Tag]) -> (Clip, [ImageContainer])
 }
 
 struct ClipBuilder {
@@ -26,20 +26,20 @@ struct ClipBuilder {
 extension ClipBuilder: ClipBuildable {
     // MARK: - ClipBuildable
 
-    func build(sources: [(index: Int, source: ClipItemSource)], tags: [Tag]) -> (Clip, [ImageContainer]) {
+    func build(sources: [ClipItemSource], tags: [Tag]) -> (Clip, [ImageContainer]) {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
-        let itemAndContainers: [(ClipItem, ImageContainer)] = sources.map {
+        let itemAndContainers: [(ClipItem, ImageContainer)] = sources.map { source in
             let imageId = self.uuidIssuer()
             let item = ClipItem(id: self.uuidIssuer(),
                                 url: self.url,
                                 clipId: clipId,
-                                index: $0.index,
+                                index: source.index,
                                 imageId: imageId,
-                                imageDataSize: $0.source.data.count,
-                                source: $0.source,
+                                imageDataSize: source.data.count,
+                                source: source,
                                 currentDate: currentDate)
-            let container = ImageContainer(id: imageId, data: $0.source.data)
+            let container = ImageContainer(id: imageId, data: source.data)
             return (item, container)
         }
         let clip = Clip(clipId: clipId,

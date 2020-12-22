@@ -39,6 +39,7 @@ public class ClipTargetFinderViewController: UIViewController {
 
     private let factory: Factory
     private let viewModel: ClipTargetFinderViewModelType
+    private let thumbnailLoader: ThumbnailLoaderProtocol = ThumbnailLoader()
 
     private let selectedTagViewController: ClipTargetFinderSelectedTagsViewController
 
@@ -274,19 +275,13 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
         guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
         guard self.viewModel.outputs.images.value.indices.contains(indexPath.row) else { return cell }
 
-        let meta = self.viewModel.outputs.images.value[indexPath.row]
-        cell.url = meta.url
+        let source = self.viewModel.outputs.images.value[indexPath.row]
+        cell.id = source.identifier
 
-        URLSession.shared
-            .dataTaskPublisher(for: self.viewModel.outputs.images.value[indexPath.row].url)
-            .map { data, _ -> UIImage? in
-                let downsampleSize = ImageUtility.calcDownsamplingSize(forOriginalSize: CGSize(width: meta.width, height: meta.height))
-                return ImageUtility.downsampledImage(data: data, to: downsampleSize)
-            }
-            .catch { _ in Just(nil) }
+        self.thumbnailLoader.load(from: source)
             .receive(on: DispatchQueue.main)
             .sink { image in
-                guard cell.url == meta.url else { return }
+                guard cell.id == source.identifier else { return }
                 cell.image = image
             }
             .store(in: &self.cancellableBag)
@@ -303,10 +298,12 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row) else { return .zero }
-        let imageHeight = self.viewModel.outputs.images.value[indexPath.row].height
-        let imageWidth = self.viewModel.outputs.images.value[indexPath.row].width
-        return width * CGFloat(imageHeight / imageWidth)
+        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row),
+            let size = self.viewModel.outputs.images.value[indexPath.row].resolveSize()
+        else {
+            return .zero
+        }
+        return width * CGFloat(size.height / size.width)
     }
 
     public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
