@@ -39,7 +39,17 @@ public struct ImageSource {
             else {
                 return nil
             }
-            return CGSize(width: pixelWidth, height: pixelHeight)
+            let orientation: CGImagePropertyOrientation? = {
+                guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
+                return CGImagePropertyOrientation(rawValue: number)
+            }()
+            switch orientation {
+            case .up, .upMirrored, .down, .downMirrored, .none:
+                return CGSize(width: pixelWidth, height: pixelHeight)
+
+            case .left, .leftMirrored, .right, .rightMirrored:
+                return CGSize(width: pixelHeight, height: pixelWidth)
+            }
 
         case let .urlSet(urlSet):
             guard let imageSource = CGImageSourceCreateWithURL(urlSet.url as CFURL, nil) else {
@@ -52,7 +62,17 @@ public struct ImageSource {
             else {
                 return nil
             }
-            return CGSize(width: pixelWidth, height: pixelHeight)
+            let orientation: CGImagePropertyOrientation? = {
+                guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
+                return CGImagePropertyOrientation(rawValue: number)
+            }()
+            switch orientation {
+            case .up, .upMirrored, .down, .downMirrored, .none:
+                return CGSize(width: pixelWidth, height: pixelHeight)
+
+            case .left, .leftMirrored, .right, .rightMirrored:
+                return CGSize(width: pixelHeight, height: pixelWidth)
+            }
         }
     }
 

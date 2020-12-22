@@ -51,7 +51,18 @@ struct ClipItemSource {
         else {
             throw InitializeError.failedToResolveSize
         }
-        self.height = Double(pixelHeight)
-        self.width = Double(pixelWidth)
+        let orientation: CGImagePropertyOrientation? = {
+            guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
+            return CGImagePropertyOrientation(rawValue: number)
+        }()
+        switch orientation {
+        case .up, .upMirrored, .down, .downMirrored, .none:
+            self.height = Double(pixelHeight)
+            self.width = Double(pixelWidth)
+
+        case .left, .leftMirrored, .right, .rightMirrored:
+            self.height = Double(pixelWidth)
+            self.width = Double(pixelHeight)
+        }
     }
 }
