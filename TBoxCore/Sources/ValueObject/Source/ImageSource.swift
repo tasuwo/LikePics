@@ -3,7 +3,6 @@
 //
 
 import CoreGraphics
-import ImageIO
 
 public struct ImageSource {
     enum Value {
@@ -31,48 +30,10 @@ public struct ImageSource {
     func resolveSize() -> CGSize? {
         switch value {
         case let .rawData(data):
-            guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
-            guard
-                let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
-                let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
-                let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
-            else {
-                return nil
-            }
-            let orientation: CGImagePropertyOrientation? = {
-                guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
-                return CGImagePropertyOrientation(rawValue: number)
-            }()
-            switch orientation {
-            case .up, .upMirrored, .down, .downMirrored, .none:
-                return CGSize(width: pixelWidth, height: pixelHeight)
-
-            case .left, .leftMirrored, .right, .rightMirrored:
-                return CGSize(width: pixelHeight, height: pixelWidth)
-            }
+            return ImageUtility.resolveSize(for: data)
 
         case let .urlSet(urlSet):
-            guard let imageSource = CGImageSourceCreateWithURL(urlSet.url as CFURL, nil) else {
-                return nil
-            }
-            guard
-                let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
-                let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
-                let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
-            else {
-                return nil
-            }
-            let orientation: CGImagePropertyOrientation? = {
-                guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
-                return CGImagePropertyOrientation(rawValue: number)
-            }()
-            switch orientation {
-            case .up, .upMirrored, .down, .downMirrored, .none:
-                return CGSize(width: pixelWidth, height: pixelHeight)
-
-            case .left, .leftMirrored, .right, .rightMirrored:
-                return CGSize(width: pixelHeight, height: pixelWidth)
-            }
+            return ImageUtility.resolveSize(for: urlSet.url)
         }
     }
 

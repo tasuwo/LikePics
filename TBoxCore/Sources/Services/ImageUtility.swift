@@ -5,6 +5,16 @@
 import UIKit
 
 enum ImageUtility {
+    static func resolveSize(for url: URL) -> CGSize? {
+        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+        return self.resolveSize(for: imageSource)
+    }
+
+    static func resolveSize(for data: Data) -> CGSize? {
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+        return self.resolveSize(for: imageSource)
+    }
+
     static func calcScale(forSize source: CGSize, toFit destination: CGSize) -> CGFloat {
         let widthScale = destination.width / source.width
         let heightScale = destination.height / source.height
@@ -42,6 +52,27 @@ enum ImageUtility {
         }
 
         return UIImage(cgImage: downsampledImage)
+    }
+
+    private static func resolveSize(for imageSource: CGImageSource) -> CGSize? {
+        guard
+            let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
+            let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
+            let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+        else {
+            return nil
+        }
+        let orientation: CGImagePropertyOrientation? = {
+            guard let number = imageProperties[kCGImagePropertyOrientation] as? UInt32 else { return nil }
+            return CGImagePropertyOrientation(rawValue: number)
+        }()
+        switch orientation {
+        case .up, .upMirrored, .down, .downMirrored, .none:
+            return CGSize(width: pixelWidth, height: pixelHeight)
+
+        case .left, .leftMirrored, .right, .rightMirrored:
+            return CGSize(width: pixelHeight, height: pixelWidth)
+        }
     }
 }
 
