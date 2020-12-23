@@ -80,21 +80,6 @@ public class TagSelectionViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.tags
-            .map { $0.isEmpty }
-            .receive(on: DispatchQueue.main)
-            .assignNoRetain(to: \.isHidden, on: self.searchBar)
-            .store(in: &self.cancellableBag)
-        dependency.outputs.tags
-            .map { $0.isEmpty }
-            .receive(on: DispatchQueue.main)
-            .assignNoRetain(to: \.isHidden, on: self.collectionView)
-            .store(in: &self.cancellableBag)
-        dependency.outputs.tags
-            .map { $0.isEmpty ? 1 : 0 }
-            .receive(on: DispatchQueue.main)
-            .assignNoRetain(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
-        dependency.outputs.tags
             .filter { $0.isEmpty }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -102,6 +87,23 @@ public class TagSelectionViewController: UIViewController {
                 self?.searchBar.text = nil
                 self?.viewModel.inputs.inputtedQuery.send("")
             }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayCollectionView
+            .map { !$0 }
+            .receive(on: DispatchQueue.main)
+            .assignNoRetain(to: \.isHidden, on: self.searchBar)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.displayCollectionView
+            .map { !$0 }
+            .receive(on: DispatchQueue.main)
+            .assignNoRetain(to: \.isHidden, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayEmptyMessage
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assignNoRetain(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.filteredTags

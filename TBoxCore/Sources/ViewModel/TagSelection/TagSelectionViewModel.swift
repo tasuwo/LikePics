@@ -22,6 +22,10 @@ public protocol TagSelectionViewModelOutputs {
     var tags: CurrentValueSubject<[Tag], Never> { get }
     var selections: CurrentValueSubject<Set<Tag.Identity>, Never> { get }
     var filteredTags: CurrentValueSubject<[Tag], Never> { get }
+
+    var displayCollectionView: CurrentValueSubject<Bool, Never> { get }
+    var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
+
     var errorMessage: PassthroughSubject<String, Never> { get }
 
     var selectedTags: [Tag] { get }
@@ -50,6 +54,10 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     public let tags: CurrentValueSubject<[Tag], Never> = .init([])
     public let selections: CurrentValueSubject<Set<Tag.Identity>, Never>
     public let filteredTags: CurrentValueSubject<[Tag], Never> = .init([])
+
+    public let displayCollectionView: CurrentValueSubject<Bool, Never> = .init(false)
+    public let displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
+
     public let errorMessage: PassthroughSubject<String, Never> = .init()
 
     public var selectedTags: [Tag] {
@@ -115,6 +123,24 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                     """))
                     self.errorMessage.send(L10n.errorTagAddDefault)
                 }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.query.tags
+            .catch { _ in Just([]) }
+            .eraseToAnyPublisher()
+            .map { $0.isEmpty }
+            .sink { [weak self] isEmpty in
+                self?.displayCollectionView.send(!isEmpty)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.query.tags
+            .catch { _ in Just([]) }
+            .eraseToAnyPublisher()
+            .map { $0.isEmpty }
+            .sink { [weak self] isEmpty in
+                self?.displayEmptyMessage.send(isEmpty)
             }
             .store(in: &self.cancellableBag)
 
