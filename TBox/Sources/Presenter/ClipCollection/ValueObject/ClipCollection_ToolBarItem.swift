@@ -3,12 +3,17 @@
 //
 
 extension ClipCollection {
-    enum ToolBarItem {
-        case spacer
-        case add
-        case delete
-        case removeFromAlbum
-        case hide
-        case unhide
+    struct ToolBarItem {
+        enum Kind {
+            case spacer
+            case add
+            case delete
+            case removeFromAlbum
+            case hide
+            case unhide
+        }
+
+        let kind: Kind
+        let isEnabled: Bool
     }
 }

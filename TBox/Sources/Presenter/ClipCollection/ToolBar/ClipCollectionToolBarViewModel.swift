@@ -63,14 +63,23 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
             .sink { [weak self] isEditing in self?.isHidden.send(!isEditing) }
             .store(in: &self.cancellableBag)
 
-        self.items.send([
-            .add,
-            .spacer,
-            .hide,
-            .spacer,
-            .unhide,
-            .spacer,
-            self.context.isAlbum ? .removeFromAlbum : .delete
-        ])
+        self.selectedClipsCount
+            .sink { [weak self] count in
+                guard let self = self else { return }
+                let isEnabled = count != 0
+
+                self.items.send([
+                    .init(kind: .add, isEnabled: isEnabled),
+                    .init(kind: .spacer, isEnabled: false),
+                    .init(kind: .hide, isEnabled: isEnabled),
+                    .init(kind: .spacer, isEnabled: false),
+                    .init(kind: .unhide, isEnabled: isEnabled),
+                    .init(kind: .spacer, isEnabled: false),
+                    self.context.isAlbum
+                        ? .init(kind: .removeFromAlbum, isEnabled: isEnabled)
+                        : .init(kind: .delete, isEnabled: isEnabled)
+                ])
+            }
+            .store(in: &self.cancellableBag)
     }
 }

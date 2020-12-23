@@ -153,24 +153,28 @@ class ClipCollectionToolBarProvider {
     }
 
     private func resolveBarButtonItem(for item: ClipCollection.ToolBarItem) -> UIBarButtonItem {
-        switch item {
-        case .spacer:
-            return self.flexibleItem
+        let buttonItem: UIBarButtonItem = {
+            switch item.kind {
+            case .spacer:
+                return self.flexibleItem
 
-        case .add:
-            return self.addItem
+            case .add:
+                return self.addItem
 
-        case .delete:
-            return self.removeItem
+            case .delete:
+                return self.removeItem
 
-        case .removeFromAlbum:
-            return self.removeFromAlbum
+            case .removeFromAlbum:
+                return self.removeFromAlbum
 
-        case .hide:
-            return self.hideItem
+            case .hide:
+                return self.hideItem
 
-        case .unhide:
-            return self.unhideItem
-        }
+            case .unhide:
+                return self.unhideItem
+            }
+        }()
+        buttonItem.isEnabled = item.isEnabled
+        return buttonItem
     }
 }
