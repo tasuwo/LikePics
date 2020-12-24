@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/12/24.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+NSPhotoLibraryAddUsageDescription = "Save photos in this app to Photo Library";

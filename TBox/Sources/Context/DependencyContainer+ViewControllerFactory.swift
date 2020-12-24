@@ -26,6 +26,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = TopClipCollectionViewModel(query: query,
                                                    clipService: self.clipCommandService,
+                                                   imageQueryService: self.imageQueryService,
                                                    settingStorage: self.userSettingsStorage,
                                                    logger: self.logger)
 
@@ -196,6 +197,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewModel = SearchResultViewModel(context: context,
                                               query: query,
                                               clipService: self.clipCommandService,
+                                              imageQueryService: self.imageQueryService,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -254,6 +256,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = AlbumViewModel(query: query,
                                        clipService: self.clipCommandService,
+                                       imageQueryService: self.imageQueryService,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 

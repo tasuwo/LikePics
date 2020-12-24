@@ -83,6 +83,7 @@ class SearchResultViewController: UIViewController {
 
     func bind(to dependency: Dependency) {
         dependency.outputs.clips
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
 
@@ -103,6 +104,7 @@ class SearchResultViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selections
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] selection in
                 guard let self = self else { return }
 
@@ -116,21 +118,25 @@ class SearchResultViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.title
+            .receive(on: DispatchQueue.main)
             .map { $0 as String? }
             .assignNoRetain(to: \.title, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.emptyMessage
+            .receive(on: DispatchQueue.main)
             .map { $0 as String? }
             .assign(to: \.title, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -140,6 +146,7 @@ class SearchResultViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.presentPreview
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId, completion in
                 guard let self = self else { return }
                 guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
@@ -148,6 +155,14 @@ class SearchResultViewController: UIViewController {
                 }
                 completion(true)
                 self.present(viewController, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.presentActivityController
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] images in
+                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+                self?.present(controller, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
@@ -315,6 +330,10 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
         self.viewModel.inputs.hide.send(clipId)
+    }
+
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity) {
+        self.viewModel.inputs.share.send(clipId)
     }
 }
 

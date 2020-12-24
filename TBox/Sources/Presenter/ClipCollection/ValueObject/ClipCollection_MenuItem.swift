@@ -10,5 +10,6 @@ extension ClipCollection {
         case unhide
         case removeFromAlbum
         case delete
+        case share
     }
 }

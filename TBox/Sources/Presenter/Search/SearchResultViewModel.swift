@@ -27,6 +27,7 @@ protocol SearchResultViewModelInputs {
     var unhide: PassthroughSubject<Clip.Identity, Never> { get }
     var addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> { get }
     var addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> { get }
+    var share: PassthroughSubject<Clip.Identity, Never> { get }
 }
 
 protocol SearchResultViewModelOutputs {
@@ -35,6 +36,7 @@ protocol SearchResultViewModelOutputs {
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
     var presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> { get }
+    var presentActivityController: PassthroughSubject<[Data], Never> { get }
     var previewingClip: Clip? { get }
     var title: CurrentValueSubject<String, Never> { get }
     var emptyMessage: CurrentValueSubject<String, Never> { get }
@@ -76,6 +78,7 @@ class SearchResultViewModel: SearchResultViewModelType,
     let unhide: PassthroughSubject<Clip.Identity, Never> = .init()
     let addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> = .init()
     let addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> = .init()
+    let share: PassthroughSubject<Clip.Identity, Never> = .init()
 
     // MARK: SearchResultViewModelOutputs
 
@@ -86,6 +89,7 @@ class SearchResultViewModel: SearchResultViewModelType,
     let presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> = .init()
     let title: CurrentValueSubject<String, Never> = .init("")
     let emptyMessage: CurrentValueSubject<String, Never> = .init("")
+    let presentActivityController: PassthroughSubject<[Data], Never> = .init()
 
     var previewingClip: Clip? {
         guard let id = self.previewingClipId else { return nil }
@@ -97,6 +101,7 @@ class SearchResultViewModel: SearchResultViewModelType,
     private let context: ClipCollection.SearchContext
     private let query: ClipListQuery
     private let clipService: ClipCommandServiceProtocol
+    private let imageQueryService: NewImageQueryServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -115,12 +120,14 @@ class SearchResultViewModel: SearchResultViewModelType,
     init(context: ClipCollection.SearchContext,
          query: ClipListQuery,
          clipService: ClipCommandServiceProtocol,
+         imageQueryService: NewImageQueryServiceProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.context = context
         self.query = query
         self.clipService = clipService
+        self.imageQueryService = imageQueryService
         self.settingStorage = settingStorage
         self.logger = logger
 
@@ -354,6 +361,24 @@ extension SearchResultViewModel {
                     Failed to add clip having id \(clipId) to album having id \(albumId). (code: \(error.rawValue))
                     """))
                     self.errorMessage.send("\(L10n.clipsListErrorAtAddClipToAlbum)\n(\(error.makeErrorCode()))")
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.share
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] clipId in
+                guard let clip = self?.clips.value.first(where: { $0.id == clipId }) else {
+                    self?.errorMessage.send(L10n.clipsListErrorAtShare)
+                    return
+                }
+                do {
+                    let images = try clip.items
+                        .map { $0.imageId }
+                        .compactMap { try self?.imageQueryService.read(having: $0) }
+                    self?.presentActivityController.send(images)
+                } catch {
+                    self?.errorMessage.send(L10n.clipsListErrorAtShare)
                 }
             }
             .store(in: &self.cancellableBag)

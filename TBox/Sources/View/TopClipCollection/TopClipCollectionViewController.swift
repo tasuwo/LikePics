@@ -79,6 +79,7 @@ class TopClipCollectionViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.clips
+            .receive(on: DispatchQueue.main)
             .sink { _ in } receiveValue: { [weak self] clips in
                 guard let self = self else { return }
 
@@ -97,6 +98,7 @@ class TopClipCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selections
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] selection in
                 guard let self = self else { return }
 
@@ -110,11 +112,13 @@ class TopClipCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -124,6 +128,7 @@ class TopClipCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.presentPreview
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId, completion in
                 guard let self = self else { return }
                 guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
@@ -132,6 +137,14 @@ class TopClipCollectionViewController: UIViewController {
                 }
                 completion(true)
                 self.present(viewController, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.presentActivityController
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] images in
+                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+                self?.present(controller, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
@@ -301,6 +314,10 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
         self.viewModel.inputs.hide.send(clipId)
+    }
+
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity) {
+        self.viewModel.inputs.share.send(clipId)
     }
 }
 

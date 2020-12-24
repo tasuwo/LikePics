@@ -24,6 +24,7 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity)
 }
 
 class ClipCollectionProvider: NSObject {
@@ -224,6 +225,15 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity)
+                }
+            }
+
+        case .share:
+            return UIAction(title: L10n.clipsListContextMenuShare,
+                            image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipCollectionProvider(self, shouldShare: clip.identity)
                 }
             }
         }

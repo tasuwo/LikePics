@@ -107,6 +107,7 @@ class AlbumViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.clips
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
 
@@ -127,6 +128,7 @@ class AlbumViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selections
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] selection in
                 guard let self = self else { return }
 
@@ -140,34 +142,41 @@ class AlbumViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] operation in self?.apply(operation) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assign(to: \.hidesBackButton, on: navigationItem)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0 == .reordering }
             .assign(to: \.dragInteractionEnabled, on: collectionView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
             .map { $0 == .selecting }
             .assign(to: \.allowsMultipleSelection, on: collectionView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.title
+            .receive(on: DispatchQueue.main)
             .assignNoRetain(to: \.title, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -177,6 +186,7 @@ class AlbumViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.presentPreview
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId, completion in
                 guard let self = self else { return }
                 guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
@@ -185,6 +195,14 @@ class AlbumViewController: UIViewController {
                 }
                 completion(true)
                 self.present(viewController, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.presentActivityController
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] images in
+                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+                self?.present(controller, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
@@ -376,6 +394,10 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
         self.viewModel.inputs.hide.send(clipId)
+    }
+
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity) {
+        self.viewModel.inputs.share.send(clipId)
     }
 }
 

@@ -124,6 +124,8 @@ internal enum L10n {
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
     /// アルバムから削除
     internal static let clipsListContextMenuRemoveFromAlbum = L10n.tr("Localizable", "clips_list_context_menu_remove_from_album")
+    /// 共有
+    internal static let clipsListContextMenuShare = L10n.tr("Localizable", "clips_list_context_menu_share")
     /// 表示する
     internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
     /// アルバムへの追加に失敗しました
@@ -146,6 +148,8 @@ internal enum L10n {
     internal static let clipsListErrorAtRemoveClipsFromAlbum = L10n.tr("Localizable", "clips_list_error_at_remove_clips_from_album")
     /// クリップ内の画像の削除に失敗しました
     internal static let clipsListErrorAtRemoveItemFromClip = L10n.tr("Localizable", "clips_list_error_at_remove_item_from_clip")
+    /// 共有に失敗しました
+    internal static let clipsListErrorAtShare = L10n.tr("Localizable", "clips_list_error_at_share")
     /// クリップの更新に失敗しました
     internal static let clipsListErrorAtUnhideClip = L10n.tr("Localizable", "clips_list_error_at_unhide_clip")
     /// クリップの更新に失敗しました

@@ -31,6 +31,7 @@
 "clips_list_context_menu_hide" = "隠す";
 "clips_list_context_menu_unhide" = "表示する";
 "clips_list_context_menu_remove_from_album" = "アルバムから削除";
+"clips_list_context_menu_share" = "共有";
 "clips_list_context_menu_delete" = "削除";
 
 "top_clip_view_empty_title" = "クリップがありません";
@@ -121,6 +122,7 @@
 "clips_list_error_at_add_clip_to_album" = "アルバムへの追加に失敗しました";
 "clips_list_error_at_remove_clips_from_album" = "アルバムからの削除に失敗しました";
 "clips_list_error_at_remove_item_from_clip" = "クリップ内の画像の削除に失敗しました";
+"clips_list_error_at_share" = "共有に失敗しました";
 
 // MARK: Album
 

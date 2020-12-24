@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  TBox
+
+  Created by Tasuku Tozawa on 2020/12/24.
+  Copyright © 2020 Tasuku Tozawa. All rights reserved.
+*/
+
+NSPhotoLibraryAddUsageDescription = "アプリ内の画像をフォトライブラリに保存できます";

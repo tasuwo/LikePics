@@ -31,6 +31,7 @@
 "clips_list_context_menu_hide" = "Hide";
 "clips_list_context_menu_unhide" = "Show";
 "clips_list_context_menu_remove_from_album" = "Remove from Album";
+"clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
 
 "clip_target_finder_view_title" = "Select image.";
@@ -121,6 +122,7 @@
 "clips_list_error_at_add_clip_to_album" = "Failed to add a clip to album.";
 "clips_list_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
 "clips_list_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
+"clips_list_error_at_share" = "Failed to share.";
 
 // MARK: Album
 

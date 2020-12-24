@@ -100,6 +100,7 @@
 		2C369A732545765900462097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C369A752545765900462097 /* Localizable.strings */; };
 		2C369A892545773000462097 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C369A882545773000462097 /* String.swift */; };
 		2C369AA4254577E800462097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C369AA6254577E800462097 /* Localizable.strings */; };
+		2C37E3172594C94B00600E59 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C37E3192594C94B00600E59 /* InfoPlist.strings */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
 		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C38C704250AF33B00F32102 /* TagSelectionViewController.swift */; };
@@ -747,6 +748,8 @@
 		2C369A882545773000462097 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C369AA5254577E800462097 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C369AAF254577EB00462097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2C37E3182594C94B00600E59 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2C37E31A2594C95000600E59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractivePresentationAnimator.swift; sourceTree = "<group>"; };
 		2C38C704250AF33B00F32102 /* TagSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionViewController.swift; sourceTree = "<group>"; };
@@ -2154,6 +2157,7 @@
 				2CA0229A24DD9F5F00329251 /* Info.plist */,
 				2C6E09B824E8101900B541D9 /* Localizable.strings */,
 				2C6C7A3D253B552700A8A9B8 /* Settings.bundle */,
+				2C37E3192594C94B00600E59 /* InfoPlist.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3375,6 +3379,7 @@
 				2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */,
 				2C0B119724E2AC8E0054016C /* ClipItemPreviewViewController.xib in Resources */,
 				2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */,
+				2C37E3172594C94B00600E59 /* InfoPlist.strings in Resources */,
 				2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4309,6 +4314,15 @@
 				2C369AAF254577EB00462097 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		2C37E3192594C94B00600E59 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C37E3182594C94B00600E59 /* ja */,
+				2C37E31A2594C95000600E59 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 		2C6E09B824E8101900B541D9 /* Localizable.strings */ = {
