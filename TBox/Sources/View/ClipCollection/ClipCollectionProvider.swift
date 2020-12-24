@@ -18,13 +18,13 @@ protocol ClipCollectionProviderDataSource: AnyObject {
 protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didSelect clipId: Clip.Identity)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, didDeselect clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath)
 }
 
 class ClipCollectionProvider: NSObject {
@@ -136,7 +136,9 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         else {
             return nil
         }
-        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil, actionProvider: self.makeActionProvider(for: clip))
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                          previewProvider: nil,
+                                          actionProvider: self.makeActionProvider(for: clip, at: indexPath))
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -155,14 +157,14 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         return UITargetedPreview(view: cell, parameters: parameters)
     }
 
-    private func makeActionProvider(for clip: Clip) -> UIContextMenuActionProvider {
+    private func makeActionProvider(for clip: Clip, at indexPath: IndexPath) -> UIContextMenuActionProvider {
         guard let dataSource = self.dataSource else { return { _ in return UIMenu() } }
 
         let builder = dataSource.clipsListCollectionMenuBuilder(self)
         let context = dataSource.clipsListCollectionMenuContext(self)
 
         let items = builder.build(for: clip, context: context).map {
-            self.makeAction(from: $0, for: clip)
+            self.makeAction(from: $0, for: clip, at: indexPath)
         }
 
         return { _ in
@@ -170,14 +172,14 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         }
     }
 
-    private func makeAction(from item: ClipCollection.MenuItem, for clip: Clip) -> UIAction {
+    private func makeAction(from item: ClipCollection.MenuItem, for clip: Clip, at indexPath: IndexPath) -> UIAction {
         switch item {
         case .addTag:
             return UIAction(title: L10n.clipsListContextMenuAddTag,
                             image: UIImage(systemName: "tag.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.delegate?.clipCollectionProvider(self, shouldAddTagsTo: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldAddTagsTo: clip.identity, at: indexPath)
                 }
             }
 
@@ -186,7 +188,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.delegate?.clipCollectionProvider(self, shouldAddToAlbum: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldAddToAlbum: clip.identity, at: indexPath)
                 }
             }
 
@@ -195,7 +197,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipCollectionProvider(self, shouldUnhide: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldUnhide: clip.identity, at: indexPath)
                 }
             }
 
@@ -204,7 +206,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity, at: indexPath)
                 }
             }
 
@@ -214,7 +216,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipCollectionProvider(self, shouldRemoveFromAlbum: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldRemoveFromAlbum: clip.identity, at: indexPath)
                 }
             }
 
@@ -224,7 +226,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity, at: indexPath)
                 }
             }
 
@@ -233,7 +235,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                             image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.delegate?.clipCollectionProvider(self, shouldShare: clip.identity)
+                    self.delegate?.clipCollectionProvider(self, shouldShare: clip.identity, at: indexPath)
                 }
             }
         }

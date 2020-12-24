@@ -285,7 +285,7 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
         self.viewModel.inputs.deselect.send(clipId)
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity, at indexPath: IndexPath) {
         guard
             let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
             let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
@@ -295,28 +295,35 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity, at indexPath: IndexPath) {
         guard let viewController = self.factory.makeAlbumSelectionViewController(context: clipId, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity, at indexPath: IndexPath) {
         // NOP
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity) {
-        self.viewModel.inputs.delete.send(clipId)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity, at indexPath: IndexPath) {
+        guard let cell = self.collectionView.cellForItem(at: indexPath) else {
+            RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to delete clip. Target cell not found"))
+            return
+        }
+        self.presentDeleteAlert(at: cell, in: self.collectionView) { [weak self] in
+            guard let self = self else { return }
+            self.viewModel.inputs.delete.send(clipId)
+        }
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath) {
         self.viewModel.inputs.unhide.send(clipId)
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath) {
         self.viewModel.inputs.hide.send(clipId)
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath) {
         self.viewModel.inputs.share.send(clipId)
     }
 }

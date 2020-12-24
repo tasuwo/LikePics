@@ -7,6 +7,7 @@ import UIKit
 protocol ClipCollectionAlertPresentable: AnyObject {
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
     func presentDeleteAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
+    func presentDeleteAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void)
     func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
     func presentHideAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
 }
@@ -42,6 +43,23 @@ extension ClipCollectionAlertPresentable where Self: UIViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         alert.popoverPresentationController?.barButtonItem = item
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func presentDeleteAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void) {
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForDeleteMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipsListAlertForDeleteAction(1)
+        alert.addAction(.init(title: title, style: .destructive, handler: { _ in
+            action()
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
 
         self.present(alert, animated: true, completion: nil)
     }
