@@ -61,6 +61,10 @@ extension ClipPreviewBaseViewController: ClipInformationPresentingAnimatorDataSo
         return self.pageViewController?.currentViewController?.previewView
     }
 
+    func presentingView(_ animator: ClipInformationAnimator) -> UIView? {
+        return self.viewControllers.first?.view
+    }
+
     func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
         self.view.layoutIfNeeded()
         guard let pageView = self.pageViewController?.currentViewController?.previewView else {

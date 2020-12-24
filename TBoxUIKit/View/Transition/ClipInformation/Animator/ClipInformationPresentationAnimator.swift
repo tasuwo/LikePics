@@ -36,7 +36,8 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             let targetInformationView = to.animatingInformationView(self),
             let selectedPage = from.animatingPageView(self),
             let selectedImageView = selectedPage.imageView,
-            let selectedImage = selectedImageView.image
+            let selectedImage = selectedImageView.image,
+            let presentingView = from.presentingView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -49,13 +50,26 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
         selectedImageView.isHidden = true
 
         containerView.backgroundColor = .clear
-        containerView.insertSubview(to.view, belowSubview: from.view)
+        containerView.insertSubview(to.view, aboveSubview: from.view)
+
+        let backgroundView = UIView()
+        backgroundView.frame = presentingView.frame
+        backgroundView.backgroundColor = to.view.backgroundColor
+        to.view.backgroundColor = .clear
+        presentingView.addSubview(backgroundView)
+
+        let backgroundAnimatingImageView = UIImageView(image: selectedImage)
+        backgroundAnimatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+        containerView.addSubview(backgroundAnimatingImageView)
+        presentingView.insertSubview(backgroundAnimatingImageView, aboveSubview: backgroundView)
 
         let animatingImageView = UIImageView(image: selectedImage)
         animatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         containerView.addSubview(animatingImageView)
 
         to.view.alpha = 0
+        backgroundView.alpha = 0
+        animatingImageView.alpha = 0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
@@ -63,7 +77,10 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             targetInformationView.imageView.isHidden = false
             selectedImageView.isHidden = false
             from.view.alpha = 1.0
+            to.view.backgroundColor = backgroundView.backgroundColor
             animatingImageView.removeFromSuperview()
+            backgroundView.removeFromSuperview()
+            backgroundAnimatingImageView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }
 
@@ -73,8 +90,17 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             options: [.curveEaseInOut]
         ) {
             animatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-            from.view.alpha = 0
+            backgroundAnimatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
             to.view.alpha = 1.0
+            backgroundView.alpha = 1.0
+        }
+
+        UIView.animate(
+            withDuration: self.transitionDuration(using: transitionContext) / 3,
+            delay: 0,
+            options: [.curveEaseInOut]
+        ) {
+            animatingImageView.alpha = 1.0
         }
 
         CATransaction.commit()
