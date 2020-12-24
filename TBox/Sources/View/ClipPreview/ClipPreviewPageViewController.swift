@@ -19,6 +19,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let barItemsProvider: ClipPreviewPageBarViewController
     private var transitionController: ClipPreviewPageTransitionControllerType!
     private var tapGestureRecognizer: UITapGestureRecognizer!
+    private var isInitialLoaded: Bool = false
 
     private var isFullscreen = false {
         didSet {
@@ -89,7 +90,11 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.didUpdateCurrentPage()
+
+        if !self.isInitialLoaded {
+            self.didUpdateCurrentPage()
+            self.isInitialLoaded = true
+        }
     }
 
     // MARK: - Methods
