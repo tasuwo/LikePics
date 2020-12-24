@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable force_unwrapping file_length
+// swiftlint:disable force_unwrapping
 
 import Common
 import CoreData

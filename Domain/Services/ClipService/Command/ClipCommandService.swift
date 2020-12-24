@@ -4,8 +4,6 @@
 
 import Common
 
-// swiftlint:disable file_length
-
 public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol

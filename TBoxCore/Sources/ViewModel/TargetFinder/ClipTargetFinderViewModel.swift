@@ -263,7 +263,9 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
                     self?.isLoading.send(false)
                     self?.didFinish.send(())
                 }
-            } receiveValue: { _ in }
+            } receiveValue: { _ in
+                // NOP
+            }
             .store(in: &self.cancellableBag)
     }
 

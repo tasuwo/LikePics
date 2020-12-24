@@ -6,6 +6,8 @@ import Common
 import Domain
 import RealmSwift
 
+// swiftlint:disable contains_over_filter_is_empty
+
 public class ReferenceClipStorage {
     public struct Configuration {
         let realmConfiguration: Realm.Configuration
