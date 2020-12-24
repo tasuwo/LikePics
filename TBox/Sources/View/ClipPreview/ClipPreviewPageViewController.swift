@@ -89,10 +89,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if let currentViewController = self.currentViewController {
-            self.bind(forCurrentViewController: currentViewController)
-        }
+        self.didUpdateCurrentPage()
     }
 
     // MARK: - Methods
@@ -178,6 +175,15 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: Page resolution
 
+    private func didUpdateCurrentPage() {
+        guard let viewController = self.currentViewController else { return }
+        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        viewController.previewView.delegate = self
+
+        self.bind(forCurrentViewController: viewController)
+        self.viewModel.inputs.currentClipItemId.send(viewController.itemId)
+    }
+
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
         guard let currentIndex = self.viewModel.outputs.items.value.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
@@ -195,11 +201,8 @@ extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        guard completed, let viewController = self.currentViewController else { return }
-
-        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
-        viewController.previewView.delegate = self
-        self.bind(forCurrentViewController: viewController)
+        guard completed else { return }
+        self.didUpdateCurrentPage()
     }
 }
 

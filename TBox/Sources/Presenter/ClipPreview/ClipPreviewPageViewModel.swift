@@ -12,6 +12,7 @@ protocol ClipPreviewPageViewModelType {
 }
 
 protocol ClipPreviewPageViewModelInputs {
+    var currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> { get }
     var deleteClip: PassthroughSubject<Void, Never> { get }
     var removeClipItem: PassthroughSubject<ClipItem.Identity, Never> { get }
     var addTags: PassthroughSubject<Set<Tag.Identity>, Never> { get }
@@ -20,6 +21,7 @@ protocol ClipPreviewPageViewModelInputs {
 
 protocol ClipPreviewPageViewModelOutputs {
     var clipId: Clip.Identity { get }
+    var currentItem: CurrentValueSubject<ClipItem?, Never> { get }
     var items: CurrentValueSubject<[ClipItem], Never> { get }
     var tags: CurrentValueSubject<[Tag], Never> { get }
 
@@ -41,6 +43,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     // MARK: ClipPreviewPageViewModelInputs
 
+    let currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> = .init(nil)
     let deleteClip: PassthroughSubject<Void, Never> = .init()
     let removeClipItem: PassthroughSubject<ClipItem.Identity, Never> = .init()
     let addTags: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
@@ -49,6 +52,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     // MARK: ClipPreviewPageViewModelOutputs
 
     let clipId: Clip.Identity
+    let currentItem: CurrentValueSubject<ClipItem?, Never> = .init(nil)
     let items: CurrentValueSubject<[ClipItem], Never> = .init([])
     let tags: CurrentValueSubject<[Tag], Never> = .init([])
 
@@ -89,6 +93,15 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
             } receiveValue: { [weak self] clip in
                 self?.items.send(clip.items)
                 self?.tags.send(clip.tags)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.currentClipItemId
+            .map { [weak self] itemId in
+                self?.items.value.first(where: { $0.id == itemId })
+            }
+            .sink { [weak self] item in
+                self?.currentItem.send(item)
             }
             .store(in: &self.cancellableBag)
     }

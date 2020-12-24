@@ -74,7 +74,7 @@ class ClipPreviewPageBarViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: nil) { _ in
-            self.viewModel.inputs.isHorizontalWide.send(self.traitCollection.horizontalSizeClass == .regular)
+            self.viewModel.inputs.isHorizontalCompact.send(self.traitCollection.horizontalSizeClass == .compact)
         }
     }
 
@@ -89,7 +89,11 @@ class ClipPreviewPageBarViewController: UIViewController {
     private func bind(dependency: Dependency, view: ClipPreviewPageViewProtocol, viewModel: ClipPreviewPageViewModelType) {
         // MARK: Inputs
 
-        // TODO: 現在のClipItem情報を流す
+        dependency.inputs.isHorizontalCompact.send(self.traitCollection.horizontalSizeClass == .compact)
+
+        viewModel.outputs.currentItem
+            .sink { dependency.inputs.currentClipItem.send($0) }
+            .store(in: &self.cancellableBag)
 
         viewModel.outputs.items
             .map { $0.count }
@@ -98,8 +102,8 @@ class ClipPreviewPageBarViewController: UIViewController {
 
         // MARK: Outputs
 
-        dependency.outputs.isToolBarHidden
-            .sink { [weak view] isHidden in view?.navigationController?.setToolbarHidden(isHidden, animated: true) }
+        dependency.outputs.displayToolBar
+            .sink { [weak view] display in view?.navigationController?.setToolbarHidden(!display, animated: false) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.leftItems
@@ -120,7 +124,7 @@ class ClipPreviewPageBarViewController: UIViewController {
             .map { [weak self] items in
                 items.compactMap { self?.resolveBarButtonItem(for: $0) }
             }
-            .sink { [weak view] items in view?.setToolbarItems(items, animated: true) }
+            .sink { [weak view] items in view?.setToolbarItems(items, animated: false) }
             .store(in: &self.cancellableBag)
     }
 

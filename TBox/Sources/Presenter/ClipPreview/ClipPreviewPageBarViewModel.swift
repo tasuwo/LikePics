@@ -11,13 +11,13 @@ protocol ClipPreviewPageBarViewModelType {
 }
 
 protocol ClipPreviewPageBarViewModelInputs {
-    var isHorizontalWide: CurrentValueSubject<Bool, Never> { get }
+    var isHorizontalCompact: CurrentValueSubject<Bool, Never> { get }
     var currentClipItem: CurrentValueSubject<ClipItem?, Never> { get }
     var clipItemCount: CurrentValueSubject<Int, Never> { get }
 }
 
 protocol ClipPreviewPageBarViewModelOutputs {
-    var isToolBarHidden: CurrentValueSubject<Bool, Never> { get }
+    var displayToolBar: CurrentValueSubject<Bool, Never> { get }
     var leftItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
     var rightItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
     var toolBarItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
@@ -36,13 +36,13 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
 
     // MARK: ClipPreviewPageBarViewModelInputs
 
-    let isHorizontalWide: CurrentValueSubject<Bool, Never> = .init(false)
+    let isHorizontalCompact: CurrentValueSubject<Bool, Never> = .init(true)
     let currentClipItem: CurrentValueSubject<ClipItem?, Never> = .init(nil)
     let clipItemCount: CurrentValueSubject<Int, Never> = .init(0)
 
     // MARK: ClipPreviewPageBarViewModelOutputs
 
-    let isToolBarHidden: CurrentValueSubject<Bool, Never> = .init(false)
+    let displayToolBar: CurrentValueSubject<Bool, Never> = .init(true)
     let leftItems: CurrentValueSubject<[ClipPreview.BarItem], Never> = .init([])
     let rightItems: CurrentValueSubject<[ClipPreview.BarItem], Never> = .init([])
     let toolBarItems: CurrentValueSubject<[ClipPreview.BarItem], Never> = .init([])
@@ -54,14 +54,15 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
     // MARK: - Lifecycle
 
     init() {
-        self.isHorizontalWide
+        self.isHorizontalCompact
             .combineLatest(clipItemCount, currentClipItem)
-            .sink { [weak self] isHorizontalWide, clipItemCount, currentClipItem in
+            .sink { [weak self] isHorizontalCompact, clipItemCount, currentClipItem in
                 guard let self = self else { return }
 
-                self.isToolBarHidden.send(isHorizontalWide)
+                let displayToolBar = isHorizontalCompact
+                self.displayToolBar.send(displayToolBar)
 
-                if isHorizontalWide {
+                if !displayToolBar {
                     self.toolBarItems.send([])
                     self.leftItems.send([.init(kind: .back, isEnabled: true)])
                     self.rightItems.send([
