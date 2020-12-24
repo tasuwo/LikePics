@@ -11,7 +11,7 @@ protocol ClipPreviewPageBarViewModelType {
 }
 
 protocol ClipPreviewPageBarViewModelInputs {
-    var isHorizontalCompact: CurrentValueSubject<Bool, Never> { get }
+    var isVerticalCompact: CurrentValueSubject<Bool, Never> { get }
     var currentClipItem: CurrentValueSubject<ClipItem?, Never> { get }
     var clipItemCount: CurrentValueSubject<Int, Never> { get }
 }
@@ -36,7 +36,7 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
 
     // MARK: ClipPreviewPageBarViewModelInputs
 
-    let isHorizontalCompact: CurrentValueSubject<Bool, Never> = .init(true)
+    let isVerticalCompact: CurrentValueSubject<Bool, Never> = .init(true)
     let currentClipItem: CurrentValueSubject<ClipItem?, Never> = .init(nil)
     let clipItemCount: CurrentValueSubject<Int, Never> = .init(0)
 
@@ -54,12 +54,12 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
     // MARK: - Lifecycle
 
     init() {
-        self.isHorizontalCompact
+        self.isVerticalCompact
             .combineLatest(clipItemCount, currentClipItem)
-            .sink { [weak self] isHorizontalCompact, clipItemCount, currentClipItem in
+            .sink { [weak self] isVerticalCompact, clipItemCount, currentClipItem in
                 guard let self = self else { return }
 
-                let displayToolBar = isHorizontalCompact
+                let displayToolBar = !isVerticalCompact
                 self.displayToolBar.send(displayToolBar)
 
                 if !displayToolBar {

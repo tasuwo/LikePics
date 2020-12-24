@@ -74,7 +74,7 @@ class ClipPreviewPageBarViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: nil) { _ in
-            self.viewModel.inputs.isHorizontalCompact.send(self.traitCollection.horizontalSizeClass == .compact)
+            self.viewModel.inputs.isVerticalCompact.send(self.traitCollection.verticalSizeClass == .compact)
         }
     }
 
@@ -89,7 +89,7 @@ class ClipPreviewPageBarViewController: UIViewController {
     private func bind(dependency: Dependency, view: ClipPreviewPageViewProtocol, viewModel: ClipPreviewPageViewModelType) {
         // MARK: Inputs
 
-        dependency.inputs.isHorizontalCompact.send(self.traitCollection.horizontalSizeClass == .compact)
+        dependency.inputs.isVerticalCompact.send(self.traitCollection.verticalSizeClass == .compact)
 
         viewModel.outputs.currentItem
             .sink { dependency.inputs.currentClipItem.send($0) }
