@@ -61,19 +61,20 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = ClipPreviewPagePresenter(query: query,
+        let viewModel = ClipPreviewPageViewModel(clipId: clipId,
+                                                 query: query,
                                                  clipCommandService: self.clipCommandService,
                                                  logger: self.logger)
 
-        let barItemsPresenter = ClipPreviewPageBarButtonItemsPresenter(dataSource: presenter)
-        let barItemsProvider = ClipPreviewPageBarButtonItemsProvider(presenter: barItemsPresenter)
+        let barItemsViewModel = ClipPreviewPageBarViewModel()
+        let barItemsProvider = ClipPreviewPageBarViewController(viewModel: barItemsViewModel)
 
         let previewTransitioningController = ClipPreviewTransitioningController(logger: self.logger)
         let informationTransitioningController = ClipInformationTransitioningController(logger: self.logger)
 
         let pageViewController = ClipPreviewPageViewController(
             factory: self,
-            presenter: presenter,
+            viewModel: viewModel,
             barItemsProvider: barItemsProvider,
             previewTransitioningController: previewTransitioningController,
             informationTransitionController: informationTransitioningController

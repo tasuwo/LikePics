@@ -2,24 +2,28 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import UIKit
 
-protocol ClipPreviewPageBarButtonItemsProviderDelegate: AnyObject {
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetLeftBarButtonItems items: [UIBarButtonItem])
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetRightBarButtonItems items: [UIBarButtonItem])
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem])
-    func shouldHideToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldShowToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldDeleteClip(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider)
-    func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider)
+protocol ClipPreviewPageViewProtocol: AnyObject {
+    var navigationItem: UINavigationItem { get }
+    var navigationController: UINavigationController? { get }
+    func setToolbarItems(_ toolbarItems: [UIBarButtonItem]?, animated: Bool)
 }
 
-class ClipPreviewPageBarButtonItemsProvider {
+protocol ClipPreviewPageBarButtonItemsProviderDelegate: AnyObject {
+    func shouldDeleteClip(_ provider: ClipPreviewPageBarViewController)
+    func shouldDeleteClipImage(_ provider: ClipPreviewPageBarViewController)
+    func shouldAddToAlbum(_ provider: ClipPreviewPageBarViewController)
+    func shouldAddTags(_ provider: ClipPreviewPageBarViewController)
+    func shouldOpenWeb(_ provider: ClipPreviewPageBarViewController)
+    func shouldBack(_ provider: ClipPreviewPageBarViewController)
+    func shouldPresentInfo(_ provider: ClipPreviewPageBarViewController)
+}
+
+class ClipPreviewPageBarViewController: UIViewController {
+    typealias Dependency = ClipPreviewPageBarViewModelType
+
     private lazy var flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
                                                     target: nil,
                                                     action: nil)
@@ -46,33 +50,79 @@ class ClipPreviewPageBarButtonItemsProvider {
                                                 target: self,
                                                 action: #selector(self.didTapInfo))
 
-    private let presenter: ClipPreviewPageBarButtonItemsPresenter
-
     weak var alertPresentable: ClipItemPreviewAlertPresentable?
-    weak var delegate: ClipPreviewPageBarButtonItemsProviderDelegate? {
-        didSet {
-            self.presenter.set(navigationBar: self, toolBar: self)
-        }
-    }
+    weak var delegate: ClipPreviewPageBarButtonItemsProviderDelegate?
+
+    private let viewModel: ClipPreviewPageBarViewModelType
+    private var cancellableBag: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
-    init(presenter: ClipPreviewPageBarButtonItemsPresenter) {
-        self.presenter = presenter
+    init(viewModel: ClipPreviewPageBarViewModelType) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+
         self.setupAccessibilityIdentifiers()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: nil) { _ in
+            self.viewModel.inputs.isHorizontalWide.send(self.traitCollection.horizontalSizeClass == .regular)
+        }
     }
 
     // MARK: - Methods
 
-    func onUpdateClip() {
-        self.presenter.onUpdateClip()
-    }
-
-    func onUpdateOrientation() {
-        self.presenter.onUpdateOrientation()
+    func bind(view: ClipPreviewPageViewProtocol, viewModel: ClipPreviewPageViewModelType) {
+        self.bind(dependency: self.viewModel, view: view, viewModel: viewModel)
     }
 
     // MARK: Privates
+
+    private func bind(dependency: Dependency, view: ClipPreviewPageViewProtocol, viewModel: ClipPreviewPageViewModelType) {
+        // MARK: Inputs
+
+        // TODO: 現在のClipItem情報を流す
+
+        viewModel.outputs.items
+            .map { $0.count }
+            .sink { dependency.inputs.clipItemCount.send($0) }
+            .store(in: &self.cancellableBag)
+
+        // MARK: Outputs
+
+        dependency.outputs.isToolBarHidden
+            .sink { [weak view] isHidden in view?.navigationController?.setToolbarHidden(isHidden, animated: true) }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.leftItems
+            .map { [weak self] items in
+                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+            }
+            .assign(to: \.navigationItem.leftBarButtonItems, on: view)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.rightItems
+            .map { [weak self] items in
+                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+            }
+            .assign(to: \.navigationItem.rightBarButtonItems, on: view)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.toolBarItems
+            .map { [weak self] items in
+                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+            }
+            .sink { [weak view] items in view?.setToolbarItems(items, animated: true) }
+            .store(in: &self.cancellableBag)
+    }
 
     @objc
     private func didTapDeleteClip(item: UIBarButtonItem) {
@@ -131,29 +181,33 @@ class ClipPreviewPageBarButtonItemsProvider {
         self.delegate?.shouldPresentInfo(self)
     }
 
-    private func resolveBarButtonItem(for item: ClipPreviewPageBarButtonItemsPresenter.Item) -> UIBarButtonItem {
-        switch item {
-        case .spacer:
-            return self.flexibleItem
+    private func resolveBarButtonItem(for item: ClipPreview.BarItem) -> UIBarButtonItem {
+        let buttonItem: UIBarButtonItem = {
+            switch item.kind {
+            case .spacer:
+                return self.flexibleItem
 
-        case .add:
-            return self.addItem
+            case .add:
+                return self.addItem
 
-        case .deleteOnlyImageOrClip:
-            return self.deleteOnlyImageOrClipImage
+            case .deleteOnlyImageOrClip:
+                return self.deleteOnlyImageOrClipImage
 
-        case .deleteClip:
-            return self.deleteClipItem
+            case .deleteClip:
+                return self.deleteClipItem
 
-        case .openWeb:
-            return self.openWebItem
+            case .openWeb:
+                return self.openWebItem
 
-        case .back:
-            return self.backItem
+            case .back:
+                return self.backItem
 
-        case .info:
-            return self.infoItem
-        }
+            case .info:
+                return self.infoItem
+            }
+        }()
+        buttonItem.isEnabled = item.isEnabled
+        return buttonItem
     }
 
     private func setupAccessibilityIdentifiers() {
@@ -163,37 +217,5 @@ class ClipPreviewPageBarButtonItemsProvider {
         self.addItem.accessibilityIdentifier = "\(String(describing: Self.self)).addItem"
         self.backItem.accessibilityIdentifier = "\(String(describing: Self.self)).backItem"
         self.infoItem.accessibilityIdentifier = "\(String(describing: Self.self)).infoItem"
-    }
-}
-
-extension ClipPreviewPageBarButtonItemsProvider: ClipPreviewPageToolBar {
-    // MARK: - ClipPreviewPageToolBar
-
-    var isLandscape: Bool {
-        return UIDevice.current.orientation.isLandscape
-    }
-
-    func hide() {
-        self.delegate?.shouldHideToolBar(self)
-    }
-
-    func show() {
-        self.delegate?.shouldShowToolBar(self)
-    }
-
-    func set(_ items: [ClipPreviewPageBarButtonItemsPresenter.Item]) {
-        self.delegate?.clipItemPreviewToolBarItemsProvider(self, shouldSetToolBarItems: items.map { self.resolveBarButtonItem(for: $0) })
-    }
-}
-
-extension ClipPreviewPageBarButtonItemsProvider: ClipPreviewPageNavigationBar {
-    // MARK: - ClipPreviewPageToolBar
-
-    func setRightBarItems(_ items: [ClipPreviewPageBarButtonItemsPresenter.Item]) {
-        self.delegate?.clipItemPreviewToolBarItemsProvider(self, shouldSetRightBarButtonItems: items.map { self.resolveBarButtonItem(for: $0) })
-    }
-
-    func setLeftBarItems(_ items: [ClipPreviewPageBarButtonItemsPresenter.Item]) {
-        self.delegate?.clipItemPreviewToolBarItemsProvider(self, shouldSetLeftBarButtonItems: items.map { self.resolveBarButtonItem(for: $0) })
     }
 }

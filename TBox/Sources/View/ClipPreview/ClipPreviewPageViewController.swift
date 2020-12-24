@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxCore
@@ -10,6 +11,7 @@ import UIKit
 
 class ClipPreviewPageViewController: UIPageViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = ClipPreviewPageViewModelType
 
     enum TransitionDestination {
         case back
@@ -17,8 +19,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     private let factory: Factory
-    private let presenter: ClipPreviewPagePresenter
-    private let barItemsProvider: ClipPreviewPageBarButtonItemsProvider
+    private let viewModel: ClipPreviewPageViewModelType
+    private let barItemsProvider: ClipPreviewPageBarViewController
     private let previewTransitioningController: ClipPreviewTransitionControllerProtocol
     private let informationTransitioningController: ClipInformationTransitioningControllerProtocol
 
@@ -41,6 +43,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
+    private var cancellableBag: Set<AnyCancellable> = .init()
+
     override var prefersStatusBarHidden: Bool {
         return self.isFullscreen
     }
@@ -57,13 +61,13 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: ClipPreviewPagePresenter,
-         barItemsProvider: ClipPreviewPageBarButtonItemsProvider,
+         viewModel: ClipPreviewPageViewModel,
+         barItemsProvider: ClipPreviewPageBarViewController,
          previewTransitioningController: ClipPreviewTransitionControllerProtocol,
          informationTransitionController: ClipInformationTransitioningController)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.barItemsProvider = barItemsProvider
         self.previewTransitioningController = previewTransitioningController
         self.informationTransitioningController = informationTransitionController
@@ -72,7 +76,7 @@ class ClipPreviewPageViewController: UIPageViewController {
             UIPageViewController.OptionsKey.interPageSpacing: 40
         ])
 
-        self.presenter.view = self
+        self.addChild(barItemsProvider)
     }
 
     @available(*, unavailable)
@@ -91,13 +95,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.setupBar()
         self.setupGestureRecognizer()
 
-        self.presenter.setup()
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        self.barItemsProvider.onUpdateOrientation()
+        self.bind(to: viewModel)
     }
 
     // MARK: - Methods
@@ -109,6 +107,41 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func setupAccessibilityIdentifiers() {
         self.navigationController?.navigationBar.accessibilityIdentifier = "\(String(describing: Self.self)).navigationBar"
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.items
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                if let viewController = self.makeViewController(at: 0) {
+                    self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
+                        guard let self = self, completed, let viewController = self.currentViewController else { return }
+
+                        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+                        viewController.previewView.delegate = self
+                    })
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.close
+            .sink { [weak self] _ in
+                self?.previewTransitioningController.beginTransition(.custom(interactive: false))
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.barItemsProvider.bind(view: self, viewModel: dependency)
     }
 
     // MARK: Bar
@@ -151,10 +184,10 @@ class ClipPreviewPageViewController: UIPageViewController {
             }
 
         case (.began, .information):
-            guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
+            guard let index = self.currentIndex, self.viewModel.outputs.items.value.indices.contains(index) else { return }
             let nullableViewController = self.factory.makeClipInformationViewController(
-                clipId: self.presenter.clip.identity,
-                itemId: self.presenter.clip.items[index].identity,
+                clipId: self.viewModel.outputs.clipId,
+                itemId: self.viewModel.outputs.items.value[index].identity,
                 transitioningController: self.informationTransitioningController,
                 dataSource: self
             )
@@ -187,13 +220,14 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
-        guard let currentIndex = self.presenter.clip.items.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
+        guard let currentIndex = self.viewModel.outputs.items.value.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
         return currentIndex
     }
 
     private func makeViewController(at index: Int) -> UIViewController? {
-        guard self.presenter.clip.items.indices.contains(index) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(clipId: self.presenter.clip.identity, itemId: self.presenter.clip.items[index].identity)
+        guard self.viewModel.outputs.items.value.indices.contains(index) else { return nil }
+        return self.factory.makeClipItemPreviewViewController(clipId: self.viewModel.outputs.clipId,
+                                                              itemId: self.viewModel.outputs.items.value[index].identity)
     }
 }
 
@@ -217,7 +251,7 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let currentIndex = self.resolveIndex(of: viewController), currentIndex < self.presenter.clip.items.count else { return nil }
+        guard let currentIndex = self.resolveIndex(of: viewController), currentIndex < self.viewModel.outputs.items.value.count else { return nil }
         return self.makeViewController(at: currentIndex + 1)
     }
 }
@@ -245,33 +279,6 @@ extension ClipPreviewPageViewController: UIGestureRecognizerDelegate {
             }
         }
         return false
-    }
-}
-
-extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {
-    // MARK: - ClipPreviewPageViewProtocol
-
-    func reloadPages() {
-        if let viewController = self.makeViewController(at: 0) {
-            self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
-                guard let self = self, completed, let viewController = self.currentViewController else { return }
-
-                self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
-                viewController.previewView.delegate = self
-            })
-        }
-        self.barItemsProvider.onUpdateClip()
-    }
-
-    func closePages() {
-        self.previewTransitioningController.beginTransition(.custom(interactive: false))
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -314,63 +321,42 @@ extension ClipPreviewPageViewController: ClipItemPreviewAlertPresentable {}
 extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDelegate {
     // MARK: - ClipPreviewPageBarButtonItemsProviderDelegate
 
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetToolBarItems items: [UIBarButtonItem]) {
-        self.setToolbarItems(items, animated: true)
+    func shouldDeleteClip(_ provider: ClipPreviewPageBarViewController) {
+        self.viewModel.inputs.deleteClip.send(())
     }
 
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetLeftBarButtonItems items: [UIBarButtonItem]) {
-        self.navigationItem.leftBarButtonItems = items
-    }
-
-    func clipItemPreviewToolBarItemsProvider(_ provider: ClipPreviewPageBarButtonItemsProvider, shouldSetRightBarButtonItems items: [UIBarButtonItem]) {
-        self.navigationItem.rightBarButtonItems = items
-    }
-
-    func shouldHideToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        self.navigationController?.setToolbarHidden(true, animated: false)
-    }
-
-    func shouldShowToolBar(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        self.navigationController?.setToolbarHidden(false, animated: false)
-    }
-
-    func shouldDeleteClip(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        self.presenter.deleteClip()
-    }
-
-    func shouldDeleteClipImage(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+    func shouldDeleteClipImage(_ provider: ClipPreviewPageBarViewController) {
         guard let clipId = self.currentViewController?.itemId else { return }
-        self.presenter.removeClipItem(having: clipId)
+        self.viewModel.inputs.removeClipItem.send(clipId)
     }
 
-    func shouldAddToAlbum(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+    func shouldAddToAlbum(_ provider: ClipPreviewPageBarViewController) {
         guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func shouldAddTags(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        let tags = self.presenter.clip.tags.map { $0.identity }
+    func shouldAddTags(_ provider: ClipPreviewPageBarViewController) {
+        let tags = self.viewModel.outputs.tags.value.map { $0.identity }
         let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
         guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)
     }
 
-    func shouldOpenWeb(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        // TODO: URLが存在しなければdisabledにする
+    func shouldOpenWeb(_ provider: ClipPreviewPageBarViewController) {
         guard let url = self.currentViewController?.itemUrl else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    func shouldBack(_ provider: ClipPreviewPageBarButtonItemsProvider) {
+    func shouldBack(_ provider: ClipPreviewPageBarViewController) {
         self.previewTransitioningController.beginTransition(.custom(interactive: false))
         self.dismiss(animated: true, completion: nil)
     }
 
-    func shouldPresentInfo(_ provider: ClipPreviewPageBarButtonItemsProvider) {
-        guard let index = self.currentIndex, self.presenter.clip.items.indices.contains(index) else { return }
+    func shouldPresentInfo(_ provider: ClipPreviewPageBarViewController) {
+        guard let index = self.currentIndex, self.viewModel.outputs.items.value.indices.contains(index) else { return }
         let nullableViewController = self.factory.makeClipInformationViewController(
-            clipId: self.presenter.clip.identity,
-            itemId: self.presenter.clip.items[index].identity,
+            clipId: self.viewModel.outputs.clipId,
+            itemId: self.viewModel.outputs.items.value[index].identity,
             transitioningController: self.informationTransitioningController,
             dataSource: self
         )
@@ -384,7 +370,7 @@ extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
     func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
-        self.presenter.addClipToAlbum(albumId)
+        self.viewModel.inputs.addToAlbum.send(albumId)
     }
 }
 
@@ -392,6 +378,8 @@ extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
-        self.presenter.addTagsToClip(tagIds)
+        self.viewModel.inputs.addTags.send(tagIds)
     }
 }
+
+extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {}
