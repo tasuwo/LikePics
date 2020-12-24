@@ -202,6 +202,9 @@ class AlbumViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] images in
                 let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+                controller.completionWithItemsHandler = { _, _, _, _ in
+                    self?.viewModel.inputs.operation.send(.none)
+                }
                 self?.present(controller, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
