@@ -12,6 +12,7 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
     func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider)
     func shouldHide(_ provider: ClipCollectionToolBarProvider)
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
+    func shouldShare(_ provider: ClipCollectionToolBarProvider)
 }
 
 class ClipCollectionToolBarProvider {
@@ -23,6 +24,7 @@ class ClipCollectionToolBarProvider {
     private var removeFromAlbum: UIBarButtonItem!
     private var hideItem: UIBarButtonItem!
     private var unhideItem: UIBarButtonItem!
+    private var shareItem: UIBarButtonItem!
 
     weak var alertPresentable: ClipCollectionAlertPresentable?
     weak var delegate: ClipCollectionToolBarProviderDelegate?
@@ -123,6 +125,11 @@ class ClipCollectionToolBarProvider {
         self.delegate?.shouldUnhide(self)
     }
 
+    @objc
+    private func didTapShare() {
+        self.delegate?.shouldShare(self)
+    }
+
     private func setupButtons() {
         self.flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
                                             target: nil,
@@ -144,6 +151,10 @@ class ClipCollectionToolBarProvider {
                                           style: .plain,
                                           target: self,
                                           action: #selector(self.didTapUnhide))
+        self.shareItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"),
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(self.didTapShare))
     }
 
     private func resolveBarButtonItems(for items: [ClipCollection.ToolBarItem]) -> [UIBarButtonItem] {
@@ -170,6 +181,9 @@ class ClipCollectionToolBarProvider {
 
             case .unhide:
                 return self.unhideItem
+
+            case .share:
+                return self.shareItem
             }
         }()
         buttonItem.isEnabled = item.isEnabled

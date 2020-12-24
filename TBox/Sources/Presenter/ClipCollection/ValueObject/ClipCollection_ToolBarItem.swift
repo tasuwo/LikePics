@@ -10,6 +10,7 @@ extension ClipCollection {
             case removeFromAlbum
             case hide
             case unhide
+            case share
         }
 
         let kind: Kind

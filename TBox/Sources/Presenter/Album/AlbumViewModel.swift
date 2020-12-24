@@ -21,6 +21,7 @@ protocol AlbumViewModelInputs {
     var unhideSelections: PassthroughSubject<Void, Never> { get }
     var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var shareSelections: PassthroughSubject<Void, Never> { get }
 
     var delete: PassthroughSubject<Clip.Identity, Never> { get }
     var hide: PassthroughSubject<Clip.Identity, Never> { get }
@@ -76,6 +77,7 @@ class AlbumViewModel: AlbumViewModelType,
     let unhideSelections: PassthroughSubject<Void, Never> = .init()
     let addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
     let addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    let shareSelections: PassthroughSubject<Void, Never> = .init()
 
     let delete: PassthroughSubject<Clip.Identity, Never> = .init()
     let hide: PassthroughSubject<Clip.Identity, Never> = .init()
@@ -303,6 +305,22 @@ extension AlbumViewModel {
                     self.errorMessage.send("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode()))")
                 }
                 self.operation.send(.none)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.shareSelections
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                do {
+                    let images = try self.selectedClips
+                        .flatMap { $0.items }
+                        .map { $0.imageId }
+                        .compactMap { try self.imageQueryService.read(having: $0) }
+                    self.presentActivityController.send(images)
+                } catch {
+                    self.errorMessage.send(L10n.clipsListErrorAtShare)
+                }
             }
             .store(in: &self.cancellableBag)
     }

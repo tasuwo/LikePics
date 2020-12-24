@@ -404,6 +404,10 @@ extension SearchResultViewController: ClipCollectionToolBarProviderDelegate {
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
         self.viewModel.inputs.unhideSelections.send(())
     }
+
+    func shouldShare(_ provider: ClipCollectionToolBarProvider) {
+        self.viewModel.inputs.shareSelections.send(())
+    }
 }
 
 extension SearchResultViewController: AlbumSelectionPresenterDelegate {
