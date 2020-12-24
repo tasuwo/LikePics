@@ -26,6 +26,8 @@ internal enum L10n {
     internal static let clipInformationViewImageUrlTitle = L10n.tr("Localizable", "clip_information_view_image_url_title")
     /// 隠す
     internal static let clipInformationViewLabelClipHide = L10n.tr("Localizable", "clip_information_view_label_clip_hide")
+    /// なし
+    internal static let clipInformationViewLabelClipItemNoUrl = L10n.tr("Localizable", "clip_information_view_label_clip_item_no_url")
     /// 登録日
     internal static let clipInformationViewLabelClipItemRegisteredDate = L10n.tr("Localizable", "clip_information_view_label_clip_item_registered_date")
     /// サイズ

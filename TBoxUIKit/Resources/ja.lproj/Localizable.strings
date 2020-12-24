@@ -24,6 +24,7 @@
 "clip_information_view_label_empty" = "タグは登録されていません";
 
 "clip_information_view_label_clip_item_url" = "画像のURL";
+"clip_information_view_label_clip_item_no_url" = "なし";
 "clip_information_view_label_clip_item_size" = "サイズ";
 "clip_information_view_label_clip_item_registered_date" = "登録日";
 "clip_information_view_label_clip_item_updated_date" = "更新日";
