@@ -38,7 +38,6 @@ class TagCollectionViewController: UIViewController {
                              message: L10n.tagListViewAlertForUpdateMessage,
                              placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
     )
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     @IBOutlet var collectionView: TagCollectionView!
     @IBOutlet var searchBar: UISearchBar!

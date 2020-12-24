@@ -17,17 +17,11 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
 class ClipCollectionToolBarProvider {
     typealias Dependency = ClipCollectionToolBarViewModelType
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var flexibleItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var addItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var removeItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var removeFromAlbum: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var hideItem: UIBarButtonItem!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var unhideItem: UIBarButtonItem!
 
     weak var alertPresentable: ClipCollectionAlertPresentable?

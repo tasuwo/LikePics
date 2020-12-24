@@ -17,9 +17,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let factory: Factory
     private let viewModel: ClipPreviewPageViewModelType
     private let barItemsProvider: ClipPreviewPageBarViewController
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var transitionController: ClipPreviewPageTransitionControllerType!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
     private var isFullscreen = false {

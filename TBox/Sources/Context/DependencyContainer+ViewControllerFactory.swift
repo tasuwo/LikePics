@@ -82,7 +82,7 @@ extension DependencyContainer: ViewControllerFactory {
             factory: self,
             viewModel: viewModel,
             barItemsProvider: barItemsProvider,
-            previewTransitionCoordinatorBuilder: builder
+            transitionControllerBuilder: builder
         )
 
         let viewController = ClipPreviewBaseViewController(pageViewController: pageViewController)

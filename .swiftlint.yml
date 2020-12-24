@@ -38,7 +38,7 @@ opt_in_rules:
   - function_default_parameter_at_end
   - identical_operands
   # - implicit_return
-  - implicitly_unwrapped_optional
+  # - implicitly_unwrapped_optional
   - joined_default_parameter
   - last_where
   - legacy_multiple

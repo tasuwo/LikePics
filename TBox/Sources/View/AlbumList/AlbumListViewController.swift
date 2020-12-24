@@ -22,9 +22,7 @@ class AlbumListViewController: UIViewController {
                              message: L10n.albumListViewAlertForAddMessage,
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)
     )
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var collectionView: AlbumListCollectionView!
 
     // MARK: - Lifecycle

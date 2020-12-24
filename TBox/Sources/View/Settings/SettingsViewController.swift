@@ -8,9 +8,7 @@ import UIKit
 class SettingsViewController: UITableViewController {
     typealias Factory = ViewControllerFactory
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     var factory: Factory!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     var presenter: SettingsPresenter!
     var cancellableBag: Set<AnyCancellable> = .init()
 

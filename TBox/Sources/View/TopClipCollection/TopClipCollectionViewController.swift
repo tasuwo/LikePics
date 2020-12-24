@@ -25,9 +25,7 @@ class TopClipCollectionViewController: UIViewController {
     private let thumbnailStorage: ThumbnailStorageProtocol
 
     private let emptyMessageView = EmptyMessageView()
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var collectionView: ClipCollectionView!
 
     private var cancellableBag: Set<AnyCancellable> = .init()

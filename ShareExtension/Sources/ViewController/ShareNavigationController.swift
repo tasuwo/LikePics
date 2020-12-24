@@ -6,7 +6,6 @@ import UIKit
 
 @objc(ShareNavigationController)
 class ShareNavigationController: UINavigationController {
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var factory: DependencyContainer!
 
     // MARK: - Lifecycle

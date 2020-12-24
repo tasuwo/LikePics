@@ -26,9 +26,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     private let factory: Factory
     let viewModel: ClipTargetFinderSelectedTagsViewModelType
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var collectionView: UICollectionView!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
     private var cancellableBag = Set<AnyCancellable>()
     private var observation: NSKeyValueObservation?

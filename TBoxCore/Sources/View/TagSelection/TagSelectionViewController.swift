@@ -26,7 +26,6 @@ public class TagSelectionViewController: UIViewController {
                              placeholder: L10n.tagListViewAlertForAddPlaceholder)
     )
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     private var cancellableBag: Set<AnyCancellable> = .init()
 

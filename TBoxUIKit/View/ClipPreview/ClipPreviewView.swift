@@ -63,7 +63,6 @@ public class ClipPreviewView: UIView {
 
     public weak var delegate: ClipPreviewPageViewDelegate?
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var doubleTapGestureRecognizer: UITapGestureRecognizer!
 
     private lazy var logger: TBoxLoggable = RootLogger.shared

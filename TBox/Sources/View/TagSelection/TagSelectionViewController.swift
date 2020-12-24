@@ -22,7 +22,6 @@ class TagSelectionViewController: UIViewController {
                              placeholder: L10n.tagListViewAlertForAddPlaceholder)
     )
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
 
     @IBOutlet var searchBar: UISearchBar!

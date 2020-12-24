@@ -21,7 +21,6 @@ class ClipInformationViewController: UIViewController {
     private weak var dataSource: ClipInformationViewDataSource?
     private var shouldHideStatusBar: Bool = false
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
     override var prefersStatusBarHidden: Bool {

@@ -65,7 +65,6 @@ class ClipPreviewPageTransitionController: NSObject,
     private let factory: Factory
     private let baseViewController: UIViewController
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
     private let previewTransitioningController: ClipPreviewTransitionControllerProtocol

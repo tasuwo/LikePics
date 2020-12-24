@@ -40,9 +40,7 @@ class AlbumViewController: UIViewController {
     // MARK: View
 
     private let emptyMessageView = EmptyMessageView()
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
-    // swiftlint:disable:next implicitly_unwrapped_optional
     var collectionView: ClipCollectionView!
     private var cancellableBag: Set<AnyCancellable> = .init()
 

@@ -45,10 +45,8 @@ public class ClipInformationView: UIView {
         }
     }
 
-    // swiftlint:disable implicitly_unwrapped_optional superfluous_disable_command
     var imageView: UIImageView!
     private var collectionViewDataSource: Factory.DataSource!
-    // swiftlint:enable implicitly_unwrapped_optional superfluous_disable_command
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var collectionView: UICollectionView!

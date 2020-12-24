@@ -22,10 +22,7 @@ class AlbumSelectionViewController: UIViewController {
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)
     )
 
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var dataSource: UITableViewDiffableDataSource<Section, Album>!
-
-    // swiftlint:disable:next implicitly_unwrapped_optional
     private var tableView: AlbumSelectionTableView!
 
     // MARK: - Lifecycle
