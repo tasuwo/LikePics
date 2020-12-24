@@ -65,7 +65,7 @@ class ClipCollectionToolBarProvider {
 
         dependency.outputs.items
             .map { [weak self] items in
-                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+                self?.resolveBarButtonItems(for: items)
             }
             .sink { [weak view] items in view?.setToolbarItems(items, animated: true) }
             .store(in: &self.cancellableBag)
@@ -146,12 +146,16 @@ class ClipCollectionToolBarProvider {
                                           action: #selector(self.didTapUnhide))
     }
 
+    private func resolveBarButtonItems(for items: [ClipCollection.ToolBarItem]) -> [UIBarButtonItem] {
+        return items.reduce(into: [UIBarButtonItem]()) { array, item in
+            if !array.isEmpty { array.append(self.flexibleItem) }
+            array.append(self.resolveBarButtonItem(for: item))
+        }
+    }
+
     private func resolveBarButtonItem(for item: ClipCollection.ToolBarItem) -> UIBarButtonItem {
         let buttonItem: UIBarButtonItem = {
             switch item.kind {
-            case .spacer:
-                return self.flexibleItem
-
             case .add:
                 return self.addItem
 

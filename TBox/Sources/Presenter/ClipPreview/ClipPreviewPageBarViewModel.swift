@@ -73,9 +73,7 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
                 } else {
                     self.toolBarItems.send([
                         .init(kind: .openWeb, isEnabled: currentClipItem?.url != nil),
-                        .init(kind: .spacer, isEnabled: false),
                         .init(kind: .add, isEnabled: true),
-                        .init(kind: .spacer, isEnabled: false),
                         clipItemCount == 1
                             ? .init(kind: .deleteClip, isEnabled: true)
                             : .init(kind: .deleteOnlyImageOrClip, isEnabled: true)

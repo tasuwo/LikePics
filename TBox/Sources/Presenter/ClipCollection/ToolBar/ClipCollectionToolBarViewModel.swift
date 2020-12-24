@@ -71,11 +71,8 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
 
                 self.items.send([
                     .init(kind: .add, isEnabled: isEnabled),
-                    .init(kind: .spacer, isEnabled: false),
                     .init(kind: .hide, isEnabled: isEnabled),
-                    .init(kind: .spacer, isEnabled: false),
                     .init(kind: .unhide, isEnabled: isEnabled),
-                    .init(kind: .spacer, isEnabled: false),
                     self.context.isAlbum
                         ? .init(kind: .removeFromAlbum, isEnabled: isEnabled)
                         : .init(kind: .delete, isEnabled: isEnabled)

@@ -108,21 +108,21 @@ class ClipPreviewPageBarViewController: UIViewController {
 
         dependency.outputs.leftItems
             .map { [weak self] items in
-                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+                self?.resolveBarButtonItems(for: items)
             }
             .assign(to: \.navigationItem.leftBarButtonItems, on: view)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
             .map { [weak self] items in
-                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+                self?.resolveBarButtonItems(for: items)
             }
             .assign(to: \.navigationItem.rightBarButtonItems, on: view)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.toolBarItems
             .map { [weak self] items in
-                items.compactMap { self?.resolveBarButtonItem(for: $0) }
+                self?.resolveBarButtonItems(for: items)
             }
             .sink { [weak view] items in view?.setToolbarItems(items, animated: false) }
             .store(in: &self.cancellableBag)
@@ -185,12 +185,16 @@ class ClipPreviewPageBarViewController: UIViewController {
         self.delegate?.shouldPresentInfo(self)
     }
 
+    private func resolveBarButtonItems(for items: [ClipPreview.BarItem]) -> [UIBarButtonItem] {
+        return items.reduce(into: [UIBarButtonItem]()) { array, item in
+            if !array.isEmpty { array.append(self.flexibleItem) }
+            array.append(self.resolveBarButtonItem(for: item))
+        }
+    }
+
     private func resolveBarButtonItem(for item: ClipPreview.BarItem) -> UIBarButtonItem {
         let buttonItem: UIBarButtonItem = {
             switch item.kind {
-            case .spacer:
-                return self.flexibleItem
-
             case .add:
                 return self.addItem
 

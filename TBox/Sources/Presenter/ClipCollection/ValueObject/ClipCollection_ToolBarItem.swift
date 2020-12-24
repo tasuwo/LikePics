@@ -5,7 +5,6 @@
 extension ClipCollection {
     struct ToolBarItem {
         enum Kind {
-            case spacer
             case add
             case delete
             case removeFromAlbum
