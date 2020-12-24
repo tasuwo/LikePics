@@ -85,7 +85,7 @@ extension DependencyContainer: ViewControllerFactory {
             previewTransitionCoordinatorBuilder: builder
         )
 
-        let viewController = ClipPreviewViewController(pageViewController: pageViewController)
+        let viewController = ClipPreviewBaseViewController(pageViewController: pageViewController)
         viewController.transitioningDelegate = previewTransitioningController
         viewController.modalPresentationStyle = .fullScreen
 

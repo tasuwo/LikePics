@@ -5,7 +5,7 @@
 import TBoxUIKit
 import UIKit
 
-class ClipPreviewViewController: UINavigationController {
+class ClipPreviewBaseViewController: UINavigationController {
     private var pageViewController: ClipPreviewPageViewController?
 
     override var prefersStatusBarHidden: Bool {
@@ -31,7 +31,7 @@ class ClipPreviewViewController: UINavigationController {
     }
 }
 
-extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
+extension ClipPreviewBaseViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
     func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -53,7 +53,7 @@ extension ClipPreviewViewController: ClipPreviewPresentedAnimatorDataSource {
     }
 }
 
-extension ClipPreviewViewController: ClipInformationPresentingAnimatorDataSource {
+extension ClipPreviewBaseViewController: ClipInformationPresentingAnimatorDataSource {
     // MARK: - ClipInformationPresentingAnimatorDataSource
 
     func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
