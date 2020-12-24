@@ -15,7 +15,7 @@ protocol ClipPreviewPageViewModelInputs {
     var currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> { get }
     var deleteClip: PassthroughSubject<Void, Never> { get }
     var removeClipItem: PassthroughSubject<ClipItem.Identity, Never> { get }
-    var addTags: PassthroughSubject<Set<Tag.Identity>, Never> { get }
+    var replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addToAlbum: PassthroughSubject<Album.Identity, Never> { get }
 }
 
@@ -46,7 +46,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     let currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> = .init(nil)
     let deleteClip: PassthroughSubject<Void, Never> = .init()
     let removeClipItem: PassthroughSubject<ClipItem.Identity, Never> = .init()
-    let addTags: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
+    let replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
     let addToAlbum: PassthroughSubject<Album.Identity, Never> = .init()
 
     // MARK: ClipPreviewPageViewModelOutputs
@@ -132,10 +132,10 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.addTags
+        self.replaceTags
             .sink { [weak self] tagIds in
                 guard let self = self else { return }
-                if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clipId], byAddingTagsHaving: Array(tagIds)) {
+                if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clipId], byReplacingTagsHaving: Array(tagIds)) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to add tags (\(tagIds.map({ $0.uuidString }).joined(separator: ", "))) to clip. (code: \(error.rawValue))
                     """))

@@ -309,7 +309,7 @@ extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
-        self.viewModel.inputs.addTags.send(tagIds)
+        self.viewModel.inputs.replaceTags.send(tagIds)
     }
 }
 
