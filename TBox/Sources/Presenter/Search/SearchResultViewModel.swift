@@ -21,14 +21,12 @@ protocol SearchResultViewModelInputs {
     var unhideSelections: PassthroughSubject<Void, Never> { get }
     var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { get }
-    var shareSelections: PassthroughSubject<Void, Never> { get }
 
     var delete: PassthroughSubject<Clip.Identity, Never> { get }
     var hide: PassthroughSubject<Clip.Identity, Never> { get }
     var unhide: PassthroughSubject<Clip.Identity, Never> { get }
     var addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> { get }
     var addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> { get }
-    var share: PassthroughSubject<Clip.Identity, Never> { get }
 }
 
 protocol SearchResultViewModelOutputs {
@@ -37,10 +35,12 @@ protocol SearchResultViewModelOutputs {
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
     var presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> { get }
-    var presentActivityController: PassthroughSubject<[Data], Never> { get }
     var previewingClip: Clip? { get }
     var title: CurrentValueSubject<String, Never> { get }
     var emptyMessage: CurrentValueSubject<String, Never> { get }
+
+    func fetchImages(for clip: Clip.Identity) -> [Data]
+    func fetchImagesForSelectedClips() -> [Data]
 }
 
 protocol SearchResultViewModelType {
@@ -73,14 +73,12 @@ class SearchResultViewModel: SearchResultViewModelType,
     let unhideSelections: PassthroughSubject<Void, Never> = .init()
     let addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
     let addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> = .init()
-    let shareSelections: PassthroughSubject<Void, Never> = .init()
 
     let delete: PassthroughSubject<Clip.Identity, Never> = .init()
     let hide: PassthroughSubject<Clip.Identity, Never> = .init()
     let unhide: PassthroughSubject<Clip.Identity, Never> = .init()
     let addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> = .init()
     let addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> = .init()
-    let share: PassthroughSubject<Clip.Identity, Never> = .init()
 
     // MARK: SearchResultViewModelOutputs
 
@@ -91,7 +89,6 @@ class SearchResultViewModel: SearchResultViewModelType,
     let presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> = .init()
     let title: CurrentValueSubject<String, Never> = .init("")
     let emptyMessage: CurrentValueSubject<String, Never> = .init("")
-    let presentActivityController: PassthroughSubject<[Data], Never> = .init()
 
     var previewingClip: Clip? {
         guard let id = self.previewingClipId else { return nil }
@@ -134,6 +131,37 @@ class SearchResultViewModel: SearchResultViewModelType,
         self.logger = logger
 
         self.bind()
+    }
+
+    // MARK: - Methods
+
+    func fetchImages(for clipId: Clip.Identity) -> [Data] {
+        guard let clip = self.clips.value.first(where: { $0.id == clipId }) else {
+            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            return []
+        }
+        do {
+            let images = try clip.items
+                .map { $0.imageId }
+                .compactMap { [weak self] imageId in try self?.imageQueryService.read(having: imageId) }
+            return images
+        } catch {
+            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            return []
+        }
+    }
+
+    func fetchImagesForSelectedClips() -> [Data] {
+        do {
+            let images = try self.selectedClips
+                .flatMap { $0.items }
+                .map { $0.imageId }
+                .compactMap { try self.imageQueryService.read(having: $0) }
+            return images
+        } catch {
+            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            return []
+        }
     }
 }
 
@@ -304,22 +332,6 @@ extension SearchResultViewModel {
                 self.operation.send(.none)
             }
             .store(in: &self.cancellableBag)
-
-        self.shareSelections
-            .receive(on: DispatchQueue.global())
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                do {
-                    let images = try self.selectedClips
-                        .flatMap { $0.items }
-                        .map { $0.imageId }
-                        .compactMap { try self.imageQueryService.read(having: $0) }
-                    self.presentActivityController.send(images)
-                } catch {
-                    self.errorMessage.send(L10n.clipsListErrorAtShare)
-                }
-            }
-            .store(in: &self.cancellableBag)
     }
 
     private func bindClipOperations() {
@@ -379,24 +391,6 @@ extension SearchResultViewModel {
                     Failed to add clip having id \(clipId) to album having id \(albumId). (code: \(error.rawValue))
                     """))
                     self.errorMessage.send("\(L10n.clipsListErrorAtAddClipToAlbum)\n(\(error.makeErrorCode()))")
-                }
-            }
-            .store(in: &self.cancellableBag)
-
-        self.share
-            .receive(on: DispatchQueue.global())
-            .sink { [weak self] clipId in
-                guard let clip = self?.clips.value.first(where: { $0.id == clipId }) else {
-                    self?.errorMessage.send(L10n.clipsListErrorAtShare)
-                    return
-                }
-                do {
-                    let images = try clip.items
-                        .map { $0.imageId }
-                        .compactMap { try self?.imageQueryService.read(having: $0) }
-                    self?.presentActivityController.send(images)
-                } catch {
-                    self?.errorMessage.send(L10n.clipsListErrorAtShare)
                 }
             }
             .store(in: &self.cancellableBag)

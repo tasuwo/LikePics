@@ -12,7 +12,10 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
     func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider)
     func shouldHide(_ provider: ClipCollectionToolBarProvider)
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
-    func shouldShare(_ provider: ClipCollectionToolBarProvider)
+    func shouldCancel(_ provider: ClipCollectionToolBarProvider)
+
+    func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController)
+    func fetchImages(_ provider: ClipCollectionToolBarProvider) -> [Data]
 }
 
 class ClipCollectionToolBarProvider {
@@ -127,7 +130,18 @@ class ClipCollectionToolBarProvider {
 
     @objc
     private func didTapShare() {
-        self.delegate?.shouldShare(self)
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            guard let images = self.delegate?.fetchImages(self) else { return }
+            DispatchQueue.main.async {
+                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+                controller.popoverPresentationController?.barButtonItem = self.shareItem
+                controller.completionWithItemsHandler = { _, _, _, _ in
+                    self.delegate?.shouldCancel(self)
+                }
+                self.delegate?.present(self, controller: controller)
+            }
+        }
     }
 
     private func setupButtons() {

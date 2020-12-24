@@ -198,17 +198,6 @@ class AlbumViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.presentActivityController
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] images in
-                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
-                controller.completionWithItemsHandler = { _, _, _, _ in
-                    self?.viewModel.inputs.operation.send(.none)
-                }
-                self?.present(controller, animated: true, completion: nil)
-            }
-            .store(in: &self.cancellableBag)
-
         self.navigationItemsProvider.bind(view: self, viewModel: dependency)
         self.toolBarItemsProvider.bind(view: self, viewModel: dependency)
     }
@@ -407,7 +396,15 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath) {
-        self.viewModel.inputs.share.send(clipId)
+        guard let cell = self.collectionView.cellForItem(at: indexPath) else { return }
+        let images = self.viewModel.outputs.fetchImages(for: clipId)
+        let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+        controller.popoverPresentationController?.sourceView = self.collectionView
+        controller.popoverPresentationController?.sourceRect = cell.frame
+        controller.completionWithItemsHandler = { _, _, _, _ in
+            self.viewModel.operation.send(.none)
+        }
+        self.present(controller, animated: true, completion: nil)
     }
 }
 
@@ -472,8 +469,16 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
         self.viewModel.inputs.unhideSelections.send(())
     }
 
-    func shouldShare(_ provider: ClipCollectionToolBarProvider) {
-        self.viewModel.inputs.shareSelections.send(())
+    func shouldCancel(_ provider: ClipCollectionToolBarProvider) {
+        self.viewModel.inputs.operation.send(.none)
+    }
+
+    func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController) {
+        self.present(controller, animated: true, completion: nil)
+    }
+
+    func fetchImages(_ provider: ClipCollectionToolBarProvider) -> [Data] {
+        return self.viewModel.outputs.fetchImagesForSelectedClips()
     }
 }
 
