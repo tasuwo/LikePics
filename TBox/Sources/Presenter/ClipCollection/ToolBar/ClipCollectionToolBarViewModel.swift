@@ -66,7 +66,8 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
         self.selectedClipsCount
             .sink { [weak self] count in
                 guard let self = self else { return }
-                let isEnabled = count != 0
+                // swiftlint:disable:next empty_count
+                let isEnabled = count > 0
 
                 self.items.send([
                     .init(kind: .add, isEnabled: isEnabled),
