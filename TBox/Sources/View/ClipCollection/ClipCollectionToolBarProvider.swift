@@ -19,7 +19,7 @@ class ClipCollectionToolBarProvider {
 
     private var flexibleItem: UIBarButtonItem!
     private var addItem: UIBarButtonItem!
-    private var removeItem: UIBarButtonItem!
+    private var deleteItem: UIBarButtonItem!
     private var removeFromAlbum: UIBarButtonItem!
     private var hideItem: UIBarButtonItem!
     private var unhideItem: UIBarButtonItem!
@@ -87,8 +87,8 @@ class ClipCollectionToolBarProvider {
     }
 
     @objc
-    private func didTapRemove(item: UIBarButtonItem) {
-        self.alertPresentable?.presentRemoveAlert(at: item, targetCount: self.viewModel.outputs.selectionCount.value) { [weak self] in
+    private func didTapDelete(item: UIBarButtonItem) {
+        self.alertPresentable?.presentDeleteAlert(at: item, targetCount: self.viewModel.outputs.selectionCount.value) { [weak self] in
             guard let self = self else { return }
             self.delegate?.shouldDelete(self)
         }
@@ -130,9 +130,9 @@ class ClipCollectionToolBarProvider {
         self.addItem = UIBarButtonItem(barButtonSystemItem: .add,
                                        target: self,
                                        action: #selector(self.didTapAddToAlbum))
-        self.removeItem = UIBarButtonItem(barButtonSystemItem: .trash,
+        self.deleteItem = UIBarButtonItem(barButtonSystemItem: .trash,
                                           target: self,
-                                          action: #selector(self.didTapRemove))
+                                          action: #selector(self.didTapDelete))
         self.removeFromAlbum = UIBarButtonItem(barButtonSystemItem: .trash,
                                                target: self,
                                                action: #selector(self.didTapRemoveFromAlbum))
@@ -156,7 +156,7 @@ class ClipCollectionToolBarProvider {
                 return self.addItem
 
             case .delete:
-                return self.removeItem
+                return self.deleteItem
 
             case .removeFromAlbum:
                 return self.removeFromAlbum

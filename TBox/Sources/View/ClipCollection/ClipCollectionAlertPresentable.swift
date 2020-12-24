@@ -6,7 +6,7 @@ import UIKit
 
 protocol ClipCollectionAlertPresentable: AnyObject {
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
-    func presentRemoveAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
+    func presentDeleteAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
     func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
     func presentHideAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
 }
@@ -30,7 +30,7 @@ extension ClipCollectionAlertPresentable where Self: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentRemoveAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void) {
+    func presentDeleteAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForDeleteMessage,
                                       preferredStyle: .actionSheet)
