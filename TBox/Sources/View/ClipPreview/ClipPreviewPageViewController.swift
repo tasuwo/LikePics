@@ -249,13 +249,11 @@ extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     // MARK: - ClipInformationViewDataSource
 
     func previewImage(_ view: ClipInformationView) -> UIImage? {
-        guard let pageView = self.currentViewController?.previewView else { return nil }
-        return pageView.image
+        return self.currentViewController?.previewView.image
     }
 
     func previewPageBounds(_ view: ClipInformationView) -> CGRect {
-        guard let pageView = self.currentViewController?.previewView else { return .zero }
-        return pageView.bounds
+        return self.currentViewController?.previewView?.bounds ?? .zero
     }
 }
 
@@ -321,10 +319,10 @@ extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
     // MARK: - ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
-        guard let index = self.currentIndex, self.viewModel.outputs.items.value.indices.contains(index) else { return nil }
+        guard let itemId = self.viewModel.outputs.currentItem.value?.identity else { return nil }
         return self.factory.makeClipInformationViewController(
             clipId: self.viewModel.outputs.clipId,
-            itemId: self.viewModel.outputs.items.value[index].identity,
+            itemId: itemId,
             transitioningController: transitioningController,
             dataSource: self
         )
