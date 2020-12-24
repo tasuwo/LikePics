@@ -28,6 +28,9 @@ protocol ClipPreviewPageViewModelOutputs {
     var errorMessage: PassthroughSubject<String, Never> { get }
 
     var close: PassthroughSubject<Void, Never> { get }
+
+    func fetchImage() -> Data?
+    func fetchImagesInClip() -> [Data]
 }
 
 class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
@@ -64,16 +67,23 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     private let query: ClipQuery
     private let clipCommandService: ClipCommandServiceProtocol
+    private let imageQueryService: NewImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
-    init(clipId: Clip.Identity, query: ClipQuery, clipCommandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
+    init(clipId: Clip.Identity,
+         query: ClipQuery,
+         clipCommandService: ClipCommandServiceProtocol,
+         imageQueryService: NewImageQueryServiceProtocol,
+         logger: TBoxLoggable)
+    {
         self.clipId = clipId
         self.query = query
         self.clipCommandService = clipCommandService
+        self.imageQueryService = imageQueryService
         self.logger = logger
 
         self.bind()
@@ -155,5 +165,26 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 }
             }
             .store(in: &self.cancellableBag)
+    }
+
+    func fetchImage() -> Data? {
+        guard let item = self.currentItem.value else { return nil }
+        do {
+            return try self.imageQueryService.read(having: item.imageId)
+        } catch {
+            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            return nil
+        }
+    }
+
+    func fetchImagesInClip() -> [Data] {
+        do {
+            return try self.items.value
+                .map { $0.imageId }
+                .compactMap { try self.imageQueryService.read(having: $0) }
+        } catch {
+            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            return []
+        }
     }
 }

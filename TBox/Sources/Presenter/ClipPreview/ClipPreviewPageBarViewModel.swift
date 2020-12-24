@@ -21,6 +21,7 @@ protocol ClipPreviewPageBarViewModelOutputs {
     var leftItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
     var rightItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
     var toolBarItems: CurrentValueSubject<[ClipPreview.BarItem], Never> { get }
+    var clipItemCount: CurrentValueSubject<Int, Never> { get }
 }
 
 class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
@@ -66,6 +67,9 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
                     self.toolBarItems.send([])
                     self.leftItems.send([.init(kind: .back, isEnabled: true)])
                     self.rightItems.send([
+                        .init(kind: .openWeb, isEnabled: currentClipItem?.url != nil),
+                        .init(kind: .add, isEnabled: true),
+                        .init(kind: .share, isEnabled: true),
                         clipItemCount == 1
                             ? .init(kind: .deleteClip, isEnabled: true)
                             : .init(kind: .deleteOnlyImageOrClip, isEnabled: true)
@@ -74,6 +78,7 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
                     self.toolBarItems.send([
                         .init(kind: .openWeb, isEnabled: currentClipItem?.url != nil),
                         .init(kind: .add, isEnabled: true),
+                        .init(kind: .share, isEnabled: true),
                         clipItemCount == 1
                             ? .init(kind: .deleteClip, isEnabled: true)
                             : .init(kind: .deleteOnlyImageOrClip, isEnabled: true)

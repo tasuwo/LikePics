@@ -114,6 +114,13 @@ internal enum L10n {
 
     /// 選択したクリップは、設定が有効な間は全ての場所から隠されます
     internal static let clipsListAlertForHideMessage = L10n.tr("Localizable", "clips_list_alert_for_hide_message")
+    /// この画像のみ共有する
+    internal static let clipsListAlertForShareItemAction = L10n.tr("Localizable", "clips_list_alert_for_share_item_action")
+    /// クリップ内の%d件の画像を共有する
+    internal static func clipsListAlertForShareItemsAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_share_items_action", p1)
+    }
+
     /// タグを追加
     internal static let clipsListContextMenuAddTag = L10n.tr("Localizable", "clips_list_context_menu_add_tag")
     /// アルバムへ追加

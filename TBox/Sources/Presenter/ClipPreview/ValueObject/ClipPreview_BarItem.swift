@@ -11,6 +11,7 @@ extension ClipPreview {
             case add
             case back
             case info
+            case share
         }
 
         let kind: Kind

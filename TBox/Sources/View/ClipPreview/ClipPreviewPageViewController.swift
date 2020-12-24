@@ -295,6 +295,18 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     func shouldPresentInfo(_ provider: ClipPreviewPageBarViewController) {
         self.transitionController.inputs.beginPresentInformation.send(())
     }
+
+    func fetchImage(_ provider: ClipPreviewPageBarViewController) -> Data? {
+        return self.viewModel.outputs.fetchImage()
+    }
+
+    func fetchImages(_ provider: ClipPreviewPageBarViewController) -> [Data] {
+        return self.viewModel.outputs.fetchImagesInClip()
+    }
+
+    func present(_ provider: ClipPreviewPageBarViewController, controller: UIActivityViewController) {
+        self.present(controller, animated: true, completion: nil)
+    }
 }
 
 extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {

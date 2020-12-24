@@ -17,6 +17,7 @@
 "clips_list_right_bar_item_for_deselect_all_title" = "全て選択解除";
 "clips_list_right_bar_item_for_reorder" = "並び替え";
 "clips_list_right_bar_item_for_done" = "完了";
+
 "clips_list_alert_for_add_to_album" = "アルバムに追加する";
 "clips_list_alert_for_add_tag" = "タグを追加する";
 "clips_list_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
@@ -26,6 +27,9 @@
 "clips_list_alert_for_delete_in_album_action_delete" = "削除";
 "clips_list_alert_for_hide_message" = "選択したクリップは、設定が有効な間は全ての場所から隠されます";
 "clips_list_alert_for_hide_action" = "%d件のクリップを隠す";
+"clips_list_alert_for_share_item_action" = "この画像のみ共有する";
+"clips_list_alert_for_share_items_action" = "クリップ内の%d件の画像を共有する";
+
 "clips_list_context_menu_add_tag" = "タグを追加";
 "clips_list_context_menu_add_to_album" = "アルバムへ追加";
 "clips_list_context_menu_hide" = "隠す";

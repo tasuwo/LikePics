@@ -1,6 +1,6 @@
 strings:
     - inputs:
-        - TBox/Resources/ja.lproj
+        - TBox/Resources/ja.lproj/Localizable.strings
       outputs:
         - templateName: structured-swift5
           output: TBox/Sources/Generated/String.swift

@@ -19,6 +19,11 @@ protocol ClipPreviewPageBarButtonItemsProviderDelegate: AnyObject {
     func shouldOpenWeb(_ provider: ClipPreviewPageBarViewController)
     func shouldBack(_ provider: ClipPreviewPageBarViewController)
     func shouldPresentInfo(_ provider: ClipPreviewPageBarViewController)
+
+    func fetchImage(_ provider: ClipPreviewPageBarViewController) -> Data?
+    func fetchImages(_ provider: ClipPreviewPageBarViewController) -> [Data]
+
+    func present(_ provider: ClipPreviewPageBarViewController, controller: UIActivityViewController)
 }
 
 class ClipPreviewPageBarViewController: UIViewController {
@@ -49,6 +54,10 @@ class ClipPreviewPageBarViewController: UIViewController {
                                                 style: .plain,
                                                 target: self,
                                                 action: #selector(self.didTapInfo))
+    private lazy var shareItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"),
+                                                 style: .plain,
+                                                 target: self,
+                                                 action: #selector(self.didTapShare))
 
     weak var alertPresentable: ClipItemPreviewAlertPresentable?
     weak var delegate: ClipPreviewPageBarButtonItemsProviderDelegate?
@@ -185,6 +194,33 @@ class ClipPreviewPageBarViewController: UIViewController {
         self.delegate?.shouldPresentInfo(self)
     }
 
+    @objc
+    private func didTapShare(item: UIBarButtonItem) {
+        let shareItemAction = { [weak self] in
+            guard let self = self, let image = self.delegate?.fetchImage(self) else { return }
+            let controller = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            controller.popoverPresentationController?.barButtonItem = self.shareItem
+            self.delegate?.present(self, controller: controller)
+        }
+
+        let shareItemsAction = { [weak self] in
+            guard let self = self, let images = self.delegate?.fetchImages(self) else { return }
+            let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            controller.popoverPresentationController?.barButtonItem = self.shareItem
+            self.delegate?.present(self, controller: controller)
+        }
+
+        let clipItemCount = self.viewModel.outputs.clipItemCount.value
+        if clipItemCount > 1 {
+            self.alertPresentable?.presentShareAlert(at: item,
+                                                     targetCount: clipItemCount,
+                                                     shareItemAction: shareItemAction,
+                                                     shareItemsAction: shareItemsAction)
+        } else {
+            shareItemsAction()
+        }
+    }
+
     private func resolveBarButtonItems(for items: [ClipPreview.BarItem]) -> [UIBarButtonItem] {
         return items.reduce(into: [UIBarButtonItem]()) { array, item in
             if !array.isEmpty { array.append(self.flexibleItem) }
@@ -212,6 +248,9 @@ class ClipPreviewPageBarViewController: UIViewController {
 
             case .info:
                 return self.infoItem
+
+            case .share:
+                return self.shareItem
             }
         }()
         buttonItem.isEnabled = item.isEnabled
