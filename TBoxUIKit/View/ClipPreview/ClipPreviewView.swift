@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import UIKit
 
@@ -27,12 +28,14 @@ public class ClipPreviewView: UIView {
         self.scrollView.panGestureRecognizer
     }
 
-    public var contentOffset: CGPoint {
-        self.scrollView.contentOffset
+    public var contentOffset: AnyPublisher<CGPoint, Never> {
+        KeyValueObservingPublisher(object: scrollView, keyPath: \.contentOffset, options: .new)
+            .eraseToAnyPublisher()
     }
 
-    public var isMinimumZoomScale: Bool {
-        self.scrollView.zoomScale == self.scrollView.minimumZoomScale
+    private let _isMinimumZoomScale: CurrentValueSubject<Bool, Never> = .init(true)
+    public var isMinimumZoomScale: AnyPublisher<Bool, Never> {
+        self._isMinimumZoomScale.eraseToAnyPublisher()
     }
 
     public var isScrollEnabled: Bool {
@@ -198,6 +201,7 @@ extension ClipPreviewView: UIScrollViewDelegate {
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         guard let source = self.source else { return }
         self.updateConstraints(forImageSize: source.imageSize, on: self.bounds)
+        self._isMinimumZoomScale.send(scrollView.zoomScale == scrollView.minimumZoomScale)
     }
 
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
