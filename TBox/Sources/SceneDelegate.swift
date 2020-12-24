@@ -16,6 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var dependencyContainer: DependencyContainer?
     var window: UIWindow?
 
+    private let launchQueue = DispatchQueue(label: "net.tasuwo.TBox.SceneDelegate.launch")
+    private var isAlreadyLaunch: Bool = false
+    private var completions: [() -> Void] = []
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
@@ -50,9 +54,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // TODO: 実行頻度を考える
-        if self.dependencyContainer?.persistService.persistIfNeeded() == false {
-            self.dependencyContainer?.integrityValidationService.validateAndFixIntegrityIfNeeded()
+        self.execute { [weak self] in
+            if self?.dependencyContainer?.persistService.persistIfNeeded() == false {
+                self?.dependencyContainer?.integrityValidationService.validateAndFixIntegrityIfNeeded()
+            }
         }
     }
 
@@ -81,6 +86,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
+    func execute(afterLaunch completion: @escaping () -> Void) {
+        self.launchQueue.sync {
+            if self.isAlreadyLaunch {
+                completion()
+            } else {
+                self.completions.append(completion)
+            }
+        }
+    }
+
     func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
         do {
             let container = try DependencyContainer(configuration: configuration,
@@ -98,8 +113,13 @@ extension SceneDelegate: MainAppLauncher {
 
             self.cloudStackLoader?.startObserveCloudAvailability()
 
-            // TODO: 実行頻度を考える
             container.integrityValidationService.validateAndFixIntegrityIfNeeded()
+
+            self.launchQueue.sync {
+                self.completions.forEach { $0() }
+                self.completions = []
+                self.isAlreadyLaunch = true
+            }
         } catch {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
             fatalError("Unable to launch app.")
