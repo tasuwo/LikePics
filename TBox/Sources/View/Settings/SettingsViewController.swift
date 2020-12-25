@@ -23,7 +23,7 @@ class SettingsViewController: UITableViewController {
 
         self.presenter.view = self
 
-        self.presenter.shouldShowHiddenItems
+        self.presenter.shouldHideHiddenItems
             .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
             .store(in: &self.cancellableBag)
 
@@ -37,7 +37,7 @@ class SettingsViewController: UITableViewController {
     // MARK: - IBActions
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {
-        self.presenter.set(showHiddenItems: sender.isOn)
+        self.presenter.set(hideHiddenItems: sender.isOn)
     }
 
     @IBAction func didChangeSyncICloud(_ sender: UISwitch) {

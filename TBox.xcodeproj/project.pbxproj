@@ -695,12 +695,13 @@
 		2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorageProtocol.swift; sourceTree = "<group>"; };
 		2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUsageContextStorage.swift; sourceTree = "<group>"; };
 		2C168D572571455700080114 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
-		2C168D592571456800080114 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISwitch+setOnSmoothly.swift"; sourceTree = "<group>"; };
 		2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
+		2C1CBA8D2595902D0078FFB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
+		2C1CBA9F259590350078FFB8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncMonitor.swift; sourceTree = "<group>"; };
 		2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2C1E4433257B5A5700A067B1 /* ClipCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection.swift; sourceTree = "<group>"; };
@@ -960,7 +961,6 @@
 		2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootSetupViewController.swift; sourceTree = "<group>"; };
 		2CDF4F1825727DCF0030342B /* AppRootSetupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootSetupPresenter.swift; sourceTree = "<group>"; };
 		2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainerConfiguration.swift; sourceTree = "<group>"; };
-		2CDF4F4525729B130030342B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2CDF4F4E2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DependencyContainer+ViewControllerFactory.swift"; sourceTree = "<group>"; };
 		2CE0143C2562E72D00D15A57 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE0143E2562E72D00D15A57 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -4346,8 +4346,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				2C168D572571455700080114 /* Base */,
-				2C168D592571456800080114 /* en */,
-				2CDF4F4525729B130030342B /* ja */,
+				2C1CBA8D2595902D0078FFB8 /* en */,
+				2C1CBA9F259590350078FFB8 /* ja */,
 			);
 			name = SettingsViewController.storyboard;
 			sourceTree = "<group>";

@@ -1,6 +1,6 @@
 
-/* Class = "UILabel"; text = "隠れたアイテムを表示する"; ObjectID = "0Vj-Ia-aAu"; */
-"0Vj-Ia-aAu.text" = "Show hidden items";
+/* Class = "UILabel"; text = "非表示"; ObjectID = "0Vj-Ia-aAu"; */
+"0Vj-Ia-aAu.text" = "Hide";
 
 /* Class = "UILabel"; text = "バージョン"; ObjectID = "5z0-WG-kPC"; */
 "5z0-WG-kPC.text" = "Version";

@@ -19,7 +19,7 @@ class SettingsPresenter {
 
     private var cancellableBag: Set<AnyCancellable> = .init()
 
-    private(set) var shouldShowHiddenItems: CurrentValueSubject<Bool, Never>
+    private(set) var shouldHideHiddenItems: CurrentValueSubject<Bool, Never>
     private(set) var shouldSyncICloudEnabled: CurrentValueSubject<Bool, Never>
 
     weak var view: SettingsViewProtocol?
@@ -31,13 +31,14 @@ class SettingsPresenter {
     {
         self.storage = storage
         self.availabilityStore = availabilityStore
-        self.shouldShowHiddenItems = .init(false)
+        self.shouldHideHiddenItems = .init(false)
         self.shouldSyncICloudEnabled = .init(false)
 
         self.storage.showHiddenItems
             .receive(on: DispatchQueue.main)
+            .map { !$0 }
             .sink(receiveValue: { [weak self] value in
-                self?.shouldShowHiddenItems.send(value)
+                self?.shouldHideHiddenItems.send(value)
             })
             .store(in: &self.cancellableBag)
 
@@ -52,8 +53,8 @@ class SettingsPresenter {
             .store(in: &self.cancellableBag)
     }
 
-    func set(showHiddenItems: Bool) {
-        self.storage.set(showHiddenItems: showHiddenItems)
+    func set(hideHiddenItems: Bool) {
+        self.storage.set(showHiddenItems: !hideHiddenItems)
     }
 
     func set(isICloudSyncEnabled: Bool) -> Bool {
