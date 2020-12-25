@@ -64,9 +64,6 @@ public class ClipInformationCell: UICollectionViewCell {
             $0?.font = UIFont.preferredFont(forTextStyle: .body)
         }
 
-        self.bottomAccessoryButton.titleLabel?.lineBreakMode = .byTruncatingTail
-        self.bottomAccessoryButton.titleLabel?.numberOfLines = 1
-
         self.visibleRightAccessoryView = false
         self.visibleBottomAccessoryView = false
     }
