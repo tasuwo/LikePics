@@ -41,9 +41,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
 
                 let createdClip: Clip
-                switch self.clipStorage.create(clip: clip, overwrite: forced) {
+                switch self.clipStorage.create(clip: clip) {
                 case let .success(result):
-                    createdClip = result.new
+                    createdClip = result
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()

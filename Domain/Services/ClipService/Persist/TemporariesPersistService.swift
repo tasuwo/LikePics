@@ -102,10 +102,9 @@ public class TemporariesPersistService {
 
             try self.beginTransaction()
 
-            let oldClip: Clip?
-            switch self.clipStorage.create(clip: clip, overwrite: true) {
-            case let .success(result):
-                oldClip = result.old
+            switch self.clipStorage.create(clip: clip) {
+            case let .success:
+                break
 
             case let .failure(error):
                 try? self.cancelTransaction()
@@ -127,9 +126,6 @@ public class TemporariesPersistService {
                 return false
             }
 
-            oldClip?.items.forEach { item in
-                try? self.imageStorage.delete(having: item.imageId)
-            }
             for item in clip.items {
                 guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.identity) else {
                     // 画像が見つからなかった場合、どうしようもないためスキップに留める

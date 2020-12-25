@@ -79,7 +79,7 @@ class NewClipStorageSpec: QuickSpec {
 
                     _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
                         .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "fuga")
-                    ]), overwrite: true)
+                    ]))
                 }
                 it("既存のタグを付与したクリップが保存される") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
@@ -106,7 +106,7 @@ class NewClipStorageSpec: QuickSpec {
 
                     _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
                         .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
-                    ]), overwrite: true)
+                    ]))
                 }
                 it("既存のタグを付与したクリップが保存される") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
@@ -133,7 +133,7 @@ class NewClipStorageSpec: QuickSpec {
 
                     _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
                         .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
-                    ]), overwrite: true)
+                    ]))
                 }
                 it("既存のタグを付与したクリップが保存される") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()

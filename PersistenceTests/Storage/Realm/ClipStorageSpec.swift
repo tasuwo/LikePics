@@ -28,7 +28,7 @@ class ClipStorageSpec: QuickSpec {
         // MARK: Create
 
         describe("create(clip:forced:)") {
-            var result: Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError>!
+            var result: Result<Domain.Clip, ClipStorageError>!
             beforeEach {
                 try! clipStorage.beginTransaction()
                 result = clipStorage.create(
@@ -44,8 +44,7 @@ class ClipStorageSpec: QuickSpec {
                         isHidden: false,
                         registeredDate: Date(timeIntervalSince1970: 0),
                         updatedDate: Date(timeIntervalSince1970: 1000)
-                    ),
-                    overwrite: true
+                    )
                 )
                 try! clipStorage.commitTransaction()
             }

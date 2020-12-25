@@ -55,10 +55,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                let oldClip: Clip?
-                switch self.clipStorage.create(clip: clip, overwrite: true) {
-                case let .success(result):
-                    oldClip = result.old
+                switch self.clipStorage.create(clip: clip) {
+                case .success:
+                    break
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
@@ -69,9 +68,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                oldClip?.items.forEach { item in
-                    try? self.imageStorage.delete(having: item.imageId)
-                }
                 containers.forEach { container in
                     try? self.imageStorage.create(container.data, id: container.id)
                 }

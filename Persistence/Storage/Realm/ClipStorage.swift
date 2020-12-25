@@ -71,7 +71,7 @@ extension ClipStorage: ClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Domain.Clip, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
+    public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         // Check parameters
@@ -96,21 +96,6 @@ extension ClipStorage: ClipStorageProtocol {
             newTag.name = tag.name
             appendingTags.append(newTag)
         }
-
-        // Check duplication
-
-        var oldClip: ClipObject?
-        if let duplicatedClip = realm.object(ofType: ClipObject.self, forPrimaryKey: clip.identity.uuidString) {
-            if overwrite {
-                oldClip = duplicatedClip
-            } else {
-                return .failure(.duplicated)
-            }
-        }
-        let domainOldClip: Domain.Clip? = {
-            guard let oldClip = oldClip else { return nil }
-            return Domain.Clip.make(by: oldClip)
-        }()
 
         // Prepare new objects
 
@@ -144,18 +129,11 @@ extension ClipStorage: ClipStorageProtocol {
         newClip.registeredAt = clip.registeredDate
         newClip.updatedAt = clip.updatedDate
 
-        // Delete
-
-        oldClip?.items.forEach { item in
-            realm.delete(item)
-        }
-
         // Add
 
-        let updatePolicy: Realm.UpdatePolicy = overwrite ? .modified : .error
-        realm.add(newClip, update: updatePolicy)
+        realm.add(newClip, update: .error)
 
-        return .success((new: Domain.Clip.make(by: newClip), old: domainOldClip))
+        return .success(Domain.Clip.make(by: newClip))
     }
 
     public func create(tagWithName name: String) -> Result<Domain.Tag, ClipStorageError> {

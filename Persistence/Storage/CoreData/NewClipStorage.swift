@@ -167,7 +167,7 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func create(clip: Domain.Clip, overwrite: Bool) -> Result<(new: Domain.Clip, old: Domain.Clip?), ClipStorageError> {
+    public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
         do {
             // Check parameters
 
@@ -196,21 +196,6 @@ extension NewClipStorage: ClipStorageProtocol {
                 newTag.isHidden = false
                 appendingTags.append(newTag)
             }
-
-            // Check duplication
-
-            var oldClip: Clip?
-            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-            request.predicate = NSPredicate(format: "id == %@", clip.id as CVarArg)
-            if let duplicatedClip = try self.context.fetch(request).first {
-                if overwrite {
-                    oldClip = duplicatedClip
-                } else {
-                    self.logger.write(ConsoleLog(level: .error, message: "Failed create clip. Duplicated clip. (id=\(clip.id.uuidString)"))
-                    return .failure(.duplicated)
-                }
-            }
-            let domainOldClip = oldClip?.map(to: Domain.Clip.self)
 
             // Prepare new objects
 
@@ -241,18 +226,10 @@ extension NewClipStorage: ClipStorageProtocol {
 
             newClip.imagesSize = Int64(clip.dataSize)
             newClip.isHidden = clip.isHidden
-            newClip.createdDate = oldClip?.createdDate ?? clip.registeredDate
+            newClip.createdDate = clip.registeredDate
             newClip.updatedDate = clip.updatedDate
 
-            // Delete
-
-            oldClip?.clipItems?
-                .compactMap { $0 as? Item }
-                .forEach { item in
-                    self.context.delete(item)
-                }
-
-            return .success((new: newClip.map(to: Domain.Clip.self)!, old: domainOldClip))
+            return .success(newClip.map(to: Domain.Clip.self)!)
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to create clip. (error=\(error.localizedDescription))"))
             return .failure(.internalError)
