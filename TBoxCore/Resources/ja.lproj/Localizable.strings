@@ -13,13 +13,13 @@
 "clip_target_finder_view_overwrite_alert_cancel" = "キャンセル";
 
 "clip_target_finder_view_loading_error_not_found_title" = "画像が見つかりませんでした";
-"clip_target_finder_view_loading_error_not_found_message" = "ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください";
+"clip_target_finder_view_loading_error_not_found_message" = "以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります";
 "clip_target_finder_view_loading_error_connection_title" = "通信に失敗しました";
 "clip_target_finder_view_loading_error_connection_message" = "通信環境の良い状態でもう一度お試しください";
 "clip_target_finder_view_loading_error_internal_title" = "画像の探索に失敗しました";
 "clip_target_finder_view_loading_error_internal_message" = "もう一度お試しください";
 "clip_target_finder_view_loading_error_timeout_title" = "画像が見つかりませんでした";
-"clip_target_finder_view_loading_error_timeout_message" = "ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください";
+"clip_target_finder_view_loading_error_timeout_message" = "以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります";
 "clip_target_finder_view_loading_error_action" = "もう一度試す";
 
 "clip_target_finder_view_download_error_failed_to_save_title" = "ダウンロードできませんでした";

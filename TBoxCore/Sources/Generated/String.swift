@@ -32,11 +32,11 @@ internal enum L10n {
     internal static let clipTargetFinderViewLoadingErrorInternalMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_message")
     /// 画像の探索に失敗しました
     internal static let clipTargetFinderViewLoadingErrorInternalTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_title")
-    /// ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください
+    /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
     internal static let clipTargetFinderViewLoadingErrorNotFoundMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_message")
     /// 画像が見つかりませんでした
     internal static let clipTargetFinderViewLoadingErrorNotFoundTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_title")
-    /// ダウンロード可能な形式の画像がサイト上に存在しないか、通信環境の問題で取得に時間がかかっている可能性があります。\n何度かお試しいただくか、別のサイトの共有をお試しください
+    /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
     internal static let clipTargetFinderViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
     internal static let clipTargetFinderViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_title")

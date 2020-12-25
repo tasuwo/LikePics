@@ -13,13 +13,13 @@
 "clip_target_finder_view_overwrite_alert_cancel" = "Cancel";
 
 "clip_target_finder_view_loading_error_not_found_title" = "No Images Found";
-"clip_target_finder_view_loading_error_not_found_message" = "The reason might be the bad connection or that there are no downloadable images on the shared web site.\nPlease retry a few times or try to share the other web site.";
+"clip_target_finder_view_loading_error_not_found_message" = "Please check the following.\n\n・Bad connection\n・No downloadable images\n・The images are protected\n\nPlease retry a few times or try to share the other web site.";
 "clip_target_finder_view_loading_error_connection_title" = "Bad Network Connection";
 "clip_target_finder_view_loading_error_connection_message" = "Please check your network and retry.";
 "clip_target_finder_view_loading_error_internal_title" = "Failed To Find Images";
 "clip_target_finder_view_loading_error_internal_message" = "Please retry.";
 "clip_target_finder_view_loading_error_timeout_title" = "No Images Found";
-"clip_target_finder_view_loading_error_timeout_message" = "The reason might be the bad connection or that there are no downloadable images on the shared web site.\nPlease retry a few times or try to share the other web site.";
+"clip_target_finder_view_loading_error_timeout_message" = "Please check the following.\n\n・Bad connection\n・No downloadable images\n・The images are protected\n\nPlease retry a few times or try to share the other web site.";
 "clip_target_finder_view_loading_error_action" = "Retry";
 
 "clip_target_finder_view_download_error_failed_to_save_title" = "Failed To Download Images";
