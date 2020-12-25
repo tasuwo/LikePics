@@ -23,6 +23,8 @@ public protocol ClipCommandServiceProtocol {
     func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Void, ClipStorageError>
     func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError>
 
+    func purgeClipItems(forClipHaving id: Clip.Identity) -> Result<Void, ClipStorageError>
+
     // MARK: Delete
 
     func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError>

@@ -167,6 +167,26 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func readAlbumIds(containsClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<[Domain.Album.Identity], ClipStorageError> {
+        do {
+            guard case let .success(clips) = try self.fetchClips(for: clipIds) else { return .failure(.notFound) }
+
+            let albumIds = clips
+                .map { $0.albumItem }
+                .compactMap { $0?.allObjects }
+                .flatMap { $0 }
+                .compactMap { $0 as? Persistence.AlbumItem }
+                .compactMap { $0.album?.id }
+
+            return .success(Array(Set(albumIds)))
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read clips. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
     public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
         do {
             // Check parameters

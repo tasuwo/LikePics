@@ -37,6 +37,7 @@
 "clips_list_context_menu_remove_from_album" = "アルバムから削除";
 "clips_list_context_menu_share" = "共有";
 "clips_list_context_menu_delete" = "削除";
+"clips_list_context_menu_purge" = "分割";
 
 "top_clip_view_empty_title" = "クリップがありません";
 "top_clip_view_empty_message" = "他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう";

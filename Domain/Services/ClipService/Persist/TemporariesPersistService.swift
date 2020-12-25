@@ -103,7 +103,7 @@ public class TemporariesPersistService {
             try self.beginTransaction()
 
             switch self.clipStorage.create(clip: clip) {
-            case let .success:
+            case .success:
                 break
 
             case let .failure(error):

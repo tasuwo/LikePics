@@ -342,6 +342,10 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
         }
         self.present(controller, animated: true, completion: nil)
     }
+
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath) {
+        self.viewModel.inputs.purge.send(clipId)
+    }
 }
 
 extension SearchResultViewController: ClipCollectionAlertPresentable {}

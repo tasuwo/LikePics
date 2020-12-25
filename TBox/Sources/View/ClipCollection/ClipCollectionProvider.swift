@@ -25,6 +25,7 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath)
 }
 
 class ClipCollectionProvider: NSObject {
@@ -236,6 +237,15 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.delegate?.clipCollectionProvider(self, shouldShare: clip.identity, at: indexPath)
+                }
+            }
+
+        case .purge:
+            return UIAction(title: L10n.clipsListContextMenuPurge,
+                            image: UIImage(systemName: "scissors")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.delegate?.clipCollectionProvider(self, shouldPurge: clip.identity, at: indexPath)
                 }
             }
         }

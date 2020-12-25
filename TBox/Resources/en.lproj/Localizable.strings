@@ -37,6 +37,7 @@
 "clips_list_context_menu_remove_from_album" = "Remove from Album";
 "clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
+"clips_list_context_menu_purge" = "Purge";
 
 "clip_target_finder_view_title" = "Select image.";
 

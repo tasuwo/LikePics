@@ -11,5 +11,6 @@ extension ClipCollection {
         case removeFromAlbum
         case delete
         case share
+        case purge
     }
 }

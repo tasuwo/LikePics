@@ -17,6 +17,7 @@ enum ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
             context.isAlbum ? nil : .addToAlbum,
             clip.isHidden ? .unhide : .hide,
             .share,
+            clip.items.count > 1 ? .purge : nil,
             context.isAlbum ? .removeFromAlbum : .delete
         ].compactMap { $0 }
     }

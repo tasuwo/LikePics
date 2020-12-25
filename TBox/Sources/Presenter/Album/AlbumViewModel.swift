@@ -25,6 +25,7 @@ protocol AlbumViewModelInputs {
     var delete: PassthroughSubject<Clip.Identity, Never> { get }
     var hide: PassthroughSubject<Clip.Identity, Never> { get }
     var unhide: PassthroughSubject<Clip.Identity, Never> { get }
+    var purge: PassthroughSubject<Clip.Identity, Never> { get }
     var addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> { get }
     var addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> { get }
 
@@ -81,6 +82,7 @@ class AlbumViewModel: AlbumViewModelType,
     let delete: PassthroughSubject<Clip.Identity, Never> = .init()
     let hide: PassthroughSubject<Clip.Identity, Never> = .init()
     let unhide: PassthroughSubject<Clip.Identity, Never> = .init()
+    let purge: PassthroughSubject<Clip.Identity, Never> = .init()
     let addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> = .init()
     let addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> = .init()
 
@@ -368,6 +370,18 @@ extension AlbumViewModel {
                 if case let .failure(error) = self.clipService.updateClips(having: [id], byHiding: false) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to unhide clip having id \(id). (code: \(error.rawValue))
+                    """))
+                    self.errorMessage.send("\(L10n.clipsListErrorAtUnhideClip)\n(\(error.makeErrorCode()))")
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.purge
+            .sink { [weak self] id in
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipService.purgeClipItems(forClipHaving: id) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to purge clip having id \(id). (code: \(error.rawValue))
                     """))
                     self.errorMessage.send("\(L10n.clipsListErrorAtUnhideClip)\n(\(error.makeErrorCode()))")
                 }

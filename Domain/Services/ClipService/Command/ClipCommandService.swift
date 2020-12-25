@@ -393,6 +393,110 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
+    public func purgeClipItems(forClipHaving id: Domain.Clip.Identity) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+
+                let albumIds: [Domain.Album.Identity]
+                switch self.clipStorage.readAlbumIds(containsClipsHaving: [id]) {
+                case let .success(ids):
+                    albumIds = ids
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to purge clip. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(.internalError)
+                }
+
+                let originalClip: Domain.Clip
+                switch self.clipStorage.deleteClips(having: [id]) {
+                case let .success(clips) where clips.count == 1:
+                    // swiftlint:disable:next force_unwrapping
+                    originalClip = clips.first!
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to purge clip. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(error)
+
+                default:
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to purge clip.
+                    """))
+                    return .failure(.internalError)
+                }
+
+                let newClips: [Domain.Clip] = originalClip.items.map { item in
+                    let clipId = UUID()
+                    return Domain.Clip(id: clipId,
+                                       description: originalClip.description,
+                                       items: [
+                                           .init(id: UUID(),
+                                                 url: item.url,
+                                                 clipId: clipId,
+                                                 clipIndex: 0,
+                                                 imageId: item.imageId,
+                                                 imageFileName: item.imageFileName,
+                                                 imageUrl: item.imageUrl,
+                                                 imageSize: item.imageSize,
+                                                 imageDataSize: item.imageDataSize,
+                                                 registeredDate: item.registeredDate,
+                                                 updatedDate: Date())
+                                       ],
+                                       tags: originalClip.tags,
+                                       isHidden: originalClip.isHidden,
+                                       dataSize: item.imageDataSize,
+                                       registeredDate: originalClip.registeredDate,
+                                       updatedDate: Date())
+                }
+
+                for newClip in newClips {
+                    switch self.clipStorage.create(clip: newClip) {
+                    case .success:
+                        break
+
+                    case let .failure(error):
+                        try? self.clipStorage.cancelTransactionIfNeeded()
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        Failed to purge clip. (error=\(error.localizedDescription))
+                        """))
+                        return .failure(error)
+                    }
+                }
+
+                for albumId in albumIds {
+                    switch self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: newClips.map({ $0.id })) {
+                    case .success:
+                        break
+
+                    case let .failure(error):
+                        try? self.clipStorage.cancelTransactionIfNeeded()
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        Failed to purge clip. (error=\(error.localizedDescription))
+                        """))
+                        return .failure(error)
+                    }
+                }
+
+                try self.clipStorage.commitTransaction()
+
+                return .success(())
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to purge clip. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
     // MARK: Delete
 
     public func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError> {

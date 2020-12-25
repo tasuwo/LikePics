@@ -69,6 +69,10 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(Array(tags))
     }
 
+    public func readAlbumIds(containsClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<[Domain.Album.Identity], ClipStorageError> {
+        return .failure(.internalError)
+    }
+
     // MARK: Create
 
     public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
