@@ -382,13 +382,13 @@ public enum ClipInformationLayoutFactory {
         var items: [Item.Cell] = []
 
         if let imageUrl = clipItem.imageUrl {
-            items.append(Item.Cell(id: UUID().uuidString,
+            items.append(Item.Cell(id: "imageUrl",
                                    title: L10n.clipInformationViewLabelClipItemUrl,
                                    rightAccessory: nil,
                                    bottomAccessory: .button(title: imageUrl.absoluteString),
                                    visibleSeparator: false))
         } else {
-            items.append(Item.Cell(id: UUID().uuidString,
+            items.append(Item.Cell(id: "imageUrl",
                                    title: L10n.clipInformationViewLabelClipItemUrl,
                                    rightAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
                                    bottomAccessory: nil,
@@ -396,13 +396,13 @@ public enum ClipInformationLayoutFactory {
         }
 
         if let siteUrl = clipItem.url {
-            items.append(Item.Cell(id: UUID().uuidString,
+            items.append(Item.Cell(id: "siteUrl",
                                    title: L10n.clipInformationViewLabelClipUrl,
                                    rightAccessory: nil,
                                    bottomAccessory: .button(title: siteUrl.absoluteString),
                                    visibleSeparator: true))
         } else {
-            items.append(Item.Cell(id: UUID().uuidString,
+            items.append(Item.Cell(id: "siteUrl",
                                    title: L10n.clipInformationViewLabelClipItemUrl,
                                    rightAccessory: .button(title: L10n.clipInformationViewLabelClipItemNoUrl),
                                    bottomAccessory: nil,
@@ -410,23 +410,23 @@ public enum ClipInformationLayoutFactory {
         }
 
         return (items + [
-            Item.Cell(id: UUID().uuidString,
+            Item.Cell(id: "size",
                       title: L10n.clipInformationViewLabelClipItemSize,
                       rightAccessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
                                                                               countStyle: .binary)),
                       bottomAccessory: nil,
                       visibleSeparator: true),
-            Item.Cell(id: UUID().uuidString,
+            Item.Cell(id: "hidden",
                       title: L10n.clipInformationViewLabelClipHide,
                       rightAccessory: .switch(isOn: clip.isHidden),
                       bottomAccessory: nil,
                       visibleSeparator: true),
-            Item.Cell(id: UUID().uuidString,
+            Item.Cell(id: "registeredDate",
                       title: L10n.clipInformationViewLabelClipItemRegisteredDate,
                       rightAccessory: .label(title: self.format(clipItem.registeredDate)),
                       bottomAccessory: nil,
                       visibleSeparator: true),
-            Item.Cell(id: UUID().uuidString,
+            Item.Cell(id: "updatedDate",
                       title: L10n.clipInformationViewLabelClipItemUpdatedDate,
                       rightAccessory: .label(title: self.format(clipItem.updatedDate)),
                       bottomAccessory: nil,

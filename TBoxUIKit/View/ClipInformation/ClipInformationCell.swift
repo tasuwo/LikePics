@@ -123,7 +123,10 @@ public class ClipInformationCell: UICollectionViewCell {
             self.bottomAccessoryButton.isHidden = true
 
         case let .button(title: title):
+            UIView.setAnimationsEnabled(false)
             self.bottomAccessoryButton.setTitle(title, for: .normal)
+            self.bottomAccessoryButton.layoutIfNeeded()
+            UIView.setAnimationsEnabled(true)
             self.bottomAccessoryButton.isHidden = false
         }
     }

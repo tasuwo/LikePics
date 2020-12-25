@@ -14,7 +14,7 @@ public class ClipInformationView: UIView {
             guard let info = self.info else { return }
             let snapshot = Factory.makeSnapshot(for: info)
             DispatchQueue.global(qos: .background).async {
-                self.collectionViewDataSource.apply(snapshot, animatingDifferences: false)
+                self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
             }
         }
     }
@@ -72,6 +72,9 @@ public class ClipInformationView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
         self.updateImageViewFrame()
+
+        // HACK: 複数行あるセルの描画が少しずれるため、再描画をかける
+        self.collectionView.layoutIfNeeded()
     }
 
     // MARK: - Methods
