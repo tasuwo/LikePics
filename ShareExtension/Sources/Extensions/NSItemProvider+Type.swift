@@ -54,16 +54,28 @@ extension NSItemProvider {
 
     public func resolveImage(completion: @escaping (Result<Data, NSItemProviderResolutionError>) -> Void) {
         if self.isImage {
-            self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { item, _ in
-                guard let imageUrl = item as? URL else {
+            self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { data, _ in
+                switch data {
+                case let image as UIImage:
+                    guard let data = image.pngData() else {
+                        completion(.failure(.internalError))
+                        return
+                    }
+                    completion(.success(data))
+
+                case let data as Data:
+                    completion(.success(data))
+
+                case let url as URL:
+                    guard let image = self.fetchImageData(fromUrl: url) else {
+                        completion(.failure(.internalError))
+                        return
+                    }
+                    completion(.success(image))
+
+                default:
                     completion(.failure(.invalidType))
-                    return
                 }
-                guard let image = self.fetchImageData(fromUrl: imageUrl) else {
-                    completion(.failure(.internalError))
-                    return
-                }
-                completion(.success(image))
             }
         } else if self.isUrl {
             self.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, _ in
