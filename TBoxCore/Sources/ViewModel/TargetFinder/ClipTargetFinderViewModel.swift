@@ -218,6 +218,8 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
         self.provider.resolveSources()
             .map { sources in sources.filter { $0.isValid } }
+            .tryMap { if $0.isEmpty { throw ImageSourceProviderError.notFound } else { return $0 } }
+            .mapError { $0 as? ImageSourceProviderError ?? ImageSourceProviderError.internalError }
             .sink { [weak self] completion in
                 switch completion {
                 case let .failure(error):
