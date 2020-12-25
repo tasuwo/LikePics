@@ -314,6 +314,10 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+        return .failure(.internalError)
+    }
+
     public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 

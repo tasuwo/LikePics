@@ -265,6 +265,23 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+                let result = self.clipStorage.updateClipItems(having: ids, byUpdatingSiteUrl: siteUrl)
+                try self.clipStorage.commitTransaction()
+                return result
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to update album. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {

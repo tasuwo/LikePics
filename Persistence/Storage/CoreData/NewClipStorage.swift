@@ -97,6 +97,20 @@ public class NewClipStorage {
         return .success(clips)
     }
 
+    private func fetchClipItems(for ids: [Domain.ClipItem.Identity]) throws -> Result<[Item], ClipStorageError> {
+        var items: [Item] = []
+        for clipItemId in ids {
+            let request: NSFetchRequest<Item> = Item.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", clipItemId as CVarArg)
+            guard let item = try self.context.fetch(request).first else {
+                self.logger.write(ConsoleLog(level: .error, message: "ClipItem not found (id=\(clipItemId.uuidString))"))
+                return .failure(.notFound)
+            }
+            items.append(item)
+        }
+        return .success(items)
+    }
+
     private func fetchClipItem(for id: Domain.ClipItem.Identity) throws -> Result<Item, ClipStorageError> {
         let request: NSFetchRequest<Item> = Item.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
@@ -395,6 +409,24 @@ extension NewClipStorage: ClipStorageProtocol {
             }
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update clips. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL) -> Result<Void, ClipStorageError> {
+        do {
+            guard case let .success(items) = try self.fetchClipItems(for: ids) else { return .failure(.notFound) }
+
+            for item in items {
+                item.siteUrl = siteUrl
+                item.updatedDate = Date()
+            }
+
+            return .success(())
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add update clips. (error=\(error.localizedDescription))

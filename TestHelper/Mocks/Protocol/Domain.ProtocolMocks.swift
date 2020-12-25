@@ -79,6 +79,16 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
         fatalError("updateClipsHavingByReplacingTagsHavingHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateClipItemsCallCount = 0
+    public var updateClipItemsHandler: (([ClipItem.Identity], URL) -> (Result<Void, ClipStorageError>))?
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+        updateClipItemsCallCount += 1
+        if let updateClipItemsHandler = updateClipItemsHandler {
+            return updateClipItemsHandler(ids, byUpdatingSiteUrl)
+        }
+        fatalError("updateClipItemsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateAlbumCallCount = 0
     public var updateAlbumHandler: ((Album.Identity, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
     public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
@@ -401,6 +411,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return updateClipsHavingByReplacingTagsHavingHandler(clipIds, tagIds)
         }
         fatalError("updateClipsHavingByReplacingTagsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateClipItemsCallCount = 0
+    public var updateClipItemsHandler: (([ClipItem.Identity], URL) -> (Result<Void, ClipStorageError>))?
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+        updateClipItemsCallCount += 1
+        if let updateClipItemsHandler = updateClipItemsHandler {
+            return updateClipItemsHandler(ids, byUpdatingSiteUrl)
+        }
+        fatalError("updateClipItemsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateAlbumCallCount = 0
