@@ -69,17 +69,21 @@ class ClipCollectionNavigationBarProvider {
         dependency.outputs.leftItems
             .compactMap { [weak self] items in
                 guard let self = self else { return nil }
-                return items.compactMap { self.makeBarButtonItem(for: $0) }
+                return items
+                    .compactMap { self.makeBarButtonItem(for: $0) }
+                    .reversed()
             }
-            .assign(to: \.leftBarButtonItems, on: view.navigationItem)
+            .sink { view.navigationItem.setLeftBarButtonItems($0, animated: true) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
             .compactMap { [weak self] items in
                 guard let self = self else { return nil }
-                return items.compactMap { self.makeBarButtonItem(for: $0) }
+                return items
+                    .compactMap { self.makeBarButtonItem(for: $0) }
+                    .reversed()
             }
-            .assign(to: \.rightBarButtonItems, on: view.navigationItem)
+            .sink { view.navigationItem.setRightBarButtonItems($0, animated: true) }
             .store(in: &self.cancellableBag)
     }
 

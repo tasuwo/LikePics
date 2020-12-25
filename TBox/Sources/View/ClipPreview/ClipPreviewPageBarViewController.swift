@@ -118,15 +118,17 @@ class ClipPreviewPageBarViewController: UIViewController {
         dependency.outputs.leftItems
             .map { [weak self] items in
                 self?.resolveBarButtonItems(for: items)
+                    .reversed()
             }
-            .assign(to: \.navigationItem.leftBarButtonItems, on: view)
+            .sink { view.navigationItem.setLeftBarButtonItems($0, animated: true) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
             .map { [weak self] items in
                 self?.resolveBarButtonItems(for: items)
+                    .reversed()
             }
-            .assign(to: \.navigationItem.rightBarButtonItems, on: view)
+            .sink { view.navigationItem.setRightBarButtonItems($0, animated: true) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.toolBarItems
