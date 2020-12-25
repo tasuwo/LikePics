@@ -80,8 +80,8 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     }
 
     public private(set) var updateClipItemsCallCount = 0
-    public var updateClipItemsHandler: (([ClipItem.Identity], URL) -> (Result<Void, ClipStorageError>))?
-    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+    public var updateClipItemsHandler: (([ClipItem.Identity], URL?) -> (Result<Void, ClipStorageError>))?
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL?) -> Result<Void, ClipStorageError> {
         updateClipItemsCallCount += 1
         if let updateClipItemsHandler = updateClipItemsHandler {
             return updateClipItemsHandler(ids, byUpdatingSiteUrl)
@@ -191,6 +191,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
             return queryClipHandler(id)
         }
         fatalError("queryClipHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipItemCallCount = 0
+    public var queryClipItemHandler: ((ClipItem.Identity) -> (Result<ClipItemQuery, ClipStorageError>))?
+    public func queryClipItem(having id: ClipItem.Identity) -> Result<ClipItemQuery, ClipStorageError> {
+        queryClipItemCallCount += 1
+        if let queryClipItemHandler = queryClipItemHandler {
+            return queryClipItemHandler(id)
+        }
+        fatalError("queryClipItemHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var queryAllClipsCallCount = 0
@@ -414,8 +424,8 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var updateClipItemsCallCount = 0
-    public var updateClipItemsHandler: (([ClipItem.Identity], URL) -> (Result<Void, ClipStorageError>))?
-    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+    public var updateClipItemsHandler: (([ClipItem.Identity], URL?) -> (Result<Void, ClipStorageError>))?
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL?) -> Result<Void, ClipStorageError> {
         updateClipItemsCallCount += 1
         if let updateClipItemsHandler = updateClipItemsHandler {
             return updateClipItemsHandler(ids, byUpdatingSiteUrl)

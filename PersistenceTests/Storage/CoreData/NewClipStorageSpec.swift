@@ -3,7 +3,7 @@
 //
 
 import CoreData
-import enum Domain.ClipStorageError
+import Domain
 
 import Nimble
 import Quick
@@ -72,7 +72,7 @@ class NewClipStorageSpec: QuickSpec {
 
             context("IDが同一の既存のタグが存在する") {
                 beforeEach {
-                    let tag = Tag(context: managedContext)
+                    let tag = Persistence.Tag(context: managedContext)
                     tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                     tag.name = "hoge"
                     try! managedContext.save()
@@ -82,16 +82,16 @@ class NewClipStorageSpec: QuickSpec {
                     ]), overwrite: true)
                 }
                 it("既存のタグを付与したクリップが保存される") {
-                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                     let clip = try! managedContext.fetch(request).first!
-                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Persistence.Tag }
                     expect(tags).to(haveCount(1))
                     expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!))
                     expect(tags!.first!.name).to(equal("hoge"))
                 }
                 it("新規にタグは作成されない") {
-                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Tag> = Persistence.Tag.fetchRequest()
                     let tags = try! managedContext.fetch(request)
                     expect(tags).to(haveCount(1))
                 }
@@ -99,7 +99,7 @@ class NewClipStorageSpec: QuickSpec {
 
             context("IDは異なるが名前が同一の既存のタグが存在する") {
                 beforeEach {
-                    let tag = Tag(context: managedContext)
+                    let tag = Persistence.Tag(context: managedContext)
                     tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")
                     tag.name = "hoge"
                     try! managedContext.save()
@@ -109,16 +109,16 @@ class NewClipStorageSpec: QuickSpec {
                     ]), overwrite: true)
                 }
                 it("既存のタグを付与したクリップが保存される") {
-                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                     let clip = try! managedContext.fetch(request).first!
-                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Persistence.Tag }
                     expect(tags).to(haveCount(1))
                     expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")!))
                     expect(tags!.first!.name).to(equal("hoge"))
                 }
                 it("新規にタグは作成されない") {
-                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Tag> = Persistence.Tag.fetchRequest()
                     let tags = try! managedContext.fetch(request)
                     expect(tags).to(haveCount(1))
                 }
@@ -126,7 +126,7 @@ class NewClipStorageSpec: QuickSpec {
 
             context("ID/名前が同一の既存のタグが存在しない") {
                 beforeEach {
-                    let tag = Tag(context: managedContext)
+                    let tag = Persistence.Tag(context: managedContext)
                     tag.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")
                     tag.name = "fuga"
                     try! managedContext.save()
@@ -136,16 +136,16 @@ class NewClipStorageSpec: QuickSpec {
                     ]), overwrite: true)
                 }
                 it("既存のタグを付与したクリップが保存される") {
-                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                     let clip = try! managedContext.fetch(request).first!
-                    let tags = clip.tags?.allObjects.compactMap { $0 as? Tag }
+                    let tags = clip.tags?.allObjects.compactMap { $0 as? Persistence.Tag }
                     expect(tags).to(haveCount(1))
                     expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!))
                     expect(tags!.first!.name).to(equal("hoge"))
                 }
                 it("タグが新規に作成される") {
-                    let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Tag> = Persistence.Tag.fetchRequest()
                     let tags = try! managedContext.fetch(request)
                     expect(tags).to(haveCount(2))
                 }
@@ -156,13 +156,13 @@ class NewClipStorageSpec: QuickSpec {
             context("追加対象のタグが全て存在") {
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -176,13 +176,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("追加でき、更新される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(2))
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
@@ -191,13 +191,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -212,13 +212,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("未追加のタグのみ追加され、更新される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(2))
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
@@ -227,13 +227,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -248,13 +248,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("更新されない") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(2))
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
@@ -268,13 +268,13 @@ class NewClipStorageSpec: QuickSpec {
             context("削除対象のタグが全て存在") {
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -289,26 +289,26 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが削除され、更新される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(0))
                         expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 0)))
                     }
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -323,26 +323,26 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("追加済みのタグが削除され、更新される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(0))
                         expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 0)))
                     }
                 }
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -356,13 +356,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("更新されない") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags).to(haveCount(0))
                         expect(clip.updatedDate).to(equal(Date(timeIntervalSince1970: 0)))
                     }
@@ -374,13 +374,13 @@ class NewClipStorageSpec: QuickSpec {
             context("置換対象のタグが全て存在") {
                 context("全タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag1, tag2])
@@ -395,13 +395,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
                         expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 0)))
@@ -409,13 +409,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("一部タグが追加済み") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.tags = NSSet(array: [tag2])
@@ -430,13 +430,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
                         expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 0)))
@@ -444,13 +444,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("全てのタグが未追加") {
                     beforeEach {
-                        let tag1 = Tag(context: managedContext)
+                        let tag1 = Persistence.Tag(context: managedContext)
                         tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         tag1.name = "hoge"
-                        let tag2 = Tag(context: managedContext)
+                        let tag2 = Persistence.Tag(context: managedContext)
                         tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
                         tag2.name = "fuga"
-                        let clip = Clip(context: managedContext)
+                        let clip = Persistence.Clip(context: managedContext)
                         clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                         clip.descriptionText = "piyo"
                         clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -464,13 +464,13 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("タグが置換される") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let clip = try! managedContext.fetch(request).first!
                         let tags = clip.tags?
                             .allObjects
-                            .compactMap { $0 as? Tag }
+                            .compactMap { $0 as? Persistence.Tag }
                         expect(tags?.first(where: { $0.name == "hoge" })).notTo(beNil())
                         expect(tags?.first(where: { $0.name == "fuga" })).notTo(beNil())
                         expect(clip.updatedDate).notTo(equal(Date(timeIntervalSince1970: 0)))
@@ -483,9 +483,9 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("追加対象のクリップが追加済み") {
                 beforeEach {
-                    let clip1 = Clip(context: managedContext)
+                    let clip1 = Persistence.Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Clip(context: managedContext)
+                    let clip2 = Persistence.Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
                     let item1 = AlbumItem(context: managedContext)
@@ -518,9 +518,9 @@ class NewClipStorageSpec: QuickSpec {
             context("追加対象のクリップが未追加") {
                 context("クリップを初めて追加する") {
                     beforeEach {
-                        let clip1 = Clip(context: managedContext)
+                        let clip1 = Persistence.Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = Clip(context: managedContext)
+                        let clip2 = Persistence.Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
                         let album = Album(context: managedContext)
@@ -536,7 +536,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("クリップが追加できる") {
-                        let request: NSFetchRequest<Album> = Album.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -565,13 +565,13 @@ class NewClipStorageSpec: QuickSpec {
                 }
                 context("既に追加済みのクリップがある") {
                     beforeEach {
-                        let clip1 = Clip(context: managedContext)
+                        let clip1 = Persistence.Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = Clip(context: managedContext)
+                        let clip2 = Persistence.Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = Clip(context: managedContext)
+                        let clip3 = Persistence.Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = Clip(context: managedContext)
+                        let clip4 = Persistence.Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                         let item1 = AlbumItem(context: managedContext)
@@ -595,7 +595,7 @@ class NewClipStorageSpec: QuickSpec {
                         try! managedContext.save()
                     }
                     it("クリップが追加できる") {
-                        let request: NSFetchRequest<Album> = Album.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -629,13 +629,13 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("削除対象のクリップが一部存在しない") {
                 beforeEach {
-                    let clip1 = Clip(context: managedContext)
+                    let clip1 = Persistence.Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Clip(context: managedContext)
+                    let clip2 = Persistence.Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = Clip(context: managedContext)
+                    let clip3 = Persistence.Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = Clip(context: managedContext)
+                    let clip4 = Persistence.Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                     let item1 = AlbumItem(context: managedContext)
@@ -674,13 +674,13 @@ class NewClipStorageSpec: QuickSpec {
             context("削除対象のクリップが全て存在する") {
                 context("一部のクリップを削除する") {
                     beforeEach {
-                        let clip1 = Clip(context: managedContext)
+                        let clip1 = Persistence.Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = Clip(context: managedContext)
+                        let clip2 = Persistence.Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = Clip(context: managedContext)
+                        let clip3 = Persistence.Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = Clip(context: managedContext)
+                        let clip4 = Persistence.Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                         let item1 = AlbumItem(context: managedContext)
@@ -714,7 +714,7 @@ class NewClipStorageSpec: QuickSpec {
                             fail()
                             return
                         }
-                        let request: NSFetchRequest<Album> = Album.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -746,7 +746,7 @@ class NewClipStorageSpec: QuickSpec {
                         expect(items).to(haveCount(2))
                     }
                     it("Clipは削除されない") {
-                        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                         let clips = try! managedContext.fetch(request)
                         expect(clips).to(haveCount(4))
                     }
@@ -758,13 +758,13 @@ class NewClipStorageSpec: QuickSpec {
             var result: Result<Void, ClipStorageError>!
             context("並び替え対象のクリップが足りない") {
                 beforeEach {
-                    let clip1 = Clip(context: managedContext)
+                    let clip1 = Persistence.Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Clip(context: managedContext)
+                    let clip2 = Persistence.Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = Clip(context: managedContext)
+                    let clip3 = Persistence.Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = Clip(context: managedContext)
+                    let clip4 = Persistence.Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                     let item1 = AlbumItem(context: managedContext)
@@ -803,13 +803,13 @@ class NewClipStorageSpec: QuickSpec {
             }
             context("並び替え対象のクリップが一部存在しない") {
                 beforeEach {
-                    let clip1 = Clip(context: managedContext)
+                    let clip1 = Persistence.Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Clip(context: managedContext)
+                    let clip2 = Persistence.Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = Clip(context: managedContext)
+                    let clip3 = Persistence.Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                    let clip4 = Clip(context: managedContext)
+                    let clip4 = Persistence.Clip(context: managedContext)
                     clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                     let item1 = AlbumItem(context: managedContext)
@@ -850,13 +850,13 @@ class NewClipStorageSpec: QuickSpec {
             context("並び替え対象のクリップが全て存在する") {
                 context("並び替える") {
                     beforeEach {
-                        let clip1 = Clip(context: managedContext)
+                        let clip1 = Persistence.Clip(context: managedContext)
                         clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                        let clip2 = Clip(context: managedContext)
+                        let clip2 = Persistence.Clip(context: managedContext)
                         clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                        let clip3 = Clip(context: managedContext)
+                        let clip3 = Persistence.Clip(context: managedContext)
                         clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
-                        let clip4 = Clip(context: managedContext)
+                        let clip4 = Persistence.Clip(context: managedContext)
                         clip4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
 
                         let item1 = AlbumItem(context: managedContext)
@@ -892,7 +892,7 @@ class NewClipStorageSpec: QuickSpec {
                             fail()
                             return
                         }
-                        let request: NSFetchRequest<Album> = Album.fetchRequest()
+                        let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                         request.predicate = NSPredicate(format: "id == %@",
                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                         let album = try! managedContext.fetch(request).first!
@@ -944,7 +944,7 @@ class NewClipStorageSpec: QuickSpec {
 
         describe("deleteClips(having:)") {
             beforeEach {
-                let clip = Clip(context: managedContext)
+                let clip = Persistence.Clip(context: managedContext)
                 clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 clip.createdDate = Date(timeIntervalSince1970: 0)
                 clip.updatedDate = Date(timeIntervalSince1970: 0)
@@ -971,7 +971,7 @@ class NewClipStorageSpec: QuickSpec {
                 try! managedContext.save()
             }
             it("Clipが削除される") {
-                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                 let clips = try! managedContext.fetch(request)
                 expect(clips).to(haveCount(0))
             }
@@ -986,7 +986,7 @@ class NewClipStorageSpec: QuickSpec {
                 expect(items).to(haveCount(0))
             }
             it("Albumは削除されない") {
-                let request: NSFetchRequest<Album> = Album.fetchRequest()
+                let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                 let albums = try! managedContext.fetch(request)
                 expect(albums).to(haveCount(1))
                 expect(albums.first?.items).to(haveCount(0))
@@ -995,7 +995,7 @@ class NewClipStorageSpec: QuickSpec {
 
         describe("deleteClipItem(having:)") {
             beforeEach {
-                let clip = Clip(context: managedContext)
+                let clip = Persistence.Clip(context: managedContext)
                 clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
                 clip.imagesSize = 12 + 34 + 56 + 78
 
@@ -1046,7 +1046,7 @@ class NewClipStorageSpec: QuickSpec {
                 try! managedContext.save()
             }
             it("ClipItemが削除され、indexが更新される") {
-                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                 let clips = try! managedContext.fetch(request)
                 expect(clips).to(haveCount(1))
                 let clip = clips.first!
@@ -1078,11 +1078,11 @@ class NewClipStorageSpec: QuickSpec {
         describe("deleteAlbum(having:)") {
             context("削除対象のアルバムが存在する") {
                 beforeEach {
-                    let clip1 = Clip(context: managedContext)
+                    let clip1 = Persistence.Clip(context: managedContext)
                     clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Clip(context: managedContext)
+                    let clip2 = Persistence.Clip(context: managedContext)
                     clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
-                    let clip3 = Clip(context: managedContext)
+                    let clip3 = Persistence.Clip(context: managedContext)
                     clip3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
 
                     let item1 = AlbumItem(context: managedContext)
@@ -1108,7 +1108,7 @@ class NewClipStorageSpec: QuickSpec {
                     try! managedContext.save()
                 }
                 it("Albumが削除される") {
-                    let request: NSFetchRequest<Album> = Album.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
                     let items = try! managedContext.fetch(request)
                     expect(items).to(haveCount(0))
                 }
@@ -1118,7 +1118,7 @@ class NewClipStorageSpec: QuickSpec {
                     expect(items).to(haveCount(0))
                 }
                 it("Clipは削除されない") {
-                    let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     let items = try! managedContext.fetch(request)
                     expect(items).to(haveCount(3))
                 }
