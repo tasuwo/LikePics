@@ -123,26 +123,39 @@ extension DependencyContainer: ViewControllerFactory {
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
     {
-        let query: ClipQuery
+        let clipQuery: ClipQuery
         switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
-            query = result
+            clipQuery = result
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to open ClipInformationPresenter for clip having clip id \(clipId), item id \(itemId). (\(error.rawValue))
+            Failed to open ClipInformationViewModel for clip having clip id \(clipId), item id \(itemId). (\(error.rawValue))
             """))
             return nil
         }
 
-        let presenter = ClipInformationPresenter(query: query,
-                                                 itemId: itemId,
+        let itemQuery: ClipItemQuery
+        switch self.clipQueryService.queryClipItem(having: itemId) {
+        case let .success(result):
+            itemQuery = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipInformationViewModel for clipItem having clip id \(clipId), item id \(itemId). (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let viewModel = ClipInformationViewModel(itemId: itemId,
+                                                 clipQuery: clipQuery,
+                                                 itemQuery: itemQuery,
                                                  clipCommandService: self.clipCommandService,
                                                  logger: self.logger)
 
         let viewController = ClipInformationViewController(factory: self,
                                                            dataSource: dataSource,
-                                                           presenter: presenter,
+                                                           viewModel: viewModel,
                                                            transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen

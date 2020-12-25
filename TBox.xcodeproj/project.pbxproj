@@ -113,7 +113,7 @@
 		2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3BD96E254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift */; };
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
 		2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */; };
-		2C447A78250D438F00EAA448 /* ClipInformationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C447A77250D438F00EAA448 /* ClipInformationPresenter.swift */; };
+		2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C447A77250D438F00EAA448 /* ClipInformationViewModel.swift */; };
 		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
 		2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */; };
 		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
@@ -767,7 +767,7 @@
 		2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift"; sourceTree = "<group>"; };
 		2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		2C3D649F2512E48B009C0749 /* UICollectionView+ApplySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ApplySelection.swift"; sourceTree = "<group>"; };
-		2C447A77250D438F00EAA448 /* ClipInformationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresenter.swift; sourceTree = "<group>"; };
+		2C447A77250D438F00EAA448 /* ClipInformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewModel.swift; sourceTree = "<group>"; };
 		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
 		2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
@@ -1689,7 +1689,7 @@
 		2C447A76250D437400EAA448 /* ClipInformation */ = {
 			isa = PBXGroup;
 			children = (
-				2C447A77250D438F00EAA448 /* ClipInformationPresenter.swift */,
+				2C447A77250D438F00EAA448 /* ClipInformationViewModel.swift */,
 			);
 			path = ClipInformation;
 			sourceTree = "<group>";
@@ -4066,7 +4066,7 @@
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPageViewModel.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
 				2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */,
-				2C447A78250D438F00EAA448 /* ClipInformationPresenter.swift in Sources */,
+				2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */,
 				2C1E4450257B5A8F00A067B1 /* ClipCollection_Context.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

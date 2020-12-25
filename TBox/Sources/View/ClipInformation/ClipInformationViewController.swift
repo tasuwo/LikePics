@@ -2,15 +2,17 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 import TBoxUIKit
 import UIKit
 
 class ClipInformationViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = ClipInformationViewModelType
 
     private let factory: Factory
-    private let presenter: ClipInformationPresenter
+    private let viewModel: Dependency
     private let transitioningController: ClipInformationTransitioningControllerProtocol
     private lazy var editSiteUrlAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.clipItemPreviewViewAlertForEditSiteUrlTitle,
@@ -27,22 +29,22 @@ class ClipInformationViewController: UIViewController {
         return self.shouldHideStatusBar
     }
 
+    private var cancellableBag = Set<AnyCancellable>()
+
     @IBOutlet var informationView: ClipInformationView!
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          dataSource: ClipInformationViewDataSource,
-         presenter: ClipInformationPresenter,
+         viewModel: Dependency,
          transitioningController: ClipInformationTransitioningControllerProtocol)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.transitioningController = transitioningController
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -59,7 +61,7 @@ class ClipInformationViewController: UIViewController {
         self.informationView.delegate = self
         self.informationView.dataSource = self.dataSource
 
-        self.presenter.setup()
+        self.bind(to: viewModel)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -80,6 +82,29 @@ class ClipInformationViewController: UIViewController {
 
     private func setupAppearance() {
         self.modalTransitionStyle = .crossDissolve
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.clip
+            .combineLatest(dependency.outputs.clipItem)
+            .sink { [weak self] clip, item in
+                self?.informationView.info = .init(clip: clip, item: item)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.close
+            .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Gesture Recognizer
@@ -112,32 +137,11 @@ class ClipInformationViewController: UIViewController {
     }
 }
 
-extension ClipInformationViewController: ClipInformationViewProtocol {
-    // MARK: - ClipInformationViewProtocol
-
-    func reload() {
-        guard let item = self.presenter.clip.items.first(where: { $0.identity == self.presenter.itemId }) else {
-            return
-        }
-        self.informationView.info = .init(clip: self.presenter.clip, item: item)
-    }
-
-    func close() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-
 extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func didTapAddTagButton(_ view: ClipInformationView) {
-        let tags = self.presenter.clip.tags.map { $0.identity }
+        let tags = self.viewModel.outputs.clip.value.tags.map { $0.identity }
         let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
         guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)
@@ -150,7 +154,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
         let title = L10n.clipInformationViewAlertForDeleteTagAction
         alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.presenter.removeTagFromClip(tag)
+            self?.viewModel.inputs.removeTagFromClip(tag)
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
@@ -168,7 +172,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     }
 
     func clipInformationView(_ view: ClipInformationView, shouldHide isHidden: Bool) {
-        self.presenter.update(isHidden: isHidden)
+        self.viewModel.inputs.update(isHidden: isHidden)
     }
 
     func clipInformationView(_ view: ClipInformationView, startEditingSiteUrl url: URL?) {
@@ -177,7 +181,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
             return text.isEmpty || URL(string: text) != nil
         } completion: { [weak self] action in
             guard case let .saved(text: text) = action else { return }
-            self?.presenter.update(siteUrl: URL(string: text))
+            self?.viewModel.inputs.update(siteUrl: URL(string: text))
         }
     }
 }
@@ -186,7 +190,7 @@ extension ClipInformationViewController: TagSelectionPresenterDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
-        self.presenter.replaceTagsOfClip(tagIds)
+        self.viewModel.inputs.replaceTagsOfClip(tagIds)
     }
 }
 

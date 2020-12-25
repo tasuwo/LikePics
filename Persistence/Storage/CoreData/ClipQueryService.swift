@@ -33,6 +33,18 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
+    public func queryClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItemQuery, ClipStorageError> {
+        do {
+            guard let query = try CoreDataClipItemQuery(id: id, context: self.context) else {
+                return .failure(.notFound)
+            }
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
