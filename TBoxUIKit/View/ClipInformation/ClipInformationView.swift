@@ -95,22 +95,10 @@ public class ClipInformationView: UIView {
         self.collectionView.collectionViewLayout = Factory.createLayout()
         Factory.registerCells(to: self.collectionView)
         self.collectionView.delegate = self
-        self.collectionViewDataSource = Factory.makeDataSource(
-            for: self.collectionView,
-            configureUrlLink: { [weak self] button in
-                guard let self = self else { return }
-                button.addTarget(self, action: #selector(self.didTapUrl(_:)), for: .touchUpInside)
-                button.addInteraction(UIContextMenuInteraction(delegate: self))
-            },
-            tagCellDelegate: self,
-            sectionHeaderDelegate: self
-        )
-    }
-
-    @objc
-    func didTapUrl(_ sender: UIButton) {
-        guard let text = sender.titleLabel?.text, let url = URL(string: text) else { return }
-        self.delegate?.clipInformationView(self, shouldOpen: url)
+        self.collectionViewDataSource = Factory.makeDataSource(for: self.collectionView,
+                                                               infoCellDelegate: self,
+                                                               tagCellDelegate: self,
+                                                               sectionHeaderDelegate: self)
     }
 
     // MARK: Image View
@@ -209,6 +197,19 @@ extension ClipInformationView: TagCollectionViewCellDelegate {
         case .row, .empty:
             break
         }
+    }
+}
+
+extension ClipInformationView: ClipInformationCellDelegate {
+    // MARK: - ClipInformationCellDelegate
+
+    public func clipInformationCell(_ cell: ClipInformationCell, didTapBottomAccessory button: UIButton) {
+        guard case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) else { return }
+        self.delegate?.clipInformationView(self, shouldOpen: url)
+    }
+
+    public func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch) {
+        // NOP
     }
 }
 

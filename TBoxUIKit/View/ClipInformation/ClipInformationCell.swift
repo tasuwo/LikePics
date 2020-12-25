@@ -4,26 +4,45 @@
 
 import UIKit
 
+public protocol ClipInformationCellDelegate: UIContextMenuInteractionDelegate {
+    func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch)
+    func clipInformationCell(_ cell: ClipInformationCell, didTapBottomAccessory button: UIButton)
+}
+
 public class ClipInformationCell: UICollectionViewCell {
+    public enum RightAccessoryType {
+        case none
+        case label(title: String)
+        case `switch`(isEnabled: Bool)
+    }
+
+    public enum BottomAccessoryType {
+        case none
+        case button(title: String)
+    }
+
     public static var nib: UINib {
         return UINib(nibName: "ClipInformationCell", bundle: Bundle(for: Self.self))
     }
 
-    public var visibleBottomAccessoryView: Bool {
+    public var title: String? {
         get {
-            return !self.bottomAccessoryView.isHidden
+            self.titleLabel.text
         }
         set {
-            self.bottomAccessoryView.isHidden = !newValue
+            self.titleLabel.text = newValue
         }
     }
 
-    public var visibleRightAccessoryView: Bool {
-        get {
-            return !self.rightAccessoryLabel.isHidden
+    public var rightAccessoryType: RightAccessoryType = .none {
+        didSet {
+            self.updateAccessoryVisibility()
         }
-        set {
-            self.rightAccessoryLabel.isHidden = !newValue
+    }
+
+    public var bottomAccessoryType: BottomAccessoryType = .none {
+        didSet {
+            self.updateAccessoryVisibility()
         }
     }
 
@@ -36,11 +55,18 @@ public class ClipInformationCell: UICollectionViewCell {
         }
     }
 
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var rightAccessoryLabel: UILabel!
-    @IBOutlet var bottomAccessoryButton: UIButton!
-    @IBOutlet var bottomAccessoryView: UIView!
-    @IBOutlet var separator: UIView!
+    public weak var delegate: ClipInformationCellDelegate? {
+        didSet {
+            guard let delegate = self.delegate else { return }
+            self.bottomAccessoryButton.addInteraction(UIContextMenuInteraction(delegate: delegate))
+        }
+    }
+
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var rightAccessoryLabel: UILabel!
+    @IBOutlet private var rightAccessoryButton: UISwitch!
+    @IBOutlet private var bottomAccessoryButton: MultiLineButton!
+    @IBOutlet private var separator: UIView!
 
     // MARK: - Lifecycle
 
@@ -48,6 +74,16 @@ public class ClipInformationCell: UICollectionViewCell {
         super.awakeFromNib()
 
         self.setupAppearance()
+    }
+
+    // MARK: - IBActions
+
+    @IBAction func didSwitchRightAccessoryButton(_ sender: UISwitch) {
+        self.delegate?.clipInformationCell(self, didSwitchRightAccessory: sender)
+    }
+
+    @IBAction func didTapBottomAccessoryButton(_ sender: UIButton) {
+        self.delegate?.clipInformationCell(self, didTapBottomAccessory: sender)
     }
 
     // MARK: - Methods
@@ -64,7 +100,33 @@ public class ClipInformationCell: UICollectionViewCell {
             $0?.font = UIFont.preferredFont(forTextStyle: .body)
         }
 
-        self.visibleRightAccessoryView = false
-        self.visibleBottomAccessoryView = false
+        self.updateAccessoryVisibility()
+    }
+
+    private func updateAccessoryVisibility() {
+        switch self.rightAccessoryType {
+        case .none:
+            self.rightAccessoryLabel.isHidden = true
+            self.rightAccessoryButton.isHidden = true
+
+        case let .label(title: title):
+            self.rightAccessoryLabel.text = title
+            self.rightAccessoryLabel.isHidden = false
+            self.rightAccessoryButton.isHidden = true
+
+        case let .switch(isEnabled: isEnabled):
+            self.rightAccessoryButton.isOn = isEnabled
+            self.rightAccessoryLabel.isHidden = true
+            self.rightAccessoryButton.isHidden = false
+        }
+
+        switch self.bottomAccessoryType {
+        case .none:
+            self.bottomAccessoryButton.isHidden = true
+
+        case let .button(title: title):
+            self.bottomAccessoryButton.setTitle(title, for: .normal)
+            self.bottomAccessoryButton.isHidden = false
+        }
     }
 }

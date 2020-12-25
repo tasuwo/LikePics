@@ -24,41 +24,38 @@
                                 <rect key="frame" x="0.0" y="0.0" width="340" height="54"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rCM-G1-FdR">
-                                        <rect key="frame" x="0.0" y="0.0" width="340" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="340" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oh4-Z7-uQP" userLabel="Title">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="33" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pwd-Ql-LMF" userLabel="Spacer">
-                                                <rect key="frame" x="33" y="0.0" width="227.5" height="20.5"/>
+                                                <rect key="frame" x="33" y="0.0" width="178.5" height="31"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accessory" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikk-Fz-cDB" userLabel="Accessory">
-                                                <rect key="frame" x="260.5" y="0.0" width="79.5" height="20.5"/>
+                                                <rect key="frame" x="211.5" y="0.0" width="79.5" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cjm-Yj-HHA">
+                                                <rect key="frame" x="291" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="didSwitchRightAccessoryButton:" destination="XQg-kb-lWb" eventType="valueChanged" id="cpK-yO-UTh"/>
+                                                </connections>
+                                            </switch>
                                         </subviews>
                                     </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V93-mg-gzO" userLabel="Container">
-                                        <rect key="frame" x="0.0" y="28.5" width="340" height="25.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="yaM-qR-hUI" customClass="MultiLineButton" customModule="TBoxUIKit" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="340" height="25.5"/>
-                                                <state key="normal" title="Button"/>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstItem="yaM-qR-hUI" firstAttribute="top" secondItem="V93-mg-gzO" secondAttribute="top" id="7hO-V5-gwJ"/>
-                                            <constraint firstAttribute="bottom" secondItem="yaM-qR-hUI" secondAttribute="bottom" id="LVx-FR-Z8b"/>
-                                            <constraint firstItem="yaM-qR-hUI" firstAttribute="leading" secondItem="V93-mg-gzO" secondAttribute="leading" id="MWj-5U-CG2"/>
-                                            <constraint firstAttribute="trailing" secondItem="yaM-qR-hUI" secondAttribute="trailing" id="lmX-GF-cXh"/>
-                                        </constraints>
-                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="yaM-qR-hUI" customClass="MultiLineButton" customModule="TBoxUIKit" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="39" width="340" height="15"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="didTapBottomAccessoryButton:" destination="XQg-kb-lWb" eventType="touchUpInside" id="sDK-SU-3kn"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -92,7 +89,7 @@
             <size key="customSize" width="380" height="74"/>
             <connections>
                 <outlet property="bottomAccessoryButton" destination="yaM-qR-hUI" id="14N-a9-aYM"/>
-                <outlet property="bottomAccessoryView" destination="V93-mg-gzO" id="Y4h-8J-hiq"/>
+                <outlet property="rightAccessoryButton" destination="cjm-Yj-HHA" id="JvV-oD-cPK"/>
                 <outlet property="rightAccessoryLabel" destination="ikk-Fz-cDB" id="zF7-Od-OEM"/>
                 <outlet property="separator" destination="7D5-Ab-yu5" id="f3A-NJ-AMu"/>
                 <outlet property="titleLabel" destination="Oh4-Z7-uQP" id="paa-jZ-LwZ"/>

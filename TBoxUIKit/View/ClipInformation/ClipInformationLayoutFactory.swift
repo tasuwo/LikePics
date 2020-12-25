@@ -217,7 +217,7 @@ public enum ClipInformationLayoutFactory {
     // MARK: DataSource
 
     static func makeDataSource(for collectionView: UICollectionView,
-                               configureUrlLink: @escaping (UIButton) -> Void,
+                               infoCellDelegate: ClipInformationCellDelegate?,
                                tagCellDelegate: TagCollectionViewCellDelegate?,
                                sectionHeaderDelegate: ClipInformationSectionHeaderDelegate?) -> DataSource
     {
@@ -227,7 +227,7 @@ public enum ClipInformationLayoutFactory {
                 return self.tagsSectionCellProvider(delegate: tagCellDelegate)(collectionView, indexPath, item)
 
             case .info:
-                return self.infoSectionCellProvider(configureUrlLink: configureUrlLink)(collectionView, indexPath, item)
+                return self.infoSectionCellProvider(delegate: infoCellDelegate)(collectionView, indexPath, item)
 
             case .none:
                 return nil
@@ -267,28 +267,26 @@ public enum ClipInformationLayoutFactory {
         }
     }
 
-    private static func infoSectionCellProvider(configureUrlLink: @escaping (UIButton) -> Void) -> DataSource.CellProvider {
-        return { collectionView, indexPath, item -> UICollectionViewCell? in
+    private static func infoSectionCellProvider(delegate: ClipInformationCellDelegate?) -> DataSource.CellProvider {
+        return { [weak delegate] collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
             guard let cell = dequeuedCell as? ClipInformationCell else { return dequeuedCell }
             guard case let .row(info) = item else { return cell }
 
-            cell.titleLabel.text = info.title
+            cell.title = info.title
+            cell.delegate = delegate
 
             if let rightTitle = info.rightLabel {
-                cell.visibleRightAccessoryView = true
-                cell.rightAccessoryLabel.text = rightTitle
+                cell.rightAccessoryType = .label(title: rightTitle)
             } else {
-                cell.visibleRightAccessoryView = false
+                cell.rightAccessoryType = .none
             }
 
             if let bottomTitle = info.bottomLabel {
-                cell.visibleBottomAccessoryView = true
-                cell.bottomAccessoryButton.setTitle(bottomTitle, for: .normal)
-                configureUrlLink(cell.bottomAccessoryButton)
+                cell.bottomAccessoryType = .button(title: bottomTitle)
             } else {
-                cell.visibleBottomAccessoryView = false
+                cell.bottomAccessoryType = .none
             }
 
             cell.visibleSeparator = info.visibleSeparator
