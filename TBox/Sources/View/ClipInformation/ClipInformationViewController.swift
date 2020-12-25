@@ -12,10 +12,10 @@ class ClipInformationViewController: UIViewController {
     private let factory: Factory
     private let presenter: ClipInformationPresenter
     private let transitioningController: ClipInformationTransitioningControllerProtocol
-    private lazy var alertContainer = TextEditAlert(
-        configuration: .init(title: L10n.tagListViewAlertForAddTitle,
-                             message: L10n.tagListViewAlertForAddMessage,
-                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+    private lazy var editSiteUrlAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.clipItemPreviewViewAlertForEditSiteUrlTitle,
+                             message: L10n.clipItemPreviewViewAlertForEditSiteUrlMessage,
+                             placeholder: L10n.clipItemPreviewViewAlertForEditSiteUrlPlaceholder)
     )
 
     private weak var dataSource: ClipInformationViewDataSource?
@@ -169,6 +169,16 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
     func clipInformationView(_ view: ClipInformationView, shouldHide isHidden: Bool) {
         self.presenter.update(isHidden: isHidden)
+    }
+
+    func clipInformationView(_ view: ClipInformationView, startEditingSiteUrl url: URL?) {
+        self.editSiteUrlAlertContainer.present(withText: url?.absoluteString, on: self) {
+            guard let text = $0 else { return true }
+            return text.isEmpty || URL(string: text) != nil
+        } completion: { [weak self] action in
+            guard case let .saved(text: text) = action else { return }
+            self?.presenter.update(siteUrl: URL(string: text))
+        }
     }
 }
 

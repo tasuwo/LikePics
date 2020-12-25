@@ -20,6 +20,8 @@ internal enum L10n {
     internal static let clipInformationViewContextMenuOpen = L10n.tr("Localizable", "clip_information_view_context_menu_open")
     /// 画像のURL
     internal static let clipInformationViewImageUrlTitle = L10n.tr("Localizable", "clip_information_view_image_url_title")
+    /// 編集
+    internal static let clipInformationViewLabelClipEditUrl = L10n.tr("Localizable", "clip_information_view_label_clip_edit_url")
     /// 隠す
     internal static let clipInformationViewLabelClipHide = L10n.tr("Localizable", "clip_information_view_label_clip_hide")
     /// なし

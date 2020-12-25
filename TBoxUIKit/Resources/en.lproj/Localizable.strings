@@ -15,6 +15,7 @@
 "clip_information_view_section_label_clip" = "This Clip Info";
 "clip_information_view_section_label_clip_item" = "This Image Info";
 
+"clip_information_view_label_clip_edit_url" = "Edit";
 "clip_information_view_label_clip_url" = "Web Site URL";
 "clip_information_view_label_clip_hide" = "Hidden";
 "clip_information_view_label_clip_registered_date" = "Created";

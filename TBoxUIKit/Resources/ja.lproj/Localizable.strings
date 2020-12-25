@@ -15,6 +15,7 @@
 "clip_information_view_section_label_clip" = "このクリップの情報";
 "clip_information_view_section_label_clip_item" = "この画像の情報";
 
+"clip_information_view_label_clip_edit_url" = "編集";
 "clip_information_view_label_clip_url" = "サイトのURL";
 "clip_information_view_label_clip_hide" = "隠す";
 "clip_information_view_label_clip_registered_date" = "登録日";

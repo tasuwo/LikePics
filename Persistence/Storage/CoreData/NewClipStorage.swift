@@ -417,7 +417,7 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL) -> Result<Void, ClipStorageError> {
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL?) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(items) = try self.fetchClipItems(for: ids) else { return .failure(.notFound) }
 

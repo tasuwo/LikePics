@@ -290,6 +290,9 @@ public enum ClipInformationLayoutFactory {
             case let .switch(isOn: isOn):
                 cell.rightAccessoryType = .switch(isOn: isOn)
 
+            case let .button(title: title):
+                cell.rightAccessoryType = .button(title: title)
+
             default:
                 cell.rightAccessoryType = nil
             }
@@ -297,6 +300,9 @@ public enum ClipInformationLayoutFactory {
             switch info.bottomAccessory {
             case let .button(title: title):
                 cell.bottomAccessoryType = .button(title: title)
+
+            case let .label(title: title):
+                cell.bottomAccessoryType = .label(title: title)
 
             default:
                 cell.bottomAccessoryType = nil
@@ -390,22 +396,22 @@ public enum ClipInformationLayoutFactory {
         } else {
             items.append(Item.Cell(id: "imageUrl",
                                    title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
-                                   bottomAccessory: nil,
+                                   rightAccessory: nil,
+                                   bottomAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
                                    visibleSeparator: false))
         }
 
         if let siteUrl = clipItem.url {
             items.append(Item.Cell(id: "siteUrl",
                                    title: L10n.clipInformationViewLabelClipUrl,
-                                   rightAccessory: nil,
+                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipEditUrl),
                                    bottomAccessory: .button(title: siteUrl.absoluteString),
                                    visibleSeparator: true))
         } else {
             items.append(Item.Cell(id: "siteUrl",
-                                   title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipItemNoUrl),
-                                   bottomAccessory: nil,
+                                   title: L10n.clipInformationViewLabelClipUrl,
+                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipEditUrl),
+                                   bottomAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
                                    visibleSeparator: true))
         }
 

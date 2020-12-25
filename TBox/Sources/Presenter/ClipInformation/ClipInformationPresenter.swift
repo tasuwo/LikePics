@@ -55,7 +55,7 @@ class ClipInformationPresenter {
 
                 case let .failure(error):
                     self?.logger.write(ConsoleLog(level: .error, message: "Error occurred. (error: \(error.localizedDescription))"))
-                    self?.view?.showErrorMessage("\(L10n.clipPreviewPageViewErrorAtReadClip)")
+                    self?.view?.showErrorMessage(L10n.clipInformationErrorAtReadClip)
                 }
             }, receiveValue: { [weak self] clip in
                 self?.clip = clip
@@ -65,21 +65,28 @@ class ClipInformationPresenter {
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to replace tags. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.view?.showErrorMessage(L10n.clipInformationErrorAtReplaceTags)
         }
     }
 
     func removeTagFromClip(_ tag: Tag) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byDeletingTagsHaving: [tag.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.view?.showErrorMessage(L10n.clipInformationErrorAtRemoveTags)
         }
     }
 
     func update(isHidden: Bool) {
         if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byHiding: isHidden) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to update. (code: \(error.rawValue))"))
-            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+            self.view?.showErrorMessage(L10n.clipInformationErrorAtUpdateHidden)
+        }
+    }
+
+    func update(siteUrl: URL?) {
+        if case let .failure(error) = self.clipCommandService.updateClipItems(having: [self.itemId], byUpdatingSiteUrl: siteUrl) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to update. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage(L10n.clipInformationErrorAtUpdateSiteUrl)
         }
     }
 }

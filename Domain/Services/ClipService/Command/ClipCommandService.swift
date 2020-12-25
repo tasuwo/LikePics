@@ -265,7 +265,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
-    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL) -> Result<Void, ClipStorageError> {
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL?) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()

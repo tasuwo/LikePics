@@ -64,6 +64,16 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// 画像の読み込みに失敗しました
+    internal static let clipInformationErrorAtReadClip = L10n.tr("Localizable", "clip_information_error_at_read_clip")
+    /// タグの削除に失敗しました
+    internal static let clipInformationErrorAtRemoveTags = L10n.tr("Localizable", "clip_information_error_at_remove_tags")
+    /// タグの更新に失敗しました
+    internal static let clipInformationErrorAtReplaceTags = L10n.tr("Localizable", "clip_information_error_at_replace_tags")
+    /// 更新に失敗しました
+    internal static let clipInformationErrorAtUpdateHidden = L10n.tr("Localizable", "clip_information_error_at_update_hidden")
+    /// URLの更新に失敗しました
+    internal static let clipInformationErrorAtUpdateSiteUrl = L10n.tr("Localizable", "clip_information_error_at_update_site_url")
     /// 削除
     internal static let clipInformationViewAlertForDeleteTagAction = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_action")
     /// このタグを削除しますか？\nクリップ及び画像は削除されません
@@ -78,6 +88,12 @@ internal enum L10n {
     internal static let clipItemPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_item_action")
     /// クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます
     internal static let clipItemPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_message")
+    /// この画像の保存元のサイトのURLを入力してください
+    internal static let clipItemPreviewViewAlertForEditSiteUrlMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_message")
+    /// https://www...
+    internal static let clipItemPreviewViewAlertForEditSiteUrlPlaceholder = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_placeholder")
+    /// サイトのURL
+    internal static let clipItemPreviewViewAlertForEditSiteUrlTitle = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_title")
     /// 隠す
     internal static let clipItemPreviewViewAlertForHideAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_action")
     /// このクリップは、設定が有効な間は全ての場所から隠されます

@@ -11,4 +11,5 @@ public protocol ClipInformationViewDelegate: AnyObject {
     func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL)
     func clipInformationView(_ view: ClipInformationView, shouldHide isHidden: Bool)
+    func clipInformationView(_ view: ClipInformationView, startEditingSiteUrl url: URL?)
 }

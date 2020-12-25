@@ -211,6 +211,17 @@ extension ClipInformationView: ClipInformationCellDelegate {
         self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
+    public func clipInformationCell(_ cell: ClipInformationCell, didTapRightAccessory button: UIButton) {
+        let url: URL? = {
+            if case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) {
+                return url
+            } else {
+                return nil
+            }
+        }()
+        self.delegate?.clipInformationView(self, startEditingSiteUrl: url)
+    }
+
     public func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch) {
         self.delegate?.clipInformationView(self, shouldHide: `switch`.isOn)
     }

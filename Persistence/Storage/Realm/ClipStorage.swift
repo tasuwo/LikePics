@@ -314,7 +314,7 @@ extension ClipStorage: ClipStorageProtocol {
         return .success(clips.map { Domain.Clip.make(by: $0) })
     }
 
-    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL) -> Result<Void, ClipStorageError> {
+    public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL?) -> Result<Void, ClipStorageError> {
         return .failure(.internalError)
     }
 

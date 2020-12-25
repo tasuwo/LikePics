@@ -69,14 +69,18 @@
 "tag_list_view_context_menu_action_copy" = "Copy";
 "tag_list_view_context_menu_action_delete" = "Delete";
 "tag_list_view_context_menu_action_update" = "Rename";
+
 "tag_list_view_alert_for_add_title" = "New Tag";
 "tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
 "tag_list_view_alert_for_add_placeholder" = "Name";
+
 "tag_list_view_alert_for_update_title" = "Rename Tag";
 "tag_list_view_alert_for_update_message" = "Enter a new name for this tag.";
 "tag_list_view_alert_for_update_placeholder" = "Name";
+
 "tag_list_view_alert_for_delete_message" = "Are you sure you want to delete selected tags?\nThe clips will not be deleted.";
 "tag_list_view_alert_for_delete_action" = "Delete %d Tags";
+
 "tag_list_view_empty_title" = "No tags";
 "tag_list_view_empty_message" = "If you classify clips by tags, you can list the clips categorized with specific tag later.";
 "tag_list_view_empty_action_title" = "Add your first Tag";
@@ -84,6 +88,10 @@
 "tag_selection_view_title" = "Select Tag";
 
 "clip_preview_page_view_error_at_read_clip" = "Failed to read clip.";
+
+"clip_item_preview_view_alert_for_edit_site_url_title" = "Site URL";
+"clip_item_preview_view_alert_for_edit_site_url_message" = "Enter a site url related to this image.";
+"clip_item_preview_view_alert_for_edit_site_url_placeholder" = "https://www...";
 
 "clip_item_preview_view_alert_for_delete_message" = "If you delete clip, all images in the clip will be deleted.";
 "clip_item_preview_view_alert_for_add_to_album" = "Add to Album";
@@ -127,6 +135,14 @@
 "clips_list_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
 "clips_list_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
 "clips_list_error_at_share" = "Failed to share.";
+
+// MARK: ClipInformation
+
+"clip_information_error_at_read_clip" = "Failed to read image.";
+"clip_information_error_at_replace_tags" = "Failed to update tags.";
+"clip_information_error_at_remove_tags" = "Failed to remove tags.";
+"clip_information_error_at_update_hidden" = "Failed to update.";
+"clip_information_error_at_update_site_url" = "Failed to update site url.";
 
 // MARK: Album
 
