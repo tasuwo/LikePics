@@ -70,10 +70,16 @@ public enum ClipInformationLayoutFactory {
 
     enum Item: Hashable, Equatable {
         struct Cell: Equatable, Hashable {
+            enum Accessory: Equatable, Hashable {
+                case label(title: String)
+                case button(title: String)
+                case `switch`(isOn: Bool)
+            }
+
             let id: String
             let title: String
-            let rightLabel: String?
-            let bottomLabel: String?
+            let rightAccessory: Accessory?
+            let bottomAccessory: Accessory?
             let visibleSeparator: Bool
         }
 
@@ -277,16 +283,23 @@ public enum ClipInformationLayoutFactory {
             cell.title = info.title
             cell.delegate = delegate
 
-            if let rightTitle = info.rightLabel {
-                cell.rightAccessoryType = .label(title: rightTitle)
-            } else {
-                cell.rightAccessoryType = .none
+            switch info.rightAccessory {
+            case let .label(title: title):
+                cell.rightAccessoryType = .label(title: title)
+
+            case let .switch(isOn: isOn):
+                cell.rightAccessoryType = .switch(isOn: isOn)
+
+            default:
+                cell.rightAccessoryType = nil
             }
 
-            if let bottomTitle = info.bottomLabel {
-                cell.bottomAccessoryType = .button(title: bottomTitle)
-            } else {
-                cell.bottomAccessoryType = .none
+            switch info.bottomAccessory {
+            case let .button(title: title):
+                cell.bottomAccessoryType = .button(title: title)
+
+            default:
+                cell.bottomAccessoryType = nil
             }
 
             cell.visibleSeparator = info.visibleSeparator
@@ -371,54 +384,52 @@ public enum ClipInformationLayoutFactory {
         if let imageUrl = clipItem.imageUrl {
             items.append(Item.Cell(id: UUID().uuidString,
                                    title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightLabel: nil,
-                                   bottomLabel: imageUrl.absoluteString,
+                                   rightAccessory: nil,
+                                   bottomAccessory: .button(title: imageUrl.absoluteString),
                                    visibleSeparator: false))
         } else {
             items.append(Item.Cell(id: UUID().uuidString,
                                    title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightLabel: L10n.clipInformationViewLabelClipItemNoUrl,
-                                   bottomLabel: nil,
+                                   rightAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
+                                   bottomAccessory: nil,
                                    visibleSeparator: false))
         }
 
         if let siteUrl = clipItem.url {
             items.append(Item.Cell(id: UUID().uuidString,
                                    title: L10n.clipInformationViewLabelClipUrl,
-                                   rightLabel: nil,
-                                   bottomLabel: siteUrl.absoluteString,
+                                   rightAccessory: nil,
+                                   bottomAccessory: .button(title: siteUrl.absoluteString),
                                    visibleSeparator: true))
         } else {
             items.append(Item.Cell(id: UUID().uuidString,
                                    title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightLabel: L10n.clipInformationViewLabelClipItemNoUrl,
-                                   bottomLabel: nil,
+                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipItemNoUrl),
+                                   bottomAccessory: nil,
                                    visibleSeparator: true))
         }
 
         return (items + [
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemSize,
-                      rightLabel: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
-                                                            countStyle: .binary),
-                      bottomLabel: nil,
+                      rightAccessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
+                                                                              countStyle: .binary)),
+                      bottomAccessory: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipHide,
-                      rightLabel: clip.isHidden
-                          ? L10n.clipInformationViewAccessoryClipHideYes
-                          : L10n.clipInformationViewAccessoryClipHideNo,
-                      bottomLabel: nil,
+                      rightAccessory: .switch(isOn: clip.isHidden),
+                      bottomAccessory: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemRegisteredDate,
-                      rightLabel: self.format(clipItem.registeredDate),
-                      bottomLabel: nil,
+                      rightAccessory: .label(title: self.format(clipItem.registeredDate)),
+                      bottomAccessory: nil,
                       visibleSeparator: true),
             Item.Cell(id: UUID().uuidString,
                       title: L10n.clipInformationViewLabelClipItemUpdatedDate,
-                      rightLabel: self.format(clipItem.updatedDate),
-                      bottomLabel: nil,
+                      rightAccessory: .label(title: self.format(clipItem.updatedDate)),
+                      bottomAccessory: nil,
                       visibleSeparator: true)
         ]).map { .row($0) }
     }

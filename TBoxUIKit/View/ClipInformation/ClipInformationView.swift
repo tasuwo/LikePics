@@ -14,7 +14,7 @@ public class ClipInformationView: UIView {
             guard let info = self.info else { return }
             let snapshot = Factory.makeSnapshot(for: info)
             DispatchQueue.global(qos: .background).async {
-                self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
+                self.collectionViewDataSource.apply(snapshot, animatingDifferences: false)
             }
         }
     }
@@ -209,7 +209,7 @@ extension ClipInformationView: ClipInformationCellDelegate {
     }
 
     public func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch) {
-        // NOP
+        self.delegate?.clipInformationView(self, shouldHide: `switch`.isOn)
     }
 }
 

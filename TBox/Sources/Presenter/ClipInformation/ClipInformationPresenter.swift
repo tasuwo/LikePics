@@ -75,4 +75,11 @@ class ClipInformationPresenter {
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
         }
     }
+
+    func update(isHidden: Bool) {
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.identity], byHiding: isHidden) {
+            self.logger.write(ConsoleLog(level: .error, message: "Failed to update. (code: \(error.rawValue))"))
+            self.view?.showErrorMessage("\(L10n.albumListViewErrorAtReadImageData)\n(\(error.makeErrorCode())")
+        }
+    }
 }

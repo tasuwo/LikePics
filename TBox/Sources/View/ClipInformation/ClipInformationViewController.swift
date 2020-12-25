@@ -166,6 +166,10 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL) {
         UIPasteboard.general.string = url.absoluteString
     }
+
+    func clipInformationView(_ view: ClipInformationView, shouldHide isHidden: Bool) {
+        self.presenter.update(isHidden: isHidden)
+    }
 }
 
 extension ClipInformationViewController: TagSelectionPresenterDelegate {

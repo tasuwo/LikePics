@@ -11,13 +11,11 @@ public protocol ClipInformationCellDelegate: UIContextMenuInteractionDelegate {
 
 public class ClipInformationCell: UICollectionViewCell {
     public enum RightAccessoryType {
-        case none
         case label(title: String)
-        case `switch`(isEnabled: Bool)
+        case `switch`(isOn: Bool)
     }
 
     public enum BottomAccessoryType {
-        case none
         case button(title: String)
     }
 
@@ -34,13 +32,13 @@ public class ClipInformationCell: UICollectionViewCell {
         }
     }
 
-    public var rightAccessoryType: RightAccessoryType = .none {
+    public var rightAccessoryType: RightAccessoryType? {
         didSet {
             self.updateAccessoryVisibility()
         }
     }
 
-    public var bottomAccessoryType: BottomAccessoryType = .none {
+    public var bottomAccessoryType: BottomAccessoryType? {
         didSet {
             self.updateAccessoryVisibility()
         }
@@ -114,8 +112,8 @@ public class ClipInformationCell: UICollectionViewCell {
             self.rightAccessoryLabel.isHidden = false
             self.rightAccessoryButton.isHidden = true
 
-        case let .switch(isEnabled: isEnabled):
-            self.rightAccessoryButton.isOn = isEnabled
+        case let .switch(isOn: isOn):
+            self.rightAccessoryButton.isOn = isOn
             self.rightAccessoryLabel.isHidden = true
             self.rightAccessoryButton.isHidden = false
         }

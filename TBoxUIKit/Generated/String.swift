@@ -14,10 +14,6 @@ internal enum L10n {
     internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
     /// 保存
     internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
-    /// いいえ
-    internal static let clipInformationViewAccessoryClipHideNo = L10n.tr("Localizable", "clip_information_view_accessory_clip_hide_no")
-    /// はい
-    internal static let clipInformationViewAccessoryClipHideYes = L10n.tr("Localizable", "clip_information_view_accessory_clip_hide_yes")
     /// コピー
     internal static let clipInformationViewContextMenuCopy = L10n.tr("Localizable", "clip_information_view_context_menu_copy")
     /// 開く
