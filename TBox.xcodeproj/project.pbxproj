@@ -2215,6 +2215,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE1C0F42582669100A8FA07 /* Layout */,
+				2C170BBD2531A125001B1542 /* Transition */,
 				2CFC5CF8250DF1A9001A02E4 /* Generated */,
 				2C6E09EB24E82BC800B541D9 /* Resources */,
 				2C95EC4924E15DB600D6EEB4 /* Extension */,
@@ -2238,7 +2239,6 @@
 			isa = PBXGroup;
 			children = (
 				2C4D6C3D25811C8B006FB988 /* Alert */,
-				2C170BBD2531A125001B1542 /* Transition */,
 				2C3CCDC424F40D8700FAC660 /* Common */,
 				2C45D40924EEBE420045B6D3 /* AlbumCollection */,
 				2C50D434253226B4008A422C /* AlbumSelection */,
