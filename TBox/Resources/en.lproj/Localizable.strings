@@ -39,7 +39,7 @@
 "clips_list_context_menu_delete" = "Delete";
 "clips_list_context_menu_purge" = "Purge";
 
-"clip_target_finder_view_title" = "Select image.";
+"clip_creation_view_title" = "Select image.";
 
 "top_clip_view_empty_title" = "No Clips";
 "top_clip_view_empty_message" = "Share the url of the site containing your favorite images using other apps.";

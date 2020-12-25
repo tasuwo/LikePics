@@ -65,14 +65,14 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
     }
 }
 
-extension ShareNavigationRootViewController: ClipTargetFinderDelegate {
+extension ShareNavigationRootViewController: ClipCreationDelegate {
     // MARK: - ClipTargetCollectionViewControllerDelegate
 
-    func didFinish(_ viewController: ClipTargetFinderViewController) {
+    func didFinish(_ viewController: ClipCreationViewController) {
         self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
     }
 
-    func didCancel(_ viewController: ClipTargetFinderViewController) {
+    func didCancel(_ viewController: ClipCreationViewController) {
         let error = NSError(domain: "net.tasuwo.TBox",
                             code: 0,
                             userInfo: [NSLocalizedDescriptionKey: "An error description"])

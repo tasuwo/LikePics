@@ -11,8 +11,8 @@ import UIKit
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
-    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController
+    func makeClipTargetCollectionViewController(url: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController
 }
 
 class DependencyContainer {
@@ -57,22 +57,22 @@ extension DependencyContainer: ViewControllerFactory {
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
-        return ClipTargetFinderViewController(factory: self,
-                                              viewModel: ClipTargetFinderViewModel(url: url,
-                                                                                   clipStore: self.clipStore,
-                                                                                   provider: WebImageSourceProvider(url: url)),
-                                              tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
-                                              delegate: delegate)
+    func makeClipTargetCollectionViewController(url: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
+        return ClipCreationViewController(factory: self,
+                                          viewModel: ClipCreationViewModel(url: url,
+                                                                           clipStore: self.clipStore,
+                                                                           provider: WebImageSourceProvider(url: url)),
+                                          tagsViewModel: ClipCreationSelectedTagsViewModel(),
+                                          delegate: delegate)
     }
 
-    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipTargetFinderDelegate) -> ClipTargetFinderViewController {
-        return ClipTargetFinderViewController(factory: self,
-                                              viewModel: ClipTargetFinderViewModel(url: nil,
-                                                                                   clipStore: self.clipStore,
-                                                                                   provider: RawImageSourceProvider(imageDataSet: data)),
-                                              tagsViewModel: ClipTargetFinderSelectedTagsViewModel(),
-                                              delegate: delegate)
+    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController {
+        return ClipCreationViewController(factory: self,
+                                          viewModel: ClipCreationViewModel(url: nil,
+                                                                           clipStore: self.clipStore,
+                                                                           provider: RawImageSourceProvider(imageDataSet: data)),
+                                          tagsViewModel: ClipCreationSelectedTagsViewModel(),
+                                          delegate: delegate)
     }
 }
 

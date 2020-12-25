@@ -5,37 +5,37 @@
 import Combine
 import Domain
 
-public protocol ClipTargetFinderSelectedTagsViewModelType {
-    var inputs: ClipTargetFinderSelectedTagsViewModelInputs { get }
-    var outputs: ClipTargetFinderSelectedTagsViewModelOutputs { get }
+public protocol ClipCreationSelectedTagsViewModelType {
+    var inputs: ClipCreationSelectedTagsViewModelInputs { get }
+    var outputs: ClipCreationSelectedTagsViewModelOutputs { get }
 }
 
-public protocol ClipTargetFinderSelectedTagsViewModelInputs {
+public protocol ClipCreationSelectedTagsViewModelInputs {
     var delete: PassthroughSubject<Tag, Never> { get }
     var replace: PassthroughSubject<[Tag], Never> { get }
 }
 
-public protocol ClipTargetFinderSelectedTagsViewModelOutputs {
+public protocol ClipCreationSelectedTagsViewModelOutputs {
     var tags: CurrentValueSubject<[Tag], Never> { get }
 }
 
-public class ClipTargetFinderSelectedTagsViewModel: ClipTargetFinderSelectedTagsViewModelType,
-    ClipTargetFinderSelectedTagsViewModelInputs,
-    ClipTargetFinderSelectedTagsViewModelOutputs
+public class ClipCreationSelectedTagsViewModel: ClipCreationSelectedTagsViewModelType,
+    ClipCreationSelectedTagsViewModelInputs,
+    ClipCreationSelectedTagsViewModelOutputs
 {
     // MARK: - Properties
 
-    // MARK: ClipTargetFinderSelectedTagsViewModelType
+    // MARK: ClipCreationSelectedTagsViewModelType
 
-    public var inputs: ClipTargetFinderSelectedTagsViewModelInputs { self }
-    public var outputs: ClipTargetFinderSelectedTagsViewModelOutputs { self }
+    public var inputs: ClipCreationSelectedTagsViewModelInputs { self }
+    public var outputs: ClipCreationSelectedTagsViewModelOutputs { self }
 
-    // MARK: ClipTargetFinderSelectedTagsViewModelInputs
+    // MARK: ClipCreationSelectedTagsViewModelInputs
 
     public var delete: PassthroughSubject<Tag, Never> = .init()
     public var replace: PassthroughSubject<[Tag], Never> = .init()
 
-    // MARK: ClipTargetFinderSelectedTagsViewModelOutputs
+    // MARK: ClipCreationSelectedTagsViewModelOutputs
 
     public var tags: CurrentValueSubject<[Tag], Never> = .init([])
 

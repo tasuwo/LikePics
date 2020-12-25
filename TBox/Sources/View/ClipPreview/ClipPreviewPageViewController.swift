@@ -225,14 +225,14 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension ClipPreviewPageViewController: ClipTargetFinderDelegate {
+extension ClipPreviewPageViewController: ClipCreationDelegate {
     // MARK: - ClipTargetCollectionViewControllerDelegate
 
-    func didFinish(_ viewController: ClipTargetFinderViewController) {
+    func didFinish(_ viewController: ClipCreationViewController) {
         viewController.dismiss(animated: true, completion: nil)
     }
 
-    func didCancel(_ viewController: ClipTargetFinderViewController) {
+    func didCancel(_ viewController: ClipCreationViewController) {
         viewController.dismiss(animated: true, completion: nil)
     }
 }

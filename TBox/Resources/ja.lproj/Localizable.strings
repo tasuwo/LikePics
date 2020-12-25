@@ -42,7 +42,7 @@
 "top_clip_view_empty_title" = "クリップがありません";
 "top_clip_view_empty_message" = "他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう";
 
-"clip_target_finder_view_title" = "画像を選択";
+"clip_creation_view_title" = "画像を選択";
 
 "album_list_view_title" = "アルバム";
 "album_list_view_alert_for_add_title" = "新規アルバム";

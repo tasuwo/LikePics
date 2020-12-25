@@ -8,9 +8,9 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipTargetFinderSelectedTagsViewController: UIViewController {
+class ClipCreationSelectedTagsViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = ClipTargetFinderSelectedTagsViewModelType
+    typealias Dependency = ClipCreationSelectedTagsViewModelType
 
     enum Section {
         case main
@@ -24,7 +24,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     var contentViewHeight: CurrentValueSubject<CGFloat, Never> = .init(0)
 
     private let factory: Factory
-    let viewModel: ClipTargetFinderSelectedTagsViewModelType
+    let viewModel: ClipCreationSelectedTagsViewModelType
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Cell>!
@@ -34,7 +34,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: ClipTargetFinderSelectedTagsViewModelType)
+         viewModel: ClipCreationSelectedTagsViewModelType)
     {
         self.factory = factory
         self.viewModel = viewModel
@@ -92,7 +92,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
         return { [weak self] collectionView, indexPath, item -> UICollectionViewCell? in
             switch item {
             case .addition:
-                let configuration = TagCollectionView.CellConfiguration.Addition(title: L10n.clipTargetFinderViewAdditionTitle,
+                let configuration = TagCollectionView.CellConfiguration.Addition(title: L10n.clipCreationViewAdditionTitle,
                                                                                  delegate: self)
                 return TagCollectionView.provideCell(collectionView: collectionView,
                                                      indexPath: indexPath,
@@ -121,7 +121,7 @@ class ClipTargetFinderSelectedTagsViewController: UIViewController {
     }
 }
 
-extension ClipTargetFinderSelectedTagsViewController: UICollectionViewDelegate {
+extension ClipCreationSelectedTagsViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -133,7 +133,7 @@ extension ClipTargetFinderSelectedTagsViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewCellDelegate {
+extension ClipCreationSelectedTagsViewController: TagCollectionViewCellDelegate {
     // MARK: - TagCollectionViewCellDelegate
 
     func didTapDeleteButton(_ cell: TagCollectionViewCell) {
@@ -147,7 +147,7 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionViewCellDeleg
     }
 }
 
-extension ClipTargetFinderSelectedTagsViewController: TagCollectionAdditionCellDelegate {
+extension ClipCreationSelectedTagsViewController: TagCollectionAdditionCellDelegate {
     // MARK: - TagCollectionAdditionCellDelegate
 
     func didTap(_ cell: TagCollectionAdditionCell) {
@@ -164,7 +164,7 @@ extension ClipTargetFinderSelectedTagsViewController: TagCollectionAdditionCellD
     }
 }
 
-extension ClipTargetFinderSelectedTagsViewController: TagSelectionViewControllerDelegate {
+extension ClipCreationSelectedTagsViewController: TagSelectionViewControllerDelegate {
     // MARK: - TagSelectionViewControllerDelegate
 
     func didSelectTags(tags: [Tag]) {

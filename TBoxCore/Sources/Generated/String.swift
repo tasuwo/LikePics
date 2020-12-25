@@ -11,43 +11,43 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
     /// タグを追加
-    internal static let clipTargetFinderViewAdditionTitle = L10n.tr("Localizable", "clip_target_finder_view_addition_title")
+    internal static let clipCreationViewAdditionTitle = L10n.tr("Localizable", "clip_creation_view_addition_title")
     /// OK
-    internal static let clipTargetFinderViewDownloadErrorAction = L10n.tr("Localizable", "clip_target_finder_view_download_error_action")
+    internal static let clipCreationViewDownloadErrorAction = L10n.tr("Localizable", "clip_creation_view_download_error_action")
     /// 保存時に問題が発生しました。後ほどもう一度お試しください
-    internal static let clipTargetFinderViewDownloadErrorFailedToDownloadBody = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_download_body")
+    internal static let clipCreationViewDownloadErrorFailedToDownloadBody = L10n.tr("Localizable", "clip_creation_view_download_error_failed_to_download_body")
     /// 保存に失敗しました
-    internal static let clipTargetFinderViewDownloadErrorFailedToDownloadTitle = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_download_title")
+    internal static let clipCreationViewDownloadErrorFailedToDownloadTitle = L10n.tr("Localizable", "clip_creation_view_download_error_failed_to_download_title")
     /// 画像のダウンロードに失敗しました。通信環境を確認し、後ほどもう一度お試しください
-    internal static let clipTargetFinderViewDownloadErrorFailedToSaveBody = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_save_body")
+    internal static let clipCreationViewDownloadErrorFailedToSaveBody = L10n.tr("Localizable", "clip_creation_view_download_error_failed_to_save_body")
     /// ダウンロードできませんでした
-    internal static let clipTargetFinderViewDownloadErrorFailedToSaveTitle = L10n.tr("Localizable", "clip_target_finder_view_download_error_failed_to_save_title")
+    internal static let clipCreationViewDownloadErrorFailedToSaveTitle = L10n.tr("Localizable", "clip_creation_view_download_error_failed_to_save_title")
     /// もう一度試す
-    internal static let clipTargetFinderViewLoadingErrorAction = L10n.tr("Localizable", "clip_target_finder_view_loading_error_action")
+    internal static let clipCreationViewLoadingErrorAction = L10n.tr("Localizable", "clip_creation_view_loading_error_action")
     /// 通信環境の良い状態でもう一度お試しください
-    internal static let clipTargetFinderViewLoadingErrorConnectionMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_connection_message")
+    internal static let clipCreationViewLoadingErrorConnectionMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_connection_message")
     /// 通信に失敗しました
-    internal static let clipTargetFinderViewLoadingErrorConnectionTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_connection_title")
+    internal static let clipCreationViewLoadingErrorConnectionTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_connection_title")
     /// もう一度お試しください
-    internal static let clipTargetFinderViewLoadingErrorInternalMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_message")
+    internal static let clipCreationViewLoadingErrorInternalMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_internal_message")
     /// 画像の探索に失敗しました
-    internal static let clipTargetFinderViewLoadingErrorInternalTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_internal_title")
+    internal static let clipCreationViewLoadingErrorInternalTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_internal_title")
     /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
-    internal static let clipTargetFinderViewLoadingErrorNotFoundMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_message")
+    internal static let clipCreationViewLoadingErrorNotFoundMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_not_found_message")
     /// 画像が見つかりませんでした
-    internal static let clipTargetFinderViewLoadingErrorNotFoundTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_not_found_title")
+    internal static let clipCreationViewLoadingErrorNotFoundTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_not_found_title")
     /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
-    internal static let clipTargetFinderViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_message")
+    internal static let clipCreationViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
-    internal static let clipTargetFinderViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_target_finder_view_loading_error_timeout_title")
+    internal static let clipCreationViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_title")
     /// 既にクリップ済みのURLです。上書きしますか？
-    internal static let clipTargetFinderViewOverwriteAlertBody = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_body")
+    internal static let clipCreationViewOverwriteAlertBody = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_body")
     /// キャンセル
-    internal static let clipTargetFinderViewOverwriteAlertCancel = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_cancel")
+    internal static let clipCreationViewOverwriteAlertCancel = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_cancel")
     /// OK
-    internal static let clipTargetFinderViewOverwriteAlertOk = L10n.tr("Localizable", "clip_target_finder_view_overwrite_alert_ok")
+    internal static let clipCreationViewOverwriteAlertOk = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_ok")
     /// 画像を選択
-    internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
+    internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// OK
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// タグの追加に失敗しました

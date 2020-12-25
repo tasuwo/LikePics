@@ -354,11 +354,11 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var readAlbumIdsCallCount = 0
-    public var readAlbumIdsHandler: ((Clip.Identity) -> (Result<[Album.Identity], ClipStorageError>))?
-    public func readAlbumIds(containsClipHaving: Clip.Identity) -> Result<[Album.Identity], ClipStorageError> {
+    public var readAlbumIdsHandler: (([Clip.Identity]) -> (Result<[Album.Identity], ClipStorageError>))?
+    public func readAlbumIds(containsClipsHaving: [Clip.Identity]) -> Result<[Album.Identity], ClipStorageError> {
         readAlbumIdsCallCount += 1
         if let readAlbumIdsHandler = readAlbumIdsHandler {
-            return readAlbumIdsHandler(containsClipHaving)
+            return readAlbumIdsHandler(containsClipsHaving)
         }
         fatalError("readAlbumIdsHandler returns can't have a default value thus its handler must be set")
     }

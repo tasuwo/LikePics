@@ -8,9 +8,9 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-public protocol ClipTargetFinderDelegate: AnyObject {
-    func didCancel(_ viewController: ClipTargetFinderViewController)
-    func didFinish(_ viewController: ClipTargetFinderViewController)
+public protocol ClipCreationDelegate: AnyObject {
+    func didCancel(_ viewController: ClipCreationViewController)
+    func didFinish(_ viewController: ClipCreationViewController)
 }
 
 protocol SelectableImageCellDataSource {
@@ -19,9 +19,9 @@ protocol SelectableImageCellDataSource {
     var width: CGFloat { get }
 }
 
-public class ClipTargetFinderViewController: UIViewController {
+public class ClipCreationViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = ClipTargetFinderViewModelType
+    typealias Dependency = ClipCreationViewModelType
 
     private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
                                                 target: self,
@@ -38,27 +38,27 @@ public class ClipTargetFinderViewController: UIViewController {
     @IBOutlet var baseScrollView: UIScrollView!
 
     private let factory: Factory
-    private let viewModel: ClipTargetFinderViewModelType
+    private let viewModel: ClipCreationViewModelType
     private let thumbnailLoader: ThumbnailLoaderProtocol = ThumbnailLoader()
 
-    private let selectedTagViewController: ClipTargetFinderSelectedTagsViewController
+    private let selectedTagViewController: ClipCreationSelectedTagsViewController
 
     private var cancellableBag = Set<AnyCancellable>()
-    private weak var delegate: ClipTargetFinderDelegate?
+    private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Lifecycle
 
     public init(factory: ViewControllerFactory,
-                viewModel: ClipTargetFinderViewModelType,
-                tagsViewModel: ClipTargetFinderSelectedTagsViewModelType,
-                delegate: ClipTargetFinderDelegate)
+                viewModel: ClipCreationViewModelType,
+                tagsViewModel: ClipCreationSelectedTagsViewModelType,
+                delegate: ClipCreationDelegate)
     {
         self.factory = factory
         self.viewModel = viewModel
         self.delegate = delegate
-        self.selectedTagViewController = ClipTargetFinderSelectedTagsViewController(factory: factory,
-                                                                                    viewModel: tagsViewModel)
-        super.init(nibName: "ClipTargetFinderViewController", bundle: Bundle(for: Self.self))
+        self.selectedTagViewController = ClipCreationSelectedTagsViewController(factory: factory,
+                                                                                viewModel: tagsViewModel)
+        super.init(nibName: "ClipCreationViewController", bundle: Bundle(for: Self.self))
 
         self.addChild(self.selectedTagViewController)
     }
@@ -158,7 +158,7 @@ public class ClipTargetFinderViewController: UIViewController {
         dependency.outputs.displayAlert
             .sink { [weak self] title, message in
                 let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(.init(title: L10n.clipTargetFinderViewOverwriteAlertOk, style: .default, handler: nil))
+                alert.addAction(.init(title: L10n.clipCreationViewOverwriteAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
@@ -197,7 +197,7 @@ public class ClipTargetFinderViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.navigationItem.title = L10n.clipTargetFinderViewTitle
+        self.navigationItem.title = L10n.clipCreationViewTitle
 
         [self.itemReload, self.itemDone].forEach {
             $0.setTitleTextAttributes([.foregroundColor: UIColor.lightGray], for: .disabled)
@@ -228,14 +228,14 @@ public class ClipTargetFinderViewController: UIViewController {
 
         self.emptyMessageView.title = nil
         self.emptyMessageView.message = nil
-        self.emptyMessageView.actionButtonTitle = L10n.clipTargetFinderViewLoadingErrorAction
+        self.emptyMessageView.actionButtonTitle = L10n.clipCreationViewLoadingErrorAction
         self.emptyMessageView.delegate = self
 
         self.emptyMessageView.alpha = 0
     }
 }
 
-extension ClipTargetFinderViewController: UICollectionViewDelegate {
+extension ClipCreationViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -259,7 +259,7 @@ extension ClipTargetFinderViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipTargetFinderViewController: UICollectionViewDataSource {
+extension ClipCreationViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -294,7 +294,7 @@ extension ClipTargetFinderViewController: UICollectionViewDataSource {
     }
 }
 
-extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
+extension ClipCreationViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
     public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
@@ -311,7 +311,7 @@ extension ClipTargetFinderViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
-extension ClipTargetFinderViewController: EmptyMessageViewDelegate {
+extension ClipCreationViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     public func didTapActionButton(_ view: EmptyMessageView) {

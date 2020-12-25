@@ -64,6 +64,8 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// 画像を選択
+    internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// 画像の読み込みに失敗しました
     internal static let clipInformationErrorAtReadClip = L10n.tr("Localizable", "clip_information_error_at_read_clip")
     /// タグの削除に失敗しました
@@ -104,8 +106,6 @@ internal enum L10n {
     internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
     /// クリップの読み込みに失敗しました
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
-    /// 画像を選択
-    internal static let clipTargetFinderViewTitle = L10n.tr("Localizable", "clip_target_finder_view_title")
     /// タグを追加する
     internal static let clipsListAlertForAddTag = L10n.tr("Localizable", "clips_list_alert_for_add_tag")
     /// アルバムに追加する

@@ -7,12 +7,12 @@ import Common
 import Domain
 import UIKit
 
-public protocol ClipTargetFinderViewModelType {
-    var inputs: ClipTargetFinderViewModelInputs { get }
-    var outputs: ClipTargetFinderViewModelOutputs { get }
+public protocol ClipCreationViewModelType {
+    var inputs: ClipCreationViewModelInputs { get }
+    var outputs: ClipCreationViewModelOutputs { get }
 }
 
-public protocol ClipTargetFinderViewModelInputs {
+public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
 
     var startedFindingImage: PassthroughSubject<Void, Never> { get }
@@ -24,7 +24,7 @@ public protocol ClipTargetFinderViewModelInputs {
     var selectedTags: PassthroughSubject<[Tag], Never> { get }
 }
 
-public protocol ClipTargetFinderViewModelOutputs {
+public protocol ClipCreationViewModelOutputs {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
     var images: CurrentValueSubject<[ImageSource], Never> { get }
@@ -44,9 +44,9 @@ public protocol ClipTargetFinderViewModelOutputs {
     var displayAlert: PassthroughSubject<(title: String, body: String), Never> { get }
 }
 
-public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
-    ClipTargetFinderViewModelInputs,
-    ClipTargetFinderViewModelOutputs
+public class ClipCreationViewModel: ClipCreationViewModelType,
+    ClipCreationViewModelInputs,
+    ClipCreationViewModelOutputs
 {
     enum DownloadError: Error {
         case failedToSave(ClipStorageError)
@@ -57,12 +57,12 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     // MARK: - Properties
 
-    // MARK: ClipTargetFinderViewModelType
+    // MARK: ClipCreationViewModelType
 
-    public var inputs: ClipTargetFinderViewModelInputs { self }
-    public var outputs: ClipTargetFinderViewModelOutputs { self }
+    public var inputs: ClipCreationViewModelInputs { self }
+    public var outputs: ClipCreationViewModelOutputs { self }
 
-    // MARK: ClipTargetFinderViewModelInputs
+    // MARK: ClipCreationViewModelInputs
 
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
 
@@ -74,7 +74,7 @@ public class ClipTargetFinderViewModel: ClipTargetFinderViewModelType,
 
     public var selectedTags: PassthroughSubject<[Tag], Never> = .init()
 
-    // MARK: ClipTargetFinderViewModelOutputs
+    // MARK: ClipCreationViewModelOutputs
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -329,54 +329,54 @@ extension ImageSourceProviderError {
     var displayTitle: String {
         switch self {
         case .notFound:
-            return L10n.clipTargetFinderViewLoadingErrorNotFoundTitle
+            return L10n.clipCreationViewLoadingErrorNotFoundTitle
 
         case .networkError:
-            return L10n.clipTargetFinderViewLoadingErrorConnectionTitle
+            return L10n.clipCreationViewLoadingErrorConnectionTitle
 
         case .internalError:
-            return L10n.clipTargetFinderViewLoadingErrorInternalTitle
+            return L10n.clipCreationViewLoadingErrorInternalTitle
 
         case .timeout:
-            return L10n.clipTargetFinderViewLoadingErrorTimeoutTitle
+            return L10n.clipCreationViewLoadingErrorTimeoutTitle
         }
     }
 
     var displayMessage: String {
         switch self {
         case .notFound:
-            return L10n.clipTargetFinderViewLoadingErrorNotFoundMessage
+            return L10n.clipCreationViewLoadingErrorNotFoundMessage
 
         case .networkError:
-            return L10n.clipTargetFinderViewLoadingErrorConnectionMessage
+            return L10n.clipCreationViewLoadingErrorConnectionMessage
 
         case .internalError:
-            return L10n.clipTargetFinderViewLoadingErrorInternalMessage
+            return L10n.clipCreationViewLoadingErrorInternalMessage
 
         case .timeout:
-            return L10n.clipTargetFinderViewLoadingErrorTimeoutMessage
+            return L10n.clipCreationViewLoadingErrorTimeoutMessage
         }
     }
 }
 
-extension ClipTargetFinderViewModel.DownloadError {
+extension ClipCreationViewModel.DownloadError {
     var displayTitle: String {
         switch self {
         case .failedToDownloadImage:
-            return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadTitle
+            return L10n.clipCreationViewDownloadErrorFailedToDownloadTitle
 
         default:
-            return L10n.clipTargetFinderViewDownloadErrorFailedToSaveTitle
+            return L10n.clipCreationViewDownloadErrorFailedToSaveTitle
         }
     }
 
     var displayMessage: String {
         switch self {
         case .failedToDownloadImage:
-            return L10n.clipTargetFinderViewDownloadErrorFailedToDownloadBody
+            return L10n.clipCreationViewDownloadErrorFailedToDownloadBody
 
         default:
-            return L10n.clipTargetFinderViewDownloadErrorFailedToSaveBody
+            return L10n.clipCreationViewDownloadErrorFailedToSaveBody
         }
     }
 }
