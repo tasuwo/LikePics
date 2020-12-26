@@ -13,6 +13,7 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
     func shouldHide(_ provider: ClipCollectionToolBarProvider)
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
     func shouldCancel(_ provider: ClipCollectionToolBarProvider)
+    func shouldMerge(_ provider: ClipCollectionToolBarProvider)
 
     func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController)
     func fetchImages(_ provider: ClipCollectionToolBarProvider) -> [Data]
@@ -28,6 +29,7 @@ class ClipCollectionToolBarProvider {
     private var hideItem: UIBarButtonItem!
     private var unhideItem: UIBarButtonItem!
     private var shareItem: UIBarButtonItem!
+    private var mergeItem: UIBarButtonItem!
 
     weak var alertPresentable: ClipCollectionAlertPresentable?
     weak var delegate: ClipCollectionToolBarProviderDelegate?
@@ -144,6 +146,11 @@ class ClipCollectionToolBarProvider {
         }
     }
 
+    @objc
+    private func didTapMerge() {
+        self.delegate?.shouldMerge(self)
+    }
+
     private func setupButtons() {
         self.flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
                                             target: nil,
@@ -169,6 +176,10 @@ class ClipCollectionToolBarProvider {
                                          style: .plain,
                                          target: self,
                                          action: #selector(self.didTapShare))
+        self.mergeItem = UIBarButtonItem(image: UIImage(systemName: "paperclip"),
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(self.didTapMerge))
     }
 
     private func resolveBarButtonItems(for items: [ClipCollection.ToolBarItem]) -> [UIBarButtonItem] {
@@ -198,6 +209,9 @@ class ClipCollectionToolBarProvider {
 
             case .share:
                 return self.shareItem
+
+            case .merge:
+                return self.mergeItem
             }
         }()
         buttonItem.isEnabled = item.isEnabled

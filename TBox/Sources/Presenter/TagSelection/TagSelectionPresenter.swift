@@ -13,8 +13,10 @@ protocol TagSelectionViewProtocol: AnyObject {
     func close()
 }
 
+// TODO: I/F を統合する
 protocol TagSelectionPresenterDelegate: AnyObject {
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?)
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag])
 }
 
 class TagSelectionPresenter {
@@ -105,6 +107,7 @@ class TagSelectionPresenter {
 
     func performSelection() {
         self.delegate?.tagSelectionPresenter(self, didSelectTagsHaving: self.selections, withContext: self.context)
+        self.delegate?.tagSelectionPresenter(self, tags: self.selectedTags)
         self.view?.close()
     }
 

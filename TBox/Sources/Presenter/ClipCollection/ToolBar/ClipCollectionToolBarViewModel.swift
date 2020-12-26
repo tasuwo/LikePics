@@ -74,6 +74,7 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
                     .init(kind: .hide, isEnabled: isEnabled),
                     .init(kind: .unhide, isEnabled: isEnabled),
                     .init(kind: .share, isEnabled: isEnabled),
+                    .init(kind: .merge, isEnabled: isEnabled),
                     self.context.isAlbum
                         ? .init(kind: .removeFromAlbum, isEnabled: isEnabled)
                         : .init(kind: .delete, isEnabled: isEnabled)

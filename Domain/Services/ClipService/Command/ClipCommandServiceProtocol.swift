@@ -24,6 +24,7 @@ public protocol ClipCommandServiceProtocol {
     func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError>
 
     func purgeClipItems(forClipHaving id: Clip.Identity) -> Result<Void, ClipStorageError>
+    func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
 

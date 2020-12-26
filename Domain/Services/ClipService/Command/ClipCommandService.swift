@@ -497,6 +497,115 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
+    public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+
+                let albumIds: [Album.Identity]
+                switch self.clipStorage.readAlbumIds(containsClipsHaving: clipIds) {
+                case let .success(result):
+                    albumIds = result
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    アルバムの読み取りに失敗. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(error)
+                }
+
+                let items: [ClipItem]
+                switch self.clipStorage.readClipItems(having: itemIds) {
+                case let .success(result):
+                    items = result
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    ClipItemの読み取りに失敗. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(error)
+                }
+
+                switch self.clipStorage.deleteClips(having: clipIds) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    クリップの削除に失敗 (error=\(error.localizedDescription))
+                    """))
+                    return .failure(error)
+                }
+
+                let clipId = UUID()
+                let newItems = items.enumerated().map { index, item in
+                    return ClipItem(id: UUID(),
+                                    url: item.url,
+                                    clipId: clipId,
+                                    clipIndex: index + 1,
+                                    imageId: item.imageId,
+                                    imageFileName: item.imageFileName,
+                                    imageUrl: item.imageUrl,
+                                    imageSize: item.imageSize,
+                                    imageDataSize: item.imageDataSize,
+                                    registeredDate: item.registeredDate,
+                                    updatedDate: Date())
+                }
+                let dataSize = newItems
+                    .map { $0.imageDataSize }
+                    .reduce(0, +)
+                let clip = Clip(id: clipId,
+                                description: nil,
+                                items: newItems,
+                                // HACK: 新規生成時にはIDしか見られないため、IDのみ正しいモデルを渡しておく
+                                tags: tagIds.map { Tag(id: $0, name: "") },
+                                isHidden: false,
+                                dataSize: dataSize,
+                                registeredDate: Date(),
+                                updatedDate: Date())
+
+                switch self.clipStorage.create(clip: clip) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    新規クリップの作成に失敗. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(.internalError)
+                }
+
+                for albumId in albumIds {
+                    switch self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
+                    case .success:
+                        break
+
+                    case let .failure(error):
+                        try? self.clipStorage.cancelTransactionIfNeeded()
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        アルバムへの追加に失敗. (error=\(error.localizedDescription))
+                        """))
+                        return .failure(error)
+                    }
+                }
+
+                try self.clipStorage.commitTransaction()
+
+                return .success(())
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to merge clips. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
     // MARK: Delete
 
     public func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError> {

@@ -149,6 +149,16 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
         fatalError("purgeClipItemsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var mergeClipItemsCallCount = 0
+    public var mergeClipItemsHandler: (([ClipItem.Identity], [Tag.Identity], [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+        mergeClipItemsCallCount += 1
+        if let mergeClipItemsHandler = mergeClipItemsHandler {
+            return mergeClipItemsHandler(itemIds, tagIds, clipIds)
+        }
+        fatalError("mergeClipItemsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var deleteClipsCallCount = 0
     public var deleteClipsHandler: (([Clip.Identity]) -> (Result<Void, ClipStorageError>))?
     public func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError> {
@@ -351,6 +361,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return readAllTagsHandler()
         }
         fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readClipItemsCallCount = 0
+    public var readClipItemsHandler: (([ClipItem.Identity]) -> (Result<[ClipItem], ClipStorageError>))?
+    public func readClipItems(having: [ClipItem.Identity]) -> Result<[ClipItem], ClipStorageError> {
+        readClipItemsCallCount += 1
+        if let readClipItemsHandler = readClipItemsHandler {
+            return readClipItemsHandler(having)
+        }
+        fatalError("readClipItemsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var readAlbumIdsCallCount = 0

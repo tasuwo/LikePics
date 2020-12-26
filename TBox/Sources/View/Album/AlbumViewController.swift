@@ -477,6 +477,10 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
         self.viewModel.inputs.operation.send(.none)
     }
 
+    func shouldMerge(_ provider: ClipCollectionToolBarProvider) {
+        // TODO:
+    }
+
     func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController) {
         self.present(controller, animated: true, completion: nil)
     }
@@ -509,6 +513,10 @@ extension AlbumViewController: TagSelectionPresenterDelegate {
             guard let clipId = context as? Clip.Identity else { return }
             self.viewModel.inputs.addTags.send((tagIds, clipId))
         }
+    }
+
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
+        // NOP
     }
 }
 

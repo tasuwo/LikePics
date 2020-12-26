@@ -104,6 +104,10 @@ internal enum L10n {
     internal static let clipItemPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_successfully_delete_message")
     /// 画像の読み込みに失敗しました。クリップしなおしてください
     internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
+    /// 保存に失敗しました
+    internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
+    /// 画像の並び替え
+    internal static let clipMergeViewTitle = L10n.tr("Localizable", "clip_merge_view_title")
     /// クリップの読み込みに失敗しました
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// タグを追加する

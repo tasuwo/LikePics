@@ -192,6 +192,10 @@ extension ClipInformationViewController: TagSelectionPresenterDelegate {
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
         self.viewModel.inputs.replaceTagsOfClip(tagIds)
     }
+
+    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
+        // NOP
+    }
 }
 
 extension ClipInformationViewController: UIGestureRecognizerDelegate {

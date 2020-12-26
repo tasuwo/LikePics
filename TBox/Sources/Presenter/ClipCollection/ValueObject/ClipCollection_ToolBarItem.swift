@@ -11,6 +11,7 @@ extension ClipCollection {
             case hide
             case unhide
             case share
+            case merge
         }
 
         let kind: Kind
