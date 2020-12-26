@@ -434,6 +434,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 let newClips: [Domain.Clip] = originalClip.items.map { item in
                     let clipId = UUID()
+                    let date = Date()
                     return Domain.Clip(id: clipId,
                                        description: originalClip.description,
                                        items: [
@@ -447,13 +448,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                                  imageSize: item.imageSize,
                                                  imageDataSize: item.imageDataSize,
                                                  registeredDate: item.registeredDate,
-                                                 updatedDate: Date())
+                                                 updatedDate: date)
                                        ],
                                        tags: originalClip.tags,
                                        isHidden: originalClip.isHidden,
                                        dataSize: item.imageDataSize,
-                                       registeredDate: originalClip.registeredDate,
-                                       updatedDate: Date())
+                                       registeredDate: date,
+                                       updatedDate: date)
                 }
 
                 for newClip in newClips {
