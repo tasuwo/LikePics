@@ -3,13 +3,29 @@
 //
 
 public struct SearchableTagsStorage {
-    typealias SearchableTag = (tag: Tag, comparableName: String)
+    struct SearchableTag: Equatable, Hashable {
+        let tag: Tag
+        let comparableName: String?
+
+        init(tag: Tag) {
+            self.tag = tag
+            self.comparableName = Self.transformToSearchableText(text: tag.name)
+        }
+
+        static func transformToSearchableText(text: String) -> String? {
+            return text
+                .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
+                .applyingTransform(.hiraganaToKatakana, reverse: false)?
+                .lowercased()
+        }
+    }
 
     struct History {
-        let comparableFilterQuery: String
+        let lastComparableFilterQuery: String
         let tags: [Tag]
     }
 
+    private var comparableCache: [Tag] = []
     private var cache: LazySequence<[SearchableTag]> = [SearchableTag]().lazy
     private var lastResult: History?
 
@@ -19,30 +35,33 @@ public struct SearchableTagsStorage {
 
     // MARK: - Methods
 
-    private static func transformToSearchableText(text: String) -> String? {
-        return text
-            .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
-            .applyingTransform(.hiraganaToKatakana, reverse: false)?
-            .lowercased()
-    }
-
     public mutating func updateCache(_ tags: [Tag]) {
-        self.cache = tags.map { (tag: $0, comparableName: Self.transformToSearchableText(text: $0.name) ?? $0.name) }.lazy
+        guard self.comparableCache != tags else { return }
+        self.cache = tags.map { SearchableTag(tag: $0) }.lazy
+        self.comparableCache = tags
     }
 
     public mutating func resolveTags(byQuery query: String) -> [Tag] {
-        guard !query.isEmpty else {
+        if query.isEmpty {
             self.lastResult = nil
             return Array(self.cache.map({ $0.tag }))
         }
 
-        let comparableFilterQuery = Self.transformToSearchableText(text: query) ?? query
-        if let lastResult = lastResult, comparableFilterQuery == lastResult.comparableFilterQuery {
+        let comparableFilterQuery = SearchableTag.transformToSearchableText(text: query) ?? query
+        if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
             return lastResult.tags
         }
 
-        return self.cache
-            .filter { $0.comparableName.contains(comparableFilterQuery) }
+        let tags: [Tag] = self.cache
+            .filter {
+                guard let name = $0.comparableName else { return false }
+                return name.contains(comparableFilterQuery)
+            }
             .map { $0.tag }
+
+        self.lastResult = .init(lastComparableFilterQuery: comparableFilterQuery,
+                                tags: tags)
+
+        return tags
     }
 }
