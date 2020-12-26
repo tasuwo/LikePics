@@ -158,25 +158,31 @@ extension TagSelectionViewController: TagSelectionViewProtocol {
     // MARK: - TagSelectionViewProtocol
 
     func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(tags)
+        DispatchQueue.global().async {
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+            snapshot.appendSections([.main])
+            snapshot.appendItems(tags)
 
-        if !isEmpty {
-            self.searchBar.isHidden = false
-            self.collectionView.isHidden = false
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard isEmpty else { return }
-            self?.searchBar.isHidden = true
-            self?.collectionView.isHidden = true
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
+            if !isEmpty {
+                DispatchQueue.main.async {
+                    self.searchBar.isHidden = false
+                    self.collectionView.isHidden = false
+                    self.emptyMessageView.alpha = 0
+                }
             }
-            self?.searchBar.resignFirstResponder()
-            self?.searchBar.text = nil
-            self?.presenter.performQuery("")
+            self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                DispatchQueue.main.async {
+                    guard isEmpty else { return }
+                    self?.searchBar.isHidden = true
+                    self?.collectionView.isHidden = true
+                    UIView.animate(withDuration: 0.2) {
+                        self?.emptyMessageView.alpha = 1
+                    }
+                    self?.searchBar.resignFirstResponder()
+                    self?.searchBar.text = nil
+                    self?.presenter.performQuery("")
+                }
+            }
         }
     }
 

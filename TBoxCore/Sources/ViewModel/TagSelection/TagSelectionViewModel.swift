@@ -94,14 +94,10 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
             .catch { _ in Just([]) }
             .eraseToAnyPublisher()
             .combineLatest(self.inputtedQuery)
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] tags, query in
                 guard let self = self else { return }
-
-                self.searchStorage.updateCache(tags)
-                let filteredTags = self.searchStorage.resolveTags(byQuery: query)
-                    .sorted(by: { $0.name < $1.name })
-
-                self.filteredTags.send(filteredTags)
+                self.filteredTags.send(self.searchStorage.perform(query: query, to: tags))
                 self.tags.send(tags)
             }
             .store(in: &self.cancellableBag)

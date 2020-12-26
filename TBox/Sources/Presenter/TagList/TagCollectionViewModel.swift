@@ -92,12 +92,9 @@ class TagCollectionViewModel: TagCollectionViewModelType,
         self.query.tags
             .catch { _ in Just([]) }
             .combineLatest(self.inputtedQuery)
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] tags, searchQuery in
                 guard let self = self else { return }
-
-                self.searchStorage.updateCache(tags)
-                let filteredTags = self.searchStorage.resolveTags(byQuery: searchQuery)
-                    .sorted(by: { $0.name < $1.name })
 
                 self.displayEmptyMessageView.send(tags.isEmpty)
                 self.displaySearchBar.send(!tags.isEmpty)
@@ -113,7 +110,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.inputtedQuery.send("")
                 }
 
-                self.filteredTags.send(filteredTags)
+                self.filteredTags.send(self.searchStorage.perform(query: searchQuery, to: tags))
                 self.tags.send(tags)
             }
             .store(in: &self.cancellableBag)

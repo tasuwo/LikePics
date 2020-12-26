@@ -32,7 +32,9 @@ class TagSelectionPresenter {
     /// - attention: `setup()` 経由でのみ更新することを想定している
     private(set) var tags: [Tag] = [] {
         didSet {
-            self.view?.apply(selection: Set(self.selectedTags))
+            DispatchQueue.main.async {
+                self.view?.apply(selection: Set(self.selectedTags))
+            }
         }
     }
 
@@ -45,7 +47,9 @@ class TagSelectionPresenter {
 
     private var selections: Set<Tag.Identity> {
         didSet {
-            self.view?.apply(selection: Set(self.selectedTags))
+            DispatchQueue.main.async {
+                self.view?.apply(selection: Set(self.selectedTags))
+            }
         }
     }
 
@@ -73,17 +77,14 @@ class TagSelectionPresenter {
         self.query
             .tags
             .combineLatest(self.searchQuery)
+            .receive(on: DispatchQueue.global())
             .sink(receiveCompletion: { [weak self] _ in
                 self?.logger.write(ConsoleLog(level: .error, message: """
                 Unexpectedly finished observing at TagSelectionView.
                 """))
             }, receiveValue: { [weak self] tags, searchQuery in
                 guard let self = self else { return }
-
-                self.searchStorage.updateCache(tags)
-                let filteredTags = self.searchStorage.resolveTags(byQuery: searchQuery)
-                    .sorted(by: { $0.name < $1.name })
-
+                let filteredTags = self.searchStorage.perform(query: searchQuery, to: tags)
                 self.view?.apply(filteredTags, isFiltered: !searchQuery.isEmpty, isEmpty: tags.isEmpty)
                 self.tags = tags
             })

@@ -106,20 +106,22 @@ public class TagSelectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.filteredTags
-            .receive(on: DispatchQueue.main)
             .combineLatest(dependency.outputs.selections)
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] tags, selections in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(tags)
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
 
-                let indexPaths = selections
-                    .compactMap { identity in
-                        dependency.outputs.tags.value.first(where: { $0.identity == identity })
-                    }
-                    .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
-                self?.collectionView.applySelection(at: indexPaths)
+                DispatchQueue.main.async {
+                    let indexPaths = selections
+                        .compactMap { identity in
+                            dependency.outputs.tags.value.first(where: { $0.identity == identity })
+                        }
+                        .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
+                    self?.collectionView.applySelection(at: indexPaths)
+                }
             }
             .store(in: &self.cancellableBag)
 

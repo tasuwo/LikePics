@@ -25,8 +25,7 @@ public struct SearchableTagsStorage {
         let tags: [Tag]
     }
 
-    private var comparableCache: [Tag] = []
-    private var cache: LazySequence<[SearchableTag]> = [SearchableTag]().lazy
+    private var cache: [Tag] = []
     private var lastResult: History?
 
     // MARK: - Lifecycle
@@ -35,24 +34,29 @@ public struct SearchableTagsStorage {
 
     // MARK: - Methods
 
-    public mutating func updateCache(_ tags: [Tag]) {
-        guard self.comparableCache != tags else { return }
-        self.cache = tags.map { SearchableTag(tag: $0) }.lazy
-        self.comparableCache = tags
+    public mutating func perform(query: String, to tags: [Tag]) -> [Tag] {
+        defer {
+            self.cache = tags
+        }
+
+        let comparableFilterQuery = SearchableTag.transformToSearchableText(text: query) ?? ""
+        if self.cache != tags {
+            return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
+        } else if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
+            return lastResult.tags
+        } else {
+            return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
+        }
     }
 
-    public mutating func resolveTags(byQuery query: String) -> [Tag] {
-        if query.isEmpty {
+    private mutating func perform(comparableFilterQuery: String, to tags: [Tag]) -> [Tag] {
+        if comparableFilterQuery.isEmpty {
             self.lastResult = nil
-            return Array(self.cache.map({ $0.tag }))
+            return tags
         }
 
-        let comparableFilterQuery = SearchableTag.transformToSearchableText(text: query) ?? query
-        if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
-            return lastResult.tags
-        }
-
-        let tags: [Tag] = self.cache
+        let filteredTags = tags
+            .map { SearchableTag(tag: $0) }
             .filter {
                 guard let name = $0.comparableName else { return false }
                 return name.contains(comparableFilterQuery)
@@ -60,8 +64,8 @@ public struct SearchableTagsStorage {
             .map { $0.tag }
 
         self.lastResult = .init(lastComparableFilterQuery: comparableFilterQuery,
-                                tags: tags)
+                                tags: filteredTags)
 
-        return tags
+        return filteredTags
     }
 }
