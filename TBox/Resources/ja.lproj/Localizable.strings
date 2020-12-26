@@ -25,8 +25,9 @@
 "clips_list_alert_for_delete_in_album_message" = "これらのクリップを削除、あるいはアルバムから削除しますか？";
 "clips_list_alert_for_delete_in_album_action_remove_from_album" = "アルバムから削除";
 "clips_list_alert_for_delete_in_album_action_delete" = "削除";
-"clips_list_alert_for_hide_message" = "選択したクリップは、設定が有効な間は全ての場所から隠されます";
-"clips_list_alert_for_hide_action" = "%d件のクリップを隠す";
+"clips_list_alert_for_change_visibility_message" = "隠したクリップは、設定が有効な間は全ての場所から隠されます";
+"clips_list_alert_for_change_visibility_hide_action" = "%d件のクリップを隠す";
+"clips_list_alert_for_change_visibility_unhide_action" = "%d件のクリップを表示する";
 "clips_list_alert_for_share_item_action" = "この画像のみ共有する";
 "clips_list_alert_for_share_items_action" = "クリップ内の%d件の画像を共有する";
 

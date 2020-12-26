@@ -106,7 +106,7 @@ internal enum L10n {
     internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
     /// 保存に失敗しました
     internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
-    /// 画像の並び替え
+    /// 画像をクリップにまとめる
     internal static let clipMergeViewTitle = L10n.tr("Localizable", "clip_merge_view_title")
     /// クリップの読み込みに失敗しました
     internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
@@ -114,6 +114,18 @@ internal enum L10n {
     internal static let clipsListAlertForAddTag = L10n.tr("Localizable", "clips_list_alert_for_add_tag")
     /// アルバムに追加する
     internal static let clipsListAlertForAddToAlbum = L10n.tr("Localizable", "clips_list_alert_for_add_to_album")
+    /// %d件のクリップを隠す
+    internal static func clipsListAlertForChangeVisibilityHideAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_change_visibility_hide_action", p1)
+    }
+
+    /// 隠したクリップは、設定が有効な間は全ての場所から隠されます
+    internal static let clipsListAlertForChangeVisibilityMessage = L10n.tr("Localizable", "clips_list_alert_for_change_visibility_message")
+    /// %d件のクリップを表示する
+    internal static func clipsListAlertForChangeVisibilityUnhideAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_change_visibility_unhide_action", p1)
+    }
+
     /// %d件のクリップを削除
     internal static func clipsListAlertForDeleteAction(_ p1: Int) -> String {
         return L10n.tr("Localizable", "clips_list_alert_for_delete_action", p1)
@@ -127,13 +139,6 @@ internal enum L10n {
     internal static let clipsListAlertForDeleteInAlbumMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_in_album_message")
     /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
     internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
-    /// %d件のクリップを隠す
-    internal static func clipsListAlertForHideAction(_ p1: Int) -> String {
-        return L10n.tr("Localizable", "clips_list_alert_for_hide_action", p1)
-    }
-
-    /// 選択したクリップは、設定が有効な間は全ての場所から隠されます
-    internal static let clipsListAlertForHideMessage = L10n.tr("Localizable", "clips_list_alert_for_hide_message")
     /// この画像のみ共有する
     internal static let clipsListAlertForShareItemAction = L10n.tr("Localizable", "clips_list_alert_for_share_item_action")
     /// クリップ内の%d件の画像を共有する

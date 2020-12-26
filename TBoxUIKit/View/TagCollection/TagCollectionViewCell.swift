@@ -46,6 +46,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var visibleCountIfPossible: Bool = true {
+        didSet {
+            self.updateLabel()
+        }
+    }
+
     override public var isSelected: Bool {
         didSet {
             self.updateForDisplayMode()
@@ -141,7 +147,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.titleLabel.text = nil
             return
         }
-        if let count = self.count {
+        if let count = self.count, self.visibleCountIfPossible {
             self.titleLabel.text = "\(title) (\(count))"
         } else {
             self.titleLabel.text = title

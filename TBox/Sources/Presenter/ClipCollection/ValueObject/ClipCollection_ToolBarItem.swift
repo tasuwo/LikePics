@@ -8,8 +8,7 @@ extension ClipCollection {
             case add
             case delete
             case removeFromAlbum
-            case hide
-            case unhide
+            case changeVisibility
             case share
             case merge
         }

@@ -363,6 +363,17 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
+    func makeMergeViewController(clips: [Clip], delegate: ClipMergeViewControllerDelegate) -> UIViewController {
+        let viewModel = ClipMergeViewModel(clips: clips,
+                                           commandService: self.clipCommandService,
+                                           logger: self.logger)
+        let viewController = ClipMergeViewController(factory: self,
+                                                     viewModel: viewModel,
+                                                     thumbnailStorage: self.thumbnailStorage)
+        viewController.delegate = delegate
+        return UINavigationController(rootViewController: viewController)
+    }
+
     func makeSettingsViewController() -> UIViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 

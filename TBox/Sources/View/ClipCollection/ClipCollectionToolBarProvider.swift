@@ -26,8 +26,7 @@ class ClipCollectionToolBarProvider {
     private var addItem: UIBarButtonItem!
     private var deleteItem: UIBarButtonItem!
     private var removeFromAlbum: UIBarButtonItem!
-    private var hideItem: UIBarButtonItem!
-    private var unhideItem: UIBarButtonItem!
+    private var changeVisibilityItem: UIBarButtonItem!
     private var shareItem: UIBarButtonItem!
     private var mergeItem: UIBarButtonItem!
 
@@ -118,16 +117,14 @@ class ClipCollectionToolBarProvider {
     }
 
     @objc
-    private func didTapHide(item: UIBarButtonItem) {
-        self.alertPresentable?.presentHideAlert(at: item, targetCount: self.viewModel.outputs.selectionCount.value) { [weak self] in
+    private func didTapChangeVisibility(item: UIBarButtonItem) {
+        self.alertPresentable?.presentUpdateVisibilityAlert(at: item, targetCount: self.viewModel.outputs.selectionCount.value) { [weak self] in
             guard let self = self else { return }
             self.delegate?.shouldHide(self)
+        } unhideAction: { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.shouldUnhide(self)
         }
-    }
-
-    @objc
-    private func didTapUnhide() {
-        self.delegate?.shouldUnhide(self)
     }
 
     @objc
@@ -164,19 +161,15 @@ class ClipCollectionToolBarProvider {
         self.removeFromAlbum = UIBarButtonItem(barButtonSystemItem: .trash,
                                                target: self,
                                                action: #selector(self.didTapRemoveFromAlbum))
-        self.hideItem = UIBarButtonItem(image: UIImage(systemName: "eye.slash"),
-                                        style: .plain,
-                                        target: self,
-                                        action: #selector(self.didTapHide))
-        self.unhideItem = UIBarButtonItem(image: UIImage(systemName: "eye"),
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(self.didTapUnhide))
+        self.changeVisibilityItem = UIBarButtonItem(image: UIImage(systemName: "eye"),
+                                                    style: .plain,
+                                                    target: self,
+                                                    action: #selector(self.didTapChangeVisibility(item:)))
         self.shareItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"),
                                          style: .plain,
                                          target: self,
                                          action: #selector(self.didTapShare))
-        self.mergeItem = UIBarButtonItem(image: UIImage(systemName: "paperclip"),
+        self.mergeItem = UIBarButtonItem(image: UIImage(systemName: "rectangle.and.paperclip"),
                                          style: .plain,
                                          target: self,
                                          action: #selector(self.didTapMerge))
@@ -201,11 +194,8 @@ class ClipCollectionToolBarProvider {
             case .removeFromAlbum:
                 return self.removeFromAlbum
 
-            case .hide:
-                return self.hideItem
-
-            case .unhide:
-                return self.unhideItem
+            case .changeVisibility:
+                return self.changeVisibilityItem
 
             case .share:
                 return self.shareItem

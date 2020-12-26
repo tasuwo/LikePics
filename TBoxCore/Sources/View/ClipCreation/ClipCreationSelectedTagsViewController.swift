@@ -102,6 +102,7 @@ class ClipCreationSelectedTagsViewController: UIViewController {
                 let configuration = TagCollectionView.CellConfiguration.Tag(tag: value,
                                                                             displayMode: .normal,
                                                                             visibleDeleteButton: true,
+                                                                            visibleCountIfPossible: false,
                                                                             delegate: self)
                 return TagCollectionView.provideCell(collectionView: collectionView,
                                                      indexPath: indexPath,

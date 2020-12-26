@@ -88,6 +88,7 @@ class TagSelectionViewController: UIViewController {
             let configuration = TagCollectionView.CellConfiguration.Tag(tag: item,
                                                                         displayMode: .checkAtSelect,
                                                                         visibleDeleteButton: false,
+                                                                        visibleCountIfPossible: true,
                                                                         delegate: nil)
             return TagCollectionView.provideCell(collectionView: collectionView,
                                                  indexPath: indexPath,

@@ -21,6 +21,7 @@ protocol SearchResultViewModelInputs {
     var unhideSelections: PassthroughSubject<Void, Never> { get }
     var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var mergeSelections: PassthroughSubject<Void, Never> { get }
 
     var delete: PassthroughSubject<Clip.Identity, Never> { get }
     var hide: PassthroughSubject<Clip.Identity, Never> { get }
@@ -36,6 +37,7 @@ protocol SearchResultViewModelOutputs {
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
     var presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> { get }
+    var presentMergeView: PassthroughSubject<[Clip], Never> { get }
     var previewingClip: Clip? { get }
     var title: CurrentValueSubject<String, Never> { get }
     var emptyMessage: CurrentValueSubject<String, Never> { get }
@@ -74,6 +76,7 @@ class SearchResultViewModel: SearchResultViewModelType,
     let unhideSelections: PassthroughSubject<Void, Never> = .init()
     let addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
     let addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    let mergeSelections: PassthroughSubject<Void, Never> = .init()
 
     let delete: PassthroughSubject<Clip.Identity, Never> = .init()
     let hide: PassthroughSubject<Clip.Identity, Never> = .init()
@@ -89,6 +92,7 @@ class SearchResultViewModel: SearchResultViewModelType,
     let operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
     let errorMessage: PassthroughSubject<String, Never> = .init()
     let presentPreview: PassthroughSubject<(Clip.Identity, (_ isSucceeded: Bool) -> Void), Never> = .init()
+    var presentMergeView: PassthroughSubject<[Clip], Never> = .init()
     let title: CurrentValueSubject<String, Never> = .init("")
     let emptyMessage: CurrentValueSubject<String, Never> = .init("")
 
@@ -332,6 +336,13 @@ extension SearchResultViewModel {
                     self.errorMessage.send("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode()))")
                 }
                 self.operation.send(.none)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.mergeSelections
+            .sink { [weak self] in
+                guard let self = self else { return }
+                self.presentMergeView.send(self.selectedClips)
             }
             .store(in: &self.cancellableBag)
     }

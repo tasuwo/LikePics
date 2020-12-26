@@ -218,6 +218,7 @@ class TagCollectionViewController: UIViewController {
                 let configuration = TagCollectionView.CellConfiguration.Tag(tag: tag,
                                                                             displayMode: self.isEditing ? .deletion : .normal,
                                                                             visibleDeleteButton: false,
+                                                                            visibleCountIfPossible: true,
                                                                             delegate: nil)
                 return TagCollectionView.provideCell(collectionView: collectionView,
                                                      indexPath: indexPath,

@@ -25,8 +25,9 @@
 "clips_list_alert_for_delete_in_album_message" = "Do you want to delete these clips or remove them from this album?";
 "clips_list_alert_for_delete_in_album_action_remove_from_album" = "Remove from Album";
 "clips_list_alert_for_delete_in_album_action_delete" = "Delete";
-"clips_list_alert_for_hide_message" = "Theses clips will be hidden from all places while setting is enabled";
-"clips_list_alert_for_hide_action" = "Hide %d Clips";
+"clips_list_alert_for_change_visibility_message" = "Hidden clips are hidden from all places while setting is enabled";
+"clips_list_alert_for_change_visibility_hide_action" = "Hide %d Clips";
+"clips_list_alert_for_change_visibility_unhide_action" = "Unhide %d Clips";
 "clips_list_alert_for_share_item_action" = "Share this image";
 "clips_list_alert_for_share_items_action" = "Share %d images in this clip";
 

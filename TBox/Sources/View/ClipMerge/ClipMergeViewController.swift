@@ -8,6 +8,10 @@ import TBoxCore
 import TBoxUIKit
 import UIKit
 
+protocol ClipMergeViewControllerDelegate: AnyObject {
+    func didComplete(_ viewController: ClipMergeViewController)
+}
+
 class ClipMergeViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = ClipMergeViewModelType
@@ -44,6 +48,8 @@ class ClipMergeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var collectionView: UICollectionView!
     private var cancellableBag = Set<AnyCancellable>()
+
+    weak var delegate: ClipMergeViewControllerDelegate?
 
     // MARK: - Lifecycle
 
@@ -105,7 +111,9 @@ class ClipMergeViewController: UIViewController {
         dependency.outputs.close
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.dismiss(animated: true, completion: nil)
+                guard let self = self else { return }
+                self.dismiss(animated: true)
+                self.delegate?.didComplete(self)
             }
             .store(in: &self.cancellableBag)
     }
@@ -140,7 +148,8 @@ class ClipMergeViewController: UIViewController {
 
     @objc
     func didTapCancel() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
+        self.delegate?.didComplete(self)
     }
 
     // MARK: CollectionView
@@ -238,6 +247,7 @@ class ClipMergeViewController: UIViewController {
                 let configuration = TagCollectionView.CellConfiguration.Tag(tag: tag,
                                                                             displayMode: .normal,
                                                                             visibleDeleteButton: true,
+                                                                            visibleCountIfPossible: false,
                                                                             delegate: self)
                 return TagCollectionView.provideCell(collectionView: collectionView,
                                                      indexPath: indexPath,

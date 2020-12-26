@@ -140,6 +140,15 @@ class TopClipCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
+        dependency.outputs.presentMergeView
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] clips in
+                guard let self = self else { return }
+                let viewController = self.factory.makeMergeViewController(clips: clips, delegate: self)
+                self.present(viewController, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
         self.navigationItemsProvider.bind(view: self, viewModel: dependency)
         self.toolBarItemsProvider.bind(view: self, viewModel: dependency)
     }
@@ -398,7 +407,7 @@ extension TopClipCollectionViewController: ClipCollectionToolBarProviderDelegate
     }
 
     func shouldMerge(_ provider: ClipCollectionToolBarProvider) {
-        // TODO:
+        self.viewModel.inputs.mergeSelections.send(())
     }
 
     func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController) {
@@ -437,6 +446,14 @@ extension TopClipCollectionViewController: TagSelectionPresenterDelegate {
 
     func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
         // NOP
+    }
+}
+
+extension TopClipCollectionViewController: ClipMergeViewControllerDelegate {
+    // MARK: - ClipMergeViewControllerDelegate
+
+    func didComplete(_ viewController: ClipMergeViewController) {
+        self.viewModel.inputs.operation.send(.none)
     }
 }
 

@@ -38,16 +38,19 @@ public class TagCollectionView: UICollectionView {
             public let tag: Domain.Tag
             public let displayMode: TagCollectionViewCell.DisplayMode
             public let visibleDeleteButton: Bool
+            public let visibleCountIfPossible: Bool
             public weak var delegate: TagCollectionViewCellDelegate?
 
             public init(tag: Domain.Tag,
                         displayMode: TagCollectionViewCell.DisplayMode,
                         visibleDeleteButton: Bool,
+                        visibleCountIfPossible: Bool,
                         delegate: TagCollectionViewCellDelegate?)
             {
                 self.tag = tag
                 self.displayMode = displayMode
                 self.visibleDeleteButton = visibleDeleteButton
+                self.visibleCountIfPossible = visibleCountIfPossible
                 self.delegate = delegate
             }
         }
@@ -105,6 +108,7 @@ public class TagCollectionView: UICollectionView {
 
             cell.title = config.tag.name
             cell.displayMode = config.displayMode
+            cell.visibleCountIfPossible = config.visibleCountIfPossible
             if let clipCount = config.tag.clipCount {
                 cell.count = clipCount
             }
