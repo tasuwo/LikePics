@@ -73,7 +73,7 @@ class ClipCollectionNavigationBarProvider {
                     .compactMap { self.makeBarButtonItem(for: $0) }
                     .reversed()
             }
-            .sink { view.navigationItem.setLeftBarButtonItems($0, animated: true) }
+            .assign(to: \.leftBarButtonItems, on: view.navigationItem)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.rightItems
@@ -83,7 +83,7 @@ class ClipCollectionNavigationBarProvider {
                     .compactMap { self.makeBarButtonItem(for: $0) }
                     .reversed()
             }
-            .sink { view.navigationItem.setRightBarButtonItems($0, animated: true) }
+            .assign(to: \.rightBarButtonItems, on: view.navigationItem)
             .store(in: &self.cancellableBag)
     }
 
