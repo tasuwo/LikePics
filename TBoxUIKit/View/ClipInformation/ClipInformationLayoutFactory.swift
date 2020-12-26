@@ -227,7 +227,7 @@ public enum ClipInformationLayoutFactory {
                                tagCellDelegate: TagCollectionViewCellDelegate?,
                                sectionHeaderDelegate: ClipInformationSectionHeaderDelegate?) -> DataSource
     {
-        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak tagCellDelegate] collectionView, indexPath, item -> UICollectionViewCell? in
+        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak tagCellDelegate, weak infoCellDelegate] collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
             case .tag:
                 return self.tagsSectionCellProvider(delegate: tagCellDelegate)(collectionView, indexPath, item)

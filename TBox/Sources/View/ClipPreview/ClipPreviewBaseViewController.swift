@@ -6,7 +6,7 @@ import TBoxUIKit
 import UIKit
 
 class ClipPreviewBaseViewController: UINavigationController {
-    private var pageViewController: ClipPreviewPageViewController?
+    private weak var pageViewController: ClipPreviewPageViewController?
 
     override var prefersStatusBarHidden: Bool {
         return self.pageViewController?.prefersStatusBarHidden ?? true

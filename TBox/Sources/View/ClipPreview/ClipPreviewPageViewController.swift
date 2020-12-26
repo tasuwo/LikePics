@@ -115,9 +115,8 @@ class ClipPreviewPageViewController: UIPageViewController {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 if let viewController = self.makeViewController(at: 0) {
-                    self.setViewControllers([viewController], direction: .forward, animated: true, completion: { [weak self] completed in
-                        guard let self = self, completed, let viewController = self.currentViewController else { return }
-
+                    self.setViewControllers([viewController], direction: .forward, animated: true, completion: { completed in
+                        guard completed, let viewController = self.currentViewController else { return }
                         self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
                         viewController.previewView.delegate = self
                     })

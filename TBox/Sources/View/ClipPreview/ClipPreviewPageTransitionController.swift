@@ -6,7 +6,7 @@ import Combine
 import TBoxUIKit
 import UIKit
 
-protocol ClipInformationViewControllerFactory {
+protocol ClipInformationViewControllerFactory: AnyObject {
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController?
 }
 
@@ -62,8 +62,8 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: Privates
 
-    private let factory: Factory
-    private let baseViewController: UIViewController
+    private weak var factory: Factory?
+    private weak var baseViewController: UIViewController?
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
@@ -96,7 +96,7 @@ class ClipPreviewPageTransitionController: NSObject,
     private func setupGestureRecognizer() {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))
         panGestureRecognizer.delegate = self
-        self.baseViewController.view.addGestureRecognizer(panGestureRecognizer)
+        self.baseViewController?.view.addGestureRecognizer(panGestureRecognizer)
         self.panGestureRecognizer = panGestureRecognizer
     }
 
@@ -105,16 +105,16 @@ class ClipPreviewPageTransitionController: NSObject,
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.previewTransitioningController.beginTransition(.custom(interactive: false))
-                self.baseViewController.dismiss(animated: true, completion: nil)
+                self.baseViewController?.dismiss(animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
         self.beginPresentInformation
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                guard let viewController = self.factory.make(transitioningController: self.informationTransitioningController) else { return }
+                guard let viewController = self.factory?.make(transitioningController: self.informationTransitioningController) else { return }
                 self.informationTransitioningController.beginTransition(.custom(interactive: false))
-                self.baseViewController.present(viewController, animated: true, completion: nil)
+                self.baseViewController?.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
     }
@@ -125,7 +125,7 @@ class ClipPreviewPageTransitionController: NSObject,
         case (.began, .back):
             self.isPreviewScrollEnabled.send(false)
             self.previewTransitioningController.beginTransition(.custom(interactive: true))
-            self.baseViewController.dismiss(animated: true, completion: nil)
+            self.baseViewController?.dismiss(animated: true, completion: nil)
 
         case (.ended, .back):
             if self.previewTransitioningController.isInteractive {
@@ -140,9 +140,9 @@ class ClipPreviewPageTransitionController: NSObject,
             }
 
         case (.began, .information):
-            guard let viewController = self.factory.make(transitioningController: self.informationTransitioningController) else { return }
+            guard let viewController = self.factory?.make(transitioningController: self.informationTransitioningController) else { return }
             self.informationTransitioningController.beginTransition(.custom(interactive: true))
-            self.baseViewController.present(viewController, animated: true, completion: nil)
+            self.baseViewController?.present(viewController, animated: true, completion: nil)
 
         case (.ended, .information):
             if self.informationTransitioningController.isInteractive {
@@ -166,8 +166,8 @@ extension ClipPreviewPageTransitionController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
-            guard self.isMinimumPreviewZoomScale.value == true else { return false }
-            if gestureRecognizer.velocity(in: self.baseViewController.view).y > 0 {
+            guard self.isMinimumPreviewZoomScale.value == true, let baseView = self.baseViewController?.view else { return false }
+            if gestureRecognizer.velocity(in: baseView).y > 0 {
                 self.destination = .back
             } else {
                 self.destination = .information

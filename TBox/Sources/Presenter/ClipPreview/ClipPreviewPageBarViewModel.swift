@@ -5,7 +5,7 @@
 import Combine
 import Domain
 
-protocol ClipPreviewPageBarViewModelType {
+protocol ClipPreviewPageBarViewModelType: AnyObject {
     var inputs: ClipPreviewPageBarViewModelInputs { get }
     var outputs: ClipPreviewPageBarViewModelOutputs { get }
 }
