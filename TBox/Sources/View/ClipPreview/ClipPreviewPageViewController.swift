@@ -196,8 +196,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func makeViewController(at index: Int) -> UIViewController? {
         guard self.viewModel.outputs.items.value.indices.contains(index) else { return nil }
-        return self.factory.makeClipItemPreviewViewController(clipId: self.viewModel.outputs.clipId,
-                                                              itemId: self.viewModel.outputs.items.value[index].identity)
+        return self.factory.makeClipItemPreviewViewController(itemId: self.viewModel.outputs.items.value[index].identity)
     }
 }
 

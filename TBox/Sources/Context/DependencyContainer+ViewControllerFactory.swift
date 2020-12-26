@@ -94,26 +94,24 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(clipId: Domain.Clip.Identity, itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
-        let query: ClipQuery
-        switch self.clipQueryService.queryClip(having: clipId) {
+    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
+        let query: ClipItemQuery
+        switch self.clipQueryService.queryClipItem(having: itemId) {
         case let .success(result):
             query = result
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to open ClipItemPreviewView for clip having clip id \(clipId), item id \(itemId). (\(error.rawValue))
+            Failed to open ClipItemPreviewView for clip. \(error.localizedDescription)
             """))
             return nil
         }
 
-        let presenter = ClipItemPreviewPresenter(query: query,
-                                                 itemId: itemId,
-                                                 imageQueryService: self.imageQueryService,
-                                                 thumbnailStorage: self.thumbnailStorage,
-                                                 logger: self.logger)
-
-        let viewController = ClipItemPreviewViewController(factory: self, presenter: presenter)
+        let presenter = ClipItemPreviewPresenter(query: query, logger: self.logger)
+        let viewController = ClipItemPreviewViewController(factory: self,
+                                                           presenter: presenter,
+                                                           thumbnailStorage: self.thumbnailStorage,
+                                                           imageQueryService: self.imageQueryService)
 
         return viewController
     }
