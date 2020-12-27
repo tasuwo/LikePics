@@ -113,7 +113,9 @@ class AlbumViewModel: AlbumViewModelType,
     var clips: CurrentValueSubject<[Clip], Never> { clipCollection.outputs.clips }
     var selectedClips: [Clip] { clipCollection.outputs.selectedClips }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selections }
-    private(set) var previewingClip: Clip?
+    var previewingClip: Clip? {
+        return self.clips.value.first(where: { $0.id == self.previewingClipId })
+    }
 
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { clipCollection.outputs.operation }
     let errorMessage: PassthroughSubject<String, Never> = .init()
@@ -135,6 +137,7 @@ class AlbumViewModel: AlbumViewModelType,
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
+    private var previewingClipId: Clip.Identity?
     private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
@@ -205,19 +208,16 @@ extension AlbumViewModel {
             .store(in: &self.cancellableBag)
 
         self.viewDidAppear
-            .sink { [weak self] _ in
-                guard let self = self, self.operation.value == .none else { return }
-                self.deselectAll.send(())
-            }
+            .sink { [weak self] _ in self?.previewingClipId = nil }
             .store(in: &self.cancellableBag)
 
         self.cancelledPreview
-            .sink { [weak self] _ in self?.previewingClip = nil }
+            .sink { [weak self] _ in self?.previewingClipId = nil }
             .store(in: &self.cancellableBag)
 
         self.clipCollection.outputs.selectedSingleClip
             .sink { [weak self] clipId in
-                self?.previewingClip = self?.clips.value.first(where: { $0.id == clipId })
+                self?.previewingClipId = clipId
                 self?.presentPreview.send(clipId)
             }
             .store(in: &self.cancellableBag)

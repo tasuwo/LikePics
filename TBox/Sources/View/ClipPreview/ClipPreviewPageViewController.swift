@@ -113,13 +113,11 @@ class ClipPreviewPageViewController: UIPageViewController {
     private func bind(to dependency: Dependency) {
         dependency.outputs.items
             .sink { [weak self] _ in
-                guard let self = self else { return }
-                if let viewController = self.makeViewController(at: 0) {
-                    self.setViewControllers([viewController], direction: .forward, animated: true, completion: { completed in
-                        guard completed, let viewController = self.currentViewController else { return }
-                        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
-                        viewController.previewView.delegate = self
-                    })
+                guard let self = self, let viewController = self.makeViewController(at: 0) else { return }
+                self.setViewControllers([viewController], direction: .forward, animated: true) { completed in
+                    // Viewがロード完了していない場合、`viewWillAppear` で代わりに処理が走る
+                    guard completed, self.isInitialLoaded else { return }
+                    self.didUpdateCurrentPage()
                 }
             }
             .store(in: &self.cancellableBag)
