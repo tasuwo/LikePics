@@ -122,9 +122,9 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.deleteClips(having: [self.clipId]) {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to delete clip having id \(self.clipId). (code: \(error.rawValue))
+                    クリップの削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send("\(L10n.clipsListErrorAtDeleteClip)\n\(error.makeErrorCode())")
+                    self.errorMessage.send(L10n.clipCollectionErrorAtDeleteClip)
                 }
             }
             .store(in: &self.cancellableBag)
@@ -135,9 +135,9 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 guard let item = self.items.value.first(where: { $0.identity == itemId }) else { return }
                 if case let .failure(error) = self.clipCommandService.deleteClipItem(item) {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to delete clip item having id \(itemId). (code: \(error.rawValue))
+                    画像の削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send("\(L10n.clipsListErrorAtRemoveItemFromClip)\n\(error.makeErrorCode())")
+                    self.errorMessage.send("\(L10n.clipCollectionErrorAtRemoveItemFromClip)\n\(error.makeErrorCode())")
                 }
             }
             .store(in: &self.cancellableBag)
@@ -147,9 +147,9 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clipId], byReplacingTagsHaving: Array(tagIds)) {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to add tags (\(tagIds.map({ $0.uuidString }).joined(separator: ", "))) to clip. (code: \(error.rawValue))
+                    タグの更新に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send("\(L10n.clipsListErrorAtAddTagsToClip)\n(\(error.makeErrorCode())")
+                    self.errorMessage.send(L10n.clipCollectionErrorAtUpdateTagsToClip)
                 }
             }
             .store(in: &self.cancellableBag)
@@ -159,9 +159,9 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [self.clipId]) {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to add clips to album having id \(albumId). (code: \(error.rawValue))
+                    アルバムへの追加に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send("\(L10n.clipsListErrorAtAddClipsToAlbum)\n(\(error.makeErrorCode())")
+                    self.errorMessage.send(L10n.clipCollectionErrorAtAddClipToAlbum)
                 }
             }
             .store(in: &self.cancellableBag)
@@ -172,7 +172,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
         do {
             return try self.imageQueryService.read(having: item.imageId)
         } catch {
-            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            self.errorMessage.send(L10n.clipCollectionErrorAtShare)
             return nil
         }
     }
@@ -183,7 +183,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 .map { $0.imageId }
                 .compactMap { try self.imageQueryService.read(having: $0) }
         } catch {
-            self.errorMessage.send(L10n.clipsListErrorAtShare)
+            self.errorMessage.send(L10n.clipCollectionErrorAtShare)
             return []
         }
     }

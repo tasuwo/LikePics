@@ -10,7 +10,7 @@ import UIKit
 
 class AlbumViewController: UIViewController {
     typealias Factory = ViewControllerFactory
-    typealias Dependency = AlbumViewModelType & ClipCollectionViewModelType
+    typealias Dependency = AlbumViewModelType
 
     enum Section {
         case main
@@ -24,7 +24,7 @@ class AlbumViewController: UIViewController {
 
     // MARK: ViewModel
 
-    private let viewModel: AlbumViewModelType & ClipCollectionViewModelType
+    private let viewModel: Dependency
 
     // MARK: Provider
 
@@ -54,7 +54,7 @@ class AlbumViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: AlbumViewModelType & ClipCollectionViewModelType,
+         viewModel: Dependency,
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
@@ -187,14 +187,12 @@ class AlbumViewController: UIViewController {
 
         dependency.outputs.presentPreview
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] clipId, completion in
-                guard let self = self else { return }
-                guard let viewController = self.factory.makeClipPreviewViewController(clipId: clipId) else {
-                    completion(false)
+            .sink { [weak self] clipId in
+                guard let viewController = self?.factory.makeClipPreviewViewController(clipId: clipId) else {
+                    self?.viewModel.inputs.cancelledPreview.send(())
                     return
                 }
-                completion(true)
-                self.present(viewController, animated: true, completion: nil)
+                self?.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
@@ -207,8 +205,25 @@ class AlbumViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        self.navigationItemsProvider.bind(view: self, viewModel: dependency)
-        self.toolBarItemsProvider.bind(view: self, viewModel: dependency)
+        dependency.outputs.startShareForContextMenu
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] clipId, data in
+                guard let self = self,
+                    let clip = self.viewModel.outputs.clips.value.first(where: { $0.id == clipId }),
+                    let indexPath = self.dataSource.indexPath(for: clip) else { return }
+                guard let cell = self.collectionView.cellForItem(at: indexPath) else { return }
+                let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+                controller.popoverPresentationController?.sourceView = self.collectionView
+                controller.popoverPresentationController?.sourceRect = cell.frame
+                controller.completionWithItemsHandler = { _, _, _, _ in
+                    self.viewModel.inputs.operation.send(.none)
+                }
+                self.present(controller, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.navigationItemsProvider.bind(view: self, propagator: dependency.propagator)
+        self.toolBarItemsProvider.bind(view: self, propagator: dependency.propagator)
     }
 
     private func apply(_ operation: ClipCollection.Operation) {
@@ -405,15 +420,7 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath) {
-        guard let cell = self.collectionView.cellForItem(at: indexPath) else { return }
-        let images = self.viewModel.outputs.fetchImages(for: clipId)
-        let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
-        controller.popoverPresentationController?.sourceView = self.collectionView
-        controller.popoverPresentationController?.sourceRect = cell.frame
-        controller.completionWithItemsHandler = { _, _, _, _ in
-            self.viewModel.operation.send(.none)
-        }
-        self.present(controller, animated: true, completion: nil)
+        self.viewModel.inputs.share.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath) {
@@ -490,12 +497,8 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
         self.viewModel.inputs.mergeSelections.send(())
     }
 
-    func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController) {
-        self.present(controller, animated: true, completion: nil)
-    }
-
-    func fetchImages(_ provider: ClipCollectionToolBarProvider) -> [Data] {
-        return self.viewModel.outputs.fetchImagesForSelectedClips()
+    func shouldShare(_ provider: ClipCollectionToolBarProvider) {
+        self.viewModel.inputs.shareSelections.send(())
     }
 }
 

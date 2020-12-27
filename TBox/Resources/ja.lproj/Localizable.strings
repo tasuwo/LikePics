@@ -127,19 +127,21 @@
 
 // MARK: Clip
 
-"clips_list_error_at_delete_clips" = "クリップの削除に失敗しました";
-"clips_list_error_at_hide_clips" = "クリップの更新に失敗しました";
-"clips_list_error_at_unhide_clips" = "クリップの更新に失敗しました";
-"clips_list_error_at_add_tags_to_clips" = "タグの追加に失敗しました";
-"clips_list_error_at_add_clips_to_album" = "アルバムへの追加に失敗しました";
-"clips_list_error_at_delete_clip" = "クリップの削除に失敗しました";
-"clips_list_error_at_hide_clip" = "クリップの更新に失敗しました";
-"clips_list_error_at_unhide_clip" = "クリップの更新に失敗しました";
-"clips_list_error_at_add_tags_to_clip" = "タグの追加に失敗しました";
-"clips_list_error_at_add_clip_to_album" = "アルバムへの追加に失敗しました";
-"clips_list_error_at_remove_clips_from_album" = "アルバムからの削除に失敗しました";
-"clips_list_error_at_remove_item_from_clip" = "クリップ内の画像の削除に失敗しました";
-"clips_list_error_at_share" = "共有に失敗しました";
+"clip_collection_error_at_delete_clip" = "クリップの削除に失敗しました";
+"clip_collection_error_at_delete_clips" = "クリップの削除に失敗しました";
+"clip_collection_error_at_hide_clip" = "クリップの更新に失敗しました";
+"clip_collection_error_at_hide_clips" = "クリップの更新に失敗しました";
+"clip_collection_error_at_unhide_clip" = "クリップの更新に失敗しました";
+"clip_collection_error_at_unhide_clips" = "クリップの更新に失敗しました";
+"clip_collection_error_at_update_tags_to_clip" = "タグの更新に失敗しました";
+"clip_collection_error_at_update_tags_to_clips" = "タグの更新に失敗しました";
+"clip_collection_error_at_add_clip_to_album" = "アルバムへの追加に失敗しました";
+"clip_collection_error_at_add_clips_to_album" = "アルバムへの追加に失敗しました";
+"clip_collection_error_at_remove_clips_from_album" = "アルバムからの削除に失敗しました";
+"clip_collection_error_at_remove_item_from_clip" = "クリップ内の画像の削除に失敗しました";
+"clip_collection_error_at_share" = "共有に失敗しました";
+"clip_collection_error_at_purge" = "クリップの分割に失敗しました";
+"clip_collection_error_at_reorder" = "並び替えに失敗しました";
 
 // MARK: Clip Preview
 

@@ -41,26 +41,26 @@ class ClipCollectionNavigationBarProvider {
 
     // MARK: - Methods
 
-    func bind(view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
-        self.bind(dependency: self.viewModel, view: view, viewModel: viewModel)
+    func bind(view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
+        self.bind(dependency: self.viewModel, view: view, propagator: propagator)
     }
 
     // MARK: Privates
 
-    private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
+    private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
         // MARK: Inputs
 
-        viewModel.clips
+        propagator.clips
             .map { $0.count }
             .sink { dependency.inputs.clipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        viewModel.selections
+        propagator.selections
             .map { $0.count }
             .sink { dependency.inputs.selectedClipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        viewModel.operation
+        propagator.operation
             .sink { dependency.inputs.operation.send($0) }
             .store(in: &self.cancellableBag)
 

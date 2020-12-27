@@ -14,9 +14,7 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
     func shouldCancel(_ provider: ClipCollectionToolBarProvider)
     func shouldMerge(_ provider: ClipCollectionToolBarProvider)
-
-    func present(_ provider: ClipCollectionToolBarProvider, controller: UIActivityViewController)
-    func fetchImages(_ provider: ClipCollectionToolBarProvider) -> [Data]
+    func shouldShare(_ provider: ClipCollectionToolBarProvider)
 }
 
 class ClipCollectionToolBarProvider {
@@ -45,22 +43,34 @@ class ClipCollectionToolBarProvider {
 
     // MARK: - Methods
 
-    func bind(view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
-        self.bind(dependency: self.viewModel, view: view, viewModel: viewModel)
+    func bind(view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
+        self.bind(dependency: self.viewModel, view: view, propagator: propagator)
     }
 
     // MARK: Privates
 
-    private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, viewModel: ClipCollectionViewModelType) {
+    private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
         // MARK: Inputs
 
-        viewModel.selections
+        propagator.selections
             .map { $0.count }
             .sink { dependency.inputs.selectedClipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        viewModel.operation
+        propagator.operation
             .sink { dependency.inputs.operation.send($0) }
+            .store(in: &self.cancellableBag)
+
+        propagator.startShareForToolBar
+            .sink { [weak self, weak view] data in
+                guard let self = self else { return }
+                let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+                controller.popoverPresentationController?.barButtonItem = self.shareItem
+                controller.completionWithItemsHandler = { _, _, _, _ in
+                    self.delegate?.shouldCancel(self)
+                }
+                view?.present(controller, animated: true, completion: nil)
+            }
             .store(in: &self.cancellableBag)
 
         // MARK: Outputs
@@ -129,18 +139,7 @@ class ClipCollectionToolBarProvider {
 
     @objc
     private func didTapShare() {
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            guard let images = self.delegate?.fetchImages(self) else { return }
-            DispatchQueue.main.async {
-                let controller = UIActivityViewController(activityItems: images, applicationActivities: nil)
-                controller.popoverPresentationController?.barButtonItem = self.shareItem
-                controller.completionWithItemsHandler = { _, _, _, _ in
-                    self.delegate?.shouldCancel(self)
-                }
-                self.delegate?.present(self, controller: controller)
-            }
-        }
+        self.delegate?.shouldShare(self)
     }
 
     @objc

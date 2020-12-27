@@ -24,9 +24,11 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
+        let composition = ClipCollectionModel(clipService: self.clipCommandService,
+                                              imageQueryService: self.imageQueryService,
+                                              logger: self.logger)
         let viewModel = TopClipCollectionViewModel(query: query,
-                                                   clipService: self.clipCommandService,
-                                                   imageQueryService: self.imageQueryService,
+                                                   composition: composition,
                                                    settingStorage: self.userSettingsStorage,
                                                    logger: self.logger)
 
@@ -87,7 +89,7 @@ extension DependencyContainer: ViewControllerFactory {
             transitionControllerBuilder: builder
         )
 
-        let viewController = ClipPreviewBaseViewController(pageViewController: pageViewController)
+        let viewController = ClipPreviewBaseViewController(clipId: clipId, pageViewController: pageViewController)
         viewController.transitioningDelegate = previewTransitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -206,10 +208,12 @@ extension DependencyContainer: ViewControllerFactory {
             }
         }
 
+        let composition = ClipCollectionModel(clipService: self.clipCommandService,
+                                              imageQueryService: self.imageQueryService,
+                                              logger: self.logger)
         let viewModel = SearchResultViewModel(context: context,
                                               query: query,
-                                              clipService: self.clipCommandService,
-                                              imageQueryService: self.imageQueryService,
+                                              composition: composition,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
 
@@ -266,9 +270,12 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
+        let composition = ClipCollectionModel(clipService: self.clipCommandService,
+                                              imageQueryService: self.imageQueryService,
+                                              logger: self.logger)
         let viewModel = AlbumViewModel(query: query,
+                                       composition: composition,
                                        clipService: self.clipCommandService,
-                                       imageQueryService: self.imageQueryService,
                                        settingStorage: self.userSettingsStorage,
                                        logger: self.logger)
 

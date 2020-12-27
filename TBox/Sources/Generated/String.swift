@@ -64,6 +64,36 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// アルバムへの追加に失敗しました
+    internal static let clipCollectionErrorAtAddClipToAlbum = L10n.tr("Localizable", "clip_collection_error_at_add_clip_to_album")
+    /// アルバムへの追加に失敗しました
+    internal static let clipCollectionErrorAtAddClipsToAlbum = L10n.tr("Localizable", "clip_collection_error_at_add_clips_to_album")
+    /// クリップの削除に失敗しました
+    internal static let clipCollectionErrorAtDeleteClip = L10n.tr("Localizable", "clip_collection_error_at_delete_clip")
+    /// クリップの削除に失敗しました
+    internal static let clipCollectionErrorAtDeleteClips = L10n.tr("Localizable", "clip_collection_error_at_delete_clips")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtHideClip = L10n.tr("Localizable", "clip_collection_error_at_hide_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtHideClips = L10n.tr("Localizable", "clip_collection_error_at_hide_clips")
+    /// クリップの分割に失敗しました
+    internal static let clipCollectionErrorAtPurge = L10n.tr("Localizable", "clip_collection_error_at_purge")
+    /// アルバムからの削除に失敗しました
+    internal static let clipCollectionErrorAtRemoveClipsFromAlbum = L10n.tr("Localizable", "clip_collection_error_at_remove_clips_from_album")
+    /// クリップ内の画像の削除に失敗しました
+    internal static let clipCollectionErrorAtRemoveItemFromClip = L10n.tr("Localizable", "clip_collection_error_at_remove_item_from_clip")
+    /// 並び替えに失敗しました
+    internal static let clipCollectionErrorAtReorder = L10n.tr("Localizable", "clip_collection_error_at_reorder")
+    /// 共有に失敗しました
+    internal static let clipCollectionErrorAtShare = L10n.tr("Localizable", "clip_collection_error_at_share")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtUnhideClip = L10n.tr("Localizable", "clip_collection_error_at_unhide_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtUnhideClips = L10n.tr("Localizable", "clip_collection_error_at_unhide_clips")
+    /// タグの更新に失敗しました
+    internal static let clipCollectionErrorAtUpdateTagsToClip = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clip")
+    /// タグの更新に失敗しました
+    internal static let clipCollectionErrorAtUpdateTagsToClips = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clips")
     /// 画像を選択
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// 画像の読み込みに失敗しました
@@ -164,32 +194,6 @@ internal enum L10n {
     internal static let clipsListContextMenuShare = L10n.tr("Localizable", "clips_list_context_menu_share")
     /// 表示する
     internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
-    /// アルバムへの追加に失敗しました
-    internal static let clipsListErrorAtAddClipToAlbum = L10n.tr("Localizable", "clips_list_error_at_add_clip_to_album")
-    /// アルバムへの追加に失敗しました
-    internal static let clipsListErrorAtAddClipsToAlbum = L10n.tr("Localizable", "clips_list_error_at_add_clips_to_album")
-    /// タグの追加に失敗しました
-    internal static let clipsListErrorAtAddTagsToClip = L10n.tr("Localizable", "clips_list_error_at_add_tags_to_clip")
-    /// タグの追加に失敗しました
-    internal static let clipsListErrorAtAddTagsToClips = L10n.tr("Localizable", "clips_list_error_at_add_tags_to_clips")
-    /// クリップの削除に失敗しました
-    internal static let clipsListErrorAtDeleteClip = L10n.tr("Localizable", "clips_list_error_at_delete_clip")
-    /// クリップの削除に失敗しました
-    internal static let clipsListErrorAtDeleteClips = L10n.tr("Localizable", "clips_list_error_at_delete_clips")
-    /// クリップの更新に失敗しました
-    internal static let clipsListErrorAtHideClip = L10n.tr("Localizable", "clips_list_error_at_hide_clip")
-    /// クリップの更新に失敗しました
-    internal static let clipsListErrorAtHideClips = L10n.tr("Localizable", "clips_list_error_at_hide_clips")
-    /// アルバムからの削除に失敗しました
-    internal static let clipsListErrorAtRemoveClipsFromAlbum = L10n.tr("Localizable", "clips_list_error_at_remove_clips_from_album")
-    /// クリップ内の画像の削除に失敗しました
-    internal static let clipsListErrorAtRemoveItemFromClip = L10n.tr("Localizable", "clips_list_error_at_remove_item_from_clip")
-    /// 共有に失敗しました
-    internal static let clipsListErrorAtShare = L10n.tr("Localizable", "clips_list_error_at_share")
-    /// クリップの更新に失敗しました
-    internal static let clipsListErrorAtUnhideClip = L10n.tr("Localizable", "clips_list_error_at_unhide_clip")
-    /// クリップの更新に失敗しました
-    internal static let clipsListErrorAtUnhideClips = L10n.tr("Localizable", "clips_list_error_at_unhide_clips")
     /// 全て選択解除
     internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
     /// 完了

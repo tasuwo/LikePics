@@ -8,6 +8,16 @@ extension ClipCollection {
         case selecting
         case reordering
 
+        var isAllowedMultipleSelection: Bool {
+            switch self {
+            case .selecting:
+                return true
+
+            default:
+                return false
+            }
+        }
+
         var isEditing: Bool {
             switch self {
             case .none:

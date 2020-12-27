@@ -2,10 +2,13 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
 class ClipPreviewBaseViewController: UINavigationController {
+    let clipId: Clip.Identity
+
     private weak var pageViewController: ClipPreviewPageViewController?
 
     override var prefersStatusBarHidden: Bool {
@@ -14,7 +17,8 @@ class ClipPreviewBaseViewController: UINavigationController {
 
     // MARK: - Lifecycle
 
-    init(pageViewController: ClipPreviewPageViewController) {
+    init(clipId: Clip.Identity, pageViewController: ClipPreviewPageViewController) {
+        self.clipId = clipId
         self.pageViewController = pageViewController
         super.init(rootViewController: pageViewController)
     }

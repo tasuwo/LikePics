@@ -127,19 +127,21 @@
 
 // MARK: Clip
 
-"clips_list_error_at_delete_clips" = "Failed to delete clips.";
-"clips_list_error_at_hide_clips" = "Failed to hide clips.";
-"clips_list_error_at_unhide_clips" = "Failed to unhide clips.";
-"clips_list_error_at_add_tags_to_clips" = "Failed to add tags to clips.";
-"clips_list_error_at_add_clips_to_album" = "Failed to add clips to album.";
-"clips_list_error_at_delete_clip" = "Failed to delete a clip.";
-"clips_list_error_at_hide_clip" = "Failed to hide a clip.";
-"clips_list_error_at_unhide_clip" = "Failed to unhide a clip.";
-"clips_list_error_at_add_tags_to_clip" = "Failed to add tags to a clip.";
-"clips_list_error_at_add_clip_to_album" = "Failed to add a clip to album.";
-"clips_list_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
-"clips_list_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
-"clips_list_error_at_share" = "Failed to share.";
+"clip_collection_error_at_delete_clip" = "Failed to delete a clip.";
+"clip_collection_error_at_delete_clips" = "Failed to delete clips.";
+"clip_collection_error_at_hide_clip" = "Failed to hide a clip.";
+"clip_collection_error_at_hide_clips" = "Failed to hide clips.";
+"clip_collection_error_at_unhide_clip" = "Failed to unhide a clip.";
+"clip_collection_error_at_unhide_clips" = "Failed to unhide clips.";
+"clip_collection_error_at_update_tags_to_clip" = "Failed to update tags to a clip.";
+"clip_collection_error_at_update_tags_to_clips" = "Failed to update tags to clips.";
+"clip_collection_error_at_add_clip_to_album" = "Failed to add a clip to album.";
+"clip_collection_error_at_add_clips_to_album" = "Failed to add clips to album.";
+"clip_collection_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
+"clip_collection_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
+"clip_collection_error_at_share" = "Failed to share.";
+"clip_collection_error_at_purge" = "Failed to split images in the clip.";
+"clip_collection_error_at_reorder" = "Failed to reorder.";
 
 // MARK: Clip Preview
 
