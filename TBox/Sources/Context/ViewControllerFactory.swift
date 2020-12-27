@@ -11,7 +11,7 @@ protocol ViewControllerFactory {
     func makeTopClipCollectionViewController() -> UIViewController?
 
     func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
-    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipItemPreviewViewController?
+    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipPreviewViewController?
 
     func makeClipInformationViewController(clipId: Clip.Identity,
                                            itemId: ClipItem.Identity,

@@ -45,8 +45,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         return self.resolveIndex(of: currentViewController)
     }
 
-    var currentViewController: ClipItemPreviewViewController? {
-        return self.viewControllers?.first as? ClipItemPreviewViewController
+    var currentViewController: ClipPreviewViewController? {
+        return self.viewControllers?.first as? ClipPreviewViewController
     }
 
     // MARK: - Lifecycle
@@ -139,7 +139,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.barItemsProvider.bind(view: self, viewModel: dependency)
     }
 
-    private func bind(forCurrentViewController viewController: ClipItemPreviewViewController) {
+    private func bind(forCurrentViewController viewController: ClipPreviewViewController) {
         self.currentPreviewCancellableBag.forEach { $0.cancel() }
 
         viewController.previewView.isMinimumZoomScale
@@ -189,7 +189,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     private func resolveIndex(of viewController: UIViewController) -> Int? {
-        guard let viewController = viewController as? ClipItemPreviewViewController else { return nil }
+        guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let currentIndex = self.viewModel.outputs.items.value.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
         return currentIndex
     }
@@ -255,7 +255,7 @@ extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     }
 }
 
-extension ClipPreviewPageViewController: ClipItemPreviewAlertPresentable {}
+extension ClipPreviewPageViewController: ClipPreviewAlertPresentable {}
 
 extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDelegate {
     // MARK: - ClipPreviewPageBarButtonItemsProviderDelegate

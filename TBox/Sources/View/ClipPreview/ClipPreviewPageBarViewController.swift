@@ -59,7 +59,7 @@ class ClipPreviewPageBarViewController: UIViewController {
                                                  target: self,
                                                  action: #selector(self.didTapShare))
 
-    weak var alertPresentable: ClipItemPreviewAlertPresentable?
+    weak var alertPresentable: ClipPreviewAlertPresentable?
     weak var delegate: ClipPreviewPageBarButtonItemsProviderDelegate?
 
     private let viewModel: ClipPreviewPageBarViewModelType

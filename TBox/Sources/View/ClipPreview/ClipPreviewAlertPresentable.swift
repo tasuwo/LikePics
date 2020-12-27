@@ -4,24 +4,24 @@
 
 import UIKit
 
-protocol ClipItemPreviewAlertPresentable: AnyObject {
+protocol ClipPreviewAlertPresentable: AnyObject {
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void)
     func presentDeleteAlert(at item: UIBarButtonItem, deleteClipItemAction: (() -> Void)?, deleteClipAction: @escaping () -> Void)
     func presentHideAlert(at item: UIBarButtonItem, action: @escaping () -> Void)
     func presentShareAlert(at item: UIBarButtonItem, targetCount: Int, shareItemAction: @escaping () -> Void, shareItemsAction: @escaping () -> Void)
 }
 
-extension ClipItemPreviewAlertPresentable where Self: UIViewController {
-    // MARK: - ClipItemPreviewAlertPresentable
+extension ClipPreviewAlertPresentable where Self: UIViewController {
+    // MARK: - ClipPreviewAlertPresentable
 
     func presentAddAlert(at item: UIBarButtonItem, addToAlbumAction: @escaping () -> Void, addTagsAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: L10n.clipItemPreviewViewAlertForAddToAlbum, style: .default, handler: { _ in
+        alert.addAction(.init(title: L10n.clipPreviewViewAlertForAddToAlbum, style: .default, handler: { _ in
             addToAlbumAction()
         }))
 
-        alert.addAction(.init(title: L10n.clipItemPreviewViewAlertForAddTag, style: .default, handler: { _ in
+        alert.addAction(.init(title: L10n.clipPreviewViewAlertForAddTag, style: .default, handler: { _ in
             addTagsAction()
         }))
 
@@ -34,16 +34,16 @@ extension ClipItemPreviewAlertPresentable where Self: UIViewController {
 
     func presentDeleteAlert(at item: UIBarButtonItem, deleteClipItemAction: (() -> Void)?, deleteClipAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
-                                      message: L10n.clipItemPreviewViewAlertForDeleteMessage,
+                                      message: L10n.clipPreviewViewAlertForDeleteMessage,
                                       preferredStyle: .actionSheet)
 
         if let action = deleteClipItemAction {
-            alert.addAction(.init(title: L10n.clipItemPreviewViewAlertForDeleteClipItemAction,
+            alert.addAction(.init(title: L10n.clipPreviewViewAlertForDeleteClipItemAction,
                                   style: .destructive,
                                   handler: { _ in action() }))
         }
 
-        alert.addAction(.init(title: L10n.clipItemPreviewViewAlertForDeleteClipAction,
+        alert.addAction(.init(title: L10n.clipPreviewViewAlertForDeleteClipAction,
                               style: .destructive,
                               handler: { _ in deleteClipAction() }))
 
@@ -56,10 +56,10 @@ extension ClipItemPreviewAlertPresentable where Self: UIViewController {
 
     func presentHideAlert(at item: UIBarButtonItem, action: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
-                                      message: L10n.clipItemPreviewViewAlertForHideMessage,
+                                      message: L10n.clipPreviewViewAlertForHideMessage,
                                       preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: L10n.clipItemPreviewViewAlertForHideAction, style: .destructive, handler: { _ in
+        alert.addAction(.init(title: L10n.clipPreviewViewAlertForHideAction, style: .destructive, handler: { _ in
             action()
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))

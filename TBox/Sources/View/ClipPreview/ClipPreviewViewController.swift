@@ -7,11 +7,11 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class ClipItemPreviewViewController: UIViewController {
+class ClipPreviewViewController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     private let factory: Factory
-    private let presenter: ClipItemPreviewPresenter
+    private let presenter: ClipPreviewPresenter
     private let thumbnailStorage: ThumbnailStorageProtocol
     private let imageQueryService: NewImageQueryServiceProtocol
 
@@ -30,7 +30,7 @@ class ClipItemPreviewViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: ClipItemPreviewPresenter,
+         presenter: ClipPreviewPresenter,
          thumbnailStorage: ThumbnailStorageProtocol,
          imageQueryService: NewImageQueryServiceProtocol)
     {
@@ -92,8 +92,8 @@ class ClipItemPreviewViewController: UIViewController {
     }
 }
 
-extension ClipItemPreviewViewController: ClipItemPreviewViewProtocol {
-    // MARK: - ClipItemPreviewViewProtocol
+extension ClipPreviewViewController: ClipPreviewViewProtocol {
+    // MARK: - ClipPreviewViewProtocol
 
     func showErrorMessage(_ message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)

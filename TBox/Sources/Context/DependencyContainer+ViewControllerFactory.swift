@@ -94,7 +94,7 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipItemPreviewViewController? {
+    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipPreviewViewController? {
         let query: ClipItemQuery
         switch self.clipQueryService.queryClipItem(having: itemId) {
         case let .success(result):
@@ -107,11 +107,11 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = ClipItemPreviewPresenter(query: query, logger: self.logger)
-        let viewController = ClipItemPreviewViewController(factory: self,
-                                                           presenter: presenter,
-                                                           thumbnailStorage: self.thumbnailStorage,
-                                                           imageQueryService: self.imageQueryService)
+        let presenter = ClipPreviewPresenter(query: query, logger: self.logger)
+        let viewController = ClipPreviewViewController(factory: self,
+                                                       presenter: presenter,
+                                                       thumbnailStorage: self.thumbnailStorage,
+                                                       imageQueryService: self.imageQueryService)
 
         return viewController
     }

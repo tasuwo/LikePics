@@ -107,7 +107,7 @@ public class ClipPreviewView: UIView {
      *
      * 1. 初期状態からダブルタップ
      * 2. NavigationBarが非表示になる
-     * 3. `ClipItemPreviewViewController#viewDidLayoutSubviews` が実行される
+     * 3. `ClipPreviewViewController#viewDidLayoutSubviews` が実行される
      * 4. このメソッドが実行され、スケールが初期位置に戻される
      *
      * といった事象が発生した。そのため、レイアウト調整は初期状態に限る

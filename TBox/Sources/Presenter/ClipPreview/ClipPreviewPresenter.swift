@@ -6,9 +6,9 @@ import Common
 import Domain
 import UIKit
 
-protocol ClipItemPreviewViewProtocol: AnyObject {}
+protocol ClipPreviewViewProtocol: AnyObject {}
 
-class ClipItemPreviewPresenter {
+class ClipPreviewPresenter {
     var item: ClipItem {
         self.query.clipItem.value
     }
@@ -16,7 +16,7 @@ class ClipItemPreviewPresenter {
     private let query: ClipItemQuery
     private let logger: TBoxLoggable
 
-    weak var view: ClipItemPreviewViewProtocol?
+    weak var view: ClipPreviewViewProtocol?
 
     // MARK: - Lifecycle
 

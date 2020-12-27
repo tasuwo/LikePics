@@ -81,29 +81,29 @@ internal enum L10n {
     /// このタグを削除しますか？\nクリップ及び画像は削除されません
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
     /// タグを追加する
-    internal static let clipItemPreviewViewAlertForAddTag = L10n.tr("Localizable", "clip_item_preview_view_alert_for_add_tag")
+    internal static let clipPreviewViewAlertForAddTag = L10n.tr("Localizable", "clip_preview_view_alert_for_add_tag")
     /// アルバムに追加する
-    internal static let clipItemPreviewViewAlertForAddToAlbum = L10n.tr("Localizable", "clip_item_preview_view_alert_for_add_to_album")
+    internal static let clipPreviewViewAlertForAddToAlbum = L10n.tr("Localizable", "clip_preview_view_alert_for_add_to_album")
     /// クリップを削除する
-    internal static let clipItemPreviewViewAlertForDeleteClipAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_action")
+    internal static let clipPreviewViewAlertForDeleteClipAction = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_clip_action")
     /// 画像を削除する
-    internal static let clipItemPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_clip_item_action")
+    internal static let clipPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_clip_item_action")
     /// クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます
-    internal static let clipItemPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_delete_message")
+    internal static let clipPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_message")
     /// この画像の保存元のサイトのURLを入力してください
-    internal static let clipItemPreviewViewAlertForEditSiteUrlMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_message")
+    internal static let clipPreviewViewAlertForEditSiteUrlMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_message")
     /// https://www...
-    internal static let clipItemPreviewViewAlertForEditSiteUrlPlaceholder = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_placeholder")
+    internal static let clipPreviewViewAlertForEditSiteUrlPlaceholder = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_placeholder")
     /// サイトのURL
-    internal static let clipItemPreviewViewAlertForEditSiteUrlTitle = L10n.tr("Localizable", "clip_item_preview_view_alert_for_edit_site_url_title")
+    internal static let clipPreviewViewAlertForEditSiteUrlTitle = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_title")
     /// 隠す
-    internal static let clipItemPreviewViewAlertForHideAction = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_action")
+    internal static let clipPreviewViewAlertForHideAction = L10n.tr("Localizable", "clip_preview_view_alert_for_hide_action")
     /// このクリップは、設定が有効な間は全ての場所から隠されます
-    internal static let clipItemPreviewViewAlertForHideMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_hide_message")
+    internal static let clipPreviewViewAlertForHideMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_hide_message")
     /// 正常に削除しました
-    internal static let clipItemPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_item_preview_view_alert_for_successfully_delete_message")
+    internal static let clipPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_successfully_delete_message")
     /// 画像の読み込みに失敗しました。クリップしなおしてください
-    internal static let clipItemPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_item_preview_view_error_at_read_image")
+    internal static let clipPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_preview_view_error_at_read_image")
     /// 保存に失敗しました
     internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
     /// 画像をクリップにまとめる

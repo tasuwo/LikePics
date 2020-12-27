@@ -15,9 +15,9 @@ class ClipInformationViewController: UIViewController {
     private let viewModel: Dependency
     private let transitioningController: ClipInformationTransitioningControllerProtocol
     private lazy var editSiteUrlAlertContainer = TextEditAlert(
-        configuration: .init(title: L10n.clipItemPreviewViewAlertForEditSiteUrlTitle,
-                             message: L10n.clipItemPreviewViewAlertForEditSiteUrlMessage,
-                             placeholder: L10n.clipItemPreviewViewAlertForEditSiteUrlPlaceholder)
+        configuration: .init(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
+                             message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
+                             placeholder: L10n.clipPreviewViewAlertForEditSiteUrlPlaceholder)
     )
 
     private weak var dataSource: ClipInformationViewDataSource?
