@@ -141,7 +141,11 @@
 "clips_list_error_at_remove_item_from_clip" = "クリップ内の画像の削除に失敗しました";
 "clips_list_error_at_share" = "共有に失敗しました";
 
-// MARK: ClipInformation
+// MARK: Clip Preview
+
+"clip_preview_error_at_load_image" = "画像の読み込みに失敗しました";
+
+// MARK: Clip Information
 
 "clip_information_error_at_read_clip" = "画像の読み込みに失敗しました";
 "clip_information_error_at_replace_tags" = "タグの更新に失敗しました";

@@ -107,11 +107,11 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = ClipPreviewPresenter(query: query, logger: self.logger)
-        let viewController = ClipPreviewViewController(factory: self,
-                                                       presenter: presenter,
-                                                       thumbnailStorage: self.thumbnailStorage,
-                                                       imageQueryService: self.imageQueryService)
+        let viewModel = ClipPreviewViewModel(query: query,
+                                             thumbnailStorage: self.thumbnailStorage,
+                                             imageQueryService: self.imageQueryService,
+                                             logger: self.logger)
+        let viewController = ClipPreviewViewController(factory: self, viewModel: viewModel)
 
         return viewController
     }

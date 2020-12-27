@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
@@ -9,38 +10,33 @@ import UIKit
 
 class ClipPreviewViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = ClipPreviewViewModelType
 
     private let factory: Factory
-    private let presenter: ClipPreviewPresenter
-    private let thumbnailStorage: ThumbnailStorageProtocol
-    private let imageQueryService: NewImageQueryServiceProtocol
+    private let viewModel: Dependency
 
     private var isInitialLoaded: Bool = false
 
     var itemId: ClipItem.Identity {
-        return self.presenter.item.id
+        return self.viewModel.outputs.item.value.id
     }
 
     var itemUrl: URL? {
-        return self.presenter.item.url
+        return self.viewModel.outputs.item.value.url
     }
+
+    private var cancellableBag = Set<AnyCancellable>()
 
     @IBOutlet var previewView: ClipPreviewView!
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: ClipPreviewPresenter,
-         thumbnailStorage: ThumbnailStorageProtocol,
-         imageQueryService: NewImageQueryServiceProtocol)
+         viewModel: Dependency)
     {
         self.factory = factory
-        self.presenter = presenter
-        self.thumbnailStorage = thumbnailStorage
-        self.imageQueryService = imageQueryService
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -48,24 +44,26 @@ class ClipPreviewViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.viewModel.inputs.viewWillAppear.send(())
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // viewDidLoad で読み込むと、大きめの画像の場合に画面遷移中に読み込み処理で操作が引っかかるので、
-        // 画面遷移後に画像を読み込む
-        if self.isInitialLoaded == false {
-            self.isInitialLoaded = true
-            // 初回のPreview画面への遷移時に操作が引っかかってしまうので、若干遅延して読み込ませる
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
-                self.loadImage()
-            }
-        }
+        self.viewModel.inputs.viewDidAppear.send(())
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.loadThumbnail()
+        self.bind(to: viewModel)
+
+        if let image = self.viewModel.outputs.readInitialImage() {
+            self.previewView.source = (image, image.size)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -76,28 +74,30 @@ class ClipPreviewViewController: UIViewController {
 
     // MARK: - Methods
 
-    private func loadThumbnail() {
-        guard let image = self.thumbnailStorage.readThumbnailIfExists(for: self.presenter.item) else { return }
-        self.previewView.source = (image, image.size)
-    }
+    // MARK: Bind
 
-    private func loadImage() {
-        guard let data = try? self.imageQueryService.read(having: self.presenter.item.imageId),
-            let image = UIImage(data: data)
-        else {
-            RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to load image"))
-            return
-        }
-        self.previewView.source = (image, self.presenter.item.imageSize.cgSize)
-    }
-}
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.dismiss
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
 
-extension ClipPreviewViewController: ClipPreviewViewProtocol {
-    // MARK: - ClipPreviewViewProtocol
+        dependency.outputs.imageLoaded
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.previewView.source = (image, image.size)
+            }
+            .store(in: &self.cancellableBag)
 
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 }

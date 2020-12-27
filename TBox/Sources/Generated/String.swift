@@ -80,6 +80,14 @@ internal enum L10n {
     internal static let clipInformationViewAlertForDeleteTagAction = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_action")
     /// このタグを削除しますか？\nクリップ及び画像は削除されません
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
+    /// 保存に失敗しました
+    internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
+    /// 画像をクリップにまとめる
+    internal static let clipMergeViewTitle = L10n.tr("Localizable", "clip_merge_view_title")
+    /// 画像の読み込みに失敗しました
+    internal static let clipPreviewErrorAtLoadImage = L10n.tr("Localizable", "clip_preview_error_at_load_image")
+    /// クリップの読み込みに失敗しました
+    internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// タグを追加する
     internal static let clipPreviewViewAlertForAddTag = L10n.tr("Localizable", "clip_preview_view_alert_for_add_tag")
     /// アルバムに追加する
@@ -104,12 +112,6 @@ internal enum L10n {
     internal static let clipPreviewViewAlertForSuccessfullyDeleteMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_successfully_delete_message")
     /// 画像の読み込みに失敗しました。クリップしなおしてください
     internal static let clipPreviewViewErrorAtReadImage = L10n.tr("Localizable", "clip_preview_view_error_at_read_image")
-    /// 保存に失敗しました
-    internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
-    /// 画像をクリップにまとめる
-    internal static let clipMergeViewTitle = L10n.tr("Localizable", "clip_merge_view_title")
-    /// クリップの読み込みに失敗しました
-    internal static let clipPreviewPageViewErrorAtReadClip = L10n.tr("Localizable", "clip_preview_page_view_error_at_read_clip")
     /// タグを追加する
     internal static let clipsListAlertForAddTag = L10n.tr("Localizable", "clips_list_alert_for_add_tag")
     /// アルバムに追加する
