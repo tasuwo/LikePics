@@ -18,9 +18,6 @@ public class ThumbnailStorage {
         let targetUrl: URL
     }
 
-    enum StorageConfiguration {
-    }
-
     private let queryService: NewImageQueryServiceProtocol
     private let fileManager: FileManager
     private let baseUrl: URL
@@ -82,43 +79,33 @@ public class ThumbnailStorage {
         try self.fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
     }
 
-    private func resolveCacheDirectoryUrl(forClipId clipId: Domain.Clip.Identity) -> URL {
-        return self.baseUrl.appendingPathComponent(clipId.uuidString, isDirectory: true)
+    private func resolveCacheImageFileUrl(for item: ClipItem) -> URL {
+        return self.baseUrl.appendingPathComponent("\(item.imageId.uuidString).\(item.imageFileName)", isDirectory: false)
     }
 
-    private func resolveCacheImageFileUrl(fileName: String, clipId: Domain.Clip.Identity) -> URL {
-        return self.resolveCacheDirectoryUrl(forClipId: clipId).appendingPathComponent(fileName, isDirectory: false)
-    }
-
-    private func existsCache(named fileName: String, inClipHaving clipId: Domain.Clip.Identity) -> Bool {
-        let url = self.resolveCacheImageFileUrl(fileName: fileName, clipId: clipId)
+    private func existsCache(for item: ClipItem) -> Bool {
+        let url = self.resolveCacheImageFileUrl(for: item)
         return self.fileManager.fileExists(atPath: url.path)
     }
 
-    private func readCache(named name: String, inClipHaving clipId: Domain.Clip.Identity) throws -> UIImage {
-        let fileUrl = self.resolveCacheImageFileUrl(fileName: name, clipId: clipId)
+    private func readCache(for item: ClipItem) throws -> UIImage {
+        let fileUrl = self.resolveCacheImageFileUrl(for: item)
 
         guard let data = try? Data(contentsOf: fileUrl) else {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to initialize Data by URL. (name=\(name), clipId=\(clipId))
+            Failed to initialize Data by URL. (url=\(fileUrl))
             """))
             throw ThumbnailStorageError.failedToReadData
         }
 
         guard let image = UIImage(data: data) else {
             self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to initialize UIImage by Data. (name=\(name), clipId=\(clipId))
+            Failed to initialize UIImage by Data. (url=\(fileUrl))
             """))
             throw ThumbnailStorageError.failedToConvertToImage
         }
 
         return image
-    }
-
-    private func createDirectoryIfNeeded(for item: ClipItem) throws {
-        let clipDirectoryUrl = self.resolveCacheDirectoryUrl(forClipId: item.clipId)
-        guard self.fileManager.fileExists(atPath: clipDirectoryUrl.path) == false else { return }
-        try self.fileManager.createDirectory(at: clipDirectoryUrl, withIntermediateDirectories: true, attributes: nil)
     }
 }
 
@@ -131,29 +118,20 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
 
     public func readThumbnailIfExists(for item: ClipItem) -> UIImage? {
         return self.ioQueue.sync {
-            guard self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else { return nil }
-            return try? self.readCache(named: item.imageFileName, inClipHaving: item.clipId)
+            guard self.existsCache(for: item) else { return nil }
+            return try? self.readCache(for: item)
         }
     }
 
     public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
         self.ioQueue.sync {
-            guard !self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else {
-                guard let image = try? self.readCache(named: item.imageFileName, inClipHaving: item.clipId) else {
+            guard !self.existsCache(for: item) else {
+                guard let image = try? self.readCache(for: item) else {
                     completion(nil)
                     return
                 }
                 completion(image)
                 return
-            }
-
-            do {
-                try self.createDirectoryIfNeeded(for: item)
-            } catch {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to create directory. (name=\(item.imageFileName), clipId=\(item.clipId)
-                """))
-                completion(nil)
             }
         }
 
@@ -170,17 +148,17 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
 
             guard let downsampledImage = Self.downsampledImage(data: data, to: targetSize) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to downsampling image. (name=\(item.imageFileName), clipId=\(item.clipId), targetSize=\(targetSize)
+                Failed to downsampling image. (name=\(item.imageId).\(item.imageFileName) targetSize=\(targetSize)
                 """))
                 completion(nil)
                 return
             }
 
-            let fileUrl = self.resolveCacheImageFileUrl(fileName: item.imageFileName, clipId: item.clipId)
+            let fileUrl = self.resolveCacheImageFileUrl(for: item)
             let utType = ImageExtensionResolver.resolveUTType(of: fileUrl)
             guard let destination = CGImageDestinationCreateWithURL(fileUrl as CFURL, utType, 1, nil) else {
                 self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to create CGIMageDestination. (name=\(item.imageFileName), clipId=\(item.clipId), fileUrl=\(fileUrl.absoluteString)
+                Failed to create CGIMageDestination. (fileUrl=\(fileUrl.absoluteString), targetSize=\(targetSize))
                 """))
                 completion(nil)
                 return
@@ -196,8 +174,8 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
 
     public func deleteThumbnailCacheIfExists(for item: ClipItem) {
         return self.ioQueue.sync {
-            guard self.existsCache(named: item.imageFileName, inClipHaving: item.clipId) else { return }
-            let fileUrl = self.resolveCacheImageFileUrl(fileName: item.imageFileName, clipId: item.clipId)
+            guard self.existsCache(for: item) else { return }
+            let fileUrl = self.resolveCacheImageFileUrl(for: item)
             try? self.fileManager.removeItem(at: fileUrl)
         }
     }
