@@ -23,11 +23,11 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let finalAlpha: CGFloat = 0
 
     private static let startingCornerRadius: CGFloat = 0
-    private static let finalCornerRadius: CGFloat = 10
+    private static let finalCornerRadius: CGFloat = 15
 
     private static let cancelAnimateDuration: TimeInterval = 0.15
-    private static let endAnimateDuration: TimeInterval = 0.2
-    private static let fallbackAnimateDuration: TimeInterval = 0.2
+    private static let endAnimateDuration: TimeInterval = 0.17
+    private static let fallbackAnimateDuration: TimeInterval = 0.17
 
     private var logger: TBoxLoggable
     private var fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -121,7 +121,9 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         animatingView.center = nextAnchorPoint
         animatingImageView.frame = animatingView.bounds
         animatingView.layer.cornerRadius = cornerRadius
+        animatingView.layer.cornerCurve = .continuous
         animatingImageView.layer.cornerRadius = cornerRadius
+        animatingImageView.layer.cornerCurve = .continuous
 
         transitionContext.updateInteractiveTransition(1 - scale)
 
