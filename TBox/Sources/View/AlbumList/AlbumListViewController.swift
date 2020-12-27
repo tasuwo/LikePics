@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
@@ -9,6 +10,7 @@ import UIKit
 
 class AlbumListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = AlbumListViewModelType
 
     enum Section {
         case main
@@ -22,7 +24,12 @@ class AlbumListViewController: UIViewController {
 
     // MARK: ViewModel
 
-    private let presenter: AlbumListPresenter
+    private let viewModel: Dependency
+    private var cancellableBag = Set<AnyCancellable>()
+
+    // MARK: Storage
+
+    private let thumbnailStorage: ThumbnailStorageProtocol
 
     // MARK: View
 
@@ -37,12 +44,14 @@ class AlbumListViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AlbumListPresenter) {
+    init(factory: Factory,
+         viewModel: AlbumListViewModel,
+         thumbnailStorage: ThumbnailStorageProtocol)
+    {
         self.factory = factory
-        self.presenter = presenter
+        self.thumbnailStorage = thumbnailStorage
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -57,7 +66,7 @@ class AlbumListViewController: UIViewController {
         self.setupCollectionView()
         self.setupEmptyMessage()
 
-        self.presenter.setup()
+        self.bind(to: viewModel)
     }
 
     // MARK: - Methods
@@ -70,9 +79,46 @@ class AlbumListViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
-                self?.presenter.addAlbum(title: text)
+                self?.viewModel.inputs.addedAlbum.send(text)
             }
         )
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.albums
+            .sink { [weak self] albums in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(albums)
+                self?.dataSource.apply(snapshot, animatingDifferences: !albums.isEmpty)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayEmptyMessage
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isEditButtonEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isEnabled in self?.navigationItem.rightBarButtonItem?.isEnabled = isEnabled }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.endEditing
+            .sink { [weak self] _ in self?.setEditing(false, animated: true) }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Collection View
@@ -87,18 +133,22 @@ class AlbumListViewController: UIViewController {
     }
 
     private func configureDataSource() {
-        self.dataSource = .init(collectionView: self.collectionView) { collectionView, indexPath, album -> UICollectionViewCell? in
+        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, album -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
-            guard let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
+            guard let self = self, let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
 
             cell.identifier = album.identity
             cell.title = album.title
 
-            if let image = self.presenter.readImageIfExists(for: album) {
-                cell.thumbnail = image
-            } else {
-                cell.thumbnail = nil
-                self.presenter.fetchImage(for: album) { image in
+            let thumbnailTarget = album.clips.first?.items.first
+            let thumbnail: UIImage? = {
+                guard let item = thumbnailTarget else { return nil }
+                return self.thumbnailStorage.readThumbnailIfExists(for: item)
+            }()
+            cell.thumbnail = thumbnail
+
+            if let item = thumbnailTarget, thumbnail == nil {
+                self.thumbnailStorage.requestThumbnail(for: item) { image in
                     DispatchQueue.main.async {
                         guard cell.identifier == album.identity else { return }
                         cell.thumbnail = image
@@ -184,40 +234,6 @@ class AlbumListViewController: UIViewController {
     }
 }
 
-extension AlbumListViewController: AlbumListViewProtocol {
-    // MARK: - AlbumListViewProtocol
-
-    func apply(_ albums: [Album]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(albums)
-
-        if !albums.isEmpty {
-            self.emptyMessageView.alpha = 0
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard albums.isEmpty else { return }
-            self?.navigationItem.rightBarButtonItem?.isEnabled = false
-            self?.emptyMessageView.alpha = 1
-        }
-    }
-
-    func reload() {
-        self.collectionView.reloadData()
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func endEditing() {
-        self.setEditing(false, animated: true)
-    }
-}
-
 extension AlbumListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
@@ -257,7 +273,7 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
                                       preferredStyle: .actionSheet)
 
         let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
-            self?.presenter.deleteAlbum(album)
+            self?.viewModel.inputs.deletedAlbum.send(album.id)
         }
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))

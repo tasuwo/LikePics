@@ -247,13 +247,13 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = AlbumListPresenter(query: query,
+        let viewModel = AlbumListViewModel(query: query,
                                            clipCommandService: self.clipCommandService,
-                                           thumbnailStorage: self.thumbnailStorage,
                                            settingStorage: self.userSettingsStorage,
                                            logger: self.logger)
-
-        let viewController = AlbumListViewController(factory: self, presenter: presenter)
+        let viewController = AlbumListViewController(factory: self,
+                                                     viewModel: viewModel,
+                                                     thumbnailStorage: self.thumbnailStorage)
         return UINavigationController(rootViewController: viewController)
     }
 
