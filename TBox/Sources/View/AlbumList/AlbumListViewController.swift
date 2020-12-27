@@ -14,16 +14,26 @@ class AlbumListViewController: UIViewController {
         case main
     }
 
+    // MARK: - Properties
+
+    // MARK: Factory
+
     private let factory: Factory
+
+    // MARK: ViewModel
+
     private let presenter: AlbumListPresenter
+
+    // MARK: View
+
     private let emptyMessageView = EmptyMessageView()
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)
     )
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
     private var collectionView: AlbumListCollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
 
     // MARK: - Lifecycle
 
