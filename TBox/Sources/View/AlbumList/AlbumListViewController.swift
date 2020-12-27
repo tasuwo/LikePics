@@ -171,22 +171,24 @@ class AlbumListViewController: UIViewController {
                     return .fractionalWidth(0.5)
 
                 case .regular, .unspecified:
-                    return .fractionalWidth(0.33)
+                    return .fractionalWidth(0.25)
 
                 @unknown default:
-                    return .fractionalWidth(0.33)
+                    return .fractionalWidth(0.25)
                 }
             }()
             let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth,
                                                   heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+            item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
 
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .fractionalWidth(itemWidth.dimension * 4 / 3))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
             let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = CGFloat(16)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8)
 
             return section
         }
