@@ -12,7 +12,8 @@ protocol ClipPreviewPageViewModelType {
 }
 
 protocol ClipPreviewPageViewModelInputs {
-    var currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> { get }
+    var changedPage: PassthroughSubject<ClipItem.Identity, Never> { get }
+
     var deleteClip: PassthroughSubject<Void, Never> { get }
     var removeClipItem: PassthroughSubject<ClipItem.Identity, Never> { get }
     var replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> { get }
@@ -21,12 +22,14 @@ protocol ClipPreviewPageViewModelInputs {
 
 protocol ClipPreviewPageViewModelOutputs {
     var clipId: Clip.Identity { get }
-    var currentItem: CurrentValueSubject<ClipItem?, Never> { get }
+
     var items: CurrentValueSubject<[ClipItem], Never> { get }
+    var currentItem: CurrentValueSubject<ClipItem?, Never> { get }
     var tags: CurrentValueSubject<[Tag], Never> { get }
 
     var errorMessage: PassthroughSubject<String, Never> { get }
 
+    var loadPageAt: PassthroughSubject<Int, Never> { get }
     var close: PassthroughSubject<Void, Never> { get }
 
     func fetchImage() -> Data?
@@ -46,7 +49,8 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     // MARK: ClipPreviewPageViewModelInputs
 
-    let currentClipItemId: CurrentValueSubject<ClipItem.Identity?, Never> = .init(nil)
+    let changedPage: PassthroughSubject<ClipItem.Identity, Never> = .init()
+
     let deleteClip: PassthroughSubject<Void, Never> = .init()
     let removeClipItem: PassthroughSubject<ClipItem.Identity, Never> = .init()
     let replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
@@ -55,12 +59,13 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     // MARK: ClipPreviewPageViewModelOutputs
 
     let clipId: Clip.Identity
-    let currentItem: CurrentValueSubject<ClipItem?, Never> = .init(nil)
-    let items: CurrentValueSubject<[ClipItem], Never> = .init([])
-    let tags: CurrentValueSubject<[Tag], Never> = .init([])
+    let items: CurrentValueSubject<[ClipItem], Never>
+    let currentItem: CurrentValueSubject<ClipItem?, Never>
+    let tags: CurrentValueSubject<[Tag], Never>
 
     let errorMessage: PassthroughSubject<String, Never> = .init()
 
+    let loadPageAt: PassthroughSubject<Int, Never> = .init()
     let close: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
@@ -69,6 +74,8 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     private let clipCommandService: ClipCommandServiceProtocol
     private let imageQueryService: NewImageQueryServiceProtocol
     private let logger: TBoxLoggable
+
+    private let currentIndex: CurrentValueSubject<Int, Never>
 
     private var cancellableBag = Set<AnyCancellable>()
 
@@ -86,6 +93,11 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
         self.imageQueryService = imageQueryService
         self.logger = logger
 
+        self.items = .init(query.clip.value.sortedItems)
+        self.currentItem = .init(query.clip.value.items.first)
+        self.currentIndex = .init(0)
+        self.tags = .init(query.clip.value.tags)
+
         self.bind()
     }
 
@@ -101,17 +113,33 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
             .sink { [weak self] _ in
                 self?.close.send(())
             } receiveValue: { [weak self] clip in
-                self?.items.send(clip.items)
-                self?.tags.send(clip.tags)
+                guard let self = self else { return }
+                let oldItem = clip.items[self.currentIndex.value]
+
+                self.items.send(clip.items)
+                self.tags.send(clip.tags)
+
+                // 元のItemが削除されているようであれば、最初のページをロードする
+                let newIndex = clip.items.firstIndex(where: { $0.id == oldItem.id }) ?? 0
+                self.currentIndex.send(newIndex)
+                self.loadPageAt.send(newIndex)
             }
             .store(in: &self.cancellableBag)
 
-        self.currentClipItemId
-            .map { [weak self] itemId in
-                self?.items.value.first(where: { $0.id == itemId })
+        self.changedPage
+            .compactMap { [weak self] itemId in
+                self?.items.value.firstIndex(where: { $0.id == itemId })
             }
-            .sink { [weak self] item in
-                self?.currentItem.send(item)
+            .sink { [weak self] index in
+                self?.currentIndex.send(index)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.items
+            .combineLatest(self.currentIndex)
+            .sink { [weak self] items, index in
+                guard items.indices.contains(index) else { return }
+                self?.currentItem.send(items[index])
             }
             .store(in: &self.cancellableBag)
     }

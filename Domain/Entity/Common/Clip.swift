@@ -29,6 +29,10 @@ public struct Clip: Equatable {
         return self.items[2]
     }
 
+    public var sortedItems: [ClipItem] {
+        return self.items.sorted(by: { $0.clipIndex < $1.clipIndex })
+    }
+
     // MARK: - Lifecycle
 
     public init(id: UUID,

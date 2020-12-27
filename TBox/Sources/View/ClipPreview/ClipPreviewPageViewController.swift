@@ -15,7 +15,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     typealias TransitionControllerBuilder = (ClipInformationViewControllerFactory, UIViewController) -> ClipPreviewPageTransitionController
 
     private let factory: Factory
-    private let viewModel: ClipPreviewPageViewModelType
+    private let viewModel: Dependency
     private let barItemsProvider: ClipPreviewPageBarViewController
     private var transitionController: ClipPreviewPageTransitionControllerType!
     private var tapGestureRecognizer: UITapGestureRecognizer!
@@ -52,7 +52,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         viewModel: ClipPreviewPageViewModel,
+         viewModel: Dependency,
          barItemsProvider: ClipPreviewPageBarViewController,
          transitionControllerBuilder: @escaping TransitionControllerBuilder)
     {
@@ -86,13 +86,16 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.setupGestureRecognizer()
 
         self.bind(to: viewModel)
+
+        guard let viewController = self.makeViewController(at: 0) else { return }
+        self.setViewControllers([viewController], direction: .forward, animated: false)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if !self.isInitialLoaded {
-            self.didUpdateCurrentPage()
+            self.didChangedCurrentPage()
             self.isInitialLoaded = true
         }
     }
@@ -111,13 +114,12 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        dependency.outputs.items
-            .sink { [weak self] _ in
-                guard let self = self, let viewController = self.makeViewController(at: 0) else { return }
-                self.setViewControllers([viewController], direction: .forward, animated: true) { completed in
-                    // Viewがロード完了していない場合、`viewWillAppear` で代わりに処理が走る
-                    guard completed, self.isInitialLoaded else { return }
-                    self.didUpdateCurrentPage()
+        dependency.outputs.loadPageAt
+            .sink { [weak self] index in
+                guard let self = self, let viewController = self.makeViewController(at: index) else { return }
+                self.setViewControllers([viewController], direction: .forward, animated: false) { completed in
+                    guard completed else { return }
+                    self.didChangedCurrentPage()
                 }
             }
             .store(in: &self.cancellableBag)
@@ -137,22 +139,26 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.barItemsProvider.bind(view: self, viewModel: dependency)
     }
 
-    private func bind(forCurrentViewController viewController: ClipPreviewViewController) {
-        self.currentPreviewCancellableBag.forEach { $0.cancel() }
+    private func didChangedCurrentPage() {
+        guard let viewController = self.currentViewController else { return }
 
+        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        viewController.previewView.delegate = self
+
+        self.currentPreviewCancellableBag.forEach { $0.cancel() }
         viewController.previewView.isMinimumZoomScale
             .sink { [weak self] isMinimumZoomScale in
                 self?.transitionController.inputs.isMinimumPreviewZoomScale.send(isMinimumZoomScale)
             }
             .store(in: &self.currentPreviewCancellableBag)
-
         viewController.previewView.contentOffset
             .sink { [weak self] offset in
                 self?.transitionController.inputs.previewContentOffset.send(offset)
             }
             .store(in: &self.currentPreviewCancellableBag)
-
         self.transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
+
+        self.viewModel.inputs.changedPage.send(viewController.itemId)
     }
 
     // MARK: Bar
@@ -177,22 +183,13 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: Page resolution
 
-    private func didUpdateCurrentPage() {
-        guard let viewController = self.currentViewController else { return }
-        self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
-        viewController.previewView.delegate = self
-
-        self.bind(forCurrentViewController: viewController)
-        self.viewModel.inputs.currentClipItemId.send(viewController.itemId)
-    }
-
     private func resolveIndex(of viewController: UIViewController) -> Int? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let currentIndex = self.viewModel.outputs.items.value.firstIndex(where: { $0.identity == viewController.itemId }) else { return nil }
         return currentIndex
     }
 
-    private func makeViewController(at index: Int) -> UIViewController? {
+    private func makeViewController(at index: Int) -> ClipPreviewViewController? {
         guard self.viewModel.outputs.items.value.indices.contains(index) else { return nil }
         return self.factory.makeClipItemPreviewViewController(itemId: self.viewModel.outputs.items.value[index].identity)
     }
@@ -203,7 +200,7 @@ extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed else { return }
-        self.didUpdateCurrentPage()
+        self.didChangedCurrentPage()
     }
 }
 
@@ -331,7 +328,7 @@ extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
     // MARK: - ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
-        guard let itemId = self.viewModel.outputs.currentItem.value?.identity else { return nil }
+        guard let itemId = self.viewModel.outputs.currentItem.value?.id else { return nil }
         return self.factory.makeClipInformationViewController(
             clipId: self.viewModel.outputs.clipId,
             itemId: itemId,
