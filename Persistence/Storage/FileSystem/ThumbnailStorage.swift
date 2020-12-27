@@ -23,11 +23,7 @@ public class ThumbnailStorage {
     private let baseUrl: URL
     private let logger: TBoxLoggable
 
-    private let downsamplingQueue = DispatchQueue(label: "net.tasuwo.TBox.Persistence.ImageCacheStorage.downsamplingQueue",
-                                                  qos: .userInteractive,
-                                                  attributes: .concurrent)
-    private let ioQueue = DispatchQueue(label: "net.tasuwo.TBox.Persistence.ImageCacheStorage.ioQueue",
-                                        qos: .userInteractive)
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.ThumbnailStorage", qos: .userInitiated, attributes: .concurrent)
 
     // MARK: - Lifecycle
 
@@ -117,25 +113,21 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
     }
 
     public func readThumbnailIfExists(for item: ClipItem) -> UIImage? {
-        return self.ioQueue.sync {
-            guard self.existsCache(for: item) else { return nil }
-            return try? self.readCache(for: item)
-        }
+        guard self.existsCache(for: item) else { return nil }
+        return try? self.readCache(for: item)
     }
 
     public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        self.ioQueue.sync {
-            guard !self.existsCache(for: item) else {
-                guard let image = try? self.readCache(for: item) else {
-                    completion(nil)
-                    return
-                }
-                completion(image)
+        guard !self.existsCache(for: item) else {
+            guard let image = try? self.readCache(for: item) else {
+                completion(nil)
                 return
             }
+            completion(image)
+            return
         }
 
-        self.downsamplingQueue.async {
+        self.queue.async {
             guard let data = try? self.queryService.read(having: item.imageId) else {
                 self.logger.write(ConsoleLog(level: .debug, message: """
                 元画像ファイルの取得に失敗しました。iCloud同期前である可能性があります (name=\(item.imageFileName), clipId=\(item.clipId))
@@ -164,19 +156,16 @@ extension ThumbnailStorage: ThumbnailStorageProtocol {
                 return
             }
 
-            self.ioQueue.sync {
-                CGImageDestinationAddImage(destination, downsampledImage, nil)
-                CGImageDestinationFinalize(destination)
-                completion(UIImage(cgImage: downsampledImage))
-            }
+            CGImageDestinationAddImage(destination, downsampledImage, nil)
+            CGImageDestinationFinalize(destination)
+
+            completion(UIImage(cgImage: downsampledImage))
         }
     }
 
     public func deleteThumbnailCacheIfExists(for item: ClipItem) {
-        return self.ioQueue.sync {
-            guard self.existsCache(for: item) else { return }
-            let fileUrl = self.resolveCacheImageFileUrl(for: item)
-            try? self.fileManager.removeItem(at: fileUrl)
-        }
+        guard self.existsCache(for: item) else { return }
+        let fileUrl = self.resolveCacheImageFileUrl(for: item)
+        try? self.fileManager.removeItem(at: fileUrl)
     }
 }
