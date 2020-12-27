@@ -39,7 +39,7 @@ protocol AlbumViewModelInputs {
 }
 
 protocol AlbumViewModelOutputs {
-    var album: CurrentValueSubject<Album?, Never> { get }
+    var album: CurrentValueSubject<Album, Never> { get }
     var clips: CurrentValueSubject<[Clip], Never> { get }
     var selectedClips: [Clip] { get }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { get }
@@ -53,6 +53,7 @@ protocol AlbumViewModelOutputs {
     var presentMergeView: PassthroughSubject<[Clip], Never> { get }
     var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { get }
     var startShareForToolBar: PassthroughSubject<[Data], Never> { get }
+    var close: PassthroughSubject<Void, Never> { get }
 
     var title: CurrentValueSubject<String?, Never> { get }
 }
@@ -108,7 +109,7 @@ class AlbumViewModel: AlbumViewModelType,
 
     // MARK: AlbumViewModelOutputs
 
-    let album: CurrentValueSubject<Album?, Never> = .init(nil)
+    let album: CurrentValueSubject<Album, Never>
     var clips: CurrentValueSubject<[Clip], Never> { clipCollection.outputs.clips }
     var selectedClips: [Clip] { clipCollection.outputs.selectedClips }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selections }
@@ -122,6 +123,7 @@ class AlbumViewModel: AlbumViewModelType,
     var presentMergeView: PassthroughSubject<[Clip], Never> { clipCollection.outputs.requestedStartingMerge }
     var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { clipCollection.outputs.requestedShareClip }
     var startShareForToolBar: PassthroughSubject<[Data], Never> { clipCollection.outputs.requestedShareClips }
+    let close: PassthroughSubject<Void, Never> = .init()
 
     let title: CurrentValueSubject<String?, Never> = .init(nil)
 
@@ -148,6 +150,8 @@ class AlbumViewModel: AlbumViewModelType,
         self.clipService = clipService
         self.settingStorage = settingStorage
         self.logger = logger
+
+        self.album = .init(query.album.value)
 
         self.bind()
     }
@@ -184,14 +188,13 @@ extension AlbumViewModel {
             .store(in: &self.cancellableBag)
 
         self.album
-            .sink { [weak self] album in self?.title.send(album?.title) }
+            .sink { [weak self] album in self?.title.send(album.title) }
             .store(in: &self.cancellableBag)
 
         self.query.album
             .eraseToAnyPublisher()
             .sink { [weak self] _ in
-                // TODO: 画面を閉じる
-                self?.album.send(nil)
+                self?.close.send(())
             } receiveValue: { [weak self] album in
                 self?.album.send(album)
             }
@@ -221,8 +224,8 @@ extension AlbumViewModel {
 
         self.removeSelectionsFromAlbum
             .sink { [weak self] _ in
-                guard let self = self, let album = self.album.value else { return }
-                if case let .failure(error) = self.clipService.updateAlbum(having: album.identity, byDeletingClipsHaving: Array(self.selections.value)) {
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipService.updateAlbum(having: self.album.value.identity, byDeletingClipsHaving: Array(self.selections.value)) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムからのクリップの削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
@@ -233,8 +236,8 @@ extension AlbumViewModel {
 
         self.removeFromAlbum
             .sink { [weak self] clipId in
-                guard let self = self, let album = self.album.value else { return }
-                if case let .failure(error) = self.clipService.updateAlbum(having: album.identity, byDeletingClipsHaving: [clipId]) {
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipService.updateAlbum(having: self.album.value.identity, byDeletingClipsHaving: [clipId]) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムからのクリップの削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
@@ -245,8 +248,8 @@ extension AlbumViewModel {
 
         self.reorder
             .sink { [weak self] clipIds in
-                guard let self = self, let album = self.album.value else { return }
-                if case let .failure(error) = self.clipService.updateAlbum(having: album.id, byReorderingClipsHaving: clipIds) {
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipService.updateAlbum(having: self.album.value.identity, byReorderingClipsHaving: clipIds) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     並び替えに失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))

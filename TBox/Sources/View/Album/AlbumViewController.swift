@@ -222,6 +222,10 @@ class AlbumViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
+        dependency.outputs.close
+            .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
+            .store(in: &self.cancellableBag)
+
         self.navigationItemsProvider.bind(view: self, propagator: dependency.propagator)
         self.toolBarItemsProvider.bind(view: self, propagator: dependency.propagator)
     }
@@ -280,7 +284,7 @@ class AlbumViewController: UIViewController {
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
-        self.title = self.viewModel.outputs.album.value?.title
+        self.title = self.viewModel.outputs.album.value.title
         self.navigationItemsProvider.delegate = self
     }
 
