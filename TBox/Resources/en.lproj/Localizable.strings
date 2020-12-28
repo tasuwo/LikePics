@@ -46,12 +46,19 @@
 "top_clip_view_empty_message" = "Share the url of the site containing your favorite images using other apps.";
 
 "album_list_view_title" = "Albums";
+
 "album_list_view_alert_for_add_title" = "New Album";
 "album_list_view_alert_for_add_message" = "Enter a name for this album.";
 "album_list_view_alert_for_add_placeholder" = "Title";
+
+"album_list_view_alert_for_edit_title" = "Edit Album Title";
+"album_list_view_alert_for_edit_message" = "Enter a name for this album.";
+"album_list_view_alert_for_edit_placeholder" = "Title";
+
 "album_list_view_alert_for_delete_title" = "Delete \"%@\"";
 "album_list_view_alert_for_delete_message" = "Are you sure you want to delete the album \"%@\"?\nThe clips will not be deleted.";
 "album_list_view_alert_for_delete_action" = "Delete Album";
+
 "album_list_view_empty_title" = "No Clips";
 "album_list_view_empty_message" = "You can collect clips into an album";
 "album_list_view_empty_action_title" = "Add your first Album";
@@ -160,6 +167,7 @@
 "album_list_view_error_at_read_albums" = "Failed to read albums.";
 "album_list_view_error_at_add_album" = "Failed to add album.";
 "album_list_view_error_at_delete_album" = "Failed to delete album.";
+"album_list_view_error_at_edit_album" = "Failed to update album title.";
 "album_list_view_error_at_read_image_data" = "Failed to read image data.";
 
 // MARK: Tag

@@ -15,6 +15,7 @@ protocol AlbumListViewModelType {
 protocol AlbumListViewModelInputs {
     var addedAlbum: PassthroughSubject<String, Never> { get }
     var deletedAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> { get }
 }
 
 protocol AlbumListViewModelOutputs {
@@ -22,7 +23,6 @@ protocol AlbumListViewModelOutputs {
     var errorMessage: PassthroughSubject<String, Never> { get }
     var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
     var isEditButtonEnabled: CurrentValueSubject<Bool, Never> { get }
-    var endEditing: PassthroughSubject<Void, Never> { get }
 }
 
 class AlbumListViewModel: AlbumListViewModelType,
@@ -40,6 +40,7 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     let addedAlbum: PassthroughSubject<String, Never> = .init()
     let deletedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    let editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> = .init()
 
     // MARK: AlbumListViewModelOutputs
 
@@ -47,7 +48,6 @@ class AlbumListViewModel: AlbumListViewModelType,
     let errorMessage: PassthroughSubject<String, Never> = .init()
     let displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
     let isEditButtonEnabled: CurrentValueSubject<Bool, Never> = .init(false)
-    let endEditing: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
 
@@ -124,7 +124,18 @@ extension AlbumListViewModel {
                     """))
                     self.errorMessage.send(L10n.albumListViewErrorAtDeleteAlbum)
                 }
-                self.endEditing.send(())
+            }
+            .store(in: &self.cancellableBag)
+
+        self.editedAlbumTitle
+            .sink { [weak self] albumId, newTitle in
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, titleTo: newTitle) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to delete album. (code: \(error.rawValue))
+                    """))
+                    self.errorMessage.send(L10n.albumListViewErrorAtDeleteAlbum)
+                }
             }
             .store(in: &self.cancellableBag)
     }

@@ -38,10 +38,15 @@ class AlbumListViewController: UIViewController {
     // MARK: View
 
     private let emptyMessageView = EmptyMessageView()
-    private lazy var alertContainer = TextEditAlert(
+    private lazy var addAlbumAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)
+    )
+    private lazy var editAlbumTitleAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.albumListViewAlertForEditTitle,
+                             message: L10n.albumListViewAlertForEditMessage,
+                             placeholder: L10n.albumListViewAlertForEditPlaceholder)
     )
     private var collectionView: AlbumListCollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
@@ -76,7 +81,7 @@ class AlbumListViewController: UIViewController {
     // MARK: - Methods
 
     private func startAddingAlbum() {
-        self.alertContainer.present(
+        self.addAlbumAlertContainer.present(
             withText: nil,
             on: self,
             validator: {
@@ -120,10 +125,6 @@ class AlbumListViewController: UIViewController {
                 self?.present(alert, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
-
-        dependency.outputs.endEditing
-            .sink { [weak self] _ in self?.setEditing(false, animated: true) }
-            .store(in: &self.cancellableBag)
     }
 
     // MARK: Collection View
@@ -150,6 +151,8 @@ class AlbumListViewController: UIViewController {
             cell.identifier = album.identity
             cell.title = album.title
             cell.clipCount = album.clips.count
+            cell.isEditing = self.isEditing
+            cell.delegate = self
 
             let thumbnailTarget = album.clips.first?.items.first
             let thumbnail: UIImage? = {
@@ -249,8 +252,21 @@ class AlbumListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.collectionView.visibleSupplementaryViews(ofKind: ElementKind.remover.rawValue)
-            .forEach { $0.isHidden = !editing }
+        let shouldHide = !editing
+
+        let cells = self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
+        let removers = self.collectionView.visibleSupplementaryViews(ofKind: ElementKind.remover.rawValue)
+        removers.forEach { remover in
+            remover.isHidden = shouldHide
+            remover.alpha = shouldHide ? 1 : 0
+        }
+        UIView.animate(withDuration: 0.2) {
+            removers.forEach { $0.alpha = shouldHide ? 0 : 1 }
+            cells.forEach {
+                $0.isEditing = editing
+                $0.layoutIfNeeded()
+            }
+        }
     }
 }
 
@@ -266,6 +282,7 @@ extension AlbumListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard !self.isEditing else { return }
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
@@ -309,5 +326,24 @@ extension AlbumListViewController: EmptyMessageViewDelegate {
 
     func didTapActionButton(_ view: EmptyMessageView) {
         self.startAddingAlbum()
+    }
+}
+
+extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
+    // MARK: - AlbumListCollectionViewCellDelegate
+
+    func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.editAlbumTitleAlertContainer.present(
+            withText: album.title,
+            on: self,
+            validator: {
+                $0?.isEmpty != true
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.viewModel.inputs.editedAlbumTitle.send((album.id, text))
+            }
+        )
     }
 }

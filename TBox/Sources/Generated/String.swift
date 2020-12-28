@@ -28,6 +28,12 @@ internal enum L10n {
         return L10n.tr("Localizable", "album_list_view_alert_for_delete_title", String(describing: p1))
     }
 
+    /// このアルバムの名前を入力してください
+    internal static let albumListViewAlertForEditMessage = L10n.tr("Localizable", "album_list_view_alert_for_edit_message")
+    /// アルバム名
+    internal static let albumListViewAlertForEditPlaceholder = L10n.tr("Localizable", "album_list_view_alert_for_edit_placeholder")
+    /// アルバム名の編集
+    internal static let albumListViewAlertForEditTitle = L10n.tr("Localizable", "album_list_view_alert_for_edit_title")
     /// はじめてのアルバムを追加する
     internal static let albumListViewEmptyActionTitle = L10n.tr("Localizable", "album_list_view_empty_action_title")
     /// 複数のクリップをアルバムにまとめることができます

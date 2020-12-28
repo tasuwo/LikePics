@@ -5,6 +5,10 @@
 import Domain
 import UIKit
 
+public protocol AlbumListCollectionViewCellDelegate: AnyObject {
+    func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell)
+}
+
 public class AlbumListCollectionViewCell: UICollectionViewCell {
     public static var nib: UINib {
         return UINib(nibName: "AlbumListCollectionViewCell", bundle: Bundle(for: Self.self))
@@ -23,10 +27,10 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     public var title: String? {
         get {
-            self.titleLabel.text
+            return self.titleButton.title(for: .normal)
         }
         set {
-            self.titleLabel.text = newValue
+            self.titleButton.setTitle(newValue, for: .normal)
         }
     }
 
@@ -42,20 +46,53 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @IBOutlet var thumbnailImageView: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var metaLabel: UILabel!
+    public var isEditing: Bool = false {
+        didSet {
+            self.updateAppearance()
+        }
+    }
 
-    // MARK: - Methods
+    public weak var delegate: AlbumListCollectionViewCellDelegate?
+
+    @IBOutlet var thumbnailImageView: UIImageView!
+    @IBOutlet var titleButton: UIButton!
+    @IBOutlet var metaLabel: UILabel!
+    @IBOutlet var titleEditButton: UIButton!
+    @IBOutlet var titleEditButtonContainer: UIView!
+
+    // MARK: - Lifecycle
 
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
     }
 
+    // MARK: - IBAction
+
+    @IBAction func didTapTitleEditButton(_ sender: Any) {
+        self.delegate?.didTapTitleEditButton(self)
+    }
+
+    @IBAction func didTapTitle(_ sender: Any) {
+        self.delegate?.didTapTitleEditButton(self)
+    }
+
+    // MARK: - Methods
+
     func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10
         self.thumbnailImageView.contentMode = .scaleAspectFill
+
+        self.titleButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        self.titleButton.titleLabel?.lineBreakMode = .byTruncatingTail
+
         self.clipCount = nil
+        self.isEditing = false
+        self.updateAppearance()
+    }
+
+    func updateAppearance() {
+        self.titleButton.isEnabled = self.isEditing
+        self.titleEditButtonContainer.isHidden = !self.isEditing
     }
 }
