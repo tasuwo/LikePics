@@ -249,6 +249,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         self.indicator.hidesWhenStopped = true
 
+        self.selectionMark.backgroundColor = .white
+        self.selectionMark.layer.cornerRadius = self.selectionMark.bounds.width / 2.0
+
         self.updateOverallOverlayView()
     }
 
