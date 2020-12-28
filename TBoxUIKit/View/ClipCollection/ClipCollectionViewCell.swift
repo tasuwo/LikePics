@@ -53,7 +53,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             guard let primaryImage = self.primaryImage else { return }
 
             self.primaryImageView.isHidden = !primaryImage.isLoaded
-            self.primaryImageShadowView.isHidden = !primaryImage.isLoaded
 
             self.primaryImageView.removeAspectRatioConstraint()
             guard case let .loaded(image) = primaryImage else {
@@ -74,7 +73,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             guard let secondaryImage = self.secondaryImage else { return }
 
             self.secondaryImageView.isHidden = !secondaryImage.isLoaded
-            self.secondaryImageShadowView.isHidden = !secondaryImage.isLoaded
             self.secondaryImageOverlayView.isHidden = !secondaryImage.isLoaded
 
             self.secondaryImageView.removeAspectRatioConstraint()
@@ -96,7 +94,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             guard let tertiaryImage = self.tertiaryImage else { return }
 
             self.tertiaryImageView.isHidden = !tertiaryImage.isLoaded
-            self.tertiaryImageShadowView.isHidden = !tertiaryImage.isLoaded
             self.tertiaryImageOverlayView.isHidden = !tertiaryImage.isLoaded
 
             self.tertiaryImageView.removeAspectRatioConstraint()
@@ -148,14 +145,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         ]
     }
 
-    private var imageShadowViews: [UIView] {
-        return [
-            self.primaryImageShadowView,
-            self.secondaryImageShadowView,
-            self.tertiaryImageShadowView
-        ]
-    }
-
     private var overlayViews: [UIView] {
         return [
             self.secondaryImageOverlayView,
@@ -167,10 +156,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet public var primaryImageView: UIImageView!
     @IBOutlet public var secondaryImageView: UIImageView!
     @IBOutlet public var tertiaryImageView: UIImageView!
-
-    @IBOutlet var primaryImageShadowView: UIView!
-    @IBOutlet var secondaryImageShadowView: UIView!
-    @IBOutlet var tertiaryImageShadowView: UIView!
 
     @IBOutlet var secondaryImageOverlayView: UIView!
     @IBOutlet var tertiaryImageOverlayView: UIView!
@@ -226,11 +211,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         self.imageViews.forEach {
             $0.isHidden = true
             Self.setupAppearance(imageView: $0)
-        }
-
-        self.imageShadowViews.forEach {
-            $0.isHidden = true
-            Self.setupAppearance(shadowView: $0, interfaceStyle: self.traitCollection.userInterfaceStyle, onImage: true)
         }
 
         self.overlayViews.forEach {

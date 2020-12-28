@@ -3,7 +3,6 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,10 +20,6 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cof-mn-eeS">
                         <rect key="frame" x="0.0" y="0.0" width="197" height="317"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E64-VG-nTI">
-                                <rect key="frame" x="0.0" y="35" width="197" height="280"/>
-                                <color key="backgroundColor" name="background"/>
-                            </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="Sd1-hN-MSQ">
                                 <rect key="frame" x="0.0" y="35" width="197" height="280"/>
                             </imageView>
@@ -32,20 +27,12 @@
                                 <rect key="frame" x="0.0" y="35" width="197" height="280"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fe7-GE-hL3">
-                                <rect key="frame" x="0.0" y="20" width="197" height="280"/>
-                                <color key="backgroundColor" name="background"/>
-                            </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="Sxz-Ec-Mu0">
                                 <rect key="frame" x="0.0" y="20" width="197" height="280"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ey-X5-ub9" userLabel="Secondary Image Overlay View">
                                 <rect key="frame" x="0.0" y="20" width="197" height="280"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.25" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BLd-da-g0k">
-                                <rect key="frame" x="0.0" y="0.0" width="197" height="280"/>
-                                <color key="backgroundColor" name="background"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="wfu-ls-oyC">
                                 <rect key="frame" x="0.0" y="0.0" width="197" height="280"/>
@@ -55,33 +42,21 @@
                         <constraints>
                             <constraint firstItem="Sd1-hN-MSQ" firstAttribute="bottom" secondItem="Sxz-Ec-Mu0" secondAttribute="bottom" constant="15" id="12L-cW-BGi"/>
                             <constraint firstItem="wfu-ls-oyC" firstAttribute="leading" secondItem="Cof-mn-eeS" secondAttribute="leading" id="1HN-fc-3DZ"/>
-                            <constraint firstItem="BLd-da-g0k" firstAttribute="trailing" secondItem="wfu-ls-oyC" secondAttribute="trailing" id="47r-kY-MXp"/>
-                            <constraint firstItem="E64-VG-nTI" firstAttribute="bottom" secondItem="Sd1-hN-MSQ" secondAttribute="bottom" id="DKz-nD-w83"/>
-                            <constraint firstItem="fe7-GE-hL3" firstAttribute="trailing" secondItem="Sxz-Ec-Mu0" secondAttribute="trailing" id="ESH-y9-60T"/>
-                            <constraint firstItem="fe7-GE-hL3" firstAttribute="leading" secondItem="Sxz-Ec-Mu0" secondAttribute="leading" id="G7Y-bu-5Wy"/>
                             <constraint firstItem="Dyn-sy-3hs" firstAttribute="trailing" secondItem="Sd1-hN-MSQ" secondAttribute="trailing" id="HTm-Gv-ysv"/>
                             <constraint firstItem="Sxz-Ec-Mu0" firstAttribute="trailing" secondItem="wfu-ls-oyC" secondAttribute="trailing" id="Haj-gM-ICm"/>
                             <constraint firstItem="3ey-X5-ub9" firstAttribute="bottom" secondItem="Sxz-Ec-Mu0" secondAttribute="bottom" id="J9u-08-P46"/>
                             <constraint firstItem="Dyn-sy-3hs" firstAttribute="bottom" secondItem="Sd1-hN-MSQ" secondAttribute="bottom" id="Jak-LT-l2x"/>
-                            <constraint firstItem="BLd-da-g0k" firstAttribute="bottom" secondItem="wfu-ls-oyC" secondAttribute="bottom" id="L8Y-Oh-4aS"/>
                             <constraint firstItem="wfu-ls-oyC" firstAttribute="top" secondItem="Cof-mn-eeS" secondAttribute="top" id="M3m-OK-crZ"/>
                             <constraint firstItem="3ey-X5-ub9" firstAttribute="leading" secondItem="Sxz-Ec-Mu0" secondAttribute="leading" id="Mq9-UY-1Ce"/>
-                            <constraint firstItem="BLd-da-g0k" firstAttribute="leading" secondItem="wfu-ls-oyC" secondAttribute="leading" id="MsA-25-LdW"/>
                             <constraint firstItem="3ey-X5-ub9" firstAttribute="trailing" secondItem="Sxz-Ec-Mu0" secondAttribute="trailing" id="OQB-xS-HWD"/>
                             <constraint firstItem="Sxz-Ec-Mu0" firstAttribute="leading" secondItem="wfu-ls-oyC" secondAttribute="leading" id="SBh-Lr-cra"/>
-                            <constraint firstItem="E64-VG-nTI" firstAttribute="trailing" secondItem="Sd1-hN-MSQ" secondAttribute="trailing" id="VlA-rd-14k"/>
-                            <constraint firstItem="E64-VG-nTI" firstAttribute="leading" secondItem="Sd1-hN-MSQ" secondAttribute="leading" id="W6p-bV-ONO"/>
-                            <constraint firstItem="fe7-GE-hL3" firstAttribute="top" secondItem="Sxz-Ec-Mu0" secondAttribute="top" id="XEg-pM-7c1"/>
                             <constraint firstAttribute="trailing" secondItem="wfu-ls-oyC" secondAttribute="trailing" id="XZH-vy-dHq"/>
-                            <constraint firstItem="E64-VG-nTI" firstAttribute="top" secondItem="Sd1-hN-MSQ" secondAttribute="top" id="ZAB-oK-oRc"/>
                             <constraint firstItem="Sd1-hN-MSQ" firstAttribute="leading" secondItem="Sxz-Ec-Mu0" secondAttribute="leading" id="aLY-pH-16Y"/>
-                            <constraint firstItem="BLd-da-g0k" firstAttribute="top" secondItem="wfu-ls-oyC" secondAttribute="top" id="efO-lT-qJW"/>
                             <constraint firstItem="Dyn-sy-3hs" firstAttribute="leading" secondItem="Sd1-hN-MSQ" secondAttribute="leading" id="f7N-rt-tUi"/>
                             <constraint firstItem="Sd1-hN-MSQ" firstAttribute="trailing" secondItem="Sxz-Ec-Mu0" secondAttribute="trailing" id="gH7-qz-S9l"/>
                             <constraint firstItem="Sxz-Ec-Mu0" firstAttribute="bottom" secondItem="wfu-ls-oyC" secondAttribute="bottom" constant="20" id="hat-Su-HqY"/>
                             <constraint firstItem="Dyn-sy-3hs" firstAttribute="top" secondItem="Sd1-hN-MSQ" secondAttribute="top" id="mQg-ae-x3n"/>
                             <constraint firstItem="3ey-X5-ub9" firstAttribute="top" secondItem="Sxz-Ec-Mu0" secondAttribute="top" id="nko-hE-WH8"/>
-                            <constraint firstItem="fe7-GE-hL3" firstAttribute="bottom" secondItem="Sxz-Ec-Mu0" secondAttribute="bottom" id="ygs-e7-tTN"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJb-u8-3T5">
@@ -143,14 +118,11 @@
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
                 <outlet property="indicator" destination="MUZ-FQ-RAF" id="OKh-c3-twc"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
-                <outlet property="primaryImageShadowView" destination="BLd-da-g0k" id="09h-HO-fYW"/>
                 <outlet property="primaryImageView" destination="wfu-ls-oyC" id="JbO-ZO-ycy"/>
                 <outlet property="secondaryImageOverlayView" destination="3ey-X5-ub9" id="gkO-b7-8xj"/>
-                <outlet property="secondaryImageShadowView" destination="fe7-GE-hL3" id="2hk-ZA-eUV"/>
                 <outlet property="secondaryImageView" destination="Sxz-Ec-Mu0" id="tx3-hV-Wt0"/>
                 <outlet property="selectionMark" destination="3SE-fc-NHX" id="ctZ-15-Yf8"/>
                 <outlet property="tertiaryImageOverlayView" destination="Dyn-sy-3hs" id="6r0-ft-f5q"/>
-                <outlet property="tertiaryImageShadowView" destination="E64-VG-nTI" id="vhA-Zz-hGZ"/>
                 <outlet property="tertiaryImageView" destination="Sd1-hN-MSQ" id="6gt-cH-TxQ"/>
             </connections>
             <point key="canvasLocation" x="147.10144927536234" y="73.325892857142847"/>
@@ -158,9 +130,6 @@
     </objects>
     <resources>
         <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
-        <namedColor name="background">
-            <color red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
