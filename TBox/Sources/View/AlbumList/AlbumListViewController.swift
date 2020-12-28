@@ -252,6 +252,8 @@ class AlbumListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
+        self.navigationItem.leftBarButtonItem?.isEnabled = !editing
+
         let shouldHide = !editing
 
         let cells = self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
