@@ -32,3 +32,5 @@
 
 "adding_alert_action_save" = "Save";
 "adding_alert_action_cancel" = "Cancel";
+
+"album_list_collection_view_cell_count" = "%d clips";

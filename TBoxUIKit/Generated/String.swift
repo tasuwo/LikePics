@@ -14,6 +14,11 @@ internal enum L10n {
     internal static let addingAlertActionCancel = L10n.tr("Localizable", "adding_alert_action_cancel")
     /// 保存
     internal static let addingAlertActionSave = L10n.tr("Localizable", "adding_alert_action_save")
+    /// %d件
+    internal static func albumListCollectionViewCellCount(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "album_list_collection_view_cell_count", p1)
+    }
+
     /// コピー
     internal static let clipInformationViewContextMenuCopy = L10n.tr("Localizable", "clip_information_view_context_menu_copy")
     /// 開く

@@ -30,8 +30,21 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var clipCount: Int? {
+        didSet {
+            if let count = self.clipCount {
+                self.metaLabel.text = L10n.albumListCollectionViewCellCount(count)
+                self.metaLabel.isHidden = false
+            } else {
+                self.metaLabel.text = nil
+                self.metaLabel.isHidden = true
+            }
+        }
+    }
+
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var metaLabel: UILabel!
 
     // MARK: - Methods
 
@@ -42,6 +55,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10
-        self.thumbnailImageView.contentMode = .scaleAspectFit
+        self.thumbnailImageView.contentMode = .scaleAspectFill
+        self.clipCount = nil
     }
 }

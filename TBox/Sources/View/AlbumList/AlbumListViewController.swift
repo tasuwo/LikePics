@@ -92,6 +92,7 @@ class AlbumListViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.albums
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] albums in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
                 snapshot.appendSections([.main])
@@ -148,6 +149,7 @@ class AlbumListViewController: UIViewController {
 
             cell.identifier = album.identity
             cell.title = album.title
+            cell.clipCount = album.clips.count
 
             let thumbnailTarget = album.clips.first?.items.first
             let thumbnail: UIImage? = {
@@ -182,30 +184,30 @@ class AlbumListViewController: UIViewController {
                                                               elementKind: ElementKind.remover.rawValue,
                                                               containerAnchor: removerAnchor)
 
-            let itemWidth: NSCollectionLayoutDimension = {
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .estimated(100))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [remover])
+
+            let count: Int = {
                 switch environment.traitCollection.horizontalSizeClass {
                 case .compact:
-                    return .fractionalWidth(0.5)
+                    return 2
 
                 case .regular, .unspecified:
-                    return .fractionalWidth(0.25)
+                    return 4
 
                 @unknown default:
-                    return .fractionalWidth(0.25)
+                    return 4
                 }
             }()
-            let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth,
-                                                  heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [remover])
-            item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
-
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .fractionalWidth(itemWidth.dimension * 4 / 3))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                                                   heightDimension: .estimated(100))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
+            group.interItemSpacing = .fixed(16)
 
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = CGFloat(16)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
             return section
         }
