@@ -12,6 +12,10 @@ class AlbumListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = AlbumListViewModelType
 
+    enum ElementKind: String {
+        case remover
+    }
+
     enum Section {
         case main
     }
@@ -133,6 +137,11 @@ class AlbumListViewController: UIViewController {
     }
 
     private func configureDataSource() {
+        let supplementaryRegistration = UICollectionView.SupplementaryRegistration<AlbumListRemoverView>(elementKind: ElementKind.remover.rawValue) { [weak self] badgeView, _, _ in
+            badgeView.delegate = self
+            badgeView.isHidden = self?.isEditing == false
+        }
+
         self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, album -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
             guard let self = self, let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
@@ -156,15 +165,23 @@ class AlbumListViewController: UIViewController {
                 }
             }
 
-            cell.delegate = self
-            cell.visibleDeleteButton = self.isEditing
-
             return cell
+        }
+
+        self.dataSource.supplementaryViewProvider = {
+            return self.collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryRegistration, for: $2)
         }
     }
 
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
+            let removerAnchor = NSCollectionLayoutAnchor(edges: [.top, .leading], fractionalOffset: CGPoint(x: -0.45, y: -0.45))
+            let removerSize = NSCollectionLayoutSize(widthDimension: .absolute(44),
+                                                     heightDimension: .absolute(44))
+            let remover = NSCollectionLayoutSupplementaryItem(layoutSize: removerSize,
+                                                              elementKind: ElementKind.remover.rawValue,
+                                                              containerAnchor: removerAnchor)
+
             let itemWidth: NSCollectionLayoutDimension = {
                 switch environment.traitCollection.horizontalSizeClass {
                 case .compact:
@@ -179,7 +196,7 @@ class AlbumListViewController: UIViewController {
             }()
             let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth,
                                                   heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [remover])
             item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
 
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -230,9 +247,8 @@ class AlbumListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        self.collectionView.visibleCells
-            .compactMap { $0 as? AlbumListCollectionViewCell }
-            .forEach { $0.visibleDeleteButton = editing }
+        self.collectionView.visibleSupplementaryViews(ofKind: ElementKind.remover.rawValue)
+            .forEach { $0.isHidden = !editing }
     }
 }
 
@@ -260,11 +276,11 @@ extension AlbumListViewController: UICollectionViewDelegate {
     }
 }
 
-extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
-    // MARK: - AlbumListCollectionViewCellDelegate
+extension AlbumListViewController: AlbumListRemoverViewDelegate {
+    // MARK: - AlbumListRemoverViewDelegate
 
-    func didTapDeleteButton(_ cell: AlbumListCollectionViewCell) {
-        guard let indexPath = self.collectionView.indexPath(for: cell),
+    func albumListRemoverView(_ view: AlbumListRemoverView) {
+        guard let indexPath = self.collectionView.indexPath(for: view, ofKind: ElementKind.remover.rawValue),
             let album = self.dataSource.itemIdentifier(for: indexPath)
         else {
             return
@@ -280,7 +296,7 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
-        alert.popoverPresentationController?.sourceView = cell.deleteButtonPlacement
+        alert.popoverPresentationController?.sourceView = view
 
         self.present(alert, animated: true, completion: nil)
     }
