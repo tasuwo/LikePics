@@ -44,6 +44,8 @@ internal enum L10n {
     internal static let albumListViewErrorAtAddAlbum = L10n.tr("Localizable", "album_list_view_error_at_add_album")
     /// アルバムの削除に失敗しました
     internal static let albumListViewErrorAtDeleteAlbum = L10n.tr("Localizable", "album_list_view_error_at_delete_album")
+    /// アルバムタイトルの更新に失敗しました
+    internal static let albumListViewErrorAtEditAlbum = L10n.tr("Localizable", "album_list_view_error_at_edit_album")
     /// アルバムの読み込みに失敗しました
     internal static let albumListViewErrorAtReadAlbums = L10n.tr("Localizable", "album_list_view_error_at_read_albums")
     /// 画像の読み込みに失敗しました

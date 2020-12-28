@@ -20,8 +20,52 @@ protocol SelectableImageCellDataSource {
 }
 
 public class ClipCreationViewController: UIViewController {
+    // MARK: - Type Aliases
+
     typealias Factory = ViewControllerFactory
     typealias Dependency = ClipCreationViewModelType
+
+    // MARK: - Enums
+
+    enum Section: Int {
+        case tag
+        case image
+    }
+
+    enum Item: Hashable {
+        case tagAddition
+        case tag(Tag)
+        case image(ImageSource)
+
+        var identifier: String {
+            switch self {
+            case .tagAddition:
+                return "tag-addition"
+
+            case let .tag(tag):
+                return tag.id.uuidString
+
+            case let .image(source):
+                return source.identifier.uuidString
+            }
+        }
+    }
+
+    // MARK: - Properties
+
+    // MARK: Factory
+
+    private let factory: Factory
+
+    // MARK: Dependency
+
+    private let viewModel: Dependency
+
+    // MARK: IBOutlets
+
+    @IBOutlet var indicator: UIActivityIndicatorView!
+
+    // MARK: Views
 
     private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
                                                 target: self,
@@ -31,18 +75,15 @@ public class ClipCreationViewController: UIViewController {
                                                   target: self,
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
-    @IBOutlet var collectionView: ClipSelectionCollectionView!
-    @IBOutlet var selectedTagListContainer: UIView!
-    @IBOutlet var selectedTagListContainerHeight: NSLayoutConstraint!
-    @IBOutlet var indicator: UIActivityIndicatorView!
-    @IBOutlet var baseScrollView: UIScrollView!
+    private var collectionView: UICollectionView!
 
-    private let factory: Factory
-    private let viewModel: ClipCreationViewModelType
+    // MARK: Services
+
     private let thumbnailLoader: ThumbnailLoaderProtocol = ThumbnailLoader()
 
-    private let selectedTagViewController: ClipCreationSelectedTagsViewController
+    // MARK: States
 
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellableBag = Set<AnyCancellable>()
     private weak var delegate: ClipCreationDelegate?
 
@@ -50,17 +91,12 @@ public class ClipCreationViewController: UIViewController {
 
     public init(factory: ViewControllerFactory,
                 viewModel: ClipCreationViewModelType,
-                tagsViewModel: ClipCreationSelectedTagsViewModelType,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory
         self.viewModel = viewModel
         self.delegate = delegate
-        self.selectedTagViewController = ClipCreationSelectedTagsViewController(factory: factory,
-                                                                                viewModel: tagsViewModel)
         super.init(nibName: "ClipCreationViewController", bundle: Bundle(for: Self.self))
-
-        self.addChild(self.selectedTagViewController)
     }
 
     @available(*, unavailable)
@@ -68,20 +104,8 @@ public class ClipCreationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Methods
-
-    // MARK: Lifecycle
-
     override public func viewDidLoad() {
         super.viewDidLoad()
-
-        self.selectedTagViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        self.selectedTagListContainer.addSubview(self.selectedTagViewController.view)
-        NSLayoutConstraint.activate(self.selectedTagListContainer.constraints(fittingIn: self.selectedTagViewController.view))
-
-        if let layout = self.collectionView?.collectionViewLayout as? ClipCollectionLayout {
-            layout.delegate = self
-        }
 
         self.setupAppearance()
         self.setupCollectionView()
@@ -93,6 +117,14 @@ public class ClipCreationViewController: UIViewController {
         self.viewModel.inputs.viewLoaded.send(self.view)
         self.viewModel.inputs.startedFindingImage.send(())
     }
+
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.viewModel.inputs.viewDidAppear.send(())
+    }
+
+    // MARK: - Methods
 
     private func setupAppearance() {
         self.indicator.hidesWhenStopped = true
@@ -118,10 +150,9 @@ public class ClipCreationViewController: UIViewController {
             .assign(to: \.isEnabled, on: self.itemDone)
             .store(in: &self.cancellableBag)
 
-        // TODO: 将来的にScrollViewをCollectionViewに置き換える
         dependency.outputs.displayCollectionView
             .map { !$0 }
-            .assign(to: \.isHidden, on: self.baseScrollView)
+            .assign(to: \.isHidden, on: self.collectionView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.displayEmptyMessage
@@ -129,8 +160,10 @@ public class ClipCreationViewController: UIViewController {
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.images
-            .sink { [weak self] _ in self?.collectionView.reloadData() }
+        dependency.outputs.tags
+            .combineLatest(dependency.outputs.images)
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] tags, images in self?.apply(tags: tags, images: images) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selectedIndices
@@ -138,7 +171,7 @@ public class ClipCreationViewController: UIViewController {
                 guard let self = self else { return }
 
                 indices.enumerated().forEach { idx, index in
-                    guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? ClipSelectionCollectionViewCell else { return }
+                    guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: Section.image.rawValue)) as? ClipSelectionCollectionViewCell else { return }
                     cell.selectionOrder = idx + 1
                 }
 
@@ -158,7 +191,7 @@ public class ClipCreationViewController: UIViewController {
         dependency.outputs.displayAlert
             .sink { [weak self] title, message in
                 let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(.init(title: L10n.clipCreationViewOverwriteAlertOk, style: .default, handler: nil))
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
@@ -169,29 +202,138 @@ public class ClipCreationViewController: UIViewController {
                 self.delegate?.didFinish(self)
             }
             .store(in: &self.cancellableBag)
+    }
 
-        self.selectedTagViewController.viewModel.outputs.tags
-            .sink { [weak self] tags in
-                self?.viewModel.inputs.selectedTags.send(tags)
-            }
-            .store(in: &self.cancellableBag)
-
-        self.selectedTagViewController.contentViewHeight
-            // HACK: CollectionView更新後即座に `layoutIfNeeded` を呼び出すとクラッシュするため、その回避
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .sink { [weak self] height in
-                self?.selectedTagListContainerHeight.constant = height
-                UIView.animate(withDuration: 0.2) { [weak self] in
-                    self?.view.layoutIfNeeded()
-                }
-            }
-            .store(in: &self.cancellableBag)
+    private func apply(tags: [Tag], images: [ImageSource]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.tag])
+        snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
+        snapshot.appendSections([.image])
+        snapshot.appendItems(images.map({ Item.image($0) }))
+        self.dataSource.apply(snapshot)
     }
 
     // MARK: CollectionView
 
     private func setupCollectionView() {
-        self.collectionView.backgroundColor = Asset.Color.background.color
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Self.createLayout())
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.backgroundColor = Asset.Color.background.color
+        collectionView.contentInsetAdjustmentBehavior = .always
+        collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = true
+        collectionView.delegate = self
+        collectionView.isHidden = true
+
+        view.addSubview(collectionView)
+
+        configureDataSource()
+    }
+
+    private func configureDataSource() {
+        let additionCellRegistration = UICollectionView.CellRegistration<TagCollectionAdditionCell, Void>(cellNib: TagCollectionAdditionCell.nib) { [weak self] cell, _, _ in
+            cell.title = L10n.clipCreationViewAdditionTitle
+            cell.delegate = self
+        }
+
+        let tagCellRegistration = UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak self] cell, _, tag in
+            cell.title = tag.name
+            cell.displayMode = .normal
+            cell.visibleCountIfPossible = false
+            cell.visibleDeleteButton = true
+            cell.delegate = self
+        }
+
+        let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak self] cell, indexPath, source in
+            guard let self = self else { return }
+
+            cell.id = source.identifier
+
+            self.thumbnailLoader.load(from: source)
+                .filter { _ in cell.id == source.identifier }
+                .receive(on: DispatchQueue.main)
+                .assign(to: \.image, on: cell)
+                .store(in: &self.cancellableBag)
+
+            if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
+                cell.selectionOrder = indexInSelection + 1
+            }
+        }
+
+        self.dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
+            switch item {
+            case .tagAddition:
+                return collectionView.dequeueConfiguredReusableCell(using: additionCellRegistration, for: indexPath, item: ())
+
+            case let .tag(tag):
+                return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
+
+            case let .image(source):
+                return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: source)
+            }
+        }
+    }
+
+    private static func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
+            switch Section(rawValue: sectionIndex) {
+            case .tag:
+                return self.createTagsLayoutSection()
+
+            case .image:
+                return self.createImageLayoutSection(for: environment)
+
+            case .none:
+                return nil
+            }
+        }
+        return layout
+    }
+
+    private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
+                                              heightDimension: .estimated(32))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(32))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(16)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = CGFloat(16)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        return section
+    }
+
+    private static func createImageLayoutSection(for environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let count: Int = {
+            switch environment.traitCollection.horizontalSizeClass {
+            case .compact:
+                return 2
+
+            case .regular, .unspecified:
+                return 3
+
+            @unknown default:
+                return 3
+            }
+        }()
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
+        group.interItemSpacing = .fixed(16)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = CGFloat(16)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16)
+
+        return section
     }
 
     // MARK: NavigationBar
@@ -239,75 +381,28 @@ extension ClipCreationViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
+        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
+        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return self.viewModel.outputs.images.value.indices.contains(indexPath.row)
+        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard case .image = Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.select.send(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard case .image = Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.deselect.send(indexPath.row)
-    }
-}
-
-extension ClipCreationViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel.outputs.images.value.count
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: self.collectionView).cellIdentifier, for: indexPath)
-        guard let cell = dequeuedCell as? ClipSelectionCollectionViewCell else { return dequeuedCell }
-        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row) else { return cell }
-
-        let source = self.viewModel.outputs.images.value[indexPath.row]
-        cell.id = source.identifier
-
-        self.thumbnailLoader.load(from: source)
-            .receive(on: DispatchQueue.main)
-            .sink { image in
-                guard cell.id == source.identifier else { return }
-                cell.image = image
-            }
-            .store(in: &self.cancellableBag)
-
-        if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
-            cell.selectionOrder = indexInSelection + 1
-        }
-
-        return cell
-    }
-}
-
-extension ClipCreationViewController: ClipsCollectionLayoutDelegate {
-    // MARK: - ClipsCollectionLayoutDelegate
-
-    public func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
-        guard self.viewModel.outputs.images.value.indices.contains(indexPath.row),
-            let size = self.viewModel.outputs.images.value[indexPath.row].resolveSize()
-        else {
-            return .zero
-        }
-        return width * CGFloat(size.height / size.width)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, heightForHeaderAtIndexPath indexPath: IndexPath) -> CGFloat {
-        return .zero
     }
 }
 
@@ -316,5 +411,44 @@ extension ClipCreationViewController: EmptyMessageViewDelegate {
 
     public func didTapActionButton(_ view: EmptyMessageView) {
         self.viewModel.inputs.startedFindingImage.send(())
+    }
+}
+
+extension ClipCreationViewController: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    public func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let item = self.dataSource.itemIdentifier(for: indexPath),
+            case let .tag(tag) = item
+        else {
+            return
+        }
+        self.viewModel.inputs.delete.send(tag)
+    }
+}
+
+extension ClipCreationViewController: TagCollectionAdditionCellDelegate {
+    // MARK: - TagCollectionAdditionCellDelegate
+
+    public func didTap(_ cell: TagCollectionAdditionCell) {
+        guard let parent = self.parent else {
+            RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to resolve parent view controller for opening tag selection view"))
+            return
+        }
+        let selectedTags = Set(self.viewModel.outputs.tags.value.map({ $0.identity }))
+        guard let nextVC = self.factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else {
+            RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to open tag selection view"))
+            return
+        }
+        parent.present(nextVC, animated: true, completion: nil)
+    }
+}
+
+extension ClipCreationViewController: TagSelectionViewControllerDelegate {
+    // MARK: - TagSelectionViewControllerDelegate
+
+    public func didSelectTags(tags: [Tag]) {
+        self.viewModel.inputs.replace.send(tags)
     }
 }

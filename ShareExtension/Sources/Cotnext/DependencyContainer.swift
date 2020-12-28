@@ -62,7 +62,6 @@ extension DependencyContainer: ViewControllerFactory {
                                           viewModel: ClipCreationViewModel(url: url,
                                                                            clipStore: self.clipStore,
                                                                            provider: WebImageSourceProvider(url: url)),
-                                          tagsViewModel: ClipCreationSelectedTagsViewModel(),
                                           delegate: delegate)
     }
 
@@ -71,7 +70,6 @@ extension DependencyContainer: ViewControllerFactory {
                                           viewModel: ClipCreationViewModel(url: nil,
                                                                            clipStore: self.clipStore,
                                                                            provider: RawImageSourceProvider(imageDataSet: data)),
-                                          tagsViewModel: ClipCreationSelectedTagsViewModel(),
                                           delegate: delegate)
     }
 }

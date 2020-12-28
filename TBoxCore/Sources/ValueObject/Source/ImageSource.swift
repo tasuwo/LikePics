@@ -4,8 +4,8 @@
 
 import CoreGraphics
 
-public struct ImageSource {
-    enum Value {
+public struct ImageSource: Hashable {
+    enum Value: Hashable {
         case urlSet(WebImageUrlSet)
         case rawData(Data)
     }

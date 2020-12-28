@@ -8,9 +8,6 @@
 
 "clip_creation_view_title" = "Select Image";
 "clip_creation_view_addition_title" = "Add Tags";
-"clip_creation_view_overwrite_alert_body" = "This url is already clipped. Overwrite it?";
-"clip_creation_view_overwrite_alert_ok" = "OK";
-"clip_creation_view_overwrite_alert_cancel" = "Cancel";
 
 "clip_creation_view_loading_error_not_found_title" = "No Images Found";
 "clip_creation_view_loading_error_not_found_message" = "Please check the following.\n\n・Bad connection\n・No downloadable images\n・The images are protected\n\nPlease retry a few times or try to share the other web site.";

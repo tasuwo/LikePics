@@ -225,9 +225,7 @@
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
 		2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */; };
 		2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */; };
-		2CA9DBE12584325A00D88ED4 /* ClipCreationSelectedTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBE02584325A00D88ED4 /* ClipCreationSelectedTagsViewController.swift */; };
 		2CA9DBEB258598E700D88ED4 /* UIView+ConstraintFittingIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */; };
-		2CA9DBF5258599F700D88ED4 /* ClipCreationSelectedTagsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBF4258599F700D88ED4 /* ClipCreationSelectedTagsViewModel.swift */; };
 		2CA9DC1C25860DDF00D88ED4 /* TagCollectionAdditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC1B25860DDF00D88ED4 /* TagCollectionAdditionCell.swift */; };
 		2CA9DC2E25860E8F00D88ED4 /* TagCollectionAdditionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CA9DC2D25860E8F00D88ED4 /* TagCollectionAdditionCell.xib */; };
 		2CA9DC3925861AEC00D88ED4 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC3825861AEC00D88ED4 /* ViewControllerFactory.swift */; };
@@ -890,9 +888,7 @@
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLinkingClipsQuery.swift; sourceTree = "<group>"; };
 		2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionProvider.swift; sourceTree = "<group>"; };
-		2CA9DBE02584325A00D88ED4 /* ClipCreationSelectedTagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationSelectedTagsViewController.swift; sourceTree = "<group>"; };
 		2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintFittingIn.swift"; sourceTree = "<group>"; };
-		2CA9DBF4258599F700D88ED4 /* ClipCreationSelectedTagsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationSelectedTagsViewModel.swift; sourceTree = "<group>"; };
 		2CA9DC1B25860DDF00D88ED4 /* TagCollectionAdditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionAdditionCell.swift; sourceTree = "<group>"; };
 		2CA9DC2D25860E8F00D88ED4 /* TagCollectionAdditionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagCollectionAdditionCell.xib; sourceTree = "<group>"; };
 		2CA9DC3825861AEC00D88ED4 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
@@ -1631,7 +1627,6 @@
 			children = (
 				2C2AB05F24DEF7BA007E2B18 /* ClipCreationViewController.swift */,
 				2C2AB06724DF00B0007E2B18 /* ClipCreationViewController.xib */,
-				2CA9DBE02584325A00D88ED4 /* ClipCreationSelectedTagsViewController.swift */,
 			);
 			path = ClipCreation;
 			sourceTree = "<group>";
@@ -1640,7 +1635,6 @@
 			isa = PBXGroup;
 			children = (
 				2C2AB06524DEFAF1007E2B18 /* ClipCreationViewModel.swift */,
-				2CA9DBF4258599F700D88ED4 /* ClipCreationSelectedTagsViewModel.swift */,
 			);
 			path = ClipCreation;
 			sourceTree = "<group>";
@@ -3900,8 +3894,6 @@
 				2C6E09A024E6DD4400B541D9 /* ClipCreationViewController.swift in Sources */,
 				2CA9DC3925861AEC00D88ED4 /* ViewControllerFactory.swift in Sources */,
 				2C553298259252730086B36B /* RawImageSourceProvider.swift in Sources */,
-				2CA9DBF5258599F700D88ED4 /* ClipCreationSelectedTagsViewModel.swift in Sources */,
-				2CA9DBE12584325A00D88ED4 /* ClipCreationSelectedTagsViewController.swift in Sources */,
 				2C0512A0254EECF9007964B7 /* WebImageProvidingService_Twitter.swift in Sources */,
 				2C0512FA254EF0F1007964B7 /* WebImageUrlSet.swift in Sources */,
 			);

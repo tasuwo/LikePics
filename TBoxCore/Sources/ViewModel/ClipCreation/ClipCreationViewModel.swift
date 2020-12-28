@@ -14,19 +14,22 @@ public protocol ClipCreationViewModelType {
 
 public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
+    var viewDidAppear: PassthroughSubject<Void, Never> { get }
 
     var startedFindingImage: PassthroughSubject<Void, Never> { get }
     var saveImages: PassthroughSubject<Void, Never> { get }
 
+    var delete: PassthroughSubject<Tag, Never> { get }
+    var replace: PassthroughSubject<[Tag], Never> { get }
+
     var select: PassthroughSubject<Int, Never> { get }
     var deselect: PassthroughSubject<Int, Never> { get }
-
-    var selectedTags: PassthroughSubject<[Tag], Never> { get }
 }
 
 public protocol ClipCreationViewModelOutputs {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
+    var tags: CurrentValueSubject<[Tag], Never> { get }
     var images: CurrentValueSubject<[ImageSource], Never> { get }
     var selectedIndices: CurrentValueSubject<[Int], Never> { get }
 
@@ -65,9 +68,13 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     // MARK: ClipCreationViewModelInputs
 
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
+    public let viewDidAppear: PassthroughSubject<Void, Never> = .init()
 
     public var startedFindingImage: PassthroughSubject<Void, Never> = .init()
     public var saveImages: PassthroughSubject<Void, Never> = .init()
+
+    public var delete: PassthroughSubject<Tag, Never> = .init()
+    public var replace: PassthroughSubject<[Tag], Never> = .init()
 
     public var select: PassthroughSubject<Int, Never> = .init()
     public var deselect: PassthroughSubject<Int, Never> = .init()
@@ -78,14 +85,15 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
+    public var tags: CurrentValueSubject<[Tag], Never> = .init([])
     public var images: CurrentValueSubject<[ImageSource], Never> = .init([])
     public var selectedIndices: CurrentValueSubject<[Int], Never> = .init([])
 
     public var isReloadItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
     public var isDoneItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
-    public var displayCollectionView: CurrentValueSubject<Bool, Never> = .init(true)
-    public var displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(true)
+    public var displayCollectionView: CurrentValueSubject<Bool, Never> = .init(false)
+    public var displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
 
     public var didFinish: PassthroughSubject<Void, Never> = .init()
 
@@ -96,7 +104,6 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     // MARK: Privates
 
-    private var tags: [Tag] = []
     private var cancellableBag = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
@@ -164,22 +171,30 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.select
-            .sink { [weak self] index in
-                self?.selectItem(at: index)
+        self.delete
+            .sink { [weak self] tag in
+                guard var newTags = self?.tags.value,
+                    let index = newTags.firstIndex(of: tag)
+                else {
+                    return
+                }
+                newTags.remove(at: index)
+                self?.tags.send(newTags)
             }
+            .store(in: &self.cancellableBag)
+
+        self.replace
+            .sink { [weak self] tags in
+                self?.tags.send(tags)
+            }
+            .store(in: &self.cancellableBag)
+
+        self.select
+            .sink { [weak self] index in self?.selectItem(at: index) }
             .store(in: &self.cancellableBag)
 
         self.deselect
-            .sink { [weak self] index in
-                self?.deselectItem(at: index)
-            }
-            .store(in: &self.cancellableBag)
-
-        self.selectedTags
-            .sink { [weak self] tags in
-                self?.tags = tags
-            }
+            .sink { [weak self] index in self?.deselectItem(at: index) }
             .store(in: &self.cancellableBag)
 
         // MARK: Outputs
@@ -200,7 +215,10 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
         self.images
             .map { !$0.isEmpty }
-            .sink { [weak self] isEmpty in self?.displayCollectionView.send(isEmpty) }
+            // 描画直後はCollectionViewのboundsが不正なので、調整されるまで待つ
+            .combineLatest(self.viewDidAppear)
+            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .sink { [weak self] isEmpty, _ in self?.displayCollectionView.send(isEmpty) }
             .store(in: &self.cancellableBag)
 
         self.images
@@ -214,7 +232,6 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         self.isLoading.send(true)
 
         self.images.send([])
-        self.selectedIndices.send([])
 
         self.provider.resolveSources()
             .map { sources in sources.filter { $0.isValid } }
@@ -314,7 +331,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     // MARK: Save Images
 
     private func save(sources: [ClipItemSource]) -> Result<Void, DownloadError> {
-        let result = self.clipBuilder.build(sources: sources, tags: self.tags)
+        let result = self.clipBuilder.build(sources: sources, tags: self.tags.value)
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())

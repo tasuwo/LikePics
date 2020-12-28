@@ -40,12 +40,6 @@ internal enum L10n {
     internal static let clipCreationViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
     internal static let clipCreationViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_title")
-    /// 既にクリップ済みのURLです。上書きしますか？
-    internal static let clipCreationViewOverwriteAlertBody = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_body")
-    /// キャンセル
-    internal static let clipCreationViewOverwriteAlertCancel = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_cancel")
-    /// OK
-    internal static let clipCreationViewOverwriteAlertOk = L10n.tr("Localizable", "clip_creation_view_overwrite_alert_ok")
     /// 画像を選択
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// OK
