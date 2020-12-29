@@ -366,6 +366,10 @@
 		2CFC5D1A250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */; };
 		2CFDF212259AF3A800C97A6A /* ImageUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF211259AF3A800C97A6A /* ImageUtility.swift */; };
 		2CFDF252259B02D700C97A6A /* ThumbnailLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF251259B02D700C97A6A /* ThumbnailLoader.swift */; };
+		2CFDF265259B1C2D00C97A6A /* ThumbnailProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF264259B1C2D00C97A6A /* ThumbnailProvidable.swift */; };
+		2CFDF277259B1E3C00C97A6A /* ThumbnailProvidable+TBoxUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF276259B1E3C00C97A6A /* ThumbnailProvidable+TBoxUIKit.swift */; };
+		2CFDF281259B1F4C00C97A6A /* ThumbnailRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF280259B1F4C00C97A6A /* ThumbnailRenderable.swift */; };
+		2CFDF28B259B1F8300C97A6A /* Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF28A259B1F8300C97A6A /* Thumbnail.swift */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
 		A23DF61484F1653DE1630077 /* Pods_TBoxTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */; };
@@ -1024,6 +1028,10 @@
 		2CFC5D19250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationPresentedAnimatorDataSource.swift; sourceTree = "<group>"; };
 		2CFDF211259AF3A800C97A6A /* ImageUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtility.swift; sourceTree = "<group>"; };
 		2CFDF251259B02D700C97A6A /* ThumbnailLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoader.swift; sourceTree = "<group>"; };
+		2CFDF264259B1C2D00C97A6A /* ThumbnailProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvidable.swift; sourceTree = "<group>"; };
+		2CFDF276259B1E3C00C97A6A /* ThumbnailProvidable+TBoxUIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailProvidable+TBoxUIKit.swift"; sourceTree = "<group>"; };
+		2CFDF280259B1F4C00C97A6A /* ThumbnailRenderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRenderable.swift; sourceTree = "<group>"; };
+		2CFDF28A259B1F8300C97A6A /* Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thumbnail.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debugdev.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debugdev.xcconfig"; sourceTree = "<group>"; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1644,6 +1652,7 @@
 		2C3CCDAD24F2C4B500FAC660 /* ClipCollection */ = {
 			isa = PBXGroup;
 			children = (
+				2CFDF263259B1C2200C97A6A /* Thumbnail */,
 				2CB4792125986E2400BB87A3 /* Components */,
 				2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */,
 				2CB3CB3D2515EFF900BE06E5 /* ClipCollectionAlertPresentable.swift */,
@@ -2876,6 +2885,17 @@
 				2CFDF251259B02D700C97A6A /* ThumbnailLoader.swift */,
 			);
 			path = ThumbnailLoader;
+			sourceTree = "<group>";
+		};
+		2CFDF263259B1C2200C97A6A /* Thumbnail */ = {
+			isa = PBXGroup;
+			children = (
+				2CFDF28A259B1F8300C97A6A /* Thumbnail.swift */,
+				2CFDF264259B1C2D00C97A6A /* ThumbnailProvidable.swift */,
+				2CFDF276259B1E3C00C97A6A /* ThumbnailProvidable+TBoxUIKit.swift */,
+				2CFDF280259B1F4C00C97A6A /* ThumbnailRenderable.swift */,
+			);
+			path = Thumbnail;
 			sourceTree = "<group>";
 		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
@@ -4121,6 +4141,7 @@
 				2CDA49D32516EF400043DC14 /* ClipPreviewPageBarViewModel.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
 				2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */,
+				2CFDF265259B1C2D00C97A6A /* ThumbnailProvidable.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
@@ -4133,10 +4154,13 @@
 				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* TagSelectionPresenter.swift in Sources */,
 				2CB3CB482515F29C00BE06E5 /* ClipCollectionToolBarViewModel.swift in Sources */,
+				2CFDF281259B1F4C00C97A6A /* ThumbnailRenderable.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarViewController.swift in Sources */,
 				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
+				2CFDF28B259B1F8300C97A6A /* Thumbnail.swift in Sources */,
 				2CDF4F4F2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift in Sources */,
+				2CFDF277259B1E3C00C97A6A /* ThumbnailProvidable+TBoxUIKit.swift in Sources */,
 				2C1E445A257B5AC200A067B1 /* ClipCollection_NavigationItem.swift in Sources */,
 				2CB3CB342515EEBC00BE06E5 /* ClipCollectionToolBarProvider.swift in Sources */,
 				2C753C4625963C6200715482 /* ClipMergeViewModel.swift in Sources */,
