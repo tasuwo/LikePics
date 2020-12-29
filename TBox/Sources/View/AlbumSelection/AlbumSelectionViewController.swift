@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 import TBoxUIKit
 import UIKit
@@ -13,8 +14,18 @@ class AlbumSelectionViewController: UIViewController {
         case main
     }
 
+    // MARK: - Properties
+
+    // MARK: Factory
+
     private let factory: Factory
+
+    // MARK: Dependency
+
     private let presenter: AlbumSelectionPresenter
+
+    // MARK: View
+
     private let emptyMessageView = EmptyMessageView()
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
@@ -25,11 +36,24 @@ class AlbumSelectionViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, Album>!
     private var tableView: AlbumSelectionTableView!
 
+    // MARK: Thumbnail
+
+    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
+
+    // MARK: States
+
+    private var cancellableBag = Set<AnyCancellable>()
+
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: AlbumSelectionPresenter) {
+    init(factory: Factory,
+         presenter: AlbumSelectionPresenter,
+         thumbnailLoader: ThumbnailLoader)
+    {
         self.factory = factory
         self.presenter = presenter
+        self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
 
         self.presenter.view = self
@@ -84,17 +108,22 @@ class AlbumSelectionViewController: UIViewController {
             cell.identifier = album.identity
             cell.title = album.title
 
-            if let image = self?.presenter.readImageIfExists(for: album) {
-                cell.thumbnail = image
-            } else {
+            guard let self = self else { return cell }
+
+            guard let thumbnailTarget = album.clips.first?.items.first else {
                 cell.thumbnail = nil
-                self?.presenter.fetchImage(for: album) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == album.identity else { return }
-                        cell.thumbnail = image
-                    }
-                }
+                return cell
             }
+            // TODO: アルバムにあったサムネイルをロードする
+            // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: thumbnailTarget)
+            // let scale = tableView.traitCollection.displayScale
+            // self.thumbnailLoadQueue.async {
+            //     self.thumbnailLoader.load(for: thumbnailTarget, pointSize: imageViewSize, scale: scale)
+            //         .filter { _ in cell.identifier == album.identity }
+            //         .receive(on: DispatchQueue.main)
+            //         .assign(to: \.thumbnail, on: cell)
+            //         .store(in: &self.cancellableBag)
+            // }
 
             return cell
         }

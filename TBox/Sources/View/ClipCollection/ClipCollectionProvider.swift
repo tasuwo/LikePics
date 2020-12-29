@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 import TBoxUIKit
 import UIKit
@@ -9,8 +10,6 @@ import UIKit
 protocol ClipCollectionProviderDataSource: AnyObject {
     func isEditing(_ provider: ClipCollectionProvider) -> Bool
     func clipCollectionProvider(_ provider: ClipCollectionProvider, clipFor indexPath: IndexPath) -> Clip?
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage?
-    func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void)
     func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type
     func clipsListCollectionMenuContext(_ provider: ClipCollectionProvider) -> ClipCollection.Context
 }
@@ -28,9 +27,25 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath)
 }
 
-class ClipCollectionProvider: NSObject {
+class ClipCollectionProvider: NSObject, ThumbnailRenderable {
+    // MARK: - Properties
+
     weak var dataSource: ClipCollectionProviderDataSource?
     weak var delegate: ClipCollectionProviderDelegate?
+
+    // MARK: ThumbnailRenderable
+
+    let thumbnailLoadingQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionProvider.thumbnailLoad")
+    let thumbnailLoader: ThumbnailLoaderProtocol
+    var cancellableBag = Set<AnyCancellable>()
+
+    // MARK: - Lifecycle
+
+    init(thumbnailLoader: ThumbnailLoaderProtocol) {
+        self.thumbnailLoader = thumbnailLoader
+    }
+
+    // MARK: - Methods
 
     func provideCell(collectionView: UICollectionView, indexPath: IndexPath, clip: Clip) -> UICollectionViewCell? {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipCollectionView.cellIdentifier, for: indexPath)
@@ -41,65 +56,18 @@ class ClipCollectionProvider: NSObject {
         cell.secondaryImage = nil
         cell.tertiaryImage = nil
 
-        if let item = clip.primaryItem {
-            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.primaryImage = .loaded(image)
-            } else {
-                cell.primaryImage = .loading
-                self.dataSource?.requestImage(self, for: item) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == clip.identity else { return }
-                        if let image = image {
-                            cell.primaryImage = .loaded(image)
-                        } else {
-                            cell.primaryImage = .failedToLoad
-                        }
-                    }
-                }
-            }
-        } else {
-            cell.primaryImage = .noImage
-        }
-
-        if let item = clip.secondaryItem {
-            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.secondaryImage = .loaded(image)
-            } else {
-                cell.secondaryImage = .loading
-                self.dataSource?.requestImage(self, for: item) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == clip.identity else { return }
-                        if let image = image {
-                            cell.secondaryImage = .loaded(image)
-                        } else {
-                            cell.secondaryImage = .failedToLoad
-                        }
-                    }
-                }
-            }
-        } else {
-            cell.secondaryImage = .noImage
-        }
-
-        if let item = clip.tertiaryItem {
-            if let image = self.dataSource?.clipCollectionProvider(self, imageFor: item) {
-                cell.tertiaryImage = .loaded(image)
-            } else {
-                cell.tertiaryImage = .loading
-                self.dataSource?.requestImage(self, for: item) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == clip.identity else { return }
-                        if let image = image {
-                            cell.tertiaryImage = .loaded(image)
-                        } else {
-                            cell.tertiaryImage = .failedToLoad
-                        }
-                    }
-                }
-            }
-        } else {
-            cell.tertiaryImage = .noImage
-        }
+        self.load(clip.primaryItem,
+                  to: cell,
+                  context: ClipCollectionViewCellThumbnailContext.primary,
+                  traitCollection: collectionView.traitCollection)
+        self.load(clip.secondaryItem,
+                  to: cell,
+                  context: ClipCollectionViewCellThumbnailContext.secondary,
+                  traitCollection: collectionView.traitCollection)
+        self.load(clip.tertiaryItem,
+                  to: cell,
+                  context: ClipCollectionViewCellThumbnailContext.tertiary,
+                  traitCollection: collectionView.traitCollection)
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false
 
@@ -276,6 +244,23 @@ extension ClipCollectionProvider: ClipsCollectionLayoutDelegate {
 
         default:
             return width
+        }
+    }
+}
+
+extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
+    // MARK: - UICollectionViewDataSourcePrefetching
+
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        guard let layout = collectionView.collectionViewLayout as? ClipCollectionLayout else { return }
+        for indexPath in indexPaths {
+            guard let attribute = layout.layoutAttributesForItem(at: indexPath) else { return }
+            guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
+            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
+            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
+            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
+            self.prefetch(clip.secondaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
+            self.prefetch(clip.tertiaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
         }
     }
 }

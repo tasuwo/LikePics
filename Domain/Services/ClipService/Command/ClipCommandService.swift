@@ -8,7 +8,7 @@ public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorageProtocol
-    let thumbnailStorage: ThumbnailStorageProtocol
+    let thumbnailLoader: ThumbnailLoader
     let logger: TBoxLoggable
     let queue: DispatchQueue
 
@@ -19,14 +19,14 @@ public class ClipCommandService {
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: NewImageStorageProtocol,
-                thumbnailStorage: ThumbnailStorageProtocol,
+                thumbnailLoader: ThumbnailLoader,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
-        self.thumbnailStorage = thumbnailStorage
+        self.thumbnailLoader = thumbnailLoader
         self.logger = logger
         self.queue = queue
     }
@@ -690,7 +690,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try? self.imageStorage.delete(having: item.imageId)
-                self.thumbnailStorage.deleteThumbnailCacheIfExists(for: clipItem)
+                self.thumbnailLoader.delete(for: clipItem)
 
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()

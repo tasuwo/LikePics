@@ -83,7 +83,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: Privates
 
     private let query: ClipItemQuery
-    private let thumbnailStorage: ThumbnailStorageProtocol
+    private let thumbnailLoader: ThumbnailLoader
     private let imageQueryService: NewImageQueryServiceProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipPreviewViewModel")
@@ -96,12 +96,12 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: - Lifecycle
 
     init(query: ClipItemQuery,
-         thumbnailStorage: ThumbnailStorageProtocol,
+         thumbnailLoader: ThumbnailLoader,
          imageQueryService: NewImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
-        self.thumbnailStorage = thumbnailStorage
+        self.thumbnailLoader = thumbnailLoader
         self.imageQueryService = imageQueryService
         self.logger = logger
 
@@ -139,17 +139,19 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
                     self.preferredLazyLoadTiming = .viewDidAppear
                 }
 
-                if let image = self.thumbnailStorage.readThumbnailIfExists(for: item) {
-                    self.state = .thumbnailLoaded
-                    return image
-                } else {
-                    self.thumbnailStorage.requestThumbnail(for: item) { [weak self] image in
-                        guard let self = self, let image = image, self.state == .loading else { return }
-                        self.state = .thumbnailLoaded
-                        self.imageLoaded.send(image)
-                    }
-                    return nil
-                }
+                // TODO: 低画質画像のロードを行う
+                // if let image = self.thumbnailStorage.readThumbnailIfExists(for: item) {
+                //     self.state = .thumbnailLoaded
+                //     return image
+                // } else {
+                //     self.thumbnailStorage.requestThumbnail(for: item) { [weak self] image in
+                //         guard let self = self, let image = image, self.state == .loading else { return }
+                //         self.state = .thumbnailLoaded
+                //         self.imageLoaded.send(image)
+                //     }
+                //     return nil
+                // }
+                return nil
             }
         }
     }

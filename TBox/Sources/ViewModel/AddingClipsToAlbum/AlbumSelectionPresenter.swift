@@ -22,7 +22,6 @@ class AlbumSelectionPresenter {
     private let query: AlbumListQuery
     private let context: Any?
     private let clipCommandService: ClipCommandServiceProtocol
-    private let thumbnailStorage: ThumbnailStorageProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
@@ -50,14 +49,12 @@ class AlbumSelectionPresenter {
     init(query: AlbumListQuery,
          context: Any?,
          clipCommandService: ClipCommandServiceProtocol,
-         thumbnailStorage: ThumbnailStorageProtocol,
          settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.context = context
         self.clipCommandService = clipCommandService
-        self.thumbnailStorage = thumbnailStorage
         self.settingStorage = settingStorage
         self.logger = logger
     }
@@ -88,31 +85,10 @@ class AlbumSelectionPresenter {
         self.view?.close()
     }
 
-    func readImageIfExists(for album: Album) -> UIImage? {
-        guard let clipItem = self.resolveThumbnailItem(for: album) else { return nil }
-        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
-    }
-
-    func fetchImage(for album: Album, completion: @escaping (UIImage?) -> Void) {
-        guard let clipItem = self.resolveThumbnailItem(for: album) else {
-            completion(nil)
-            return
-        }
-        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
-    }
-
     func addAlbum(title: String) {
         if case let .failure(error) = self.clipCommandService.create(albumWithTitle: title) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add album. (code: \(error.rawValue))"))
             self.view?.showErrorMessage("\(L10n.albumListViewErrorAtAddAlbum)\n(\(error.makeErrorCode())")
-        }
-    }
-
-    private func resolveThumbnailItem(for album: Album) -> ClipItem? {
-        if self.showHiddenItems {
-            return album.clips.first?.items.first
-        } else {
-            return album.clips.first(where: { !$0.isHidden })?.items.first
         }
     }
 }

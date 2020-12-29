@@ -42,11 +42,10 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewController = TopClipCollectionViewController(factory: self,
                                                              viewModel: viewModel,
-                                                             clipCollectionProvider: ClipCollectionProvider(),
+                                                             clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.thumbnailLoader),
                                                              navigationItemsProvider: navigationItemsProvider,
                                                              toolBarItemsProvider: toolBarItemsProvider,
-                                                             menuBuilder: ClipCollectionMenuBuilder.self,
-                                                             thumbnailStorage: self.thumbnailStorage)
+                                                             menuBuilder: ClipCollectionMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -110,7 +109,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let viewModel = ClipPreviewViewModel(query: query,
-                                             thumbnailStorage: self.thumbnailStorage,
+                                             thumbnailLoader: self.thumbnailLoader,
                                              imageQueryService: self.imageQueryService,
                                              logger: self.logger)
         let viewController = ClipPreviewViewController(factory: self, viewModel: viewModel)
@@ -227,11 +226,10 @@ extension DependencyContainer: ViewControllerFactory {
 
         return SearchResultViewController(factory: self,
                                           viewModel: viewModel,
-                                          clipCollectionProvider: ClipCollectionProvider(),
+                                          clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.thumbnailLoader),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
-                                          menuBuilder: ClipCollectionMenuBuilder.self,
-                                          thumbnailStorage: self.thumbnailStorage)
+                                          menuBuilder: ClipCollectionMenuBuilder.self)
     }
 
     func makeAlbumListViewController() -> UIViewController? {
@@ -253,7 +251,7 @@ extension DependencyContainer: ViewControllerFactory {
                                            logger: self.logger)
         let viewController = AlbumListViewController(factory: self,
                                                      viewModel: viewModel,
-                                                     thumbnailStorage: self.thumbnailStorage)
+                                                     thumbnailLoader: self.thumbnailLoader)
         return UINavigationController(rootViewController: viewController)
     }
 
@@ -289,11 +287,10 @@ extension DependencyContainer: ViewControllerFactory {
 
         return AlbumViewController(factory: self,
                                    viewModel: viewModel,
-                                   clipCollectionProvider: ClipCollectionProvider(),
+                                   clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.thumbnailLoader),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
-                                   menuBuilder: ClipCollectionMenuBuilder.self,
-                                   thumbnailStorage: self.thumbnailStorage)
+                                   menuBuilder: ClipCollectionMenuBuilder.self)
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
@@ -312,11 +309,12 @@ extension DependencyContainer: ViewControllerFactory {
         let presenter = AlbumSelectionPresenter(query: query,
                                                 context: context,
                                                 clipCommandService: self.clipCommandService,
-                                                thumbnailStorage: self.thumbnailStorage,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
         presenter.delegate = delegate
-        let viewController = AlbumSelectionViewController(factory: self, presenter: presenter)
+        let viewController = AlbumSelectionViewController(factory: self,
+                                                          presenter: presenter,
+                                                          thumbnailLoader: self.thumbnailLoader)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -374,7 +372,7 @@ extension DependencyContainer: ViewControllerFactory {
                                            logger: self.logger)
         let viewController = ClipMergeViewController(factory: self,
                                                      viewModel: viewModel,
-                                                     thumbnailStorage: self.thumbnailStorage)
+                                                     thumbnailLoader: self.thumbnailLoader)
         viewController.delegate = delegate
         return UINavigationController(rootViewController: viewController)
     }

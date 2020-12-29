@@ -31,10 +31,6 @@ class AlbumListViewController: UIViewController {
     private let viewModel: Dependency
     private var cancellableBag = Set<AnyCancellable>()
 
-    // MARK: Storage
-
-    private let thumbnailStorage: ThumbnailStorageProtocol
-
     // MARK: View
 
     private let emptyMessageView = EmptyMessageView()
@@ -51,14 +47,19 @@ class AlbumListViewController: UIViewController {
     private var collectionView: AlbumListCollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
 
+    // MARK: Thumbnail
+
+    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
+
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: AlbumListViewModel,
-         thumbnailStorage: ThumbnailStorageProtocol)
+         thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
-        self.thumbnailStorage = thumbnailStorage
+        self.thumbnailLoader = thumbnailLoader
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -154,21 +155,20 @@ class AlbumListViewController: UIViewController {
             cell.isEditing = self.isEditing
             cell.delegate = self
 
-            let thumbnailTarget = album.clips.first?.items.first
-            let thumbnail: UIImage? = {
-                guard let item = thumbnailTarget else { return nil }
-                return self.thumbnailStorage.readThumbnailIfExists(for: item)
-            }()
-            cell.thumbnail = thumbnail
-
-            if let item = thumbnailTarget, thumbnail == nil {
-                self.thumbnailStorage.requestThumbnail(for: item) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == album.identity else { return }
-                        cell.thumbnail = image
-                    }
-                }
+            guard let thumbnailTarget = album.clips.first?.items.first else {
+                cell.thumbnail = nil
+                return cell
             }
+            // TODO: アルバムにあったサムネイルをロードする
+            // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: thumbnailTarget)
+            // let scale = collectionView.traitCollection.displayScale
+            // self.thumbnailLoadQueue.async {
+            //     self.thumbnailLoader.load(for: thumbnailTarget, pointSize: imageViewSize, scale: scale)
+            //         .filter { _ in cell.identifier == album.identity }
+            //         .receive(on: DispatchQueue.main)
+            //         .assign(to: \.thumbnail, on: cell)
+            //         .store(in: &self.cancellableBag)
+            // }
 
             return cell
         }

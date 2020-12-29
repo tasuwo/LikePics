@@ -33,10 +33,6 @@ class AlbumViewController: UIViewController {
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
     private let menuBuilder: ClipCollectionMenuBuildable.Type
 
-    // MARK: Storage
-
-    private let thumbnailStorage: ThumbnailStorageProtocol
-
     // MARK: View
 
     private let emptyMessageView = EmptyMessageView()
@@ -58,8 +54,7 @@ class AlbumViewController: UIViewController {
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type,
-         thumbnailStorage: ThumbnailStorageProtocol)
+         menuBuilder: ClipCollectionMenuBuildable.Type)
     {
         self.factory = factory
         self.viewModel = viewModel
@@ -67,7 +62,6 @@ class AlbumViewController: UIViewController {
         self.navigationItemsProvider = navigationItemsProvider
         self.toolBarItemsProvider = toolBarItemsProvider
         self.menuBuilder = menuBuilder
-        self.thumbnailStorage = thumbnailStorage
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -255,6 +249,7 @@ class AlbumViewController: UIViewController {
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.collectionView.delegate = self.clipCollectionProvider
+        self.collectionView.prefetchDataSource = self.clipCollectionProvider
         self.collectionView.contentInsetAdjustmentBehavior = .always
 
         self.view.addSubview(collectionView)
@@ -355,14 +350,6 @@ extension AlbumViewController: ClipCollectionProviderDataSource {
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, clipFor indexPath: IndexPath) -> Clip? {
         return self.dataSource.itemIdentifier(for: indexPath)
-    }
-
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, imageFor clipItem: ClipItem) -> UIImage? {
-        return self.thumbnailStorage.readThumbnailIfExists(for: clipItem)
-    }
-
-    func requestImage(_ provider: ClipCollectionProvider, for clipItem: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        self.thumbnailStorage.requestThumbnail(for: clipItem, completion: completion)
     }
 
     func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {

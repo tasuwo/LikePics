@@ -42,24 +42,38 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let factory: Factory
-    private let viewModel: Dependency
-    private let thumbnailStorage: ThumbnailStorageProtocol
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    private var collectionView: UICollectionView!
-    private var cancellableBag = Set<AnyCancellable>()
+    // MARK: Factory
 
+    private let factory: Factory
+
+    // MARK: Dependency
+
+    private let viewModel: Dependency
+
+    // MARK: View
+
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+
+    // MARK: Thumbnail
+
+    private let thumbnailLoader: Domain.ThumbnailLoaderProtocol
+    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipMergeViewController.thumbnailLoadQueue")
+
+    // MARK: States
+
+    private var cancellableBag = Set<AnyCancellable>()
     weak var delegate: ClipMergeViewControllerDelegate?
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: Dependency,
-         thumbnailStorage: ThumbnailStorageProtocol)
+         thumbnailLoader: Domain.ThumbnailLoaderProtocol)
     {
         self.factory = factory
         self.viewModel = viewModel
-        self.thumbnailStorage = thumbnailStorage
+        self.thumbnailLoader = thumbnailLoader
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -257,12 +271,16 @@ class ClipMergeViewController: UIViewController {
                 let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: "clip-selection", for: indexPath)
                 guard let cell = dequeuedCell as? ClipMergeImageCell else { return dequeuedCell }
                 cell.identifier = clipItem.id
-                self.thumbnailStorage.requestThumbnail(for: clipItem) { image in
-                    DispatchQueue.main.async {
-                        guard cell.identifier == clipItem.id else { return }
-                        cell.thumbnail = image
-                    }
-                }
+                // TODO: サムネイルをロードする
+                // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: clipItem)
+                // let scale = collectionView.traitCollection.displayScale
+                // self.thumbnailLoadQueue.async {
+                //     self.thumbnailLoader.load(for: clipItem, pointSize: imageViewSize, scale: scale)
+                //         .filter { _ in cell.identifier == clipItem.id }
+                //         .receive(on: DispatchQueue.main)
+                //         .assign(to: \.thumbnail, on: cell)
+                //         .store(in: &self.cancellableBag)
+                // }
                 return cell
             }
         }
