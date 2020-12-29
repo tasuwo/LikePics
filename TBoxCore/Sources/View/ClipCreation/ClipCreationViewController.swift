@@ -85,6 +85,7 @@ public class ClipCreationViewController: UIViewController {
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellableBag = Set<AnyCancellable>()
+    private let downsamplingQueue = DispatchQueue(label: "net.tasuwo.TBox.TBoxCore.ClipCreationViewController.downsampling")
     private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Lifecycle
@@ -223,6 +224,7 @@ public class ClipCreationViewController: UIViewController {
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
         collectionView.isHidden = true
 
         view.addSubview(collectionView)
@@ -249,11 +251,15 @@ public class ClipCreationViewController: UIViewController {
 
             cell.id = source.identifier
 
-            self.thumbnailLoader.load(from: source)
-                .filter { _ in cell.id == source.identifier }
-                .receive(on: DispatchQueue.main)
-                .assign(to: \.image, on: cell)
-                .store(in: &self.cancellableBag)
+            let imageViewSize = cell.imageDisplaySize
+            let scale = cell.traitCollection.displayScale
+            self.downsamplingQueue.async {
+                self.thumbnailLoader.load(source, as: imageViewSize, scale: scale)
+                    .filter { _ in cell.id == source.identifier }
+                    .receive(on: DispatchQueue.main)
+                    .assign(to: \.image, on: cell)
+                    .store(in: &self.cancellableBag)
+            }
 
             if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
                 cell.selectionOrder = indexInSelection + 1
@@ -336,6 +342,24 @@ public class ClipCreationViewController: UIViewController {
         return section
     }
 
+    private static func predictCellSize(for collectionView: UICollectionView) -> CGSize {
+        let numberOfColumns: CGFloat = {
+            switch collectionView.traitCollection.horizontalSizeClass {
+            case .compact:
+                return 2
+
+            case .regular, .unspecified:
+                return 3
+
+            @unknown default:
+                return 3
+            }
+        }()
+        let totalSpaceSize: CGFloat = 16 * 2 + (numberOfColumns - 1) * 16
+        let width = (collectionView.bounds.size.width - totalSpaceSize) / numberOfColumns
+        return CGSize(width: width, height: width)
+    }
+
     // MARK: NavigationBar
 
     private func setupNavigationBar() {
@@ -374,6 +398,23 @@ public class ClipCreationViewController: UIViewController {
         self.emptyMessageView.delegate = self
 
         self.emptyMessageView.alpha = 0
+    }
+}
+
+extension ClipCreationViewController: UICollectionViewDataSourcePrefetching {
+    // MARK: - UICollectionViewDataSourcePrefetching
+
+    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            let imageViewSize = Self.predictCellSize(for: collectionView)
+            let scale = self.collectionView.traitCollection.displayScale
+            self.downsamplingQueue.async {
+                guard case let .image(source) = self.dataSource.itemIdentifier(for: indexPath) else { return }
+                self.thumbnailLoader.load(source, as: imageViewSize, scale: scale)
+                    .sink { _ in }
+                    .store(in: &self.cancellableBag)
+            }
+        }
     }
 }
 

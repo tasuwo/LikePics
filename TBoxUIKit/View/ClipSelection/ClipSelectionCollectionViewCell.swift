@@ -25,6 +25,10 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var imageDisplaySize: CGSize {
+        return self.imageView.bounds.size
+    }
+
     public var selectionOrder: Int? {
         didSet {
             if let order = selectionOrder {

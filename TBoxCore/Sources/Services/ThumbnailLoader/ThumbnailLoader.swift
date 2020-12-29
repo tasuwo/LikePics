@@ -3,25 +3,39 @@
 //
 
 import Combine
+import Common
 import UIKit
 
 public protocol ThumbnailLoaderProtocol {
-    func load(from source: ImageSource) -> Future<UIImage?, Never>
+    func load(_ source: ImageSource, as pointSize: CGSize, scale: CGFloat) -> Future<UIImage?, Never>
 }
 
 public class ThumbnailLoader {
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.TBoxCore.ThumbnailLoader", qos: .userInteractive, attributes: .concurrent)
-    private let cache = NSCache<NSString, NSData>()
+    private let cache = NSCache<NSString, AnyObject>()
     private var cancellableBag = Set<AnyCancellable>()
 }
 
 extension ThumbnailLoader: ThumbnailLoaderProtocol {
     // MARK: - ThumbnailLoaderProtocol
 
-    public func load(from source: ImageSource) -> Future<UIImage?, Never> {
+    public func load(_ source: ImageSource, as pointSize: CGSize, scale: CGFloat) -> Future<UIImage?, Never> {
         switch source.value {
         case let .rawData(data):
-            return Future { $0(.success(UIImage(data: data))) }
+            return Future { promise in
+                if let cachedImage = self.cache.object(forKey: source.identifier.uuidString as NSString) as? UIImage {
+                    promise(.success(cachedImage))
+                    return
+                }
+
+                guard let image = ImageUtility.downsampling(data, to: pointSize, scale: scale) else {
+                    promise(.success(nil))
+                    return
+                }
+
+                self.cache.setObject(image, forKey: source.identifier.uuidString as NSString)
+
+                promise(.success(image))
+            }
 
         case let .urlSet(urlSet):
             return Future { [weak self] promise in
@@ -30,32 +44,22 @@ extension ThumbnailLoader: ThumbnailLoaderProtocol {
                     return
                 }
 
-                if let cachedImage = self.cache.object(forKey: urlSet.url.absoluteString as NSString) as Data? {
-                    promise(.success(UIImage(data: cachedImage)))
+                if let cachedImage = self.cache.object(forKey: urlSet.url.absoluteString as NSString) as? UIImage {
+                    promise(.success(cachedImage))
                     return
                 }
 
-                self.queue.async {
-                    guard let size = source.resolveSize() else {
-                        promise(.success(nil))
-                        return
+                URLSession.shared
+                    .dataTaskPublisher(for: urlSet.url)
+                    .map { ImageUtility.downsampling($0.data, to: pointSize, scale: scale) }
+                    .catch { _ in Just(nil) }
+                    .sink { image in
+                        if let image = image {
+                            self.cache.setObject(image, forKey: urlSet.url.absoluteString as NSString)
+                        }
+                        promise(.success(image))
                     }
-
-                    URLSession.shared
-                        .dataTaskPublisher(for: urlSet.url)
-                        .map { data, _ -> UIImage? in
-                            let downsampleSize = ImageUtility.calcDownsamplingSize(forOriginalSize: size)
-                            return ImageUtility.downsampledImage(data: data, to: downsampleSize)
-                        }
-                        .catch { _ in Just(nil) }
-                        .sink { image in
-                            if let data = image?.pngData() as NSData? {
-                                self.cache.setObject(data, forKey: urlSet.url.absoluteString as NSString)
-                            }
-                            promise(.success(image))
-                        }
-                        .store(in: &self.cancellableBag)
-                }
+                    .store(in: &self.cancellableBag)
             }
         }
     }
