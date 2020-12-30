@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Smoothie
 import UIKit
 
 public class AlbumSelectionCell: UITableViewCell {

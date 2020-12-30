@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import Smoothie
 import TBoxCore
 import TBoxUIKit
 import UIKit
@@ -57,7 +58,7 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: Domain.ThumbnailLoader
+    private let thumbnailLoader: Smoothie.ThumbnailLoader
 
     // MARK: States
 
@@ -68,7 +69,7 @@ class ClipMergeViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: Dependency,
-         thumbnailLoader: Domain.ThumbnailLoader)
+         thumbnailLoader: Smoothie.ThumbnailLoader)
     {
         self.factory = factory
         self.viewModel = viewModel

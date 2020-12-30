@@ -6,6 +6,7 @@ import Common
 import CoreData
 import Domain
 import Persistence
+import Smoothie
 import TBoxCore
 import UIKit
 
@@ -14,7 +15,7 @@ class DependencyContainer {
 
     // MARK: Image Loader
 
-    let thumbnailLoader: Domain.ThumbnailLoader
+    let thumbnailLoader: Smoothie.ThumbnailLoader
 
     // MARK: Storage
 
@@ -79,11 +80,11 @@ class DependencyContainer {
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
 
         let cacheDirectoryUrl = Self.resolveCacheDirectoryUrl()
-        let config = Domain.ThumbnailLoadPipeline.Configuration(memoryCache: MemoryCache(),
-                                                                diskCache: try DiskCache(path: cacheDirectoryUrl),
-                                                                dataLoader: self.imageQueryService)
-        let pipeline = Domain.ThumbnailLoadPipeline(config: config)
-        self.thumbnailLoader = Domain.ThumbnailLoader(pipeline: pipeline)
+        let config = ThumbnailLoadPipeline.Configuration(memoryCache: MemoryCache(),
+                                                         diskCache: try DiskCache(path: cacheDirectoryUrl),
+                                                         dataLoader: self.imageQueryService)
+        let pipeline = ThumbnailLoadPipeline(config: config)
+        self.thumbnailLoader = Smoothie.ThumbnailLoader(pipeline: pipeline)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,

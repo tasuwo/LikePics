@@ -5,6 +5,7 @@
 import Common
 import CoreData
 import Domain
+import Smoothie
 
 public class NewImageQueryService {
     public var context: NSManagedObjectContext {
