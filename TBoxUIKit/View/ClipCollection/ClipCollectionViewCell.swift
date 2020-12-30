@@ -6,6 +6,14 @@ import Domain
 import UIKit
 
 public class ClipCollectionViewCell: UICollectionViewCell {
+    public static let ThumbnailLoadingUserInfoKey = "TBoxUIKit.ClipCollectionViewCell.ThumbnailLoadingUserInfoKey"
+
+    public enum ThumbnailLoadingUserInfoValue: String {
+        case primary
+        case secondary
+        case tertiary
+    }
+
     public enum Image {
         case loaded(UIImage)
         case loading
@@ -243,6 +251,54 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             self.indicator.startAnimating()
         } else {
             self.indicator.stopAnimating()
+        }
+    }
+}
+
+extension ClipCollectionViewCell: ThumbnailLoaderObserver {
+    // MARK: - ThumbnailLoaderObserver
+
+    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+        guard self.identifier == request.identifier else { return }
+        switch kind {
+        case .primary:
+            self.primaryImage = .loading
+
+        case .secondary:
+            self.secondaryImage = .loading
+
+        case .tertiary:
+            self.tertiaryImage = .loading
+        }
+    }
+
+    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+        guard self.identifier == request.identifier else { return }
+        switch kind {
+        case .primary:
+            self.primaryImage = result.convert()
+
+        case .secondary:
+            self.secondaryImage = result.convert()
+
+        case .tertiary:
+            self.tertiaryImage = result.convert()
+        }
+    }
+}
+
+private extension ThumbnailLoadResult {
+    func convert() -> ClipCollectionViewCell.Image {
+        switch self {
+        case let .loaded(image):
+            return .loaded(image)
+
+        case .failedToLoad:
+            return .failedToLoad
         }
     }
 }

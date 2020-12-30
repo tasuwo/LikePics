@@ -30,6 +30,10 @@ public class AlbumSelectionCell: UITableViewCell {
         }
     }
 
+    public var thumbnailDisplaySize: CGSize {
+        thumbnailImageView.bounds.size
+    }
+
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
 
@@ -46,5 +50,23 @@ public class AlbumSelectionCell: UITableViewCell {
         self.thumbnailImageView.layer.cornerCurve = .continuous
         self.thumbnailImageView.contentMode = .scaleAspectFill
         self.thumbnailImageView.clipsToBounds = true
+    }
+}
+
+extension AlbumSelectionCell: ThumbnailLoaderObserver {
+    // MARK: - ThumbnailLoaderObserver
+
+    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+        self.thumbnail = nil
+    }
+
+    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+        switch result {
+        case let .loaded(image):
+            self.thumbnail = image
+
+        default:
+            self.thumbnail = nil
+        }
     }
 }

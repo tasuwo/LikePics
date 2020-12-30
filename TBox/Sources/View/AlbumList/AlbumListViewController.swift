@@ -49,14 +49,13 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: LegacyThumbnailLoader
-    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
+    private let thumbnailLoader: ThumbnailLoader
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: AlbumListViewModel,
-         thumbnailLoader: LegacyThumbnailLoader)
+         thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
         self.thumbnailLoader = thumbnailLoader
@@ -155,20 +154,16 @@ class AlbumListViewController: UIViewController {
             cell.isEditing = self.isEditing
             cell.delegate = self
 
-            guard let thumbnailTarget = album.clips.first?.items.first else {
+            if let thumbnailTarget = album.clips.first?.items.first {
+                let request = ThumbnailRequest(identifier: album.identity,
+                                               cacheKey: "album-list-\(thumbnailTarget.identity.uuidString)",
+                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: thumbnailTarget.imageId),
+                                               size: cell.thumbnailSize,
+                                               scale: cell.traitCollection.displayScale)
+                self.thumbnailLoader.load(request: request, observer: cell)
+            } else {
                 cell.thumbnail = nil
-                return cell
             }
-            // TODO: アルバムにあったサムネイルをロードする
-            // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: thumbnailTarget)
-            // let scale = collectionView.traitCollection.displayScale
-            // self.thumbnailLoadQueue.async {
-            //     self.thumbnailLoader.load(for: thumbnailTarget, pointSize: imageViewSize, scale: scale)
-            //         .filter { _ in cell.identifier == album.identity }
-            //         .receive(on: DispatchQueue.main)
-            //         .assign(to: \.thumbnail, on: cell)
-            //         .store(in: &self.cancellableBag)
-            // }
 
             return cell
         }

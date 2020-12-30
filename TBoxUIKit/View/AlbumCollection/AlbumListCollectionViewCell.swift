@@ -25,6 +25,10 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var thumbnailSize: CGSize {
+        self.thumbnailImageView.bounds.size
+    }
+
     public var title: String? {
         get {
             return self.titleButton.title(for: .normal)
@@ -94,5 +98,24 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     func updateAppearance() {
         self.titleButton.isEnabled = self.isEditing
         self.titleEditButtonContainer.isHidden = !self.isEditing
+    }
+}
+
+extension AlbumListCollectionViewCell: ThumbnailLoaderObserver {
+    // MARK: - ThumbnailLoaderObserver
+
+    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+        self.thumbnail = nil
+    }
+
+    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+        guard self.identifier == request.identifier else { return }
+        switch result {
+        case let .loaded(image):
+            self.thumbnail = image
+
+        default:
+            self.thumbnail = nil
+        }
     }
 }

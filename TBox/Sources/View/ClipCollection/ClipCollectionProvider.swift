@@ -27,7 +27,7 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath)
 }
 
-class ClipCollectionProvider: NSObject, ThumbnailRenderable {
+class ClipCollectionProvider: NSObject {
     // MARK: - Properties
 
     weak var dataSource: ClipCollectionProviderDataSource?
@@ -35,13 +35,11 @@ class ClipCollectionProvider: NSObject, ThumbnailRenderable {
 
     // MARK: ThumbnailRenderable
 
-    let thumbnailLoadingQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionProvider.thumbnailLoad")
-    let thumbnailLoader: ThumbnailLoaderProtocol
-    var cancellableBag = Set<AnyCancellable>()
+    let thumbnailLoader: ThumbnailLoader
 
     // MARK: - Lifecycle
 
-    init(thumbnailLoader: ThumbnailLoaderProtocol) {
+    init(thumbnailLoader: ThumbnailLoader) {
         self.thumbnailLoader = thumbnailLoader
     }
 
@@ -53,25 +51,39 @@ class ClipCollectionProvider: NSObject, ThumbnailRenderable {
 
         cell.identifier = clip.identity
 
-        cell.secondaryImage = nil
-        cell.tertiaryImage = nil
+        let scale = collectionView.traitCollection.displayScale
 
-        self.load(clip.primaryItem,
-                  to: cell,
-                  context: ClipCollectionViewCellThumbnailContext.primary,
-                  traitCollection: collectionView.traitCollection)
-        self.load(clip.secondaryItem,
-                  to: cell,
-                  context: ClipCollectionViewCellThumbnailContext.secondary,
-                  traitCollection: collectionView.traitCollection)
-        self.load(clip.tertiaryItem,
-                  to: cell,
-                  context: ClipCollectionViewCellThumbnailContext.tertiary,
-                  traitCollection: collectionView.traitCollection)
+        if let item = clip.primaryItem {
+            let request = self.makeRequest(for: item, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
+            self.thumbnailLoader.load(request: request, observer: cell)
+        } else {
+            cell.primaryImage = .noImage
+        }
+        if let item = clip.secondaryItem {
+            let request = self.makeRequest(for: item, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
+            self.thumbnailLoader.load(request: request, observer: cell)
+        } else {
+            cell.secondaryImage = .noImage
+        }
+        if let item = clip.tertiaryItem {
+            let request = self.makeRequest(for: item, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
+            self.thumbnailLoader.load(request: request, observer: cell)
+        } else {
+            cell.tertiaryImage = .noImage
+        }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false
 
         return cell
+    }
+
+    private func makeRequest(for item: ClipItem, size: CGSize, scale: CGFloat, context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue) -> ThumbnailRequest {
+        return ThumbnailRequest(identifier: item.clipId,
+                                cacheKey: "clip-collection-\(item.identity.uuidString)",
+                                originalDataLoadRequest: NewImageDataLoadRequest(imageId: item.imageId),
+                                size: size,
+                                scale: scale,
+                                userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
     }
 }
 
@@ -256,11 +268,19 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
         for indexPath in indexPaths {
             guard let attribute = layout.layoutAttributesForItem(at: indexPath) else { return }
             guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
-            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
-            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
-            self.prefetch(clip.primaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
-            self.prefetch(clip.secondaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
-            self.prefetch(clip.tertiaryItem, pointSize: attribute.frame.size, traitCollection: collectionView.traitCollection)
+            let scale = collectionView.traitCollection.displayScale
+            if let item = clip.primaryItem {
+                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .primary)
+                self.thumbnailLoader.load(request: request, observer: nil)
+            }
+            if let item = clip.secondaryItem {
+                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .secondary)
+                self.thumbnailLoader.load(request: request, observer: nil)
+            }
+            if let item = clip.tertiaryItem {
+                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .tertiary)
+                self.thumbnailLoader.load(request: request, observer: nil)
+            }
         }
     }
 }

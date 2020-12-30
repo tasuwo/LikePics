@@ -12,6 +12,10 @@ import UIKit
 class DependencyContainer {
     // MARK: - Properties
 
+    // MARK: Image Loader
+
+    let thumbnailLoader: Domain.ThumbnailLoader
+
     // MARK: Storage
 
     let clipStorage: NewClipStorage
@@ -19,8 +23,6 @@ class DependencyContainer {
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorage
     let tmpImageStorage: ImageStorageProtocol
-    let thumbnailStorage: ThumbnailStorageProtocol
-    let thumbnailLoader: Domain.LegacyThumbnailLoader
     let userSettingsStorage: UserSettingsStorageProtocol
     let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
@@ -75,14 +77,17 @@ class DependencyContainer {
         self.imageStorage = NewImageStorage(context: self.commandContext)
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
-        self.thumbnailStorage = try ThumbnailStorage(bundle: Bundle.main)
-        self.thumbnailLoader = try Domain.LegacyThumbnailLoader(queryService: self.imageQueryService,
-                                                                thumbnailStorage: self.thumbnailStorage)
+
+        let cacheDirectoryUrl = Self.resolveCacheDirectoryUrl()
+        let config = Domain.ThumbnailLoadPipeline.Configuration(memoryCache: MemoryCache(),
+                                                                diskCache: try DiskCache(path: cacheDirectoryUrl),
+                                                                dataLoader: self.imageQueryService)
+        let pipeline = Domain.ThumbnailLoadPipeline(config: config)
+        self.thumbnailLoader = Domain.ThumbnailLoader(pipeline: pipeline)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,
                                                      imageStorage: self.imageStorage,
-                                                     thumbnailLoader: self.thumbnailLoader,
                                                      logger: self.logger,
                                                      queue: self.clipCommandQueue)
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
@@ -105,6 +110,25 @@ class DependencyContainer {
     }
 
     // MARK: - Methods
+
+    private static func resolveCacheDirectoryUrl() -> URL {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+            fatalError("Failed to resolve bundle identifier")
+        }
+
+        let targetUrl: URL = {
+            let directoryName: String = "thumbnails"
+            if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+                return directory
+                    .appendingPathComponent(bundleIdentifier, isDirectory: true)
+                    .appendingPathComponent(directoryName, isDirectory: true)
+            } else {
+                fatalError("Failed to resolve directory url for image cache.")
+            }
+        }()
+
+        return targetUrl
+    }
 
     func makeCloudStackLoader() -> CloudStackLoader {
         return CloudStackLoader(userSettingsStorage: self.userSettingsStorage,

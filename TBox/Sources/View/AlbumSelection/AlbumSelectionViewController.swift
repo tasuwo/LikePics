@@ -38,8 +38,7 @@ class AlbumSelectionViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: LegacyThumbnailLoader
-    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
+    private let thumbnailLoader: ThumbnailLoader
 
     // MARK: States
 
@@ -49,7 +48,7 @@ class AlbumSelectionViewController: UIViewController {
 
     init(factory: Factory,
          presenter: AlbumSelectionPresenter,
-         thumbnailLoader: LegacyThumbnailLoader)
+         thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
         self.presenter = presenter
@@ -108,22 +107,16 @@ class AlbumSelectionViewController: UIViewController {
             cell.identifier = album.identity
             cell.title = album.title
 
-            guard let self = self else { return cell }
-
-            guard let thumbnailTarget = album.clips.first?.items.first else {
+            if let thumbnailTarget = album.clips.first?.items.first {
+                let request = ThumbnailRequest(identifier: album.identity,
+                                               cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
+                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: thumbnailTarget.imageId),
+                                               size: cell.thumbnailDisplaySize,
+                                               scale: cell.traitCollection.displayScale)
+                self?.thumbnailLoader.load(request: request, observer: cell)
+            } else {
                 cell.thumbnail = nil
-                return cell
             }
-            // TODO: アルバムにあったサムネイルをロードする
-            // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: thumbnailTarget)
-            // let scale = tableView.traitCollection.displayScale
-            // self.thumbnailLoadQueue.async {
-            //     self.thumbnailLoader.load(for: thumbnailTarget, pointSize: imageViewSize, scale: scale)
-            //         .filter { _ in cell.identifier == album.identity }
-            //         .receive(on: DispatchQueue.main)
-            //         .assign(to: \.thumbnail, on: cell)
-            //         .store(in: &self.cancellableBag)
-            // }
 
             return cell
         }

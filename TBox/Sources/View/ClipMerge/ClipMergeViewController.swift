@@ -57,8 +57,7 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: Domain.ThumbnailLoaderProtocol
-    private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipMergeViewController.thumbnailLoadQueue")
+    private let thumbnailLoader: Domain.ThumbnailLoader
 
     // MARK: States
 
@@ -69,7 +68,7 @@ class ClipMergeViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: Dependency,
-         thumbnailLoader: Domain.ThumbnailLoaderProtocol)
+         thumbnailLoader: Domain.ThumbnailLoader)
     {
         self.factory = factory
         self.viewModel = viewModel
@@ -271,16 +270,14 @@ class ClipMergeViewController: UIViewController {
                 let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: "clip-selection", for: indexPath)
                 guard let cell = dequeuedCell as? ClipMergeImageCell else { return dequeuedCell }
                 cell.identifier = clipItem.id
-                // TODO: サムネイルをロードする
-                // let imageViewSize = ThumbnailSizeResolver.calcDownsamplingSize(for: clipItem)
-                // let scale = collectionView.traitCollection.displayScale
-                // self.thumbnailLoadQueue.async {
-                //     self.thumbnailLoader.load(for: clipItem, pointSize: imageViewSize, scale: scale)
-                //         .filter { _ in cell.identifier == clipItem.id }
-                //         .receive(on: DispatchQueue.main)
-                //         .assign(to: \.thumbnail, on: cell)
-                //         .store(in: &self.cancellableBag)
-                // }
+
+                let request = ThumbnailRequest(identifier: clipItem.id,
+                                               cacheKey: "clip-merge-\(clipItem.id.uuidString)",
+                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: clipItem.imageId),
+                                               size: cell.thumbnailDisplaySize,
+                                               scale: cell.traitCollection.displayScale)
+                self.thumbnailLoader.load(request: request, observer: cell)
+
                 return cell
             }
         }

@@ -83,7 +83,6 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: Privates
 
     private let query: ClipItemQuery
-    private let thumbnailLoader: LegacyThumbnailLoader
     private let imageQueryService: NewImageQueryServiceProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipPreviewViewModel")
@@ -96,12 +95,10 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: - Lifecycle
 
     init(query: ClipItemQuery,
-         thumbnailLoader: LegacyThumbnailLoader,
          imageQueryService: NewImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
-        self.thumbnailLoader = thumbnailLoader
         self.imageQueryService = imageQueryService
         self.logger = logger
 
@@ -119,40 +116,16 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     private func readInitialImage(for item: ClipItem) -> UIImage? {
         return self.queue.sync {
             guard self.state.isInitialState else { return nil }
-            if item.imageDataSize < (1024 * 128) {
-                // SQLite から直に読み込めるサイズであれば、即座に読み込む
-                // See Also: https://www.vadimbulavin.com/how-to-save-images-and-videos-to-core-data-efficiently/
-                guard let data = try? self.imageQueryService.read(having: item.imageId),
-                    let image = UIImage(data: data)
-                else {
-                    self.errorMessage.send(L10n.clipPreviewErrorAtLoadImage)
-                    return nil
-                }
-                self.state = .imageLoaded
-                return image
-            } else {
-                if item.imageDataSize < (1024 * 1024) {
-                    self.preferredLazyLoadTiming = .viewWillAppear
-                } else {
-                    // 大きすぎる画像は画面遷移前に読み込んでしまうと、画面遷移時に操作が引っかかる
-                    // そのため、画面読み込み後まで画像のロードを遅延させる
-                    self.preferredLazyLoadTiming = .viewDidAppear
-                }
 
-                // TODO: 低画質画像のロードを行う
-                // if let image = self.thumbnailStorage.readThumbnailIfExists(for: item) {
-                //     self.state = .thumbnailLoaded
-                //     return image
-                // } else {
-                //     self.thumbnailStorage.requestThumbnail(for: item) { [weak self] image in
-                //         guard let self = self, let image = image, self.state == .loading else { return }
-                //         self.state = .thumbnailLoaded
-                //         self.imageLoaded.send(image)
-                //     }
-                //     return nil
-                // }
+            // TODO: パフォーマンスの改善
+            guard let data = try? self.imageQueryService.read(having: item.imageId),
+                let image = UIImage(data: data)
+            else {
+                self.errorMessage.send(L10n.clipPreviewErrorAtLoadImage)
                 return nil
             }
+            self.state = .imageLoaded
+            return image
         }
     }
 

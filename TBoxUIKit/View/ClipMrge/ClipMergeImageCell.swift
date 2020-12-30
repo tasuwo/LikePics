@@ -21,6 +21,10 @@ public class ClipMergeImageCell: UICollectionViewCell {
         }
     }
 
+    public var thumbnailDisplaySize: CGSize {
+        imageView.bounds.size
+    }
+
     @IBOutlet private var imageView: UIImageView!
 
     // MARK: - Lifecycle
@@ -38,5 +42,25 @@ public class ClipMergeImageCell: UICollectionViewCell {
         self.imageView.layer.cornerCurve = .continuous
         self.imageView.contentMode = .scaleAspectFill
         self.imageView.clipsToBounds = true
+    }
+}
+
+extension ClipMergeImageCell: ThumbnailLoaderObserver {
+    // MARK: - ThumbnailLoaderObserver
+
+    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
+        self.thumbnail = nil
+    }
+
+    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+        guard self.identifier == request.identifier else { return }
+        switch result {
+        case let .loaded(image):
+            self.thumbnail = image
+
+        default:
+            self.thumbnail = nil
+        }
     }
 }

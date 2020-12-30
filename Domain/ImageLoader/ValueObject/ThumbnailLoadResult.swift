@@ -7,7 +7,6 @@ import UIKit
 public enum ThumbnailLoadResult {
     case loaded(UIImage)
     case failedToLoad
-    case noImage
 
     // MARK: - Lifecycle
 
