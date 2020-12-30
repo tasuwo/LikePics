@@ -12,7 +12,7 @@ public protocol ThumbnailLoaderProtocol {
     func delete(for item: ClipItem)
 }
 
-public class ThumbnailLoader {
+public class LegacyThumbnailLoader {
     // MARK: - Properties
 
     private let queryService: NewImageQueryServiceProtocol
@@ -83,7 +83,7 @@ public class ThumbnailLoader {
     }
 }
 
-extension ThumbnailLoader: ThumbnailLoaderProtocol {
+extension LegacyThumbnailLoader: ThumbnailLoaderProtocol {
     // MARK: - ThumbnailLoaderProtocol
 
     public func readCache(for item: ClipItem) -> UIImage? {

@@ -83,7 +83,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: Privates
 
     private let query: ClipItemQuery
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: LegacyThumbnailLoader
     private let imageQueryService: NewImageQueryServiceProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipPreviewViewModel")
@@ -96,7 +96,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: - Lifecycle
 
     init(query: ClipItemQuery,
-         thumbnailLoader: ThumbnailLoader,
+         thumbnailLoader: LegacyThumbnailLoader,
          imageQueryService: NewImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {

@@ -8,7 +8,7 @@ public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorageProtocol
-    let thumbnailLoader: ThumbnailLoader
+    let thumbnailLoader: LegacyThumbnailLoader
     let logger: TBoxLoggable
     let queue: DispatchQueue
 
@@ -19,7 +19,7 @@ public class ClipCommandService {
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: NewImageStorageProtocol,
-                thumbnailLoader: ThumbnailLoader,
+                thumbnailLoader: LegacyThumbnailLoader,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {

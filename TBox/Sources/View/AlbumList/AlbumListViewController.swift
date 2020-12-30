@@ -49,14 +49,14 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: LegacyThumbnailLoader
     private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: AlbumListViewModel,
-         thumbnailLoader: ThumbnailLoader)
+         thumbnailLoader: LegacyThumbnailLoader)
     {
         self.factory = factory
         self.thumbnailLoader = thumbnailLoader

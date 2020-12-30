@@ -20,7 +20,7 @@ class DependencyContainer {
     let imageStorage: NewImageStorage
     let tmpImageStorage: ImageStorageProtocol
     let thumbnailStorage: ThumbnailStorageProtocol
-    let thumbnailLoader: Domain.ThumbnailLoader
+    let thumbnailLoader: Domain.LegacyThumbnailLoader
     let userSettingsStorage: UserSettingsStorageProtocol
     let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
@@ -76,8 +76,8 @@ class DependencyContainer {
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
         self.thumbnailStorage = try ThumbnailStorage(bundle: Bundle.main)
-        self.thumbnailLoader = try Domain.ThumbnailLoader(queryService: self.imageQueryService,
-                                                          thumbnailStorage: self.thumbnailStorage)
+        self.thumbnailLoader = try Domain.LegacyThumbnailLoader(queryService: self.imageQueryService,
+                                                                thumbnailStorage: self.thumbnailStorage)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,

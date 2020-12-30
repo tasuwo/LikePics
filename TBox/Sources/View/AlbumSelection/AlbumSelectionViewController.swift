@@ -38,7 +38,7 @@ class AlbumSelectionViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: LegacyThumbnailLoader
     private let thumbnailLoadQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController.thumbnailLoad")
 
     // MARK: States
@@ -49,7 +49,7 @@ class AlbumSelectionViewController: UIViewController {
 
     init(factory: Factory,
          presenter: AlbumSelectionPresenter,
-         thumbnailLoader: ThumbnailLoader)
+         thumbnailLoader: LegacyThumbnailLoader)
     {
         self.factory = factory
         self.presenter = presenter
