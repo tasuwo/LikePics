@@ -50,6 +50,14 @@ class ThumbnailLoadTask {
         self.delegate?.didComplete(self)
     }
 
+    func finish(requestId: RequestId) -> Bool {
+        guard self.requests.keys.contains(requestId) else {
+            return self.requests.isEmpty
+        }
+        self.requests.removeValue(forKey: requestId)
+        return self.requests.isEmpty
+    }
+
     func cancel(requestId: RequestId) {
         guard self.requests.keys.contains(requestId) else { return }
         self.requests.removeValue(forKey: requestId)

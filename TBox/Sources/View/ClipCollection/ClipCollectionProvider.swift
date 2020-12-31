@@ -82,7 +82,13 @@ class ClipCollectionProvider: NSObject {
         return cell
     }
 
-    private func makeRequest(for item: ClipItem, id: String, size: CGSize, scale: CGFloat, context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue) -> ThumbnailRequest {
+    private func makeRequest(for item: ClipItem,
+                             id: String,
+                             size: CGSize,
+                             scale: CGFloat,
+                             context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue,
+                             isPrefetch: Bool = false) -> ThumbnailRequest
+    {
         let info = ThumbnailRequest.ThumbnailInfo(id: "clip-collection-\(item.identity.uuidString)",
                                                   size: size,
                                                   scale: scale)
@@ -90,6 +96,7 @@ class ClipCollectionProvider: NSObject {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 thumbnailInfo: info,
+                                isPrefetch: isPrefetch,
                                 userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
     }
 }
@@ -280,17 +287,17 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
 
             if let item = clip.primaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary, isPrefetch: true)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
             if let item = clip.secondaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary, isPrefetch: true)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
             if let item = clip.tertiaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary, isPrefetch: true)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
         }
@@ -306,17 +313,17 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
 
             if let item = clip.primaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary, isPrefetch: true)
                 self.thumbnailLoader.cancel(request)
             }
             if let item = clip.secondaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary, isPrefetch: true)
                 self.thumbnailLoader.cancel(request)
             }
             if let item = clip.tertiaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
-                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary, isPrefetch: true)
                 self.thumbnailLoader.cancel(request)
             }
         }

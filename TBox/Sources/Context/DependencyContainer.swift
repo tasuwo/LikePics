@@ -94,8 +94,6 @@ class DependencyContainer {
         clipCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit, countLimit: Int.max))
         self.clipThumbnailLoader = ThumbnailLoader(pipeline: .init(config: clipCacheConfig))
 
-        self.clipDiskCache.removeAll()
-
         var albumCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,

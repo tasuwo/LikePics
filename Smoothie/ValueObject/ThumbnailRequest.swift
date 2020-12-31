@@ -20,16 +20,19 @@ public struct ThumbnailRequest {
     public let requestId: String
     public let imageRequest: OriginalImageRequest
     public let thumbnailInfo: ThumbnailInfo
+    public let isPrefetch: Bool
     public let userInfo: [AnyHashable: Any]?
 
     public init(requestId: String,
                 originalImageRequest: OriginalImageRequest,
                 thumbnailInfo: ThumbnailInfo,
+                isPrefetch: Bool = false,
                 userInfo: [AnyHashable: Any]? = nil)
     {
         self.requestId = requestId
         self.imageRequest = originalImageRequest
         self.thumbnailInfo = thumbnailInfo
+        self.isPrefetch = isPrefetch
         self.userInfo = userInfo
     }
 }

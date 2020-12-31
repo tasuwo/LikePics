@@ -37,7 +37,8 @@ public class ThumbnailLoadPipeline {
     private struct Context {
         let request: ThumbnailRequest
         let task: ThumbnailLoadTask
-        let completion: (UIImage?) -> Void
+        let didLoad: (UIImage?) -> Void
+        let didFinish: () -> Bool
     }
 
     public let config: Configuration
@@ -86,9 +87,18 @@ public class ThumbnailLoadPipeline {
             task.append(request, observer: observer)
             self.tasks[request.thumbnailInfo.id] = task
 
-            let context = Context(request: request, task: task) { task.didLoad(image: $0) }
+            let context = Context(request: request, task: task) {
+                task.didLoad(image: $0)
+            } didFinish: {
+                if task.finish(requestId: request.requestId) {
+                    self.tasks.removeValue(forKey: request.thumbnailInfo.id)
+                    return true
+                }
+                return false
+            }
 
             if let data = self.config.memoryCache[request.thumbnailInfo.id] {
+                if request.isPrefetch { if context.didFinish() { return } }
                 self.enqueueDecompressingOperation(context: context, data: data)
             } else {
                 self.enqueueCheckCacheOperation(context: context)
@@ -118,6 +128,7 @@ extension ThumbnailLoadPipeline {
 
             self.queue.async {
                 if let data = data {
+                    if context.request.isPrefetch { if context.didFinish() { return } }
                     self.enqueueDecompressingOperation(context: context, data: data)
                 } else {
                     self.enqueueDataLoadingOperation(context: context)
@@ -141,7 +152,7 @@ extension ThumbnailLoadPipeline {
                 if let data = data {
                     self.enqueueDownsamplingOperation(context: context, data: data)
                 } else {
-                    context.completion(nil)
+                    context.didLoad(nil)
                 }
             }
         }
@@ -164,7 +175,7 @@ extension ThumbnailLoadPipeline {
                 if let thumbnail = thumbnail {
                     self.enqueueEncodingOperation(context: context, thumbnail: thumbnail)
                 } else {
-                    context.completion(nil)
+                    context.didLoad(nil)
                 }
             }
         }
@@ -183,11 +194,14 @@ extension ThumbnailLoadPipeline {
 
             self.queue.async {
                 if let encodedImage = encodedImage {
-                    self.config.memoryCache.insert(encodedImage, forKey: context.request.thumbnailInfo.id)
+                    if !context.request.isPrefetch {
+                        self.config.memoryCache.insert(encodedImage, forKey: context.request.thumbnailInfo.id)
+                    }
                     self.enqueueCachingOperation(for: context.request, data: encodedImage)
+                    if context.request.isPrefetch { if context.didFinish() { return } }
                     self.enqueueDecompressingOperation(context: context, data: encodedImage)
                 } else {
-                    context.completion(nil)
+                    context.didLoad(nil)
                 }
             }
         }
@@ -217,7 +231,7 @@ extension ThumbnailLoadPipeline {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
-                context.completion(image)
+                context.didLoad(image)
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
