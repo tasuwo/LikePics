@@ -56,7 +56,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         presentingView.addSubview(backgroundView)
 
         let animatingView = UIView()
-        ClipCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
+        ClipCollectionViewCell.setupAppearance(shadowView: animatingView)
         animatingView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         presentingView.insertSubview(animatingView, aboveSubview: backgroundView)
 

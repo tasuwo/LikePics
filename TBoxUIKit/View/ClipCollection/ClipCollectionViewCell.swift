@@ -183,37 +183,15 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         imageView.clipsToBounds = true
     }
 
-    static func setupAppearance(shadowView: UIView, interfaceStyle: UIUserInterfaceStyle, onImage: Bool = false) {
+    static func setupAppearance(shadowView: UIView) {
         shadowView.layer.cornerRadius = Self.cornerRadius
-        shadowView.layer.shadowColor = UIColor.black.cgColor
-        shadowView.layer.shadowOpacity = onImage ? 0.3 : Self.shadowOpacity(for: interfaceStyle)
-        shadowView.layer.shadowRadius = 8
-        shadowView.layer.shadowOffset = .init(width: 0, height: 8)
         shadowView.clipsToBounds = false
         shadowView.layer.masksToBounds = false
-    }
-
-    private static func shadowOpacity(for userInterfaceStyle: UIUserInterfaceStyle) -> Float {
-        switch userInterfaceStyle {
-        case .dark:
-            return 0.9
-
-        default:
-            return 0.5
-        }
     }
 
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
-    }
-
-    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            self.contentView.layer.shadowOpacity = Self.shadowOpacity(for: self.traitCollection.userInterfaceStyle)
-        }
     }
 
     private func setupAppearance() {
@@ -231,7 +209,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         self.imagesContainerView.clipsToBounds = true
         self.imagesContainerView.layer.masksToBounds = true
 
-        Self.setupAppearance(shadowView: self.contentView, interfaceStyle: self.traitCollection.userInterfaceStyle)
+        Self.setupAppearance(shadowView: self.contentView)
 
         self.clipsToBounds = false
         self.layer.masksToBounds = false

@@ -289,7 +289,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         presentingView.addSubview(backgroundView)
 
         let animatingView = UIView()
-        ClipCollectionViewCell.setupAppearance(shadowView: animatingView, interfaceStyle: from.traitCollection.userInterfaceStyle)
+        ClipCollectionViewCell.setupAppearance(shadowView: animatingView)
         animatingView.frame = initialImageFrame
         presentingView.insertSubview(animatingView, aboveSubview: backgroundView)
 
