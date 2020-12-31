@@ -127,6 +127,16 @@ class TagCollectionViewController: UIViewController {
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
+        dependency.outputs.displayClipCount
+            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .sink { [weak self] displayClipCount in
+                self?.collectionView.visibleCells
+                    .compactMap { $0 as? TagCollectionViewCell }
+                    .forEach { $0.visibleCountIfPossible = displayClipCount }
+                self?.collectionView.collectionViewLayout.invalidateLayout()
+            }
+            .store(in: &self.cancellableBag)
+
         dependency.outputs.searchBarCleared
             .debounce(for: 0.2, scheduler: RunLoop.main)
             .sink { [weak self] _ in
@@ -215,11 +225,13 @@ class TagCollectionViewController: UIViewController {
             guard let self = self else { return nil }
             switch item {
             case let .tag(tag):
-                let configuration = TagCollectionView.CellConfiguration.Tag(tag: tag,
-                                                                            displayMode: self.isEditing ? .deletion : .normal,
-                                                                            visibleDeleteButton: false,
-                                                                            visibleCountIfPossible: true,
-                                                                            delegate: nil)
+                let configuration = TagCollectionView.CellConfiguration.Tag(
+                    tag: tag,
+                    displayMode: self.isEditing ? .deletion : .normal,
+                    visibleDeleteButton: false,
+                    visibleCountIfPossible: self.viewModel.outputs.displayClipCount.value,
+                    delegate: nil
+                )
                 return TagCollectionView.provideCell(collectionView: collectionView,
                                                      indexPath: indexPath,
                                                      configuration: .tag(configuration))

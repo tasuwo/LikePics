@@ -27,6 +27,7 @@ protocol TagCollectionViewModelOutputs {
     var displaySearchBar: CurrentValueSubject<Bool, Never> { get }
     var displayCollectionView: CurrentValueSubject<Bool, Never> { get }
     var displayEmptyMessageView: CurrentValueSubject<Bool, Never> { get }
+    var displayClipCount: CurrentValueSubject<Bool, Never> { get }
 
     var errorMessage: PassthroughSubject<String, Never> { get }
     var searchBarCleared: PassthroughSubject<Void, Never> { get }
@@ -60,6 +61,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
     let displaySearchBar: CurrentValueSubject<Bool, Never> = .init(false)
     let displayCollectionView: CurrentValueSubject<Bool, Never> = .init(false)
     let displayEmptyMessageView: CurrentValueSubject<Bool, Never> = .init(false)
+    let displayClipCount: CurrentValueSubject<Bool, Never> = .init(false)
 
     let errorMessage: PassthroughSubject<String, Never> = .init()
     let searchBarCleared: PassthroughSubject<Void, Never> = .init()
@@ -69,6 +71,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     private let query: TagListQuery
     private let clipCommandService: ClipCommandServiceProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
     private var cancellable: AnyCancellable?
@@ -78,9 +81,14 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     // MARK: - Lifecycle
 
-    init(query: TagListQuery, clipCommandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
+    init(query: TagListQuery,
+         clipCommandService: ClipCommandServiceProtocol,
+         settingStorage: UserSettingsStorageProtocol,
+         logger: TBoxLoggable)
+    {
         self.query = query
         self.clipCommandService = clipCommandService
+        self.settingStorage = settingStorage
         self.logger = logger
 
         self.bind()
@@ -113,6 +121,10 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                 self.filteredTags.send(self.searchStorage.perform(query: searchQuery, to: tags))
                 self.tags.send(tags)
             }
+            .store(in: &self.cancellableBag)
+
+        self.settingStorage.showHiddenItems
+            .sink { [weak self] showHiddenItems in self?.displayClipCount.send(showHiddenItems) }
             .store(in: &self.cancellableBag)
 
         self.created

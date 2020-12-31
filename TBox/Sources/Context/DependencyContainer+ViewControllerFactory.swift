@@ -334,6 +334,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = TagCollectionViewModel(query: query,
                                                clipCommandService: self.clipCommandService,
+                                               settingStorage: self.userSettingsStorage,
                                                logger: self.logger)
         let viewController = TagCollectionViewController(factory: self, viewModel: viewModel, logger: self.logger)
 
