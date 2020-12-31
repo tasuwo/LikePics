@@ -273,6 +273,7 @@ class ClipMergeViewController: UIViewController {
 
                 let requestId = UUID().uuidString
                 cell.identifier = requestId
+                cell.thumbnail = nil
 
                 let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(clipItem.identity.uuidString)",
                                                           size: cell.thumbnailDisplaySize,
@@ -282,6 +283,7 @@ class ClipMergeViewController: UIViewController {
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)
                 self.thumbnailLoader.load(request: request, observer: cell)
+                cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
 
                 return cell
             }

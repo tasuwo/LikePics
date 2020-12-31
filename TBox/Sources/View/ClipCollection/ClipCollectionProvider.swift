@@ -61,6 +61,7 @@ class ClipCollectionProvider: NSObject {
             cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.primaryImage = .noImage
+            cell.onReuse = {}
         }
         if let item = clip.secondaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
@@ -68,6 +69,7 @@ class ClipCollectionProvider: NSObject {
             cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.secondaryImage = .noImage
+            cell.onReuse = {}
         }
         if let item = clip.tertiaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
@@ -75,6 +77,7 @@ class ClipCollectionProvider: NSObject {
             cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.tertiaryImage = .noImage
+            cell.onReuse = {}
         }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false

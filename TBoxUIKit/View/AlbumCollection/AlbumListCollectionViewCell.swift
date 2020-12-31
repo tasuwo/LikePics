@@ -113,22 +113,22 @@ extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
             self.thumbnail = nil
         }
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
             self.thumbnail = image
         }
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
             self.thumbnail = nil
         }
     }

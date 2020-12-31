@@ -154,9 +154,10 @@ class AlbumListViewController: UIViewController {
             cell.isEditing = self.isEditing
             cell.delegate = self
 
+            let requestId = UUID().uuidString
+            cell.identifier = requestId
+
             if let thumbnailTarget = album.clips.first?.items.first {
-                let requestId = UUID().uuidString
-                cell.identifier = requestId
                 let info = ThumbnailRequest.ThumbnailInfo(id: "album-list-\(thumbnailTarget.identity.uuidString)",
                                                           size: cell.thumbnailSize,
                                                           scale: cell.traitCollection.displayScale)
@@ -167,8 +168,8 @@ class AlbumListViewController: UIViewController {
                 self.thumbnailLoader.load(request: request, observer: cell)
                 cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
             } else {
-                cell.identifier = nil
                 cell.thumbnail = nil
+                cell.onReuse = {}
             }
 
             return cell

@@ -247,26 +247,28 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        guard self.identifier == request.requestId else { return }
-        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-        switch kind {
-        case .primary:
-            self.primaryImage = .loading
+        DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+            switch kind {
+            case .primary:
+                self.primaryImage = .loading
 
-        case .secondary:
-            self.secondaryImage = .loading
+            case .secondary:
+                self.secondaryImage = .loading
 
-        case .tertiary:
-            self.tertiaryImage = .loading
+            case .tertiary:
+                self.tertiaryImage = .loading
+            }
         }
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.requestId else { return }
-        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
         DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
             switch kind {
             case .primary:
                 self.primaryImage = .loaded(image)
@@ -281,10 +283,10 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.requestId else { return }
-        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
         DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
             switch kind {
             case .primary:
                 self.primaryImage = .failedToLoad
