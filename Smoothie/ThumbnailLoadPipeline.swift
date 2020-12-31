@@ -18,7 +18,6 @@ public class ThumbnailLoadPipeline {
         public let dataLoadingQueue = OperationQueue()
         public let dataCachingQueue = OperationQueue()
         public let downsamplingQueue = OperationQueue()
-        public let imageDecodingQueue = OperationQueue()
         public let imageEncodingQueue = OperationQueue()
         public let imageDecompressingQueue = OperationQueue()
 
@@ -26,11 +25,10 @@ public class ThumbnailLoadPipeline {
             self.dataLoader = dataLoader
 
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
-            self.dataCachingQueue.maxConcurrentOperationCount = 2
+            self.dataCachingQueue.maxConcurrentOperationCount = 1
             self.downsamplingQueue.maxConcurrentOperationCount = 2
-            self.imageDecodingQueue.maxConcurrentOperationCount = 1
             self.imageEncodingQueue.maxConcurrentOperationCount = 1
-            self.imageDecompressingQueue.maxConcurrentOperationCount = 2
+            self.imageDecompressingQueue.maxConcurrentOperationCount = 1
         }
     }
 
