@@ -27,13 +27,13 @@
 			<key>NSExtensionActivationRule</key>
 			<dict>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-				<integer>10</integer>
+				<integer>20</integer>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-				<integer>10</integer>
+				<integer>20</integer>
 				<key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
-				<integer>10</integer>
+				<integer>20</integer>
                 <key>NSExtensionActivationSupportsImageWithMaxCount</key>
-                <integer>9999</integer>
+                <integer>20</integer>
 			</dict>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
