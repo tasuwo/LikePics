@@ -134,7 +134,7 @@ extension AlbumListViewModel {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtDeleteAlbum)
+                    self.errorMessage.send(L10n.albumListViewErrorAtEditAlbum)
                 }
             }
             .store(in: &self.cancellableBag)

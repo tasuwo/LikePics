@@ -343,7 +343,7 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
             withText: album.title,
             on: self,
             validator: {
-                $0?.isEmpty != true
+                $0?.isEmpty != true && $0 != album.title
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
                 self?.viewModel.inputs.editedAlbumTitle.send((album.id, text))
