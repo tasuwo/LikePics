@@ -9,10 +9,8 @@ public extension UICollectionView {
         let elements = self.visibleSupplementaryViews(ofKind: kind)
         let indexPaths = self.indexPathsForVisibleSupplementaryElements(ofKind: kind)
 
-        for (element, indexPath) in zip(elements, indexPaths) {
-            if element === supplementaryView {
-                return indexPath
-            }
+        for (element, indexPath) in zip(elements, indexPaths) where element === supplementaryView {
+            return indexPath
         }
 
         return nil
