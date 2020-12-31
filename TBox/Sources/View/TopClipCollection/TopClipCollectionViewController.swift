@@ -154,7 +154,8 @@ class TopClipCollectionViewController: UIViewController {
                 let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
                 controller.popoverPresentationController?.sourceView = self.collectionView
                 controller.popoverPresentationController?.sourceRect = cell.frame
-                controller.completionWithItemsHandler = { _, _, _, _ in
+                controller.completionWithItemsHandler = { _, completed, _, _ in
+                    guard completed else { return }
                     self.viewModel.inputs.operation.send(.none)
                 }
                 self.present(controller, animated: true, completion: nil)

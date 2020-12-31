@@ -66,7 +66,8 @@ class ClipCollectionToolBarProvider {
                 guard let self = self else { return }
                 let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
                 controller.popoverPresentationController?.barButtonItem = self.shareItem
-                controller.completionWithItemsHandler = { _, _, _, _ in
+                controller.completionWithItemsHandler = { _, completed, _, _ in
+                    guard completed else { return }
                     self.delegate?.shouldCancel(self)
                 }
                 view?.present(controller, animated: true, completion: nil)
