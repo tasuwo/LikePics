@@ -15,7 +15,7 @@ class DependencyContainer {
 
     // MARK: Image Loader
 
-    let thumbnailLoader: Smoothie.ThumbnailLoader
+    let thumbnailLoader: ThumbnailLoader
 
     // MARK: Storage
 
@@ -84,7 +84,7 @@ class DependencyContainer {
         config.diskCache = try DiskCache(path: cacheDirectoryUrl)
         config.diskCache?.removeAll()
         let pipeline = ThumbnailLoadPipeline(config: config)
-        self.thumbnailLoader = Smoothie.ThumbnailLoader(pipeline: pipeline)
+        self.thumbnailLoader = ThumbnailLoader(pipeline: pipeline)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,

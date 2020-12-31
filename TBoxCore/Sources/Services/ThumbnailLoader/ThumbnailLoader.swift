@@ -6,11 +6,11 @@ import Combine
 import Common
 import UIKit
 
-public protocol ThumbnailLoaderProtocol {
+protocol ThumbnailLoaderProtocol {
     func load(_ source: ImageSource, as pointSize: CGSize, scale: CGFloat) -> Future<UIImage?, Never>
 }
 
-public class ThumbnailLoader {
+class ThumbnailLoader {
     private let cache = NSCache<NSString, AnyObject>()
     private var cancellableBag = Set<AnyCancellable>()
 }

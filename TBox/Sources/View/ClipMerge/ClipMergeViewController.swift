@@ -58,7 +58,7 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: Smoothie.ThumbnailLoader
+    private let thumbnailLoader: ThumbnailLoader
 
     // MARK: States
 
@@ -69,7 +69,7 @@ class ClipMergeViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: Dependency,
-         thumbnailLoader: Smoothie.ThumbnailLoader)
+         thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
         self.viewModel = viewModel
