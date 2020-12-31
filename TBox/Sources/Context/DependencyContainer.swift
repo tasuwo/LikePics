@@ -79,10 +79,9 @@ class DependencyContainer {
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
 
+        var config = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
         let cacheDirectoryUrl = Self.resolveCacheDirectoryUrl()
-        let config = ThumbnailLoadPipeline.Configuration(memoryCache: MemoryCache(),
-                                                         diskCache: try DiskCache(path: cacheDirectoryUrl),
-                                                         dataLoader: self.imageQueryService)
+        config.diskCache = try DiskCache(path: cacheDirectoryUrl)
         let pipeline = ThumbnailLoadPipeline(config: config)
         self.thumbnailLoader = Smoothie.ThumbnailLoader(pipeline: pipeline)
 

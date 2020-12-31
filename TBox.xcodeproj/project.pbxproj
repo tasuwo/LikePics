@@ -2293,12 +2293,12 @@
 		2C8C4541259D464D00DEAABB /* Smoothie */ = {
 			isa = PBXGroup;
 			children = (
+				2C8C45C7259D4B5800DEAABB /* ImageLoader */,
 				2C8C45B3259D474100DEAABB /* Extensions */,
 				2C4F26A9259C873200156958 /* ValueObject */,
 				2CE2D88D259C4BB50097F8C5 /* Cache */,
 				2C4F26BC259C92C700156958 /* ThumbnailLoader.swift */,
 				2CE2D8D7259C5C970097F8C5 /* ThumbnailLoadPipeline.swift */,
-				2CE2D8E9259C5FFD0097F8C5 /* OriginalImageLoader.swift */,
 				2C8C4542259D464D00DEAABB /* Smoothie.h */,
 				2C8C4543259D464D00DEAABB /* Info.plist */,
 			);
@@ -2311,6 +2311,14 @@
 				2C4F26EA259CA10400156958 /* String+SHA256.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2C8C45C7259D4B5800DEAABB /* ImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				2CE2D8E9259C5FFD0097F8C5 /* OriginalImageLoader.swift */,
+			);
+			path = ImageLoader;
 			sourceTree = "<group>";
 		};
 		2C8FD62E24E02DCE005887F9 /* TBoxUIKit */ = {

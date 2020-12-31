@@ -7,10 +7,10 @@ import UIKit
 
 public class ThumbnailLoadPipeline {
     public struct Configuration {
-        public let memoryCache: MemoryCaching
-        public let diskCache: DiskCaching?
-        public let compressionRatio: Float
-        public let dataLoader: OriginalImageLoader
+        public var memoryCache: MemoryCaching = MemoryCache()
+        public var diskCache: DiskCaching?
+        public var compressionRatio: Float = 0.8
+        public var dataLoader: OriginalImageLoader
 
         public let dataLoadingQueue = OperationQueue()
         public let dataCachingQueue = OperationQueue()
@@ -19,15 +19,8 @@ public class ThumbnailLoadPipeline {
         public let imageEncodingQueue = OperationQueue()
         public let imageDecompressingQueue = OperationQueue()
 
-        public init(memoryCache: MemoryCaching,
-                    diskCache: DiskCaching,
-                    dataLoader: OriginalImageLoader,
-                    compressionRatio: Float = 0.8)
-        {
-            self.memoryCache = memoryCache
-            self.diskCache = diskCache
+        public init(dataLoader: OriginalImageLoader) {
             self.dataLoader = dataLoader
-            self.compressionRatio = compressionRatio
 
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
             self.dataCachingQueue.maxConcurrentOperationCount = 2
@@ -43,7 +36,8 @@ public class ThumbnailLoadPipeline {
         let promise: Future<UIImage?, Never>.Promise
     }
 
-    private let config: Configuration
+    public let config: Configuration
+
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadPipeline", target: .global(qos: .userInitiated))
 
     // MARK: - Lifecycle

@@ -2,8 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Common
-
 public protocol DiskCaching: AnyObject {
     func store(_ data: Data?, forKey key: String)
     func remove(forKey key: String)
