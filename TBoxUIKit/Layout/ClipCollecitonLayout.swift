@@ -59,6 +59,13 @@ public class ClipCollectionLayout: UICollectionViewLayout {
         return self.cache[indexPath.item]
     }
 
+    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        if let collectionView = self.collectionView {
+            return collectionView.frame.size != newBounds.size
+        }
+        return false
+    }
+
     // MARK: - UICollectionViewLayout
 
     override public func prepare() {
