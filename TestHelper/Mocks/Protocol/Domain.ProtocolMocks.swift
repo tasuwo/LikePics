@@ -4,7 +4,7 @@
 
 import Combine
 @testable import Domain
-import UIKit
+import Smoothie
 
 public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     public init() { }
@@ -634,20 +634,6 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
-public class NewImageQueryServiceProtocolMock: NewImageQueryServiceProtocol {
-    public init() { }
-
-    public private(set) var readCallCount = 0
-    public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
-    public func read(having id: ImageContainer.Identity) throws -> Data? {
-        readCallCount += 1
-        if let readHandler = readHandler {
-            return try readHandler(id)
-        }
-        return nil
-    }
-}
-
 public class NewImageStorageProtocolMock: NewImageStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {
@@ -838,47 +824,6 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     }
 }
 
-public class ThumbnailStorageProtocolMock: ThumbnailStorageProtocol {
-    public init() { }
-
-    public private(set) var clearCacheCallCount = 0
-    public var clearCacheHandler: (() -> Void)?
-    public func clearCache() {
-        clearCacheCallCount += 1
-        if let clearCacheHandler = clearCacheHandler {
-            clearCacheHandler()
-        }
-    }
-
-    public private(set) var readThumbnailIfExistsCallCount = 0
-    public var readThumbnailIfExistsHandler: ((ClipItem) -> (UIImage?))?
-    public func readThumbnailIfExists(for item: ClipItem) -> UIImage? {
-        readThumbnailIfExistsCallCount += 1
-        if let readThumbnailIfExistsHandler = readThumbnailIfExistsHandler {
-            return readThumbnailIfExistsHandler(item)
-        }
-        return nil
-    }
-
-    public private(set) var requestThumbnailCallCount = 0
-    public var requestThumbnailHandler: ((ClipItem, @escaping (UIImage?) -> Void) -> Void)?
-    public func requestThumbnail(for item: ClipItem, completion: @escaping (UIImage?) -> Void) {
-        requestThumbnailCallCount += 1
-        if let requestThumbnailHandler = requestThumbnailHandler {
-            requestThumbnailHandler(item, completion)
-        }
-    }
-
-    public private(set) var deleteThumbnailCacheIfExistsCallCount = 0
-    public var deleteThumbnailCacheIfExistsHandler: ((ClipItem) -> Void)?
-    public func deleteThumbnailCacheIfExists(for item: ClipItem) {
-        deleteThumbnailCacheIfExistsCallCount += 1
-        if let deleteThumbnailCacheIfExistsHandler = deleteThumbnailCacheIfExistsHandler {
-            deleteThumbnailCacheIfExistsHandler(item)
-        }
-    }
-}
-
 public class AlbumListQueryMock: AlbumListQuery {
     public init() { }
     public init(albums: CurrentValueSubject<[Album], Error>) {
@@ -1053,5 +998,19 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         if let setEnabledICloudSyncHandler = setEnabledICloudSyncHandler {
             setEnabledICloudSyncHandler(enabledICloudSync)
         }
+    }
+}
+
+public class NewImageQueryServiceProtocolMock: NewImageQueryServiceProtocol {
+    public init() { }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
+    public func read(having id: ImageContainer.Identity) throws -> Data? {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return try readHandler(id)
+        }
+        return nil
     }
 }
