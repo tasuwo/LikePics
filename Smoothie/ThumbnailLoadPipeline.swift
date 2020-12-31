@@ -7,6 +7,8 @@ import os
 import UIKit
 
 public class ThumbnailLoadPipeline {
+    typealias ThumbnailId = String
+
     public struct Configuration {
         public var memoryCache: MemoryCaching = MemoryCache()
         public var diskCache: DiskCaching?
@@ -34,6 +36,7 @@ public class ThumbnailLoadPipeline {
 
     private struct Context {
         let request: ThumbnailRequest
+        let task: ThumbnailLoadTask
         let completion: (UIImage?) -> Void
     }
 
@@ -42,7 +45,7 @@ public class ThumbnailLoadPipeline {
     private let logger = Logger()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadPipeline", target: .global(qos: .userInitiated))
 
-    private var loadings: [String: ThumbnailLoadNotifier] = [:]
+    private var tasks: [ThumbnailId: ThumbnailLoadTask] = [:]
 
     // MARK: - Lifecycle
 
@@ -53,16 +56,16 @@ public class ThumbnailLoadPipeline {
     // MARK: - Methods
 
     func readCacheIfExists(for request: ThumbnailRequest) -> UIImage? {
-        if let data = config.memoryCache[request.cacheKey],
+        if let data = config.memoryCache[request.thumbnailInfo.id],
             let image = decompress(data)
         {
             return image
         }
 
-        if let data = config.diskCache?[request.cacheKey],
+        if let data = config.diskCache?[request.thumbnailInfo.id],
             let image = decompress(data)
         {
-            config.memoryCache[request.cacheKey] = data
+            config.memoryCache[request.thumbnailInfo.id] = data
             return image
         }
 
@@ -73,25 +76,30 @@ public class ThumbnailLoadPipeline {
         queue.async { [weak self, weak observer] in
             guard let self = self else { return }
 
-            let target = ThumbnailLoadNotifier.Target(request: request, observer: observer)
-
-            if let notifier = self.loadings[request.cacheKey] {
-                notifier.targets.append(target)
+            if let task = self.tasks[request.thumbnailInfo.id] {
+                task.append(request, observer: observer)
                 return
             }
 
-            self.loadings[request.cacheKey] = ThumbnailLoadNotifier(target: target)
+            let task = ThumbnailLoadTask(thumbnailId: request.thumbnailInfo.id)
+            task.delegate = self
+            task.append(request, observer: observer)
+            self.tasks[request.thumbnailInfo.id] = task
 
-            let context = Context(request: request) { image in
-                self.loadings[request.cacheKey]?.didLoad(image: image)
-                self.loadings.removeValue(forKey: request.cacheKey)
-            }
+            let context = Context(request: request, task: task) { task.didLoad(image: $0) }
 
-            if let data = self.config.memoryCache[request.cacheKey] {
+            if let data = self.config.memoryCache[request.thumbnailInfo.id] {
                 self.enqueueDecompressingOperation(context: context, data: data)
             } else {
                 self.enqueueCheckCacheOperation(context: context)
             }
+        }
+    }
+
+    func cancel(_ request: ThumbnailRequest) {
+        queue.async { [weak self] in
+            guard let self = self, let task = self.tasks[request.thumbnailInfo.id] else { return }
+            task.cancel(requestId: request.requestId)
         }
     }
 }
@@ -105,7 +113,7 @@ extension ThumbnailLoadPipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Read Disk Cache")
-            let data = self.config.diskCache?[context.request.cacheKey]
+            let data = self.config.diskCache?[context.request.thumbnailInfo.id]
             log.log(.end, name: "Read Disk Cache")
 
             self.queue.async {
@@ -116,6 +124,7 @@ extension ThumbnailLoadPipeline {
                 }
             }
         }
+        context.task.dependentOperation = operation
         config.dataCachingQueue.addOperation(operation)
     }
 
@@ -125,7 +134,7 @@ extension ThumbnailLoadPipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Load Original Data")
-            let data = self.config.dataLoader.loadData(with: context.request.originalDataRequest)
+            let data = self.config.dataLoader.loadData(with: context.request.imageRequest)
             log.log(.end, name: "Load Original Data")
 
             self.queue.async {
@@ -136,6 +145,7 @@ extension ThumbnailLoadPipeline {
                 }
             }
         }
+        context.task.dependentOperation = operation
         config.dataLoadingQueue.addOperation(operation)
     }
 
@@ -146,8 +156,8 @@ extension ThumbnailLoadPipeline {
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
             let thumbnail = self.thumbnail(data: data,
-                                           size: context.request.size,
-                                           scale: context.request.scale)
+                                           size: context.request.thumbnailInfo.size,
+                                           scale: context.request.thumbnailInfo.scale)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -158,6 +168,7 @@ extension ThumbnailLoadPipeline {
                 }
             }
         }
+        context.task.dependentOperation = operation
         config.downsamplingQueue.addOperation(operation)
     }
 
@@ -172,7 +183,7 @@ extension ThumbnailLoadPipeline {
 
             self.queue.async {
                 if let encodedImage = encodedImage {
-                    self.config.memoryCache.insert(encodedImage, forKey: context.request.cacheKey)
+                    self.config.memoryCache.insert(encodedImage, forKey: context.request.thumbnailInfo.id)
                     self.enqueueCachingOperation(for: context.request, data: encodedImage)
                     self.enqueueDecompressingOperation(context: context, data: encodedImage)
                 } else {
@@ -180,6 +191,7 @@ extension ThumbnailLoadPipeline {
                 }
             }
         }
+        context.task.dependentOperation = operation
         config.imageEncodingQueue.addOperation(operation)
     }
 
@@ -189,7 +201,7 @@ extension ThumbnailLoadPipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Store Cache")
-            self.config.diskCache?.store(data, forKey: request.cacheKey)
+            self.config.diskCache?.store(data, forKey: request.thumbnailInfo.id)
             log.log(.end, name: "Store Cache")
         }
         config.dataCachingQueue.addOperation(operation)
@@ -209,6 +221,16 @@ extension ThumbnailLoadPipeline {
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
+    }
+}
+
+extension ThumbnailLoadPipeline: ThumbnailLoadTaskDelegate {
+    // MARK: - ThumbnailLoadTaskDelegate
+
+    func didComplete(_ task: ThumbnailLoadTask) {
+        queue.async {
+            self.tasks.removeValue(forKey: task.thumbnailId)
+        }
     }
 }
 

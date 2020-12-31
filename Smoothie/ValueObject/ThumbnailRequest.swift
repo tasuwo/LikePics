@@ -5,25 +5,31 @@
 import CoreGraphics
 
 public struct ThumbnailRequest {
-    public let identifier: UUID
-    public let cacheKey: String
-    public let originalDataRequest: OriginalImageRequest
-    public let size: CGSize
-    public let scale: CGFloat
+    public struct ThumbnailInfo {
+        public let id: String
+        public let size: CGSize
+        public let scale: CGFloat
+
+        public init(id: String, size: CGSize, scale: CGFloat) {
+            self.id = id
+            self.size = size
+            self.scale = scale
+        }
+    }
+
+    public let requestId: String
+    public let imageRequest: OriginalImageRequest
+    public let thumbnailInfo: ThumbnailInfo
     public let userInfo: [AnyHashable: Any]?
 
-    public init(identifier: UUID,
-                cacheKey: String,
-                originalDataLoadRequest: OriginalImageRequest,
-                size: CGSize,
-                scale: CGFloat,
+    public init(requestId: String,
+                originalImageRequest: OriginalImageRequest,
+                thumbnailInfo: ThumbnailInfo,
                 userInfo: [AnyHashable: Any]? = nil)
     {
-        self.identifier = identifier
-        self.originalDataRequest = originalDataLoadRequest
-        self.cacheKey = cacheKey
-        self.size = size
-        self.scale = scale
+        self.requestId = requestId
+        self.imageRequest = originalImageRequest
+        self.thumbnailInfo = thumbnailInfo
         self.userInfo = userInfo
     }
 }

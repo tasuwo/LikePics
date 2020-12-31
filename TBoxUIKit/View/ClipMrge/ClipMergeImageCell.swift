@@ -11,7 +11,7 @@ public class ClipMergeImageCell: UICollectionViewCell {
         return UINib(nibName: "ClipMergeImageCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: ClipItem.Identity?
+    public var identifier: String?
 
     public var thumbnail: UIImage? {
         get {
@@ -26,6 +26,8 @@ public class ClipMergeImageCell: UICollectionViewCell {
         imageView.bounds.size
     }
 
+    public var onReuse: () -> Void = {}
+
     @IBOutlet private var imageView: UIImageView!
 
     // MARK: - Lifecycle
@@ -34,6 +36,11 @@ public class ClipMergeImageCell: UICollectionViewCell {
         super.awakeFromNib()
 
         self.setupAppearance()
+    }
+
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        self.onReuse()
     }
 
     // MARK: - Methods
@@ -50,19 +57,21 @@ extension ClipMergeImageCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
-        self.thumbnail = nil
+        guard self.identifier == request.requestId else { return }
+        DispatchQueue.main.async {
+            self.thumbnail = nil
+        }
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = image
         }
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = nil
         }

@@ -52,7 +52,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     static let cornerRadius: CGFloat = 10
 
-    public var identifier: Clip.Identity?
+    public var identifier: String?
 
     public var primaryImage: Image? {
         didSet {
@@ -140,6 +140,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             || !primaryImage.isLoaded
     }
 
+    public var onReuse: () -> Void = {}
+
     override public var isSelected: Bool {
         didSet {
             self.updateOverallOverlayView()
@@ -174,6 +176,13 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var overallOverlayView: UIView!
     @IBOutlet var selectionMark: UIView!
     @IBOutlet var indicator: UIActivityIndicatorView!
+
+    // MRAK: - Lifecycle
+
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        self.onReuse()
+    }
 
     // MARK: - Methods
 
@@ -238,9 +247,9 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
+        guard self.identifier == request.requestId else { return }
         guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
             let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-        guard self.identifier == request.identifier else { return }
         switch kind {
         case .primary:
             self.primaryImage = .loading
@@ -254,7 +263,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
             let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
         DispatchQueue.main.async {
@@ -272,7 +281,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
             let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
         DispatchQueue.main.async {

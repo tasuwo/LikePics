@@ -11,7 +11,7 @@ public class AlbumSelectionCell: UITableViewCell {
         return UINib(nibName: "AlbumSelectionCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: Album.Identity?
+    public var identifier: String?
 
     public var title: String? {
         get {
@@ -35,6 +35,8 @@ public class AlbumSelectionCell: UITableViewCell {
         thumbnailImageView.bounds.size
     }
 
+    public var onReuse: () -> Void = {}
+
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
 
@@ -44,6 +46,11 @@ public class AlbumSelectionCell: UITableViewCell {
         super.awakeFromNib()
 
         self.setupAppearance()
+    }
+
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        self.onReuse()
     }
 
     func setupAppearance() {
@@ -58,19 +65,19 @@ extension AlbumSelectionCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         self.thumbnail = nil
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = image
         }
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = nil
         }

@@ -32,6 +32,10 @@ public class ThumbnailLoader {
         }
     }
 
+    public func cancel(_ request: ThumbnailRequest) {
+        pipeline.cancel(request)
+    }
+
     public func prefetch(for request: ThumbnailRequest) {
         pipeline.load(for: request, observer: nil)
     }

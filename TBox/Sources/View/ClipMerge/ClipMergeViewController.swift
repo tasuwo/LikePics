@@ -270,13 +270,17 @@ class ClipMergeViewController: UIViewController {
             case let .item(clipItem):
                 let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: "clip-selection", for: indexPath)
                 guard let cell = dequeuedCell as? ClipMergeImageCell else { return dequeuedCell }
-                cell.identifier = clipItem.id
 
-                let request = ThumbnailRequest(identifier: clipItem.id,
-                                               cacheKey: "clip-merge-\(clipItem.id.uuidString)",
-                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: clipItem.imageId),
-                                               size: cell.thumbnailDisplaySize,
-                                               scale: cell.traitCollection.displayScale)
+                let requestId = UUID().uuidString
+                cell.identifier = requestId
+
+                let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(clipItem.identity.uuidString)",
+                                                          size: cell.thumbnailDisplaySize,
+                                                          scale: cell.traitCollection.displayScale)
+                let imageRequest = NewImageDataLoadRequest(imageId: clipItem.imageId)
+                let request = ThumbnailRequest(requestId: requestId,
+                                               originalImageRequest: imageRequest,
+                                               thumbnailInfo: info)
                 self.thumbnailLoader.load(request: request, observer: cell)
 
                 return cell

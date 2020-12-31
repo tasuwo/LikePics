@@ -105,17 +105,21 @@ class AlbumSelectionViewController: UIViewController {
             let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: AlbumSelectionTableView.cellIdentifier, for: indexPath)
             guard let cell = dequeuedCell as? AlbumSelectionCell else { return dequeuedCell }
 
-            cell.identifier = album.identity
             cell.title = album.title
 
             if let thumbnailTarget = album.clips.first?.items.first {
-                let request = ThumbnailRequest(identifier: album.identity,
-                                               cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
-                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: thumbnailTarget.imageId),
-                                               size: cell.thumbnailDisplaySize,
-                                               scale: cell.traitCollection.displayScale)
+                let requestId = UUID().uuidString
+                cell.identifier = requestId
+                let info = ThumbnailRequest.ThumbnailInfo(id: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
+                                                          size: cell.thumbnailDisplaySize,
+                                                          scale: cell.traitCollection.displayScale)
+                let imageRequest = NewImageDataLoadRequest(imageId: thumbnailTarget.imageId)
+                let request = ThumbnailRequest(requestId: requestId,
+                                               originalImageRequest: imageRequest,
+                                               thumbnailInfo: info)
                 self?.thumbnailLoader.load(request: request, observer: cell)
             } else {
+                cell.identifier = nil
                 cell.thumbnail = nil
             }
 

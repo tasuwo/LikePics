@@ -15,7 +15,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "AlbumListCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: Album.Identity?
+    public var identifier: String?
 
     public var thumbnail: UIImage? {
         get {
@@ -57,6 +57,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var onReuse: () -> Void = {}
+
     public weak var delegate: AlbumListCollectionViewCellDelegate?
 
     @IBOutlet var thumbnailImageView: UIImageView!
@@ -70,6 +72,11 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
+    }
+
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        self.onReuse()
     }
 
     // MARK: - IBAction
@@ -106,21 +113,21 @@ extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = nil
         }
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = image
         }
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
-        guard self.identifier == request.identifier else { return }
+        guard self.identifier == request.requestId else { return }
         DispatchQueue.main.async {
             self.thumbnail = nil
         }

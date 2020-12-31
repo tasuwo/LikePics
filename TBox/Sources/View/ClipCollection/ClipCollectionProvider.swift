@@ -50,25 +50,29 @@ class ClipCollectionProvider: NSObject {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: ClipCollectionView.cellIdentifier, for: indexPath)
         guard let cell = dequeuedCell as? ClipCollectionViewCell else { return dequeuedCell }
 
-        cell.identifier = clip.identity
+        let requestId = UUID().uuidString
+        cell.identifier = requestId
 
         let scale = collectionView.traitCollection.displayScale
 
         if let item = clip.primaryItem {
-            let request = self.makeRequest(for: item, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
+            let request = self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
             self.thumbnailLoader.load(request: request, observer: cell)
+            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.primaryImage = .noImage
         }
         if let item = clip.secondaryItem {
-            let request = self.makeRequest(for: item, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
+            let request = self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
             self.thumbnailLoader.load(request: request, observer: cell)
+            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.secondaryImage = .noImage
         }
         if let item = clip.tertiaryItem {
-            let request = self.makeRequest(for: item, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
+            let request = self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
             self.thumbnailLoader.load(request: request, observer: cell)
+            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
         } else {
             cell.tertiaryImage = .noImage
         }
@@ -78,12 +82,14 @@ class ClipCollectionProvider: NSObject {
         return cell
     }
 
-    private func makeRequest(for item: ClipItem, size: CGSize, scale: CGFloat, context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue) -> ThumbnailRequest {
-        return ThumbnailRequest(identifier: item.clipId,
-                                cacheKey: "clip-collection-\(item.identity.uuidString)",
-                                originalDataLoadRequest: NewImageDataLoadRequest(imageId: item.imageId),
-                                size: size,
-                                scale: scale,
+    private func makeRequest(for item: ClipItem, id: String, size: CGSize, scale: CGFloat, context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue) -> ThumbnailRequest {
+        let info = ThumbnailRequest.ThumbnailInfo(id: "clip-collection-\(item.identity.uuidString)",
+                                                  size: size,
+                                                  scale: scale)
+        let imageRequest = NewImageDataLoadRequest(imageId: item.imageId)
+        return ThumbnailRequest(requestId: id,
+                                originalImageRequest: imageRequest,
+                                thumbnailInfo: info,
                                 userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
     }
 }
@@ -269,19 +275,54 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
         for indexPath in indexPaths {
             guard let attribute = layout.layoutAttributesForItem(at: indexPath) else { return }
             guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
+
             let scale = collectionView.traitCollection.displayScale
+
             if let item = clip.primaryItem {
-                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .primary)
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
             if let item = clip.secondaryItem {
-                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .secondary)
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
             if let item = clip.tertiaryItem {
-                let request = self.makeRequest(for: item, size: attribute.frame.size, scale: scale, context: .tertiary)
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary)
                 self.thumbnailLoader.load(request: request, observer: nil)
             }
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        guard let layout = collectionView.collectionViewLayout as? ClipCollectionLayout else { return }
+        for indexPath in indexPaths {
+            guard let attribute = layout.layoutAttributesForItem(at: indexPath) else { return }
+            guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
+
+            let scale = collectionView.traitCollection.displayScale
+
+            if let item = clip.primaryItem {
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary)
+                self.thumbnailLoader.cancel(request)
+            }
+            if let item = clip.secondaryItem {
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary)
+                self.thumbnailLoader.cancel(request)
+            }
+            if let item = clip.tertiaryItem {
+                let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
+                let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary)
+                self.thumbnailLoader.cancel(request)
+            }
+        }
+    }
+
+    private func prefetchRequestIdIssuer(item: ClipItem, indexPath: IndexPath) -> String {
+        return "prefetch-\(item.id.uuidString)-\(indexPath.section)-\(indexPath.row)"
     }
 }

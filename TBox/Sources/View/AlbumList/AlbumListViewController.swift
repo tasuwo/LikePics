@@ -149,20 +149,25 @@ class AlbumListViewController: UIViewController {
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
             guard let self = self, let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
 
-            cell.identifier = album.identity
             cell.title = album.title
             cell.clipCount = album.clips.count
             cell.isEditing = self.isEditing
             cell.delegate = self
 
             if let thumbnailTarget = album.clips.first?.items.first {
-                let request = ThumbnailRequest(identifier: album.identity,
-                                               cacheKey: "album-list-\(thumbnailTarget.identity.uuidString)",
-                                               originalDataLoadRequest: NewImageDataLoadRequest(imageId: thumbnailTarget.imageId),
-                                               size: cell.thumbnailSize,
-                                               scale: cell.traitCollection.displayScale)
+                let requestId = UUID().uuidString
+                cell.identifier = requestId
+                let info = ThumbnailRequest.ThumbnailInfo(id: "album-list-\(thumbnailTarget.identity.uuidString)",
+                                                          size: cell.thumbnailSize,
+                                                          scale: cell.traitCollection.displayScale)
+                let imageRequest = NewImageDataLoadRequest(imageId: thumbnailTarget.imageId)
+                let request = ThumbnailRequest(requestId: requestId,
+                                               originalImageRequest: imageRequest,
+                                               thumbnailInfo: info)
                 self.thumbnailLoader.load(request: request, observer: cell)
+                cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
             } else {
+                cell.identifier = nil
                 cell.thumbnail = nil
             }
 
