@@ -256,10 +256,10 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension ClipCollectionViewCell: ThumbnailLoaderObserver {
-    // MARK: - ThumbnailLoaderObserver
+extension ClipCollectionViewCell: ThumbnailLoadObserver {
+    // MARK: - ThumbnailLoadObserver
 
-    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+    public func didStartLoading(_ request: ThumbnailRequest) {
         guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
             let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
         guard self.identifier == request.identifier else { return }
@@ -275,31 +275,39 @@ extension ClipCollectionViewCell: ThumbnailLoaderObserver {
         }
     }
 
-    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+        guard self.identifier == request.identifier else { return }
         guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
             let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-        guard self.identifier == request.identifier else { return }
-        switch kind {
-        case .primary:
-            self.primaryImage = result.convert()
+        DispatchQueue.main.async {
+            switch kind {
+            case .primary:
+                self.primaryImage = .loaded(image)
 
-        case .secondary:
-            self.secondaryImage = result.convert()
+            case .secondary:
+                self.secondaryImage = .loaded(image)
 
-        case .tertiary:
-            self.tertiaryImage = result.convert()
+            case .tertiary:
+                self.tertiaryImage = .loaded(image)
+            }
         }
     }
-}
 
-private extension ThumbnailLoadResult {
-    func convert() -> ClipCollectionViewCell.Image {
-        switch self {
-        case let .loaded(image):
-            return .loaded(image)
+    public func didFailedToLoad(_ request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
+        guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+        DispatchQueue.main.async {
+            switch kind {
+            case .primary:
+                self.primaryImage = .failedToLoad
 
-        case .failedToLoad:
-            return .failedToLoad
+            case .secondary:
+                self.secondaryImage = .failedToLoad
+
+            case .tertiary:
+                self.tertiaryImage = .failedToLoad
+            }
         }
     }
 }

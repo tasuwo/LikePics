@@ -102,20 +102,26 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension AlbumListCollectionViewCell: ThumbnailLoaderObserver {
-    // MARK: - ThumbnailLoaderObserver
+extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
+    // MARK: - ThumbnailLoadObserver
 
-    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
-        self.thumbnail = nil
+    public func didStartLoading(_ request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
+        DispatchQueue.main.async {
+            self.thumbnail = nil
+        }
     }
 
-    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
+    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
         guard self.identifier == request.identifier else { return }
-        switch result {
-        case let .loaded(image):
+        DispatchQueue.main.async {
             self.thumbnail = image
+        }
+    }
 
-        default:
+    public func didFailedToLoad(_ request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
+        DispatchQueue.main.async {
             self.thumbnail = nil
         }
     }

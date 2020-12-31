@@ -54,19 +54,24 @@ public class AlbumSelectionCell: UITableViewCell {
     }
 }
 
-extension AlbumSelectionCell: ThumbnailLoaderObserver {
-    // MARK: - ThumbnailLoaderObserver
+extension AlbumSelectionCell: ThumbnailLoadObserver {
+    // MARK: - ThumbnailLoadObserver
 
-    public func didStartAsyncLoading(_ loader: ThumbnailLoader, request: ThumbnailRequest) {
+    public func didStartLoading(_ request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
         self.thumbnail = nil
     }
 
-    public func didFinishLoad(_ loader: ThumbnailLoader, request: ThumbnailRequest, result: ThumbnailLoadResult) {
-        switch result {
-        case let .loaded(image):
+    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+        guard self.identifier == request.identifier else { return }
+        DispatchQueue.main.async {
             self.thumbnail = image
+        }
+    }
 
-        default:
+    public func didFailedToLoad(_ request: ThumbnailRequest) {
+        guard self.identifier == request.identifier else { return }
+        DispatchQueue.main.async {
             self.thumbnail = nil
         }
     }

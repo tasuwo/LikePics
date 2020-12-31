@@ -34,13 +34,15 @@ public class ThumbnailLoadPipeline {
 
     private struct Context {
         let request: ThumbnailRequest
-        let promise: Future<UIImage?, Never>.Promise
+        let completion: (UIImage?) -> Void
     }
 
     public let config: Configuration
 
-    private let logger: Logger = Logger()
+    private let logger = Logger()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadPipeline", target: .global(qos: .userInitiated))
+
+    private var loadings: [String: ThumbnailLoadNotifier] = [:]
 
     // MARK: - Lifecycle
 
@@ -67,14 +69,28 @@ public class ThumbnailLoadPipeline {
         return nil
     }
 
-    func load(for request: ThumbnailRequest) -> Future<UIImage?, Never> {
-        return Future { [weak self] promise in
-            self?.queue.async {
-                if let data = self?.config.memoryCache[request.cacheKey] {
-                    self?.enqueueDecompressingOperation(context: .init(request: request, promise: promise), data: data)
-                } else {
-                    self?.enqueueCheckCacheOperation(context: .init(request: request, promise: promise))
-                }
+    func load(for request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
+        queue.async { [weak self, weak observer] in
+            guard let self = self else { return }
+
+            let target = ThumbnailLoadNotifier.Target(request: request, observer: observer)
+
+            if let notifier = self.loadings[request.cacheKey] {
+                notifier.targets.append(target)
+                return
+            }
+
+            self.loadings[request.cacheKey] = ThumbnailLoadNotifier(target: target)
+
+            let context = Context(request: request) { image in
+                self.loadings[request.cacheKey]?.didLoad(image: image)
+                self.loadings.removeValue(forKey: request.cacheKey)
+            }
+
+            if let data = self.config.memoryCache[request.cacheKey] {
+                self.enqueueDecompressingOperation(context: context, data: data)
+            } else {
+                self.enqueueCheckCacheOperation(context: context)
             }
         }
     }
@@ -116,7 +132,7 @@ extension ThumbnailLoadPipeline {
                 if let data = data {
                     self.enqueueDownsamplingOperation(context: context, data: data)
                 } else {
-                    context.promise(.success(nil))
+                    context.completion(nil)
                 }
             }
         }
@@ -138,7 +154,7 @@ extension ThumbnailLoadPipeline {
                 if let thumbnail = thumbnail {
                     self.enqueueEncodingOperation(context: context, thumbnail: thumbnail)
                 } else {
-                    context.promise(.success(nil))
+                    context.completion(nil)
                 }
             }
         }
@@ -156,10 +172,11 @@ extension ThumbnailLoadPipeline {
 
             self.queue.async {
                 if let encodedImage = encodedImage {
+                    self.config.memoryCache.insert(encodedImage, forKey: context.request.cacheKey)
                     self.enqueueCachingOperation(for: context.request, data: encodedImage)
                     self.enqueueDecompressingOperation(context: context, data: encodedImage)
                 } else {
-                    context.promise(.success(nil))
+                    context.completion(nil)
                 }
             }
         }
@@ -173,7 +190,6 @@ extension ThumbnailLoadPipeline {
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Store Cache")
             self.config.diskCache?.store(data, forKey: request.cacheKey)
-            self.config.memoryCache.insert(data, forKey: request.cacheKey)
             log.log(.end, name: "Store Cache")
         }
         config.dataCachingQueue.addOperation(operation)
@@ -189,7 +205,7 @@ extension ThumbnailLoadPipeline {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
-                context.promise(.success(image))
+                context.completion(image)
             }
         }
         config.imageDecompressingQueue.addOperation(operation)

@@ -197,7 +197,6 @@
 		2C8C4563259D469C00DEAABB /* Smoothie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8C4540259D464D00DEAABB /* Smoothie.framework */; };
 		2C8C4578259D46D800DEAABB /* ThumbnailRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26D6259C933B00156958 /* ThumbnailRequest.swift */; };
 		2C8C4582259D46E100DEAABB /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26AA259C874D00156958 /* ImageType.swift */; };
-		2C8C458C259D46E600DEAABB /* ThumbnailLoadResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26E0259C935F00156958 /* ThumbnailLoadResult.swift */; };
 		2C8C4596259D46EC00DEAABB /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8A8259C4BCA0097F8C5 /* MemoryCache.swift */; };
 		2C8C45A9259D46F100DEAABB /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8CC259C50610097F8C5 /* DiskCache.swift */; };
 		2C8C45B4259D474B00DEAABB /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26EA259CA10400156958 /* String+SHA256.swift */; };
@@ -305,6 +304,7 @@
 		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CD62F9D259D508B0067D8AD /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD62F9C259D508B0067D8AD /* Logger.swift */; };
+		2CD62FB1259D5A5E0067D8AD /* ThumbnailLoadNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadNotifier.swift */; };
 		2CD6732225812CD600007CCF /* TemporariesPersistServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */; };
 		2CD6734925812F2E00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD6735625812F4B00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -814,7 +814,6 @@
 		2C4F26AA259C874D00156958 /* ImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageType.swift; sourceTree = "<group>"; };
 		2C4F26BC259C92C700156958 /* ThumbnailLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoader.swift; sourceTree = "<group>"; };
 		2C4F26D6259C933B00156958 /* ThumbnailRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRequest.swift; sourceTree = "<group>"; };
-		2C4F26E0259C935F00156958 /* ThumbnailLoadResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoadResult.swift; sourceTree = "<group>"; };
 		2C4F26EA259CA10400156958 /* String+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256.swift"; sourceTree = "<group>"; };
 		2C50D435253226D0008A422C /* AlbumSelectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionCell.swift; sourceTree = "<group>"; };
 		2C50D447253226DF008A422C /* AlbumSelectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumSelectionCell.xib; sourceTree = "<group>"; };
@@ -992,6 +991,7 @@
 		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CD62F9C259D508B0067D8AD /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoadNotifier.swift; sourceTree = "<group>"; };
 		2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceSpec.swift; sourceTree = "<group>"; };
 		2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContextObserver.swift; sourceTree = "<group>"; };
@@ -1819,7 +1819,6 @@
 			children = (
 				2C4F26AA259C874D00156958 /* ImageType.swift */,
 				2C4F26D6259C933B00156958 /* ThumbnailRequest.swift */,
-				2C4F26E0259C935F00156958 /* ThumbnailLoadResult.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -2302,6 +2301,7 @@
 				2CE2D88D259C4BB50097F8C5 /* Cache */,
 				2C4F26BC259C92C700156958 /* ThumbnailLoader.swift */,
 				2CE2D8D7259C5C970097F8C5 /* ThumbnailLoadPipeline.swift */,
+				2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadNotifier.swift */,
 				2C8C4542259D464D00DEAABB /* Smoothie.h */,
 				2C8C4543259D464D00DEAABB /* Info.plist */,
 			);
@@ -4082,9 +4082,9 @@
 				2C8C4558259D466F00DEAABB /* ThumbnailLoadPipeline.swift in Sources */,
 				2C8C4582259D46E100DEAABB /* ImageType.swift in Sources */,
 				2CD62F9D259D508B0067D8AD /* Logger.swift in Sources */,
-				2C8C458C259D46E600DEAABB /* ThumbnailLoadResult.swift in Sources */,
 				2C8C4596259D46EC00DEAABB /* MemoryCache.swift in Sources */,
 				2C8C4578259D46D800DEAABB /* ThumbnailRequest.swift in Sources */,
+				2CD62FB1259D5A5E0067D8AD /* ThumbnailLoadNotifier.swift in Sources */,
 				2C8C4557259D466F00DEAABB /* OriginalImageLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
