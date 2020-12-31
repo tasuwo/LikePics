@@ -304,6 +304,7 @@
 		2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B7F251E512F00BEE210 /* TagListQuery.swift */; };
 		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
+		2CD62F9D259D508B0067D8AD /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD62F9C259D508B0067D8AD /* Logger.swift */; };
 		2CD6732225812CD600007CCF /* TemporariesPersistServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */; };
 		2CD6734925812F2E00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD6735625812F4B00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -990,6 +991,7 @@
 		2CD25B7F251E512F00BEE210 /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
 		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
+		2CD62F9C259D508B0067D8AD /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceSpec.swift; sourceTree = "<group>"; };
 		2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContextObserver.swift; sourceTree = "<group>"; };
@@ -2293,6 +2295,7 @@
 		2C8C4541259D464D00DEAABB /* Smoothie */ = {
 			isa = PBXGroup;
 			children = (
+				2CD62F9B259D50680067D8AD /* Common */,
 				2C8C45C7259D4B5800DEAABB /* ImageLoader */,
 				2C8C45B3259D474100DEAABB /* Extensions */,
 				2C4F26A9259C873200156958 /* ValueObject */,
@@ -2685,6 +2688,14 @@
 				2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */,
 			);
 			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
+		2CD62F9B259D50680067D8AD /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2CD62F9C259D508B0067D8AD /* Logger.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		2CD6732025812CC700007CCF /* Persist */ = {
@@ -4070,6 +4081,7 @@
 				2C8C45A9259D46F100DEAABB /* DiskCache.swift in Sources */,
 				2C8C4558259D466F00DEAABB /* ThumbnailLoadPipeline.swift in Sources */,
 				2C8C4582259D46E100DEAABB /* ImageType.swift in Sources */,
+				2CD62F9D259D508B0067D8AD /* Logger.swift in Sources */,
 				2C8C458C259D46E600DEAABB /* ThumbnailLoadResult.swift in Sources */,
 				2C8C4596259D46EC00DEAABB /* MemoryCache.swift in Sources */,
 				2C8C4578259D46D800DEAABB /* ThumbnailRequest.swift in Sources */,

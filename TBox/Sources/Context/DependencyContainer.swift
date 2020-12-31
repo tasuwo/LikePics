@@ -82,6 +82,7 @@ class DependencyContainer {
         var config = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
         let cacheDirectoryUrl = Self.resolveCacheDirectoryUrl()
         config.diskCache = try DiskCache(path: cacheDirectoryUrl)
+        config.diskCache?.removeAll()
         let pipeline = ThumbnailLoadPipeline(config: config)
         self.thumbnailLoader = Smoothie.ThumbnailLoader(pipeline: pipeline)
 

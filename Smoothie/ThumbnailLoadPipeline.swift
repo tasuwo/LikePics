@@ -3,6 +3,7 @@
 //
 
 import Combine
+import os
 import UIKit
 
 public class ThumbnailLoadPipeline {
@@ -38,6 +39,7 @@ public class ThumbnailLoadPipeline {
 
     public let config: Configuration
 
+    private let logger: Logger = Logger()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadPipeline", target: .global(qos: .userInitiated))
 
     // MARK: - Lifecycle
@@ -85,7 +87,10 @@ extension ThumbnailLoadPipeline {
         let operation = BlockOperation { [weak self, context] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Read Disk Cache")
             let data = self.config.diskCache?[context.request.cacheKey]
+            log.log(.end, name: "Read Disk Cache")
 
             self.queue.async {
                 if let data = data {
@@ -102,7 +107,10 @@ extension ThumbnailLoadPipeline {
         let operation = BlockOperation { [weak self, context] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Load Original Data")
             let data = self.config.dataLoader.loadData(with: context.request.originalDataRequest)
+            log.log(.end, name: "Load Original Data")
 
             self.queue.async {
                 if let data = data {
@@ -119,9 +127,12 @@ extension ThumbnailLoadPipeline {
         let operation = BlockOperation { [weak self, context] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Downsample Data")
             let thumbnail = self.thumbnail(data: data,
                                            size: context.request.size,
                                            scale: context.request.scale)
+            log.log(.end, name: "Downsample Data")
 
             self.queue.async {
                 if let thumbnail = thumbnail {
@@ -138,7 +149,10 @@ extension ThumbnailLoadPipeline {
         let operation = BlockOperation { [weak self, context] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Encode CGImage")
             let encodedImage = self.encode(thumbnail, compressionRatio: self.config.compressionRatio)
+            log.log(.end, name: "Encode CGImage")
 
             self.queue.async {
                 if let encodedImage = encodedImage {
@@ -155,8 +169,12 @@ extension ThumbnailLoadPipeline {
     private func enqueueCachingOperation(for request: ThumbnailRequest, data: Data) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
+
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Store Cache")
             self.config.diskCache?.store(data, forKey: request.cacheKey)
             self.config.memoryCache.insert(data, forKey: request.cacheKey)
+            log.log(.end, name: "Store Cache")
         }
         config.dataCachingQueue.addOperation(operation)
     }
@@ -165,7 +183,10 @@ extension ThumbnailLoadPipeline {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Decompress Data")
             let image = self.decompress(data)
+            log.log(.end, name: "Decompress Data")
 
             self.queue.async {
                 context.promise(.success(image))
