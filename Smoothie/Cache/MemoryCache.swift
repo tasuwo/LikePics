@@ -12,11 +12,22 @@ public protocol MemoryCaching: AnyObject {
 public final class MemoryCache {
     public struct Configuration {
         public static let `default` = Configuration(
-            costLimit: Int.max,
+            costLimit: Int(Self.defaultCostLimit()),
             countLimit: Int.max
         )
+
         public let costLimit: Int
         public let countLimit: Int
+
+        public init(costLimit: Int, countLimit: Int) {
+            self.costLimit = costLimit
+            self.countLimit = countLimit
+        }
+
+        public static func defaultCostLimit() -> UInt64 {
+            let totalMemory = ProcessInfo.processInfo.physicalMemory
+            return totalMemory / 4
+        }
     }
 
     private lazy var cache: NSCache<NSString, AnyObject> = {

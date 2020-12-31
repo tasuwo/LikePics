@@ -15,7 +15,10 @@ class DependencyContainer {
 
     // MARK: Image Loader
 
-    let thumbnailLoader: ThumbnailLoader
+    let clipDiskCache: DiskCache
+    let clipThumbnailLoader: ThumbnailLoader
+    let albumThumbnailLoader: ThumbnailLoader
+    let temporaryThumbnailLoader: ThumbnailLoader
 
     // MARK: Storage
 
@@ -79,16 +82,35 @@ class DependencyContainer {
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
 
-        var config = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
-        let cacheDirectoryUrl = Self.resolveCacheDirectoryUrl()
-        config.diskCache = try DiskCache(path: cacheDirectoryUrl)
-        config.diskCache?.removeAll()
-        let pipeline = ThumbnailLoadPipeline(config: config)
-        self.thumbnailLoader = ThumbnailLoader(pipeline: pipeline)
+        Self.sweepLegacyThumbnailCachesIfExists()
+
+        let defaultCostLimit = Int(MemoryCache.Configuration.defaultCostLimit())
+
+        var clipCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
+        self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
+                                           config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
+        clipCacheConfig.diskCache = self.clipDiskCache
+        clipCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit, countLimit: Int.max))
+        self.clipThumbnailLoader = ThumbnailLoader(pipeline: .init(config: clipCacheConfig))
+
+        var albumCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
+        let albumDiskCache = try DiskCache(path: albumCacheDirectory,
+                                           config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
+        albumCacheConfig.diskCache = albumDiskCache
+        albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit / 4, countLimit: Int.max))
+        self.albumThumbnailLoader = ThumbnailLoader(pipeline: .init(config: albumCacheConfig))
+
+        var temporaryCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        temporaryCacheConfig.diskCache = nil
+        temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit / 4, countLimit: 50))
+        self.temporaryThumbnailLoader = ThumbnailLoader(pipeline: .init(config: temporaryCacheConfig))
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,
                                                      imageStorage: self.imageStorage,
+                                                     diskCache: self.clipDiskCache,
                                                      logger: self.logger,
                                                      queue: self.clipCommandQueue)
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
@@ -112,13 +134,34 @@ class DependencyContainer {
 
     // MARK: - Methods
 
-    private static func resolveCacheDirectoryUrl() -> URL {
+    private static func sweepLegacyThumbnailCachesIfExists() {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
         }
 
         let targetUrl: URL = {
             let directoryName: String = "thumbnails"
+            if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+                return directory
+                    .appendingPathComponent(bundleIdentifier, isDirectory: true)
+                    .appendingPathComponent(directoryName, isDirectory: true)
+            } else {
+                fatalError("Failed to resolve directory url for image cache.")
+            }
+        }()
+
+        if FileManager.default.fileExists(atPath: targetUrl.path) {
+            try? FileManager.default.removeItem(at: targetUrl)
+        }
+    }
+
+    private static func resolveCacheDirectoryUrl(name: String) -> URL {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+            fatalError("Failed to resolve bundle identifier")
+        }
+
+        let targetUrl: URL = {
+            let directoryName: String = name
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
                 return directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)

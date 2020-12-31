@@ -3,11 +3,13 @@
 //
 
 import Common
+import Smoothie
 
 public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorageProtocol
+    let diskCache: DiskCaching
     let logger: TBoxLoggable
     let queue: DispatchQueue
 
@@ -18,12 +20,14 @@ public class ClipCommandService {
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: NewImageStorageProtocol,
+                diskCache: DiskCaching,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
+        self.diskCache = diskCache
         self.logger = logger
         self.queue = queue
     }
@@ -663,10 +667,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                let clipItem: ClipItem
                 switch self.clipStorage.deleteClipItem(having: item.id) {
-                case let .success(result):
-                    clipItem = result
+                case .success:
+                    break
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
@@ -687,8 +690,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try? self.imageStorage.delete(having: item.imageId)
-                // TODO: サムネイルのディスクキャッシュも削除する
-                // self.thumbnailLoader.delete(for: clipItem)
+                self.diskCache.remove(forKey: "clip-collection-\(item.identity.uuidString)")
 
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
