@@ -159,7 +159,11 @@ extension TopClipCollectionViewModel {
                     .sorted(by: { $0.registeredDate > $1.registeredDate })
                 self.clips.send(newClips)
 
-                self.operation.send(.none)
+                // 余分な選択を除外する
+                let newClipIds = Set(self.clips.value.map { $0.identity })
+                if !self.selections.value.isSubset(of: newClipIds) {
+                    self.selections.send(self.selections.value.subtracting(self.selections.value.subtracting(newClipIds)))
+                }
             }
             .store(in: &self.cancellableBag)
 
