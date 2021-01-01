@@ -1,7 +1,7 @@
 devices([
   "iPhone 11 Pro Max",
   "iPhone 8 Plus",
-  "iPad Pro (12.9-inch) (2nd generation)",
+  "iPad Pro (11-inch) (2nd generation)",
   "iPad Pro (12.9-inch) (4th generation)",
 ])
 
@@ -22,4 +22,6 @@ output_directory("./fastlane/screenshots")
 clear_previous_screenshots(true)
 
 override_status_bar(true)
+
+stop_after_first_error(true)
 

@@ -20,37 +20,35 @@ class TBoxUITests: XCTestCase {
     func testExample() throws {
         let app = XCUIApplication()
 
-        app.tabBars["AppRootTabBarController.tabBar"]
+        let tabBar = app.tabBars["AppRootTabBarController.tabBar"]
+
+        tabBar
             .buttons["AppRootTabBarController.tabBarItem.top"]
             .tap()
         snapshot("Home")
 
-        app.tabBars["AppRootTabBarController.tabBar"]
+        tabBar
             .buttons["AppRootTabBarController.tabBarItem.tag"]
             .tap()
         snapshot("Tag")
 
-        app.tabBars["AppRootTabBarController.tabBar"]
+        tabBar
             .buttons["AppRootTabBarController.tabBarItem.album"]
             .tap()
         snapshot("Album")
 
-        app.tabBars["AppRootTabBarController.tabBar"]
+        tabBar
             .buttons["AppRootTabBarController.tabBarItem.top"]
             .tap()
 
         app.collectionViews
-            .children(matching: .cell)
-            .element(boundBy: 0)
-            .children(matching: .other).element
-            .children(matching: .other).element
-            .children(matching: .other)
+            .children(matching: .any)
             .element(boundBy: 0)
             .tap()
         snapshot("Preview")
 
-        app.navigationBars["ClipPreviewPageViewController.navigationBar"]
-            .buttons["ClipPreviewPageBarButtonItemsProvider.infoItem"]
+        app.navigationBars["LikePics.ClipPreviewPageView"]
+            .buttons["ClipPreviewPageBarViewController.infoItem"]
             .tap()
         snapshot("Info")
     }
