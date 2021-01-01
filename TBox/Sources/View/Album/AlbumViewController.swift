@@ -497,7 +497,7 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
 extension AlbumViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
+    func albumSelectionPresenter(_ presenter: AlbumSelectionViewModel, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         if self.isEditing {
             self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {

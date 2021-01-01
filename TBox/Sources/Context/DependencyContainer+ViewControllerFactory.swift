@@ -306,14 +306,14 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = AlbumSelectionPresenter(query: query,
+        let viewModel = AlbumSelectionViewModel(query: query,
                                                 context: context,
                                                 clipCommandService: self.clipCommandService,
                                                 settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
-        presenter.delegate = delegate
+        viewModel.delegate = delegate
         let viewController = AlbumSelectionViewController(factory: self,
-                                                          presenter: presenter,
+                                                          viewModel: viewModel,
                                                           thumbnailLoader: self.temporaryThumbnailLoader)
 
         return UINavigationController(rootViewController: viewController)

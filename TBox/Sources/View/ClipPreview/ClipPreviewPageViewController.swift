@@ -305,7 +305,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
 extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionPresenter, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
+    func albumSelectionPresenter(_ presenter: AlbumSelectionViewModel, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
         self.viewModel.inputs.addToAlbum.send(albumId)
     }
 }

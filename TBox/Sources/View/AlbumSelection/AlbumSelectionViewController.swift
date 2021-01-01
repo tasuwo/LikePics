@@ -10,6 +10,7 @@ import UIKit
 
 class AlbumSelectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = AlbumSelectionViewModelType
 
     enum Section {
         case main
@@ -23,7 +24,7 @@ class AlbumSelectionViewController: UIViewController {
 
     // MARK: Dependency
 
-    private let presenter: AlbumSelectionPresenter
+    private let viewModel: AlbumSelectionViewModel
 
     // MARK: View
 
@@ -48,15 +49,13 @@ class AlbumSelectionViewController: UIViewController {
     // MARK: - Lifecycle
 
     init(factory: Factory,
-         presenter: AlbumSelectionPresenter,
+         viewModel: AlbumSelectionViewModel,
          thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -71,7 +70,7 @@ class AlbumSelectionViewController: UIViewController {
         self.setupNavigationBar()
         self.setupEmptyMessage()
 
-        self.presenter.setup()
+        self.bind(to: viewModel)
     }
 
     // MARK: - Methods
@@ -84,9 +83,44 @@ class AlbumSelectionViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
-                self?.presenter.addAlbum(title: text)
+                self?.viewModel.addedAlbum.send(text)
             }
         )
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.albums
+            .debounce(for: 0.2, scheduler: DispatchQueue.global())
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] albums in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(albums)
+                self?.dataSource.apply(snapshot, animatingDifferences: true)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self?.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayEmptyMessage
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.close
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Table View
@@ -125,6 +159,7 @@ class AlbumSelectionViewController: UIViewController {
 
             return cell
         }
+        self.dataSource.defaultRowAnimation = .fade
     }
 
     // MARK: Navigation Bar
@@ -157,46 +192,12 @@ class AlbumSelectionViewController: UIViewController {
     }
 }
 
-extension AlbumSelectionViewController: AlbumSelectionViewProtocol {
-    // MARK: - AlbumSelectionViewProtocol
-
-    func apply(_ albums: [Album]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(albums)
-
-        if !albums.isEmpty {
-            self.emptyMessageView.alpha = 0
-        }
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard albums.isEmpty else { return }
-            UIView.animate(withDuration: 0.2) {
-                self?.emptyMessageView.alpha = 1
-            }
-        }
-    }
-
-    func reload() {
-        self.tableView.reloadData()
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func close() {
-        self.dismiss(animated: true, completion: nil)
-    }
-}
-
 extension AlbumSelectionViewController: UITableViewDelegate {
     // MARK: - UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.presenter.select(albumId: album.id)
+        self.viewModel.inputs.selectedAlbum.send(album.id)
     }
 }
 
