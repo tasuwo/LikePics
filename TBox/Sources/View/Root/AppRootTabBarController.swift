@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import TBoxUIKit
@@ -10,13 +11,33 @@ import UIKit
 class AppRootTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
 
+    // MARK: - Properties
+
+    // MARK: Factory
+
     private let factory: Factory
+
+    // MARK: Dependency
+
+    private let integrityViewModel: ClipIntegrityResolvingViewModelType
+
+    // MARK: View
+
+    var loadingView: UIView?
+
+    // MARK: Privates
+
     let logger: TBoxLoggable
+    private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
-    init(factory: Factory, logger: TBoxLoggable = RootLogger.shared) {
+    init(factory: Factory,
+         integrityViewModel: ClipIntegrityResolvingViewModelType,
+         logger: TBoxLoggable = RootLogger.shared)
+    {
         self.factory = factory
+        self.integrityViewModel = integrityViewModel
         self.logger = logger
         super.init(nibName: nil, bundle: nil)
     }
@@ -29,6 +50,47 @@ class AppRootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupTabBar()
+        self.updateAppearance()
+
+        self.bind(to: integrityViewModel)
+
+        self.integrityViewModel.inputs.didLaunchApp.send(())
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.updateAppearance()
+        }, completion: nil)
+    }
+
+    // MARK: - Methods
+
+    // MARK: Bind
+
+    private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isLoading
+            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.addLoadingView()
+                } else {
+                    self?.removeLoadingView()
+                }
+            }
+            .store(in: &self.cancellableBag)
+    }
+
+    // MARK: TabBar
+
+    private func setupTabBar() {
         guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController() else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipCollectionView."))
             return
@@ -76,19 +138,9 @@ class AppRootTabBarController: UITabBarController {
             // searchEntryViewController,
             settingsViewController
         ]
-
-        self.updateAppearance()
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.updateAppearance()
-        }, completion: nil)
-    }
-
-    // MARK: - Methods
+    // MARK: Appearance
 
     private func updateAppearance() {
         guard let viewController = self.selectedViewController else {

@@ -134,6 +134,17 @@ class DependencyContainer {
 
     // MARK: - Methods
 
+    func makeCloudStackLoader() -> CloudStackLoader {
+        return CloudStackLoader(userSettingsStorage: self.userSettingsStorage,
+                                cloudAvailabilityStore: self.cloudAvailabilityObserver,
+                                cloudStack: self.coreDataStack)
+    }
+
+    func makeClipIntegrityResolvingViewModel() -> ClipIntegrityResolvingViewModelType {
+        return ClipIntegrityResolvingViewModel(persistService: self.persistService,
+                                               integrityValidationService: self.integrityValidationService)
+    }
+
     private static func sweepLegacyThumbnailCachesIfExists() {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
@@ -172,12 +183,6 @@ class DependencyContainer {
         }()
 
         return targetUrl
-    }
-
-    func makeCloudStackLoader() -> CloudStackLoader {
-        return CloudStackLoader(userSettingsStorage: self.userSettingsStorage,
-                                cloudAvailabilityStore: self.cloudAvailabilityObserver,
-                                cloudStack: self.coreDataStack)
     }
 }
 

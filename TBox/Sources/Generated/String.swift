@@ -62,6 +62,8 @@ internal enum L10n {
     internal static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// アルバム内にクリップがありません
     internal static let albumViewEmptyTitle = L10n.tr("Localizable", "album_view_empty_title")
+    /// 新しい画像を読み込んでいます\nしばらくお待ちください
+    internal static let appRootLoadingMessage = L10n.tr("Localizable", "app_root_loading_message")
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム

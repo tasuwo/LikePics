@@ -17,8 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     private let launchQueue = DispatchQueue(label: "net.tasuwo.TBox.SceneDelegate.launch")
-    private var isAlreadyLaunch: Bool = false
-    private var completions: [() -> Void] = []
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -46,37 +44,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.setupAppearance()
     }
 
-    func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
-    }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        self.execute { [weak self] in
-            if self?.dependencyContainer?.persistService.persistIfNeeded() == false {
-                self?.dependencyContainer?.integrityValidationService.validateAndFixIntegrityIfNeeded()
-            }
-        }
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
-    }
-
     private func setupAppearance() {
         UISwitch.appearance().onTintColor = Asset.Color.likePicsSwitchClient.color
         self.window?.tintColor = Asset.Color.likePicsRedClient.color
@@ -86,23 +53,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
-    func execute(afterLaunch completion: @escaping () -> Void) {
-        self.launchQueue.sync {
-            if self.isAlreadyLaunch {
-                completion()
-            } else {
-                self.completions.append(completion)
-            }
-        }
-    }
-
     func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
         do {
             let container = try DependencyContainer(configuration: configuration,
                                                     cloudAvailabilityObserver: observer)
             self.dependencyContainer = container
 
-            let rootViewController = AppRootTabBarController(factory: container)
+            let rootViewModel = container.makeClipIntegrityResolvingViewModel()
+            let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel)
 
             self.window?.rootViewController?.dismiss(animated: true) {
                 self.window?.rootViewController = rootViewController
@@ -112,14 +70,6 @@ extension SceneDelegate: MainAppLauncher {
             self.cloudStackLoader?.observer = rootViewController
 
             self.cloudStackLoader?.startObserveCloudAvailability()
-
-            container.integrityValidationService.validateAndFixIntegrityIfNeeded()
-
-            self.launchQueue.sync {
-                self.completions.forEach { $0() }
-                self.completions = []
-                self.isAlreadyLaunch = true
-            }
         } catch {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
             fatalError("Unable to launch app.")

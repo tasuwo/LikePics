@@ -6,6 +6,8 @@
   Copyright © 2020 Tasuku Tozawa. All rights reserved.
 */
 
+"app_root_loading_message" = "Loading new images.\nPlease wait a moment.";
+
 "app_root_tab_item_home" = "Home";
 "app_root_tab_item_album" = "Albums";
 "app_root_tab_item_tag" = "Tags";

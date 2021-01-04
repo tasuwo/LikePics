@@ -6,7 +6,6 @@ import Domain
 import UIKit
 
 protocol MainAppLauncher: AnyObject {
-    func execute(afterLaunch: @escaping () -> Void)
     func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver)
 }
 
