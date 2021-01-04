@@ -240,9 +240,7 @@ extension ThumbnailLoadPipeline: ThumbnailLoadTaskDelegate {
     // MARK: - ThumbnailLoadTaskDelegate
 
     func didComplete(_ task: ThumbnailLoadTask) {
-        queue.async {
-            self.tasks.removeValue(forKey: task.thumbnailId)
-        }
+        self.tasks.removeValue(forKey: task.thumbnailId)
     }
 }
 
