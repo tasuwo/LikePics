@@ -29,6 +29,6 @@ extension ReferenceTag: Hashable {}
 
 extension ReferenceTag {
     func map(to: Tag.Type) -> Tag {
-        return .init(id: self.id, name: self.name)
+        return .init(id: self.id, name: self.name, isHidden: false)
     }
 }

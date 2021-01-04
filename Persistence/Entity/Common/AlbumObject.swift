@@ -26,6 +26,8 @@ extension Domain.Album: Persistable {
         return .init(id: UUID(uuidString: managedObject.id)!,
                      title: managedObject.title,
                      clips: clips,
+                     // TODO: Realmモデル定義を削除する
+                     isHidden: false,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
     }
@@ -51,6 +53,7 @@ extension Persistence.Album {
         return Domain.Album(id: id,
                             title: title,
                             clips: clips,
+                            isHidden: self.isHidden,
                             registeredDate: createdDate,
                             updatedDate: updateDate)
     }

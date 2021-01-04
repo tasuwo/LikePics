@@ -8,6 +8,7 @@ extension Album {
         id: UUID = UUID(),
         title: String = "",
         clips: [Clip] = [],
+        isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
@@ -15,6 +16,7 @@ extension Album {
             id: id,
             title: title,
             clips: clips,
+            isHidden: isHidden,
             registeredDate: registeredDate,
             updatedDate: updatedDate
         )
@@ -105,11 +107,13 @@ extension Tag {
     static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
+        isHidden: Bool = false,
         clipCount: Int? = nil
     ) -> Self {
         return .init(
             id: id,
             name: name,
+            isHidden: isHidden,
             clipCount: clipCount
         )
     }

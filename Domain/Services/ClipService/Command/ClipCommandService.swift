@@ -598,7 +598,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                 description: nil,
                                 items: newItems,
                                 // HACK: 新規生成時にはIDしか見られないため、IDのみ正しいモデルを渡しておく
-                                tags: tagIds.map { Tag(id: $0, name: "") },
+                                tags: tagIds.map { Tag(id: $0, name: "", isHidden: false) },
                                 isHidden: false,
                                 dataSize: dataSize,
                                 registeredDate: Date(),
