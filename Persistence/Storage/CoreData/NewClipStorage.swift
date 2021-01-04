@@ -562,6 +562,22 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateAlbum(having albumId: Domain.Album.Identity, byHiding isHidden: Bool) -> Result<Domain.Album, ClipStorageError> {
+        do {
+            guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
+
+            album.isHidden = isHidden
+            album.updatedDate = Date()
+
+            return .success(album.map(to: Domain.Album.self)!)
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
     public func updateTag(having id: Domain.Tag.Identity, nameTo name: String) -> Result<Domain.Tag, ClipStorageError> {
         do {
             guard case let .success(tag) = try self.fetchTag(for: id) else { return .failure(.notFound) }
@@ -570,6 +586,21 @@ extension NewClipStorage: ClipStorageProtocol {
             tag.name = name
 
             return .success(result)
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update tag. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
+    public func updateTag(having id: Domain.Tag.Identity, byHiding isHidden: Bool) -> Result<Domain.Tag, ClipStorageError> {
+        do {
+            guard case let .success(tag) = try self.fetchTag(for: id) else { return .failure(.notFound) }
+
+            tag.isHidden = isHidden
+
+            return .success(tag.map(to: Domain.Tag.self)!)
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add update tag. (error=\(error.localizedDescription))
