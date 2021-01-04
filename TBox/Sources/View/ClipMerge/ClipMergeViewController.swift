@@ -283,7 +283,10 @@ class ClipMergeViewController: UIViewController {
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)
                 self.thumbnailLoader.load(request: request, observer: cell)
-                cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
+                cell.onReuse = { [weak self] identifier in
+                    guard identifier == requestId else { return }
+                    self?.thumbnailLoader.cancel(request)
+                }
 
                 return cell
             }

@@ -58,26 +58,35 @@ class ClipCollectionProvider: NSObject {
         if let item = clip.primaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
             self.thumbnailLoader.load(request: request, observer: cell)
-            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
+            cell.onReuse = { [weak self] identifier in
+                guard identifier == requestId else { return }
+                self?.thumbnailLoader.cancel(request)
+            }
         } else {
             cell.primaryImage = .noImage
-            cell.onReuse = {}
+            cell.onReuse = nil
         }
         if let item = clip.secondaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
             self.thumbnailLoader.load(request: request, observer: cell)
-            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
+            cell.onReuse = { [weak self] identifier in
+                guard identifier == requestId else { return }
+                self?.thumbnailLoader.cancel(request)
+            }
         } else {
             cell.secondaryImage = .noImage
-            cell.onReuse = {}
+            cell.onReuse = nil
         }
         if let item = clip.tertiaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
             self.thumbnailLoader.load(request: request, observer: cell)
-            cell.onReuse = { [weak self] in self?.thumbnailLoader.cancel(request) }
+            cell.onReuse = { [weak self] identifier in
+                guard identifier == requestId else { return }
+                self?.thumbnailLoader.cancel(request)
+            }
         } else {
             cell.tertiaryImage = .noImage
-            cell.onReuse = {}
+            cell.onReuse = nil
         }
 
         cell.visibleSelectedMark = self.dataSource?.isEditing(self) ?? false

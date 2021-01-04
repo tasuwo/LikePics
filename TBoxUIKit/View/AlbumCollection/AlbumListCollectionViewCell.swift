@@ -57,7 +57,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var onReuse: () -> Void = {}
+    public var onReuse: ((String?) -> Void)?
 
     public weak var delegate: AlbumListCollectionViewCellDelegate?
 
@@ -76,7 +76,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
-        self.onReuse()
+        self.onReuse?(self.identifier)
     }
 
     // MARK: - IBAction

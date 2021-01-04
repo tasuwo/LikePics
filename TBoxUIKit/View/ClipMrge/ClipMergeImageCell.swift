@@ -26,7 +26,7 @@ public class ClipMergeImageCell: UICollectionViewCell {
         imageView.bounds.size
     }
 
-    public var onReuse: () -> Void = {}
+    public var onReuse: ((String?) -> Void)?
 
     @IBOutlet private var imageView: UIImageView!
 
@@ -40,7 +40,7 @@ public class ClipMergeImageCell: UICollectionViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
-        self.onReuse()
+        self.onReuse?(self.identifier)
     }
 
     // MARK: - Methods

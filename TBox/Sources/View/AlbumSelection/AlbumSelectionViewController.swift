@@ -152,9 +152,14 @@ class AlbumSelectionViewController: UIViewController {
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)
                 self?.thumbnailLoader.load(request: request, observer: cell)
+                cell.onReuse = { [weak self] identifier in
+                    guard identifier == requestId else { return }
+                    self?.thumbnailLoader.cancel(request)
+                }
             } else {
                 cell.identifier = nil
                 cell.thumbnail = nil
+                cell.onReuse = nil
             }
 
             return cell

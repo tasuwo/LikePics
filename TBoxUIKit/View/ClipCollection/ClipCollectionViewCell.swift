@@ -140,7 +140,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             || !primaryImage.isLoaded
     }
 
-    public var onReuse: () -> Void = {}
+    public var onReuse: ((String?) -> Void)?
 
     override public var isSelected: Bool {
         didSet {
@@ -181,7 +181,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
-        self.onReuse()
+        self.onReuse?(self.identifier)
     }
 
     // MARK: - Methods

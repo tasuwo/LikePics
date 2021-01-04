@@ -35,7 +35,7 @@ public class AlbumSelectionCell: UITableViewCell {
         thumbnailImageView.bounds.size
     }
 
-    public var onReuse: () -> Void = {}
+    public var onReuse: ((String?) -> Void)?
 
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
@@ -50,7 +50,7 @@ public class AlbumSelectionCell: UITableViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
-        self.onReuse()
+        self.onReuse?(self.identifier)
     }
 
     func setupAppearance() {
