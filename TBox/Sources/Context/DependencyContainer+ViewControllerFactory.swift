@@ -251,6 +251,7 @@ extension DependencyContainer: ViewControllerFactory {
                                            logger: self.logger)
         let viewController = AlbumListViewController(factory: self,
                                                      viewModel: viewModel,
+                                                     menuBuilder: AlbumListMenuBuilder.self,
                                                      thumbnailLoader: self.albumThumbnailLoader)
         return UINavigationController(rootViewController: viewController)
     }

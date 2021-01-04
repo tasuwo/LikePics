@@ -30,7 +30,6 @@ class AlbumListViewController: UIViewController {
     // MARK: ViewModel
 
     private let viewModel: Dependency
-    private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: View
 
@@ -48,19 +47,29 @@ class AlbumListViewController: UIViewController {
     private var collectionView: AlbumListCollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
 
+    // MARK: Components
+
+    private let menuBuilder: AlbumListMenuBuildable.Type
+
     // MARK: Thumbnail
 
     private let thumbnailLoader: ThumbnailLoader
+
+    // MARK: States
+
+    private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: AlbumListViewModel,
+         menuBuilder: AlbumListMenuBuildable.Type,
          thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
-        self.thumbnailLoader = thumbnailLoader
         self.viewModel = viewModel
+        self.menuBuilder = menuBuilder
+        self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,6 +101,35 @@ class AlbumListViewController: UIViewController {
                 self?.viewModel.inputs.addedAlbum.send(text)
             }
         )
+    }
+
+    private func startEditingAlbumTitle(for album: Album) {
+        self.editAlbumTitleAlertContainer.present(
+            withText: album.title,
+            on: self,
+            validator: {
+                $0?.isEmpty != true && $0 != album.title
+            }, completion: { [weak self] action in
+                guard case let .saved(text: text) = action else { return }
+                self?.viewModel.inputs.editedAlbumTitle.send((album.id, text))
+            }
+        )
+    }
+
+    private func startDeletingAlbum(_ album: Album) {
+        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(album.title),
+                                      message: L10n.albumListViewAlertForDeleteMessage(album.title),
+                                      preferredStyle: .actionSheet)
+
+        let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
+            self?.viewModel.inputs.deletedAlbum.send(album.id)
+        }
+        alert.addAction(action)
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.sourceView = view
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: Bind
@@ -302,29 +340,70 @@ extension AlbumListViewController: UICollectionViewDelegate {
     }
 }
 
+extension AlbumListViewController {
+    // MARK: - UICollectionViewDelegate (Context Menu)
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let album = self.dataSource.itemIdentifier(for: indexPath),
+            self.isEditing == false
+        else {
+            return nil
+        }
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                          previewProvider: nil,
+                                          actionProvider: self.makeActionProvider(for: album, at: indexPath))
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    private func makeTargetedPreview(for configuration: UIContextMenuConfiguration, collectionView: UICollectionView) -> UITargetedPreview? {
+        guard let identifier = configuration.identifier as? NSIndexPath else { return nil }
+        guard let cell = collectionView.cellForItem(at: identifier as IndexPath) else { return nil }
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        return UITargetedPreview(view: cell, parameters: parameters)
+    }
+
+    private func makeActionProvider(for album: Album, at indexPath: IndexPath) -> UIContextMenuActionProvider {
+        let items = self.menuBuilder.build(for: album).map {
+            self.makeAction(from: $0, for: album, at: indexPath)
+        }
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: items)
+        }
+    }
+
+    private func makeAction(from item: AlbumList.MenuItem, for album: Album, at indexPath: IndexPath) -> UIAction {
+        switch item {
+        case .rename:
+            return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
+                            image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+                self?.startEditingAlbumTitle(for: album)
+            }
+
+        case .delete:
+            return UIAction(title: L10n.tagListViewContextMenuActionDelete,
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
+                self?.startDeletingAlbum(album)
+            }
+        }
+    }
+}
+
 extension AlbumListViewController: AlbumListRemoverViewDelegate {
     // MARK: - AlbumListRemoverViewDelegate
 
     func albumListRemoverView(_ view: AlbumListRemoverView) {
         guard let indexPath = self.collectionView.indexPath(for: view, ofKind: ElementKind.remover.rawValue),
-            let album = self.dataSource.itemIdentifier(for: indexPath)
-        else {
-            return
-        }
-
-        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(album.title),
-                                      message: L10n.albumListViewAlertForDeleteMessage(album.title),
-                                      preferredStyle: .actionSheet)
-
-        let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
-            self?.viewModel.inputs.deletedAlbum.send(album.id)
-        }
-        alert.addAction(action)
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
-
-        alert.popoverPresentationController?.sourceView = view
-
-        self.present(alert, animated: true, completion: nil)
+            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.startDeletingAlbum(album)
     }
 }
 
@@ -342,15 +421,6 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
             let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.editAlbumTitleAlertContainer.present(
-            withText: album.title,
-            on: self,
-            validator: {
-                $0?.isEmpty != true && $0 != album.title
-            }, completion: { [weak self] action in
-                guard case let .saved(text: text) = action else { return }
-                self?.viewModel.inputs.editedAlbumTitle.send((album.id, text))
-            }
-        )
+        self.startEditingAlbumTitle(for: album)
     }
 }

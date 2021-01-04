@@ -217,6 +217,9 @@
 		2C95EC4B24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */; };
 		2C9810F025A303EC00B89A47 /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9810EF25A303EC00B89A47 /* ClipIntegrityResolvingViewModel.swift */; };
 		2C98110425A32D1400B89A47 /* AppRootTabBarController+LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98110325A32D1400B89A47 /* AppRootTabBarController+LoadingView.swift */; };
+		2C98111825A352C500B89A47 /* AlbumListMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98111725A352C500B89A47 /* AlbumListMenuBuilder.swift */; };
+		2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98112325A352EC00B89A47 /* AlbumList.swift */; };
+		2C98113825A352FD00B89A47 /* AlbumList_MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98113725A352FD00B89A47 /* AlbumList_MenuItem.swift */; };
 		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
 		2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* ClipStorage.swift */; };
 		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
@@ -896,6 +899,9 @@
 		2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AspectRatioConstraint.swift"; sourceTree = "<group>"; };
 		2C9810EF25A303EC00B89A47 /* ClipIntegrityResolvingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipIntegrityResolvingViewModel.swift; sourceTree = "<group>"; };
 		2C98110325A32D1400B89A47 /* AppRootTabBarController+LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRootTabBarController+LoadingView.swift"; sourceTree = "<group>"; };
+		2C98111725A352C500B89A47 /* AlbumListMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListMenuBuilder.swift; sourceTree = "<group>"; };
+		2C98112325A352EC00B89A47 /* AlbumList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumList.swift; sourceTree = "<group>"; };
+		2C98113725A352FD00B89A47 /* AlbumList_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumList_MenuItem.swift; sourceTree = "<group>"; };
 		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
 		2C99275E24DDC7D300672CA7 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1777,6 +1783,8 @@
 		2C45D40624EEBDF30045B6D3 /* AlbumList */ = {
 			isa = PBXGroup;
 			children = (
+				2C98114B25A3532A00B89A47 /* Components */,
+				2C98112225A352E100B89A47 /* ValueObject */,
 				2C45D40724EEBE020045B6D3 /* AlbumListViewModel.swift */,
 			);
 			path = AlbumList;
@@ -2388,6 +2396,31 @@
 				2CE22D4A24E2A48C00449210 /* ClipPreviewView.xib */,
 			);
 			path = ClipPreview;
+			sourceTree = "<group>";
+		};
+		2C98112225A352E100B89A47 /* ValueObject */ = {
+			isa = PBXGroup;
+			children = (
+				2C98112325A352EC00B89A47 /* AlbumList.swift */,
+				2C98113725A352FD00B89A47 /* AlbumList_MenuItem.swift */,
+			);
+			path = ValueObject;
+			sourceTree = "<group>";
+		};
+		2C98114B25A3532A00B89A47 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2C98114C25A3533100B89A47 /* Menu */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2C98114C25A3533100B89A47 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				2C98111725A352C500B89A47 /* AlbumListMenuBuilder.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		2C99275624DDC6DB00672CA7 /* Storage */ = {
@@ -4253,6 +4286,7 @@
 				2CFC5CFC250DF20A001A02E4 /* AssetCatalog.swift in Sources */,
 				2CC1D3D424E6B1F500E1B21C /* ClipPreviewBaseViewController.swift in Sources */,
 				2C1E4464257B5AE900A067B1 /* ClipCollection_ToolBarItem.swift in Sources */,
+				2C98113825A352FD00B89A47 /* AlbumList_MenuItem.swift in Sources */,
 				2C3ADF5E24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipPreviewViewModel.swift in Sources */,
@@ -4268,6 +4302,7 @@
 				2CB60550257FC85C00F7579F /* SearchResultViewModel.swift in Sources */,
 				2CB3CB1A2515E06C00BE06E5 /* ClipCollectionNavigationBarViewModel.swift in Sources */,
 				2C9810F025A303EC00B89A47 /* ClipIntegrityResolvingViewModel.swift in Sources */,
+				2C98111825A352C500B89A47 /* AlbumListMenuBuilder.swift in Sources */,
 				2C1E4434257B5A5700A067B1 /* ClipCollection.swift in Sources */,
 				2CB60584257FD15F00F7579F /* AlbumViewModel.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
@@ -4286,6 +4321,7 @@
 				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* TagSelectionPresenter.swift in Sources */,
 				2CB3CB482515F29C00BE06E5 /* ClipCollectionToolBarViewModel.swift in Sources */,
+				2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */,
 				2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarViewController.swift in Sources */,
 				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
