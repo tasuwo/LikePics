@@ -4,6 +4,8 @@
 
 extension AlbumList {
     enum MenuItem {
+        case hide
+        case reveal
         case rename
         case delete
     }

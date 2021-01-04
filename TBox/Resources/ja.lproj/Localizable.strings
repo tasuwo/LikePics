@@ -66,6 +66,11 @@
 "album_list_view_empty_message" = "複数のクリップをアルバムにまとめることができます";
 "album_list_view_empty_action_title" = "はじめてのアルバムを追加する";
 
+"album_list_view_context_menu_action_hide" = "隠す";
+"album_list_view_context_menu_action_reveal" = "表示する";
+"album_list_view_context_menu_action_update" = "タイトルの変更";
+"album_list_view_context_menu_action_delete" = "削除";
+
 "album_view_empty_title" = "アルバム内にクリップがありません";
 
 "search_entry_view_title" = "検索";
@@ -170,6 +175,8 @@
 "album_list_view_error_at_read_albums" = "アルバムの読み込みに失敗しました";
 "album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
 "album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
+"album_list_view_error_at_hide_album" = "アルバムの更新に失敗しました";
+"album_list_view_error_at_reveal_album" = "アルバムの更新に失敗しました";
 "album_list_view_error_at_edit_album" = "アルバムタイトルの更新に失敗しました";
 "album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
 

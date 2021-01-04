@@ -66,6 +66,11 @@
 "album_list_view_empty_message" = "You can collect clips into an album";
 "album_list_view_empty_action_title" = "Add your first Album";
 
+"album_list_view_context_menu_action_hide" = "Hide";
+"album_list_view_context_menu_action_reveal" = "Reveal";
+"album_list_view_context_menu_action_update" = "Edit Title";
+"album_list_view_context_menu_action_delete" = "Delete";
+
 "album_view_empty_title" = "No Clips in this Album";
 
 "search_entry_view_title" = "Search";
@@ -170,6 +175,8 @@
 "album_list_view_error_at_read_albums" = "Failed to read albums.";
 "album_list_view_error_at_add_album" = "Failed to add album.";
 "album_list_view_error_at_delete_album" = "Failed to delete album.";
+"album_list_view_error_at_hide_album" = "Failed to update album.";
+"album_list_view_error_at_reveal_album" = "Failed to update album.";
 "album_list_view_error_at_edit_album" = "Failed to update album title.";
 "album_list_view_error_at_read_image_data" = "Failed to read image data.";
 

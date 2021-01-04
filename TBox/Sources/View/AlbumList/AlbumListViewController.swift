@@ -381,14 +381,32 @@ extension AlbumListViewController {
 
     private func makeAction(from item: AlbumList.MenuItem, for album: Album, at indexPath: IndexPath) -> UIAction {
         switch item {
+        case .hide:
+            return UIAction(title: L10n.albumListViewContextMenuActionHide,
+                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.viewModel.inputs.hidedAlbum.send(album.id)
+                }
+            }
+
+        case .reveal:
+            return UIAction(title: L10n.albumListViewContextMenuActionReveal,
+                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.viewModel.inputs.revealedAlbum.send(album.id)
+                }
+            }
+
         case .rename:
-            return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
+            return UIAction(title: L10n.albumListViewContextMenuActionUpdate,
                             image: UIImage(systemName: "text.cursor")) { [weak self] _ in
                 self?.startEditingAlbumTitle(for: album)
             }
 
         case .delete:
-            return UIAction(title: L10n.tagListViewContextMenuActionDelete,
+            return UIAction(title: L10n.albumListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
                 self?.startDeletingAlbum(album)

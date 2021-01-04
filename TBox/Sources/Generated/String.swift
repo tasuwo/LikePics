@@ -34,6 +34,14 @@ internal enum L10n {
     internal static let albumListViewAlertForEditPlaceholder = L10n.tr("Localizable", "album_list_view_alert_for_edit_placeholder")
     /// アルバム名の編集
     internal static let albumListViewAlertForEditTitle = L10n.tr("Localizable", "album_list_view_alert_for_edit_title")
+    /// 削除
+    internal static let albumListViewContextMenuActionDelete = L10n.tr("Localizable", "album_list_view_context_menu_action_delete")
+    /// 隠す
+    internal static let albumListViewContextMenuActionHide = L10n.tr("Localizable", "album_list_view_context_menu_action_hide")
+    /// 表示する
+    internal static let albumListViewContextMenuActionReveal = L10n.tr("Localizable", "album_list_view_context_menu_action_reveal")
+    /// タイトルの変更
+    internal static let albumListViewContextMenuActionUpdate = L10n.tr("Localizable", "album_list_view_context_menu_action_update")
     /// はじめてのアルバムを追加する
     internal static let albumListViewEmptyActionTitle = L10n.tr("Localizable", "album_list_view_empty_action_title")
     /// 複数のクリップをアルバムにまとめることができます
@@ -46,10 +54,14 @@ internal enum L10n {
     internal static let albumListViewErrorAtDeleteAlbum = L10n.tr("Localizable", "album_list_view_error_at_delete_album")
     /// アルバムタイトルの更新に失敗しました
     internal static let albumListViewErrorAtEditAlbum = L10n.tr("Localizable", "album_list_view_error_at_edit_album")
+    /// アルバムの更新に失敗しました
+    internal static let albumListViewErrorAtHideAlbum = L10n.tr("Localizable", "album_list_view_error_at_hide_album")
     /// アルバムの読み込みに失敗しました
     internal static let albumListViewErrorAtReadAlbums = L10n.tr("Localizable", "album_list_view_error_at_read_albums")
     /// 画像の読み込みに失敗しました
     internal static let albumListViewErrorAtReadImageData = L10n.tr("Localizable", "album_list_view_error_at_read_image_data")
+    /// アルバムの更新に失敗しました
+    internal static let albumListViewErrorAtRevealAlbum = L10n.tr("Localizable", "album_list_view_error_at_reveal_album")
     /// アルバム
     internal static let albumListViewTitle = L10n.tr("Localizable", "album_list_view_title")
     /// はじめてのアルバムを追加する

@@ -14,6 +14,7 @@ enum AlbumListMenuBuilder: AlbumListMenuBuildable {
     static func build(for album: Album) -> [AlbumList.MenuItem] {
         return [
             .rename,
+            album.isHidden ? .reveal : .hide,
             .delete
         ]
     }
