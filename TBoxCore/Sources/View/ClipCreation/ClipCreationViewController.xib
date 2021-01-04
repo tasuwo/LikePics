@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClipCreationViewController" customModule="TBoxCore" customModuleProvider="target">
             <connections>
                 <outlet property="indicator" destination="ib4-SI-9D4" id="ubB-TK-fWA"/>
+                <outlet property="overlayView" destination="fcA-hK-F2S" id="VO8-mi-rq6"/>
                 <outlet property="view" destination="iN0-l3-epB" id="IXN-k4-hcW"/>
             </connections>
         </placeholder>
@@ -19,15 +20,27 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ib4-SI-9D4">
-                    <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
-                </activityIndicatorView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fcA-hK-F2S" userLabel="Overlay View">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ib4-SI-9D4">
+                            <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="ib4-SI-9D4" firstAttribute="centerX" secondItem="fcA-hK-F2S" secondAttribute="centerX" id="8Qv-Zy-OLR"/>
+                        <constraint firstItem="ib4-SI-9D4" firstAttribute="centerY" secondItem="fcA-hK-F2S" secondAttribute="centerY" id="GX7-Ia-KnE"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="WaQ-kB-jce"/>
-                <constraint firstItem="ib4-SI-9D4" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="cFW-WW-2fq"/>
+                <constraint firstItem="fcA-hK-F2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Nnb-ve-R6f"/>
+                <constraint firstItem="fcA-hK-F2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ZQH-0b-JwJ"/>
+                <constraint firstAttribute="trailing" secondItem="fcA-hK-F2S" secondAttribute="trailing" id="hyw-ss-Apn"/>
+                <constraint firstAttribute="bottom" secondItem="fcA-hK-F2S" secondAttribute="bottom" id="szz-gy-jG9"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="152.67857142857142"/>
         </view>

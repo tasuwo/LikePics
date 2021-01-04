@@ -205,7 +205,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .store(in: &self.cancellableBag)
 
         self.selectedIndices
-            .map { !$0.isEmpty }
+            .combineLatest(isLoading)
+            .map { selectedIndices, isLoading -> Bool in !selectedIndices.isEmpty && !isLoading }
             .sink { [weak self] value in self?.isDoneItemEnabled.send(value) }
             .store(in: &self.cancellableBag)
 
@@ -279,7 +280,6 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                     self?.isLoading.send(false)
 
                 case .finished:
-                    self?.isLoading.send(false)
                     self?.didFinish.send(())
                 }
             } receiveValue: { _ in

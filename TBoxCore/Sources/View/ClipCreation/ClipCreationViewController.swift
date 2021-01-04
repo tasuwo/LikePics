@@ -63,6 +63,7 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: IBOutlets
 
+    @IBOutlet var overlayView: UIView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     // MARK: Views
@@ -113,6 +114,8 @@ public class ClipCreationViewController: UIViewController {
         self.setupNavigationBar()
         self.setupEmptyMessage()
 
+        view.bringSubviewToFront(overlayView)
+
         self.bind(to: viewModel)
 
         self.viewModel.inputs.viewLoaded.send(self.view)
@@ -128,7 +131,6 @@ public class ClipCreationViewController: UIViewController {
     // MARK: - Methods
 
     private func setupAppearance() {
-        self.indicator.hidesWhenStopped = true
         self.view.backgroundColor = Asset.Color.background.color
     }
 
@@ -136,10 +138,18 @@ public class ClipCreationViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.isLoading
-            .sink { [weak self] isLoading in
-                isLoading
-                    ? self?.indicator.startAnimating()
-                    : self?.indicator.stopAnimating()
+            .combineLatest(dependency.outputs.displayCollectionView)
+            .sink { [weak self] isLoading, displayCollectionView in
+                self?.overlayView.backgroundColor = displayCollectionView
+                    ? UIColor.black.withAlphaComponent(0.8)
+                    : .clear
+                if isLoading {
+                    self?.indicator.startAnimating()
+                    self?.overlayView.isHidden = false
+                } else {
+                    self?.indicator.stopAnimating()
+                    self?.overlayView.isHidden = true
+                }
             }
             .store(in: &self.cancellableBag)
 
