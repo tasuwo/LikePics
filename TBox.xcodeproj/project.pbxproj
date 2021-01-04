@@ -1957,7 +1957,7 @@
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C447A76250D437400EAA448 /* ClipInformation */,
 				2C753C4425963C5100715482 /* ClipMerge */,
-				2CFC5CEE250DA906001A02E4 /* TagList */,
+				2CFC5CEE250DA906001A02E4 /* TagCollection */,
 				2C45D40624EEBDF30045B6D3 /* AlbumList */,
 				2C3ADF5A24EEE436007C4AA0 /* Album */,
 				2C38C706250AF3B900F32102 /* TagSelection */,
@@ -2910,12 +2910,12 @@
 			path = TagCollection;
 			sourceTree = "<group>";
 		};
-		2CFC5CEE250DA906001A02E4 /* TagList */ = {
+		2CFC5CEE250DA906001A02E4 /* TagCollection */ = {
 			isa = PBXGroup;
 			children = (
 				2CFC5CEF250DA919001A02E4 /* TagCollectionViewModel.swift */,
 			);
-			path = TagList;
+			path = TagCollection;
 			sourceTree = "<group>";
 		};
 		2CFC5CF5250DEFF7001A02E4 /* Generated */ = {
