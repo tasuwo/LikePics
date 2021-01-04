@@ -6,13 +6,15 @@
 public struct ReferenceTag: Equatable {
     public let id: UUID
     public let name: String
+    public let isHidden: Bool
     public let isDirty: Bool
 
     // MARK: - Lifecycle
 
-    public init(id: UUID, name: String, isDirty: Bool = false) {
+    public init(id: UUID, name: String, isHidden: Bool, isDirty: Bool = false) {
         self.id = id
         self.name = name
+        self.isHidden = isHidden
         self.isDirty = isDirty
     }
 }
@@ -29,6 +31,6 @@ extension ReferenceTag: Hashable {}
 
 extension ReferenceTag {
     func map(to: Tag.Type) -> Tag {
-        return .init(id: self.id, name: self.name, isHidden: false)
+        return .init(id: self.id, name: self.name, isHidden: self.isHidden)
     }
 }

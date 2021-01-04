@@ -108,7 +108,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name)) {
+                switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name, isHidden: tag.isHidden)) {
                 case .success:
                     break
 

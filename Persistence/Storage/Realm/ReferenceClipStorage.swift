@@ -102,6 +102,15 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         return .success(())
     }
 
+    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+
+        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id.uuidString)
+        tag?.isHidden = isHidden
+
+        return .success(())
+    }
+
     public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 

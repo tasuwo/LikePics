@@ -61,17 +61,25 @@ public class ClipReferencesIntegrityValidationService {
                 // Dirtyフラグが立っていた場合、整合の対象から外す
                 if referenceTag.isDirty { continue }
 
-                // 名前が同一であれば、整合性が保たれているとみなし、何もしない
-                if referenceTag.name == tag.name { continue }
+                if referenceTag.name != tag.name {
+                    if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, nameTo: tag.name) {
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        Failed to update tag '\(referenceTag.name)' to '\(tag.name)'
+                        Error: \(error.localizedDescription)
+                        """))
+                    }
+                }
 
-                if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, nameTo: tag.name) {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to update tag '\(referenceTag.name)' to '\(tag.name)'
-                    Error: \(error.localizedDescription)
-                    """))
+                if referenceTag.isHidden != tag.isHidden {
+                    if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, byHiding: tag.isHidden) {
+                        self.logger.write(ConsoleLog(level: .error, message: """
+                        Failed to update tag to \(tag.isHidden ? "hide" : "reveal")
+                        Error: \(error.localizedDescription)
+                        """))
+                    }
                 }
             } else {
-                if case let .failure(error) = self.referenceClipStorage.create(tag: .init(id: tag.id, name: tag.name)) {
+                if case let .failure(error) = self.referenceClipStorage.create(tag: .init(id: tag.id, name: tag.name, isHidden: tag.isHidden)) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to create reference tag '\(tag.name)' with id \(tag.id)
                     Error: \(error.localizedDescription)

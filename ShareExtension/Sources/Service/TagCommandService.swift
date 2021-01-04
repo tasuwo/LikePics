@@ -24,7 +24,7 @@ extension TagCommandService: TagCommandServiceProtocol {
         do {
             try self.storage.beginTransaction()
 
-            switch self.storage.create(tag: .init(id: UUID(), name: name, isDirty: true)) {
+            switch self.storage.create(tag: .init(id: UUID(), name: name, isHidden: false, isDirty: true)) {
             case .success:
                 break
 
