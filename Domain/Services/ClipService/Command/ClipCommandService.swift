@@ -633,18 +633,15 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 let existsFiles = try clips
                     .flatMap { $0.items }
                     .allSatisfy { try self.imageStorage.exists(having: $0.imageId) }
-                guard existsFiles else {
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
+                if existsFiles {
+                    clips
+                        .flatMap { $0.items }
+                        .forEach { try? self.imageStorage.delete(having: $0.imageId) }
+                } else {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to delete clips. No image files found.
+                    No image files found for deleting clip. Ignored
                     """))
-                    return .failure(.internalError)
                 }
-
-                clips
-                    .flatMap { $0.items }
-                    .forEach { try? self.imageStorage.delete(having: $0.imageId) }
 
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
