@@ -17,6 +17,8 @@ protocol ClipIntegrityResolvingViewModelInputs {
 
 protocol ClipIntegrityResolvingViewModelOutputs {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
+    var allLoadingTargetCount: CurrentValueSubject<Int?, Never> { get }
+    var loadingTargetIndex: CurrentValueSubject<Int?, Never> { get }
 }
 
 class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
@@ -38,6 +40,8 @@ class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
     // MARK: ClipIntegrityResolvingViewModelOutputs
 
     let isLoading: CurrentValueSubject<Bool, Never> = .init(true)
+    let allLoadingTargetCount: CurrentValueSubject<Int?, Never> = .init(nil)
+    let loadingTargetIndex: CurrentValueSubject<Int?, Never> = .init(nil)
 
     // MARK: Privates
 
@@ -57,12 +61,22 @@ class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
 
         self.bind()
     }
+
+    // MARK: - Methods
+
+    private func finishLoading() {
+        self.isLoading.send(false)
+        self.allLoadingTargetCount.send(nil)
+        self.loadingTargetIndex.send(nil)
+    }
 }
 
 extension ClipIntegrityResolvingViewModel {
     // MARK: - Bind
 
     private func bind() {
+        self.persistService.set(observer: self)
+
         self.inputs.didLaunchApp
             .receive(on: queue)
             .sink { [weak self] _ in
@@ -70,7 +84,7 @@ extension ClipIntegrityResolvingViewModel {
                 self.isLoading.send(true)
                 _ = self.persistService.persistIfNeeded()
                 self.integrityValidationService.validateAndFixIntegrityIfNeeded()
-                self.isLoading.send(false)
+                self.finishLoading()
             }
             .store(in: &self.cancellableBag)
 
@@ -82,8 +96,17 @@ extension ClipIntegrityResolvingViewModel {
                 if self.persistService.persistIfNeeded() == false {
                     self.integrityValidationService.validateAndFixIntegrityIfNeeded()
                 }
-                self.isLoading.send(false)
+                self.finishLoading()
             }
             .store(in: &self.cancellableBag)
+    }
+}
+
+extension ClipIntegrityResolvingViewModel: TemporariesPersistServiceObserver {
+    // MARK: - TemporariesPersistServiceObserver
+
+    func temporariesPersistService(_ service: TemporariesPersistService, didStartPersistAt index: Int, in count: Int) {
+        self.outputs.allLoadingTargetCount.send(count)
+        self.outputs.loadingTargetIndex.send(index)
     }
 }

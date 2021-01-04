@@ -5,6 +5,14 @@
 import UIKit
 
 extension AppRootTabBarController {
+    func didStartLoad(at index: Int?, in count: Int?) {
+        guard let index = index, let count = count else {
+            self.loadingLabel?.text = L10n.appRootLoadingMessage
+            return
+        }
+        self.loadingLabel?.text = "\(L10n.appRootLoadingMessage)\n\(L10n.appRootLoadingProgress(index, count))"
+    }
+
     func addLoadingView() {
         guard self.loadingView == nil, let view = self.view else { return }
 
@@ -41,6 +49,7 @@ extension AppRootTabBarController {
             label.topAnchor.constraint(equalTo: indicatorView.bottomAnchor, constant: 12),
             label.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor)
         ])
+        self.loadingLabel = label
 
         loadingView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         indicatorView.startAnimating()
@@ -49,6 +58,7 @@ extension AppRootTabBarController {
     }
 
     func removeLoadingView() {
+        self.loadingLabel = nil
         self.loadingView?.isHidden = true
         self.loadingView?.removeFromSuperview()
         self.loadingView = nil

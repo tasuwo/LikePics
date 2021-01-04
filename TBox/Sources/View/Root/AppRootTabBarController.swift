@@ -24,6 +24,7 @@ class AppRootTabBarController: UITabBarController {
     // MARK: View
 
     var loadingView: UIView?
+    var loadingLabel: UILabel?
 
     // MARK: Privates
 
@@ -84,6 +85,14 @@ class AppRootTabBarController: UITabBarController {
                 } else {
                     self?.removeLoadingView()
                 }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.loadingTargetIndex
+            .combineLatest(dependency.outputs.allLoadingTargetCount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loadingTargetIndex, allLoadingTargetCount in
+                self?.didStartLoad(at: loadingTargetIndex, in: allLoadingTargetCount)
             }
             .store(in: &self.cancellableBag)
     }

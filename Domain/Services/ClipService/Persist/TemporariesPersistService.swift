@@ -15,6 +15,8 @@ public class TemporariesPersistService {
 
     private(set) var isRunning: Bool = false
 
+    weak var observer: TemporariesPersistServiceObserver?
+
     // MARK: - Lifecycle
 
     public init(temporaryClipStorage: ClipStorageProtocol,
@@ -73,7 +75,8 @@ public class TemporariesPersistService {
         }
 
         var persistentSkippedClipIds: [Clip.Identity] = []
-        for (clipId, _) in temporaryClips {
+        for (index, (clipId, _)) in temporaryClips.enumerated() {
+            self.observer?.temporariesPersistService(self, didStartPersistAt: index + 1, in: temporaryClips.count)
             guard self.persist(clipId: clipId, in: temporaryClips) else {
                 persistentSkippedClipIds.append(clipId)
                 continue
@@ -253,6 +256,10 @@ public class TemporariesPersistService {
 
 extension TemporariesPersistService: TemporariesPersistServiceProtocol {
     // MARK: - TemporariesPersistServiceProtocol
+
+    public func set(observer: TemporariesPersistServiceObserver) {
+        self.observer = observer
+    }
 
     public func persistIfNeeded() -> Bool {
         self.queue.sync {

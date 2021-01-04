@@ -7,6 +7,7 @@
 */
 
 "app_root_loading_message" = "新しい画像を読み込んでいます\nしばらくお待ちください";
+"app_root_loading_progress" = "(%d/%d)";
 
 "app_root_tab_item_home" = "ホーム";
 "app_root_tab_item_album" = "アルバム";

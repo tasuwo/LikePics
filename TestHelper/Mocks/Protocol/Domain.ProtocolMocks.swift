@@ -796,20 +796,6 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     }
 }
 
-public class TemporariesPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
-    public init() { }
-
-    public private(set) var persistIfNeededCallCount = 0
-    public var persistIfNeededHandler: (() -> (Bool))?
-    public func persistIfNeeded() -> Bool {
-        persistIfNeededCallCount += 1
-        if let persistIfNeededHandler = persistIfNeededHandler {
-            return persistIfNeededHandler()
-        }
-        return false
-    }
-}
-
 public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
     public init() { }
 
@@ -1012,5 +998,28 @@ public class NewImageQueryServiceProtocolMock: NewImageQueryServiceProtocol {
             return try readHandler(id)
         }
         return nil
+    }
+}
+
+public class TemporariesPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
+    public init() { }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((TemporariesPersistServiceObserver) -> Void)?
+    public func set(observer: TemporariesPersistServiceObserver) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(observer)
+        }
+    }
+
+    public private(set) var persistIfNeededCallCount = 0
+    public var persistIfNeededHandler: (() -> (Bool))?
+    public func persistIfNeeded() -> Bool {
+        persistIfNeededCallCount += 1
+        if let persistIfNeededHandler = persistIfNeededHandler {
+            return persistIfNeededHandler()
+        }
+        return false
     }
 }

@@ -64,6 +64,11 @@ internal enum L10n {
     internal static let albumViewEmptyTitle = L10n.tr("Localizable", "album_view_empty_title")
     /// 新しい画像を読み込んでいます\nしばらくお待ちください
     internal static let appRootLoadingMessage = L10n.tr("Localizable", "app_root_loading_message")
+    /// (%d/%d)
+    internal static func appRootLoadingProgress(_ p1: Int, _ p2: Int) -> String {
+        return L10n.tr("Localizable", "app_root_loading_progress", p1, p2)
+    }
+
     /// アルバム
     internal static let appRootTabItemAlbum = L10n.tr("Localizable", "app_root_tab_item_album")
     /// ホーム
