@@ -347,6 +347,23 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
+    public func updateAlbum(having albumId: Album.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+                let result = self.clipStorage.updateAlbum(having: albumId, byHiding: isHidden).map { _ in () }
+                try self.clipStorage.commitTransaction()
+                return result
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to update album. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
     public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {
@@ -383,6 +400,24 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to update tag. (error=\(error.localizedDescription))
+                """))
+                return .failure(.internalError)
+            }
+        }
+    }
+
+    public func updateTag(having id: Tag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        return self.queue.sync {
+            do {
+                try self.clipStorage.beginTransaction()
+                let result = self.clipStorage.updateTag(having: id, byHiding: isHidden).map { _ in () }
+                try self.clipStorage.commitTransaction()
+                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
