@@ -15,6 +15,8 @@ protocol TagCollectionViewModelInputs {
     var created: PassthroughSubject<String, Never> { get }
     var selected: PassthroughSubject<Tag, Never> { get }
     var deleted: PassthroughSubject<[Tag], Never> { get }
+    var hided: PassthroughSubject<Tag.Identity, Never> { get }
+    var revealed: PassthroughSubject<Tag.Identity, Never> { get }
     var inputtedQuery: PassthroughSubject<String, Never> { get }
     func updateTag(having id: Tag.Identity, nameTo name: String)
 }
@@ -50,6 +52,8 @@ class TagCollectionViewModel: TagCollectionViewModelType,
     let created: PassthroughSubject<String, Never> = .init()
     let selected: PassthroughSubject<Tag, Never> = .init()
     let deleted: PassthroughSubject<[Tag], Never> = .init()
+    let hided: PassthroughSubject<Tag.Identity, Never> = .init()
+    let revealed: PassthroughSubject<Tag.Identity, Never> = .init()
     let inputtedQuery: PassthroughSubject<String, Never> = .init()
 
     // MARK: TagCollectionViewModelOutputs
@@ -99,10 +103,13 @@ class TagCollectionViewModel: TagCollectionViewModelType,
     func bind() {
         self.query.tags
             .catch { _ in Just([]) }
-            .combineLatest(self.inputtedQuery)
+            .combineLatest(self.inputtedQuery, self.settingStorage.showHiddenItems)
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, searchQuery in
+            .sink { [weak self] tags, searchQuery, showHiddenItems in
                 guard let self = self else { return }
+
+                let tags = tags
+                    .filter { showHiddenItems ? true : $0.isHidden == false }
 
                 self.displayEmptyMessageView.send(tags.isEmpty)
                 self.displaySearchBar.send(!tags.isEmpty)
@@ -166,6 +173,32 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
+        self.hided
+            .sink { [weak self] tagId in
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipCommandService.updateTag(having: tagId, byHiding: true) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to hide tags. (code: \(error.rawValue))
+                    """))
+                    self.errorMessage.send(L10n.errorTagDefault)
+                    return
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.revealed
+            .sink { [weak self] tagId in
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipCommandService.updateTag(having: tagId, byHiding: false) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to reveal tags. (code: \(error.rawValue))
+                    """))
+                    self.errorMessage.send(L10n.errorTagDefault)
+                    return
+                }
+            }
+            .store(in: &self.cancellableBag)
+
         self.inputtedQuery.send("")
     }
 
@@ -182,7 +215,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add tag. (code: \(error.rawValue))
             """))
-            self.errorMessage.send(L10n.errorTagRenameDefault)
+            self.errorMessage.send(L10n.errorTagDefault)
         }
     }
 }

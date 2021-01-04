@@ -257,12 +257,12 @@ internal enum L10n {
     internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
     /// 同名のタグを追加することはできません
     internal static let errorTagAddDuplicated = L10n.tr("Localizable", "error_tag_add_duplicated")
+    /// タグの更新に失敗しました
+    internal static let errorTagDefault = L10n.tr("Localizable", "error_tag_default")
     /// タグの削除に失敗しました
     internal static let errorTagDelete = L10n.tr("Localizable", "error_tag_delete")
     /// タグの読み込みに失敗しました
     internal static let errorTagRead = L10n.tr("Localizable", "error_tag_read")
-    /// クリップの更新に失敗しました
-    internal static let errorTagRenameDefault = L10n.tr("Localizable", "error_tag_rename_default")
     /// 同じ名前のタグが既に存在します
     internal static let errorTagRenameDuplicated = L10n.tr("Localizable", "error_tag_rename_duplicated")
     /// 検索に失敗しました
@@ -312,6 +312,10 @@ internal enum L10n {
     internal static let tagListViewContextMenuActionCopy = L10n.tr("Localizable", "tag_list_view_context_menu_action_copy")
     /// 削除
     internal static let tagListViewContextMenuActionDelete = L10n.tr("Localizable", "tag_list_view_context_menu_action_delete")
+    /// 隠す
+    internal static let tagListViewContextMenuActionHide = L10n.tr("Localizable", "tag_list_view_context_menu_action_hide")
+    /// 表示する
+    internal static let tagListViewContextMenuActionReveal = L10n.tr("Localizable", "tag_list_view_context_menu_action_reveal")
     /// 名前の変更
     internal static let tagListViewContextMenuActionUpdate = L10n.tr("Localizable", "tag_list_view_context_menu_action_update")
     /// はじめてのタグを追加する

@@ -86,6 +86,8 @@
 "tag_list_view_context_menu_action_copy" = "Copy";
 "tag_list_view_context_menu_action_delete" = "Delete";
 "tag_list_view_context_menu_action_update" = "Rename";
+"tag_list_view_context_menu_action_hide" = "Hide";
+"tag_list_view_context_menu_action_reveal" = "Reveal";
 
 "tag_list_view_alert_for_add_title" = "New Tag";
 "tag_list_view_alert_for_add_message" = "Enter a name for this tag.";
@@ -186,8 +188,8 @@
 "error_tag_add_default" = "Failed to add tag.";
 "error_tag_add_duplicated" = "Duplicated tag name.";
 "error_tag_delete" = "Failed to delete tag";
-"error_tag_rename_default" = "Failed to rename tag.";
 "error_tag_rename_duplicated" = "Duplicated tag name.";
+"error_tag_default" = "タグの更新に失敗しました";
 
 // MARK: Setting
 

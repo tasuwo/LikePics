@@ -52,6 +52,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     private let clipQuery: ClipQuery
     private let itemQuery: ClipItemQuery
     private let clipCommandService: ClipCommandServiceProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
     private var cancellableBag = Set<AnyCancellable>()
@@ -62,12 +63,14 @@ class ClipInformationViewModel: ClipInformationViewModelType,
          clipQuery: ClipQuery,
          itemQuery: ClipItemQuery,
          clipCommandService: ClipCommandServiceProtocol,
+         settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.itemId = itemId
         self.clipQuery = clipQuery
         self.itemQuery = itemQuery
         self.clipCommandService = clipCommandService
+        self.settingStorage = settingStorage
         self.logger = logger
 
         self.clip = .init(clipQuery.clip.value)
@@ -80,7 +83,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
 
     func bind() {
         self.clipQuery.clip
-            .combineLatest(itemQuery.clipItem)
+            .combineLatest(itemQuery.clipItem, settingStorage.showHiddenItems.mapError({ _ -> Error in NSError() }))
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -90,8 +93,8 @@ class ClipInformationViewModel: ClipInformationViewModelType,
                     self?.logger.write(ConsoleLog(level: .error, message: "Error occurred. (error: \(error.localizedDescription))"))
                     self?.errorMessage.send(L10n.clipInformationErrorAtReadClip)
                 }
-            }, receiveValue: { [weak self] clip, item in
-                self?.clip.send(clip)
+            }, receiveValue: { [weak self] clip, item, showHiddenItems in
+                self?.clip.send(showHiddenItems ? clip : clip.removingHiddenTags())
                 self?.clipItem.send(item)
             })
             .store(in: &self.cancellableBag)

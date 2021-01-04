@@ -344,6 +344,9 @@
 		2CE4B13F25922FA3003CE9FF /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4B13E25922FA3003CE9FF /* ImageLoader.swift */; };
 		2CEDB81C25452640007D9E02 /* EmptyMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */; };
 		2CEDB82625452650007D9E02 /* EmptyMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CEDB82525452650007D9E02 /* EmptyMessageView.xib */; };
+		2CEE6BD625A365FA005DA31C /* TagCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE6BD525A365FA005DA31C /* TagCollection.swift */; };
+		2CEE6BE125A3660E005DA31C /* TagCollection_MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE6BE025A3660E005DA31C /* TagCollection_MenuItem.swift */; };
+		2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE6BEC25A36B6F005DA31C /* TagCollectionMenuBuilder.swift */; };
 		2CEE8E4E254FC154004ED04A /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */; };
 		2CF05ACB25409E2B00564A3D /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CF05ACD25409E2B00564A3D /* SettingsViewController.storyboard */; };
 		2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */; };
@@ -1030,6 +1033,9 @@
 		2CE4B13E25922FA3003CE9FF /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMessageView.swift; sourceTree = "<group>"; };
 		2CEDB82525452650007D9E02 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
+		2CEE6BD525A365FA005DA31C /* TagCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollection.swift; sourceTree = "<group>"; };
+		2CEE6BE025A3660E005DA31C /* TagCollection_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollection_MenuItem.swift; sourceTree = "<group>"; };
+		2CEE6BEC25A36B6F005DA31C /* TagCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2CEE8E4D254FC154004ED04A /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainerLoader.swift; sourceTree = "<group>"; };
 		2CF2FDE42592480800412FC7 /* WebImageSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageSourceProvider.swift; sourceTree = "<group>"; };
@@ -2811,6 +2817,31 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		2CEE6BCA25A36558005DA31C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2CEE6BEB25A36B60005DA31C /* Menu */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2CEE6BCB25A36560005DA31C /* ValueObject */ = {
+			isa = PBXGroup;
+			children = (
+				2CEE6BD525A365FA005DA31C /* TagCollection.swift */,
+				2CEE6BE025A3660E005DA31C /* TagCollection_MenuItem.swift */,
+			);
+			path = ValueObject;
+			sourceTree = "<group>";
+		};
+		2CEE6BEB25A36B60005DA31C /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				2CEE6BEC25A36B6F005DA31C /* TagCollectionMenuBuilder.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		2CF2FDE3259247F700412FC7 /* ImageSourceProvider */ = {
 			isa = PBXGroup;
 			children = (
@@ -2913,6 +2944,8 @@
 		2CFC5CEE250DA906001A02E4 /* TagCollection */ = {
 			isa = PBXGroup;
 			children = (
+				2CEE6BCA25A36558005DA31C /* Components */,
+				2CEE6BCB25A36560005DA31C /* ValueObject */,
 				2CFC5CEF250DA919001A02E4 /* TagCollectionViewModel.swift */,
 			);
 			path = TagCollection;
@@ -4305,6 +4338,7 @@
 				2C98111825A352C500B89A47 /* AlbumListMenuBuilder.swift in Sources */,
 				2C1E4434257B5A5700A067B1 /* ClipCollection.swift in Sources */,
 				2CB60584257FD15F00F7579F /* AlbumViewModel.swift in Sources */,
+				2CEE6BD625A365FA005DA31C /* TagCollection.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2CDA49D32516EF400043DC14 /* ClipPreviewPageBarViewModel.swift in Sources */,
 				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
@@ -4313,6 +4347,7 @@
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
+				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2CFC5CF0250DA919001A02E4 /* TagCollectionViewModel.swift in Sources */,
 				2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */,
@@ -4339,6 +4374,7 @@
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,
 				2C753C3325963BD000715482 /* ClipMergeViewController.swift in Sources */,
+				2CEE6BE125A3660E005DA31C /* TagCollection_MenuItem.swift in Sources */,
 				2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
 				2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */,

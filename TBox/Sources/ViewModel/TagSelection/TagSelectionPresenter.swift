@@ -23,9 +23,10 @@ class TagSelectionPresenter {
     private let query: TagListQuery
     private let context: Any?
     private let clipCommandService: ClipCommandServiceProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
-    private let searchQuery: CurrentValueSubject<String, Error> = .init("")
+    private let searchQuery: CurrentValueSubject<String, Never> = .init("")
     private var searchStorage: SearchableTagsStorage = .init()
     private var cancellableBag = Set<AnyCancellable>()
 
@@ -62,11 +63,13 @@ class TagSelectionPresenter {
          selectedTags: [Tag.Identity],
          context: Any?,
          clipCommandService: ClipCommandServiceProtocol,
+         settingStorage: UserSettingsStorageProtocol,
          logger: TBoxLoggable)
     {
         self.query = query
         self.context = context
         self.clipCommandService = clipCommandService
+        self.settingStorage = settingStorage
         self.logger = logger
         self.selections = Set(selectedTags)
     }
@@ -74,20 +77,18 @@ class TagSelectionPresenter {
     // MARK: - Methods
 
     func setup() {
-        self.query
-            .tags
-            .combineLatest(self.searchQuery)
+        self.query.tags
+            .catch { _ in Just([]) }
+            .combineLatest(self.searchQuery, self.settingStorage.showHiddenItems)
             .receive(on: DispatchQueue.global())
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.logger.write(ConsoleLog(level: .error, message: """
-                Unexpectedly finished observing at TagSelectionView.
-                """))
-            }, receiveValue: { [weak self] tags, searchQuery in
+            .sink { [weak self] tags, searchQuery, showHiddenItems in
                 guard let self = self else { return }
+                let tags = tags
+                    .filter { showHiddenItems ? true : $0.isHidden == false }
                 let filteredTags = self.searchStorage.perform(query: searchQuery, to: tags)
                 self.view?.apply(filteredTags, isFiltered: !searchQuery.isEmpty, isEmpty: tags.isEmpty)
                 self.tags = tags
-            })
+            }
             .store(in: &self.cancellableBag)
     }
 

@@ -150,6 +150,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                  clipQuery: clipQuery,
                                                  itemQuery: itemQuery,
                                                  clipCommandService: self.clipCommandService,
+                                                 settingStorage: self.userSettingsStorage,
                                                  logger: self.logger)
 
         let viewController = ClipInformationViewController(factory: self,
@@ -337,7 +338,10 @@ extension DependencyContainer: ViewControllerFactory {
                                                clipCommandService: self.clipCommandService,
                                                settingStorage: self.userSettingsStorage,
                                                logger: self.logger)
-        let viewController = TagCollectionViewController(factory: self, viewModel: viewModel, logger: self.logger)
+        let viewController = TagCollectionViewController(factory: self,
+                                                         viewModel: viewModel,
+                                                         menuBuilder: TagCollectionMenuBuilder.self,
+                                                         logger: self.logger)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -362,6 +366,7 @@ extension DependencyContainer: ViewControllerFactory {
                                               selectedTags: selectedTags,
                                               context: context,
                                               clipCommandService: self.clipCommandService,
+                                              settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
         presenter.delegate = delegate
         let viewController = TagSelectionViewController(factory: self, presenter: presenter)

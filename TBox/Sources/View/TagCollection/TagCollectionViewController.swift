@@ -22,11 +22,20 @@ class TagCollectionViewController: UIViewController {
         case tag(Tag)
     }
 
+    // MARK: - Properties
+
     private static let uncategorizedCellIdentifier = "uncategorized"
 
+    // MARK: Factory
+
     private let factory: Factory
-    private let viewModel: TagCollectionViewModel
-    private let logger: TBoxLoggable
+
+    // MARK: Dependency
+
+    private let viewModel: Dependency
+
+    // MARK: View
+
     private let emptyMessageView = EmptyMessageView()
     private lazy var addAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
@@ -42,16 +51,25 @@ class TagCollectionViewController: UIViewController {
     @IBOutlet var collectionView: TagCollectionView!
     @IBOutlet var searchBar: UISearchBar!
 
+    // MARK: Components
+
+    private let menuBuilder: TagCollectionMenuBuildable.Type
+
+    // MARK: States
+
+    private let logger: TBoxLoggable
     private var cancellableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: TagCollectionViewModel,
+         menuBuilder: TagCollectionMenuBuildable.Type,
          logger: TBoxLoggable)
     {
         self.factory = factory
         self.viewModel = viewModel
+        self.menuBuilder = menuBuilder
         self.logger = logger
         super.init(nibName: nil, bundle: nil)
     }
@@ -305,11 +323,17 @@ extension TagCollectionViewController: UICollectionViewDelegate {
             break
         }
     }
+}
+
+extension TagCollectionViewController {
+    // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
-            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil, actionProvider: self.makeActionProvider(for: tag))
+            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                              previewProvider: nil,
+                                              actionProvider: self.makeActionProvider(for: tag, at: indexPath))
 
         default:
             return nil
@@ -332,31 +356,62 @@ extension TagCollectionViewController: UICollectionViewDelegate {
         return UITargetedPreview(view: cell, parameters: parameters)
     }
 
-    private func makeActionProvider(for tag: Tag) -> UIContextMenuActionProvider {
-        let copy = UIAction(title: L10n.tagListViewContextMenuActionCopy,
+    private func makeActionProvider(for tag: Tag, at indexPath: IndexPath) -> UIContextMenuActionProvider {
+        let items = self.menuBuilder.build(for: tag).map {
+            self.makeAction(from: $0, for: tag, at: indexPath)
+        }
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: items)
+        }
+    }
+
+    private func makeAction(from item: TagCollection.MenuItem, for tag: Tag, at indexPath: IndexPath) -> UIAction {
+        switch item {
+        case .copy:
+            return UIAction(title: L10n.tagListViewContextMenuActionCopy,
                             image: UIImage(systemName: "square.on.square.fill")) { _ in
-            UIPasteboard.general.string = tag.name
-        }
-        let delete = UIAction(title: L10n.tagListViewContextMenuActionDelete,
-                              image: UIImage(systemName: "trash.fill")) { [weak self] _ in
-            self?.viewModel.inputs.deleted.send([tag])
-        }
-        let update = UIAction(title: L10n.tagListViewContextMenuActionUpdate,
-                              image: UIImage(systemName: "text.cursor")) { [weak self] _ in
-            guard let self = self else { return }
-            self.updateAlertContainer.present(
-                withText: tag.name,
-                on: self,
-                validator: {
-                    $0 != tag.name && $0?.isEmpty != true
-                }, completion: { action in
-                    guard case let .saved(text: name) = action else { return }
-                    self.viewModel.updateTag(having: tag.identity, nameTo: name)
+                UIPasteboard.general.string = tag.name
+            }
+
+        case .hide:
+            return UIAction(title: L10n.tagListViewContextMenuActionHide,
+                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.viewModel.inputs.hided.send(tag.id)
                 }
-            )
-        }
-        return { (elements: [UIMenuElement]) in
-            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: [copy, delete, update])
+            }
+
+        case .reveal:
+            return UIAction(title: L10n.tagListViewContextMenuActionReveal,
+                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self.viewModel.inputs.revealed.send(tag.id)
+                }
+            }
+
+        case .delete:
+            return UIAction(title: L10n.tagListViewContextMenuActionDelete,
+                            image: UIImage(systemName: "trash.fill")) { [weak self] _ in
+                self?.viewModel.inputs.deleted.send([tag])
+            }
+
+        case .rename:
+            return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
+                            image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAlertContainer.present(
+                    withText: tag.name,
+                    on: self,
+                    validator: {
+                        $0 != tag.name && $0?.isEmpty != true
+                    }, completion: { action in
+                        guard case let .saved(text: name) = action else { return }
+                        self.viewModel.inputs.updateTag(having: tag.identity, nameTo: name)
+                    }
+                )
+            }
         }
     }
 }
