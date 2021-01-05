@@ -49,6 +49,7 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Components
 
+    private let navigationBarProvider: AlbumListNavigationBarProvider
     private let menuBuilder: AlbumListMenuBuildable.Type
 
     // MARK: Thumbnail
@@ -63,11 +64,13 @@ class AlbumListViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: AlbumListViewModel,
+         navigationBarProvider: AlbumListNavigationBarProvider,
          menuBuilder: AlbumListMenuBuildable.Type,
          thumbnailLoader: ThumbnailLoader)
     {
         self.factory = factory
         self.viewModel = viewModel
+        self.navigationBarProvider = navigationBarProvider
         self.menuBuilder = menuBuilder
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
@@ -135,6 +138,8 @@ class AlbumListViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
+        // Dependency Outputs
+
         dependency.outputs.albums
             .receive(on: DispatchQueue.global())
             .sink { [weak self] albums in
@@ -145,15 +150,16 @@ class AlbumListViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
+        dependency.outputs.operation
+            .receive(on: DispatchQueue.main)
+            .map { $0.isEditing }
+            .assignNoRetain(to: \.isEditing, on: self)
+            .store(in: &self.cancellableBag)
+
         dependency.outputs.displayEmptyMessage
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.isEditButtonEnabled
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isEnabled in self?.navigationItem.rightBarButtonItem?.isEnabled = isEnabled }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.errorMessage
@@ -163,6 +169,27 @@ class AlbumListViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.dragInteractionEnabled
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.dragInteractionEnabled, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+
+        // Navigation Bar
+
+        self.navigationBarProvider.bind(view: self, propagator: dependency.outputs)
+
+        self.navigationBarProvider.didTapAdd
+            .sink { [weak self] _ in self?.startAddingAlbum() }
+            .store(in: &self.cancellableBag)
+
+        self.navigationBarProvider.didTapEdit
+            .sink { _ in dependency.inputs.operation.send(.editing) }
+            .store(in: &self.cancellableBag)
+
+        self.navigationBarProvider.didTapDone
+            .sink { _ in dependency.inputs.operation.send(.none) }
             .store(in: &self.cancellableBag)
     }
 
@@ -283,14 +310,6 @@ class AlbumListViewController: UIViewController {
 
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.albumListViewTitle
-        self.navigationItem.leftBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
-        self.navigationItem.rightBarButtonItem = self.editButtonItem
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-    }
-
-    @objc
-    func didTapAdd() {
-        self.startAddingAlbum()
     }
 
     // MARK: EmptyMessage
@@ -312,10 +331,6 @@ class AlbumListViewController: UIViewController {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-
-        self.navigationItem.leftBarButtonItem?.isEnabled = !editing
-
-        self.collectionView.dragInteractionEnabled = editing
 
         let shouldHide = !editing
 

@@ -13,6 +13,8 @@ protocol AlbumListViewModelType {
 }
 
 protocol AlbumListViewModelInputs {
+    var operation: CurrentValueSubject<AlbumList.Operation, Never> { get }
+
     var addedAlbum: PassthroughSubject<String, Never> { get }
     var deletedAlbum: PassthroughSubject<Album.Identity, Never> { get }
     var hidedAlbum: PassthroughSubject<Album.Identity, Never> { get }
@@ -23,9 +25,10 @@ protocol AlbumListViewModelInputs {
 
 protocol AlbumListViewModelOutputs {
     var albums: CurrentValueSubject<[Album], Never> { get }
+    var operation: CurrentValueSubject<AlbumList.Operation, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
     var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
-    var isEditButtonEnabled: CurrentValueSubject<Bool, Never> { get }
+    var dragInteractionEnabled: CurrentValueSubject<Bool, Never> { get }
 }
 
 class AlbumListViewModel: AlbumListViewModelType,
@@ -51,9 +54,10 @@ class AlbumListViewModel: AlbumListViewModelType,
     // MARK: AlbumListViewModelOutputs
 
     let albums: CurrentValueSubject<[Album], Never>
+    let operation: CurrentValueSubject<AlbumList.Operation, Never> = .init(.none)
     let errorMessage: PassthroughSubject<String, Never> = .init()
     let displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
-    let isEditButtonEnabled: CurrentValueSubject<Bool, Never> = .init(false)
+    let dragInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: Privates
 
@@ -90,8 +94,8 @@ extension AlbumListViewModel {
                 return Just([Album]()).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-            .combineLatest(self.settingStorage.showHiddenItems)
-            .sink { [weak self] albums, showHiddenItems in
+            .combineLatest(self.settingStorage.showHiddenItems, self.operation)
+            .sink { [weak self] albums, showHiddenItems, operation in
                 guard let self = self else { return }
 
                 let newAlbums: [Album]
@@ -105,8 +109,16 @@ extension AlbumListViewModel {
 
                 self.albums.send(newAlbums)
                 self.displayEmptyMessage.send(albums.isEmpty)
-                self.isEditButtonEnabled.send(!albums.isEmpty)
+
+                if operation.isEditing, newAlbums.isEmpty {
+                    self.operation.send(.none)
+                }
             }
+            .store(in: &self.cancellableBag)
+
+        self.operation
+            .map { $0.isEditing }
+            .sink { [weak self] isEditing in self?.dragInteractionEnabled.send(isEditing) }
             .store(in: &self.cancellableBag)
 
         self.addedAlbum

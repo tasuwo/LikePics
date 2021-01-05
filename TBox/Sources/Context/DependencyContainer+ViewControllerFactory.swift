@@ -246,12 +246,16 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
+        let navBarViewModel = AlbumListNavigationBarViewModel()
+        let navBarProvider = AlbumListNavigationBarProvider(viewModel: navBarViewModel)
+
         let viewModel = AlbumListViewModel(query: query,
                                            clipCommandService: self.clipCommandService,
                                            settingStorage: self.userSettingsStorage,
                                            logger: self.logger)
         let viewController = AlbumListViewController(factory: self,
                                                      viewModel: viewModel,
+                                                     navigationBarProvider: navBarProvider,
                                                      menuBuilder: AlbumListMenuBuilder.self,
                                                      thumbnailLoader: self.albumThumbnailLoader)
         return UINavigationController(rootViewController: viewController)
