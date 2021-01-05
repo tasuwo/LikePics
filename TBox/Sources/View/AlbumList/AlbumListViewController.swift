@@ -239,7 +239,7 @@ class AlbumListViewController: UIViewController {
                 let info = ThumbnailRequest.ThumbnailInfo(id: "album-list-\(thumbnailTarget.identity.uuidString)",
                                                           size: cell.thumbnailSize,
                                                           scale: cell.traitCollection.displayScale)
-                let imageRequest = NewImageDataLoadRequest(imageId: thumbnailTarget.imageId)
+                let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)

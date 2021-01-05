@@ -147,7 +147,7 @@ class AlbumSelectionViewController: UIViewController {
                 let info = ThumbnailRequest.ThumbnailInfo(id: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
                                                           size: cell.thumbnailDisplaySize,
                                                           scale: cell.traitCollection.displayScale)
-                let imageRequest = NewImageDataLoadRequest(imageId: thumbnailTarget.imageId)
+                let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)

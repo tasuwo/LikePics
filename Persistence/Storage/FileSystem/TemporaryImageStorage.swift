@@ -4,7 +4,7 @@
 
 import Domain
 
-public class ImageStorage {
+public class TemporaryImageStorage {
     public struct Configuration {
         let targetUrl: URL
     }
@@ -42,7 +42,7 @@ public class ImageStorage {
     }
 }
 
-extension ImageStorage: ImageStorageProtocol {
+extension TemporaryImageStorage: TemporaryImageStorageProtocol {
     // MARK: - ItemStorageProtocol
 
     public func imageFileExists(named name: String, inClipHaving clipId: Domain.Clip.Identity) -> Bool {

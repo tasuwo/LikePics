@@ -7,7 +7,7 @@ import CoreData
 import Domain
 import Smoothie
 
-public class NewImageQueryService {
+public class ImageQueryService {
     public var context: NSManagedObjectContext {
         willSet {
             self.context.perform { [weak self] in
@@ -25,7 +25,7 @@ public class NewImageQueryService {
     }
 }
 
-extension NewImageQueryService: NewImageQueryServiceProtocol {
+extension ImageQueryService: ImageQueryServiceProtocol {
     public func read(having id: UUID) throws -> Data? {
         return try self.context.sync { [weak self] in
             let request: NSFetchRequest<Image> = Image.fetchRequest()
@@ -35,11 +35,11 @@ extension NewImageQueryService: NewImageQueryServiceProtocol {
     }
 }
 
-extension NewImageQueryService: OriginalImageLoader {
+extension ImageQueryService: OriginalImageLoader {
     // MARK: - OriginalImageLoader
 
     public func loadData(with request: OriginalImageRequest) -> Data? {
-        guard let request = request as? NewImageDataLoadRequest else {
+        guard let request = request as? ImageDataLoadRequest else {
             RootLogger.shared.write(ConsoleLog(level: .error, message: "不正なリクエスト"))
             return nil
         }

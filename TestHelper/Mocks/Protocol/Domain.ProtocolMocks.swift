@@ -636,66 +636,6 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
 
 public class ImageStorageProtocolMock: ImageStorageProtocol {
     public init() { }
-
-    public private(set) var imageFileExistsCallCount = 0
-    public var imageFileExistsHandler: ((String, Clip.Identity) -> (Bool))?
-    public func imageFileExists(named name: String, inClipHaving clipId: Clip.Identity) -> Bool {
-        imageFileExistsCallCount += 1
-        if let imageFileExistsHandler = imageFileExistsHandler {
-            return imageFileExistsHandler(name, clipId)
-        }
-        return false
-    }
-
-    public private(set) var saveCallCount = 0
-    public var saveHandler: ((Data, String, Clip.Identity) throws -> Void)?
-    public func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
-        saveCallCount += 1
-        if let saveHandler = saveHandler {
-            try saveHandler(image, fileName, clipId)
-        }
-    }
-
-    public private(set) var deleteCallCount = 0
-    public var deleteHandler: ((String, Clip.Identity) throws -> Void)?
-    public func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
-        deleteCallCount += 1
-        if let deleteHandler = deleteHandler {
-            try deleteHandler(fileName, clipId)
-        }
-    }
-
-    public private(set) var deleteAllCallCount = 0
-    public var deleteAllHandler: ((Clip.Identity) throws -> Void)?
-    public func deleteAll(inClipHaving clipId: Clip.Identity) throws {
-        deleteAllCallCount += 1
-        if let deleteAllHandler = deleteAllHandler {
-            try deleteAllHandler(clipId)
-        }
-    }
-
-    public private(set) var deleteAll1CallCount = 0
-    public var deleteAll1Handler: (() throws -> Void)?
-    public func deleteAll() throws {
-        deleteAll1CallCount += 1
-        if let deleteAll1Handler = deleteAll1Handler {
-            try deleteAll1Handler()
-        }
-    }
-
-    public private(set) var readImageCallCount = 0
-    public var readImageHandler: ((String, Clip.Identity) throws -> (Data?))?
-    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data? {
-        readImageCallCount += 1
-        if let readImageHandler = readImageHandler {
-            return try readImageHandler(name, clipId)
-        }
-        return nil
-    }
-}
-
-public class NewImageStorageProtocolMock: NewImageStorageProtocol {
-    public init() { }
     public init(isInTransaction: Bool = false) {
         self.isInTransaction = isInTransaction
     }
@@ -957,6 +897,66 @@ public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
     }
 }
 
+public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
+    public init() { }
+
+    public private(set) var imageFileExistsCallCount = 0
+    public var imageFileExistsHandler: ((String, Clip.Identity) -> (Bool))?
+    public func imageFileExists(named name: String, inClipHaving clipId: Clip.Identity) -> Bool {
+        imageFileExistsCallCount += 1
+        if let imageFileExistsHandler = imageFileExistsHandler {
+            return imageFileExistsHandler(name, clipId)
+        }
+        return false
+    }
+
+    public private(set) var saveCallCount = 0
+    public var saveHandler: ((Data, String, Clip.Identity) throws -> Void)?
+    public func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws {
+        saveCallCount += 1
+        if let saveHandler = saveHandler {
+            try saveHandler(image, fileName, clipId)
+        }
+    }
+
+    public private(set) var deleteCallCount = 0
+    public var deleteHandler: ((String, Clip.Identity) throws -> Void)?
+    public func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws {
+        deleteCallCount += 1
+        if let deleteHandler = deleteHandler {
+            try deleteHandler(fileName, clipId)
+        }
+    }
+
+    public private(set) var deleteAllCallCount = 0
+    public var deleteAllHandler: ((Clip.Identity) throws -> Void)?
+    public func deleteAll(inClipHaving clipId: Clip.Identity) throws {
+        deleteAllCallCount += 1
+        if let deleteAllHandler = deleteAllHandler {
+            try deleteAllHandler(clipId)
+        }
+    }
+
+    public private(set) var deleteAll1CallCount = 0
+    public var deleteAll1Handler: (() throws -> Void)?
+    public func deleteAll() throws {
+        deleteAll1CallCount += 1
+        if let deleteAll1Handler = deleteAll1Handler {
+            try deleteAll1Handler()
+        }
+    }
+
+    public private(set) var readImageCallCount = 0
+    public var readImageHandler: ((String, Clip.Identity) throws -> (Data?))?
+    public func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data? {
+        readImageCallCount += 1
+        if let readImageHandler = readImageHandler {
+            return try readImageHandler(name, clipId)
+        }
+        return nil
+    }
+}
+
 public class AlbumListQueryMock: AlbumListQuery {
     public init() { }
     public init(albums: CurrentValueSubject<[Album], Error>) {
@@ -1134,7 +1134,7 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     }
 }
 
-public class NewImageQueryServiceProtocolMock: NewImageQueryServiceProtocol {
+public class ImageQueryServiceProtocolMock: ImageQueryServiceProtocol {
     public init() { }
 
     public private(set) var readCallCount = 0

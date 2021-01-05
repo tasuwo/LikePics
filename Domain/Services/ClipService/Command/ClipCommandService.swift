@@ -8,7 +8,7 @@ import Smoothie
 public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
-    let imageStorage: NewImageStorageProtocol
+    let imageStorage: ImageStorageProtocol
     let diskCache: DiskCaching
     let logger: TBoxLoggable
     let queue: DispatchQueue
@@ -19,7 +19,7 @@ public class ClipCommandService {
 
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
-                imageStorage: NewImageStorageProtocol,
+                imageStorage: ImageStorageProtocol,
                 diskCache: DiskCaching,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)

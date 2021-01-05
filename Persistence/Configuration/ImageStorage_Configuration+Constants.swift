@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-extension ImageStorage.Configuration {
+extension TemporaryImageStorage.Configuration {
     public enum Kind {
         case document
         case group

@@ -278,7 +278,7 @@ class ClipMergeViewController: UIViewController {
                 let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(clipItem.identity.uuidString)",
                                                           size: cell.thumbnailDisplaySize,
                                                           scale: cell.traitCollection.displayScale)
-                let imageRequest = NewImageDataLoadRequest(imageId: clipItem.imageId)
+                let imageRequest = ImageDataLoadRequest(imageId: clipItem.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)

@@ -104,7 +104,7 @@ class ClipCollectionProvider: NSObject {
         let info = ThumbnailRequest.ThumbnailInfo(id: "clip-collection-\(item.identity.uuidString)",
                                                   size: size,
                                                   scale: scale)
-        let imageRequest = NewImageDataLoadRequest(imageId: item.imageId)
+        let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 thumbnailInfo: info,

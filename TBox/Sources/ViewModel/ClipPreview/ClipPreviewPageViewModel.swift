@@ -72,7 +72,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     private let query: ClipQuery
     private let clipCommandService: ClipCommandServiceProtocol
-    private let imageQueryService: NewImageQueryServiceProtocol
+    private let imageQueryService: ImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
     private let currentIndex: CurrentValueSubject<Int, Never>
@@ -84,7 +84,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     init(clipId: Clip.Identity,
          query: ClipQuery,
          clipCommandService: ClipCommandServiceProtocol,
-         imageQueryService: NewImageQueryServiceProtocol,
+         imageQueryService: ImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {
         self.clipId = clipId

@@ -8,15 +8,15 @@ import Quick
 import Domain
 @testable import Persistence
 
-class ImageStorageSpec: QuickSpec {
+class TemporaryImageStorageSpec: QuickSpec {
     static let testDirectory = FileManager.default.temporaryDirectory
-        .appendingPathComponent("ImageStorageSpec", isDirectory: true)
+        .appendingPathComponent("TemporaryImageStorageSpec", isDirectory: true)
     static let testDirectory2 = FileManager.default.temporaryDirectory
-        .appendingPathComponent("ImageStorageSpec2", isDirectory: true)
-    static let config = ImageStorage.Configuration(targetUrl: ImageStorageSpec.testDirectory)
+        .appendingPathComponent("TemporaryImageStorageSpec2", isDirectory: true)
+    static let config = TemporaryImageStorage.Configuration(targetUrl: TemporaryImageStorageSpec.testDirectory)
 
     override func spec() {
-        var storage: ImageStorage!
+        var storage: TemporaryImageStorage!
         let sampleImage = UIImage(named: "SampleImageBlack", in: Bundle(for: Self.self), with: nil)!
         let sampleClipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6111")!
         let expectedClipDirectoryUrl = Self.testDirectory
@@ -41,7 +41,7 @@ class ImageStorageSpec: QuickSpec {
 
         describe("init") {
             beforeEach {
-                storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
             }
             it("画像保存用のディレクトリが作成されている") {
                 expect(FileManager.default.fileExists(atPath: Self.testDirectory.path)).to(beTrue())
@@ -51,7 +51,7 @@ class ImageStorageSpec: QuickSpec {
         describe("imageFileExists(named:inClipHaving:)") {
             context("画像が存在する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
@@ -66,7 +66,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("存在しない画像を読み込む") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                 }
                 it("falseが返る") {
                     expect(storage.imageFileExists(named: "hogehoge.png", inClipHaving: sampleClipId)).to(beFalse())
@@ -77,7 +77,7 @@ class ImageStorageSpec: QuickSpec {
         describe("save(_:asName:inClipHaving:)") {
             context("新しいクリップに画像を保存する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
 
@@ -99,7 +99,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("既存のクリップに画像を保存する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                     try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClipHaving: sampleClipId)
                 }
@@ -127,7 +127,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("重複して画像を保存する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                 }
@@ -152,7 +152,7 @@ class ImageStorageSpec: QuickSpec {
         describe("delete(fileName:inClipHaving:)") {
             context("クリップに複数存在するうちの1つの画像を削除する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
                     try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClipHaving: sampleClipId)
 
@@ -182,7 +182,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("クリップの最後の1枚の画像を削除する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
                     try! storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
@@ -195,7 +195,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("存在しない画像を削除する") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                 }
                 it("何も起きない") {
                     expect({
@@ -213,7 +213,7 @@ class ImageStorageSpec: QuickSpec {
             var data: Data!
             context("存在する画像を読み込む") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
                     data = try! storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
@@ -231,7 +231,7 @@ class ImageStorageSpec: QuickSpec {
 
             context("存在しない画像を読み込む") {
                 beforeEach {
-                    storage = try! ImageStorage(configuration: Self.config, fileManager: FileManager.default)
+                    storage = try! TemporaryImageStorage(configuration: Self.config, fileManager: FileManager.default)
                     data = try! storage.readImage(named: "hogehoge.png", inClipHaving: sampleClipId)
                 }
                 it("nilが返る") {

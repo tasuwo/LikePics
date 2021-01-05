@@ -6,7 +6,7 @@ import Common
 import CoreData
 import Domain
 
-public class NewImageStorage {
+public class ImageStorage {
     public var context: NSManagedObjectContext {
         willSet {
             self.context.perform { [weak self] in
@@ -24,7 +24,7 @@ public class NewImageStorage {
     }
 }
 
-extension NewImageStorage: NewImageStorageProtocol {
+extension ImageStorage: ImageStorageProtocol {
     // MARK: Transaction
 
     public var isInTransaction: Bool {

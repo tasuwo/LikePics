@@ -11,7 +11,7 @@ import Quick
 @testable import Persistence
 @testable import TestHelper
 
-class NewClipStorageSpec: QuickSpec {
+class ClipStorageSpec: QuickSpec {
     func coreDataStack() -> NSPersistentContainer {
         let bundle = Bundle(for: PersistentContainerLoader.Class.self)
         guard let url = bundle.url(forResource: "Model", withExtension: "momd"),

@@ -4,10 +4,22 @@
 
 /// @mockable
 public protocol ImageStorageProtocol {
-    func imageFileExists(named name: String, inClipHaving clipId: Clip.Identity) -> Bool
-    func save(_ image: Data, asName fileName: String, inClipHaving clipId: Clip.Identity) throws
-    func delete(fileName: String, inClipHaving clipId: Clip.Identity) throws
-    func deleteAll(inClipHaving clipId: Clip.Identity) throws
-    func deleteAll() throws
-    func readImage(named name: String, inClipHaving clipId: Clip.Identity) throws -> Data?
+    // MARK: Transaction
+
+    var isInTransaction: Bool { get }
+    func beginTransaction() throws
+    func commitTransaction() throws
+    func cancelTransactionIfNeeded() throws
+
+    // MARK: Create
+
+    func create(_ image: Data, id: ImageContainer.Identity) throws
+
+    // MARK: Delete
+
+    func delete(having id: ImageContainer.Identity) throws
+
+    // MARK: Read
+
+    func exists(having id: ImageContainer.Identity) throws -> Bool
 }

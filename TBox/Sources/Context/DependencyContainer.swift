@@ -25,8 +25,8 @@ class DependencyContainer {
     let clipStorage: ClipStorage
     let tmpClipStorage: TemporaryClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
-    let imageStorage: NewImageStorage
-    let tmpImageStorage: ImageStorageProtocol
+    let imageStorage: ImageStorage
+    let tmpImageStorage: TemporaryImageStorageProtocol
     let userSettingsStorage: UserSettingsStorageProtocol
     let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
@@ -34,7 +34,7 @@ class DependencyContainer {
 
     let clipCommandService: ClipCommandService
     let clipQueryService: ClipQueryService
-    let imageQueryService: NewImageQueryService
+    let imageQueryService: ImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporariesPersistServiceProtocol
     let cloudChangeDetecter: CloudKitChangeDetecter
@@ -60,7 +60,7 @@ class DependencyContainer {
     // MARK: - Lifecycle
 
     init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityObserver) throws {
-        self.tmpImageStorage = try ImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
+        self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
         self.logger = RootLogger.shared
         self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
@@ -78,9 +78,9 @@ class DependencyContainer {
         self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
         self.clipStorage = ClipStorage(context: self.commandContext)
-        self.imageStorage = NewImageStorage(context: self.commandContext)
+        self.imageStorage = ImageStorage(context: self.commandContext)
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
-        self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
+        self.imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         Self.sweepLegacyThumbnailCachesIfExists()
 

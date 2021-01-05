@@ -12,17 +12,17 @@ class TemporariesPersistServiceSpec: QuickSpec {
     override func spec() {
         var service: TemporariesPersistService!
         var temporaryClipStorage: TemporaryClipStorageProtocolMock!
-        var temporaryImageStorage: ImageStorageProtocolMock!
+        var temporaryImageStorage: TemporaryImageStorageProtocolMock!
         var clipStorage: ClipStorageProtocolMock!
         var referenceClipStorage: ReferenceClipStorageProtocolMock!
-        var imageStorage: NewImageStorageProtocolMock!
+        var imageStorage: ImageStorageProtocolMock!
 
         beforeEach {
             temporaryClipStorage = TemporaryClipStorageProtocolMock()
-            temporaryImageStorage = ImageStorageProtocolMock()
+            temporaryImageStorage = TemporaryImageStorageProtocolMock()
             clipStorage = ClipStorageProtocolMock()
             referenceClipStorage = ReferenceClipStorageProtocolMock()
-            imageStorage = NewImageStorageProtocolMock()
+            imageStorage = ImageStorageProtocolMock()
 
             service = .init(temporaryClipStorage: temporaryClipStorage,
                             temporaryImageStorage: temporaryImageStorage,

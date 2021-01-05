@@ -5,11 +5,11 @@
 import Smoothie
 
 /// @mockable
-public protocol NewImageQueryServiceProtocol {
+public protocol ImageQueryServiceProtocol {
     func read(having id: ImageContainer.Identity) throws -> Data?
 }
 
-public struct NewImageDataLoadRequest: OriginalImageRequest {
+public struct ImageDataLoadRequest: OriginalImageRequest {
     public let imageId: UUID
 
     public init(imageId: UUID) {

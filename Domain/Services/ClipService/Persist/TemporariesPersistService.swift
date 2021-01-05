@@ -6,10 +6,10 @@ import Common
 
 public class TemporariesPersistService {
     let temporaryClipStorage: TemporaryClipStorageProtocol
-    let temporaryImageStorage: ImageStorageProtocol
+    let temporaryImageStorage: TemporaryImageStorageProtocol
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
-    let imageStorage: NewImageStorageProtocol
+    let imageStorage: ImageStorageProtocol
     let logger: TBoxLoggable
     let queue: DispatchQueue
 
@@ -20,10 +20,10 @@ public class TemporariesPersistService {
     // MARK: - Lifecycle
 
     public init(temporaryClipStorage: TemporaryClipStorageProtocol,
-                temporaryImageStorage: ImageStorageProtocol,
+                temporaryImageStorage: TemporaryImageStorageProtocol,
                 clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
-                imageStorage: NewImageStorageProtocol,
+                imageStorage: ImageStorageProtocol,
                 logger: TBoxLoggable,
                 queue: DispatchQueue)
     {

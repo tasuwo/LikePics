@@ -108,7 +108,7 @@ class ClipCollectionModel: ClipCollectionModelType,
     // MARK: Privates
 
     private let clipService: ClipCommandServiceProtocol
-    private let imageQueryService: NewImageQueryServiceProtocol
+    private let imageQueryService: ImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
     private var cancellableBag = Set<AnyCancellable>()
@@ -116,7 +116,7 @@ class ClipCollectionModel: ClipCollectionModelType,
     // MARK: - Lifecycle
 
     init(clipService: ClipCommandServiceProtocol,
-         imageQueryService: NewImageQueryServiceProtocol,
+         imageQueryService: ImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {
         self.clipService = clipService
