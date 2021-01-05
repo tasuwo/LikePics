@@ -78,7 +78,6 @@
 		2C21415E254858D50013F486 /* TBoxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C21415D254858D50013F486 /* TBoxUITests.swift */; };
 		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
 		2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236D72251A10D000AB5EDD /* ClipQuery.swift */; };
-		2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */; };
 		2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C25841D254FDCC300373A31 /* AppDataLoader.swift */; };
 		2C27D7B524E254A3006B5DA9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
 		2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */; };
@@ -236,7 +235,6 @@
 		2CA0229624DD9F5F00329251 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229524DD9F5F00329251 /* Assets.xcassets */; };
 		2CA0229924DD9F5F00329251 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */; };
 		2CA022A424DD9F5F00329251 /* TBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA022A324DD9F5F00329251 /* TBoxTests.swift */; };
-		2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */; };
 		2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */; };
 		2CA9DBEB258598E700D88ED4 /* UIView+ConstraintFittingIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */; };
 		2CA9DC1C25860DDF00D88ED4 /* TagCollectionAdditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA9DC1B25860DDF00D88ED4 /* TagCollectionAdditionCell.swift */; };
@@ -299,13 +297,7 @@
 		2CD25B08251E469B00BEE210 /* AlbumQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B07251E469B00BEE210 /* AlbumQuery.swift */; };
 		2CD25B1A251E46B800BEE210 /* AlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B19251E46B800BEE210 /* AlbumListQuery.swift */; };
 		2CD25B24251E46EA00BEE210 /* TagQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B23251E46EA00BEE210 /* TagQuery.swift */; };
-		2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B3D251E4BEE00BEE210 /* RealmAlbumQuery.swift */; };
-		2CD25B48251E4C6B00BEE210 /* RealmClipItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B47251E4C6B00BEE210 /* RealmClipItemQuery.swift */; };
-		2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B51251E4C9F00BEE210 /* RealmTagQuery.swift */; };
-		2CD25B5C251E4CEE00BEE210 /* RealmClipsResultQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B5B251E4CEE00BEE210 /* RealmClipsResultQuery.swift */; };
-		2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */; };
 		2CD25B80251E512F00BEE210 /* TagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B7F251E512F00BEE210 /* TagListQuery.swift */; };
-		2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */; };
 		2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */; };
 		2CD62F9D259D508B0067D8AD /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD62F9C259D508B0067D8AD /* Logger.swift */; };
 		2CD62FB1259D5A5E0067D8AD /* ThumbnailLoadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadTask.swift */; };
@@ -763,7 +755,6 @@
 		2C21415F254858D50013F486 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C2289ED24FA15750026E24A /* PaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
 		2C236D72251A10D000AB5EDD /* ClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQuery.swift; sourceTree = "<group>"; };
-		2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmClipQuery.swift; sourceTree = "<group>"; };
 		2C25841D254FDCC300373A31 /* AppDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataLoader.swift; sourceTree = "<group>"; };
 		2C2727A224DED48500FEF1BD /* WebImageUrlFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlFinder.swift; sourceTree = "<group>"; };
 		2C2727A424DED4C600FEF1BD /* WebImageUrlFinderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlFinderError.swift; sourceTree = "<group>"; };
@@ -931,7 +922,6 @@
 		2CA0229F24DD9F5F00329251 /* TBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA022A324DD9F5F00329251 /* TBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxTests.swift; sourceTree = "<group>"; };
 		2CA022A524DD9F5F00329251 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmLinkingClipsQuery.swift; sourceTree = "<group>"; };
 		2CA22587252237ED00CE1A81 /* ClipCollectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionProvider.swift; sourceTree = "<group>"; };
 		2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintFittingIn.swift"; sourceTree = "<group>"; };
 		2CA9DC1B25860DDF00D88ED4 /* TagCollectionAdditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionAdditionCell.swift; sourceTree = "<group>"; };
@@ -997,13 +987,7 @@
 		2CD25B07251E469B00BEE210 /* AlbumQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumQuery.swift; sourceTree = "<group>"; };
 		2CD25B19251E46B800BEE210 /* AlbumListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListQuery.swift; sourceTree = "<group>"; };
 		2CD25B23251E46EA00BEE210 /* TagQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagQuery.swift; sourceTree = "<group>"; };
-		2CD25B3D251E4BEE00BEE210 /* RealmAlbumQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmAlbumQuery.swift; sourceTree = "<group>"; };
-		2CD25B47251E4C6B00BEE210 /* RealmClipItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmClipItemQuery.swift; sourceTree = "<group>"; };
-		2CD25B51251E4C9F00BEE210 /* RealmTagQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagQuery.swift; sourceTree = "<group>"; };
-		2CD25B5B251E4CEE00BEE210 /* RealmClipsResultQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmClipsResultQuery.swift; sourceTree = "<group>"; };
-		2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmAlbumListQuery.swift; sourceTree = "<group>"; };
 		2CD25B7F251E512F00BEE210 /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
-		2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTagListQuery.swift; sourceTree = "<group>"; };
 		2CD3DA6024EECF830031A065 /* AlbumListCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionLayout.swift; sourceTree = "<group>"; };
 		2CD62F9C259D508B0067D8AD /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoadTask.swift; sourceTree = "<group>"; };
@@ -2068,14 +2052,6 @@
 		2C6DD0F7255C3B6100E316A4 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
-				2C236DA2251A118F00AB5EDD /* RealmClipQuery.swift */,
-				2CD25B3D251E4BEE00BEE210 /* RealmAlbumQuery.swift */,
-				2CD25B47251E4C6B00BEE210 /* RealmClipItemQuery.swift */,
-				2CD25B51251E4C9F00BEE210 /* RealmTagQuery.swift */,
-				2CD25B5B251E4CEE00BEE210 /* RealmClipsResultQuery.swift */,
-				2CD25B75251E4EAE00BEE210 /* RealmAlbumListQuery.swift */,
-				2CD25B89251E515300BEE210 /* RealmTagListQuery.swift */,
-				2CA2257D252226DB00CE1A81 /* RealmLinkingClipsQuery.swift */,
 				2CA9DC802586281200D88ED4 /* RealmReferenceTagListQuery.swift */,
 			);
 			path = Realm;
@@ -4442,9 +4418,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */,
-				2CD25B3E251E4BEE00BEE210 /* RealmAlbumQuery.swift in Sources */,
-				2CD25B8A251E515300BEE210 /* RealmTagListQuery.swift in Sources */,
-				2CD25B52251E4C9F00BEE210 /* RealmTagQuery.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* ClipStorage_Configuration+Constants.swift in Sources */,
 				2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */,
 				2C6DD0E2255C2D3F00E316A4 /* NewClipStorage.swift in Sources */,
@@ -4456,19 +4429,15 @@
 				2CBA8451254C815000DA5045 /* ReferenceClipStorageMigrationService.swift in Sources */,
 				2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */,
 				2CFB118C255C1A6400451C15 /* CoreDataClipQuery.swift in Sources */,
-				2CD25B48251E4C6B00BEE210 /* RealmClipItemQuery.swift in Sources */,
 				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
 				2C6DD0C1255C225200E316A4 /* CoreDataClipItemQuery.swift in Sources */,
 				2CBA8413254C71C600DA5045 /* ReferenceTagObject.swift in Sources */,
 				2CD893B1256D5C6000EACB80 /* ViewContextObserver.swift in Sources */,
 				2C0B5C78254D3B9500FA43F8 /* ReferenceClipStorage_Configuration+Constants.swift in Sources */,
 				2C122AF32578BEFE00AD23B4 /* CloudKitChangeDetecter.swift in Sources */,
-				2CA2257E252226DB00CE1A81 /* RealmLinkingClipsQuery.swift in Sources */,
 				2CA9DC5C258626F000D88ED4 /* ReferenceTagQueryService.swift in Sources */,
 				2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */,
-				2C236DA3251A118F00AB5EDD /* RealmClipQuery.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
-				2CD25B76251E4EAE00BEE210 /* RealmAlbumListQuery.swift in Sources */,
 				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* ClipStorage.swift in Sources */,
 				2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */,
@@ -4481,7 +4450,6 @@
 				2C122B072578C19100AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */,
 				2CD0E587255C20F1002DE383 /* CoreDataAlbumListQuery.swift in Sources */,
 				2CBA2F93253890A500ECFF47 /* ImageStorage.swift in Sources */,
-				2CD25B5C251E4CEE00BEE210 /* RealmClipsResultQuery.swift in Sources */,
 				2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */,
 				2CD0E57C255C2043002DE383 /* CoreDataAlbumQuery.swift in Sources */,
 				2C3BD964254D1D4C00054410 /* ImageStorage_Configuration+Constants.swift in Sources */,
