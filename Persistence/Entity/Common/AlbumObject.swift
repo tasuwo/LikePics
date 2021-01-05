@@ -17,6 +17,7 @@ final class AlbumObject: Object {
     }
 }
 
+// TODO: Realmモデル定義を削除する
 extension Domain.Album: Persistable {
     // MARK: - Persistable
 
@@ -26,7 +27,6 @@ extension Domain.Album: Persistable {
         return .init(id: UUID(uuidString: managedObject.id)!,
                      title: managedObject.title,
                      clips: clips,
-                     // TODO: Realmモデル定義を削除する
                      isHidden: false,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)

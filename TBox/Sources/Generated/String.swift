@@ -60,6 +60,8 @@ internal enum L10n {
     internal static let albumListViewErrorAtReadAlbums = L10n.tr("Localizable", "album_list_view_error_at_read_albums")
     /// 画像の読み込みに失敗しました
     internal static let albumListViewErrorAtReadImageData = L10n.tr("Localizable", "album_list_view_error_at_read_image_data")
+    /// アルバムの並べ替えに失敗しました
+    internal static let albumListViewErrorAtReorderAlbum = L10n.tr("Localizable", "album_list_view_error_at_reorder_album")
     /// アルバムの更新に失敗しました
     internal static let albumListViewErrorAtRevealAlbum = L10n.tr("Localizable", "album_list_view_error_at_reveal_album")
     /// アルバム

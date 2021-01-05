@@ -179,6 +179,7 @@
 "album_list_view_error_at_delete_album" = "アルバムの削除に失敗しました";
 "album_list_view_error_at_hide_album" = "アルバムの更新に失敗しました";
 "album_list_view_error_at_reveal_album" = "アルバムの更新に失敗しました";
+"album_list_view_error_at_reorder_album" = "アルバムの並べ替えに失敗しました";
 "album_list_view_error_at_edit_album" = "アルバムタイトルの更新に失敗しました";
 "album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
 

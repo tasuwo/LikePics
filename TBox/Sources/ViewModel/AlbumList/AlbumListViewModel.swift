@@ -17,6 +17,7 @@ protocol AlbumListViewModelInputs {
     var deletedAlbum: PassthroughSubject<Album.Identity, Never> { get }
     var hidedAlbum: PassthroughSubject<Album.Identity, Never> { get }
     var revealedAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var reorderedAlbums: PassthroughSubject<[Album.Identity], Never> { get }
     var editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> { get }
 }
 
@@ -44,6 +45,7 @@ class AlbumListViewModel: AlbumListViewModelType,
     let deletedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
     let hidedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
     let revealedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    var reorderedAlbums: PassthroughSubject<[Album.Identity], Never> = .init()
     let editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> = .init()
 
     // MARK: AlbumListViewModelOutputs
@@ -94,11 +96,10 @@ extension AlbumListViewModel {
 
                 let newAlbums: [Album]
                 if showHiddenItems {
-                    newAlbums = albums.sorted(by: { $0.registeredDate > $1.registeredDate })
+                    newAlbums = albums
                 } else {
                     newAlbums = albums
                         .filter { !$0.isHidden }
-                        .sorted(by: { $0.registeredDate > $1.registeredDate })
                         .map { $0.removingHiddenClips() }
                 }
 
@@ -152,6 +153,18 @@ extension AlbumListViewModel {
                     Failed to reveal album. (code: \(error.rawValue))
                     """))
                     self.errorMessage.send(L10n.albumListViewErrorAtRevealAlbum)
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        self.reorderedAlbums
+            .sink { [weak self] albumIds in
+                guard let self = self else { return }
+                if case let .failure(error) = self.clipCommandService.updateAlbums(byReordering: albumIds) {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to reorder album. (code: \(error.rawValue))
+                    """))
+                    self.errorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
                 }
             }
             .store(in: &self.cancellableBag)

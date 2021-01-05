@@ -175,6 +175,24 @@ class AlbumListViewController: UIViewController {
         self.view.addSubview(collectionView)
         self.collectionView.delegate = self
         self.configureDataSource()
+
+        // Reorder Settings
+
+        self.dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in
+            guard let self = self else { return false }
+            return self.isEditing
+        }
+
+        self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            guard let self = self else { return }
+            guard let albumIds = self.viewModel.outputs.albums.value
+                .applying(transaction.difference)?
+                .map({ $0.id }) else { return }
+            self.viewModel.inputs.reorderedAlbums.send(albumIds)
+        }
+
+        self.collectionView.dragDelegate = self
+        self.collectionView.dropDelegate = self
     }
 
     private func configureDataSource() {
@@ -296,6 +314,8 @@ class AlbumListViewController: UIViewController {
         super.setEditing(editing, animated: animated)
 
         self.navigationItem.leftBarButtonItem?.isEnabled = !editing
+
+        self.collectionView.dragInteractionEnabled = editing
 
         let shouldHide = !editing
 
@@ -440,5 +460,44 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
         guard let indexPath = self.collectionView.indexPath(for: cell),
             let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
         self.startEditingAlbumTitle(for: album)
+    }
+}
+
+extension AlbumListViewController: UICollectionViewDragDelegate {
+    // MARK: - UICollectionViewDragDelegate
+
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
+        let provider = NSItemProvider(object: item.id.uuidString as NSString)
+        let dragItem = UIDragItem(itemProvider: provider)
+        return [dragItem]
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+}
+
+extension AlbumListViewController: UICollectionViewDropDelegate {
+    // MARK: - UICollectionViewDropDelegate
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return self.isEditing
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        // NOP
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
     }
 }

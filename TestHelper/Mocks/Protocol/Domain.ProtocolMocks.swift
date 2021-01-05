@@ -139,6 +139,16 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
         fatalError("updateAlbumHavingByHidingHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateAlbumsCallCount = 0
+    public var updateAlbumsHandler: (([Album.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbums(byReordering albumIds: [Album.Identity]) -> Result<Void, ClipStorageError> {
+        updateAlbumsCallCount += 1
+        if let updateAlbumsHandler = updateAlbumsHandler {
+            return updateAlbumsHandler(albumIds)
+        }
+        fatalError("updateAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateTagCallCount = 0
     public var updateTagHandler: ((Tag.Identity, String) -> (Result<Void, ClipStorageError>))?
     public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
@@ -543,6 +553,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("updateAlbumHavingByHidingHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateAlbumsCallCount = 0
+    public var updateAlbumsHandler: (([Album.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbums(byReordering albumIds: [Album.Identity]) -> Result<Void, ClipStorageError> {
+        updateAlbumsCallCount += 1
+        if let updateAlbumsHandler = updateAlbumsHandler {
+            return updateAlbumsHandler(albumIds)
+        }
+        fatalError("updateAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateTagCallCount = 0
     public var updateTagHandler: ((Tag.Identity, String) -> (Result<Tag, ClipStorageError>))?
     public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Tag, ClipStorageError> {
@@ -813,6 +833,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
             return updateTagHandler(id, name)
         }
         fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagHavingCallCount = 0
+    public var updateTagHavingHandler: ((ReferenceTag.Identity, Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        updateTagHavingCallCount += 1
+        if let updateTagHavingHandler = updateTagHavingHandler {
+            return updateTagHavingHandler(id, isHidden)
+        }
+        fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateTagsCallCount = 0

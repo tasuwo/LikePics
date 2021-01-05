@@ -116,6 +116,8 @@ public class CoreDataStack {
         }
         description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
         description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+        description.shouldMigrateStoreAutomatically = true
+        description.shouldInferMappingModelAutomatically = true
 
         if !isICloudSyncEnabled {
             description.cloudKitContainerOptions = nil

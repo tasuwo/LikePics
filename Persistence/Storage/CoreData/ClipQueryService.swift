@@ -112,7 +112,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let factory: CoreDataAlbumListQuery.RequestFactory = {
                 let request: NSFetchRequest<Album> = Album.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.createdDate, ascending: true)]
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
                 return request
             }
             let query = try CoreDataAlbumListQuery(requestFactory: factory, context: self.context)

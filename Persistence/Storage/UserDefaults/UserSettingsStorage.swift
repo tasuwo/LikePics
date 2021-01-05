@@ -22,6 +22,7 @@ public class UserSettingsStorage {
         }
         return userDefaults
     }()
+
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Persistence.UserSettingStorage")
 
     // MARK: - Lifecycle

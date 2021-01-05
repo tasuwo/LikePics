@@ -98,11 +98,10 @@ extension AlbumSelectionViewModel {
 
                 let newAlbums: [Album]
                 if showHiddenItems {
-                    newAlbums = albums.sorted(by: { $0.registeredDate > $1.registeredDate })
+                    newAlbums = albums
                 } else {
                     newAlbums = albums
                         .filter { !$0.isHidden }
-                        .sorted(by: { $0.registeredDate > $1.registeredDate })
                         .map { $0.removingHiddenClips() }
                 }
 

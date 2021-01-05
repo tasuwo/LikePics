@@ -317,13 +317,23 @@ extension NewClipStorage: ClipStorageProtocol {
                 self.logger.write(ConsoleLog(level: .error, message: "Failed to create album. Duplicated."))
                 return .failure(.duplicated)
             }
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+            let albums = try self.context.fetch(request)
 
             let album = Album(context: self.context)
             album.id = UUID()
             album.title = title
+            album.index = 1
             album.createdDate = Date()
             album.updatedDate = Date()
             album.isHidden = false
+
+            var currentIndex: Int64 = 2
+            albums.forEach {
+                $0.index = currentIndex
+                currentIndex += 1
+            }
 
             return .success(album.map(to: Domain.Album.self)!)
         } catch {
@@ -578,6 +588,30 @@ extension NewClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateAlbums(byReordering albumIds: [Domain.Album.Identity]) -> Result<Void, ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            let albums = try self.context.fetch(request)
+            guard Set(albums.compactMap({ $0.id })) == Set(albumIds) else { return .failure(.invalidParameter) }
+
+            var currentIndex: Int64 = 1
+            for albumId in albumIds {
+                guard let target = albums.first(where: { $0.id == albumId }) else {
+                    continue
+                }
+                target.index = currentIndex
+                currentIndex += 1
+            }
+
+            return .success(())
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update album. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
     public func updateTag(having id: Domain.Tag.Identity, nameTo name: String) -> Result<Domain.Tag, ClipStorageError> {
         do {
             guard case let .success(tag) = try self.fetchTag(for: id) else { return .failure(.notFound) }
@@ -659,12 +693,29 @@ extension NewClipStorage: ClipStorageProtocol {
 
     public func deleteAlbum(having id: Domain.Album.Identity) -> Result<Domain.Album, ClipStorageError> {
         do {
-            guard case let .success(album) = try self.fetchAlbum(for: id) else { return .failure(.notFound) }
-            let deleteTarget = album.map(to: Domain.Album.self)!
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+            let albums = try self.context.fetch(request)
 
-            self.context.delete(album)
+            var deletedTarget: Domain.Album?
+            var currentIndex: Int64 = 1
+            for album in albums {
+                if deletedTarget != nil {
+                    album.index = currentIndex
+                    currentIndex += 1
+                    continue
+                }
 
-            return .success(deleteTarget)
+                if deletedTarget == nil, album.id == id {
+                    deletedTarget = album.map(to: Domain.Album.self)
+                    currentIndex = album.index
+                    self.context.delete(album)
+                    continue
+                }
+            }
+
+            guard let result = deletedTarget else { return .failure(.notFound) }
+            return .success(result)
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to delete album. (error=\(error.localizedDescription))
