@@ -37,12 +37,12 @@ class NewClipStorageSpec: QuickSpec {
     override func spec() {
         var container: NSPersistentContainer!
         var managedContext: NSManagedObjectContext!
-        var service: NewClipStorage!
+        var service: ClipStorage!
 
         beforeEach {
             container = self.coreDataStack()
             managedContext = container.newBackgroundContext()
-            service = NewClipStorage(context: managedContext)
+            service = ClipStorage(context: managedContext)
         }
 
         describe("create(clip:overwrite:)") {

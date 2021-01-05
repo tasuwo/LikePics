@@ -8,7 +8,7 @@ import Common
 import CoreData
 import Domain
 
-public class NewClipStorage {
+public class ClipStorage {
     public var context: NSManagedObjectContext {
         willSet {
             self.context.perform { [weak self] in
@@ -122,7 +122,7 @@ public class NewClipStorage {
     }
 }
 
-extension NewClipStorage: ClipStorageProtocol {
+extension ClipStorage: ClipStorageProtocol {
     public var isInTransaction: Bool {
         return self.context.hasChanges
     }

@@ -22,7 +22,7 @@ class DependencyContainer {
 
     // MARK: Storage
 
-    let clipStorage: NewClipStorage
+    let clipStorage: ClipStorage
     let tmpClipStorage: TemporaryClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorage
@@ -77,7 +77,7 @@ class DependencyContainer {
 
         self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
-        self.clipStorage = NewClipStorage(context: self.commandContext)
+        self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = NewImageStorage(context: self.commandContext)
         self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = NewImageQueryService(context: self.imageQueryContext)
