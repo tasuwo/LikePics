@@ -5,12 +5,12 @@
 import Common
 
 public class TemporaryClipCommandService {
-    private let clipStorage: ClipStorageProtocol
+    private let clipStorage: TemporaryClipStorageProtocol
     private let imageStorage: ImageStorageProtocol
     private let logger: TBoxLoggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.TemporaryClipCommandService")
 
-    public init(clipStorage: ClipStorageProtocol,
+    public init(clipStorage: TemporaryClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 logger: TBoxLoggable)
     {

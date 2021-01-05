@@ -23,7 +23,7 @@ class DependencyContainer {
     // MARK: Storage
 
     let clipStorage: NewClipStorage
-    let tmpClipStorage: ClipStorageProtocol
+    let tmpClipStorage: TemporaryClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: NewImageStorage
     let tmpImageStorage: ImageStorageProtocol
@@ -62,7 +62,7 @@ class DependencyContainer {
     init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityObserver) throws {
         self.tmpImageStorage = try ImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
         self.logger = RootLogger.shared
-        self.tmpClipStorage = try ClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
+        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
 
         self.monitor = ICloudSyncMonitor(logger: self.logger)

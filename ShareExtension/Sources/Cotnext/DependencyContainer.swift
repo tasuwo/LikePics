@@ -33,8 +33,8 @@ class DependencyContainer {
 
         self.logger = RootLogger.shared
         let imageStorage = try ImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
-        let clipStorage = try ClipStorage(config: .resolve(for: mainBundle, kind: .group),
-                                          logger: self.logger)
+        let clipStorage = try TemporaryClipStorage(config: .resolve(for: mainBundle, kind: .group),
+                                                   logger: self.logger)
         let referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: mainBundle),
                                                             logger: self.logger)
 

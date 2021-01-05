@@ -4,7 +4,7 @@
 
 import RealmSwift
 
-extension ClipStorage.Configuration {
+extension TemporaryClipStorage.Configuration {
     public enum Kind {
         case group
     }

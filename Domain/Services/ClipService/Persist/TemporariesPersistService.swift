@@ -5,7 +5,7 @@
 import Common
 
 public class TemporariesPersistService {
-    let temporaryClipStorage: ClipStorageProtocol
+    let temporaryClipStorage: TemporaryClipStorageProtocol
     let temporaryImageStorage: ImageStorageProtocol
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
@@ -19,7 +19,7 @@ public class TemporariesPersistService {
 
     // MARK: - Lifecycle
 
-    public init(temporaryClipStorage: ClipStorageProtocol,
+    public init(temporaryClipStorage: TemporaryClipStorageProtocol,
                 temporaryImageStorage: ImageStorageProtocol,
                 clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,

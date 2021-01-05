@@ -880,6 +880,83 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     }
 }
 
+public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
+    public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionIfNeededCallCount = 0
+    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
+    public func cancelTransactionIfNeeded() throws {
+        cancelTransactionIfNeededCallCount += 1
+        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
+            try cancelTransactionIfNeededHandler()
+        }
+    }
+
+    public private(set) var readAllClipsCallCount = 0
+    public var readAllClipsHandler: (() -> (Result<[Clip], ClipStorageError>))?
+    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+        readAllClipsCallCount += 1
+        if let readAllClipsHandler = readAllClipsHandler {
+            return readAllClipsHandler()
+        }
+        fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((Clip) -> (Result<Clip, ClipStorageError>))?
+    public func create(clip: Clip) -> Result<Clip, ClipStorageError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(clip)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteClipsCallCount = 0
+    public var deleteClipsHandler: (([Clip.Identity]) -> (Result<[Clip], ClipStorageError>))?
+    public func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError> {
+        deleteClipsCallCount += 1
+        if let deleteClipsHandler = deleteClipsHandler {
+            return deleteClipsHandler(ids)
+        }
+        fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteAllCallCount = 0
+    public var deleteAllHandler: (() -> (Result<Void, ClipStorageError>))?
+    public func deleteAll() -> Result<Void, ClipStorageError> {
+        deleteAllCallCount += 1
+        if let deleteAllHandler = deleteAllHandler {
+            return deleteAllHandler()
+        }
+        fatalError("deleteAllHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
 public class AlbumListQueryMock: AlbumListQuery {
     public init() { }
     public init(albums: CurrentValueSubject<[Album], Error>) {
