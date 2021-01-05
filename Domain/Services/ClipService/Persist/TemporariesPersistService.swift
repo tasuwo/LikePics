@@ -60,11 +60,12 @@ public class TemporariesPersistService {
     }
 
     private func persistTemporaryClips() -> Bool {
-        let temporaryClips: [Clip.Identity: Clip]
+        let temporaryClips: [Clip.Identity: ClipRecipe]
         switch self.temporaryClipStorage.readAllClips() {
         case let .success(clips):
-            temporaryClips = clips.reduce(into: [Clip.Identity: Clip]()) { result, clip in
-                result[clip.identity] = clip
+            // TODO: TemporaryClipStorageからClipRecipeを直接取得できる
+            temporaryClips = clips.reduce(into: [Clip.Identity: ClipRecipe]()) { result, clip in
+                result[clip.identity] = .init(clip)
             }
 
         case let .failure(error):
@@ -94,7 +95,7 @@ public class TemporariesPersistService {
         return true
     }
 
-    private func persist(clipId: Clip.Identity, in temporaryClips: [Clip.Identity: Clip]) -> Bool {
+    private func persist(clipId: Clip.Identity, in temporaryClips: [Clip.Identity: ClipRecipe]) -> Bool {
         do {
             guard let clip = temporaryClips[clipId] else {
                 self.logger.write(ConsoleLog(level: .error, message: """
@@ -131,7 +132,7 @@ public class TemporariesPersistService {
 
             try autoreleasepool {
                 for item in clip.items {
-                    guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.identity) else {
+                    guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
                         // 画像が見つからなかった場合、どうしようもないためスキップに留める
                         self.logger.write(ConsoleLog(level: .info, message: """
                         移行対象の画像が見つかりませんでした。スキップします
@@ -141,10 +142,10 @@ public class TemporariesPersistService {
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
                     // 画像の移動に失敗した場合でも異常終了とはしない
                     try? self.imageStorage.create(data, id: item.imageId)
-                    try? self.temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.identity)
+                    try? self.temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
                 }
             }
-            try? self.temporaryImageStorage.deleteAll(inClipHaving: clip.identity)
+            try? self.temporaryImageStorage.deleteAll(inClipHaving: clip.id)
 
             try self.commitTransaction()
 

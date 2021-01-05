@@ -199,34 +199,24 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
+    public func create(clip: ClipRecipe) -> Result<Domain.Clip, ClipStorageError> {
         do {
             // Check parameters
 
             var appendingTags: [Tag] = []
-            for tag in clip.tags {
+            for tagId in clip.tagIds {
                 // IDが同一の既存のタグがあれば、そちらを利用する
                 let requestById: NSFetchRequest<Tag> = Tag.fetchRequest()
-                requestById.predicate = NSPredicate(format: "id == %@", tag.id as CVarArg)
+                requestById.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
                 if let tag = try self.context.fetch(requestById).first {
                     appendingTags.append(tag)
                     continue
                 }
 
-                // 名前が同一の既存のタグがあれば、そちらを利用する
-                let requestByName: NSFetchRequest<Tag> = Tag.fetchRequest()
-                requestByName.predicate = NSPredicate(format: "name == %@", tag.name as CVarArg)
-                if let tag = try self.context.fetch(requestByName).first {
-                    appendingTags.append(tag)
-                    continue
-                }
-
-                // ID or 名前が同一のタグが存在しなければ、タグを新たに作成する
-                let newTag = Tag(context: self.context)
-                newTag.id = tag.id
-                newTag.name = tag.name
-                newTag.isHidden = false
-                appendingTags.append(newTag)
+                // IDが同一のタグが存在しなければ、スキップする
+                self.logger.write(ConsoleLog(level: .error, message: """
+                クリップ作成のためのタグ(ID: \(tagId))が見つかりませんでした。無視してクリップを作成します
+                """))
             }
 
             // Prepare new objects

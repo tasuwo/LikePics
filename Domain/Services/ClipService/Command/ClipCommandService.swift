@@ -38,10 +38,10 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
     // MARK: Create
 
-    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {
-                let containsFilesFor = { (item: ClipItem) in
+                let containsFilesFor = { (item: ClipItemRecipe) in
                     return containers.contains(where: { $0.id == item.imageId })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
@@ -485,29 +485,29 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(.internalError)
                 }
 
-                let newClips: [Domain.Clip] = originalClip.items.map { item in
+                let newClips: [ClipRecipe] = originalClip.items.map { item in
                     let clipId = UUID()
                     let date = Date()
-                    return Domain.Clip(id: clipId,
-                                       description: originalClip.description,
-                                       items: [
-                                           .init(id: UUID(),
-                                                 url: item.url,
-                                                 clipId: clipId,
-                                                 clipIndex: 0,
-                                                 imageId: item.imageId,
-                                                 imageFileName: item.imageFileName,
-                                                 imageUrl: item.imageUrl,
-                                                 imageSize: item.imageSize,
-                                                 imageDataSize: item.imageDataSize,
-                                                 registeredDate: item.registeredDate,
-                                                 updatedDate: date)
-                                       ],
-                                       tags: originalClip.tags,
-                                       isHidden: originalClip.isHidden,
-                                       dataSize: item.imageDataSize,
-                                       registeredDate: date,
-                                       updatedDate: date)
+                    return ClipRecipe(id: clipId,
+                                      description: originalClip.description,
+                                      items: [
+                                          .init(id: UUID(),
+                                                url: item.url,
+                                                clipId: clipId,
+                                                clipIndex: 0,
+                                                imageId: item.imageId,
+                                                imageFileName: item.imageFileName,
+                                                imageUrl: item.imageUrl,
+                                                imageSize: item.imageSize,
+                                                imageDataSize: item.imageDataSize,
+                                                registeredDate: item.registeredDate,
+                                                updatedDate: date)
+                                      ],
+                                      tagIds: originalClip.tags.map { $0.id },
+                                      isHidden: originalClip.isHidden,
+                                      dataSize: item.imageDataSize,
+                                      registeredDate: date,
+                                      updatedDate: date)
                 }
 
                 for newClip in newClips {
@@ -596,32 +596,31 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 let clipId = UUID()
                 let newItems = items.enumerated().map { index, item in
-                    return ClipItem(id: UUID(),
-                                    url: item.url,
-                                    clipId: clipId,
-                                    clipIndex: index + 1,
-                                    imageId: item.imageId,
-                                    imageFileName: item.imageFileName,
-                                    imageUrl: item.imageUrl,
-                                    imageSize: item.imageSize,
-                                    imageDataSize: item.imageDataSize,
-                                    registeredDate: item.registeredDate,
-                                    updatedDate: Date())
+                    return ClipItemRecipe(id: UUID(),
+                                          url: item.url,
+                                          clipId: clipId,
+                                          clipIndex: index + 1,
+                                          imageId: item.imageId,
+                                          imageFileName: item.imageFileName,
+                                          imageUrl: item.imageUrl,
+                                          imageSize: item.imageSize,
+                                          imageDataSize: item.imageDataSize,
+                                          registeredDate: item.registeredDate,
+                                          updatedDate: Date())
                 }
                 let dataSize = newItems
                     .map { $0.imageDataSize }
                     .reduce(0, +)
-                let clip = Clip(id: clipId,
-                                description: nil,
-                                items: newItems,
-                                // HACK: 新規生成時にはIDしか見られないため、IDのみ正しいモデルを渡しておく
-                                tags: tagIds.map { Tag(id: $0, name: "", isHidden: false) },
-                                isHidden: false,
-                                dataSize: dataSize,
-                                registeredDate: Date(),
-                                updatedDate: Date())
+                let recipe = ClipRecipe(id: clipId,
+                                        description: nil,
+                                        items: newItems,
+                                        tagIds: tagIds,
+                                        isHidden: false,
+                                        dataSize: dataSize,
+                                        registeredDate: Date(),
+                                        updatedDate: Date())
 
-                switch self.clipStorage.create(clip: clip) {
+                switch self.clipStorage.create(clip: recipe) {
                 case .success:
                     break
 
