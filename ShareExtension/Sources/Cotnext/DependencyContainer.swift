@@ -21,6 +21,7 @@ class DependencyContainer {
     private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }
     private let tagCommandService: TagCommandService
+    private let userSettingsStorage: UserSettingsStorage
 
     init() throws {
         let mainBundleUrl = Bundle.main.bundleURL
@@ -46,6 +47,8 @@ class DependencyContainer {
 
         self.tagCommandService = TagCommandService(storage: referenceClipStorage,
                                                    logger: self.logger)
+
+        self.userSettingsStorage = UserSettingsStorage(bundle: mainBundle)
     }
 }
 
@@ -83,6 +86,7 @@ extension DependencyContainer: TBoxCore.ViewControllerFactory {
             let viewModel = TagSelectionViewModel(query: query,
                                                   selectedTags: selectedTags,
                                                   commandService: self.tagCommandService,
+                                                  settingStorage: self.userSettingsStorage,
                                                   logger: self.logger)
             let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
             return UINavigationController(rootViewController: viewController)

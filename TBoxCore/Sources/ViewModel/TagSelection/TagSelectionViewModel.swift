@@ -70,6 +70,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
 
     private let query: TagListQuery
     private let commandService: TagCommandServiceProtocol
+    private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
     private var searchStorage: SearchableTagsStorage = .init()
     private var cancellableBag: Set<AnyCancellable> = .init()
@@ -79,10 +80,12 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     public init(query: TagListQuery,
                 selectedTags: Set<Tag.Identity>,
                 commandService: TagCommandServiceProtocol,
+                settingStorage: UserSettingsStorageProtocol,
                 logger: TBoxLoggable)
     {
         self.query = query
         self.commandService = commandService
+        self.settingStorage = settingStorage
         self.logger = logger
         self.selections = .init(selectedTags)
 
@@ -93,10 +96,11 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
         self.query.tags
             .catch { _ in Just([]) }
             .eraseToAnyPublisher()
-            .combineLatest(self.inputtedQuery)
+            .combineLatest(self.inputtedQuery, self.settingStorage.showHiddenItems)
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, query in
+            .sink { [weak self] tags, query, showHiddenItems in
                 guard let self = self else { return }
+                let tags = tags.filter { showHiddenItems ? true : $0.isHidden == false }
                 self.filteredTags.send(self.searchStorage.perform(query: query, to: tags))
                 self.tags.send(tags)
             }

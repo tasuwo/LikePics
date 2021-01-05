@@ -12,12 +12,22 @@ public class UserSettingsStorage {
         case enabledICloudSync = "userSettingsEnabledICloudSync"
     }
 
-    private let userDefaults = UserDefaults.standard
+    private let bundle: Bundle
+    private lazy var userDefaults: UserDefaults = {
+        guard let bundleIdentifier = self.bundle.bundleIdentifier else {
+            fatalError("Failed to resolve bundle identifier")
+        }
+        guard let userDefaults = UserDefaults(suiteName: "group.\(bundleIdentifier)") else {
+            fatalError("Failed to initialize UserDefaults")
+        }
+        return userDefaults
+    }()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Persistence.UserSettingStorage")
 
     // MARK: - Lifecycle
 
-    public init() {
+    public init(bundle: Bundle = Bundle.main) {
+        self.bundle = bundle
         self.userDefaults.register(defaults: [
             Self.Key.showHiddenItems.rawValue: false,
             Self.Key.enabledICloudSync.rawValue: true
