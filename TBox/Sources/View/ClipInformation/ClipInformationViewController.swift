@@ -186,15 +186,12 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     }
 }
 
-extension ClipInformationViewController: TagSelectionPresenterDelegate {
-    // MARK: - TagSelectionPresenterDelegate
+extension ClipInformationViewController: TagSelectionDelegate {
+    // MARK: - TagSelectionDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
+    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+        let tagIds = Set(tags.map { $0.id })
         self.viewModel.inputs.replaceTagsOfClip(tagIds)
-    }
-
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
-        // NOP
     }
 }
 

@@ -310,15 +310,12 @@ extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
     }
 }
 
-extension ClipPreviewPageViewController: TagSelectionPresenterDelegate {
+extension ClipPreviewPageViewController: TagSelectionDelegate {
     // MARK: - TagSelectionPresenterDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
+    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+        let tagIds = Set(tags.map { $0.id })
         self.viewModel.inputs.replaceTags.send(tagIds)
-    }
-
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
-        // NOP
     }
 }
 

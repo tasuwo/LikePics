@@ -352,7 +352,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeTagSelectionViewController(selectedTags: [Domain.Tag.Identity],
                                         context: Any?,
-                                        delegate: TagSelectionPresenterDelegate) -> UIViewController?
+                                        delegate: TagSelectionDelegate) -> UIViewController?
     {
         let query: TagListQuery
         switch self.clipQueryService.queryAllTags() {
@@ -366,14 +366,14 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let presenter = TagSelectionPresenter(query: query,
+        let viewModel = TagSelectionViewModel(query: query,
                                               selectedTags: selectedTags,
                                               context: context,
                                               clipCommandService: self.clipCommandService,
                                               settingStorage: self.userSettingsStorage,
                                               logger: self.logger)
-        presenter.delegate = delegate
-        let viewController = TagSelectionViewController(factory: self, presenter: presenter)
+        viewModel.delegate = delegate
+        let viewController = TagSelectionViewController(factory: self, viewModel: viewModel)
         return UINavigationController(rootViewController: viewController)
     }
 

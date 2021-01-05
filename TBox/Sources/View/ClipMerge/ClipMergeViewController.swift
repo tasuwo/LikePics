@@ -315,14 +315,10 @@ extension ClipMergeViewController: TagCollectionViewCellDelegate {
     }
 }
 
-extension ClipMergeViewController: TagSelectionPresenterDelegate {
-    // MARK: - TagSelectionPresenterDelegate
+extension ClipMergeViewController: TagSelectionDelegate {
+    // MARK: - TagSelectionDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
-        // NOP
-    }
-
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
+    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
         self.viewModel.inputs.tagsSelected.send(tags)
     }
 }

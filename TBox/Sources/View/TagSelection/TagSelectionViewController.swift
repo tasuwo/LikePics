@@ -2,19 +2,31 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 import TBoxUIKit
 import UIKit
 
 class TagSelectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
+    typealias Dependency = TagSelectionViewModelType
 
     enum Section {
         case main
     }
 
+    // MARK: - Properties
+
+    // MARK: Factory
+
     private let factory: Factory
-    private let presenter: TagSelectionPresenter
+
+    // MARK: Dependency
+
+    private let viewModel: Dependency
+
+    // MARK: View
+
     private let emptyMessageView = EmptyMessageView()
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
@@ -27,14 +39,16 @@ class TagSelectionViewController: UIViewController {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: TagCollectionView!
 
+    // MARK: States
+
+    private var cancellableBag = Set<AnyCancellable>()
+
     // MARK: - Lifecycle
 
-    init(factory: Factory, presenter: TagSelectionPresenter) {
+    init(factory: Factory, viewModel: Dependency) {
         self.factory = factory
-        self.presenter = presenter
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
-        self.presenter.view = self
     }
 
     @available(*, unavailable)
@@ -54,7 +68,7 @@ class TagSelectionViewController: UIViewController {
         self.setupSearchBar()
         self.setupEmptyMessage()
 
-        self.presenter.setup()
+        self.bind(to: viewModel)
     }
 
     // MARK: - Methods
@@ -67,9 +81,75 @@ class TagSelectionViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: tag) = action else { return }
-                self?.presenter.addTag(tag)
+                self?.viewModel.inputs.createdTag.send(tag)
             }
         )
+    }
+
+    // MARK: Bind
+
+    private func bind(to dependency: Dependency) {
+        dependency.outputs.tags
+            .filter { $0.isEmpty }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.searchBar.resignFirstResponder()
+                self?.searchBar.text = nil
+                self?.viewModel.inputs.inputtedQuery.send("")
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayCollectionView
+            .map { !$0 }
+            .receive(on: DispatchQueue.main)
+            .assignNoRetain(to: \.isHidden, on: self.searchBar)
+            .store(in: &self.cancellableBag)
+        dependency.outputs.displayCollectionView
+            .map { !$0 }
+            .receive(on: DispatchQueue.main)
+            .assignNoRetain(to: \.isHidden, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayEmptyMessage
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assignNoRetain(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.filteredTags
+            .combineLatest(dependency.outputs.selections)
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] tags, selections in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(tags)
+                self?.dataSource.apply(snapshot, animatingDifferences: true)
+
+                DispatchQueue.main.async {
+                    let indexPaths = selections
+                        .compactMap { identity in
+                            dependency.outputs.tags.value.first(where: { $0.identity == identity })
+                        }
+                        .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
+                    self?.collectionView.applySelection(at: indexPaths)
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.errorMessage
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.close
+            .sink { [weak self] _ in
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &self.cancellableBag)
     }
 
     // MARK: Collection View
@@ -128,7 +208,7 @@ class TagSelectionViewController: UIViewController {
 
     @objc
     func didTapSave() {
-        self.presenter.performSelection()
+        self.viewModel.inputs.done.send(())
     }
 
     // MARK: SearchBar
@@ -154,55 +234,6 @@ class TagSelectionViewController: UIViewController {
     }
 }
 
-extension TagSelectionViewController: TagSelectionViewProtocol {
-    // MARK: - TagSelectionViewProtocol
-
-    func apply(_ tags: [Tag], isFiltered: Bool, isEmpty: Bool) {
-        DispatchQueue.global().async {
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-            snapshot.appendSections([.main])
-            snapshot.appendItems(tags)
-
-            if !isEmpty {
-                DispatchQueue.main.async {
-                    self.searchBar.isHidden = false
-                    self.collectionView.isHidden = false
-                    self.emptyMessageView.alpha = 0
-                }
-            }
-            self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-                DispatchQueue.main.async {
-                    guard isEmpty else { return }
-                    self?.searchBar.isHidden = true
-                    self?.collectionView.isHidden = true
-                    UIView.animate(withDuration: 0.2) {
-                        self?.emptyMessageView.alpha = 1
-                    }
-                    self?.searchBar.resignFirstResponder()
-                    self?.searchBar.text = nil
-                    self?.presenter.performQuery("")
-                }
-            }
-        }
-    }
-
-    func apply(selection: Set<Tag>) {
-        let indexPaths = selection
-            .compactMap { self.dataSource.indexPath(for: $0) }
-        self.collectionView.applySelection(at: indexPaths)
-    }
-
-    func showErrorMessage(_ message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    func close() {
-        self.dismiss(animated: true, completion: nil)
-    }
-}
-
 extension TagSelectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
@@ -216,12 +247,12 @@ extension TagSelectionViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let tagId = self.dataSource.itemIdentifier(for: indexPath)?.identity else { return }
-        self.presenter.select(tagId: tagId)
+        self.viewModel.inputs.select.send(tagId)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let tagId = self.dataSource.itemIdentifier(for: indexPath)?.identity else { return }
-        self.presenter.deselect(tagId: tagId)
+        self.viewModel.inputs.deselect.send(tagId)
     }
 }
 
@@ -231,14 +262,14 @@ extension TagSelectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform { [weak self] in
             guard let text = self?.searchBar.text else { return }
-            self?.presenter.performQuery(text)
+            self?.viewModel.inputs.inputtedQuery.send(text)
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
             guard let text = self?.searchBar.text else { return }
-            self?.presenter.performQuery(text)
+            self?.viewModel.inputs.inputtedQuery.send(text)
         }
         return true
     }

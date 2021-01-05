@@ -442,20 +442,17 @@ extension SearchResultViewController: AlbumSelectionPresenterDelegate {
     }
 }
 
-extension SearchResultViewController: TagSelectionPresenterDelegate {
-    // MARK: - TagSelectionPresenterDelegate
+extension SearchResultViewController: TagSelectionDelegate {
+    // MARK: - TagSelectionDelegate
 
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, didSelectTagsHaving tagIds: Set<Tag.Identity>, withContext context: Any?) {
+    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+        let tagIds = Set(tags.map { $0.id })
         if self.isEditing {
             self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
             self.viewModel.inputs.addTags.send((tagIds, clipId))
         }
-    }
-
-    func tagSelectionPresenter(_ presenter: TagSelectionPresenter, tags: [Tag]) {
-        // NOP
     }
 }
 
