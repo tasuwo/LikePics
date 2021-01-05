@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+// sourcery: AutoDefaultValue
 public struct ClipItemRecipe {
     public let id: UUID
     public let url: URL?

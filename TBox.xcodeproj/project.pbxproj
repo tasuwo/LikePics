@@ -117,7 +117,7 @@
 		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
 		2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FB24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift */; };
 		2C45D40024EEACF80045B6D3 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FF24EEACF80045B6D3 /* Album.swift */; };
-		2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40124EEAD750045B6D3 /* AlbumObject.swift */; };
+		2C45D40224EEAD750045B6D3 /* Album+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40124EEAD750045B6D3 /* Album+MapToDomainModel.swift */; };
 		2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40424EEB4050045B6D3 /* AlbumListViewController.swift */; };
 		2C45D40824EEBE020045B6D3 /* AlbumListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40724EEBE020045B6D3 /* AlbumListViewModel.swift */; };
 		2C45D40B24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40A24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift */; };
@@ -154,6 +154,9 @@
 		2C6DD0D7255C24EC00E316A4 /* CoreDataTagListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0D6255C24EC00E316A4 /* CoreDataTagListQuery.swift */; };
 		2C6DD0E2255C2D3F00E316A4 /* ClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0E1255C2D3F00E316A4 /* ClipStorage.swift */; };
 		2C6DD0ED255C2D4900E316A4 /* ClipQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD0EC255C2D4900E316A4 /* ClipQueryService.swift */; };
+		2C6DD53A25A4ACCB00D440AD /* Clip+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD53925A4ACCB00D440AD /* Clip+MapToDomainModel.swift */; };
+		2C6DD54E25A4ACF400D440AD /* ClipItem+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD54D25A4ACF400D440AD /* ClipItem+MapToDomainModel.swift */; };
+		2C6DD59825A4B83800D440AD /* TagIdObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6DD59725A4B83800D440AD /* TagIdObject.swift */; };
 		2C6E098C24E6D94F00B541D9 /* ShareNavigationRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */; };
 		2C6E099624E6DD1A00B541D9 /* TBoxCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C6E099424E6DD1A00B541D9 /* TBoxCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2C6E099924E6DD1A00B541D9 /* TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */; };
@@ -219,7 +222,6 @@
 		2C98111825A352C500B89A47 /* AlbumListMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98111725A352C500B89A47 /* AlbumListMenuBuilder.swift */; };
 		2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98112325A352EC00B89A47 /* AlbumList.swift */; };
 		2C98113825A352FD00B89A47 /* AlbumList_MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C98113725A352FD00B89A47 /* AlbumList_MenuItem.swift */; };
-		2C99275524DDC68100672CA7 /* Persistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275424DDC68100672CA7 /* Persistable.swift */; };
 		2C99275824DDC6E600672CA7 /* TemporaryClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99275724DDC6E600672CA7 /* TemporaryClipStorage.swift */; };
 		2C99276724DDC7D400672CA7 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; };
 		2C99277024DDC7D400672CA7 /* Domain.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C99276024DDC7D300672CA7 /* Domain.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -350,7 +352,7 @@
 		2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658A2511134300DF78E6 /* SettingsViewController.swift */; };
 		2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */; };
 		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
-		2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* TagObject.swift */; };
+		2CF5ABB324FB486A0084695F /* Tag+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* Tag+MapToDomainModel.swift */; };
 		2CF68D7B2596BE160095A3E3 /* ClipMergeImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF68D7A2596BE160095A3E3 /* ClipMergeImageCell.swift */; };
 		2CF68D8D2596BE270095A3E3 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CF68D8C2596BE270095A3E3 /* ClipMergeImageCell.xib */; };
 		2CF9E0DF2511699D00223848 /* WeakContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF9E0DE2511699D00223848 /* WeakContainer.swift */; };
@@ -808,7 +810,7 @@
 		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
 		2C45D3FB24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingViewController.swift; sourceTree = "<group>"; };
 		2C45D3FF24EEACF80045B6D3 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
-		2C45D40124EEAD750045B6D3 /* AlbumObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumObject.swift; sourceTree = "<group>"; };
+		2C45D40124EEAD750045B6D3 /* Album+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Album+MapToDomainModel.swift"; sourceTree = "<group>"; };
 		2C45D40424EEB4050045B6D3 /* AlbumListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewController.swift; sourceTree = "<group>"; };
 		2C45D40724EEBE020045B6D3 /* AlbumListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewModel.swift; sourceTree = "<group>"; };
 		2C45D40A24EEBE550045B6D3 /* AlbumListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -857,6 +859,9 @@
 		2C6DD0D6255C24EC00E316A4 /* CoreDataTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTagListQuery.swift; sourceTree = "<group>"; };
 		2C6DD0E1255C2D3F00E316A4 /* ClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorage.swift; sourceTree = "<group>"; };
 		2C6DD0EC255C2D4900E316A4 /* ClipQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryService.swift; sourceTree = "<group>"; };
+		2C6DD53925A4ACCB00D440AD /* Clip+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Clip+MapToDomainModel.swift"; sourceTree = "<group>"; };
+		2C6DD54D25A4ACF400D440AD /* ClipItem+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipItem+MapToDomainModel.swift"; sourceTree = "<group>"; };
+		2C6DD59725A4B83800D440AD /* TagIdObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagIdObject.swift; sourceTree = "<group>"; };
 		2C6E098B24E6D94F00B541D9 /* ShareNavigationRootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareNavigationRootViewController.xib; sourceTree = "<group>"; };
 		2C6E099224E6DD1A00B541D9 /* TBoxCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6E099424E6DD1A00B541D9 /* TBoxCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBoxCore.h; sourceTree = "<group>"; };
@@ -902,7 +907,6 @@
 		2C98111725A352C500B89A47 /* AlbumListMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListMenuBuilder.swift; sourceTree = "<group>"; };
 		2C98112325A352EC00B89A47 /* AlbumList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumList.swift; sourceTree = "<group>"; };
 		2C98113725A352FD00B89A47 /* AlbumList_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumList_MenuItem.swift; sourceTree = "<group>"; };
-		2C99275424DDC68100672CA7 /* Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistable.swift; sourceTree = "<group>"; };
 		2C99275724DDC6E600672CA7 /* TemporaryClipStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorage.swift; sourceTree = "<group>"; };
 		2C99275E24DDC7D300672CA7 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C99276024DDC7D300672CA7 /* Domain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Domain.h; sourceTree = "<group>"; };
@@ -1038,7 +1042,7 @@
 		2CF4658A2511134300DF78E6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		2CF5ABB024FB47D10084695F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		2CF5ABB224FB486A0084695F /* TagObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagObject.swift; sourceTree = "<group>"; };
+		2CF5ABB224FB486A0084695F /* Tag+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+MapToDomainModel.swift"; sourceTree = "<group>"; };
 		2CF68D7A2596BE160095A3E3 /* ClipMergeImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeImageCell.swift; sourceTree = "<group>"; };
 		2CF68D8C2596BE270095A3E3 /* ClipMergeImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipMergeImageCell.xib; sourceTree = "<group>"; };
 		2CF9E0DE2511699D00223848 /* WeakContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakContainer.swift; sourceTree = "<group>"; };
@@ -1341,8 +1345,7 @@
 			children = (
 				2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */,
 				2C9B1E2724E4233C00D420D9 /* ClipItemObject.swift */,
-				2C45D40124EEAD750045B6D3 /* AlbumObject.swift */,
-				2CF5ABB224FB486A0084695F /* TagObject.swift */,
+				2C6DD59725A4B83800D440AD /* TagIdObject.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1587,9 +1590,9 @@
 		2C2F623624DDC4C4000A8CDB /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				2C99275424DDC68100672CA7 /* Persistable.swift */,
 				2CF2305C255D8DFA00EB15D4 /* PersistentContainerLoader.swift */,
 				2CB1B6202556BAB40026088A /* Model.xcdatamodeld */,
+				2C6DD53825A4AC2B00D440AD /* Mapping */,
 				2C1040DB254D9509000DF7DE /* Common */,
 				2C0B5CD4254D861000FA43F8 /* Reference */,
 			);
@@ -2122,6 +2125,17 @@
 				2C3BD963254D1D4C00054410 /* TemporaryImageStorage_Configuration+Constants.swift */,
 			);
 			path = Configuration;
+			sourceTree = "<group>";
+		};
+		2C6DD53825A4AC2B00D440AD /* Mapping */ = {
+			isa = PBXGroup;
+			children = (
+				2C45D40124EEAD750045B6D3 /* Album+MapToDomainModel.swift */,
+				2CF5ABB224FB486A0084695F /* Tag+MapToDomainModel.swift */,
+				2C6DD53925A4ACCB00D440AD /* Clip+MapToDomainModel.swift */,
+				2C6DD54D25A4ACF400D440AD /* ClipItem+MapToDomainModel.swift */,
+			);
+			path = Mapping;
 			sourceTree = "<group>";
 		};
 		2C6E099324E6DD1A00B541D9 /* TBoxCore */ = {
@@ -4461,17 +4475,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C6DD54E25A4ACF400D440AD /* ClipItem+MapToDomainModel.swift in Sources */,
 				2CF2305D255D8DFA00EB15D4 /* PersistentContainerLoader.swift in Sources */,
 				2C3BD96F254D1D6B00054410 /* TemporaryClipStorage_Configuration+Constants.swift in Sources */,
 				2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */,
 				2C6DD0E2255C2D3F00E316A4 /* ClipStorage.swift in Sources */,
 				2C1F29AA2561007800B89AE9 /* NSManagedObjectContext+Block.swift in Sources */,
 				2C1F29442560DDE000B89AE9 /* ImageStorage.swift in Sources */,
-				2C99275524DDC68100672CA7 /* Persistable.swift in Sources */,
 				2C6DD0D7255C24EC00E316A4 /* CoreDataTagListQuery.swift in Sources */,
 				2CD0E568255C1F54002DE383 /* CoreDataClipListQuery.swift in Sources */,
 				2CBA8451254C815000DA5045 /* ReferenceClipStorageMigrationService.swift in Sources */,
-				2C45D40224EEAD750045B6D3 /* AlbumObject.swift in Sources */,
+				2C45D40224EEAD750045B6D3 /* Album+MapToDomainModel.swift in Sources */,
 				2CFB118C255C1A6400451C15 /* CoreDataClipQuery.swift in Sources */,
 				2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */,
 				2C6DD0C1255C225200E316A4 /* CoreDataClipItemQuery.swift in Sources */,
@@ -4482,9 +4496,11 @@
 				2CA9DC5C258626F000D88ED4 /* ReferenceTagQueryService.swift in Sources */,
 				2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */,
 				2C9B1E2824E4233C00D420D9 /* ClipItemObject.swift in Sources */,
-				2CF5ABB324FB486A0084695F /* TagObject.swift in Sources */,
+				2CF5ABB324FB486A0084695F /* Tag+MapToDomainModel.swift in Sources */,
 				2C99275824DDC6E600672CA7 /* TemporaryClipStorage.swift in Sources */,
 				2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */,
+				2C6DD53A25A4ACCB00D440AD /* Clip+MapToDomainModel.swift in Sources */,
+				2C6DD59825A4B83800D440AD /* TagIdObject.swift in Sources */,
 				2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */,
 				2C6DD0ED255C2D4900E316A4 /* ClipQueryService.swift in Sources */,
 				2CBA8427254C73E400DA5045 /* ReferenceClipStorage.swift in Sources */,

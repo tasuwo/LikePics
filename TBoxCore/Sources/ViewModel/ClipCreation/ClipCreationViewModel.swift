@@ -331,7 +331,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     // MARK: Save Images
 
     private func save(sources: [ClipItemSource]) -> Result<Void, DownloadError> {
-        let result = self.clipBuilder.build(sources: sources, tags: self.tags.value)
+        let result = self.clipBuilder.build(sources: sources, tagIds: self.tags.value.map { $0.id })
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())

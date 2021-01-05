@@ -5,5 +5,5 @@
 import Domain
 
 public protocol ClipStorable {
-    func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError>
+    func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError>
 }

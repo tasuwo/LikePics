@@ -63,9 +63,8 @@ public class TemporariesPersistService {
         let temporaryClips: [Clip.Identity: ClipRecipe]
         switch self.temporaryClipStorage.readAllClips() {
         case let .success(clips):
-            // TODO: TemporaryClipStorageからClipRecipeを直接取得できる
             temporaryClips = clips.reduce(into: [Clip.Identity: ClipRecipe]()) { result, clip in
-                result[clip.identity] = .init(clip)
+                result[clip.id] = clip
             }
 
         case let .failure(error):

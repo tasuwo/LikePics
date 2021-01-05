@@ -24,10 +24,8 @@ final class ClipItemObject: Object {
     }
 }
 
-extension Domain.ClipItem: Persistable {
-    // MARK: - Persistable
-
-    static func make(by managedObject: ClipItemObject) -> Domain.ClipItem {
+extension ClipItemRecipe {
+    static func make(by managedObject: ClipItemObject) -> ClipItemRecipe {
         let imageUrl: URL?
         if let imageUrlString = managedObject.imageUrl {
             imageUrl = URL(string: imageUrlString)
@@ -43,44 +41,19 @@ extension Domain.ClipItem: Persistable {
         }
 
         // swiftlint:disable:next force_unwrapping
-        return Domain.ClipItem(id: UUID(uuidString: managedObject.id)!,
-                               url: url,
-                               // swiftlint:disable:next force_unwrapping
-                               clipId: UUID(uuidString: managedObject.clipId)!,
-                               clipIndex: managedObject.clipIndex,
-                               // swiftlint:disable:next force_unwrapping
-                               imageId: UUID(uuidString: managedObject.imageId)!,
-                               imageFileName: managedObject.imageFileName,
-                               imageUrl: imageUrl,
-                               imageSize: ImageSize(height: managedObject.imageHeight,
-                                                    width: managedObject.imageWidth),
-                               imageDataSize: managedObject.imageDataSize,
-                               registeredDate: managedObject.registeredAt,
-                               updatedDate: managedObject.updatedAt)
-    }
-}
-
-extension Persistence.Item {
-    func map(to: Domain.ClipItem.Type) -> Domain.ClipItem? {
-        guard let id = self.id,
-            let clipId = self.clip?.id,
-            let imageId = self.imageId,
-            let createdDate = self.createdDate,
-            let updatedDate = self.updatedDate
-        else {
-            return nil
-        }
-
-        return Domain.ClipItem(id: id,
-                               url: self.siteUrl,
-                               clipId: clipId,
-                               clipIndex: Int(self.index),
-                               imageId: imageId,
-                               imageFileName: self.imageFileName ?? "",
-                               imageUrl: self.imageUrl,
-                               imageSize: .init(height: self.imageHeight, width: self.imageWidth),
-                               imageDataSize: Int(self.imageSize),
-                               registeredDate: createdDate,
-                               updatedDate: updatedDate)
+        return .init(id: UUID(uuidString: managedObject.id)!,
+                     url: url,
+                     // swiftlint:disable:next force_unwrapping
+                     clipId: UUID(uuidString: managedObject.clipId)!,
+                     clipIndex: managedObject.clipIndex,
+                     // swiftlint:disable:next force_unwrapping
+                     imageId: UUID(uuidString: managedObject.imageId)!,
+                     imageFileName: managedObject.imageFileName,
+                     imageUrl: imageUrl,
+                     imageSize: ImageSize(height: managedObject.imageHeight,
+                                          width: managedObject.imageWidth),
+                     imageDataSize: managedObject.imageDataSize,
+                     registeredDate: managedObject.registeredAt,
+                     updatedDate: managedObject.updatedAt)
     }
 }

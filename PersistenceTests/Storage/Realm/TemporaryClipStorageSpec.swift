@@ -28,19 +28,19 @@ class TemporaryClipStorageSpec: QuickSpec {
         // MARK: Create
 
         describe("create(clip:)") {
-            var result: Result<Domain.Clip, ClipStorageError>!
+            var result: Result<ClipRecipe, ClipStorageError>!
             beforeEach {
                 try! clipStorage.beginTransaction()
                 result = clipStorage.create(
-                    clip: Domain.Clip.makeDefault(
+                    clip: ClipRecipe.makeDefault(
                         id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                         description: "my description",
                         items: [
-                            ClipItem.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, imageFileName: "hoge1"),
-                            ClipItem.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, imageFileName: "hoge2"),
-                            ClipItem.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, imageFileName: "hoge3"),
+                            ClipItemRecipe.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, imageFileName: "hoge1"),
+                            ClipItemRecipe.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!, imageFileName: "hoge2"),
+                            ClipItemRecipe.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, imageFileName: "hoge3"),
                         ],
-                        tags: [],
+                        tagIds: [],
                         isHidden: false,
                         registeredDate: Date(timeIntervalSince1970: 0),
                         updatedDate: Date(timeIntervalSince1970: 1000)
@@ -62,7 +62,7 @@ class TemporaryClipStorageSpec: QuickSpec {
                 expect(clips.first?.descriptionText).to(equal("my description"))
                 expect(clips.first?.isHidden).to(beFalse())
                 expect(clips.first?.items).to(haveCount(3))
-                expect(clips.first?.tags).to(haveCount(0))
+                expect(clips.first?.tagIds).to(haveCount(0))
                 expect(clips.first?.registeredAt).to(equal(Date(timeIntervalSince1970: 0)))
                 expect(clips.first?.updatedAt).to(equal(Date(timeIntervalSince1970: 1000)))
             }

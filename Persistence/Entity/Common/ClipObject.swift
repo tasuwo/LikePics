@@ -9,7 +9,7 @@ final class ClipObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
-    let tags = List<TagObject>()
+    let tagIds = List<TagIdObject>()
     @objc dynamic var isHidden: Bool = false
     @objc dynamic var dataSize: Int = 0
     @objc dynamic var registeredAt = Date()
@@ -20,47 +20,17 @@ final class ClipObject: Object {
     }
 }
 
-extension Domain.Clip: Persistable {
-    // MARK: - Persistable
-
-    static func make(by managedObject: ClipObject) -> Domain.Clip {
-        let items = Array(managedObject.items.map { Domain.ClipItem.make(by: $0) })
+extension Domain.Clip {
+    static func make(by managedObject: ClipObject) -> ClipRecipe {
+        let items = Array(managedObject.items.map { ClipItemRecipe.make(by: $0) })
         // swiftlint:disable:next force_unwrapping
         return .init(id: UUID(uuidString: managedObject.id)!,
                      description: managedObject.descriptionText,
                      items: items,
-                     tags: managedObject.tags.map { Domain.Tag.make(by: $0) },
+                     tagIds: managedObject.tagIds.compactMap({ UUID(uuidString: $0.id) }),
                      isHidden: managedObject.isHidden,
                      dataSize: managedObject.dataSize,
                      registeredDate: managedObject.registeredAt,
                      updatedDate: managedObject.updatedAt)
-    }
-}
-
-extension Persistence.Clip {
-    func map(to type: Domain.Clip.Type) -> Domain.Clip? {
-        guard let id = self.id,
-            let createdDate = self.createdDate,
-            let updatedDate = self.updatedDate
-        else {
-            return nil
-        }
-
-        let tags = self.tags?.allObjects
-            .compactMap { $0 as? Persistence.Tag }
-            .compactMap { $0.map(to: Domain.Tag.self) } ?? []
-
-        let items = self.clipItems?
-            .compactMap { $0 as? Persistence.Item }
-            .compactMap { $0.map(to: Domain.ClipItem.self) } ?? []
-
-        return Domain.Clip(id: id,
-                           description: self.descriptionText,
-                           items: items,
-                           tags: tags,
-                           isHidden: self.isHidden,
-                           dataSize: Int(self.imagesSize),
-                           registeredDate: createdDate,
-                           updatedDate: updatedDate)
     }
 }

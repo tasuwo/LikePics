@@ -23,10 +23,10 @@ public class TemporaryClipCommandService {
 extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
     // MARK: - TemporaryClipCommandServiceProtocol
 
-    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         return self.queue.sync {
             do {
-                let containsFilesFor = { (item: ClipItem) in
+                let containsFilesFor = { (item: ClipItemRecipe) in
                     return containers.contains(where: { $0.id == item.imageId })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
@@ -40,7 +40,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 try self.clipStorage.beginTransaction()
 
-                let createdClip: Clip
+                let createdClip: ClipRecipe
                 switch self.clipStorage.create(clip: clip) {
                 case let .success(result):
                     createdClip = result
@@ -53,10 +53,10 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                try? self.imageStorage.deleteAll(inClipHaving: createdClip.identity)
+                try? self.imageStorage.deleteAll(inClipHaving: createdClip.id)
                 containers.forEach { container in
                     guard let item = clip.items.first(where: { $0.imageId == container.id }) else { return }
-                    try? self.imageStorage.save(container.data, asName: item.imageFileName, inClipHaving: createdClip.identity)
+                    try? self.imageStorage.save(container.data, asName: item.imageFileName, inClipHaving: createdClip.id)
                 }
 
                 try self.clipStorage.commitTransaction()

@@ -77,6 +77,60 @@ extension ClipItem {
     }
 }
 
+extension ClipItemRecipe {
+    static func makeDefault(
+        id: UUID = UUID(),
+        url: URL? = nil,
+        clipId: UUID = UUID(),
+        clipIndex: Int = 0,
+        imageId: UUID = UUID(),
+        imageFileName: String = "",
+        imageUrl: URL? = nil,
+        imageSize: ImageSize = ImageSize.makeDefault(),
+        imageDataSize: Int = 0,
+        registeredDate: Date = Date(timeIntervalSince1970: 0),
+        updatedDate: Date = Date(timeIntervalSince1970: 0)
+    ) -> Self {
+        return .init(
+            id: id,
+            url: url,
+            clipId: clipId,
+            clipIndex: clipIndex,
+            imageId: imageId,
+            imageFileName: imageFileName,
+            imageUrl: imageUrl,
+            imageSize: imageSize,
+            imageDataSize: imageDataSize,
+            registeredDate: registeredDate,
+            updatedDate: updatedDate
+        )
+    }
+}
+
+extension ClipRecipe {
+    static func makeDefault(
+        id: UUID = UUID(),
+        description: String? = nil,
+        items: [ClipItemRecipe] = [],
+        tagIds: [UUID] = [],
+        isHidden: Bool = false,
+        dataSize: Int = 0,
+        registeredDate: Date = Date(timeIntervalSince1970: 0),
+        updatedDate: Date = Date(timeIntervalSince1970: 0)
+    ) -> Self {
+        return .init(
+            id: id,
+            description: description,
+            items: items,
+            tagIds: tagIds,
+            isHidden: isHidden,
+            dataSize: dataSize,
+            registeredDate: registeredDate,
+            updatedDate: updatedDate
+        )
+    }
+}
+
 extension ImageSize {
     static func makeDefault(
         height: Double = 0,

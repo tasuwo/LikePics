@@ -8,7 +8,7 @@ extension ClipObject {
     static func makeDefault(id: String,
                             description: String = "hoge",
                             items: [ClipItemObject] = [],
-                            tags: [TagObject] = [],
+                            tagIds: [TagIdObject] = [],
                             isHidden: Bool = false,
                             registeredAt: Date = Date(timeIntervalSince1970: 0),
                             updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
@@ -19,8 +19,8 @@ extension ClipObject {
         items.forEach {
             obj.items.append($0)
         }
-        tags.forEach {
-            obj.tags.append($0)
+        tagIds.forEach {
+            obj.tagIds.append($0)
         }
         obj.isHidden = isHidden
         obj.registeredAt = registeredAt
@@ -54,30 +54,10 @@ extension ClipItemObject {
     }
 }
 
-extension TagObject {
-    static func makeDefault(id: String, name: String) -> TagObject {
-        let obj = TagObject()
+extension TagIdObject {
+    static func makeDefault(id: String) -> TagIdObject {
+        let obj = TagIdObject()
         obj.id = id
-        obj.name = name
-        return obj
-    }
-}
-
-extension AlbumObject {
-    static func makeDefault(id: String = "",
-                            title: String = "",
-                            clips: [ClipObject] = [],
-                            registeredAt: Date = Date(timeIntervalSince1970: 0),
-                            updatedAt: Date = Date(timeIntervalSince1970: 0)) -> AlbumObject
-    {
-        let obj = AlbumObject()
-        obj.id = id
-        clips.forEach {
-            obj.clips.append($0)
-        }
-        obj.title = title
-        obj.registeredAt = registeredAt
-        obj.updatedAt = updatedAt
         return obj
     }
 }

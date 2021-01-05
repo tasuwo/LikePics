@@ -810,8 +810,8 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     public init() { }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip, containers, forced)
@@ -857,8 +857,8 @@ public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
     }
 
     public private(set) var readAllClipsCallCount = 0
-    public var readAllClipsHandler: (() -> (Result<[Clip], ClipStorageError>))?
-    public func readAllClips() -> Result<[Clip], ClipStorageError> {
+    public var readAllClipsHandler: (() -> (Result<[ClipRecipe], ClipStorageError>))?
+    public func readAllClips() -> Result<[ClipRecipe], ClipStorageError> {
         readAllClipsCallCount += 1
         if let readAllClipsHandler = readAllClipsHandler {
             return readAllClipsHandler()
@@ -867,8 +867,8 @@ public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
     }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((Clip) -> (Result<Clip, ClipStorageError>))?
-    public func create(clip: Clip) -> Result<Clip, ClipStorageError> {
+    public var createHandler: ((ClipRecipe) -> (Result<ClipRecipe, ClipStorageError>))?
+    public func create(clip: ClipRecipe) -> Result<ClipRecipe, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip)
@@ -877,8 +877,8 @@ public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
     }
 
     public private(set) var deleteClipsCallCount = 0
-    public var deleteClipsHandler: (([Clip.Identity]) -> (Result<[Clip], ClipStorageError>))?
-    public func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError> {
+    public var deleteClipsHandler: (([Clip.Identity]) -> (Result<[ClipRecipe], ClipStorageError>))?
+    public func deleteClips(having ids: [Clip.Identity]) -> Result<[ClipRecipe], ClipStorageError> {
         deleteClipsCallCount += 1
         if let deleteClipsHandler = deleteClipsHandler {
             return deleteClipsHandler(ids)

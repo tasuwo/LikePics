@@ -13,14 +13,14 @@ public protocol TemporaryClipStorageProtocol {
 
     // MARK: Read
 
-    func readAllClips() -> Result<[Clip], ClipStorageError>
+    func readAllClips() -> Result<[ClipRecipe], ClipStorageError>
 
     // MARK: Create
 
-    func create(clip: Clip) -> Result<Clip, ClipStorageError>
+    func create(clip: ClipRecipe) -> Result<ClipRecipe, ClipStorageError>
 
     // MARK: Delete
 
-    func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError>
+    func deleteClips(having ids: [Clip.Identity]) -> Result<[ClipRecipe], ClipStorageError>
     func deleteAll() -> Result<Void, ClipStorageError>
 }

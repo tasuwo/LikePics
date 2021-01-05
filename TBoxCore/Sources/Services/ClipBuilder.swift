@@ -5,7 +5,7 @@
 import Domain
 
 protocol ClipBuildable {
-    func build(sources: [ClipItemSource], tags: [Tag]) -> (Clip, [ImageContainer])
+    func build(sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
 }
 
 struct ClipBuilder {
@@ -26,38 +26,38 @@ struct ClipBuilder {
 extension ClipBuilder: ClipBuildable {
     // MARK: - ClipBuildable
 
-    func build(sources: [ClipItemSource], tags: [Tag]) -> (Clip, [ImageContainer]) {
+    func build(sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer]) {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
-        let itemAndContainers: [(ClipItem, ImageContainer)] = sources.map { source in
+        let itemAndContainers: [(ClipItemRecipe, ImageContainer)] = sources.map { source in
             let imageId = self.uuidIssuer()
-            let item = ClipItem(id: self.uuidIssuer(),
-                                url: self.url,
-                                clipId: clipId,
-                                index: source.index,
-                                imageId: imageId,
-                                imageDataSize: source.data.count,
-                                source: source,
-                                currentDate: currentDate)
+            let item = ClipItemRecipe(id: self.uuidIssuer(),
+                                      url: self.url,
+                                      clipId: clipId,
+                                      index: source.index,
+                                      imageId: imageId,
+                                      imageDataSize: source.data.count,
+                                      source: source,
+                                      currentDate: currentDate)
             let container = ImageContainer(id: imageId, data: source.data)
             return (item, container)
         }
-        let clip = Clip(clipId: clipId,
-                        clipItems: itemAndContainers.map { $0.0 },
-                        tags: tags,
-                        dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
-                        registeredDate: currentDate,
-                        currentDate: currentDate)
+        let clip = ClipRecipe(clipId: clipId,
+                              clipItems: itemAndContainers.map { $0.0 },
+                              tagIds: tagIds,
+                              dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
+                              registeredDate: currentDate,
+                              currentDate: currentDate)
         return (clip, itemAndContainers.map { $1 })
     }
 }
 
-private extension Clip {
-    init(clipId: Clip.Identity, clipItems: [ClipItem], tags: [Tag], dataSize: Int, registeredDate: Date, currentDate: Date) {
+private extension ClipRecipe {
+    init(clipId: Clip.Identity, clipItems: [ClipItemRecipe], tagIds: [Tag.Identity], dataSize: Int, registeredDate: Date, currentDate: Date) {
         self.init(id: clipId,
                   description: nil,
                   items: clipItems,
-                  tags: tags,
+                  tagIds: tagIds,
                   isHidden: false,
                   dataSize: dataSize,
                   registeredDate: registeredDate,
@@ -65,7 +65,7 @@ private extension Clip {
     }
 }
 
-private extension ClipItem {
+private extension ClipItemRecipe {
     init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
         self.init(id: id,
                   url: url,

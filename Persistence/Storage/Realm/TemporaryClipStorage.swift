@@ -6,8 +6,6 @@ import Common
 import Domain
 import RealmSwift
 
-// swiftlint:disable first_where
-
 public class TemporaryClipStorage {
     public struct Configuration {
         let realmConfiguration: Realm.Configuration
@@ -55,7 +53,7 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
 
     // MARK: Read
 
-    public func readAllClips() -> Result<[Domain.Clip], ClipStorageError> {
+    public func readAllClips() -> Result<[ClipRecipe], ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
         let clips = realm.objects(ClipObject.self)
             .map { Domain.Clip.make(by: $0) }
@@ -64,31 +62,8 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
 
     // MARK: Create
 
-    public func create(clip: Domain.Clip) -> Result<Domain.Clip, ClipStorageError> {
+    public func create(clip: ClipRecipe) -> Result<ClipRecipe, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
-
-        // Check parameters
-
-        var appendingTags: [TagObject] = []
-        for tag in clip.tags {
-            // IDが同一の既存のタグがあれば、そちらを利用する
-            if let tagObj = realm.object(ofType: TagObject.self, forPrimaryKey: tag.identity.uuidString) {
-                appendingTags.append(tagObj)
-                continue
-            }
-
-            // 名前が同一の既存のタグがあれば、そちらを利用する
-            if let tagObj = realm.objects(TagObject.self).filter("name = '\(tag.name)'").first {
-                appendingTags.append(tagObj)
-                continue
-            }
-
-            // ID or 名前が同一のタグが存在しなければ、タグを新たに作成する
-            let newTag = TagObject()
-            newTag.id = tag.id.uuidString
-            newTag.name = tag.name
-            appendingTags.append(newTag)
-        }
 
         // Prepare new objects
 
@@ -115,7 +90,13 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
             newClip.items.append(newClipItem)
         }
 
-        appendingTags.forEach { newClip.tags.append($0) }
+        clip.tagIds
+            .map {
+                let obj = TagIdObject()
+                obj.id = $0.uuidString
+                return obj
+            }
+            .forEach { newClip.tagIds.append($0) }
 
         newClip.dataSize = clip.dataSize
         newClip.isHidden = clip.isHidden
@@ -131,7 +112,7 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
 
     // MARK: Delete
 
-    public func deleteClips(having ids: [Domain.Clip.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
+    public func deleteClips(having ids: [Domain.Clip.Identity]) -> Result<[ClipRecipe], ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         var clipObjects: [ClipObject] = []

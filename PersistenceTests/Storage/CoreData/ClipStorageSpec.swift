@@ -77,9 +77,8 @@ class ClipStorageSpec: QuickSpec {
                     tag.name = "hoge"
                     try! managedContext.save()
 
-                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
-                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "fuga")
-                    ]))
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                          tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
                 }
                 it("既存のタグを付与したクリップが保存される") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
@@ -104,18 +103,15 @@ class ClipStorageSpec: QuickSpec {
                     tag.name = "hoge"
                     try! managedContext.save()
 
-                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
-                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
-                    ]))
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                          tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
                 }
                 it("既存のタグを付与したクリップが保存される") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                     let clip = try! managedContext.fetch(request).first!
                     let tags = clip.tags?.allObjects.compactMap { $0 as? Persistence.Tag }
-                    expect(tags).to(haveCount(1))
-                    expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E59")!))
-                    expect(tags!.first!.name).to(equal("hoge"))
+                    expect(tags).to(haveCount(0))
                 }
                 it("新規にタグは作成されない") {
                     let request: NSFetchRequest<Persistence.Tag> = Persistence.Tag.fetchRequest()
@@ -131,23 +127,20 @@ class ClipStorageSpec: QuickSpec {
                     tag.name = "fuga"
                     try! managedContext.save()
 
-                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, tags: [
-                        .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge")
-                    ]))
+                    _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                          tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
                 }
-                it("既存のタグを付与したクリップが保存される") {
+                it("タグの付与がスキップされる") {
                     let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
                     request.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
                     let clip = try! managedContext.fetch(request).first!
                     let tags = clip.tags?.allObjects.compactMap { $0 as? Persistence.Tag }
-                    expect(tags).to(haveCount(1))
-                    expect(tags!.first!.id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!))
-                    expect(tags!.first!.name).to(equal("hoge"))
+                    expect(tags).to(haveCount(0))
                 }
-                it("タグが新規に作成される") {
+                it("新規にタグは作成されない") {
                     let request: NSFetchRequest<Persistence.Tag> = Persistence.Tag.fetchRequest()
                     let tags = try! managedContext.fetch(request)
-                    expect(tags).to(haveCount(2))
+                    expect(tags).to(haveCount(1))
                 }
             }
         }
