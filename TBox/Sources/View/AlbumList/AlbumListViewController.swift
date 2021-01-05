@@ -223,11 +223,6 @@ class AlbumListViewController: UIViewController {
     }
 
     private func configureDataSource() {
-        let supplementaryRegistration = UICollectionView.SupplementaryRegistration<AlbumListRemoverView>(elementKind: ElementKind.remover.rawValue) { [weak self] badgeView, _, _ in
-            badgeView.delegate = self
-            badgeView.isHidden = self?.isEditing == false
-        }
-
         self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, album -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
             guard let self = self, let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
@@ -260,24 +255,13 @@ class AlbumListViewController: UIViewController {
 
             return cell
         }
-
-        self.dataSource.supplementaryViewProvider = {
-            return self.collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryRegistration, for: $2)
-        }
     }
 
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
-            let removerAnchor = NSCollectionLayoutAnchor(edges: [.top, .leading], fractionalOffset: CGPoint(x: -0.45, y: -0.45))
-            let removerSize = NSCollectionLayoutSize(widthDimension: .absolute(44),
-                                                     heightDimension: .absolute(44))
-            let remover = NSCollectionLayoutSupplementaryItem(layoutSize: removerSize,
-                                                              elementKind: ElementKind.remover.rawValue,
-                                                              containerAnchor: removerAnchor)
-
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                   heightDimension: .estimated(100))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [remover])
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
             let count: Int = {
                 switch environment.traitCollection.horizontalSizeClass {
@@ -332,21 +316,8 @@ class AlbumListViewController: UIViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        let shouldHide = !editing
-
-        let cells = self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
-        let removers = self.collectionView.visibleSupplementaryViews(ofKind: ElementKind.remover.rawValue)
-        removers.forEach { remover in
-            remover.isHidden = shouldHide
-            remover.alpha = shouldHide ? 1 : 0
-        }
-        UIView.animate(withDuration: 0.2) {
-            removers.forEach { $0.alpha = shouldHide ? 0 : 1 }
-            cells.forEach {
-                $0.isEditing = editing
-                $0.layoutIfNeeded()
-            }
-        }
+        self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
+            .forEach { $0.isEditing = editing }
     }
 }
 
@@ -450,16 +421,6 @@ extension AlbumListViewController {
     }
 }
 
-extension AlbumListViewController: AlbumListRemoverViewDelegate {
-    // MARK: - AlbumListRemoverViewDelegate
-
-    func albumListRemoverView(_ view: AlbumListRemoverView) {
-        guard let indexPath = self.collectionView.indexPath(for: view, ofKind: ElementKind.remover.rawValue),
-            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.startDeletingAlbum(album)
-    }
-}
-
 extension AlbumListViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
@@ -476,6 +437,12 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
             let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
         self.startEditingAlbumTitle(for: album)
     }
+
+    func didTapRemover(_ cell: AlbumListCollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell),
+            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.startDeletingAlbum(album)
+    }
 }
 
 extension AlbumListViewController: UICollectionViewDragDelegate {
@@ -489,9 +456,8 @@ extension AlbumListViewController: UICollectionViewDragDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        let parameters = UIDragPreviewParameters()
-        parameters.backgroundColor = .clear
-        return parameters
+        guard let cell = collectionView.cellForItem(at: indexPath) as? AlbumListCollectionViewCell else { return nil }
+        return self.makePreviewParameter(for: cell)
     }
 }
 
@@ -511,8 +477,30 @@ extension AlbumListViewController: UICollectionViewDropDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? AlbumListCollectionViewCell else { return nil }
+        return self.makePreviewParameter(for: cell)
+    }
+}
+
+extension AlbumListViewController {
+    // MARK: Drag & Drop
+
+    func makePreviewParameter(for cell: AlbumListCollectionViewCell) -> UIDragPreviewParameters {
         let parameters = UIDragPreviewParameters()
+        // HACK: 左上のRemoverアイコンが見切れてしまうため、描画範囲を広げる
+        let path: UIBezierPath = {
+            let path = UIBezierPath()
+            path.move(to: .init(x: -22, y: -22))
+            path.addLine(to: .init(x: cell.frame.width, y: 0))
+            path.addLine(to: .init(x: cell.frame.width, y: cell.frame.height))
+            path.addLine(to: .init(x: -22, y: cell.frame.height))
+            path.close()
+            return path
+        }()
+        parameters.visiblePath = path
         parameters.backgroundColor = .clear
+        // HACK: nilだとデフォルトの影が描画されてしまうため、空の BezierPath を指定する
+        parameters.shadowPath = UIBezierPath()
         return parameters
     }
 }

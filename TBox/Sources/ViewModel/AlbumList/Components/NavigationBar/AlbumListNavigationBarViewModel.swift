@@ -51,7 +51,7 @@ class AlbumListNavigationBarViewModel: AlbumListNavigationBarViewModelType,
 
         self.operation
             .combineLatest(self.albumsCount)
-            .sink { [weak self] mode, albumsCount  in
+            .sink { [weak self] mode, albumsCount in
                 switch mode {
                 case .none:
                     self?.rightItems.send([.edit(isEnabled: albumsCount > 0)])

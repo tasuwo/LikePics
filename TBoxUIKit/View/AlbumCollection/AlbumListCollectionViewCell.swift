@@ -8,6 +8,7 @@ import UIKit
 
 public protocol AlbumListCollectionViewCellDelegate: AnyObject {
     func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell)
+    func didTapRemover(_ cell: AlbumListCollectionViewCell)
 }
 
 public class AlbumListCollectionViewCell: UICollectionViewCell {
@@ -53,9 +54,11 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     public var isEditing: Bool = false {
         didSet {
-            self.updateAppearance()
+            self.updateAppearanceWithAnimation(isEditing: self.isEditing)
         }
     }
+
+    private var isDragging: Bool = false
 
     public var onReuse: ((String?) -> Void)?
 
@@ -66,6 +69,9 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     @IBOutlet var metaLabel: UILabel!
     @IBOutlet var titleEditButton: UIButton!
     @IBOutlet var titleEditButtonContainer: UIView!
+    @IBOutlet var titleEditButtonRowStackView: UIStackView!
+    @IBOutlet var removerButton: UIButton!
+    @IBOutlet var removerContainer: UIView!
 
     // MARK: - Lifecycle
 
@@ -79,6 +85,23 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         self.onReuse?(self.identifier)
     }
 
+    override public func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
+        switch dragState {
+        case .lifting, .dragging:
+            self.isDragging = true
+            guard self.isEditing else { return }
+            self.updateAppearance(isEditing: false)
+
+        case .none:
+            self.isDragging = false
+            guard self.isEditing else { return }
+            self.updateAppearance(isEditing: true)
+
+        @unknown default:
+            break
+        }
+    }
+
     // MARK: - IBAction
 
     @IBAction func didTapTitleEditButton(_ sender: Any) {
@@ -87,6 +110,10 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     @IBAction func didTapTitle(_ sender: Any) {
         self.delegate?.didTapTitleEditButton(self)
+    }
+
+    @IBAction func didTapRemover(_ sender: Any) {
+        self.delegate?.didTapRemover(self)
     }
 
     // MARK: - Methods
@@ -98,14 +125,51 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         self.titleButton.titleLabel?.adjustsFontForContentSizeCategory = true
         self.titleButton.titleLabel?.lineBreakMode = .byTruncatingTail
 
+        if let imageView = self.removerButton.imageView {
+            imageView.backgroundColor = .white
+            imageView.layer.cornerRadius = imageView.bounds.width / 2
+        }
+
         self.clipCount = nil
         self.isEditing = false
-        self.updateAppearance()
+        self.updateAppearance(isEditing: false)
     }
 
-    func updateAppearance() {
-        self.titleButton.isEnabled = self.isEditing
-        self.titleEditButtonContainer.isHidden = !self.isEditing
+    func updateAppearance(isEditing: Bool) {
+        // HACK: Drop時、StackViewのアニメーション更新がうまくいかないケースがあるため、別途アニメーションせずに
+        //       可視性を更新するメソッドを設ける
+        DispatchQueue.main.async {
+            self.titleButton.isEnabled = isEditing
+            self.titleEditButtonContainer.isHidden = !isEditing
+            self.removerContainer.isHidden = !isEditing
+        }
+    }
+
+    func updateAppearanceWithAnimation(isEditing: Bool) {
+        guard self.isDragging == false else { return }
+
+        UIView.animate(withDuration: 0.2) {
+            self.titleButton.isEnabled = isEditing
+            self.titleEditButtonContainer.isHidden = !isEditing
+            self.titleEditButtonRowStackView.layoutIfNeeded()
+        }
+
+        let displayRemover = isEditing
+        if displayRemover {
+            self.removerContainer.alpha = 0
+            self.removerContainer.isHidden = false
+            UIView.animate(withDuration: 0.2) {
+                self.removerContainer.alpha = 1
+            }
+        } else {
+            self.removerContainer.alpha = 1
+            UIView.animate(withDuration: 0.2) {
+                self.removerContainer.alpha = 0
+            } completion: { _ in
+                self.removerContainer.isHidden = true
+                self.removerContainer.alpha = 1
+            }
+        }
     }
 }
 
