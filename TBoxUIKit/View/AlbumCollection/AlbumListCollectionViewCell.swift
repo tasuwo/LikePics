@@ -52,12 +52,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var isEditing: Bool = false {
-        didSet {
-            self.updateAppearanceWithAnimation(isEditing: self.isEditing)
-        }
-    }
-
+    private var isEditing: Bool = false
     private var isDragging: Bool = false
 
     public var onReuse: ((String?) -> Void)?
@@ -118,7 +113,16 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Methods
 
-    func setupAppearance() {
+    public func setEditing(_ isEditing: Bool, animated: Bool) {
+        self.isEditing = isEditing
+        if animated {
+            self.updateAppearanceWithAnimation(isEditing: isEditing)
+        } else {
+            self.updateAppearance(isEditing: isEditing)
+        }
+    }
+
+    private func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10
         self.thumbnailImageView.contentMode = .scaleAspectFill
 
@@ -132,12 +136,15 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
         self.clipCount = nil
         self.isEditing = false
-        self.updateAppearance(isEditing: false)
+
+        self.titleButton.isEnabled = isEditing
+        self.titleEditButtonContainer.isHidden = !isEditing
+        self.removerContainer.isHidden = !isEditing
     }
 
-    func updateAppearance(isEditing: Bool) {
-        // HACK: Drop時、StackViewのアニメーション更新がうまくいかないケースがあるため、別途アニメーションせずに
-        //       可視性を更新するメソッドを設ける
+    private func updateAppearance(isEditing: Bool) {
+        // HACK: Drag&Drop時にStackView上の編集アイコンが隠れたままになってしまう
+        //       ケースがあるため、非同期に実行する
         DispatchQueue.main.async {
             self.titleButton.isEnabled = isEditing
             self.titleEditButtonContainer.isHidden = !isEditing
@@ -145,13 +152,16 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func updateAppearanceWithAnimation(isEditing: Bool) {
+    private func updateAppearanceWithAnimation(isEditing: Bool) {
         guard self.isDragging == false else { return }
+
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0.2)
 
         UIView.animate(withDuration: 0.2) {
             self.titleButton.isEnabled = isEditing
             self.titleEditButtonContainer.isHidden = !isEditing
-            self.titleEditButtonRowStackView.layoutIfNeeded()
+            self.titleEditButtonContainer.layoutIfNeeded()
         }
 
         let displayRemover = isEditing
@@ -170,6 +180,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
                 self.removerContainer.alpha = 1
             }
         }
+
+        CATransaction.commit()
     }
 }
 

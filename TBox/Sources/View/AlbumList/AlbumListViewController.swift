@@ -12,14 +12,7 @@ import UIKit
 class AlbumListViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = AlbumListViewModelType
-
-    enum ElementKind: String {
-        case remover
-    }
-
-    enum Section {
-        case main
-    }
+    typealias Layout = AlbumListViewLayout
 
     // MARK: - Properties
 
@@ -45,7 +38,7 @@ class AlbumListViewController: UIViewController {
                              placeholder: L10n.albumListViewAlertForEditPlaceholder)
     )
     private var collectionView: AlbumListCollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Album>!
+    private var dataSource: Layout.DataSource!
 
     // MARK: Components
 
@@ -141,12 +134,10 @@ class AlbumListViewController: UIViewController {
         // Dependency Outputs
 
         dependency.outputs.albums
-            .receive(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] albums in
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
-                snapshot.appendSections([.main])
-                snapshot.appendItems(albums)
-                self?.dataSource.apply(snapshot, animatingDifferences: !albums.isEmpty)
+                guard let self = self else { return }
+                Layout.apply(items: albums.map { Layout.Item(album: $0) }, to: self.dataSource)
             }
             .store(in: &self.cancellableBag)
 
@@ -196,12 +187,17 @@ class AlbumListViewController: UIViewController {
     // MARK: Collection View
 
     private func setupCollectionView() {
-        self.collectionView = AlbumListCollectionView(frame: self.view.bounds, collectionViewLayout: self.createLayout())
+        self.collectionView = AlbumListCollectionView(frame: self.view.bounds,
+                                                      collectionViewLayout: Layout.createLayout())
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
         self.view.addSubview(collectionView)
         self.collectionView.delegate = self
-        self.configureDataSource()
+
+        self.dataSource = Layout.configureDataSource(collectionView: collectionView,
+                                                     thumbnailLoader: thumbnailLoader,
+                                                     editing: self,
+                                                     delegate: self)
 
         // Reorder Settings
 
@@ -211,83 +207,12 @@ class AlbumListViewController: UIViewController {
         }
 
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
-            guard let self = self else { return }
-            guard let albumIds = self.viewModel.outputs.albums.value
-                .applying(transaction.difference)?
-                .map({ $0.id }) else { return }
-            self.viewModel.inputs.reorderedAlbums.send(albumIds)
+            let albumIds = transaction.finalSnapshot.itemIdentifiers.map { $0.album.id }
+            self?.viewModel.inputs.reorderedAlbums.send(albumIds)
         }
 
         self.collectionView.dragDelegate = self
         self.collectionView.dropDelegate = self
-    }
-
-    private func configureDataSource() {
-        self.dataSource = .init(collectionView: self.collectionView) { [weak self] collectionView, indexPath, album -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumListCollectionView.cellIdentifier, for: indexPath)
-            guard let self = self, let cell = dequeuedCell as? AlbumListCollectionViewCell else { return dequeuedCell }
-
-            cell.title = album.title
-            cell.clipCount = album.clips.count
-            cell.isEditing = self.isEditing
-            cell.delegate = self
-
-            let requestId = UUID().uuidString
-            cell.identifier = requestId
-
-            if let thumbnailTarget = album.clips.first?.items.first {
-                let info = ThumbnailRequest.ThumbnailInfo(id: "album-list-\(thumbnailTarget.identity.uuidString)",
-                                                          size: cell.thumbnailSize,
-                                                          scale: cell.traitCollection.displayScale)
-                let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
-                let request = ThumbnailRequest(requestId: requestId,
-                                               originalImageRequest: imageRequest,
-                                               thumbnailInfo: info)
-                self.thumbnailLoader.load(request: request, observer: cell)
-                cell.onReuse = { [weak self] identifier in
-                    guard identifier == requestId else { return }
-                    self?.thumbnailLoader.cancel(request)
-                }
-            } else {
-                cell.thumbnail = nil
-                cell.onReuse = nil
-            }
-
-            return cell
-        }
-    }
-
-    private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(100))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            let count: Int = {
-                switch environment.traitCollection.horizontalSizeClass {
-                case .compact:
-                    return 2
-
-                case .regular, .unspecified:
-                    return 4
-
-                @unknown default:
-                    return 4
-                }
-            }()
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(100))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
-            group.interItemSpacing = .fixed(16)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = CGFloat(16)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-
-            return section
-        }
-
-        return layout
     }
 
     // MARK: Navigation Bar
@@ -317,7 +242,7 @@ class AlbumListViewController: UIViewController {
         super.setEditing(editing, animated: animated)
 
         self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
-            .forEach { $0.isEditing = editing }
+            .forEach { $0.setEditing(editing, animated: true) }
     }
 }
 
@@ -334,11 +259,11 @@ extension AlbumListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard !self.isEditing else { return }
-        guard let album = self.dataSource.itemIdentifier(for: indexPath) else {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
-        guard let viewController = self.factory.makeAlbumViewController(albumId: album.identity) else {
+        guard let viewController = self.factory.makeAlbumViewController(albumId: item.album.identity) else {
             RootLogger.shared.write(ConsoleLog(level: .critical, message: "Failed to open AlbumViewController"))
             return
         }
@@ -350,14 +275,12 @@ extension AlbumListViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let album = self.dataSource.itemIdentifier(for: indexPath),
-            self.isEditing == false
-        else {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath), self.isEditing == false else {
             return nil
         }
         return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
                                           previewProvider: nil,
-                                          actionProvider: self.makeActionProvider(for: album, at: indexPath))
+                                          actionProvider: self.makeActionProvider(for: item.album, at: indexPath))
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -373,6 +296,7 @@ extension AlbumListViewController {
         guard let cell = collectionView.cellForItem(at: identifier as IndexPath) else { return nil }
         let parameters = UIPreviewParameters()
         parameters.backgroundColor = .clear
+        parameters.shadowPath = UIBezierPath()
         return UITargetedPreview(view: cell, parameters: parameters)
     }
 
@@ -434,14 +358,14 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
 
     func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.startEditingAlbumTitle(for: album)
+            let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.startEditingAlbumTitle(for: item.album)
     }
 
     func didTapRemover(_ cell: AlbumListCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.startDeletingAlbum(album)
+            let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        self.startDeletingAlbum(item.album)
     }
 }
 
@@ -450,7 +374,7 @@ extension AlbumListViewController: UICollectionViewDragDelegate {
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
-        let provider = NSItemProvider(object: item.id.uuidString as NSString)
+        let provider = NSItemProvider(object: item.album.id.uuidString as NSString)
         let dragItem = UIDragItem(itemProvider: provider)
         return [dragItem]
     }
@@ -502,5 +426,13 @@ extension AlbumListViewController {
         // HACK: nilだとデフォルトの影が描画されてしまうため、空の BezierPath を指定する
         parameters.shadowPath = UIBezierPath()
         return parameters
+    }
+}
+
+extension AlbumListViewController: AlbumListViewEditing {
+    // MARK: - AlbumListViewEditing
+
+    func isEditing(_ layout: AlbumListViewLayout.Type) -> Bool {
+        return self.isEditing
     }
 }
