@@ -4,13 +4,13 @@
 
 import UIKit
 
-public protocol TagCollectionAdditionCellDelegate: AnyObject {
-    func didTap(_ cell: TagCollectionAdditionCell)
+public protocol ButtonCellDelegate: AnyObject {
+    func didTap(_ cell: ButtonCell)
 }
 
-public class TagCollectionAdditionCell: UICollectionViewCell {
+public class ButtonCell: UICollectionViewCell {
     public static var nib: UINib {
-        return UINib(nibName: "TagCollectionAdditionCell", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "ButtonCell", bundle: Bundle(for: Self.self))
     }
 
     public var title: String? {
@@ -21,7 +21,7 @@ public class TagCollectionAdditionCell: UICollectionViewCell {
 
     @IBOutlet var additionButton: UIButton!
 
-    public weak var delegate: TagCollectionAdditionCellDelegate?
+    public weak var delegate: ButtonCellDelegate?
 
     // MARK: - Lifecycle
 

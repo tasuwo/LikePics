@@ -26,9 +26,9 @@ public class TagCollectionView: UICollectionView {
     public enum CellConfiguration {
         public struct Addition {
             public let title: String
-            public weak var delegate: TagCollectionAdditionCellDelegate?
+            public weak var delegate: ButtonCellDelegate?
 
-            public init(title: String, delegate: TagCollectionAdditionCellDelegate?) {
+            public init(title: String, delegate: ButtonCellDelegate?) {
                 self.title = title
                 self.delegate = delegate
             }
@@ -96,7 +96,7 @@ public class TagCollectionView: UICollectionView {
 
         switch configuration {
         case let .addition(config):
-            guard let cell = dequeuedCell as? TagCollectionAdditionCell else { return dequeuedCell }
+            guard let cell = dequeuedCell as? ButtonCell else { return dequeuedCell }
 
             cell.title = config.title
             cell.delegate = config.delegate
@@ -148,7 +148,7 @@ public class TagCollectionView: UICollectionView {
 
     private func registerCell() {
         self.register(TagCollectionViewCell.nib, forCellWithReuseIdentifier: CellType.tag.identifier)
-        self.register(TagCollectionAdditionCell.nib, forCellWithReuseIdentifier: CellType.addition.identifier)
+        self.register(ButtonCell.nib, forCellWithReuseIdentifier: CellType.addition.identifier)
     }
 
     private func setupAppearance() {

@@ -175,7 +175,7 @@ class ClipMergeViewController: UIViewController {
         self.collectionView.contentInsetAdjustmentBehavior = .always
 
         self.collectionView.register(TagCollectionViewCell.nib, forCellWithReuseIdentifier: "tag")
-        self.collectionView.register(TagCollectionAdditionCell.nib, forCellWithReuseIdentifier: "tag-addition")
+        self.collectionView.register(ButtonCell.nib, forCellWithReuseIdentifier: "tag-addition")
         self.collectionView.register(ClipMergeImageCell.nib, forCellWithReuseIdentifier: "clip-selection")
 
         self.view.addSubview(collectionView)
@@ -294,10 +294,10 @@ class ClipMergeViewController: UIViewController {
     }
 }
 
-extension ClipMergeViewController: TagCollectionAdditionCellDelegate {
-    // MARK: - TagCollectionAdditionCellDelegate
+extension ClipMergeViewController: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
 
-    func didTap(_ cell: TagCollectionAdditionCell) {
+    func didTap(_ cell: ButtonCell) {
         let tags = self.viewModel.outputs.tags.value.map { $0.identity }
         guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)

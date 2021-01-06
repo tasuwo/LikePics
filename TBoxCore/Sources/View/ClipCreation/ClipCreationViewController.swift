@@ -264,7 +264,7 @@ public class ClipCreationViewController: UIViewController {
     }
 
     private func configureDataSource() {
-        let additionCellRegistration = UICollectionView.CellRegistration<TagCollectionAdditionCell, Void>(cellNib: TagCollectionAdditionCell.nib) { [weak self] cell, _, _ in
+        let additionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
             cell.title = L10n.clipCreationViewAdditionTitle
             cell.delegate = self
         }
@@ -499,10 +499,10 @@ extension ClipCreationViewController: TagCollectionViewCellDelegate {
     }
 }
 
-extension ClipCreationViewController: TagCollectionAdditionCellDelegate {
-    // MARK: - TagCollectionAdditionCellDelegate
+extension ClipCreationViewController: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
 
-    public func didTap(_ cell: TagCollectionAdditionCell) {
+    public func didTap(_ cell: ButtonCell) {
         guard let parent = self.parent else {
             RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to resolve parent view controller for opening tag selection view"))
             return
