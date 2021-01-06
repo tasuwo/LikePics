@@ -36,6 +36,7 @@ public protocol ClipCreationViewModelOutputs {
     var isReloadItemEnabled: CurrentValueSubject<Bool, Never> { get }
     var isDoneItemEnabled: CurrentValueSubject<Bool, Never> { get }
 
+    var displayReloadButton: CurrentValueSubject<Bool, Never> { get }
     var displayCollectionView: CurrentValueSubject<Bool, Never> { get }
     var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
 
@@ -51,6 +52,23 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     ClipCreationViewModelInputs,
     ClipCreationViewModelOutputs
 {
+    public struct Configuration {
+        public static let webImage = Configuration(selectAllAfterLoading: false,
+                                                   isReloadable: true)
+        public static let rawImage = Configuration(selectAllAfterLoading: true,
+                                                   isReloadable: false)
+
+        public let selectAllAfterLoading: Bool
+        public let isReloadable: Bool
+
+        public init(selectAllAfterLoading: Bool,
+                    isReloadable: Bool)
+        {
+            self.selectAllAfterLoading = selectAllAfterLoading
+            self.isReloadable = isReloadable
+        }
+    }
+
     enum DownloadError: Error {
         case failedToSave(ClipStorageError)
         case failedToDownloadImage(ImageLoaderError)
@@ -92,6 +110,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public var isReloadItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
     public var isDoneItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
+    public let displayReloadButton: CurrentValueSubject<Bool, Never> = .init(false)
     public var displayCollectionView: CurrentValueSubject<Bool, Never> = .init(false)
     public var displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -112,6 +131,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     private let clipBuilder: ClipBuildable
     private let provider: ImageSourceProvider
     private let imageLoader: ImageLoaderProtocol
+    private let configuration: Configuration
     private let urlSession: URLSession
 
     // MARK: - Lifecycle
@@ -120,12 +140,14 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
          clipBuilder: ClipBuildable,
          provider: ImageSourceProvider,
          imageLoader: ImageLoaderProtocol,
+         configuration: Configuration,
          urlSession: URLSession = URLSession.shared)
     {
         self.clipStore = clipStore
         self.clipBuilder = clipBuilder
         self.provider = provider
         self.imageLoader = imageLoader
+        self.configuration = configuration
         self.urlSession = urlSession
 
         self.bind()
@@ -134,6 +156,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public convenience init(url: URL?,
                             clipStore: ClipStorable,
                             provider: ImageSourceProvider,
+                            configuration: Configuration,
                             urlSession: URLSession = URLSession.shared)
     {
         self.init(clipStore: clipStore,
@@ -142,6 +165,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                                            uuidIssuer: { UUID() }),
                   provider: provider,
                   imageLoader: ImageLoader(),
+                  configuration: configuration,
                   urlSession: urlSession)
     }
 
@@ -227,6 +251,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .map { images, isLoading in images.isEmpty && !isLoading }
             .sink { [weak self] display in self?.displayEmptyMessage.send(display) }
             .store(in: &self.cancellableBag)
+
+        self.displayReloadButton.send(configuration.isReloadable)
     }
 
     private func loadImageSources() {
@@ -236,7 +262,10 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
         self.provider.resolveSources()
             .map { sources in sources.filter { $0.isValid } }
-            .tryMap { if $0.isEmpty { throw ImageSourceProviderError.notFound } else { return $0 } }
+            .tryMap { sources -> [ImageSource] in
+                guard !sources.isEmpty else { throw ImageSourceProviderError.notFound }
+                return sources
+            }
             .mapError { $0 as? ImageSourceProviderError ?? ImageSourceProviderError.internalError }
             .sink { [weak self] completion in
                 switch completion {
@@ -251,7 +280,11 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                     self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] foundImages in
-                self?.images.send(foundImages)
+                guard let self = self else { return }
+                self.images.send(foundImages)
+                if self.configuration.selectAllAfterLoading {
+                    self.selectedIndices.send(([Int])(0 ..< foundImages.count))
+                }
             }
             .store(in: &self.cancellableBag)
     }

@@ -61,19 +61,19 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipTargetCollectionViewController(url: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
-        return ClipCreationViewController(factory: self,
-                                          viewModel: ClipCreationViewModel(url: url,
-                                                                           clipStore: self.clipStore,
-                                                                           provider: WebImageSourceProvider(url: url)),
-                                          delegate: delegate)
+        let viewModel = ClipCreationViewModel(url: url,
+                                              clipStore: self.clipStore,
+                                              provider: WebImageSourceProvider(url: url),
+                                              configuration: .webImage)
+        return ClipCreationViewController(factory: self, viewModel: viewModel, delegate: delegate)
     }
 
     func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController {
-        return ClipCreationViewController(factory: self,
-                                          viewModel: ClipCreationViewModel(url: nil,
-                                                                           clipStore: self.clipStore,
-                                                                           provider: RawImageSourceProvider(imageDataSet: data)),
-                                          delegate: delegate)
+        let viewModel = ClipCreationViewModel(url: nil,
+                                              clipStore: self.clipStore,
+                                              provider: RawImageSourceProvider(imageDataSet: data),
+                                              configuration: .rawImage)
+        return ClipCreationViewController(factory: self, viewModel: viewModel, delegate: delegate)
     }
 }
 

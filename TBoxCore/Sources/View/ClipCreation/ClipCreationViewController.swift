@@ -162,6 +162,12 @@ public class ClipCreationViewController: UIViewController {
             .assign(to: \.isEnabled, on: self.itemDone)
             .store(in: &self.cancellableBag)
 
+        dependency.outputs.displayReloadButton
+            .map { [weak self] display in display ? self?.itemReload : nil }
+            .map { [$0].compactMap { $0 } }
+            .assign(to: \.leftBarButtonItems, on: self.navigationItem)
+            .store(in: &self.cancellableBag)
+
         dependency.outputs.displayCollectionView
             .map { !$0 }
             .assign(to: \.isHidden, on: self.collectionView)
@@ -173,24 +179,15 @@ public class ClipCreationViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.tags
+            .receive(on: DispatchQueue.main)
             .combineLatest(dependency.outputs.images)
             .receive(on: DispatchQueue.global())
             .sink { [weak self] tags, images in self?.apply(tags: tags, images: images) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selectedIndices
-            .sink { [weak self] indices in
-                guard let self = self else { return }
-
-                indices.enumerated().forEach { idx, index in
-                    guard let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: Section.image.rawValue)) as? ClipSelectionCollectionViewCell else { return }
-                    cell.selectionOrder = idx + 1
-                }
-
-                self.collectionView.indexPathsForSelectedItems?
-                    .filter { !indices.contains($0.row) }
-                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] indices in self?.apply(indices: indices) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.emptyErrorTitle
@@ -222,7 +219,30 @@ public class ClipCreationViewController: UIViewController {
         snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
         snapshot.appendSections([.image])
         snapshot.appendItems(images.map({ Item.image($0) }))
-        self.dataSource.apply(snapshot)
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard let self = self else { return }
+            self.apply(indices: self.viewModel.outputs.selectedIndices.value)
+        }
+    }
+
+    private func apply(indices: [Int]) {
+        let indexPaths = indices.map { IndexPath(row: $0, section: Section.image.rawValue) }
+        let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems ?? []
+
+        // 足りない分を選択する
+        Set(indexPaths).subtracting(selectedIndexPaths)
+            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+
+        // 並び順を更新する
+        indexPaths.enumerated().forEach { idx, indexPath in
+            guard let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
+            cell.selectionOrder = idx + 1
+        }
+
+        // 余剰な部分を選択解除する
+        selectedIndexPaths
+            .filter { !indices.contains($0.row) }
+            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }
 
     // MARK: CollectionView
@@ -381,7 +401,6 @@ public class ClipCreationViewController: UIViewController {
             $0.isEnabled = false
         }
 
-        self.navigationItem.setLeftBarButton(self.itemReload, animated: true)
         self.navigationItem.setRightBarButton(self.itemDone, animated: true)
     }
 
