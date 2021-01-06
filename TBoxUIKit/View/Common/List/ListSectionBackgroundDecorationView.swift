@@ -4,7 +4,7 @@
 
 import UIKit
 
-class ClipInformationSectionBackgroundDecorationView: UICollectionReusableView {
+class ListSectionBackgroundDecorationView: UICollectionReusableView {
     let topSeparatorView = UIView()
     let bottomSeparatorView = UIView()
 

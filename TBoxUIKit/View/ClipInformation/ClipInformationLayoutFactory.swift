@@ -160,7 +160,7 @@ public enum ClipInformationLayoutFactory {
 
         layout.configuration = config
 
-        layout.register(ClipInformationSectionBackgroundDecorationView.self,
+        layout.register(ListSectionBackgroundDecorationView.self,
                         forDecorationViewOfKind: ElementKind.sectionBackground.rawValue)
 
         return layout
