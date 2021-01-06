@@ -61,7 +61,8 @@ public class ClipCreationViewController: UIViewController {
                                                   target: self,
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
-    var collectionView: UICollectionView!
+    private var collectionView: UICollectionView!
+    private var dataSource: ClipCreationViewLayout.DataSource!
 
     // MARK: Services
 
@@ -69,7 +70,6 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: States
 
-    private var dataSource: ClipCreationViewLayout.DataSource!
     private var cancellableBag = Set<AnyCancellable>()
     private weak var delegate: ClipCreationDelegate?
 
