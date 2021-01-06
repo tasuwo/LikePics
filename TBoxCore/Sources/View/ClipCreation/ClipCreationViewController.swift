@@ -132,6 +132,7 @@ public class ClipCreationViewController: UIViewController {
 
     private func setupAppearance() {
         self.view.backgroundColor = Asset.Color.background.color
+        self.navigationItem.hidesBackButton = true
     }
 
     // MARK: Bind
