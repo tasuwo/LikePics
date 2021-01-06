@@ -36,9 +36,3 @@ public protocol ClipCommandServiceProtocol {
     func deleteAlbum(having id: Album.Identity) -> Result<Void, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<Void, ClipStorageError>
 }
-
-extension ClipCommandServiceProtocol {
-    public func create(clip: Clip, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
-        self.create(clip: clip, withContainers: containers, forced: false)
-    }
-}
