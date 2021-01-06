@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import Smoothie
 import TBoxUIKit
 import UIKit
 
@@ -24,41 +25,6 @@ public class ClipCreationViewController: UIViewController {
 
     typealias Factory = ViewControllerFactory
     typealias Dependency = ClipCreationViewModelType
-
-    // MARK: - Enums
-
-    enum Section: Int {
-        case url
-        case tag
-        case image
-    }
-
-    enum Item: Hashable {
-        case urlAddition
-        case url(URL)
-        case tagAddition
-        case tag(Tag)
-        case image(ImageSource)
-
-        var identifier: String {
-            switch self {
-            case .urlAddition:
-                return "url-addition"
-
-            case .url:
-                return "url"
-
-            case .tagAddition:
-                return "tag-addition"
-
-            case let .tag(tag):
-                return tag.id.uuidString
-
-            case let .image(source):
-                return source.identifier.uuidString
-            }
-        }
-    }
 
     // MARK: - Properties
 
@@ -99,23 +65,24 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: Services
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol = ThumbnailLoader()
+    private let thumbnailLoader: ThumbnailLoader
 
     // MARK: States
 
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: ClipCreationViewLayout.DataSource!
     private var cancellableBag = Set<AnyCancellable>()
-    private let downsamplingQueue = DispatchQueue(label: "net.tasuwo.TBox.TBoxCore.ClipCreationViewController.downsampling")
     private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Lifecycle
 
     public init(factory: ViewControllerFactory,
                 viewModel: ClipCreationViewModelType,
+                thumbnailLoader: ThumbnailLoader,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory
         self.viewModel = viewModel
+        self.thumbnailLoader = thumbnailLoader
         self.delegate = delegate
         super.init(nibName: "ClipCreationViewController", bundle: Bundle(for: Self.self))
     }
@@ -233,25 +200,14 @@ public class ClipCreationViewController: UIViewController {
     }
 
     private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.url])
-        if let url = url {
-            snapshot.appendItems([.url(url)])
-        } else {
-            snapshot.appendItems([.urlAddition])
-        }
-        snapshot.appendSections([.tag])
-        snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
-        snapshot.appendSections([.image])
-        snapshot.appendItems(images.map({ Item.image($0) }))
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+        self.dataSource.apply(ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images), animatingDifferences: true) { [weak self] in
             guard let self = self else { return }
             self.apply(indices: self.viewModel.outputs.selectedIndices.value)
         }
     }
 
     private func apply(indices: [Int]) {
-        let indexPaths = indices.map { IndexPath(row: $0, section: Section.image.rawValue) }
+        let indexPaths = indices.map { IndexPath(row: $0, section: ClipCreationViewLayout.Section.image.rawValue) }
         let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems ?? []
 
         // 足りない分を選択する
@@ -273,181 +229,22 @@ public class ClipCreationViewController: UIViewController {
     // MARK: CollectionView
 
     private func setupCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Self.createLayout())
+        collectionView = UICollectionView(frame: view.bounds,
+                                          collectionViewLayout: ClipCreationViewLayout.createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = Asset.Color.background.color
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         collectionView.delegate = self
-        collectionView.prefetchDataSource = self
         collectionView.isHidden = true
 
         view.addSubview(collectionView)
 
-        configureDataSource()
-    }
-
-    private func configureDataSource() {
-        let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
-            cell.title = L10n.clipCreationViewUrlAdditionCellTitle
-            cell.delegate = self
-        }
-
-        let urlCellRegistration = UICollectionView.CellRegistration<ButtonCell, URL>(cellNib: ButtonCell.nib) { [weak self] cell, _, url in
-            cell.title = url.absoluteString
-            cell.delegate = self
-        }
-
-        let tagAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
-            cell.title = L10n.clipCreationViewTagAdditionCellTitle
-            cell.delegate = self
-        }
-
-        let tagCellRegistration = UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak self] cell, _, tag in
-            cell.title = tag.name
-            cell.displayMode = .normal
-            cell.visibleCountIfPossible = false
-            cell.visibleDeleteButton = true
-            cell.delegate = self
-        }
-
-        let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak self] cell, indexPath, source in
-            guard let self = self else { return }
-
-            cell.id = source.identifier
-
-            let imageViewSize = cell.imageDisplaySize
-            let scale = cell.traitCollection.displayScale
-            self.downsamplingQueue.async {
-                self.thumbnailLoader.load(source, as: imageViewSize, scale: scale)
-                    .filter { _ in cell.id == source.identifier }
-                    .receive(on: DispatchQueue.main)
-                    .assign(to: \.image, on: cell)
-                    .store(in: &self.cancellableBag)
-            }
-
-            if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
-                cell.selectionOrder = indexInSelection + 1
-            }
-        }
-
-        dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
-            switch item {
-            case .urlAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: urlAdditionCellRegistration, for: indexPath, item: ())
-
-            case let .url(url):
-                return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: url)
-
-            case .tagAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
-
-            case let .tag(tag):
-                return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
-
-            case let .image(source):
-                return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: source)
-            }
-        }
-    }
-
-    private static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
-            switch Section(rawValue: sectionIndex) {
-            case .url:
-                return self.createUrlLayoutSection()
-
-            case .tag:
-                return self.createTagsLayoutSection()
-
-            case .image:
-                return self.createImageLayoutSection(for: environment)
-
-            case .none:
-                return nil
-            }
-        }
-        return layout
-    }
-
-    private static func createUrlLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16)
-
-        return section
-    }
-
-    private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                              heightDimension: .estimated(32))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(16)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(16)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-
-        return section
-    }
-
-    private static func createImageLayoutSection(for environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let count: Int = {
-            switch environment.traitCollection.horizontalSizeClass {
-            case .compact:
-                return 2
-
-            case .regular, .unspecified:
-                return 3
-
-            @unknown default:
-                return 3
-            }
-        }()
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
-        group.interItemSpacing = .fixed(16)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(16)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16)
-
-        return section
-    }
-
-    private static func predictCellSize(for collectionView: UICollectionView) -> CGSize {
-        let numberOfColumns: CGFloat = {
-            switch collectionView.traitCollection.horizontalSizeClass {
-            case .compact:
-                return 2
-
-            case .regular, .unspecified:
-                return 3
-
-            @unknown default:
-                return 3
-            }
-        }()
-        let totalSpaceSize: CGFloat = 16 * 2 + (numberOfColumns - 1) * 16
-        let width = (collectionView.bounds.size.width - totalSpaceSize) / numberOfColumns
-        return CGSize(width: width, height: width)
+        self.dataSource = ClipCreationViewLayout.configureDataSource(collectionView: collectionView,
+                                                                     buttonCellDelegate: self,
+                                                                     tagCellDelegate: self,
+                                                                     thumbnailLoader: self.thumbnailLoader)
     }
 
     // MARK: NavigationBar
@@ -490,48 +287,31 @@ public class ClipCreationViewController: UIViewController {
     }
 }
 
-extension ClipCreationViewController: UICollectionViewDataSourcePrefetching {
-    // MARK: - UICollectionViewDataSourcePrefetching
-
-    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        for indexPath in indexPaths {
-            let imageViewSize = Self.predictCellSize(for: collectionView)
-            let scale = self.collectionView.traitCollection.displayScale
-            self.downsamplingQueue.async {
-                guard case let .image(source) = self.dataSource.itemIdentifier(for: indexPath) else { return }
-                self.thumbnailLoader.load(source, as: imageViewSize, scale: scale)
-                    .sink { _ in }
-                    .store(in: &self.cancellableBag)
-            }
-        }
-    }
-}
-
 extension ClipCreationViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = Section(rawValue: indexPath.section) else { return false }
+        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard case .image = Section(rawValue: indexPath.section) else { return }
+        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.selectedImage.send(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard case .image = Section(rawValue: indexPath.section) else { return }
+        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.deselectedImage.send(indexPath.row)
     }
 }
@@ -563,7 +343,7 @@ extension ClipCreationViewController: ButtonCellDelegate {
 
     public func didTap(_ cell: ButtonCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
-            let section = Section(rawValue: indexPath.section) else { return }
+            let section = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
         switch section {
         case .url:
             self.startUrlEditing()

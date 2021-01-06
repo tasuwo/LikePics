@@ -6,6 +6,7 @@ import Combine
 import Common
 import Domain
 import Persistence
+import Smoothie
 import TBoxCore
 import UIKit
 
@@ -22,6 +23,7 @@ class DependencyContainer {
     private let currentDateResolver = { Date() }
     private let tagCommandService: TagCommandService
     private let userSettingsStorage: UserSettingsStorage
+    private let thumbnailLoader: ThumbnailLoader
 
     init() throws {
         let mainBundleUrl = Bundle.main.bundleURL
@@ -49,6 +51,11 @@ class DependencyContainer {
                                                    logger: self.logger)
 
         self.userSettingsStorage = UserSettingsStorage(bundle: mainBundle)
+
+        var config = ThumbnailLoadPipeline.Configuration(dataLoader: ImageSourceLoader())
+        config.diskCache = nil
+        config.memoryCache = MemoryCache(config: .default)
+        self.thumbnailLoader = ThumbnailLoader(pipeline: .init(config: config))
     }
 }
 
@@ -65,7 +72,10 @@ extension DependencyContainer: ViewControllerFactory {
                                               clipStore: self.clipStore,
                                               provider: WebImageSourceProvider(url: url),
                                               configuration: .webImage)
-        return ClipCreationViewController(factory: self, viewModel: viewModel, delegate: delegate)
+        return ClipCreationViewController(factory: self,
+                                          viewModel: viewModel,
+                                          thumbnailLoader: thumbnailLoader,
+                                          delegate: delegate)
     }
 
     func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController {
@@ -73,7 +83,10 @@ extension DependencyContainer: ViewControllerFactory {
                                               clipStore: self.clipStore,
                                               provider: RawImageSourceProvider(imageDataSet: data),
                                               configuration: .rawImage)
-        return ClipCreationViewController(factory: self, viewModel: viewModel, delegate: delegate)
+        return ClipCreationViewController(factory: self,
+                                          viewModel: viewModel,
+                                          thumbnailLoader: thumbnailLoader,
+                                          delegate: delegate)
     }
 }
 

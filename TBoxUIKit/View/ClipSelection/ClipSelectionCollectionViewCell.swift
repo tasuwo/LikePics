@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Smoothie
 import UIKit
 
 public class ClipSelectionCollectionViewCell: UICollectionViewCell {
@@ -10,7 +11,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var id: UUID?
+    public var identifier: String?
     public var image: UIImage? {
         didSet {
             guard let image = self.image else {
@@ -66,5 +67,30 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 
     private func updateSelectionOrderAppearance() {
         self.selectionOrderLabel.isHidden = !self.isSelected && self.selectionOrder != nil
+    }
+}
+
+extension ClipSelectionCollectionViewCell: ThumbnailLoadObserver {
+    // MARK: - ThumbnailLoadObserver
+
+    public func didStartLoading(_ request: ThumbnailRequest) {
+        DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            self.image = nil
+        }
+    }
+
+    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+        DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            self.image = image
+        }
+    }
+
+    public func didFailedToLoad(_ request: ThumbnailRequest) {
+        DispatchQueue.main.async {
+            guard self.identifier == request.requestId else { return }
+            self.image = nil
+        }
     }
 }
