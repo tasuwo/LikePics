@@ -83,8 +83,6 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let clipCommandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
-
-    private let searchQuery: CurrentValueSubject<String, Never> = .init("")
     private var searchStorage: SearchableTagsStorage = .init()
     private var cancellableBag = Set<AnyCancellable>()
 
@@ -114,12 +112,12 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private func bind() {
         self.query.tags
             .catch { _ in Just([]) }
-            .combineLatest(self.searchQuery, self.settingStorage.showHiddenItems)
+            .combineLatest(self.inputtedQuery, self.settingStorage.showHiddenItems)
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, searchQuery, showHiddenItems in
+            .sink { [weak self] tags, inputtedQuery, showHiddenItems in
                 guard let self = self else { return }
                 let tags = tags.filter { showHiddenItems ? true : $0.isHidden == false }
-                self.filteredTags.send(self.searchStorage.perform(query: searchQuery, to: tags))
+                self.filteredTags.send(self.searchStorage.perform(query: inputtedQuery, to: tags))
                 self.tags.send(tags)
             }
             .store(in: &self.cancellableBag)
