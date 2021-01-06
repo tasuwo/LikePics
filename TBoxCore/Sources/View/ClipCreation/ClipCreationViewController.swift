@@ -346,8 +346,8 @@ extension ClipCreationViewController: ButtonCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell),
             let section = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
         switch section {
-        case .url:
-            self.startUrlEditing()
+        // case .url:
+        //     self.startUrlEditing()
 
         case .tag:
             self.presentTagSelectionView()

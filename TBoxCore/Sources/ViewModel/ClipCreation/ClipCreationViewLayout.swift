@@ -13,25 +13,25 @@ enum ClipCreationViewLayout {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     enum Section: Int {
-        case url
+        // case url
         case tag
         case image
     }
 
     enum Item: Hashable {
-        case urlAddition
-        case url(URL)
+        // case urlAddition
+        // case url(URL)
         case tagAddition
         case tag(Tag)
         case image(ImageSource)
 
         var identifier: String {
             switch self {
-            case .urlAddition:
-                return "url-addition"
+            // case .urlAddition:
+            //     return "url-addition"
 
-            case .url:
-                return "url"
+            // case .url:
+            //     return "url"
 
             case .tagAddition:
                 return "tag-addition"
@@ -70,8 +70,8 @@ extension ClipCreationViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
-            case .url:
-                return self.createUrlLayoutSection()
+            // case .url:
+            //     return self.createUrlLayoutSection()
 
             case .tag:
                 return self.createTagsLayoutSection()
@@ -153,12 +153,12 @@ extension ClipCreationViewLayout {
 extension ClipCreationViewLayout {
     static func createSnapshot(url: URL?, tags: [Tag], images: [ImageSource]) -> Snapshot {
         var snapshot = Snapshot()
-        snapshot.appendSections([.url])
-        if let url = url {
-            snapshot.appendItems([.url(url)])
-        } else {
-            snapshot.appendItems([.urlAddition])
-        }
+        // snapshot.appendSections([.url])
+        // if let url = url {
+        //     snapshot.appendItems([.url(url)])
+        // } else {
+        //     snapshot.appendItems([.urlAddition])
+        // }
         snapshot.appendSections([.tag])
         snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
         snapshot.appendSections([.image])
@@ -217,11 +217,11 @@ extension ClipCreationViewLayout {
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
-            case .urlAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: urlAdditionCellRegistration, for: indexPath, item: ())
+            // case .urlAddition:
+            //     return collectionView.dequeueConfiguredReusableCell(using: urlAdditionCellRegistration, for: indexPath, item: ())
 
-            case let .url(url):
-                return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: url)
+            // case let .url(url):
+            //     return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: url)
 
             case .tagAddition:
                 return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
