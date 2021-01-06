@@ -128,7 +128,7 @@ public class ClipCreationViewController: UIViewController {
             .combineLatest(dependency.outputs.displayCollectionView)
             .sink { [weak self] isLoading, displayCollectionView in
                 self?.overlayView.backgroundColor = displayCollectionView
-                    ? UIColor.black.withAlphaComponent(0.8)
+                    ? UIColor.black.withAlphaComponent(0.4)
                     : .clear
                 if isLoading {
                     self?.indicator.startAnimating()
@@ -166,7 +166,6 @@ public class ClipCreationViewController: UIViewController {
 
         dependency.outputs.url
             .combineLatest(dependency.outputs.tags, dependency.outputs.images)
-            .debounce(for: 1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.global())
             .sink { [weak self] url, tags, images in self?.apply(url: url, tags: tags, images: images) }
             .store(in: &self.cancellableBag)
@@ -200,7 +199,8 @@ public class ClipCreationViewController: UIViewController {
     }
 
     private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {
-        self.dataSource.apply(ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images), animatingDifferences: false) { [weak self] in
+        let snapshot = ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images)
+        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
             guard let self = self else { return }
             self.apply(indices: self.viewModel.outputs.selectedIndices.value)
         }

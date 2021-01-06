@@ -109,10 +109,10 @@ extension ClipCreationViewLayout {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(32))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(16)
+        group.interItemSpacing = .fixed(8)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(16)
+        section.interGroupSpacing = CGFloat(8)
         section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         return section
