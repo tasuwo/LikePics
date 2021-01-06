@@ -131,6 +131,7 @@
 "album_selection_view_empty_action_title" = "Add your first Album";
 
 "clip_merge_view_title" = "Collect Images into a Clip";
+"clip_merge_view_add_tag_title" = "Add Tag";
 "clip_merge_view_error_at_merge" = "Failed to save";
 
 "settings_confirm_icloud_sync_off_title" = "Disable iCloud Sync";

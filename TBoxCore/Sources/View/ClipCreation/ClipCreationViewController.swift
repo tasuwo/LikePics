@@ -95,7 +95,7 @@ public class ClipCreationViewController: UIViewController {
                                                   target: self,
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
-    private var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
 
     // MARK: Services
 

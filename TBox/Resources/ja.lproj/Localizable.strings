@@ -131,6 +131,7 @@
 "album_selection_view_empty_action_title" = "はじめてのアルバムを追加する";
 
 "clip_merge_view_title" = "画像をクリップにまとめる";
+"clip_merge_view_add_tag_title" = "タグを追加する";
 "clip_merge_view_error_at_merge" = "保存に失敗しました";
 
 "settings_confirm_icloud_sync_off_title" = "iCloud同期をオフにしますか？";

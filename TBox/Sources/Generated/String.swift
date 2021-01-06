@@ -139,6 +139,8 @@ internal enum L10n {
     internal static let clipInformationViewAlertForDeleteTagAction = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_action")
     /// このタグを削除しますか？\nクリップ及び画像は削除されません
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
+    /// タグを追加する
+    internal static let clipMergeViewAddTagTitle = L10n.tr("Localizable", "clip_merge_view_add_tag_title")
     /// 保存に失敗しました
     internal static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
     /// 画像をクリップにまとめる
