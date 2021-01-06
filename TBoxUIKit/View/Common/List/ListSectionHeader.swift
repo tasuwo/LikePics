@@ -37,6 +37,7 @@ public class ListSectionHeader: UICollectionReusableView {
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var addButtonContainer: UIView!
+    @IBOutlet var separator: UIView!
 
     // MARK: - IBAction
 
@@ -53,6 +54,7 @@ public class ListSectionHeader: UICollectionReusableView {
     }
 
     private func setupAppearance() {
+        self.separator.backgroundColor = .separator
         self.visibleAddButton = false
     }
 }

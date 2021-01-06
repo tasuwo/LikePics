@@ -4,9 +4,8 @@
 
 import UIKit
 
-class ListSectionBackgroundDecorationView: UICollectionReusableView {
-    let topSeparatorView = UIView()
-    let bottomSeparatorView = UIView()
+public class ListSectionBackgroundDecorationView: UICollectionReusableView {
+    let backgroundView = UIView()
 
     // MARK: - Lifecycle
 
@@ -24,27 +23,17 @@ class ListSectionBackgroundDecorationView: UICollectionReusableView {
     // MARK: - Methods
 
     private func setupAppearance() {
-        self.backgroundColor = .systemBackground
+        backgroundColor = .clear
 
-        [
-            self.topSeparatorView,
-            self.bottomSeparatorView
-        ].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.backgroundColor = .separator
-            self.addSubview($0)
-        }
-
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.backgroundColor = .systemBackground
+        backgroundView.layer.cornerRadius = 18
+        addSubview(backgroundView)
         NSLayoutConstraint.activate([
-            self.topSeparatorView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            self.topSeparatorView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            self.topSeparatorView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-            self.topSeparatorView.heightAnchor.constraint(equalToConstant: 0.5),
-
-            self.bottomSeparatorView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            self.bottomSeparatorView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            self.bottomSeparatorView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-            self.bottomSeparatorView.heightAnchor.constraint(equalToConstant: 0.5)
+            backgroundView.rightAnchor.constraint(equalTo: rightAnchor),
+            backgroundView.leftAnchor.constraint(equalTo: leftAnchor),
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

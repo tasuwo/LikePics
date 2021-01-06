@@ -9,6 +9,8 @@ import WebKit
 public class ClipInformationView: UIView {
     public typealias Factory = ClipInformationLayoutFactory
 
+    public static let topImageHeight: CGFloat = 80
+
     public var info: Factory.Information? {
         didSet {
             guard let info = self.info else { return }
@@ -96,6 +98,8 @@ public class ClipInformationView: UIView {
 
     private func setupCollectionView() {
         self.collectionView.collectionViewLayout = Factory.createLayout()
+        self.collectionView.contentInset = .init(top: Self.topImageHeight, left: 0, bottom: 0, right: 0)
+        self.collectionView.layoutMargins = .init(top: 0, left: 18, bottom: 0, right: 18)
         Factory.registerCells(to: self.collectionView)
         self.collectionView.delegate = self
         self.collectionViewDataSource = Factory.makeDataSource(for: self.collectionView,
@@ -118,7 +122,7 @@ public class ClipInformationView: UIView {
         let scale = ClipPreviewView.calcScaleScaleToFit(forSize: image.size, fittingIn: bounds.size)
         let resizedImageSize = image.size.scaled(by: scale)
         return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
-                                    y: -resizedImageSize.height + self.safeAreaInsets.top + 80),
+                                    y: -resizedImageSize.height + self.safeAreaInsets.top + Self.topImageHeight),
                       size: resizedImageSize)
     }
 }

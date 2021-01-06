@@ -149,14 +149,18 @@ public enum ClipInformationLayoutFactory {
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 16
+        config.interSectionSpacing = 12
+        config.contentInsetsReference = .layoutMargins
 
         let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .absolute(20))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize,
                                                                  elementKind: ElementKind.layoutHeader.rawValue,
                                                                  alignment: .top)
-        config.boundarySupplementaryItems = [header]
+        let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize,
+                                                                 elementKind: ElementKind.layoutHeader.rawValue,
+                                                                 alignment: .bottom)
+        config.boundarySupplementaryItems = [header, footer]
 
         layout.configuration = config
 
@@ -167,33 +171,44 @@ public enum ClipInformationLayoutFactory {
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
-                                                             top: nil,
-                                                             trailing: nil,
-                                                             bottom: .fixed(4))
-        let groupContentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0)
-        let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing,
-                                                            groupContentInsets: groupContentInsets)
+        // Base
 
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
+                                              heightDimension: .estimated(32))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(32))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(8)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = CGFloat(8)
+        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+
+        // Header
+
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                                 heightDimension: .estimated(44))
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                         elementKind: ElementKind.sectionHeader.rawValue,
                                                                         alignment: .top)
         section.boundarySupplementaryItems = [sectionHeader]
+        section.supplementariesFollowContentInsets = false
 
-        section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 0, bottom: 4, trailing: 0)
+        // Background
 
         let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(
             elementKind: ElementKind.sectionBackground.rawValue
         )
-
         section.decorationItems = [sectionBackgroundDecoration]
 
         return section
     }
 
     private static func createRowsLayoutSection() -> NSCollectionLayoutSection {
+        // Base
+
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
                                               heightDimension: .estimated(44))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -203,6 +218,9 @@ public enum ClipInformationLayoutFactory {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+
+        // Header
 
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                 heightDimension: .estimated(44))
@@ -211,10 +229,11 @@ public enum ClipInformationLayoutFactory {
                                                                         alignment: .top)
         section.boundarySupplementaryItems = [sectionHeader]
 
+        // Background
+
         let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(
             elementKind: ElementKind.sectionBackground.rawValue
         )
-
         section.decorationItems = [sectionBackgroundDecoration]
 
         return section
