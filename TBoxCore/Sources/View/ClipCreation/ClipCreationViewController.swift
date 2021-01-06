@@ -28,17 +28,26 @@ public class ClipCreationViewController: UIViewController {
     // MARK: - Enums
 
     enum Section: Int {
+        case url
         case tag
         case image
     }
 
     enum Item: Hashable {
+        case urlAddition
+        case url(URL)
         case tagAddition
         case tag(Tag)
         case image(ImageSource)
 
         var identifier: String {
             switch self {
+            case .urlAddition:
+                return "url-addition"
+
+            case .url:
+                return "url"
+
             case .tagAddition:
                 return "tag-addition"
 
@@ -68,6 +77,16 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: Views
 
+    private lazy var addUrlAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.clipCreationViewAlertForAddUrlTitle,
+                             message: L10n.clipCreationViewAlertForAddUrlMessage,
+                             placeholder: L10n.clipCreationViewAlertForUrlPlaceholder)
+    )
+    private lazy var editUrlAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.clipCreationViewAlertForEditUrlTitle,
+                             message: L10n.clipCreationViewAlertForEditUrlMessage,
+                             placeholder: L10n.clipCreationViewAlertForUrlPlaceholder)
+    )
     private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
                                                 target: self,
                                                 action: #selector(saveAction))
@@ -178,11 +197,11 @@ public class ClipCreationViewController: UIViewController {
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.tags
-            .receive(on: DispatchQueue.main)
-            .combineLatest(dependency.outputs.images)
+        dependency.outputs.url
+            .combineLatest(dependency.outputs.tags, dependency.outputs.images)
+            .debounce(for: 1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, images in self?.apply(tags: tags, images: images) }
+            .sink { [weak self] url, tags, images in self?.apply(url: url, tags: tags, images: images) }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selectedIndices
@@ -213,8 +232,14 @@ public class ClipCreationViewController: UIViewController {
             .store(in: &self.cancellableBag)
     }
 
-    private func apply(tags: [Tag], images: [ImageSource]) {
+    private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.url])
+        if let url = url {
+            snapshot.appendItems([.url(url)])
+        } else {
+            snapshot.appendItems([.urlAddition])
+        }
         snapshot.appendSections([.tag])
         snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
         snapshot.appendSections([.image])
@@ -264,8 +289,18 @@ public class ClipCreationViewController: UIViewController {
     }
 
     private func configureDataSource() {
-        let additionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
-            cell.title = L10n.clipCreationViewAdditionTitle
+        let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
+            cell.title = L10n.clipCreationViewUrlAdditionCellTitle
+            cell.delegate = self
+        }
+
+        let urlCellRegistration = UICollectionView.CellRegistration<ButtonCell, URL>(cellNib: ButtonCell.nib) { [weak self] cell, _, url in
+            cell.title = url.absoluteString
+            cell.delegate = self
+        }
+
+        let tagAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak self] cell, _, _ in
+            cell.title = L10n.clipCreationViewTagAdditionCellTitle
             cell.delegate = self
         }
 
@@ -297,10 +332,16 @@ public class ClipCreationViewController: UIViewController {
             }
         }
 
-        self.dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
+        dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
+            case .urlAddition:
+                return collectionView.dequeueConfiguredReusableCell(using: urlAdditionCellRegistration, for: indexPath, item: ())
+
+            case let .url(url):
+                return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: url)
+
             case .tagAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: additionCellRegistration, for: indexPath, item: ())
+                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
 
             case let .tag(tag):
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
@@ -314,6 +355,9 @@ public class ClipCreationViewController: UIViewController {
     private static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
+            case .url:
+                return self.createUrlLayoutSection()
+
             case .tag:
                 return self.createTagsLayoutSection()
 
@@ -325,6 +369,21 @@ public class ClipCreationViewController: UIViewController {
             }
         }
         return layout
+    }
+
+    private static func createUrlLayoutSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(32))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16)
+
+        return section
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
@@ -503,6 +562,49 @@ extension ClipCreationViewController: ButtonCellDelegate {
     // MARK: - ButtonCellDelegate
 
     public func didTap(_ cell: ButtonCell) {
+        guard let indexPath = collectionView.indexPath(for: cell),
+            let section = Section(rawValue: indexPath.section) else { return }
+        switch section {
+        case .url:
+            self.startUrlEditing()
+
+        case .tag:
+            self.presentTagSelectionView()
+
+        case .image:
+            return
+        }
+    }
+
+    private func startUrlEditing() {
+        if let url = viewModel.outputs.url.value {
+            self.editUrlAlertContainer.present(
+                withText: url.absoluteString,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.viewModel.inputs.urlAdded.send(URL(string: text))
+                }
+            )
+        } else {
+            self.addUrlAlertContainer.present(
+                withText: nil,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.viewModel.inputs.urlAdded.send(URL(string: text))
+                }
+            )
+        }
+    }
+
+    private func presentTagSelectionView() {
         guard let parent = self.parent else {
             RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to resolve parent view controller for opening tag selection view"))
             return

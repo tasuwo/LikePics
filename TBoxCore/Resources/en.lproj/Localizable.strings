@@ -7,7 +7,16 @@
 */
 
 "clip_creation_view_title" = "Select Image";
-"clip_creation_view_addition_title" = "Add Tags";
+"clip_creation_view_url_addition_cell_title" = "Add the URL where you downloaded images";
+"clip_creation_view_tag_addition_cell_title" = "Add Tags";
+
+"clip_creation_view_alert_for_add_url_title" = "Add URL";
+"clip_creation_view_alert_for_add_url_message" = "You can save images with URL where you downloaded it.";
+
+"clip_creation_view_alert_for_edit_url_title" = "Edit URL";
+"clip_creation_view_alert_for_edit_url_message" = "You can save images with URL where you downloaded it.";
+
+"clip_creation_view_alert_for_url_placeholder" = "https://...";
 
 "clip_creation_view_loading_error_not_found_title" = "No Images Found";
 "clip_creation_view_loading_error_not_found_message" = "Please check the following.\n\n・Bad connection\n・No downloadable images\n・The images are protected\n\nPlease retry a few times or try to share the other web site.";

@@ -5,19 +5,16 @@
 import Domain
 
 protocol ClipBuildable {
-    func build(sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    func build(url: URL?, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
 }
 
 struct ClipBuilder {
-    private let url: URL?
     private let currentDateResolver: () -> Date
     private let uuidIssuer: () -> UUID
 
-    init(url: URL?,
-         currentDateResolver: @escaping () -> Date,
+    init(currentDateResolver: @escaping () -> Date,
          uuidIssuer: @escaping () -> UUID)
     {
-        self.url = url
         self.currentDateResolver = currentDateResolver
         self.uuidIssuer = uuidIssuer
     }
@@ -26,13 +23,13 @@ struct ClipBuilder {
 extension ClipBuilder: ClipBuildable {
     // MARK: - ClipBuildable
 
-    func build(sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer]) {
+    func build(url: URL?, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer]) {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
         let itemAndContainers: [(ClipItemRecipe, ImageContainer)] = sources.map { source in
             let imageId = self.uuidIssuer()
             let item = ClipItemRecipe(id: self.uuidIssuer(),
-                                      url: self.url,
+                                      url: url,
                                       clipId: clipId,
                                       index: source.index,
                                       imageId: imageId,

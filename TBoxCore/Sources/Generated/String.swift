@@ -10,8 +10,16 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-    /// タグを追加
-    internal static let clipCreationViewAdditionTitle = L10n.tr("Localizable", "clip_creation_view_addition_title")
+    /// 保存する画像の取得元となるURLを設定できます\nURLは画像の保存後に参照することができます
+    internal static let clipCreationViewAlertForAddUrlMessage = L10n.tr("Localizable", "clip_creation_view_alert_for_add_url_message")
+    /// URLを追加
+    internal static let clipCreationViewAlertForAddUrlTitle = L10n.tr("Localizable", "clip_creation_view_alert_for_add_url_title")
+    /// 保存する画像の取得元となるURLを編集します\nURLは画像の保存後に参照することができます
+    internal static let clipCreationViewAlertForEditUrlMessage = L10n.tr("Localizable", "clip_creation_view_alert_for_edit_url_message")
+    /// URLを編集
+    internal static let clipCreationViewAlertForEditUrlTitle = L10n.tr("Localizable", "clip_creation_view_alert_for_edit_url_title")
+    /// https://...
+    internal static let clipCreationViewAlertForUrlPlaceholder = L10n.tr("Localizable", "clip_creation_view_alert_for_url_placeholder")
     /// OK
     internal static let clipCreationViewDownloadErrorAction = L10n.tr("Localizable", "clip_creation_view_download_error_action")
     /// 保存時に問題が発生しました。後ほどもう一度お試しください
@@ -40,8 +48,12 @@ internal enum L10n {
     internal static let clipCreationViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
     internal static let clipCreationViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_title")
+    /// タグを追加する
+    internal static let clipCreationViewTagAdditionCellTitle = L10n.tr("Localizable", "clip_creation_view_tag_addition_cell_title")
     /// 画像を選択
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
+    /// 画像取得元のURLを追加する
+    internal static let clipCreationViewUrlAdditionCellTitle = L10n.tr("Localizable", "clip_creation_view_url_addition_cell_title")
     /// OK
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// タグの追加に失敗しました

@@ -7,7 +7,16 @@
 */
 
 "clip_creation_view_title" = "画像を選択";
-"clip_creation_view_addition_title" = "タグを追加";
+"clip_creation_view_url_addition_cell_title" = "画像取得元のURLを追加する";
+"clip_creation_view_tag_addition_cell_title" = "タグを追加する";
+
+"clip_creation_view_alert_for_add_url_title" = "URLを追加";
+"clip_creation_view_alert_for_add_url_message" = "保存する画像の取得元となるURLを設定できます\nURLは画像の保存後に参照することができます";
+
+"clip_creation_view_alert_for_edit_url_title" = "URLを編集";
+"clip_creation_view_alert_for_edit_url_message" = "保存する画像の取得元となるURLを編集します\nURLは画像の保存後に参照することができます";
+
+"clip_creation_view_alert_for_url_placeholder" = "https://...";
 
 "clip_creation_view_loading_error_not_found_title" = "画像が見つかりませんでした";
 "clip_creation_view_loading_error_not_found_message" = "以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります";

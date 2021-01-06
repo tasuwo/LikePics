@@ -16,6 +16,8 @@ public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
     var viewDidAppear: PassthroughSubject<Void, Never> { get }
 
+    var urlAdded: PassthroughSubject<URL?, Never> { get }
+
     var loadImages: PassthroughSubject<Void, Never> { get }
     var saveImages: PassthroughSubject<Void, Never> { get }
 
@@ -29,6 +31,7 @@ public protocol ClipCreationViewModelInputs {
 public protocol ClipCreationViewModelOutputs {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
+    var url: CurrentValueSubject<URL?, Never> { get }
     var tags: CurrentValueSubject<[Tag], Never> { get }
     var images: CurrentValueSubject<[ImageSource], Never> { get }
     var selectedIndices: CurrentValueSubject<[Int], Never> { get }
@@ -88,6 +91,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
     public let viewDidAppear: PassthroughSubject<Void, Never> = .init()
 
+    public let urlAdded: PassthroughSubject<URL?, Never> = .init()
+
     public var loadImages: PassthroughSubject<Void, Never> = .init()
     public var saveImages: PassthroughSubject<Void, Never> = .init()
 
@@ -103,6 +108,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
+    public let url: CurrentValueSubject<URL?, Never>
     public var tags: CurrentValueSubject<[Tag], Never> = .init([])
     public var images: CurrentValueSubject<[ImageSource], Never> = .init([])
     public var selectedIndices: CurrentValueSubject<[Int], Never> = .init([])
@@ -136,7 +142,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     // MARK: - Lifecycle
 
-    init(clipStore: ClipStorable,
+    init(url: URL?,
+         clipStore: ClipStorable,
          clipBuilder: ClipBuildable,
          provider: ImageSourceProvider,
          imageLoader: ImageLoaderProtocol,
@@ -150,6 +157,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         self.configuration = configuration
         self.urlSession = urlSession
 
+        self.url = .init(url)
+
         self.bind()
     }
 
@@ -159,9 +168,9 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                             configuration: Configuration,
                             urlSession: URLSession = URLSession.shared)
     {
-        self.init(clipStore: clipStore,
-                  clipBuilder: ClipBuilder(url: url,
-                                           currentDateResolver: { Date() },
+        self.init(url: url,
+                  clipStore: clipStore,
+                  clipBuilder: ClipBuilder(currentDateResolver: { Date() },
                                            uuidIssuer: { UUID() }),
                   provider: provider,
                   imageLoader: ImageLoader(),
@@ -181,6 +190,10 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                 guard let self = self else { return }
                 self.provider.viewDidLoad.send(view)
             }
+            .store(in: &self.cancellableBag)
+
+        self.urlAdded
+            .sink { [weak self] url in self?.url.send(url) }
             .store(in: &self.cancellableBag)
 
         self.loadImages
@@ -364,7 +377,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     // MARK: Save Images
 
     private func save(sources: [ClipItemSource]) -> Result<Void, DownloadError> {
-        let result = self.clipBuilder.build(sources: sources, tagIds: self.tags.value.map { $0.id })
+        let result = self.clipBuilder.build(url: self.url.value, sources: sources, tagIds: self.tags.value.map { $0.id })
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())
