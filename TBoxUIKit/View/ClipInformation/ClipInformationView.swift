@@ -171,10 +171,10 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
     }
 }
 
-extension ClipInformationView: ClipInformationSectionHeaderDelegate {
-    // MARK: - ClipInformationSectionHeaderDelegate
+extension ClipInformationView: ListSectionHeaderDelegate {
+    // MARK: - ListSectionHeaderDelegate
 
-    public func didTapAdd(_ header: ClipInformationSectionHeader) {
+    public func didTapAdd(_ header: ListSectionHeader) {
         guard let identifier = header.identifier,
             let number = Int(identifier),
             let section = Factory.Section(rawValue: number),

@@ -121,7 +121,7 @@ public enum ClipInformationLayoutFactory {
         collectionView.register(ClipInformationLayoutHeader.self,
                                 forSupplementaryViewOfKind: ElementKind.layoutHeader.rawValue,
                                 withReuseIdentifier: HeaderType.layout.identifier)
-        collectionView.register(ClipInformationSectionHeader.nib,
+        collectionView.register(ListSectionHeader.nib,
                                 forSupplementaryViewOfKind: ElementKind.sectionHeader.rawValue,
                                 withReuseIdentifier: HeaderType.section.identifier)
         collectionView.register(TagCollectionViewCell.nib,
@@ -225,7 +225,7 @@ public enum ClipInformationLayoutFactory {
     static func makeDataSource(for collectionView: UICollectionView,
                                infoCellDelegate: ClipInformationCellDelegate?,
                                tagCellDelegate: TagCollectionViewCellDelegate?,
-                               sectionHeaderDelegate: ClipInformationSectionHeaderDelegate?) -> DataSource
+                               sectionHeaderDelegate: ListSectionHeaderDelegate?) -> DataSource
     {
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak tagCellDelegate, weak infoCellDelegate] collectionView, indexPath, item -> UICollectionViewCell? in
             switch Section(rawValue: indexPath.section) {
@@ -314,7 +314,7 @@ public enum ClipInformationLayoutFactory {
         }
     }
 
-    private static func headerProvider(delegate: ClipInformationSectionHeaderDelegate?) -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
+    private static func headerProvider(delegate: ListSectionHeaderDelegate?) -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
         return { [weak delegate] collectionView, kind, indexPath -> UICollectionReusableView? in
             let identifier: String
             switch ElementKind(rawValue: kind) {
@@ -334,7 +334,7 @@ public enum ClipInformationLayoutFactory {
                 return dequeuedHeader
             }
 
-            guard let header = dequeuedHeader as? ClipInformationSectionHeader else {
+            guard let header = dequeuedHeader as? ListSectionHeader else {
                 return nil
             }
 

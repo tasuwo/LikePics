@@ -4,18 +4,18 @@
 
 import UIKit
 
-public protocol ClipInformationSectionHeaderDelegate: AnyObject {
-    func didTapAdd(_ header: ClipInformationSectionHeader)
+public protocol ListSectionHeaderDelegate: AnyObject {
+    func didTapAdd(_ header: ListSectionHeader)
 }
 
-public class ClipInformationSectionHeader: UICollectionReusableView {
-    static var nib: UINib {
-        return UINib(nibName: "ClipInformationSectionHeader", bundle: Bundle(for: Self.self))
+public class ListSectionHeader: UICollectionReusableView {
+    public static var nib: UINib {
+        return UINib(nibName: "ListSectionHeader", bundle: Bundle(for: Self.self))
     }
 
-    var identifier: String?
+    public var identifier: String?
 
-    var title: String? {
+    public var title: String? {
         get {
             self.titleLabel.text
         }
@@ -33,7 +33,7 @@ public class ClipInformationSectionHeader: UICollectionReusableView {
         }
     }
 
-    weak var delegate: ClipInformationSectionHeaderDelegate?
+    public weak var delegate: ListSectionHeaderDelegate?
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var addButtonContainer: UIView!
