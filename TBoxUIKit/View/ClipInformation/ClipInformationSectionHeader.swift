@@ -53,9 +53,6 @@ public class ClipInformationSectionHeader: UICollectionReusableView {
     }
 
     private func setupAppearance() {
-        self.titleLabel.adjustsFontForContentSizeCategory = true
-        self.titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-
         self.visibleAddButton = false
     }
 }
