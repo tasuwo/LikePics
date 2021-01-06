@@ -43,6 +43,9 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.deleteButtonContainer.isHidden = !newValue
+            self.labelMaxWidthConstraint.constant = newValue
+                ? 240 - self.deleteButtonWidthConstraint.constant
+                : 240
         }
     }
 
@@ -61,6 +64,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
     @IBOutlet var iconImage: UIImageView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var deleteButtonContainer: UIView!
+    @IBOutlet var labelMaxWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var deleteButtonWidthConstraint: NSLayoutConstraint!
 
     public weak var delegate: TagCollectionViewCellDelegate?
 

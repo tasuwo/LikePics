@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,10 +21,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="242" height="41"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGi-OV-WPW" userLabel="Body Container">
-                                <rect key="frame" x="0.0" y="0.0" width="200" height="41"/>
+                                <rect key="frame" x="0.0" y="0.0" width="198" height="41"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
-                                        <rect key="frame" x="8" y="8" width="184" height="25"/>
+                                        <rect key="frame" x="8" y="8" width="182" height="25"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
                                                 <rect key="frame" x="0.0" y="0.0" width="16" height="25"/>
@@ -46,8 +46,8 @@
                                                     <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="width" id="ji1-RQ-09U"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="20" y="0.0" width="164" height="25"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
+                                                <rect key="frame" x="20" y="0.0" width="162" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -68,7 +68,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j6Q-YR-0Lx" userLabel="Delete Button Container">
-                                <rect key="frame" x="200" y="0.0" width="42" height="41"/>
+                                <rect key="frame" x="198" y="0.0" width="44" height="41"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmd-1C-BuX" userLabel="Separator">
                                         <rect key="frame" x="0.0" y="0.0" width="1" height="41"/>
@@ -78,9 +78,9 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7PG-Ds-8Lx" userLabel="Delete Button">
-                                        <rect key="frame" x="0.0" y="-0.5" width="42" height="42"/>
+                                        <rect key="frame" x="0.0" y="-1.5" width="44" height="44"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="42" id="K6j-GX-Qho"/>
+                                            <constraint firstAttribute="width" constant="44" id="K6j-GX-Qho"/>
                                             <constraint firstAttribute="width" secondItem="7PG-Ds-8Lx" secondAttribute="height" multiplier="1:1" id="Pok-m9-S1o"/>
                                         </constraints>
                                         <state key="normal" image="xmark" catalog="system"/>
@@ -114,7 +114,9 @@
             <size key="customSize" width="242" height="41"/>
             <connections>
                 <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
+                <outlet property="deleteButtonWidthConstraint" destination="K6j-GX-Qho" id="2YA-6R-ncp"/>
                 <outlet property="iconImage" destination="Bt0-iq-WPi" id="bDi-Oe-Lrv"/>
+                <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
             <point key="canvasLocation" x="163.768115942029" y="63.28125"/>
