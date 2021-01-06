@@ -187,7 +187,7 @@
 		2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */; };
 		2C86CC5024E12E2D0091A89E /* ClipPreviewPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4F24E12E2D0091A89E /* ClipPreviewPageViewModel.swift */; };
 		2C8AF8A524E3EE4F00CB0642 /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */; };
-		2C8B30542528348C00A0A151 /* ClipInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B30532528348C00A0A151 /* ClipInformationCell.swift */; };
+		2C8B30542528348C00A0A151 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B30532528348C00A0A151 /* ListCell.swift */; };
 		2C8B305E252834D200A0A151 /* ClipInformationViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */; };
 		2C8B3070252834E900A0A151 /* ClipInformationViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */; };
 		2C8C4544259D464D00DEAABB /* Smoothie.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C8C4542259D464D00DEAABB /* Smoothie.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -203,7 +203,7 @@
 		2C8C45A9259D46F100DEAABB /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8CC259C50610097F8C5 /* DiskCache.swift */; };
 		2C8C45B4259D474B00DEAABB /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26EA259CA10400156958 /* String+SHA256.swift */; };
 		2C8DD8162577E0FB005A03C0 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8DD80C2577DA41005A03C0 /* CoreDataStack.swift */; };
-		2C8FA90E252837A6006CF26C /* ClipInformationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C8FA90D252837A6006CF26C /* ClipInformationCell.xib */; };
+		2C8FA90E252837A6006CF26C /* ListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C8FA90D252837A6006CF26C /* ListCell.xib */; };
 		2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD62624E02297005887F9 /* ClipItem.swift */; };
 		2C8FD63624E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
 		2C8FD63D24E02DCE005887F9 /* TBoxUIKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8FD63C24E02DCE005887F9 /* TBoxUIKitTests.swift */; };
@@ -886,14 +886,14 @@
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
 		2C86CC4F24E12E2D0091A89E /* ClipPreviewPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewModel.swift; sourceTree = "<group>"; };
 		2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
-		2C8B30532528348C00A0A151 /* ClipInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationCell.swift; sourceTree = "<group>"; };
+		2C8B30532528348C00A0A151 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewDelegate.swift; sourceTree = "<group>"; };
 		2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewDataSource.swift; sourceTree = "<group>"; };
 		2C8C4540259D464D00DEAABB /* Smoothie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Smoothie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C8C4542259D464D00DEAABB /* Smoothie.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Smoothie.h; sourceTree = "<group>"; };
 		2C8C4543259D464D00DEAABB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C8DD80C2577DA41005A03C0 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		2C8FA90D252837A6006CF26C /* ClipInformationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationCell.xib; sourceTree = "<group>"; };
+		2C8FA90D252837A6006CF26C /* ListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListCell.xib; sourceTree = "<group>"; };
 		2C8FD62624E02297005887F9 /* ClipItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItem.swift; sourceTree = "<group>"; };
 		2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBoxUIKit.h; sourceTree = "<group>"; };
@@ -1741,6 +1741,8 @@
 			children = (
 				2C0F9B262528ACDC00235B25 /* ListSectionHeader.swift */,
 				2C0F9B302528AD0A00235B25 /* ListSectionHeader.xib */,
+				2C8B30532528348C00A0A151 /* ListCell.swift */,
+				2C8FA90D252837A6006CF26C /* ListCell.xib */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -1750,8 +1752,6 @@
 			children = (
 				2C2C9EEC250BC7370020715B /* ClipInformationView.xib */,
 				2C2C9EEE250BC7710020715B /* ClipInformationView.swift */,
-				2C8B30532528348C00A0A151 /* ClipInformationCell.swift */,
-				2C8FA90D252837A6006CF26C /* ClipInformationCell.xib */,
 				2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */,
 				2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */,
 				2C0F9B142528523400235B25 /* ClipInformationSectionBackgroundDecorationView.swift */,
@@ -3686,7 +3686,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C45D40D24EEBE630045B6D3 /* AlbumListCollectionViewCell.xib in Resources */,
-				2C8FA90E252837A6006CF26C /* ClipInformationCell.xib in Resources */,
+				2C8FA90E252837A6006CF26C /* ListCell.xib in Resources */,
 				2CA9DC2E25860E8F00D88ED4 /* ButtonCell.xib in Resources */,
 				2C2C9EED250BC7370020715B /* ClipInformationView.xib in Resources */,
 				2CB071302509053D0000E7E1 /* TagCollectionViewCell.xib in Resources */,
@@ -4289,7 +4289,7 @@
 				2C570B6624E0505F00A1DC9F /* ClipCollectionView.swift in Sources */,
 				2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */,
 				2C0596AF25198D8E008F11F5 /* String.swift in Sources */,
-				2C8B30542528348C00A0A151 /* ClipInformationCell.swift in Sources */,
+				2C8B30542528348C00A0A151 /* ListCell.swift in Sources */,
 				2C0F9B272528ACDC00235B25 /* ListSectionHeader.swift in Sources */,
 				2C1CBAC42595B9510078FFB8 /* MultiLineButton.swift in Sources */,
 				2C51D45424E1954A006811F6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */,

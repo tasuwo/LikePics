@@ -60,7 +60,7 @@ public enum ClipInformationLayoutFactory {
                 return TagCollectionViewCell.self
 
             case .row:
-                return ClipInformationCell.self
+                return ListCell.self
 
             case .empty:
                 return TagCollectionEmptyCell.self
@@ -126,7 +126,7 @@ public enum ClipInformationLayoutFactory {
                                 withReuseIdentifier: HeaderType.section.identifier)
         collectionView.register(TagCollectionViewCell.nib,
                                 forCellWithReuseIdentifier: ItemType.tag.identifier)
-        collectionView.register(ClipInformationCell.nib,
+        collectionView.register(ListCell.nib,
                                 forCellWithReuseIdentifier: ItemType.row.identifier)
         collectionView.register(TagCollectionEmptyCell.nib,
                                 forCellWithReuseIdentifier: ItemType.empty.identifier)
@@ -223,7 +223,7 @@ public enum ClipInformationLayoutFactory {
     // MARK: DataSource
 
     static func makeDataSource(for collectionView: UICollectionView,
-                               infoCellDelegate: ClipInformationCellDelegate?,
+                               infoCellDelegate: ListCellDelegate?,
                                tagCellDelegate: TagCollectionViewCellDelegate?,
                                sectionHeaderDelegate: ListSectionHeaderDelegate?) -> DataSource
     {
@@ -273,11 +273,11 @@ public enum ClipInformationLayoutFactory {
         }
     }
 
-    private static func infoSectionCellProvider(delegate: ClipInformationCellDelegate?) -> DataSource.CellProvider {
+    private static func infoSectionCellProvider(delegate: ListCellDelegate?) -> DataSource.CellProvider {
         return { [weak delegate] collectionView, indexPath, item -> UICollectionViewCell? in
             let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
                                                                   for: indexPath)
-            guard let cell = dequeuedCell as? ClipInformationCell else { return dequeuedCell }
+            guard let cell = dequeuedCell as? ListCell else { return dequeuedCell }
             guard case let .row(info) = item else { return cell }
 
             cell.title = info.title

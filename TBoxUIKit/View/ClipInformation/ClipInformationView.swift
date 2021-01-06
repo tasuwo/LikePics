@@ -203,15 +203,15 @@ extension ClipInformationView: TagCollectionViewCellDelegate {
     }
 }
 
-extension ClipInformationView: ClipInformationCellDelegate {
-    // MARK: - ClipInformationCellDelegate
+extension ClipInformationView: ListCellDelegate {
+    // MARK: - ListCellDelegate
 
-    public func clipInformationCell(_ cell: ClipInformationCell, didTapBottomAccessory button: UIButton) {
+    public func listCell(_ cell: ListCell, didTapBottomAccessory button: UIButton) {
         guard case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) else { return }
         self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
-    public func clipInformationCell(_ cell: ClipInformationCell, didTapRightAccessory button: UIButton) {
+    public func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton) {
         let url: URL? = {
             if case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) {
                 return url
@@ -222,7 +222,7 @@ extension ClipInformationView: ClipInformationCellDelegate {
         self.delegate?.clipInformationView(self, startEditingSiteUrl: url)
     }
 
-    public func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch) {
+    public func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch) {
         self.delegate?.clipInformationView(self, shouldHide: `switch`.isOn)
     }
 }

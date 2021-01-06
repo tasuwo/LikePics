@@ -4,13 +4,13 @@
 
 import UIKit
 
-public protocol ClipInformationCellDelegate: UIContextMenuInteractionDelegate {
-    func clipInformationCell(_ cell: ClipInformationCell, didSwitchRightAccessory switch: UISwitch)
-    func clipInformationCell(_ cell: ClipInformationCell, didTapRightAccessory button: UIButton)
-    func clipInformationCell(_ cell: ClipInformationCell, didTapBottomAccessory button: UIButton)
+public protocol ListCellDelegate: UIContextMenuInteractionDelegate {
+    func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch)
+    func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton)
+    func listCell(_ cell: ListCell, didTapBottomAccessory button: UIButton)
 }
 
-public class ClipInformationCell: UICollectionViewCell {
+public class ListCell: UICollectionViewCell {
     public enum RightAccessoryType {
         case label(title: String)
         case button(title: String)
@@ -23,7 +23,7 @@ public class ClipInformationCell: UICollectionViewCell {
     }
 
     public static var nib: UINib {
-        return UINib(nibName: "ClipInformationCell", bundle: Bundle(for: Self.self))
+        return UINib(nibName: "ListCell", bundle: Bundle(for: Self.self))
     }
 
     public var title: String? {
@@ -56,7 +56,7 @@ public class ClipInformationCell: UICollectionViewCell {
         }
     }
 
-    public weak var delegate: ClipInformationCellDelegate? {
+    public weak var delegate: ListCellDelegate? {
         didSet {
             guard let delegate = self.delegate else { return }
             self.bottomAccessoryButton.addInteraction(UIContextMenuInteraction(delegate: delegate))
@@ -82,15 +82,15 @@ public class ClipInformationCell: UICollectionViewCell {
     // MARK: - IBActions
 
     @IBAction func didChangeRightAccessorySwitch(_ sender: UISwitch) {
-        self.delegate?.clipInformationCell(self, didSwitchRightAccessory: sender)
+        self.delegate?.listCell(self, didSwitchRightAccessory: sender)
     }
 
     @IBAction func didTapRightAccessoryButton(_ sender: UIButton) {
-        self.delegate?.clipInformationCell(self, didTapRightAccessory: sender)
+        self.delegate?.listCell(self, didTapRightAccessory: sender)
     }
 
     @IBAction func didTapBottomAccessoryButton(_ sender: UIButton) {
-        self.delegate?.clipInformationCell(self, didTapBottomAccessory: sender)
+        self.delegate?.listCell(self, didTapBottomAccessory: sender)
     }
 
     // MARK: - Methods
