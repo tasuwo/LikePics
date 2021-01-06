@@ -119,7 +119,7 @@ public class ClipCreationViewController: UIViewController {
         self.bind(to: viewModel)
 
         self.viewModel.inputs.viewLoaded.send(self.view)
-        self.viewModel.inputs.startedFindingImage.send(())
+        self.viewModel.inputs.loadImages.send(())
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -392,7 +392,7 @@ public class ClipCreationViewController: UIViewController {
 
     @objc
     private func reloadAction() {
-        self.viewModel.inputs.startedFindingImage.send(())
+        self.viewModel.inputs.loadImages.send(())
     }
 
     // MARK: EmptyMessage
@@ -449,12 +449,12 @@ extension ClipCreationViewController: UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard case .image = Section(rawValue: indexPath.section) else { return }
-        self.viewModel.inputs.select.send(indexPath.row)
+        self.viewModel.inputs.selectedImage.send(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard case .image = Section(rawValue: indexPath.section) else { return }
-        self.viewModel.inputs.deselect.send(indexPath.row)
+        self.viewModel.inputs.deselectedImage.send(indexPath.row)
     }
 }
 
@@ -462,7 +462,7 @@ extension ClipCreationViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     public func didTapActionButton(_ view: EmptyMessageView) {
-        self.viewModel.inputs.startedFindingImage.send(())
+        self.viewModel.inputs.loadImages.send(())
     }
 }
 
@@ -476,7 +476,7 @@ extension ClipCreationViewController: TagCollectionViewCellDelegate {
         else {
             return
         }
-        self.viewModel.inputs.delete.send(tag)
+        self.viewModel.inputs.deletedTag.send(tag)
     }
 }
 
@@ -501,6 +501,6 @@ extension ClipCreationViewController: TagSelectionViewControllerDelegate {
     // MARK: - TagSelectionViewControllerDelegate
 
     public func didSelectTags(tags: [Tag]) {
-        self.viewModel.inputs.replace.send(tags)
+        self.viewModel.inputs.replacedTags.send(tags)
     }
 }

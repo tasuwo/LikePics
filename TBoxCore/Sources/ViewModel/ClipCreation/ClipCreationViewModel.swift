@@ -16,14 +16,14 @@ public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
     var viewDidAppear: PassthroughSubject<Void, Never> { get }
 
-    var startedFindingImage: PassthroughSubject<Void, Never> { get }
+    var loadImages: PassthroughSubject<Void, Never> { get }
     var saveImages: PassthroughSubject<Void, Never> { get }
 
-    var delete: PassthroughSubject<Tag, Never> { get }
-    var replace: PassthroughSubject<[Tag], Never> { get }
+    var deletedTag: PassthroughSubject<Tag, Never> { get }
+    var replacedTags: PassthroughSubject<[Tag], Never> { get }
 
-    var select: PassthroughSubject<Int, Never> { get }
-    var deselect: PassthroughSubject<Int, Never> { get }
+    var selectedImage: PassthroughSubject<Int, Never> { get }
+    var deselectedImage: PassthroughSubject<Int, Never> { get }
 }
 
 public protocol ClipCreationViewModelOutputs {
@@ -70,14 +70,14 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
     public let viewDidAppear: PassthroughSubject<Void, Never> = .init()
 
-    public var startedFindingImage: PassthroughSubject<Void, Never> = .init()
+    public var loadImages: PassthroughSubject<Void, Never> = .init()
     public var saveImages: PassthroughSubject<Void, Never> = .init()
 
-    public var delete: PassthroughSubject<Tag, Never> = .init()
-    public var replace: PassthroughSubject<[Tag], Never> = .init()
+    public var deletedTag: PassthroughSubject<Tag, Never> = .init()
+    public var replacedTags: PassthroughSubject<[Tag], Never> = .init()
 
-    public var select: PassthroughSubject<Int, Never> = .init()
-    public var deselect: PassthroughSubject<Int, Never> = .init()
+    public var selectedImage: PassthroughSubject<Int, Never> = .init()
+    public var deselectedImage: PassthroughSubject<Int, Never> = .init()
 
     public var selectedTags: PassthroughSubject<[Tag], Never> = .init()
 
@@ -159,9 +159,9 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.startedFindingImage
+        self.loadImages
             .sink { [weak self] _ in
-                self?.findImages()
+                self?.loadImageSources()
             }
             .store(in: &self.cancellableBag)
 
@@ -171,7 +171,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.delete
+        self.deletedTag
             .sink { [weak self] tag in
                 guard var newTags = self?.tags.value,
                     let index = newTags.firstIndex(of: tag)
@@ -183,17 +183,17 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.replace
+        self.replacedTags
             .sink { [weak self] tags in
                 self?.tags.send(tags)
             }
             .store(in: &self.cancellableBag)
 
-        self.select
+        self.selectedImage
             .sink { [weak self] index in self?.selectItem(at: index) }
             .store(in: &self.cancellableBag)
 
-        self.deselect
+        self.deselectedImage
             .sink { [weak self] index in self?.deselectItem(at: index) }
             .store(in: &self.cancellableBag)
 
@@ -229,7 +229,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .store(in: &self.cancellableBag)
     }
 
-    private func findImages() {
+    private func loadImageSources() {
         self.isLoading.send(true)
 
         self.images.send([])
