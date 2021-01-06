@@ -169,7 +169,8 @@ extension ClipCreationViewLayout {
     static func configureDataSource(collectionView: UICollectionView,
                                     buttonCellDelegate: ButtonCellDelegate,
                                     tagCellDelegate: TagCollectionViewCellDelegate,
-                                    thumbnailLoader: Smoothie.ThumbnailLoader) -> DataSource
+                                    thumbnailLoader: Smoothie.ThumbnailLoader,
+                                    outputs: ClipCreationViewModelOutputs) -> DataSource
     {
         let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
             cell.title = L10n.clipCreationViewUrlAdditionCellTitle
@@ -194,7 +195,7 @@ extension ClipCreationViewLayout {
             cell.delegate = tagCellDelegate
         }
 
-        let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader] cell, _, source in
+        let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in
             let requestId = UUID().uuidString
             cell.identifier = requestId
             cell.image = nil
@@ -207,10 +208,11 @@ extension ClipCreationViewLayout {
                                            thumbnailInfo: info)
             thumbnailLoader?.load(request: request, observer: cell)
 
-            // TODO: モデルにindexを含めて伝播する
-            // if let indexInSelection = self.viewModel.outputs.selectedIndices.value.firstIndex(of: indexPath.row) {
-            //     cell.selectionOrder = indexInSelection + 1
-            // }
+            // モデルにIndexを含めることも検討したが、選択状態更新毎にDataSourceを更新させると見た目がイマイチだったため、
+            // selectionOrderについてはPushではなくPull方式を取る
+            if let indexInSelection = outputs?.selectedIndices.value.firstIndex(of: indexPath.row) {
+                cell.selectionOrder = indexInSelection + 1
+            }
         }
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in

@@ -200,7 +200,7 @@ public class ClipCreationViewController: UIViewController {
     }
 
     private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {
-        self.dataSource.apply(ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images), animatingDifferences: true) { [weak self] in
+        self.dataSource.apply(ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images), animatingDifferences: false) { [weak self] in
             guard let self = self else { return }
             self.apply(indices: self.viewModel.outputs.selectedIndices.value)
         }
@@ -244,7 +244,8 @@ public class ClipCreationViewController: UIViewController {
         self.dataSource = ClipCreationViewLayout.configureDataSource(collectionView: collectionView,
                                                                      buttonCellDelegate: self,
                                                                      tagCellDelegate: self,
-                                                                     thumbnailLoader: self.thumbnailLoader)
+                                                                     thumbnailLoader: self.thumbnailLoader,
+                                                                     outputs: viewModel.outputs)
     }
 
     // MARK: NavigationBar

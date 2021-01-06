@@ -28,7 +28,7 @@ public protocol ClipCreationViewModelInputs {
     var deselectedImage: PassthroughSubject<Int, Never> { get }
 }
 
-public protocol ClipCreationViewModelOutputs {
+public protocol ClipCreationViewModelOutputs: AnyObject {
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
     var url: CurrentValueSubject<URL?, Never> { get }
