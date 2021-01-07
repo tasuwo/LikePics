@@ -164,13 +164,15 @@ extension Tag {
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
-        clipCount: Int? = nil
+        clipCount: Int? = nil,
+        searchableName: String? = nil
     ) -> Self {
         return .init(
             id: id,
             name: name,
             isHidden: isHidden,
-            clipCount: clipCount
+            clipCount: clipCount,
+            searchableName: searchableName
         )
     }
 }

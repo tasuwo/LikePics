@@ -335,7 +335,13 @@ extension TopClipCollectionViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath) {
-        self.viewModel.inputs.purge.send(clipId)
+        guard let cell = self.collectionView.cellForItem(at: indexPath) else {
+            RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to purge clip. Target cell not found"))
+            return
+        }
+        self.presentPurgeAlert(at: cell, in: collectionView) { [weak self] in
+            self?.viewModel.inputs.purge.send(clipId)
+        }
     }
 }
 

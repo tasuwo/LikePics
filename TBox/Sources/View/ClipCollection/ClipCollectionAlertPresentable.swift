@@ -10,6 +10,7 @@ protocol ClipCollectionAlertPresentable: AnyObject {
     func presentDeleteAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void)
     func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
     func presentUpdateVisibilityAlert(at item: UIBarButtonItem, targetCount: Int, hideAction: @escaping () -> Void, unhideAction: @escaping () -> Void)
+    func presentPurgeAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void)
 }
 
 extension ClipCollectionAlertPresentable where Self: UIViewController {
@@ -96,6 +97,22 @@ extension ClipCollectionAlertPresentable where Self: UIViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
         alert.popoverPresentationController?.barButtonItem = item
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func presentPurgeAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void) {
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForPurgeMessage,
+                                      preferredStyle: .actionSheet)
+
+        alert.addAction(.init(title: L10n.clipsListAlertForPurgeAction, style: .destructive, handler: { _ in
+            action()
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
 
         self.present(alert, animated: true, completion: nil)
     }

@@ -33,6 +33,8 @@
 "clips_list_alert_for_change_visibility_unhide_action" = "%d件のクリップを表示する";
 "clips_list_alert_for_share_item_action" = "この画像のみ共有する";
 "clips_list_alert_for_share_items_action" = "クリップ内の%d件の画像を共有する";
+"clips_list_alert_for_purge_message" = "このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます";
+"clips_list_alert_for_purge_action" = "別々のクリップに分割する";
 
 "clips_list_context_menu_add_tag" = "タグを追加";
 "clips_list_context_menu_add_to_album" = "アルバムへ追加";

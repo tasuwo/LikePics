@@ -202,6 +202,10 @@ internal enum L10n {
     internal static let clipsListAlertForDeleteInAlbumMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_in_album_message")
     /// クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます
     internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
+    /// 別々のクリップに分割する
+    internal static let clipsListAlertForPurgeAction = L10n.tr("Localizable", "clips_list_alert_for_purge_action")
+    /// このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます
+    internal static let clipsListAlertForPurgeMessage = L10n.tr("Localizable", "clips_list_alert_for_purge_message")
     /// この画像のみ共有する
     internal static let clipsListAlertForShareItemAction = L10n.tr("Localizable", "clips_list_alert_for_share_item_action")
     /// クリップ内の%d件の画像を共有する
