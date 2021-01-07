@@ -116,7 +116,7 @@ class TagCollectionViewController: UIViewController {
     private func bind(to dependency: Dependency) {
         dependency.outputs.filteredTags
             .combineLatest(dependency.outputs.displayUncategorizedTag)
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] tags, displayUncategorizedTag in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
                 snapshot.appendSections([.uncategorized])
