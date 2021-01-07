@@ -427,17 +427,13 @@ extension TagCollectionViewController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        RunLoop.main.perform { [weak self] in
-            let text = self?.searchController.searchBar.text ?? ""
-            self?.viewModel.inputs.inputtedQuery.send(text)
-        }
+        let text = self.searchController.searchBar.text ?? ""
+        self.viewModel.inputs.inputtedQuery.send(text)
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            let text = self?.searchController.searchBar.text ?? ""
-            self?.viewModel.inputs.inputtedQuery.send(text)
-        }
+        let text = self.searchController.searchBar.text ?? ""
+        self.viewModel.inputs.inputtedQuery.send(text)
         return true
     }
 
