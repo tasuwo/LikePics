@@ -216,7 +216,7 @@
 		2C8FD63F24E02DCE005887F9 /* TBoxUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C8FD62F24E02DCE005887F9 /* TBoxUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2C8FD64224E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; };
 		2C8FD64324E02DCE005887F9 /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8FD62D24E02DCE005887F9 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */; };
+		2C8FD64B24E02DFA005887F9 /* ClipCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11D24DFA2DC00A43B8D /* ClipCollectionLayout.swift */; };
 		2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C8F8A24DF0BAC00692301 /* ClipSelectionCollectionView.swift */; };
 		2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C55D11924DF9F7700A43B8D /* ClipSelectionCollectionViewCell.swift */; };
 		2C8FD64E24E02E0B005887F9 /* ClipSelectionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */; };
@@ -839,7 +839,7 @@
 		2C55D11724DF9D2600A43B8D /* WebImageProvidingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageProvidingService.swift; sourceTree = "<group>"; };
 		2C55D11924DF9F7700A43B8D /* ClipSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		2C55D11B24DFA0D200A43B8D /* ClipSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
-		2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollecitonLayout.swift; sourceTree = "<group>"; };
+		2C55D11D24DFA2DC00A43B8D /* ClipCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionLayout.swift; sourceTree = "<group>"; };
 		2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		2C570B6524E0505F00A1DC9F /* ClipCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionView.swift; sourceTree = "<group>"; };
 		2C570B6C24E067D200A1DC9F /* ClipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2812,7 +2812,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE1C0F5258266A800A8FA07 /* GridLayout.swift */,
-				2C55D11D24DFA2DC00A43B8D /* ClipCollecitonLayout.swift */,
+				2C55D11D24DFA2DC00A43B8D /* ClipCollectionLayout.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -4246,7 +4246,7 @@
 				2C50D452253228CA008A422C /* AlbumSelectionTableView.swift in Sources */,
 				2C7EEA03252F76A3005E3E46 /* UncategorizedCell.swift in Sources */,
 				2CDE2E8B259970EA00B49D7A /* UICollectionView+indexPathForSupplementaryView.swift in Sources */,
-				2C8FD64B24E02DFA005887F9 /* ClipCollecitonLayout.swift in Sources */,
+				2C8FD64B24E02DFA005887F9 /* ClipCollectionLayout.swift in Sources */,
 				2CFC5CFA250DF1A9001A02E4 /* AssetCatalog.swift in Sources */,
 				2CFC5D1A250E3A54001A02E4 /* ClipInformationPresentedAnimatorDataSource.swift in Sources */,
 				2C8FD64C24E02E00005887F9 /* ClipSelectionCollectionView.swift in Sources */,
