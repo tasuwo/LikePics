@@ -283,6 +283,7 @@ class TagCollectionViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = L10n.tagListViewPlaceholder
+        searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         definesPresentationContext = true
     }
@@ -427,14 +428,14 @@ extension TagCollectionViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform { [weak self] in
-            guard let text = self?.searchController.searchBar.text else { return }
+            let text = self?.searchController.searchBar.text ?? ""
             self?.viewModel.inputs.inputtedQuery.send(text)
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            guard let text = self?.searchController.searchBar.text else { return }
+            let text = self?.searchController.searchBar.text ?? ""
             self?.viewModel.inputs.inputtedQuery.send(text)
         }
         return true
@@ -454,6 +455,15 @@ extension TagCollectionViewController: UISearchBarDelegate {
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchController.searchBar.resignFirstResponder()
+    }
+}
+
+extension TagCollectionViewController: UISearchResultsUpdating {
+    // MARK: - UISearchResultsUpdating
+
+    func updateSearchResults(for searchController: UISearchController) {
+        let text = self.searchController.searchBar.text ?? ""
+        self.viewModel.inputs.inputtedQuery.send(text)
     }
 }
 
