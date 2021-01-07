@@ -8,6 +8,7 @@ public struct SearchableTagsStorage {
         let tags: [Tag]
     }
 
+    private var cache = Set<Tag.Identity>()
     private var lastResult: History?
 
     // MARK: - Lifecycle
@@ -17,8 +18,16 @@ public struct SearchableTagsStorage {
     // MARK: - Methods
 
     public mutating func perform(query: String, to tags: [Tag]) -> [Tag] {
+        let ids = Set(tags.map({ $0.id }))
+
+        defer {
+            cache = ids
+        }
+
         let comparableFilterQuery = Tag.transformToSearchableText(text: query) ?? ""
-        if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
+        if cache != ids {
+            return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
+        } else if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
             return lastResult.tags
         } else {
             return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
