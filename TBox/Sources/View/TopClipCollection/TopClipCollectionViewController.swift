@@ -94,17 +94,25 @@ class TopClipCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.selections
+        dependency.outputs.selected
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] selection in
+            .sink { [weak self] selected in
                 guard let self = self else { return }
+                selected
+                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            }
+            .store(in: &self.cancellableBag)
 
-                let indexPaths = selection
-                    .compactMap { identity in
-                        dependency.outputs.clips.value.first(where: { $0.identity == identity })
-                    }
-                    .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
-                self.collectionView.applySelection(at: indexPaths)
+        dependency.outputs.deselected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] deselected in
+                guard let self = self else { return }
+                deselected
+                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
             }
             .store(in: &self.cancellableBag)
 

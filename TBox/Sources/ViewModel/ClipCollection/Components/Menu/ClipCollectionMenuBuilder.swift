@@ -23,8 +23,8 @@ enum ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
             .subMenu(.init(kind: .others,
                            isInline: true,
                            children: [
-                            clip.items.count > 1 ? .item(.purge) : nil,
-                            context.isAlbum ? .item(.removeFromAlbum) : .item(.delete)
+                               clip.items.count > 1 ? .item(.purge) : nil,
+                               context.isAlbum ? .item(.removeFromAlbum) : .item(.delete)
                            ].compactMap { $0 }))
         ].compactMap { $0 }
     }

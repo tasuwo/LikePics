@@ -41,6 +41,8 @@ protocol ClipCollectionModelOutputs {
     var clips: CurrentValueSubject<[Clip], Never> { get }
     var selectedClips: [Clip] { get }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { get }
+    var selected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
+    var deselected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
 
     var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
@@ -97,6 +99,8 @@ class ClipCollectionModel: ClipCollectionModelType,
     }
 
     let selections: CurrentValueSubject<Set<Clip.Identity>, Never> = .init([])
+    let selected: PassthroughSubject<Set<Clip.Identity>, Never> = .init()
+    let deselected: PassthroughSubject<Set<Clip.Identity>, Never> = .init()
     let operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
     let errorMessage: PassthroughSubject<String, Never> = .init()
 
@@ -171,6 +175,14 @@ extension ClipCollectionModel {
     }
 
     private func bindSelectOperations() {
+        self.selections
+            .zip(selections.dropFirst())
+            .sink { [weak self] last, current in
+                self?.selected.send(current.subtracting(last))
+                self?.deselected.send(last.subtracting(current))
+            }
+            .store(in: &self.cancellableBag)
+
         self.select
             .sink { [weak self] clipId in
                 guard let self = self else { return }

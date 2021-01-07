@@ -43,6 +43,8 @@ protocol AlbumViewModelOutputs {
     var clips: CurrentValueSubject<[Clip], Never> { get }
     var selectedClips: [Clip] { get }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { get }
+    var selected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
+    var deselected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
     // 選択状態はクリップの更新により解除されてしまうことがあるため、selectionsとは別途管理する
     var previewingClip: Clip? { get }
 
@@ -113,6 +115,8 @@ class AlbumViewModel: AlbumViewModelType,
     var clips: CurrentValueSubject<[Clip], Never> { clipCollection.outputs.clips }
     var selectedClips: [Clip] { clipCollection.outputs.selectedClips }
     var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selections }
+    var selected: PassthroughSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selected }
+    var deselected: PassthroughSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.deselected }
     var previewingClip: Clip? {
         return self.clips.value.first(where: { $0.id == self.previewingClipId })
     }

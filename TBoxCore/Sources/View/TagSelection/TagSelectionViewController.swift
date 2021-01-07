@@ -116,9 +116,7 @@ public class TagSelectionViewController: UIViewController {
 
                 DispatchQueue.main.async {
                     let indexPaths = selections
-                        .compactMap { identity in
-                            dependency.outputs.tags.value.first(where: { $0.identity == identity })
-                        }
+                        .compactMap { identity in dependency.outputs.tags.value.first(where: { $0.identity == identity }) }
                         .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
                     self?.collectionView.applySelection(at: indexPaths)
                 }
