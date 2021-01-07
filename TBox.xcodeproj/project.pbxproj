@@ -148,6 +148,8 @@
 		2C5EF1172563F7AC00610D96 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C5EF12625640C3700610D96 /* ClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5EF12525640C3700610D96 /* ClipStorageSpec.swift */; };
 		2C5FCA3B25A6130100C9B949 /* AlbumListViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FCA3A25A6130100C9B949 /* AlbumListViewLayout.swift */; };
+		2C5FCA9B25A75B2800C9B949 /* ClipCollection_MenuElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */; };
+		2C5FCAA625A75B4000C9B949 /* ClipCollection_SubMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */; };
 		2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */; };
 		2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */; };
 		2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */; };
@@ -848,6 +850,8 @@
 		2C5C070125A5B77800351A97 /* ImageSourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourceLoader.swift; sourceTree = "<group>"; };
 		2C5EF12525640C3700610D96 /* ClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageSpec.swift; sourceTree = "<group>"; };
 		2C5FCA3A25A6130100C9B949 /* AlbumListViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewLayout.swift; sourceTree = "<group>"; };
+		2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_MenuElement.swift; sourceTree = "<group>"; };
+		2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_SubMenu.swift; sourceTree = "<group>"; };
 		2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineUIButton.swift; sourceTree = "<group>"; };
 		2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryServiceProtocol.swift; sourceTree = "<group>"; };
@@ -1462,7 +1466,9 @@
 			isa = PBXGroup;
 			children = (
 				2C1E4433257B5A5700A067B1 /* ClipCollection.swift */,
+				2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */,
 				2C1E4445257B5A6F00A067B1 /* ClipCollection_MenuItem.swift */,
+				2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */,
 				2C1E444F257B5A8F00A067B1 /* ClipCollection_Context.swift */,
 				2C1E4459257B5AC200A067B1 /* ClipCollection_NavigationItem.swift */,
 				2C1E4463257B5AE900A067B1 /* ClipCollection_ToolBarItem.swift */,
@@ -4454,6 +4460,7 @@
 				2CFCCB4A25A4256200EF31A4 /* AlbumList_NavigationItem.swift in Sources */,
 				2C5C06E325A5A34800351A97 /* ClipMergeViewLayout.swift in Sources */,
 				2CA22588252237ED00CE1A81 /* ClipCollectionProvider.swift in Sources */,
+				2C5FCAA625A75B4000C9B949 /* ClipCollection_SubMenu.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
 				2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */,
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
@@ -4464,6 +4471,7 @@
 				2C835A672594444A002F6085 /* ClipPreviewPageTransitionController.swift in Sources */,
 				2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */,
 				2C86CC5024E12E2D0091A89E /* ClipPreviewPageViewModel.swift in Sources */,
+				2C5FCA9B25A75B2800C9B949 /* ClipCollection_MenuElement.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
 				2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */,
 				2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */,

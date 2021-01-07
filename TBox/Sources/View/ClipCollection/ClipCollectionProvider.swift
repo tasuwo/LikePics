@@ -135,6 +135,10 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         guard let clip = self.dataSource?.clipCollectionProvider(self, clipFor: indexPath) else { return }
         self.delegate?.clipCollectionProvider(self, didDeselect: clip.identity)
     }
+}
+
+extension ClipCollectionProvider {
+    // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard
@@ -171,7 +175,7 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         let context = dataSource.clipsListCollectionMenuContext(self)
 
         let items = builder.build(for: clip, context: context).map {
-            self.makeAction(from: $0, for: clip, at: indexPath)
+            self.makeElement(from: $0, for: clip, at: indexPath)
         }
 
         return { _ in
@@ -179,7 +183,40 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
         }
     }
 
-    private func makeAction(from item: ClipCollection.MenuItem, for clip: Clip, at indexPath: IndexPath) -> UIAction {
+    private func makeElement(from element: ClipCollection.MenuElement, for clip: Clip, at indexPath: IndexPath) -> UIMenuElement {
+        switch element {
+        case let .item(item):
+            return self.makeElement(from: item, for: clip, at: indexPath)
+
+        case let .subMenu(subMenu):
+            let title = Self.resolveTitle(for: subMenu.kind)
+            let icon = Self.resolveIcon(for: subMenu.kind)
+            let children = subMenu.children.map { self.makeElement(from: $0, for: clip, at: indexPath) }
+            return UIMenu(title: title, image: icon, options: subMenu.isInline ? .displayInline : [], children: children)
+        }
+    }
+
+    private static func resolveTitle(for kind: ClipCollection.SubMenu.Kind) -> String {
+        switch kind {
+        case .add:
+            return L10n.clipsListContextMenuAdd
+
+        case .others:
+            return L10n.clipsListContextMenuOthers
+        }
+    }
+
+    private static func resolveIcon(for kind: ClipCollection.SubMenu.Kind) -> UIImage? {
+        switch kind {
+        case .add:
+            return UIImage(systemName: "plus")
+
+        case .others:
+            return UIImage(systemName: "ellipsis")
+        }
+    }
+
+    private func makeElement(from item: ClipCollection.MenuItem, for clip: Clip, at indexPath: IndexPath) -> UIMenuElement {
         switch item {
         case .addTag:
             return UIAction(title: L10n.clipsListContextMenuAddTag,
@@ -248,7 +285,8 @@ extension ClipCollectionProvider: UICollectionViewDelegate {
 
         case .purge:
             return UIAction(title: L10n.clipsListContextMenuPurge,
-                            image: UIImage(systemName: "scissors")) { [weak self] _ in
+                            image: UIImage(systemName: "scissors"),
+                            attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.delegate?.clipCollectionProvider(self, shouldPurge: clip.identity, at: indexPath)

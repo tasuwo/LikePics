@@ -213,6 +213,8 @@ internal enum L10n {
         return L10n.tr("Localizable", "clips_list_alert_for_share_items_action", p1)
     }
 
+    /// 追加
+    internal static let clipsListContextMenuAdd = L10n.tr("Localizable", "clips_list_context_menu_add")
     /// タグを追加
     internal static let clipsListContextMenuAddTag = L10n.tr("Localizable", "clips_list_context_menu_add_tag")
     /// アルバムへ追加
@@ -221,6 +223,8 @@ internal enum L10n {
     internal static let clipsListContextMenuDelete = L10n.tr("Localizable", "clips_list_context_menu_delete")
     /// 隠す
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
+    /// その他
+    internal static let clipsListContextMenuOthers = L10n.tr("Localizable", "clips_list_context_menu_others")
     /// 分割
     internal static let clipsListContextMenuPurge = L10n.tr("Localizable", "clips_list_context_menu_purge")
     /// アルバムから削除

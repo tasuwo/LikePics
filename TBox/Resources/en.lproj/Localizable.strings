@@ -36,6 +36,7 @@
 "clips_list_alert_for_purge_message" = "Delete this clip and create new clips containing only one image using each images in this clip. Relation to tags, albums, and site/image urls are preserved.";
 "clips_list_alert_for_purge_action" = "Create New Clips";
 
+"clips_list_context_menu_add" = "Add";
 "clips_list_context_menu_add_tag" = "Add Tags";
 "clips_list_context_menu_add_to_album" = "Add to Album";
 "clips_list_context_menu_hide" = "Hide";
@@ -44,6 +45,7 @@
 "clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
 "clips_list_context_menu_purge" = "Purge";
+"clips_list_context_menu_others" = "Others";
 
 "clip_creation_view_title" = "Select image.";
 

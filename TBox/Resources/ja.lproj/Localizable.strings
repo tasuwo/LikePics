@@ -36,6 +36,7 @@
 "clips_list_alert_for_purge_message" = "このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます";
 "clips_list_alert_for_purge_action" = "別々のクリップに分割する";
 
+"clips_list_context_menu_add" = "追加";
 "clips_list_context_menu_add_tag" = "タグを追加";
 "clips_list_context_menu_add_to_album" = "アルバムへ追加";
 "clips_list_context_menu_hide" = "隠す";
@@ -44,6 +45,7 @@
 "clips_list_context_menu_share" = "共有";
 "clips_list_context_menu_delete" = "削除";
 "clips_list_context_menu_purge" = "分割";
+"clips_list_context_menu_others" = "その他";
 
 "top_clip_view_empty_title" = "クリップがありません";
 "top_clip_view_empty_message" = "他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう";
