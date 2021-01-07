@@ -172,7 +172,18 @@ extension AlbumListViewModel {
         self.reorderedAlbums
             .sink { [weak self] albumIds in
                 guard let self = self else { return }
-                if case let .failure(error) = self.clipCommandService.updateAlbums(byReordering: albumIds) {
+
+                let originals = self.query.albums.value.map({ $0.id })
+                guard Set(originals).count == originals.count, Set(albumIds).count == albumIds.count else {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    アルバムの並び替えに失敗しました。IDに重複が存在します
+                    """))
+                    self.errorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
+                    return
+                }
+
+                let ids = self.performReorder(originals: self.query.albums.value.map({ $0.id }), request: albumIds)
+                if case let .failure(error) = self.clipCommandService.updateAlbums(byReordering: ids) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to reorder album. (code: \(error.rawValue))
                     """))
@@ -192,5 +203,15 @@ extension AlbumListViewModel {
                 }
             }
             .store(in: &self.cancellableBag)
+    }
+
+    private func performReorder(originals: [Album.Identity], request: [Album.Identity]) -> [Album.Identity] {
+        var index = 0
+        return originals
+            .map { original in
+                guard request.contains(original) else { return original }
+                index += 1
+                return request[index - 1]
+            }
     }
 }
