@@ -83,6 +83,8 @@
 "search_result_for_uncategorized_empty_title" = "未分類のクリップはありません";
 
 "tag_list_view_title" = "タグ";
+"tag_list_view_placeholder" = "タグを探す";
+
 "tag_list_view_context_menu_action_copy" = "コピー";
 "tag_list_view_context_menu_action_delete" = "削除";
 "tag_list_view_context_menu_action_update" = "名前の変更";

@@ -83,6 +83,8 @@
 "search_result_for_uncategorized_empty_title" = "No Uncategorized Clips";
 
 "tag_list_view_title" = "Tags";
+"tag_list_view_placeholder" = "Search Tags";
+
 "tag_list_view_context_menu_action_copy" = "Copy";
 "tag_list_view_context_menu_action_delete" = "Delete";
 "tag_list_view_context_menu_action_update" = "Rename";

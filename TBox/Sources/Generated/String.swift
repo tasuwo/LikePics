@@ -328,6 +328,8 @@ internal enum L10n {
     internal static let tagListViewEmptyMessage = L10n.tr("Localizable", "tag_list_view_empty_message")
     /// タグがありません
     internal static let tagListViewEmptyTitle = L10n.tr("Localizable", "tag_list_view_empty_title")
+    /// タグを探す
+    internal static let tagListViewPlaceholder = L10n.tr("Localizable", "tag_list_view_placeholder")
     /// タグ
     internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
     /// タグを選択

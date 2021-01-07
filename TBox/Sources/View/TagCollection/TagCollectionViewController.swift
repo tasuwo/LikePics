@@ -48,8 +48,8 @@ class TagCollectionViewController: UIViewController {
                              placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
     )
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    @IBOutlet var collectionView: TagCollectionView!
-    @IBOutlet var searchBar: UISearchBar!
+    private var collectionView: TagCollectionView!
+    private let searchController = UISearchController(searchResultsController: nil)
 
     // MARK: Components
 
@@ -82,14 +82,10 @@ class TagCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // HACK: nibから読み込んでいるため初期サイズがnibに引きずられる
-        //       これによりCollectionViewのレイアウトが初回表示時にズレるのを防ぐ
-        self.view.frame = self.tabBarController?.view.frame ?? self.view.frame
-
-        self.setupCollectionView()
         self.setupAppearance()
+        self.setupCollectionView()
         self.setupNavigationBar()
-        self.setupSearchBar()
+        self.setupSearchController()
         self.setupEmptyMessage()
 
         self.bind(to: viewModel)
@@ -99,6 +95,7 @@ class TagCollectionViewController: UIViewController {
 
     private func setupAppearance() {
         self.title = L10n.tagListViewTitle
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
     }
 
     private func startAddingTag() {
@@ -119,7 +116,7 @@ class TagCollectionViewController: UIViewController {
     private func bind(to dependency: Dependency) {
         dependency.outputs.filteredTags
             .combineLatest(dependency.outputs.displayUncategorizedTag)
-            .receive(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] tags, displayUncategorizedTag in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
                 snapshot.appendSections([.uncategorized])
@@ -131,22 +128,22 @@ class TagCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.displaySearchBar
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .map { !$0 }
-            .assign(to: \.isHidden, on: self.searchBar)
+            .assign(to: \.isHidden, on: self.searchController.searchBar)
             .store(in: &self.cancellableBag)
         dependency.outputs.displayCollectionView
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .map { !$0 }
             .assign(to: \.isHidden, on: self.collectionView)
             .store(in: &self.cancellableBag)
         dependency.outputs.displayEmptyMessageView
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
         dependency.outputs.displayClipCount
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] displayClipCount in
                 self?.collectionView.visibleCells
                     .compactMap { $0 as? TagCollectionViewCell }
@@ -156,14 +153,15 @@ class TagCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.searchBarCleared
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.searchBar.resignFirstResponder()
-                self?.searchBar.text = nil
+                self?.searchController.searchBar.resignFirstResponder()
+                self?.searchController.searchBar.text = nil
             }
             .store(in: &self.cancellableBag)
 
         dependency.outputs.errorMessage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -173,6 +171,7 @@ class TagCollectionViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         dependency.outputs.tagViewOpened
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] tag in
                 guard let self = self else { return }
                 guard let viewController = self.factory.makeSearchResultViewController(context: .tag(.categorized(tag))) else {
@@ -187,8 +186,11 @@ class TagCollectionViewController: UIViewController {
     // MARK: Collection View
 
     private func setupCollectionView() {
-        self.collectionView.collectionViewLayout = self.createLayout()
-        self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
+        self.collectionView = TagCollectionView(frame: self.view.frame,
+                                                collectionViewLayout: self.createLayout())
+        self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.collectionView.backgroundColor = .clear
+        self.view.addSubview(collectionView)
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
@@ -275,11 +277,14 @@ class TagCollectionViewController: UIViewController {
         self.startAddingTag()
     }
 
-    // MARK: SearchBar
+    // MARK: SearchController
 
-    func setupSearchBar() {
-        self.searchBar.delegate = self
-        self.searchBar.showsCancelButton = false
+    func setupSearchController() {
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = L10n.tagListViewPlaceholder
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
 
     // MARK: EmptyMessage
@@ -421,33 +426,33 @@ extension TagCollectionViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform { [weak self] in
-            guard let text = self?.searchBar.text else { return }
+            guard let text = self?.searchController.searchBar.text else { return }
             self?.viewModel.inputs.inputtedQuery.send(text)
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            guard let text = self?.searchBar.text else { return }
+            guard let text = self?.searchController.searchBar.text else { return }
             self?.viewModel.inputs.inputtedQuery.send(text)
         }
         return true
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.searchBar.setShowsCancelButton(true, animated: true)
+        searchController.searchBar.setShowsCancelButton(true, animated: true)
     }
 
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.searchBar.setShowsCancelButton(false, animated: true)
+        searchController.searchBar.setShowsCancelButton(false, animated: true)
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.resignFirstResponder()
+        searchController.searchBar.resignFirstResponder()
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.resignFirstResponder()
+        searchController.searchBar.resignFirstResponder()
     }
 }
 
