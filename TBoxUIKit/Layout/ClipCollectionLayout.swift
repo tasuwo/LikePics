@@ -9,7 +9,8 @@ public protocol ClipsCollectionLayoutDelegate: AnyObject {
 }
 
 public class ClipCollectionLayout: UICollectionViewLayout {
-    private static let cellPadding: CGFloat = 10
+    private static let contentPadding: CGFloat = 8
+    private static let cellPadding: CGFloat = 8
     private static let defaultContentHeight: CGFloat = 180
 
     public weak var delegate: ClipsCollectionLayoutDelegate?
@@ -40,7 +41,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
             return 0
         }
         let insets = collectionView.adjustedContentInset
-        return collectionView.bounds.width - (insets.left + insets.right)
+        return collectionView.bounds.width - (insets.left + insets.right) - Self.contentPadding * 2
     }
 
     private var contentHeight: CGFloat = 0
@@ -89,7 +90,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
         }
 
         let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
-        let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth }
+        let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
 
         setupCellAttributes(collectionView: collectionView,
                             columnWidth: columnWidth,
@@ -100,7 +101,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
                                      columnWidth: CGFloat,
                                      xOffset: [CGFloat])
     {
-        var yOffset = [CGFloat].init(repeating: 0, count: self.numberOfColumns)
+        var yOffset = [CGFloat].init(repeating: Self.contentPadding, count: self.numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {
             let indexPath = IndexPath(item: $0, section: 0)
@@ -120,5 +121,6 @@ public class ClipCollectionLayout: UICollectionViewLayout {
             self.contentHeight = max(contentHeight, frame.maxY)
             yOffset[column] += columnHeight
         }
+        self.contentHeight += Self.contentPadding * 2
     }
 }
