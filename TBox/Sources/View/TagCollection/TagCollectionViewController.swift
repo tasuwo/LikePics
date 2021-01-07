@@ -398,7 +398,8 @@ extension TagCollectionViewController {
 
         case .delete:
             return UIAction(title: L10n.tagListViewContextMenuActionDelete,
-                            image: UIImage(systemName: "trash.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
                 self?.viewModel.inputs.deleted.send([tag])
             }
 
