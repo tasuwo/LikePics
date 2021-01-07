@@ -51,6 +51,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var overlayView: UIView!
     @IBOutlet var selectionOrderLabel: UILabel!
+    @IBOutlet var selectionOrderLabelContainer: UIView!
 
     // MARK: - Methods
 
@@ -61,6 +62,8 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 
     private func setupAppearance() {
         self.layer.cornerRadius = 10
+        self.selectionOrderLabelContainer.layer.borderWidth = 2.25
+        self.selectionOrderLabelContainer.layer.borderColor = UIColor.white.cgColor
         self.overlayView.isHidden = true
         self.selectionOrderLabel.isHidden = true
     }

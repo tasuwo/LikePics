@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -25,7 +24,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="170" height="175"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ih3-Pb-0r7" userLabel="Selection Order Label Container">
-                                <rect key="frame" x="126" y="131" width="32" height="32"/>
+                                <rect key="frame" x="126" y="12" width="32" height="32"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="163-rK-Yaf">
                                         <rect key="frame" x="8" y="0.0" width="16" height="32"/>
@@ -55,7 +54,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ih3-Pb-0r7" secondAttribute="trailing" constant="12" id="9Vp-hU-1VB"/>
-                            <constraint firstAttribute="bottom" secondItem="ih3-Pb-0r7" secondAttribute="bottom" constant="12" id="Rtt-a8-aiU"/>
+                            <constraint firstItem="ih3-Pb-0r7" firstAttribute="top" secondItem="qYD-9y-JV2" secondAttribute="top" constant="12" id="YRZ-LL-Ykn"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -77,6 +76,7 @@
                 <outlet property="imageView" destination="g2B-t9-dHN" id="KOk-r9-98N"/>
                 <outlet property="overlayView" destination="qYD-9y-JV2" id="vww-BQ-OBS"/>
                 <outlet property="selectionOrderLabel" destination="163-rK-Yaf" id="fsS-pH-qAn"/>
+                <outlet property="selectionOrderLabelContainer" destination="ih3-Pb-0r7" id="boY-a4-M0b"/>
             </connections>
             <point key="canvasLocation" x="84.057971014492765" y="85.379464285714278"/>
         </collectionViewCell>
