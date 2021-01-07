@@ -9,6 +9,8 @@ public struct Tag: Equatable {
     public let isHidden: Bool
     public let clipCount: Int?
 
+    public let searchableName: String?
+
     // MARK: - Lifecycle
 
     public init(id: UUID, name: String, isHidden: Bool, clipCount: Int? = nil) {
@@ -16,6 +18,17 @@ public struct Tag: Equatable {
         self.name = name
         self.isHidden = isHidden
         self.clipCount = clipCount
+
+        self.searchableName = Self.transformToSearchableText(text: name)
+    }
+
+    // MARK: - Methods
+
+    static func transformToSearchableText(text: String) -> String? {
+        return text
+            .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
+            .applyingTransform(.hiraganaToKatakana, reverse: false)?
+            .lowercased()
     }
 }
 
