@@ -153,7 +153,7 @@ public enum ClipInformationLayoutFactory {
         config.contentInsetsReference = .layoutMargins
 
         let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                      heightDimension: .absolute(20))
+                                                      heightDimension: .absolute(16))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize,
                                                                  elementKind: ElementKind.layoutHeader.rawValue,
                                                                  alignment: .top)
@@ -184,7 +184,7 @@ public enum ClipInformationLayoutFactory {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         // Header
 
