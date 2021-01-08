@@ -51,6 +51,7 @@ protocol ClipCollectionViewModelOutputs {
 
     var clips: AnyPublisher<[Clip], Never> { get }
     var selectedClips: AnyPublisher<[Clip], Never> { get }
+    var selections: Set<Clip.Identity> { get }
     var previewingClip: Clip? { get }
     var operation: AnyPublisher<ClipCollection.Operation, Never> { get }
 
@@ -122,6 +123,8 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
             }
             .eraseToAnyPublisher()
     }
+
+    var selections: Set<Clip.Identity> { _selections.value }
 
     var previewingClip: Clip?
 

@@ -126,7 +126,6 @@ class AlbumViewController: UIViewController {
             .sink { [weak self] selected in
                 guard let self = self else { return }
                 selected
-                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
                     .compactMap { self.dataSource.indexPath(for: $0) }
                     .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
             }
@@ -137,7 +136,6 @@ class AlbumViewController: UIViewController {
             .sink { [weak self] deselected in
                 guard let self = self else { return }
                 deselected
-                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
                     .compactMap { self.dataSource.indexPath(for: $0) }
                     .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
             }
@@ -174,10 +172,11 @@ class AlbumViewController: UIViewController {
 
         dependency.outputs.title
             .receive(on: DispatchQueue.main)
+            .compactMap { $0 }
             .assignNoRetain(to: \.title, on: self)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
@@ -187,18 +186,18 @@ class AlbumViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.presentPreview
+        dependency.outputs.previewed
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId in
                 guard let viewController = self?.factory.makeClipPreviewViewController(clipId: clipId) else {
-                    self?.viewModel.inputs.cancelledPreview.send(())
+                    self?.viewModel.inputs.previewCancelled.send(())
                     return
                 }
                 self?.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.presentMergeView
+        dependency.outputs.startMerging
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
@@ -207,19 +206,22 @@ class AlbumViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.startShareForContextMenu
+        dependency.outputs.startSharing
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] clipId, data in
-                guard let self = self,
-                    let clip = self.viewModel.outputs.clips.value.first(where: { $0.id == clipId }),
-                    let indexPath = self.dataSource.indexPath(for: clip) else { return }
-                guard let cell = self.collectionView.cellForItem(at: indexPath) else { return }
-                let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+            .sink { [weak self] context in
+                guard case let .menu(clip) = context.source,
+                    let self = self,
+                    let indexPath = self.dataSource.indexPath(for: clip),
+                    let cell = self.collectionView.cellForItem(at: indexPath)
+                else {
+                    return
+                }
+                let controller = UIActivityViewController(activityItems: context.data, applicationActivities: nil)
                 controller.popoverPresentationController?.sourceView = self.collectionView
                 controller.popoverPresentationController?.sourceRect = cell.frame
                 controller.completionWithItemsHandler = { _, completed, _, _ in
                     guard completed else { return }
-                    self.viewModel.inputs.operation.send(.none)
+                    self.viewModel.inputs.operationRequested.send(.none)
                 }
                 self.present(controller, animated: true, completion: nil)
             }
@@ -269,16 +271,12 @@ class AlbumViewController: UIViewController {
         // Reorder settings
 
         self.dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in
-            guard let self = self else { return false }
-            return self.isEditing
+            return self?.isEditing ?? false
         }
 
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
-            guard let self = self else { return }
-            guard let clipIds = self.viewModel.outputs.clips.value
-                .applying(transaction.difference)?
-                .map({ $0.id }) else { return }
-            self.viewModel.inputs.reorder.send(clipIds)
+            let clipIds = transaction.finalSnapshot.itemIdentifiers.map { $0.id }
+            self?.viewModel.inputs.reorder.send(clipIds)
         }
 
         self.collectionView.dragDelegate = self
@@ -382,10 +380,11 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity, at indexPath: IndexPath) {
-        guard
-            let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
-            let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
-        else {
+        guard let viewController = self.factory.makeTagSelectionViewController(
+            selectedTags: self.viewModel.outputs.resolveTags(for: clipId),
+            context: clipId,
+            delegate: self
+        ) else {
             return
         }
         self.present(viewController, animated: true, completion: nil)
@@ -412,7 +411,7 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath) {
-        self.viewModel.inputs.unhide.send(clipId)
+        self.viewModel.inputs.reveal.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath) {
@@ -440,11 +439,11 @@ extension AlbumViewController: ClipCollectionNavigationBarProviderDelegate {
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.selecting)
+        self.viewModel.inputs.operationRequested.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
@@ -456,11 +455,11 @@ extension AlbumViewController: ClipCollectionNavigationBarProviderDelegate {
     }
 
     func didTapReorderButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.reordering)
+        self.viewModel.inputs.operationRequested.send(.reordering)
     }
 
     func didTapDoneButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 }
 
@@ -492,11 +491,11 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
     }
 
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
-        self.viewModel.inputs.unhideSelections.send(())
+        self.viewModel.inputs.revealSelections.send(())
     }
 
     func shouldCancel(_ provider: ClipCollectionToolBarProvider) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 
     func shouldMerge(_ provider: ClipCollectionToolBarProvider) {
@@ -516,7 +515,7 @@ extension AlbumViewController: AlbumSelectionPresenterDelegate {
             self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.viewModel.inputs.addToAlbum.send((albumId, clipId))
+            self.viewModel.inputs.addToAlbum.send(.init(target: albumId, clips: Set([clipId])))
         }
     }
 }
@@ -530,7 +529,7 @@ extension AlbumViewController: TagSelectionDelegate {
             self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.viewModel.inputs.addTags.send((tagIds, clipId))
+            self.viewModel.inputs.replaceTags.send(.init(target: clipId, tags: tagIds))
         }
     }
 }
@@ -578,7 +577,7 @@ extension AlbumViewController: ClipMergeViewControllerDelegate {
     // MARK: - ClipMergeViewControllerDelegate
 
     func didComplete(_ viewController: ClipMergeViewController) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 }
 

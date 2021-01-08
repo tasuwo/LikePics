@@ -274,14 +274,14 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let composition = ClipCollectionModel(clipService: self.clipCommandService,
-                                              imageQueryService: self.imageQueryService,
-                                              logger: self.logger)
+        let innerViewModel = ClipCollectionViewModel(clipService: self.clipCommandService,
+                                                     imageQueryService: self.imageQueryService,
+                                                     logger: self.logger)
         let viewModel = AlbumViewModel(query: query,
-                                       composition: composition,
                                        clipService: self.clipCommandService,
                                        settingStorage: self.userSettingsStorage,
-                                       logger: self.logger)
+                                       logger: self.logger,
+                                       viewModel: innerViewModel)
 
         let context = ClipCollection.Context(isAlbum: true)
 
