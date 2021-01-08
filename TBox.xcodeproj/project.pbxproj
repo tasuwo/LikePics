@@ -46,6 +46,10 @@
 		2C1040E8254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */; };
 		2C104108254D968E000DF7DE /* TemporariesPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* TemporariesPersistService.swift */; };
 		2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */; };
+		2C11717825A87D7A00BE75AB /* ClipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11717725A87D7A00BE75AB /* ClipCollectionViewModel.swift */; };
+		2C11718325A8802400BE75AB /* ClipCollection_ShareContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11718225A8802400BE75AB /* ClipCollection_ShareContext.swift */; };
+		2C11718F25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11718E25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift */; };
+		2C1171A325A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1171A225A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift */; };
 		2C122AF32578BEFE00AD23B4 /* CloudKitChangeDetecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AF22578BEFE00AD23B4 /* CloudKitChangeDetecter.swift */; };
 		2C122AFD2578C0FC00AD23B4 /* RemoteChangeDetecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AFC2578C0FC00AD23B4 /* RemoteChangeDetecter.swift */; };
 		2C122B072578C19100AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */; };
@@ -727,6 +731,10 @@
 		2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceProtocol.swift; sourceTree = "<group>"; };
 		2C104107254D968E000DF7DE /* TemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistService.swift; sourceTree = "<group>"; };
 		2C10411B254D9B20000DF7DE /* ClipReferencesIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationService.swift; sourceTree = "<group>"; };
+		2C11717725A87D7A00BE75AB /* ClipCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionViewModel.swift; sourceTree = "<group>"; };
+		2C11718225A8802400BE75AB /* ClipCollection_ShareContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_ShareContext.swift; sourceTree = "<group>"; };
+		2C11718E25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_TagsReplacingRequest.swift; sourceTree = "<group>"; };
+		2C1171A225A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_AddingToAlbumRequest.swift; sourceTree = "<group>"; };
 		2C122AE02578B3F000AD23B4 /* Notification_Name+DidFindRelevantTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification_Name+DidFindRelevantTransactions.swift"; sourceTree = "<group>"; };
 		2C122AF22578BEFE00AD23B4 /* CloudKitChangeDetecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitChangeDetecter.swift; sourceTree = "<group>"; };
 		2C122AFC2578C0FC00AD23B4 /* RemoteChangeDetecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteChangeDetecter.swift; sourceTree = "<group>"; };
@@ -1407,6 +1415,15 @@
 			path = Persist;
 			sourceTree = "<group>";
 		};
+		2C11718D25A886AB00BE75AB /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				2C11718E25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift */,
+				2C1171A225A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
 		2C122B062578C15700AD23B4 /* Integrity */ = {
 			isa = PBXGroup;
 			children = (
@@ -1465,6 +1482,7 @@
 		2C1E4432257B5A1900A067B1 /* ValueObject */ = {
 			isa = PBXGroup;
 			children = (
+				2C11718D25A886AB00BE75AB /* Request */,
 				2C1E4433257B5A5700A067B1 /* ClipCollection.swift */,
 				2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */,
 				2C1E4445257B5A6F00A067B1 /* ClipCollection_MenuItem.swift */,
@@ -1474,6 +1492,7 @@
 				2C1E4463257B5AE900A067B1 /* ClipCollection_ToolBarItem.swift */,
 				2CE4298D257B681300BB4783 /* ClipCollection_Operation.swift */,
 				2CB60569257FC93700F7579F /* ClipCollection_SearchContext.swift */,
+				2C11718225A8802400BE75AB /* ClipCollection_ShareContext.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -1727,6 +1746,7 @@
 				2C1E4432257B5A1900A067B1 /* ValueObject */,
 				2CB4792025986E1500BB87A3 /* Components */,
 				2CB478C4259848AE00BB87A3 /* ClipCollectionModel.swift */,
+				2C11717725A87D7A00BE75AB /* ClipCollectionViewModel.swift */,
 			);
 			path = ClipCollection;
 			sourceTree = "<group>";
@@ -4401,6 +4421,7 @@
 				2C3ADF5E24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipPreviewViewModel.swift in Sources */,
+				2C1171A325A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift in Sources */,
 				2CB3CB3E2515EFF900BE06E5 /* ClipCollectionAlertPresentable.swift in Sources */,
 				2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */,
 				2CB478EF25986A4C00BB87A3 /* ClipCollectionStatePropagable.swift in Sources */,
@@ -4423,6 +4444,7 @@
 				2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
+				2C11718325A8802400BE75AB /* ClipCollection_ShareContext.swift in Sources */,
 				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
 				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,
@@ -4452,6 +4474,7 @@
 				2CA0228F24DD9F5E00329251 /* SceneDelegate.swift in Sources */,
 				2CDA49DD2516F2A40043DC14 /* ClipPreviewAlertPresentable.swift in Sources */,
 				2C98110425A32D1400B89A47 /* AppRootTabBarController+LoadingView.swift in Sources */,
+				2C11718F25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2C5FCA3B25A6130100C9B949 /* AlbumListViewLayout.swift in Sources */,
 				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,
@@ -4466,6 +4489,7 @@
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
+				2C11717825A87D7A00BE75AB /* ClipCollectionViewModel.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
 				2C835A672594444A002F6085 /* ClipPreviewPageTransitionController.swift in Sources */,
