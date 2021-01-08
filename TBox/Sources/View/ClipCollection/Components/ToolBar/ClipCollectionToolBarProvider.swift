@@ -52,12 +52,11 @@ class ClipCollectionToolBarProvider {
     private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
         // MARK: Inputs
 
-        propagator.selections
-            .map { $0.count }
+        propagator.selectionsCount
             .sink { dependency.inputs.selectedClipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        propagator.operation
+        propagator.currentOperation
             .sink { dependency.inputs.operation.send($0) }
             .store(in: &self.cancellableBag)
 

@@ -6,8 +6,8 @@ import Combine
 import Domain
 
 protocol ClipCollectionStatePropagable {
-    var clips: CurrentValueSubject<[Clip], Never> { get }
-    var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { get }
-    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
-    var startShareForToolBar: PassthroughSubject<[Data], Never> { get }
+    var clipsCount: AnyPublisher<Int, Never> { get }
+    var selectionsCount: AnyPublisher<Int, Never> { get }
+    var currentOperation: AnyPublisher<ClipCollection.Operation, Never> { get }
+    var startShareForToolBar: AnyPublisher<[Data], Never> { get }
 }

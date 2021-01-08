@@ -50,17 +50,15 @@ class ClipCollectionNavigationBarProvider {
     private func bind(dependency: Dependency, view: ClipCollectionViewProtocol, propagator: ClipCollectionStatePropagable) {
         // MARK: Inputs
 
-        propagator.clips
-            .map { $0.count }
+        propagator.clipsCount
             .sink { dependency.inputs.clipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        propagator.selections
-            .map { $0.count }
+        propagator.selectionsCount
             .sink { dependency.inputs.selectedClipsCount.send($0) }
             .store(in: &self.cancellableBag)
 
-        propagator.operation
+        propagator.currentOperation
             .sink { dependency.inputs.operation.send($0) }
             .store(in: &self.cancellableBag)
 

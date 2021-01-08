@@ -54,7 +54,6 @@ protocol AlbumViewModelOutputs {
     var presentPreview: PassthroughSubject<Clip.Identity, Never> { get }
     var presentMergeView: PassthroughSubject<[Clip], Never> { get }
     var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { get }
-    var startShareForToolBar: PassthroughSubject<[Data], Never> { get }
     var close: PassthroughSubject<Void, Never> { get }
 
     var title: CurrentValueSubject<String?, Never> { get }
@@ -128,10 +127,25 @@ class AlbumViewModel: AlbumViewModelType,
     let presentPreview: PassthroughSubject<Clip.Identity, Never> = .init()
     var presentMergeView: PassthroughSubject<[Clip], Never> { clipCollection.outputs.requestedStartingMerge }
     var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { clipCollection.outputs.requestedShareClip }
-    var startShareForToolBar: PassthroughSubject<[Data], Never> { clipCollection.outputs.requestedShareClips }
     let close: PassthroughSubject<Void, Never> = .init()
 
     let title: CurrentValueSubject<String?, Never> = .init(nil)
+
+    // MARK: ClipCollectionStatePropagable
+
+    var clipsCount: AnyPublisher<Int, Never> {
+        clips.map { $0.count }.eraseToAnyPublisher()
+    }
+
+    var selectionsCount: AnyPublisher<Int, Never> {
+        selections.map { $0.count }.eraseToAnyPublisher()
+    }
+
+    var currentOperation: AnyPublisher<ClipCollection.Operation, Never> {
+        operation.eraseToAnyPublisher()
+    }
+
+    var startShareForToolBar: AnyPublisher<[Data], Never> { clipCollection.outputs.requestedShareClips.eraseToAnyPublisher() }
 
     // MARK: Privates
 
