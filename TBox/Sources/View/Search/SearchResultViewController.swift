@@ -100,28 +100,6 @@ class SearchResultViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.selected
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] selected in
-                guard let self = self else { return }
-                selected
-                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            }
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.deselected
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] deselected in
-                guard let self = self else { return }
-                deselected
-                    .compactMap { identity in dependency.outputs.clips.value.first(where: { $0.identity == identity }) }
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-            }
-            .store(in: &self.cancellableBag)
-
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
@@ -134,13 +112,33 @@ class SearchResultViewController: UIViewController {
             .assignNoRetain(to: \.title, on: self)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.emptyMessage
+        dependency.outputs.selected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] selected in
+                guard let self = self else { return }
+                selected
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.deselected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] deselected in
+                guard let self = self else { return }
+                deselected
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+            }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.displayEmptyMessage
             .receive(on: DispatchQueue.main)
             .map { $0 as String? }
             .assign(to: \.title, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
@@ -150,18 +148,18 @@ class SearchResultViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.presentPreview
+        dependency.outputs.previewed
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId in
                 guard let viewController = self?.factory.makeClipPreviewViewController(clipId: clipId) else {
-                    self?.viewModel.inputs.cancelledPreview.send(())
+                    self?.viewModel.inputs.previewCancelled.send(())
                     return
                 }
                 self?.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.presentMergeView
+        dependency.outputs.startMerging
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
@@ -170,19 +168,22 @@ class SearchResultViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.startShareForContextMenu
+        dependency.outputs.startSharing
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] clipId, data in
-                guard let self = self,
-                    let clip = self.viewModel.outputs.clips.value.first(where: { $0.id == clipId }),
-                    let indexPath = self.dataSource.indexPath(for: clip) else { return }
-                guard let cell = self.collectionView.cellForItem(at: indexPath) else { return }
-                let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+            .sink { [weak self] context in
+                guard case let .menu(clip) = context.source,
+                    let self = self,
+                    let indexPath = self.dataSource.indexPath(for: clip),
+                    let cell = self.collectionView.cellForItem(at: indexPath)
+                else {
+                    return
+                }
+                let controller = UIActivityViewController(activityItems: context.data, applicationActivities: nil)
                 controller.popoverPresentationController?.sourceView = self.collectionView
                 controller.popoverPresentationController?.sourceRect = cell.frame
                 controller.completionWithItemsHandler = { _, completed, _, _ in
                     guard completed else { return }
-                    self.viewModel.inputs.operation.send(.none)
+                    self.viewModel.inputs.operationRequested.send(.none)
                 }
                 self.present(controller, animated: true, completion: nil)
             }
@@ -317,10 +318,11 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity, at indexPath: IndexPath) {
-        guard
-            let clip = self.viewModel.outputs.clips.value.first(where: { $0.identity == clipId }),
-            let viewController = self.factory.makeTagSelectionViewController(selectedTags: clip.tags.map({ $0.identity }), context: clipId, delegate: self)
-        else {
+        guard let viewController = self.factory.makeTagSelectionViewController(
+            selectedTags: self.viewModel.outputs.resolveTags(for: clipId),
+            context: clipId,
+            delegate: self
+        ) else {
             return
         }
         self.present(viewController, animated: true, completion: nil)
@@ -347,7 +349,7 @@ extension SearchResultViewController: ClipCollectionProviderDelegate {
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath) {
-        self.viewModel.inputs.unhide.send(clipId)
+        self.viewModel.inputs.reveal.send(clipId)
     }
 
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath) {
@@ -375,11 +377,11 @@ extension SearchResultViewController: ClipCollectionNavigationBarProviderDelegat
     // MARK: - ClipCollectionNavigationBarProviderDelegate
 
     func didTapEditButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.selecting)
+        self.viewModel.inputs.operationRequested.send(.selecting)
     }
 
     func didTapCancelButton(_ provider: ClipCollectionNavigationBarProvider) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 
     func didTapSelectAllButton(_ provider: ClipCollectionNavigationBarProvider) {
@@ -427,11 +429,11 @@ extension SearchResultViewController: ClipCollectionToolBarProviderDelegate {
     }
 
     func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
-        self.viewModel.inputs.unhideSelections.send(())
+        self.viewModel.inputs.revealSelections.send(())
     }
 
     func shouldCancel(_ provider: ClipCollectionToolBarProvider) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 
     func shouldMerge(_ provider: ClipCollectionToolBarProvider) {
@@ -451,7 +453,7 @@ extension SearchResultViewController: AlbumSelectionPresenterDelegate {
             self.viewModel.inputs.addSelectionsToAlbum.send(albumId)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.viewModel.inputs.addToAlbum.send((albumId, clipId))
+            self.viewModel.inputs.addToAlbum.send(.init(target: albumId, clips: Set([clipId])))
         }
     }
 }
@@ -465,7 +467,7 @@ extension SearchResultViewController: TagSelectionDelegate {
             self.viewModel.inputs.addTagsToSelections.send(tagIds)
         } else {
             guard let clipId = context as? Clip.Identity else { return }
-            self.viewModel.inputs.addTags.send((tagIds, clipId))
+            self.viewModel.inputs.replaceTags.send(.init(target: clipId, tags: tagIds))
         }
     }
 }
@@ -474,7 +476,7 @@ extension SearchResultViewController: ClipMergeViewControllerDelegate {
     // MARK: - ClipMergeViewControllerDelegate
 
     func didComplete(_ viewController: ClipMergeViewController) {
-        self.viewModel.inputs.operation.send(.none)
+        self.viewModel.inputs.operationRequested.send(.none)
     }
 }
 

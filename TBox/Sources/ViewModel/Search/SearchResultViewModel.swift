@@ -7,51 +7,63 @@ import Common
 import Domain
 
 protocol SearchResultViewModelInputs {
-    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
+    // MARK: State
 
+    var operationRequested: PassthroughSubject<ClipCollection.Operation, Never> { get }
     var viewDidAppear: PassthroughSubject<Void, Never> { get }
-    var cancelledPreview: PassthroughSubject<Void, Never> { get }
+    var previewCancelled: PassthroughSubject<Void, Never> { get }
+
+    // MARK: Selection
 
     var select: PassthroughSubject<Clip.Identity, Never> { get }
     var deselect: PassthroughSubject<Clip.Identity, Never> { get }
     var selectAll: PassthroughSubject<Void, Never> { get }
     var deselectAll: PassthroughSubject<Void, Never> { get }
 
+    // MARK: Actions for Selection
+
     var deleteSelections: PassthroughSubject<Void, Never> { get }
     var hideSelections: PassthroughSubject<Void, Never> { get }
-    var unhideSelections: PassthroughSubject<Void, Never> { get }
+    var revealSelections: PassthroughSubject<Void, Never> { get }
     var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { get }
     var mergeSelections: PassthroughSubject<Void, Never> { get }
     var shareSelections: PassthroughSubject<Void, Never> { get }
 
+    // MARK: Actions for Single Clip
+
     var delete: PassthroughSubject<Clip.Identity, Never> { get }
     var hide: PassthroughSubject<Clip.Identity, Never> { get }
-    var unhide: PassthroughSubject<Clip.Identity, Never> { get }
+    var reveal: PassthroughSubject<Clip.Identity, Never> { get }
     var purge: PassthroughSubject<Clip.Identity, Never> { get }
-    var addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> { get }
-    var addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> { get }
+    var replaceTags: PassthroughSubject<ClipCollection.TagsReplacingRequest, Never> { get }
+    var addToAlbum: PassthroughSubject<ClipCollection.AddingToAlbumRequest, Never> { get }
     var share: PassthroughSubject<Clip.Identity, Never> { get }
 }
 
 protocol SearchResultViewModelOutputs {
-    var clips: CurrentValueSubject<[Clip], Never> { get }
-    var selectedClips: [Clip] { get }
-    var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { get }
-    var selected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
-    var deselected: PassthroughSubject<Set<Clip.Identity>, Never> { get }
-    // 選択状態はクリップの更新により解除されてしまうことがあるため、selectionsとは別途管理する
-    var previewingClip: Clip? { get }
-
-    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { get }
-    var errorMessage: PassthroughSubject<String, Never> { get }
-    var emptyMessage: CurrentValueSubject<String, Never> { get }
-
-    var presentPreview: PassthroughSubject<Clip.Identity, Never> { get }
-    var presentMergeView: PassthroughSubject<[Clip], Never> { get }
-    var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { get }
+    // MARK: State
 
     var title: CurrentValueSubject<String, Never> { get }
+    var clips: AnyPublisher<[Clip], Never> { get }
+    var selectedClips: AnyPublisher<[Clip], Never> { get }
+    var previewingClip: Clip? { get }
+    var operation: AnyPublisher<ClipCollection.Operation, Never> { get }
+
+    // MARK: Selection
+
+    var selected: PassthroughSubject<Set<Clip>, Never> { get }
+    var deselected: PassthroughSubject<Set<Clip>, Never> { get }
+
+    // MARK: Other Actions
+
+    var previewed: PassthroughSubject<Clip.Identity, Never> { get }
+    var displayErrorMessage: PassthroughSubject<String, Never> { get }
+    var displayEmptyMessage: AnyPublisher<String, Never> { get }
+    var startMerging: PassthroughSubject<[Clip], Never> { get }
+    var startSharing: PassthroughSubject<ClipCollection.ShareContext, Never> { get }
+
+    func resolveTags(for clipId: Clip.Identity) -> [Tag.Identity]
 }
 
 protocol SearchResultViewModelType {
@@ -75,50 +87,47 @@ class SearchResultViewModel: SearchResultViewModelType,
 
     // MARK: SearchResultViewModelInputs
 
+    var operationRequested: PassthroughSubject<ClipCollection.Operation, Never> { _viewModel.inputs.operationRequested }
     let viewDidAppear: PassthroughSubject<Void, Never> = .init()
-    let cancelledPreview: PassthroughSubject<Void, Never> = .init()
+    let previewCancelled: PassthroughSubject<Void, Never> = .init()
 
-    var select: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.select }
-    var deselect: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.deselect }
-    var selectAll: PassthroughSubject<Void, Never> { clipCollection.inputs.selectAll }
-    var deselectAll: PassthroughSubject<Void, Never> { clipCollection.inputs.deselectAll }
+    var select: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.select }
+    var deselect: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.deselect }
+    var selectAll: PassthroughSubject<Void, Never> { _viewModel.inputs.selectAll }
+    var deselectAll: PassthroughSubject<Void, Never> { _viewModel.inputs.deselectAll }
 
-    var deleteSelections: PassthroughSubject<Void, Never> { clipCollection.inputs.deleteSelections }
-    var hideSelections: PassthroughSubject<Void, Never> { clipCollection.inputs.hideSelections }
-    var unhideSelections: PassthroughSubject<Void, Never> { clipCollection.inputs.unhideSelections }
-    var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { clipCollection.inputs.addTagsToSelections }
-    var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { clipCollection.inputs.addSelectionsToAlbum }
-    var mergeSelections: PassthroughSubject<Void, Never> { clipCollection.inputs.mergeSelections }
-    var shareSelections: PassthroughSubject<Void, Never> { clipCollection.inputs.shareSelections }
+    var deleteSelections: PassthroughSubject<Void, Never> { _viewModel.inputs.deleteSelections }
+    var hideSelections: PassthroughSubject<Void, Never> { _viewModel.inputs.hideSelections }
+    var revealSelections: PassthroughSubject<Void, Never> { _viewModel.inputs.revealSelections }
+    var addTagsToSelections: PassthroughSubject<Set<Tag.Identity>, Never> { _viewModel.inputs.addTagsToSelections }
+    var addSelectionsToAlbum: PassthroughSubject<Album.Identity, Never> { _viewModel.inputs.addSelectionsToAlbum }
+    var mergeSelections: PassthroughSubject<Void, Never> { _viewModel.inputs.mergeSelections }
+    var shareSelections: PassthroughSubject<Void, Never> { _viewModel.inputs.shareSelections }
 
-    var delete: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.delete }
-    var hide: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.hide }
-    var unhide: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.unhide }
-    var purge: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.purge }
-    var addTags: PassthroughSubject<(having: Set<Tag.Identity>, to: Clip.Identity), Never> { clipCollection.inputs.updateTags }
-    var addToAlbum: PassthroughSubject<(having: Album.Identity, Clip.Identity), Never> { clipCollection.inputs.addToAlbum }
-    var share: PassthroughSubject<Clip.Identity, Never> { clipCollection.inputs.share }
+    var delete: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.delete }
+    var hide: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.hide }
+    var reveal: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.reveal }
+    var purge: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.purge }
+    var replaceTags: PassthroughSubject<ClipCollection.TagsReplacingRequest, Never> { _viewModel.inputs.replaceTags }
+    var addToAlbum: PassthroughSubject<ClipCollection.AddingToAlbumRequest, Never> { _viewModel.inputs.addToAlbum }
+    var share: PassthroughSubject<Clip.Identity, Never> { _viewModel.inputs.share }
 
     // MARK: SearchResultViewModelOutputs
 
-    var clips: CurrentValueSubject<[Clip], Never> { clipCollection.outputs.clips }
-    var selectedClips: [Clip] { clipCollection.outputs.selectedClips }
-    var selections: CurrentValueSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selections }
-    var selected: PassthroughSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.selected }
-    var deselected: PassthroughSubject<Set<Clip.Identity>, Never> { clipCollection.outputs.deselected }
-    var previewingClip: Clip? {
-        return self.clips.value.first(where: { $0.id == self.previewingClipId })
-    }
+    let title: CurrentValueSubject<String, Never>
+    var clips: AnyPublisher<[Clip], Never> { _viewModel.outputs.clips }
+    var selectedClips: AnyPublisher<[Clip], Never> { _viewModel.outputs.selectedClips }
+    var previewingClip: Clip? { _viewModel.outputs.previewingClip }
+    var operation: AnyPublisher<ClipCollection.Operation, Never> { _viewModel.outputs.operation }
 
-    var operation: CurrentValueSubject<ClipCollection.Operation, Never> { clipCollection.outputs.operation }
-    var errorMessage: PassthroughSubject<String, Never> { clipCollection.outputs.errorMessage }
-    let emptyMessage: CurrentValueSubject<String, Never> = .init("")
+    var selected: PassthroughSubject<Set<Clip>, Never> { _viewModel.outputs.selected }
+    var deselected: PassthroughSubject<Set<Clip>, Never> { _viewModel.outputs.deselected }
 
-    let presentPreview: PassthroughSubject<Clip.Identity, Never> = .init()
-    var presentMergeView: PassthroughSubject<[Clip], Never> { clipCollection.outputs.requestedStartingMerge }
-    var startShareForContextMenu: PassthroughSubject<(Clip.Identity, [Data]), Never> { clipCollection.outputs.requestedShareClip }
-
-    let title: CurrentValueSubject<String, Never> = .init("")
+    var previewed: PassthroughSubject<Clip.Identity, Never> { _viewModel.outputs.previewed }
+    var displayErrorMessage: PassthroughSubject<String, Never> { _viewModel.outputs.displayErrorMessage }
+    var displayEmptyMessage: AnyPublisher<String, Never> { _displayEmptyMessage.eraseToAnyPublisher() }
+    var startMerging: PassthroughSubject<[Clip], Never> { _viewModel.outputs.startMerging }
+    var startSharing: PassthroughSubject<ClipCollection.ShareContext, Never> { _viewModel.outputs.startSharing }
 
     // MARK: ClipCollectionStatePropagable
 
@@ -127,41 +136,67 @@ class SearchResultViewModel: SearchResultViewModelType,
     }
 
     var selectionsCount: AnyPublisher<Int, Never> {
-        selections.map { $0.count }.eraseToAnyPublisher()
+        selectedClips.map { $0.count }.eraseToAnyPublisher()
     }
 
     var currentOperation: AnyPublisher<ClipCollection.Operation, Never> {
         operation.eraseToAnyPublisher()
     }
 
-    var startShareForToolBar: AnyPublisher<[Data], Never> { clipCollection.outputs.requestedShareClips.eraseToAnyPublisher() }
+    var startShareForToolBar: AnyPublisher<[Data], Never> {
+        startSharing
+            .filter { $0.source == .toolBar }
+            .map { $0.data }
+            .assertNoFailure()
+            .eraseToAnyPublisher()
+    }
 
     // MARK: Privates
 
+    private let _displayEmptyMessage: CurrentValueSubject<String, Never>
+
     private let context: ClipCollection.SearchContext
     private let query: ClipListQuery
-    private let clipCollection: ClipCollectionModelType
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
-
-    private var previewingClipId: Clip.Identity?
-    private var cancellableBag = Set<AnyCancellable>()
+    private let _viewModel: ClipCollectionViewModelType
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
     init(context: ClipCollection.SearchContext,
          query: ClipListQuery,
-         composition: ClipCollectionModelType,
          settingStorage: UserSettingsStorageProtocol,
-         logger: TBoxLoggable)
+         logger: TBoxLoggable,
+         viewModel: ClipCollectionViewModelType)
     {
         self.context = context
         self.query = query
-        self.clipCollection = composition
         self.settingStorage = settingStorage
         self.logger = logger
+        self._viewModel = viewModel
+
+        self.title = .init(context.label)
+        self._displayEmptyMessage = .init({
+            switch context {
+            case let .keywords(keywords):
+                return L10n.searchResultForKeywordsEmptyTitle(keywords.joined(separator: " "))
+
+            case let .tag(.categorized(tag)):
+                return L10n.searchResultForTagEmptyTitle(tag.name)
+
+            case .tag(.uncategorized):
+                return L10n.searchResultForUncategorizedEmptyTitle
+            }
+        }())
 
         self.bind()
+    }
+}
+
+extension SearchResultViewModel {
+    func resolveTags(for clipId: Clip.Identity) -> [Tag.Identity] {
+        return _viewModel.outputs.resolveTags(for: clipId)
     }
 }
 
@@ -178,50 +213,21 @@ extension SearchResultViewModel {
             .sink { [weak self] clips, showHiddenItems in
                 guard let self = self else { return }
 
-                let newClips = clips
-                    .filter({ clip in
-                        guard showHiddenItems else { return !clip.isHidden }
-                        return true
-                    })
-                    .sorted(by: { $0.registeredDate > $1.registeredDate })
-                self.clips.send(newClips)
-
-                // 余分な選択を除外する
-                let newClipIds = Set(self.clips.value.map { $0.identity })
-                if self.selections.value.isSubset(of: newClipIds) == false {
-                    self.selections.send(self.selections.value.subtracting(self.selections.value.subtracting(newClipIds)))
+                let newClips = clips.filter { clip in
+                    guard showHiddenItems else { return !clip.isHidden }
+                    return true
                 }
+
+                self._viewModel.inputs.clipsFetched.send(newClips)
             }
-            .store(in: &self.cancellableBag)
-
-        self.title.send(self.context.label)
-
-        self.emptyMessage.send({
-            switch self.context {
-            case let .keywords(keywords):
-                return L10n.searchResultForKeywordsEmptyTitle(keywords.joined(separator: " "))
-
-            case let .tag(.categorized(tag)):
-                return L10n.searchResultForTagEmptyTitle(tag.name)
-
-            case .tag(.uncategorized):
-                return L10n.searchResultForUncategorizedEmptyTitle
-            }
-        }())
+            .store(in: &self.subscriptions)
 
         self.viewDidAppear
-            .sink { [weak self] _ in self?.previewingClipId = nil }
-            .store(in: &self.cancellableBag)
+            .sink { [weak self] _ in self?._viewModel.inputs.dismissedPreview.send(()) }
+            .store(in: &self.subscriptions)
 
-        self.cancelledPreview
-            .sink { [weak self] _ in self?.previewingClipId = nil }
-            .store(in: &self.cancellableBag)
-
-        self.clipCollection.outputs.selectedSingleClip
-            .sink { [weak self] clipId in
-                self?.previewingClipId = clipId
-                self?.presentPreview.send(clipId)
-            }
-            .store(in: &self.cancellableBag)
+        self.previewCancelled
+            .sink { [weak self] _ in self?._viewModel.inputs.dismissedPreview.send(()) }
+            .store(in: &self.subscriptions)
     }
 }
