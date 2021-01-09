@@ -300,6 +300,7 @@
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2A24DDC0CB00ADFE54 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CCECE3324DDC3FA00ADFE54 /* ClipObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */; };
+		2CCFEE1425A9473E00F5EF94 /* HiddenIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCFEE1325A9473E00F5EF94 /* HiddenIconView.swift */; };
 		2CD0E568255C1F54002DE383 /* CoreDataClipListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0E567255C1F54002DE383 /* CoreDataClipListQuery.swift */; };
 		2CD0E57C255C2043002DE383 /* CoreDataAlbumQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0E57B255C2043002DE383 /* CoreDataAlbumQuery.swift */; };
 		2CD0E587255C20F1002DE383 /* CoreDataAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0E586255C20F1002DE383 /* CoreDataAlbumListQuery.swift */; };
@@ -1002,6 +1003,7 @@
 		2CCECE1C24DDC0CB00ADFE54 /* PersistenceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersistenceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE2524DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CCECE3224DDC3FA00ADFE54 /* ClipObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipObject.swift; sourceTree = "<group>"; };
+		2CCFEE1325A9473E00F5EF94 /* HiddenIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenIconView.swift; sourceTree = "<group>"; };
 		2CD0E567255C1F54002DE383 /* CoreDataClipListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipListQuery.swift; sourceTree = "<group>"; };
 		2CD0E57B255C2043002DE383 /* CoreDataAlbumQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataAlbumQuery.swift; sourceTree = "<group>"; };
 		2CD0E586255C20F1002DE383 /* CoreDataAlbumListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataAlbumListQuery.swift; sourceTree = "<group>"; };
@@ -1776,6 +1778,7 @@
 				2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */,
 				2CA9DC1B25860DDF00D88ED4 /* ButtonCell.swift */,
 				2CA9DC2D25860E8F00D88ED4 /* ButtonCell.xib */,
+				2CCFEE1325A9473E00F5EF94 /* HiddenIconView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -4297,6 +4300,7 @@
 				2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */,
 				2CA9DC1C25860DDF00D88ED4 /* ButtonCell.swift in Sources */,
 				2C27D7C024E29887006B5DA9 /* ClipPreviewTransitioningController.swift in Sources */,
+				2CCFEE1425A9473E00F5EF94 /* HiddenIconView.swift in Sources */,
 				2CF68D7B2596BE160095A3E3 /* ClipMergeImageCell.swift in Sources */,
 				2C8B3070252834E900A0A151 /* ClipInformationViewDataSource.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,

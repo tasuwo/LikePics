@@ -22,13 +22,36 @@
                     <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="d52-ET-86D">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="311"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oec-k8-xS0">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S8T-Ti-lo1" userLabel="Thumbnail Container">
                                 <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oec-k8-xS0">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="oec-k8-xS0" secondAttribute="height" multiplier="1:1" id="KES-la-8M0"/>
+                                        </constraints>
+                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QMq-Gm-qZs" userLabel="Hidden Icon" customClass="HiddenIconView" customModule="TBoxUIKit" customModuleProvider="target">
+                                        <rect key="frame" x="156" y="156" width="32" height="32"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="32" id="3x8-TK-oHB"/>
+                                            <constraint firstAttribute="width" secondItem="QMq-Gm-qZs" secondAttribute="height" multiplier="1:1" id="9bF-Sk-UmS"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="oec-k8-xS0" secondAttribute="height" multiplier="1:1" id="KES-la-8M0"/>
+                                    <constraint firstAttribute="trailing" secondItem="oec-k8-xS0" secondAttribute="trailing" id="3e5-WA-QIT"/>
+                                    <constraint firstAttribute="width" secondItem="S8T-Ti-lo1" secondAttribute="height" multiplier="1:1" id="6mW-4F-hqQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="QMq-Gm-qZs" secondAttribute="trailing" constant="12" id="IYf-a8-iqE"/>
+                                    <constraint firstAttribute="bottom" secondItem="oec-k8-xS0" secondAttribute="bottom" id="Y0G-oB-kbE"/>
+                                    <constraint firstAttribute="bottom" secondItem="QMq-Gm-qZs" secondAttribute="bottom" constant="12" id="dqh-iy-enY"/>
+                                    <constraint firstItem="oec-k8-xS0" firstAttribute="leading" secondItem="S8T-Ti-lo1" secondAttribute="leading" id="hzQ-EK-6zC"/>
+                                    <constraint firstItem="oec-k8-xS0" firstAttribute="top" secondItem="S8T-Ti-lo1" secondAttribute="top" id="w80-1T-9Vo"/>
                                 </constraints>
-                            </imageView>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejc-nz-iTJ">
                                 <rect key="frame" x="0.0" y="208" width="200" height="33"/>
                                 <subviews>
@@ -125,6 +148,7 @@
             </collectionViewCellContentView>
             <size key="customSize" width="237" height="316"/>
             <connections>
+                <outlet property="hiddenIcon" destination="QMq-Gm-qZs" id="QvE-8d-TRJ"/>
                 <outlet property="metaLabel" destination="xxf-Ud-Jj1" id="BSY-66-tHz"/>
                 <outlet property="removerButton" destination="JOe-8e-Rdd" id="IsC-JY-BzY"/>
                 <outlet property="removerContainer" destination="JSf-k5-YkA" id="Zc2-Dm-5aw"/>

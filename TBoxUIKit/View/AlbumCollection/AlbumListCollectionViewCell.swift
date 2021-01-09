@@ -52,6 +52,9 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public private(set) var visibleHiddenIcon: Bool = false
+    public private(set) var isHiddenAlbum: Bool = false
+
     private var isEditing: Bool = false
     private var isDragging: Bool = false
 
@@ -67,6 +70,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     @IBOutlet var titleEditButtonRowStackView: UIStackView!
     @IBOutlet var removerButton: UIButton!
     @IBOutlet var removerContainer: UIView!
+    @IBOutlet var hiddenIcon: HiddenIconView!
 
     // MARK: - Lifecycle
 
@@ -122,6 +126,16 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
+        self.visibleHiddenIcon = isVisible
+        self.updateHiddenIconAppearance(animated: animated)
+    }
+
+    public func setAlbumHiding(_ isHiding: Bool, animated: Bool) {
+        self.isHiddenAlbum = isHiding
+        self.updateHiddenIconAppearance(animated: animated)
+    }
+
     private func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10
         self.thumbnailImageView.contentMode = .scaleAspectFill
@@ -140,6 +154,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         self.titleButton.isEnabled = isEditing
         self.titleEditButtonContainer.isHidden = !isEditing
         self.removerContainer.isHidden = !isEditing
+        self.hiddenIcon.isHidden = true
     }
 
     private func updateAppearance(isEditing: Bool) {
@@ -182,6 +197,14 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
 
         CATransaction.commit()
+    }
+
+    private func updateHiddenIconAppearance(animated: Bool) {
+        if visibleHiddenIcon {
+            hiddenIcon.setHiding(!isHiddenAlbum, animated: animated)
+        } else {
+            hiddenIcon.setHiding(true, animated: animated)
+        }
     }
 }
 

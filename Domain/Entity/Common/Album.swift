@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Album: Equatable {
+public struct Album {
     public let id: UUID
     public let title: String
     public let clips: [Clip]
@@ -49,6 +49,16 @@ public struct Album: Equatable {
                      isHidden: self.isHidden,
                      registeredDate: self.registeredDate,
                      updatedDate: self.updatedDate)
+    }
+}
+
+extension Album: Equatable {
+    // MARK: - Equatable
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.title == rhs.title
+            && lhs.clips == rhs.clips
     }
 }
 

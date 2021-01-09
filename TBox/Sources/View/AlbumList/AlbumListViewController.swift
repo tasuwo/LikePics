@@ -137,7 +137,9 @@ class AlbumListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] albums in
                 guard let self = self else { return }
-                Layout.apply(items: albums.map { Layout.Item(album: $0) }, to: self.dataSource)
+                Layout.apply(items: albums.map { Layout.Item(album: $0) },
+                             to: self.dataSource,
+                             in: self.collectionView)
             }
             .store(in: &self.cancellableBag)
 

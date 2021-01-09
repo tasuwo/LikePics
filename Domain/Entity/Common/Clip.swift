@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Clip: Equatable {
+public struct Clip {
     public let id: UUID
     public let description: String?
     /// - attention: Sorted by clipIndex.
@@ -90,6 +90,20 @@ public struct Clip: Equatable {
                      dataSize: self.dataSize,
                      registeredDate: self.registeredDate,
                      updatedDate: self.updatedDate)
+    }
+}
+
+extension Clip: Equatable {
+    // MARK: - Equatable
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.description == rhs.description
+            && lhs.items == rhs.items
+            && lhs.tags == rhs.tags
+            && lhs.dataSize == rhs.dataSize
+            && lhs.registeredDate == rhs.registeredDate
+            && lhs.updatedDate == rhs.updatedDate
     }
 }
 

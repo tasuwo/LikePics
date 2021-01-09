@@ -37,6 +37,14 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="280" translatesAutoresizingMaskIntoConstraints="NO" id="wfu-ls-oyC">
                                 <rect key="frame" x="0.0" y="0.0" width="197" height="280"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CXg-BU-H4i" userLabel="Hidden Icon" customClass="HiddenIconView" customModule="TBoxUIKit" customModuleProvider="target">
+                                <rect key="frame" x="153" y="236" width="32" height="32"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="CXg-BU-H4i" secondAttribute="height" multiplier="1:1" id="KBS-zh-IaN"/>
+                                    <constraint firstAttribute="width" constant="32" id="g6L-GG-814"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -57,6 +65,8 @@
                             <constraint firstItem="Sxz-Ec-Mu0" firstAttribute="bottom" secondItem="wfu-ls-oyC" secondAttribute="bottom" constant="20" id="hat-Su-HqY"/>
                             <constraint firstItem="Dyn-sy-3hs" firstAttribute="top" secondItem="Sd1-hN-MSQ" secondAttribute="top" id="mQg-ae-x3n"/>
                             <constraint firstItem="3ey-X5-ub9" firstAttribute="top" secondItem="Sxz-Ec-Mu0" secondAttribute="top" id="nko-hE-WH8"/>
+                            <constraint firstItem="CXg-BU-H4i" firstAttribute="bottom" secondItem="wfu-ls-oyC" secondAttribute="bottom" constant="-12" id="s3p-iz-HAo"/>
+                            <constraint firstItem="CXg-BU-H4i" firstAttribute="trailing" secondItem="wfu-ls-oyC" secondAttribute="trailing" constant="-12" id="yoy-JU-gI7"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJb-u8-3T5">
@@ -115,6 +125,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <size key="customSize" width="197" height="317"/>
             <connections>
+                <outlet property="hiddenIcon" destination="CXg-BU-H4i" id="wgw-tS-Wke"/>
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
                 <outlet property="indicator" destination="MUZ-FQ-RAF" id="OKh-c3-twc"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>

@@ -122,6 +122,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public private(set) var visibleHiddenIcon: Bool = false
+    public private(set) var isHiddenClip: Bool = false
+
     public var isLoading: Bool {
         guard let primaryImage = self.primaryImage,
             let secondaryImage = self.secondaryImage,
@@ -177,6 +180,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var selectionMark: UIView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
+    @IBOutlet var hiddenIcon: HiddenIconView!
+
     // MRAK: - Lifecycle
 
     override public func prepareForReuse() {
@@ -201,6 +206,16 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
+    }
+
+    public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
+        self.visibleHiddenIcon = isVisible
+        self.updateHiddenIconAppearance(animated: animated)
+    }
+
+    public func setClipHiding(_ isHiding: Bool, animated: Bool) {
+        self.isHiddenClip = isHiding
+        self.updateHiddenIconAppearance(animated: animated)
     }
 
     private func setupAppearance() {
@@ -239,6 +254,14 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             self.indicator.startAnimating()
         } else {
             self.indicator.stopAnimating()
+        }
+    }
+
+    private func updateHiddenIconAppearance(animated: Bool) {
+        if visibleHiddenIcon {
+            hiddenIcon.setHiding(!isHiddenClip, animated: animated)
+        } else {
+            hiddenIcon.setHiding(true, animated: animated)
         }
     }
 }

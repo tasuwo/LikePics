@@ -53,6 +53,9 @@ class ClipCollectionProvider: NSObject {
         let requestId = UUID().uuidString
         cell.identifier = requestId
 
+        cell.setHiddenIconVisibility(true, animated: false)
+        cell.setClipHiding(clip.isHidden, animated: false)
+
         let scale = collectionView.traitCollection.displayScale
 
         if let item = clip.primaryItem {

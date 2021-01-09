@@ -65,14 +65,18 @@ extension AlbumListViewLayout {
 // MARK: - DataSource
 
 extension AlbumListViewLayout {
-    static func apply(items: [Item], to dataSource: DataSource) {
+    static func apply(items: [Item], to dataSource: DataSource, in collectionView: UICollectionView) {
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
-
-        var mainSnapshot = SectionSnapshot()
-        mainSnapshot.append(items)
-
-        dataSource.apply(mainSnapshot, to: .main, animatingDifferences: true)
+        snapshot.appendItems(items)
+        dataSource.apply(snapshot, animatingDifferences: true) { [weak collectionView] in
+            collectionView?.indexPathsForVisibleItems.forEach { indexPath in
+                guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+                guard let cell = collectionView?.cellForItem(at: indexPath) as? AlbumListCollectionViewCell else { return }
+                guard item.album.isHidden != cell.isHiddenAlbum else { return }
+                cell.setAlbumHiding(item.album.isHidden, animated: true)
+            }
+        }
     }
 
     static func configureAlbumCell(thumbnailLoader: ThumbnailLoader,
@@ -84,6 +88,9 @@ extension AlbumListViewLayout {
             cell.clipCount = item.album.clips.count
             cell.setEditing(editing?.isEditing(Self.self) ?? false, animated: false)
             cell.delegate = delegate
+
+            cell.setHiddenIconVisibility(true, animated: false)
+            cell.setAlbumHiding(item.album.isHidden, animated: false)
 
             let requestId = UUID().uuidString
             cell.identifier = requestId

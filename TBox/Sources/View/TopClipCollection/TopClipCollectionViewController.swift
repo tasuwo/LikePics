@@ -88,6 +88,8 @@ class TopClipCollectionViewController: UIViewController {
                     self.emptyMessageView.alpha = 0
                 }
                 self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                    self?.updateHiddenIconAppearance()
+
                     guard clips.isEmpty else { return }
                     self?.emptyMessageView.alpha = 1
                 }
@@ -173,6 +175,15 @@ class TopClipCollectionViewController: UIViewController {
 
         self.navigationItemsProvider.bind(view: self, propagator: dependency.propagator)
         self.toolBarItemsProvider.bind(view: self, propagator: dependency.propagator)
+    }
+
+    private func updateHiddenIconAppearance() {
+        self.collectionView.indexPathsForVisibleItems.forEach { indexPath in
+            guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+            guard let cell = self.collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return }
+            guard clip.isHidden != cell.isHiddenClip else { return }
+            cell.setClipHiding(clip.isHidden, animated: true)
+        }
     }
 
     // MARK: CollectionView

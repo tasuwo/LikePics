@@ -112,10 +112,12 @@ class AlbumViewController: UIViewController {
                 if !clips.isEmpty {
                     self.emptyMessageView.alpha = 0
                 }
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+                    self?.updateHiddenIconAppearance()
+
                     guard clips.isEmpty else { return }
                     UIView.animate(withDuration: 0.2) {
-                        self.emptyMessageView.alpha = 1
+                        self?.emptyMessageView.alpha = 1
                     }
                 }
             }
@@ -244,6 +246,15 @@ class AlbumViewController: UIViewController {
             let layout = ClipCollectionLayout()
             layout.delegate = self.clipCollectionProvider
             self.collectionView.setCollectionViewLayout(layout, animated: true)
+        }
+    }
+
+    private func updateHiddenIconAppearance() {
+        self.collectionView.indexPathsForVisibleItems.forEach { indexPath in
+            guard let clip = self.dataSource.itemIdentifier(for: indexPath) else { return }
+            guard let cell = self.collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return }
+            guard clip.isHidden != cell.isHiddenClip else { return }
+            cell.setClipHiding(clip.isHidden, animated: true)
         }
     }
 
