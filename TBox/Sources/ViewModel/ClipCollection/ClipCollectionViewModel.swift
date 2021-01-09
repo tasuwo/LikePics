@@ -126,7 +126,10 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
 
     var selections: Set<Clip.Identity> { _selections.value }
 
-    var previewingClip: Clip?
+    var previewingClip: Clip? {
+        guard let clipId = _previewingClipId.value else { return nil }
+        return _clips.value[clipId]
+    }
 
     var operation: AnyPublisher<ClipCollection.Operation, Never> {
         _operation.eraseToAnyPublisher()
@@ -145,6 +148,7 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     private let _clips: CurrentValueSubject<[Clip.Identity: Clip], Never> = .init([:])
     private let _selections: CurrentValueSubject<Set<Clip.Identity>, Never> = .init([])
     private let _operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
+    private let _previewingClipId: CurrentValueSubject<Clip.Identity?, Never> = .init(nil)
 
     private let clipService: ClipCommandServiceProtocol
     private let imageQueryService: ImageQueryServiceProtocol
@@ -246,7 +250,7 @@ extension ClipCollectionViewModel {
 
         self.dismissedPreview
             .sink { [weak self] _ in
-                self?.previewingClip = nil
+                self?._previewingClipId.send(nil)
             }
             .store(in: &subscriptions)
     }
@@ -269,7 +273,7 @@ extension ClipCollectionViewModel {
                 if !self._operation.value.isAllowedMultipleSelection,
                     let clip = self._clips.value[clipId]
                 {
-                    self.previewingClip = clip
+                    self._previewingClipId.send(clip.id)
                     self.previewed.send(clipId)
                 }
             }
