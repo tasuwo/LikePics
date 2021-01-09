@@ -60,6 +60,7 @@ class SearchResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
@@ -106,12 +107,6 @@ class SearchResultViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.title
-            .receive(on: DispatchQueue.main)
-            .map { $0 as String? }
-            .assignNoRetain(to: \.title, on: self)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selected
@@ -202,6 +197,12 @@ class SearchResultViewController: UIViewController {
             guard clip.isHidden != cell.isHiddenClip else { return }
             cell.setClipHiding(clip.isHidden, animated: true)
         }
+    }
+
+    // MARK: Appearance
+
+    private func setupAppearance() {
+        self.title = self.viewModel.outputs.title
     }
 
     // MARK: CollectionView

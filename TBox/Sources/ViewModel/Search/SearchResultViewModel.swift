@@ -44,7 +44,7 @@ protocol SearchResultViewModelInputs {
 protocol SearchResultViewModelOutputs {
     // MARK: State
 
-    var title: CurrentValueSubject<String, Never> { get }
+    var title: String { get }
     var clips: AnyPublisher<[Clip], Never> { get }
     var selectedClips: AnyPublisher<[Clip], Never> { get }
     var previewingClip: Clip? { get }
@@ -114,7 +114,7 @@ class SearchResultViewModel: SearchResultViewModelType,
 
     // MARK: SearchResultViewModelOutputs
 
-    let title: CurrentValueSubject<String, Never>
+    let title: String
     var clips: AnyPublisher<[Clip], Never> { _viewModel.outputs.clips }
     var selectedClips: AnyPublisher<[Clip], Never> { _viewModel.outputs.selectedClips }
     var previewingClip: Clip? { _viewModel.outputs.previewingClip }
@@ -176,7 +176,7 @@ class SearchResultViewModel: SearchResultViewModelType,
         self.logger = logger
         self._viewModel = viewModel
 
-        self.title = .init(context.label)
+        self.title = context.label
         self._displayEmptyMessage = .init({
             switch context {
             case let .keywords(keywords):
