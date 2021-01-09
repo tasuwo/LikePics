@@ -22,24 +22,22 @@ protocol TagCollectionViewModelInputs {
 }
 
 protocol TagCollectionViewModelOutputs {
-    var tags: CurrentValueSubject<[Tag], Never> { get }
-    var filteredTags: CurrentValueSubject<[Tag], Never> { get }
+    var items: AnyPublisher<[TagCollectionViewLayout.Item], Never> { get }
 
-    var displayUncategorizedTag: CurrentValueSubject<Bool, Never> { get }
-    var displaySearchBar: CurrentValueSubject<Bool, Never> { get }
-    var displayCollectionView: CurrentValueSubject<Bool, Never> { get }
-    var displayEmptyMessageView: CurrentValueSubject<Bool, Never> { get }
-    var displayClipCount: CurrentValueSubject<Bool, Never> { get }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { get }
+    var isEmptyMessageViewDisplaying: AnyPublisher<Bool, Never> { get }
 
-    var errorMessage: PassthroughSubject<String, Never> { get }
-    var searchBarCleared: PassthroughSubject<Void, Never> { get }
-    var tagViewOpened: PassthroughSubject<Tag, Never> { get }
+    var displayErrorMessage: PassthroughSubject<String, Never> { get }
+    var clearSearchBar: PassthroughSubject<Void, Never> { get }
+    var presentTagsView: PassthroughSubject<Tag, Never> { get }
 }
 
 class TagCollectionViewModel: TagCollectionViewModelType,
     TagCollectionViewModelInputs,
     TagCollectionViewModelOutputs
 {
+    typealias Layout = TagCollectionViewLayout
+
     // MARK: - Properties
 
     // MARK: TagCollectionViewModelType
@@ -58,20 +56,22 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     // MARK: TagCollectionViewModelOutputs
 
-    let tags: CurrentValueSubject<[Tag], Never> = .init([])
-    let filteredTags: CurrentValueSubject<[Tag], Never> = .init([])
+    var items: AnyPublisher<[TagCollectionViewLayout.Item], Never> { _items.eraseToAnyPublisher() }
 
-    let displayUncategorizedTag: CurrentValueSubject<Bool, Never> = .init(false)
-    let displaySearchBar: CurrentValueSubject<Bool, Never> = .init(false)
-    let displayCollectionView: CurrentValueSubject<Bool, Never> = .init(false)
-    let displayEmptyMessageView: CurrentValueSubject<Bool, Never> = .init(false)
-    let displayClipCount: CurrentValueSubject<Bool, Never> = .init(false)
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { _isCollectionViewDisplaying.eraseToAnyPublisher() }
+    var isEmptyMessageViewDisplaying: AnyPublisher<Bool, Never> { _isEmptyMessageViewDisplaying.eraseToAnyPublisher() }
 
-    let errorMessage: PassthroughSubject<String, Never> = .init()
-    let searchBarCleared: PassthroughSubject<Void, Never> = .init()
-    let tagViewOpened: PassthroughSubject<Tag, Never> = .init()
+    let displayErrorMessage: PassthroughSubject<String, Never> = .init()
+    let clearSearchBar: PassthroughSubject<Void, Never> = .init()
+    let presentTagsView: PassthroughSubject<Tag, Never> = .init()
 
     // MARK: Privates
+
+    private let _tags: CurrentValueSubject<[Tag], Never>
+    private let _items: CurrentValueSubject<[TagCollectionViewLayout.Item], Never>
+
+    private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _isEmptyMessageViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let query: TagListQuery
     private let clipCommandService: ClipCommandServiceProtocol
@@ -95,6 +95,9 @@ class TagCollectionViewModel: TagCollectionViewModelType,
         self.settingStorage = settingStorage
         self.logger = logger
 
+        self._tags = .init(query.tags.value)
+        self._items = .init([])
+
         self.bind()
     }
 
@@ -111,27 +114,38 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                 let tags = tags
                     .filter { showHiddenItems ? true : $0.isHidden == false }
 
-                self.displayEmptyMessageView.send(tags.isEmpty)
-                self.displaySearchBar.send(!tags.isEmpty)
-                self.displayCollectionView.send(!tags.isEmpty)
-                self.displayEmptyMessageView.send(tags.isEmpty)
-                self.displayUncategorizedTag.send(searchQuery.isEmpty && !tags.isEmpty)
+                let filteredTags = self.searchStorage.perform(query: searchQuery, to: tags)
+                let items: [Layout.Item] = (
+                    [searchQuery.isEmpty ? .uncategorized : nil]
+                        + filteredTags.map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: showHiddenItems)) }
+                ).compactMap { $0 }
 
-                if tags.isEmpty {
-                    self.searchBarCleared.send(())
-                }
-
-                if tags.isEmpty, !searchQuery.isEmpty {
-                    self.inputtedQuery.send("")
-                }
-
-                self.filteredTags.send(self.searchStorage.perform(query: searchQuery, to: tags))
-                self.tags.send(tags)
+                self._tags.send(tags)
+                self._items.send(items)
             }
             .store(in: &self.cancellableBag)
 
-        self.settingStorage.showHiddenItems
-            .sink { [weak self] showHiddenItems in self?.displayClipCount.send(showHiddenItems) }
+        self._tags
+            .combineLatest(self.inputtedQuery)
+            .sink { [weak self] tags, searchQuery in
+                if tags.isEmpty, !searchQuery.isEmpty {
+                    self?.clearSearchBar.send(())
+                }
+            }
+            .store(in: &self.cancellableBag)
+
+        self._tags
+            .map { $0.isEmpty }
+            .sink { [weak self] isEmpty in
+                guard let self = self else { return }
+                if isEmpty {
+                    self._isCollectionViewDisplaying.send(false)
+                    self._isEmptyMessageViewDisplaying.send(true)
+                } else {
+                    self._isEmptyMessageViewDisplaying.send(false)
+                    self._isCollectionViewDisplaying.send(true)
+                }
+            }
             .store(in: &self.cancellableBag)
 
         self.created
@@ -143,20 +157,20 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.logger.write(ConsoleLog(level: .info, message: """
                     Duplicated tag name "\(name)". (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.errorTagAddDuplicated)
+                    self.displayErrorMessage.send(L10n.errorTagAddDuplicated)
 
                 default:
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to add tag. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.errorTagAddDefault)
+                    self.displayErrorMessage.send(L10n.errorTagAddDefault)
                 }
             }
             .store(in: &self.cancellableBag)
 
         self.selected
             .sink { [weak self] tag in
-                self?.tagViewOpened.send(tag)
+                self?.presentTagsView.send(tag)
             }
             .store(in: &self.cancellableBag)
 
@@ -167,7 +181,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete tags. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.errorTagDelete)
+                    self.displayErrorMessage.send(L10n.errorTagDelete)
                     return
                 }
             }
@@ -180,7 +194,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to hide tags. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.errorTagDefault)
+                    self.displayErrorMessage.send(L10n.errorTagDefault)
                     return
                 }
             }
@@ -193,7 +207,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to reveal tags. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.errorTagDefault)
+                    self.displayErrorMessage.send(L10n.errorTagDefault)
                     return
                 }
             }
@@ -209,13 +223,13 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             self.logger.write(ConsoleLog(level: .info, message: """
             Duplicated tag name "\(name)". (code: \(error.rawValue))
             """))
-            self.errorMessage.send(L10n.errorTagRenameDuplicated)
+            self.displayErrorMessage.send(L10n.errorTagRenameDuplicated)
 
         default:
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add tag. (code: \(error.rawValue))
             """))
-            self.errorMessage.send(L10n.errorTagDefault)
+            self.displayErrorMessage.send(L10n.errorTagDefault)
         }
     }
 }

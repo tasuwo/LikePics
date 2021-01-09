@@ -204,6 +204,7 @@ class SearchResultViewController: UIViewController {
     // MARK: Appearance
 
     private func setupAppearance() {
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
         self.title = self.viewModel.outputs.title
     }
 

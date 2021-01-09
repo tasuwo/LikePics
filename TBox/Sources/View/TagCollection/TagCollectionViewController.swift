@@ -11,20 +11,9 @@ import UIKit
 class TagCollectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = TagCollectionViewModelType
-
-    enum Section: Int {
-        case uncategorized
-        case main
-    }
-
-    enum Item: Hashable {
-        case uncategorized
-        case tag(Tag)
-    }
+    typealias Layout = TagCollectionViewLayout
 
     // MARK: - Properties
-
-    private static let uncategorizedCellIdentifier = "uncategorized"
 
     // MARK: Factory
 
@@ -47,8 +36,8 @@ class TagCollectionViewController: UIViewController {
                              message: L10n.tagListViewAlertForUpdateMessage,
                              placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
     )
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    private var collectionView: TagCollectionView!
+    private var dataSource: Layout.DataSource!
+    private var collectionView: UICollectionView!
     private let searchController = UISearchController(searchResultsController: nil)
 
     // MARK: Components
@@ -114,45 +103,26 @@ class TagCollectionViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        dependency.outputs.filteredTags
-            .combineLatest(dependency.outputs.displayUncategorizedTag)
+        dependency.outputs.items
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, displayUncategorizedTag in
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-                snapshot.appendSections([.uncategorized])
-                snapshot.appendItems(displayUncategorizedTag ? [.uncategorized] : [])
-                snapshot.appendSections([.main])
-                snapshot.appendItems(tags.map { .tag($0) })
-                self?.dataSource.apply(snapshot, animatingDifferences: true)
+            .sink { [weak self] items in
+                guard let self = self else { return }
+                Layout.apply(items: items, to: self.dataSource, in: self.collectionView)
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.displaySearchBar
-            .receive(on: DispatchQueue.main)
-            .map { !$0 }
-            .assign(to: \.isHidden, on: self.searchController.searchBar)
-            .store(in: &self.cancellableBag)
-        dependency.outputs.displayCollectionView
+        dependency.outputs.isCollectionViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { !$0 }
             .assign(to: \.isHidden, on: self.collectionView)
             .store(in: &self.cancellableBag)
-        dependency.outputs.displayEmptyMessageView
+        dependency.outputs.isEmptyMessageViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
-        dependency.outputs.displayClipCount
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] displayClipCount in
-                self?.collectionView.visibleCells
-                    .compactMap { $0 as? TagCollectionViewCell }
-                    .forEach { $0.visibleCountIfPossible = displayClipCount }
-                self?.collectionView.collectionViewLayout.invalidateLayout()
-            }
-            .store(in: &self.cancellableBag)
 
-        dependency.outputs.searchBarCleared
+        dependency.outputs.clearSearchBar
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.searchController.searchBar.resignFirstResponder()
@@ -160,7 +130,7 @@ class TagCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
@@ -170,7 +140,7 @@ class TagCollectionViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.tagViewOpened
+        dependency.outputs.presentTagsView
             .receive(on: DispatchQueue.main)
             .sink { [weak self] tag in
                 guard let self = self else { return }
@@ -186,8 +156,8 @@ class TagCollectionViewController: UIViewController {
     // MARK: Collection View
 
     private func setupCollectionView() {
-        self.collectionView = TagCollectionView(frame: self.view.frame,
-                                                collectionViewLayout: self.createLayout())
+        self.collectionView = UICollectionView(frame: self.view.frame,
+                                               collectionViewLayout: Layout.createLayout())
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = .clear
         self.view.addSubview(collectionView)
@@ -195,74 +165,8 @@ class TagCollectionViewController: UIViewController {
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
 
-        self.collectionView.register(UncategorizedCell.nib,
-                                     forCellWithReuseIdentifier: Self.uncategorizedCellIdentifier)
-
-        self.dataSource = .init(collectionView: self.collectionView,
-                                cellProvider: self.cellProvider())
-    }
-
-    private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
-            switch Section(rawValue: sectionIndex) {
-            case .uncategorized:
-                return self.createUncategorizedLayoutSection()
-
-            case .main:
-                return self.createTagsLayoutSection()
-
-            case .none:
-                return nil
-            }
-        }
-        return layout
-    }
-
-    private func createUncategorizedLayoutSection() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0),
-                                                            heightDimension: .fractionalHeight(1.0)))
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(40))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14)
-
-        return NSCollectionLayoutSection(group: group)
-    }
-
-    private func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
-                                                             top: nil,
-                                                             trailing: nil,
-                                                             bottom: .fixed(4))
-        let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
-        return section
-    }
-
-    private func cellProvider() -> (UICollectionView, IndexPath, Item) -> UICollectionViewCell? {
-        return { [weak self] collectionView, indexPath, item -> UICollectionViewCell? in
-            guard let self = self else { return nil }
-            switch item {
-            case let .tag(tag):
-                let configuration = TagCollectionView.CellConfiguration.Tag(
-                    tag: tag,
-                    displayMode: .normal,
-                    visibleDeleteButton: false,
-                    visibleCountIfPossible: self.viewModel.outputs.displayClipCount.value,
-                    delegate: nil
-                )
-                return TagCollectionView.provideCell(collectionView: collectionView,
-                                                     indexPath: indexPath,
-                                                     configuration: .tag(configuration))
-
-            case .uncategorized:
-                let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: Self.uncategorizedCellIdentifier, for: indexPath)
-                guard let cell = dequeuedCell as? UncategorizedCell else { return dequeuedCell }
-                cell.delegate = self
-                return cell
-            }
-        }
+        self.dataSource = Layout.configureDataSource(collectionView: collectionView,
+                                                     uncategorizedCellDelegate: self)
     }
 
     // MARK: NavigationBar
@@ -319,7 +223,7 @@ extension TagCollectionViewController: UICollectionViewDelegate {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
             if !self.isEditing {
-                self.viewModel.inputs.selected.send(tag)
+                self.viewModel.inputs.selected.send(tag.tag)
             }
 
         case .uncategorized:
@@ -339,7 +243,7 @@ extension TagCollectionViewController {
         case let .tag(tag):
             return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
                                               previewProvider: nil,
-                                              actionProvider: self.makeActionProvider(for: tag, at: indexPath))
+                                              actionProvider: self.makeActionProvider(for: tag.tag, at: indexPath))
 
         default:
             return nil
