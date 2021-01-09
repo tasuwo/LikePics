@@ -103,6 +103,7 @@
 		2C369A732545765900462097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C369A752545765900462097 /* Localizable.strings */; };
 		2C369A892545773000462097 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C369A882545773000462097 /* String.swift */; };
 		2C369AA4254577E800462097 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C369AA6254577E800462097 /* Localizable.strings */; };
+		2C3739C725A96A43007701F7 /* ListingClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3739C625A96A43007701F7 /* ListingClip.swift */; };
 		2C37E3172594C94B00600E59 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C37E3192594C94B00600E59 /* InfoPlist.strings */; };
 		2C37EBC525101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */; };
 		2C37EBC72510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37EBC62510286E0046ABB0 /* ClipInformationInteractivePresentationAnimator.swift */; };
@@ -800,6 +801,7 @@
 		2C369A882545773000462097 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2C369AA5254577E800462097 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2C369AAF254577EB00462097 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2C3739C625A96A43007701F7 /* ListingClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingClip.swift; sourceTree = "<group>"; };
 		2C37E3182594C94B00600E59 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2C37E31A2594C95000600E59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2C37EBC425101C5B0046ABB0 /* ClipInformationInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
@@ -1678,6 +1680,14 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
+		2C3739C525A96A37007701F7 /* Listing */ = {
+			isa = PBXGroup;
+			children = (
+				2C3739C625A96A43007701F7 /* ListingClip.swift */,
+			);
+			path = Listing;
+			sourceTree = "<group>";
+		};
 		2C38C703250AF31900F32102 /* TagSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -2551,6 +2561,7 @@
 			children = (
 				2C16050725207C6A00A39E58 /* Identifiable.swift */,
 				2C1040DD254D953D000DF7DE /* Common */,
+				2C3739C525A96A37007701F7 /* Listing */,
 				2C1040DC254D9534000DF7DE /* Reference */,
 				2C236D71251A10C300AB5EDD /* Query */,
 			);
@@ -4370,6 +4381,7 @@
 				2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */,
 				2C1F297D2560EF4200B89AE9 /* ImageStorageProtocol.swift in Sources */,
 				2C99277D24DDC7E600672CA7 /* Clip.swift in Sources */,
+				2C3739C725A96A43007701F7 /* ListingClip.swift in Sources */,
 				2C8FD62724E02297005887F9 /* ClipItem.swift in Sources */,
 				2CC5CA202571577F00B0472B /* CloudAvailabilityStore.swift in Sources */,
 				2C544605254B10270088C8BC /* TemporaryImageStorageProtocol.swift in Sources */,
