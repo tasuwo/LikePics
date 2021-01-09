@@ -94,7 +94,7 @@ class AlbumListViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
-                self?.viewModel.inputs.addedAlbum.send(text)
+                self?.viewModel.inputs.createAlbum.send(text)
             }
         )
     }
@@ -107,7 +107,7 @@ class AlbumListViewController: UIViewController {
                 $0?.isEmpty != true && $0 != album.title
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
-                self?.viewModel.inputs.editedAlbumTitle.send((album.id, text))
+                self?.viewModel.inputs.editAlbumTitle.send((album.id, text))
             }
         )
     }
@@ -118,7 +118,7 @@ class AlbumListViewController: UIViewController {
                                       preferredStyle: .actionSheet)
 
         let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
-            self?.viewModel.inputs.deletedAlbum.send(album.id)
+            self?.viewModel.inputs.deleteAlbum.send(album.id)
         }
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
@@ -137,9 +137,7 @@ class AlbumListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] albums in
                 guard let self = self else { return }
-                Layout.apply(items: albums.map { Layout.Item(album: $0) },
-                             to: self.dataSource,
-                             in: self.collectionView)
+                Layout.apply(items: albums, to: self.dataSource, in: self.collectionView)
             }
             .store(in: &self.cancellableBag)
 
@@ -149,13 +147,13 @@ class AlbumListViewController: UIViewController {
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.displayEmptyMessage
+        dependency.outputs.isDisplayingEmptyMessage
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -178,11 +176,11 @@ class AlbumListViewController: UIViewController {
             .store(in: &self.cancellableBag)
 
         self.navigationBarProvider.didTapEdit
-            .sink { _ in dependency.inputs.operation.send(.editing) }
+            .sink { _ in dependency.inputs.operationRequested.send(.editing) }
             .store(in: &self.cancellableBag)
 
         self.navigationBarProvider.didTapDone
-            .sink { _ in dependency.inputs.operation.send(.none) }
+            .sink { _ in dependency.inputs.operationRequested.send(.none) }
             .store(in: &self.cancellableBag)
     }
 
@@ -198,7 +196,6 @@ class AlbumListViewController: UIViewController {
 
         self.dataSource = Layout.configureDataSource(collectionView: collectionView,
                                                      thumbnailLoader: thumbnailLoader,
-                                                     editing: self,
                                                      delegate: self)
 
         // Reorder Settings
@@ -210,7 +207,7 @@ class AlbumListViewController: UIViewController {
 
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             let albumIds = transaction.finalSnapshot.itemIdentifiers.map { $0.album.id }
-            self?.viewModel.inputs.reorderedAlbums.send(albumIds)
+            self?.viewModel.inputs.reorderAlbums.send(albumIds)
         }
 
         self.collectionView.dragDelegate = self
@@ -236,15 +233,6 @@ class AlbumListViewController: UIViewController {
         self.emptyMessageView.delegate = self
 
         self.emptyMessageView.alpha = 0
-    }
-
-    // MARK: UIViewController (Override)
-
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-
-        self.collectionView.visibleCells.compactMap { $0 as? AlbumListCollectionViewCell }
-            .forEach { $0.setEditing(editing, animated: true) }
     }
 }
 
@@ -318,7 +306,7 @@ extension AlbumListViewController {
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.viewModel.inputs.hidedAlbum.send(album.id)
+                    self.viewModel.inputs.hideAlbum.send(album.id)
                 }
             }
 
@@ -327,7 +315,7 @@ extension AlbumListViewController {
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.viewModel.inputs.revealedAlbum.send(album.id)
+                    self.viewModel.inputs.revealAlbum.send(album.id)
                 }
             }
 
@@ -428,13 +416,5 @@ extension AlbumListViewController {
         // HACK: nilだとデフォルトの影が描画されてしまうため、空の BezierPath を指定する
         parameters.shadowPath = UIBezierPath()
         return parameters
-    }
-}
-
-extension AlbumListViewController: AlbumListViewEditing {
-    // MARK: - AlbumListViewEditing
-
-    func isEditing(_ layout: AlbumListViewLayout.Type) -> Bool {
-        return self.isEditing
     }
 }

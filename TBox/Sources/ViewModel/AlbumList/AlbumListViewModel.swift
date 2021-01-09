@@ -13,22 +13,23 @@ protocol AlbumListViewModelType {
 }
 
 protocol AlbumListViewModelInputs {
-    var operation: CurrentValueSubject<AlbumList.Operation, Never> { get }
+    var operationRequested: PassthroughSubject<AlbumList.Operation, Never> { get }
 
-    var addedAlbum: PassthroughSubject<String, Never> { get }
-    var deletedAlbum: PassthroughSubject<Album.Identity, Never> { get }
-    var hidedAlbum: PassthroughSubject<Album.Identity, Never> { get }
-    var revealedAlbum: PassthroughSubject<Album.Identity, Never> { get }
-    var reorderedAlbums: PassthroughSubject<[Album.Identity], Never> { get }
-    var editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> { get }
+    var createAlbum: PassthroughSubject<String, Never> { get }
+    var deleteAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var hideAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var revealAlbum: PassthroughSubject<Album.Identity, Never> { get }
+    var reorderAlbums: PassthroughSubject<[Album.Identity], Never> { get }
+    var editAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> { get }
 }
 
 protocol AlbumListViewModelOutputs {
-    var albums: CurrentValueSubject<[Album], Never> { get }
-    var operation: CurrentValueSubject<AlbumList.Operation, Never> { get }
-    var errorMessage: PassthroughSubject<String, Never> { get }
-    var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
-    var dragInteractionEnabled: CurrentValueSubject<Bool, Never> { get }
+    var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> { get }
+    var operation: AnyPublisher<AlbumList.Operation, Never> { get }
+    var isDisplayingEmptyMessage: AnyPublisher<Bool, Never> { get }
+    var dragInteractionEnabled: AnyPublisher<Bool, Never> { get }
+
+    var displayErrorMessage: PassthroughSubject<String, Never> { get }
 }
 
 class AlbumListViewModel: AlbumListViewModelType,
@@ -44,29 +45,37 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     // MARK: AlbumListViewModelInputs
 
-    let addedAlbum: PassthroughSubject<String, Never> = .init()
-    let deletedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
-    let hidedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
-    let revealedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
-    var reorderedAlbums: PassthroughSubject<[Album.Identity], Never> = .init()
-    let editedAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> = .init()
+    let operationRequested: PassthroughSubject<AlbumList.Operation, Never> = .init()
+
+    let createAlbum: PassthroughSubject<String, Never> = .init()
+    let deleteAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    let hideAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    let revealAlbum: PassthroughSubject<Album.Identity, Never> = .init()
+    var reorderAlbums: PassthroughSubject<[Album.Identity], Never> = .init()
+    let editAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> = .init()
 
     // MARK: AlbumListViewModelOutputs
 
-    let albums: CurrentValueSubject<[Album], Never>
-    let operation: CurrentValueSubject<AlbumList.Operation, Never> = .init(.none)
-    let errorMessage: PassthroughSubject<String, Never> = .init()
-    let displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
-    let dragInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(false)
+    var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> { _albums.eraseToAnyPublisher() }
+    var operation: AnyPublisher<AlbumList.Operation, Never> { _operation.eraseToAnyPublisher() }
+    var isDisplayingEmptyMessage: AnyPublisher<Bool, Never> { _isDisplayingEmptyMessage.eraseToAnyPublisher() }
+    var dragInteractionEnabled: AnyPublisher<Bool, Never> { _dragInteractionEnabled.eraseToAnyPublisher() }
+
+    let displayErrorMessage: PassthroughSubject<String, Never> = .init()
 
     // MARK: Privates
+
+    private let _albums: CurrentValueSubject<[AlbumListViewLayout.Item], Never>
+    private let _operation: CurrentValueSubject<AlbumList.Operation, Never> = .init(.none)
+    private let _isDisplayingEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _dragInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let query: AlbumListQuery
     private let clipCommandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -79,7 +88,10 @@ class AlbumListViewModel: AlbumListViewModelType,
         self.clipCommandService = clipCommandService
         self.settingStorage = settingStorage
         self.logger = logger
-        self.albums = .init(query.albums.value)
+
+        let albums = query.albums.value
+            .map { AlbumListViewLayout.Item(album: $0, isEditing: false) }
+        self._albums = .init(albums)
 
         self.bind()
     }
@@ -94,7 +106,7 @@ extension AlbumListViewModel {
                 return Just([Album]()).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-            .combineLatest(self.settingStorage.showHiddenItems, self.operation)
+            .combineLatest(self.settingStorage.showHiddenItems, self._operation)
             .sink { [weak self] albums, showHiddenItems, operation in
                 guard let self = self else { return }
 
@@ -107,78 +119,83 @@ extension AlbumListViewModel {
                         .map { $0.removingHiddenClips() }
                 }
 
-                self.albums.send(newAlbums)
-                self.displayEmptyMessage.send(albums.isEmpty)
+                self._isDisplayingEmptyMessage.send(albums.isEmpty)
+                self._albums.send(newAlbums.map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) }))
 
                 if operation.isEditing, newAlbums.isEmpty {
-                    self.operation.send(.none)
+                    self._operation.send(.none)
+                    return
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.operation
+        self.operationRequested
+            .sink { [weak self] requested in self?._operation.send(requested) }
+            .store(in: &self.subscriptions)
+
+        self.operationRequested
             .map { $0.isEditing }
-            .sink { [weak self] isEditing in self?.dragInteractionEnabled.send(isEditing) }
-            .store(in: &self.cancellableBag)
+            .sink { [weak self] isEditing in self?._dragInteractionEnabled.send(isEditing) }
+            .store(in: &self.subscriptions)
 
-        self.addedAlbum
+        self.createAlbum
             .sink { [weak self] title in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.create(albumWithTitle: title) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to add album. (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtAddAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtAddAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.deletedAlbum
+        self.deleteAlbum
             .sink { [weak self] albumId in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.deleteAlbum(having: albumId) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtDeleteAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtDeleteAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.hidedAlbum
+        self.hideAlbum
             .sink { [weak self] albumId in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byHiding: true) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to hide album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtHideAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtHideAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.revealedAlbum
+        self.revealAlbum
             .sink { [weak self] albumId in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, byHiding: false) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to reveal album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtRevealAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtRevealAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.reorderedAlbums
+        self.reorderAlbums
             .sink { [weak self] albumIds in
                 guard let self = self else { return }
 
-                let originals = self.query.albums.value.map({ $0.id })
+                let originals = self._albums.value.map({ $0.album.id })
                 guard Set(originals).count == originals.count, Set(albumIds).count == albumIds.count else {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムの並び替えに失敗しました。IDに重複が存在します
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
                     return
                 }
 
@@ -187,22 +204,22 @@ extension AlbumListViewModel {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to reorder album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.editedAlbumTitle
+        self.editAlbumTitle
             .sink { [weak self] albumId, newTitle in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateAlbum(having: albumId, titleTo: newTitle) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete album. (code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.albumListViewErrorAtEditAlbum)
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtEditAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     private func performReorder(originals: [Album.Identity], request: [Album.Identity]) -> [Album.Identity] {

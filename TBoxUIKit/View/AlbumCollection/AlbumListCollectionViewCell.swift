@@ -55,7 +55,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     public private(set) var visibleHiddenIcon: Bool = false
     public private(set) var isHiddenAlbum: Bool = false
 
-    private var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false
     private var isDragging: Bool = false
 
     public var onReuse: ((String?) -> Void)?

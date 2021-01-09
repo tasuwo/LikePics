@@ -7,10 +7,6 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-protocol AlbumListViewEditing: AnyObject {
-    func isEditing(_ layout: AlbumListViewLayout.Type) -> Bool
-}
-
 enum AlbumListViewLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
@@ -22,6 +18,19 @@ enum AlbumListViewLayout {
 
     struct Item: Equatable, Hashable {
         let album: Album
+        let isEditing: Bool
+
+        // MARK: - Equatable
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            return lhs.album == rhs.album
+        }
+
+        // MARK: - Hashable
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(album)
+        }
     }
 }
 
@@ -69,25 +78,31 @@ extension AlbumListViewLayout {
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(items)
+        print(items.map({ $0.album.id }))
         dataSource.apply(snapshot, animatingDifferences: true) { [weak collectionView] in
             collectionView?.indexPathsForVisibleItems.forEach { indexPath in
                 guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
                 guard let cell = collectionView?.cellForItem(at: indexPath) as? AlbumListCollectionViewCell else { return }
-                guard item.album.isHidden != cell.isHiddenAlbum else { return }
-                cell.setAlbumHiding(item.album.isHidden, animated: true)
+
+                if item.album.isHidden != cell.isHiddenAlbum {
+                    cell.setAlbumHiding(item.album.isHidden, animated: true)
+                }
+                if item.isEditing != cell.isEditing {
+                    cell.setEditing(item.isEditing, animated: true)
+                }
             }
         }
     }
 
     static func configureAlbumCell(thumbnailLoader: ThumbnailLoader,
-                                   editing: AlbumListViewEditing,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
-        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak editing, weak delegate] cell, indexPath, item in
+        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak delegate] cell, indexPath, item in
             cell.title = item.album.title
             cell.clipCount = item.album.clips.count
-            cell.setEditing(editing?.isEditing(Self.self) ?? false, animated: false)
             cell.delegate = delegate
+
+            cell.setEditing(item.isEditing, animated: false)
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setAlbumHiding(item.album.isHidden, animated: false)
@@ -117,12 +132,9 @@ extension AlbumListViewLayout {
 
     static func configureDataSource(collectionView: UICollectionView,
                                     thumbnailLoader: ThumbnailLoader,
-                                    editing: AlbumListViewEditing,
                                     delegate: AlbumListCollectionViewCellDelegate) -> DataSource
     {
-        let albumCellRegistration = self.configureAlbumCell(thumbnailLoader: thumbnailLoader,
-                                                            editing: editing,
-                                                            delegate: delegate)
+        let albumCellRegistration = self.configureAlbumCell(thumbnailLoader: thumbnailLoader, delegate: delegate)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: albumCellRegistration, for: indexPath, item: item)

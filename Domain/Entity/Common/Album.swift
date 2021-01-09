@@ -70,4 +70,12 @@ extension Album: Identifiable {
     }
 }
 
-extension Album: Hashable {}
+extension Album: Hashable {
+    // MARK: - Hashable
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(clips)
+    }
+}
