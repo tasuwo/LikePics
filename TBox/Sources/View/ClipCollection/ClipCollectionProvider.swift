@@ -225,7 +225,7 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuAddTag,
                             image: UIImage(systemName: "tag.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldAddTagsTo: clip.identity, at: indexPath)
                 }
             }
@@ -234,7 +234,7 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuAddToAlbum,
                             image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldAddToAlbum: clip.identity, at: indexPath)
                 }
             }
@@ -243,7 +243,7 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuUnhide,
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldUnhide: clip.identity, at: indexPath)
                 }
             }
@@ -252,7 +252,7 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity, at: indexPath)
                 }
             }
@@ -262,7 +262,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldRemoveFromAlbum: clip.identity, at: indexPath)
                 }
             }
@@ -272,7 +272,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity, at: indexPath)
                 }
             }
@@ -281,7 +281,7 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuShare,
                             image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldShare: clip.identity, at: indexPath)
                 }
             }
@@ -291,7 +291,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "scissors"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldPurge: clip.identity, at: indexPath)
                 }
             }
