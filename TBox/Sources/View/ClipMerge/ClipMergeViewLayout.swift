@@ -136,6 +136,7 @@ extension ClipMergeViewLayout {
             cell.visibleCountIfPossible = false
             cell.visibleDeleteButton = true
             cell.delegate = tagCellDelegate
+            cell.isHiddenTag = tag.isHidden
         }
 
         let imageCellRegistration = UICollectionView.CellRegistration<ClipMergeImageCell, ClipItem>(cellNib: ClipMergeImageCell.nib) { [weak thumbnailLoader] cell, _, clipItem in

@@ -116,6 +116,7 @@
             <connections>
                 <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
                 <outlet property="deleteButtonWidthConstraint" destination="K6j-GX-Qho" id="2YA-6R-ncp"/>
+                <outlet property="hashTagLabel" destination="aKJ-iB-l6I" id="XSO-e8-ViS"/>
                 <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>

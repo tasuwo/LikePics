@@ -114,6 +114,7 @@ public class TagCollectionView: UICollectionView {
             }
             cell.visibleDeleteButton = config.visibleDeleteButton
             cell.delegate = config.delegate
+            cell.isHiddenTag = config.tag.isHidden
 
             return cell
         }

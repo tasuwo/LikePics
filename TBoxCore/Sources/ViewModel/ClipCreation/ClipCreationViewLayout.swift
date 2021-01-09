@@ -193,6 +193,7 @@ extension ClipCreationViewLayout {
             cell.visibleCountIfPossible = false
             cell.visibleDeleteButton = true
             cell.delegate = tagCellDelegate
+            cell.isHiddenTag = tag.isHidden
         }
 
         let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in

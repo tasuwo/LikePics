@@ -247,7 +247,7 @@ class TagCollectionViewController: UIViewController {
             case let .tag(tag):
                 let configuration = TagCollectionView.CellConfiguration.Tag(
                     tag: tag,
-                    displayMode: self.isEditing ? .deletion : .normal,
+                    displayMode: .normal,
                     visibleDeleteButton: false,
                     visibleCountIfPossible: self.viewModel.outputs.displayClipCount.value,
                     delegate: nil

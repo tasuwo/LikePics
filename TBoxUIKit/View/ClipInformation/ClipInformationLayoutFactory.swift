@@ -283,6 +283,7 @@ public enum ClipInformationLayoutFactory {
                 cell.displayMode = .normal
                 cell.visibleDeleteButton = true
                 cell.delegate = delegate
+                cell.isHiddenTag = tag.isHidden
 
                 return cell
 

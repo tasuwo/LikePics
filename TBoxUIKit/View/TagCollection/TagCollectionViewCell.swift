@@ -12,7 +12,6 @@ public class TagCollectionViewCell: UICollectionViewCell {
     public enum DisplayMode {
         case normal
         case checkAtSelect
-        case deletion
     }
 
     public static var nib: UINib {
@@ -61,6 +60,14 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public var isHiddenTag: Bool = false {
+        didSet {
+            self.hashTagLabel.textColor = isHiddenTag ? .secondaryLabel : .label
+            self.titleLabel.textColor = isHiddenTag ? .secondaryLabel : .label
+        }
+    }
+
+    @IBOutlet var hashTagLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var deleteButtonContainer: UIView!
     @IBOutlet var labelMaxWidthConstraint: NSLayoutConstraint!
@@ -115,22 +122,10 @@ public class TagCollectionViewCell: UICollectionViewCell {
     func updateForDisplayMode() {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
-            self.titleLabel.textColor = UIColor.white
             self.contentView.backgroundColor = UIColor.systemGreen
             self.layer.borderWidth = 0
 
-        case (.deletion, true):
-            self.titleLabel.textColor = UIColor.white
-            self.contentView.backgroundColor = UIColor.systemRed
-            self.layer.borderWidth = 0
-
-        case (.deletion, false):
-            self.titleLabel.textColor = UIColor.label
-            self.contentView.backgroundColor = UIColor.systemBackground
-            self.layer.borderWidth = 1
-
         default:
-            self.titleLabel.textColor = UIColor.label
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 1
         }
