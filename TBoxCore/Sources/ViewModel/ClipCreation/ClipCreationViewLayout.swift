@@ -172,15 +172,15 @@ extension ClipCreationViewLayout {
                                     thumbnailLoader: Smoothie.ThumbnailLoader,
                                     outputs: ClipCreationViewModelOutputs) -> DataSource
     {
-        let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
-            cell.title = L10n.clipCreationViewUrlAdditionCellTitle
-            cell.delegate = buttonCellDelegate
-        }
+        // let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
+        //     cell.title = L10n.clipCreationViewUrlAdditionCellTitle
+        //     cell.delegate = buttonCellDelegate
+        // }
 
-        let urlCellRegistration = UICollectionView.CellRegistration<ButtonCell, URL>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, url in
-            cell.title = url.absoluteString
-            cell.delegate = buttonCellDelegate
-        }
+        // let urlCellRegistration = UICollectionView.CellRegistration<ButtonCell, URL>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, url in
+        //     cell.title = url.absoluteString
+        //     cell.delegate = buttonCellDelegate
+        // }
 
         let tagAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
             cell.title = L10n.clipCreationViewTagAdditionCellTitle
