@@ -101,6 +101,14 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let pointForRemover = removerContainer.convert(point, from: self)
+        if removerContainer.bounds.contains(pointForRemover) {
+            return removerContainer.hitTest(pointForRemover, with: event)
+        }
+        return super.hitTest(point, with: event)
+    }
+
     // MARK: - IBAction
 
     @IBAction func didTapTitleEditButton(_ sender: Any) {
@@ -155,6 +163,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         self.titleEditButtonContainer.isHidden = !isEditing
         self.removerContainer.isHidden = !isEditing
         self.hiddenIcon.isHidden = true
+
+        self.contentView.clipsToBounds = false
     }
 
     private func updateAppearance(isEditing: Bool) {
