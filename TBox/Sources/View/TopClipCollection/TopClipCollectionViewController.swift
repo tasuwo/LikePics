@@ -56,6 +56,7 @@ class TopClipCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
         self.setupCollectionView()
         self.setupNavigationBar()
         self.setupToolBar()
@@ -79,21 +80,25 @@ class TopClipCollectionViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { _ in } receiveValue: { [weak self] clips in
                 guard let self = self else { return }
-
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(clips)
-
-                if !clips.isEmpty {
-                    self.emptyMessageView.alpha = 0
-                }
                 self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
                     self?.updateHiddenIconAppearance()
-
-                    guard clips.isEmpty else { return }
-                    self?.emptyMessageView.alpha = 1
                 }
             }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isEmptyMessageDisplaying
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isCollectionViewDisplaying
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.collectionView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.selected
@@ -184,6 +189,12 @@ class TopClipCollectionViewController: UIViewController {
             guard clip.isHidden != cell.isHiddenClip else { return }
             cell.setClipHiding(clip.isHidden, animated: true)
         }
+    }
+
+    // MARK: Appearance
+
+    private func setupAppearance() {
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
     }
 
     // MARK: CollectionView

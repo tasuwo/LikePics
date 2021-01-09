@@ -48,6 +48,8 @@ protocol TopClipCollectionViewModelOutputs {
     var selectedClips: AnyPublisher<[Clip], Never> { get }
     var previewingClip: Clip? { get }
     var operation: AnyPublisher<ClipCollection.Operation, Never> { get }
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { get }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { get }
 
     // MARK: Selection
 
@@ -116,6 +118,8 @@ class TopClipCollectionViewModel: TopClipCollectionViewModelType,
     var selectedClips: AnyPublisher<[Clip], Never> { _viewModel.outputs.selectedClips }
     var previewingClip: Clip? { _viewModel.outputs.previewingClip }
     var operation: AnyPublisher<ClipCollection.Operation, Never> { _viewModel.outputs.operation }
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { _viewModel.outputs.isEmptyMessageDisplaying }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { _viewModel.outputs.isCollectionViewDisplaying }
 
     var selected: PassthroughSubject<Set<Clip>, Never> { _viewModel.outputs.selected }
     var deselected: PassthroughSubject<Set<Clip>, Never> { _viewModel.outputs.deselected }

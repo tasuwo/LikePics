@@ -84,23 +84,25 @@ class SearchResultViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
-
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Clip>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(clips)
-
-                if !clips.isEmpty {
-                    self.emptyMessageView.alpha = 0
-                }
                 self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
                     self?.updateHiddenIconAppearance()
-
-                    guard clips.isEmpty else { return }
-                    UIView.animate(withDuration: 0.2) {
-                        self?.emptyMessageView.alpha = 1
-                    }
                 }
             }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isEmptyMessageDisplaying
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.emptyMessageView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isCollectionViewDisplaying
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.collectionView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.operation

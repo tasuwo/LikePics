@@ -54,6 +54,8 @@ protocol ClipCollectionViewModelOutputs {
     var selections: Set<Clip.Identity> { get }
     var previewingClip: Clip? { get }
     var operation: AnyPublisher<ClipCollection.Operation, Never> { get }
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { get }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { get }
 
     // MARK: Selection
 
@@ -135,6 +137,14 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
         _operation.eraseToAnyPublisher()
     }
 
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> {
+        _isEmptyMessageDisplaying.eraseToAnyPublisher()
+    }
+
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> {
+        _isCollectionViewDisplaying.eraseToAnyPublisher()
+    }
+
     let selected: PassthroughSubject<Set<Clip>, Never> = .init()
     let deselected: PassthroughSubject<Set<Clip>, Never> = .init()
 
@@ -148,6 +158,8 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     private let _clips: CurrentValueSubject<[Clip.Identity: Clip], Never> = .init([:])
     private let _selections: CurrentValueSubject<Set<Clip.Identity>, Never> = .init([])
     private let _operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
+    private let _isEmptyMessageDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
     private let _previewingClipId: CurrentValueSubject<Clip.Identity?, Never> = .init(nil)
 
     private let clipService: ClipCommandServiceProtocol
@@ -237,6 +249,19 @@ extension ClipCollectionViewModel {
                 let newClipIds = Set(clips.map { $0.id })
                 if !self._selections.value.isSubset(of: newClipIds) {
                     self._selections.send(self._selections.value.subtracting(self._selections.value.subtracting(newClipIds)))
+                }
+            }
+            .store(in: &subscriptions)
+
+        self._clips
+            .map { $0.isEmpty }
+            .sink { [weak self] isEmpty in
+                if isEmpty {
+                    self?._isCollectionViewDisplaying.send(false)
+                    self?._isEmptyMessageDisplaying.send(true)
+                } else {
+                    self?._isEmptyMessageDisplaying.send(false)
+                    self?._isCollectionViewDisplaying.send(true)
                 }
             }
             .store(in: &subscriptions)
