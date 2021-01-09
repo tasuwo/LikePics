@@ -99,6 +99,7 @@ class AlbumViewController: UIViewController {
 
     // MARK: Bind
 
+    // swiftlint:disable:next function_body_length
     private func bind(to dependency: Dependency) {
         dependency.outputs.clips
             .receive(on: DispatchQueue.main)
