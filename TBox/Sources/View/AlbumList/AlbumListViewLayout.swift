@@ -98,6 +98,7 @@ extension AlbumListViewLayout {
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
         return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak delegate] cell, indexPath, item in
+            cell.albumId = item.album.id
             cell.title = item.album.title
             cell.clipCount = item.album.clips.count
             cell.delegate = delegate

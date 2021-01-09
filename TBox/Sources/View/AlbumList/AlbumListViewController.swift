@@ -99,26 +99,26 @@ class AlbumListViewController: UIViewController {
         )
     }
 
-    private func startEditingAlbumTitle(for album: Album) {
+    private func startEditingAlbumTitle(albumId: Album.Identity, title: String?) {
         self.editAlbumTitleAlertContainer.present(
-            withText: album.title,
+            withText: title,
             on: self,
             validator: {
-                $0?.isEmpty != true && $0 != album.title
+                $0?.isEmpty != true && $0 != title
             }, completion: { [weak self] action in
                 guard case let .saved(text: text) = action else { return }
-                self?.viewModel.inputs.editAlbumTitle.send((album.id, text))
+                self?.viewModel.inputs.editAlbumTitle.send((albumId, text))
             }
         )
     }
 
-    private func startDeletingAlbum(_ album: Album) {
-        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(album.title),
-                                      message: L10n.albumListViewAlertForDeleteMessage(album.title),
+    private func startDeletingAlbum(albumId: Album.Identity, title: String) {
+        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(title),
+                                      message: L10n.albumListViewAlertForDeleteMessage(title),
                                       preferredStyle: .actionSheet)
 
         let action = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
-            self?.viewModel.inputs.deleteAlbum.send(album.id)
+            self?.viewModel.inputs.deleteAlbum.send(albumId)
         }
         alert.addAction(action)
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
@@ -322,14 +322,14 @@ extension AlbumListViewController {
         case .rename:
             return UIAction(title: L10n.albumListViewContextMenuActionUpdate,
                             image: UIImage(systemName: "text.cursor")) { [weak self] _ in
-                self?.startEditingAlbumTitle(for: album)
+                self?.startEditingAlbumTitle(albumId: album.id, title: album.title)
             }
 
         case .delete:
             return UIAction(title: L10n.albumListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.startDeletingAlbum(album)
+                self?.startDeletingAlbum(albumId: album.id, title: album.title)
             }
         }
     }
@@ -347,15 +347,13 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     // MARK: - AlbumListCollectionViewCellDelegate
 
     func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell) {
-        guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.startEditingAlbumTitle(for: item.album)
+        guard let albumId = cell.albumId else { return }
+        self.startEditingAlbumTitle(albumId: albumId, title: cell.title)
     }
 
     func didTapRemover(_ cell: AlbumListCollectionViewCell) {
-        guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        self.startDeletingAlbum(item.album)
+        guard let albumId = cell.albumId, let title = cell.title else { return }
+        self.startDeletingAlbum(albumId: albumId, title: title)
     }
 }
 

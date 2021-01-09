@@ -18,6 +18,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     public var identifier: String?
 
+    public var albumId: Album.Identity?
+
     public var thumbnail: UIImage? {
         get {
             self.thumbnailImageView.image
