@@ -23,31 +23,32 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGi-OV-WPW" userLabel="Body Container">
                                 <rect key="frame" x="0.0" y="0.0" width="198" height="41"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
                                         <rect key="frame" x="8" y="8" width="182" height="25"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
                                                 <rect key="frame" x="0.0" y="0.0" width="16" height="25"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Bt0-iq-WPi">
-                                                        <rect key="frame" x="0.0" y="4.5" width="16" height="17"/>
-                                                        <color key="tintColor" systemColor="labelColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKJ-iB-l6I">
+                                                        <rect key="frame" x="0.0" y="0.5" width="16" height="24"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="16" id="59i-Pz-bBQ"/>
-                                                            <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="height" multiplier="1:1" id="Hju-m5-d5b"/>
+                                                            <constraint firstAttribute="width" constant="16" id="cDj-WQ-QSB"/>
                                                         </constraints>
-                                                    </imageView>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="Bt0-iq-WPi" secondAttribute="trailing" id="SIj-oK-OmZ"/>
-                                                    <constraint firstItem="Bt0-iq-WPi" firstAttribute="centerY" secondItem="rdG-Yc-CjJ" secondAttribute="centerY" id="eg5-AA-KjO"/>
-                                                    <constraint firstItem="Bt0-iq-WPi" firstAttribute="leading" secondItem="rdG-Yc-CjJ" secondAttribute="leading" id="fDA-0c-blw"/>
-                                                    <constraint firstAttribute="width" secondItem="Bt0-iq-WPi" secondAttribute="width" id="ji1-RQ-09U"/>
+                                                    <constraint firstItem="aKJ-iB-l6I" firstAttribute="centerY" secondItem="rdG-Yc-CjJ" secondAttribute="centerY" id="0pG-N5-HYp"/>
+                                                    <constraint firstAttribute="trailing" secondItem="aKJ-iB-l6I" secondAttribute="trailing" id="Lnj-0W-F8R"/>
+                                                    <constraint firstItem="aKJ-iB-l6I" firstAttribute="leading" secondItem="rdG-Yc-CjJ" secondAttribute="leading" id="eub-60-cGB"/>
+                                                    <constraint firstAttribute="width" secondItem="aKJ-iB-l6I" secondAttribute="width" id="lC4-tk-U0u"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="20" y="0.0" width="162" height="25"/>
+                                                <rect key="frame" x="16" y="0.0" width="166" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -115,7 +116,6 @@
             <connections>
                 <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
                 <outlet property="deleteButtonWidthConstraint" destination="K6j-GX-Qho" id="2YA-6R-ncp"/>
-                <outlet property="iconImage" destination="Bt0-iq-WPi" id="bDi-Oe-Lrv"/>
                 <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
@@ -123,11 +123,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="tag.fill" catalog="system" width="128" height="119"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
