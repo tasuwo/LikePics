@@ -128,7 +128,8 @@ extension ClipStorage: ClipStorageProtocol {
     }
 
     public func beginTransaction() throws {
-        self.context.reset()
+        // FIXME: タイミングによって `unrecognized selector sent to instance` でクラッシュすることがあるため、コメントアウト
+        // self.context.reset()
     }
 
     public func commitTransaction() throws {
