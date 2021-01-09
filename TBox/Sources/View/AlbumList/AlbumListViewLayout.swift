@@ -78,7 +78,6 @@ extension AlbumListViewLayout {
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(items)
-        print(items.map({ $0.album.id }))
         dataSource.apply(snapshot, animatingDifferences: true) { [weak collectionView] in
             collectionView?.indexPathsForVisibleItems.forEach { indexPath in
                 guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
