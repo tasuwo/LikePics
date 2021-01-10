@@ -219,10 +219,11 @@ extension AlbumViewModel {
             }, receiveValue: { [weak self] album, showHiddenItems in
                 guard let self = self else { return }
 
-                let newClips = album.clips.filter { clip in
-                    guard showHiddenItems else { return !clip.isHidden }
-                    return true
-                }
+                let newClips = album.clips
+                    .filter { clip in
+                        guard showHiddenItems else { return !clip.isHidden }
+                        return true
+                    }
 
                 self._viewModel.inputs.clipsFetched.send(newClips)
             })
@@ -281,7 +282,18 @@ extension AlbumViewModel {
         self.reorder
             .sink { [weak self] clipIds in
                 guard let self = self else { return }
-                if case let .failure(error) = self.clipService.updateAlbum(having: self.album.value.identity, byReorderingClipsHaving: clipIds) {
+
+                let originals = self.query.album.value.clips.map({ $0.id })
+                guard Set(originals).count == originals.count, Set(clipIds).count == clipIds.count else {
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    アルバムの並び替えに失敗しました。IDに重複が存在します
+                    """))
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtReorderAlbum)
+                    return
+                }
+
+                let ids = self.performReorder(originals: originals, request: clipIds)
+                if case let .failure(error) = self.clipService.updateAlbum(having: self.album.value.identity, byReorderingClipsHaving: ids) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     並び替えに失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
@@ -289,5 +301,15 @@ extension AlbumViewModel {
                 }
             }
             .store(in: &self.subscriptions)
+    }
+
+    private func performReorder(originals: [Clip.Identity], request: [Clip.Identity]) -> [Clip.Identity] {
+        var index = 0
+        return originals
+            .map { original in
+                guard request.contains(original) else { return original }
+                index += 1
+                return request[index - 1]
+            }
     }
 }

@@ -76,6 +76,11 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     ClipCollectionViewModelInputs,
     ClipCollectionViewModelOutputs
 {
+    struct OrderedClip {
+        let index: Int
+        let value: Clip
+    }
+
     // MARK: - ClipCollectionViewModelType
 
     var inputs: ClipCollectionViewModelInputs { self }
@@ -113,7 +118,8 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     var clips: AnyPublisher<[Clip], Never> {
         _clips.map { $0
             .map { $0.value }
-            .sorted(by: { $0.registeredDate > $1.registeredDate })
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.value }
         }
         .eraseToAnyPublisher()
     }
@@ -121,7 +127,10 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     var selectedClips: AnyPublisher<[Clip], Never> {
         _selections.combineLatest(_clips)
             .map { selections, dict in
-                selections.compactMap { id in dict[id] }
+                selections
+                    .compactMap { id in dict[id] }
+                    .sorted(by: { $0.index < $1.index })
+                    .compactMap { $0.value }
             }
             .eraseToAnyPublisher()
     }
@@ -130,7 +139,7 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
 
     var previewingClip: Clip? {
         guard let clipId = _previewingClipId.value else { return nil }
-        return _clips.value[clipId]
+        return _clips.value[clipId]?.value
     }
 
     var operation: AnyPublisher<ClipCollection.Operation, Never> {
@@ -155,7 +164,7 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
 
     // MARK: Privates
 
-    private let _clips: CurrentValueSubject<[Clip.Identity: Clip], Never> = .init([:])
+    private let _clips: CurrentValueSubject<[Clip.Identity: OrderedClip], Never> = .init([:])
     private let _selections: CurrentValueSubject<Set<Clip.Identity>, Never> = .init([])
     private let _operation: CurrentValueSubject<ClipCollection.Operation, Never> = .init(.none)
     private let _isEmptyMessageDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
@@ -169,7 +178,10 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     private var subscriptions = Set<AnyCancellable>()
 
     private var _selectedClips: [Clip] {
-        _selections.value.compactMap { _clips.value[$0] }
+        _selections.value
+            .compactMap { _clips.value[$0] }
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.value }
     }
 
     private var selectedClipIds: [Clip.Identity] { Array(self._selections.value) }
@@ -190,7 +202,7 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
 
 extension ClipCollectionViewModel {
     func resolveTags(for clipId: Clip.Identity) -> [Tag.Identity] {
-        guard let clip = _clips.value[clipId] else { return [] }
+        guard let clip = _clips.value[clipId]?.value else { return [] }
         return clip.tags.map { $0.id }
     }
 }
@@ -199,7 +211,7 @@ extension ClipCollectionViewModel {
 
 extension ClipCollectionViewModel {
     private func fetchImages(for clipId: Clip.Identity) -> [Data] {
-        guard let clip = _clips.value[clipId] else {
+        guard let clip = _clips.value[clipId]?.value else {
             displayErrorMessage.send(L10n.clipCollectionErrorAtShare)
             return []
         }
@@ -243,7 +255,10 @@ extension ClipCollectionViewModel {
             .sink { [weak self] clips in
                 guard let self = self else { return }
 
-                self._clips.send(clips.reduce(into: [Clip.Identity: Clip](), { $0[$1.id] = $1 }))
+                let dict = clips.enumerated().reduce(into: [Clip.Identity: OrderedClip]()) { dict, value in
+                    dict[value.element.id] = OrderedClip(index: value.offset, value: value.element)
+                }
+                self._clips.send(dict)
 
                 // 余分な選択を除外する
                 let newClipIds = Set(clips.map { $0.id })
@@ -283,7 +298,7 @@ extension ClipCollectionViewModel {
     private func configureSelections() {
         self.select
             .sink { [weak self] clipId in
-                guard let self = self, let clip = self._clips.value[clipId] else { return }
+                guard let self = self, let clip = self._clips.value[clipId]?.value else { return }
                 let selections: Set<Clip.Identity> = {
                     if self._operation.value.isAllowedMultipleSelection {
                         return self._selections.value.union(Set([clipId]))
@@ -296,7 +311,7 @@ extension ClipCollectionViewModel {
                 self.selected.send(Set([clip]))
 
                 if !self._operation.value.isAllowedMultipleSelection,
-                    let clip = self._clips.value[clipId]
+                    let clip = self._clips.value[clipId]?.value
                 {
                     self._previewingClipId.send(clip.id)
                     self.previewed.send(clipId)
@@ -308,7 +323,7 @@ extension ClipCollectionViewModel {
             .sink { [weak self] _ in
                 guard let self = self, self._operation.value.isAllowedMultipleSelection else { return }
                 self._selections.send(Set(self._clips.value.keys))
-                self.selected.send(Set(self._clips.value.values))
+                self.selected.send(Set(self._clips.value.values.map({ $0.value })))
             }
             .store(in: &self.subscriptions)
 
@@ -316,7 +331,7 @@ extension ClipCollectionViewModel {
             .sink { [weak self] clipId in
                 guard let self = self,
                     self._selections.value.contains(clipId),
-                    let clip = self._clips.value[clipId] else { return }
+                    let clip = self._clips.value[clipId]?.value else { return }
                 self._selections.send(self._selections.value.subtracting(Set([clipId])))
                 self.deselected.send(Set([clip]))
             }
@@ -326,7 +341,7 @@ extension ClipCollectionViewModel {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 let targets = self._selections.value
-                    .compactMap { self._clips.value[$0] }
+                    .compactMap { self._clips.value[$0]?.value }
                 self._selections.send([])
                 self.deselected.send(Set(targets))
             }
@@ -489,7 +504,7 @@ extension ClipCollectionViewModel {
 
         self.share
             .sink { [weak self] clipId in
-                guard let self = self, let clip = self._clips.value[clipId] else { return }
+                guard let self = self, let clip = self._clips.value[clipId]?.value else { return }
                 self.startSharing.send(.init(source: .menu(clip), data: self.fetchImages(for: clipId)))
             }
             .store(in: &self.subscriptions)

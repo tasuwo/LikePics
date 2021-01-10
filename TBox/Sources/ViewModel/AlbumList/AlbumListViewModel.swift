@@ -199,7 +199,7 @@ extension AlbumListViewModel {
                     return
                 }
 
-                let ids = self.performReorder(originals: self.query.albums.value.map({ $0.id }), request: albumIds)
+                let ids = self.performReorder(originals: originals, request: albumIds)
                 if case let .failure(error) = self.clipCommandService.updateAlbums(byReordering: ids) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to reorder album. (code: \(error.rawValue))

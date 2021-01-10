@@ -194,10 +194,11 @@ extension TopClipCollectionViewModel {
             .sink { [weak self] clips, showHiddenItems in
                 guard let self = self else { return }
 
-                let newClips = clips.filter { clip in
-                    guard showHiddenItems else { return !clip.isHidden }
-                    return true
-                }
+                let newClips = clips
+                    .filter { clip in
+                        guard showHiddenItems else { return !clip.isHidden }
+                        return true
+                    }
 
                 self._viewModel.inputs.clipsFetched.send(newClips)
             }

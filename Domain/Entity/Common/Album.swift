@@ -6,6 +6,7 @@
 public struct Album {
     public let id: UUID
     public let title: String
+    /// - attention: 順序が保持されている
     public let clips: [Clip]
     public let isHidden: Bool
     public let registeredDate: Date
