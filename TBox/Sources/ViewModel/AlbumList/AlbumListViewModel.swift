@@ -51,7 +51,7 @@ class AlbumListViewModel: AlbumListViewModelType,
     let deleteAlbum: PassthroughSubject<Album.Identity, Never> = .init()
     let hideAlbum: PassthroughSubject<Album.Identity, Never> = .init()
     let revealAlbum: PassthroughSubject<Album.Identity, Never> = .init()
-    var reorderAlbums: PassthroughSubject<[Album.Identity], Never> = .init()
+    let reorderAlbums: PassthroughSubject<[Album.Identity], Never> = .init()
     let editAlbumTitle: PassthroughSubject<(Album.Identity, String), Never> = .init()
 
     // MARK: AlbumListViewModelOutputs
