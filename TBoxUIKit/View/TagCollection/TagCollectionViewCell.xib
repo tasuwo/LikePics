@@ -26,14 +26,30 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
                                         <rect key="frame" x="8" y="8" width="182" height="25"/>
                                         <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="155-GE-BhI" userLabel="Hidden Icon Container">
+                                                <rect key="frame" x="0.0" y="0.0" width="18" height="25"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye.slash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Hk0-j3-SEW">
+                                                        <rect key="frame" x="0.0" y="3.5" width="16" height="17.5"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="16" id="rVK-JY-ovr"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="Hk0-j3-SEW" firstAttribute="centerY" secondItem="155-GE-BhI" secondAttribute="centerY" id="DYG-lM-7GX"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Hk0-j3-SEW" secondAttribute="trailing" constant="2" id="O4p-hX-YKt"/>
+                                                    <constraint firstItem="Hk0-j3-SEW" firstAttribute="leading" secondItem="155-GE-BhI" secondAttribute="leading" id="bHD-8Y-RFP"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zqj-I4-aLH" userLabel="Checkmark Container">
-                                                <rect key="frame" x="0.0" y="0.0" width="16" height="25"/>
+                                                <rect key="frame" x="18" y="0.0" width="18" height="25"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="4aa-iL-vBS">
-                                                        <rect key="frame" x="0.0" y="4.5" width="14" height="16.5"/>
-                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <rect key="frame" x="0.0" y="4.5" width="16" height="16.5"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="14" id="DJh-UQ-4RQ"/>
+                                                            <constraint firstAttribute="width" constant="16" id="DJh-UQ-4RQ"/>
                                                         </constraints>
                                                     </imageView>
                                                 </subviews>
@@ -45,12 +61,12 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
-                                                <rect key="frame" x="16" y="0.0" width="16" height="25"/>
+                                                <rect key="frame" x="36" y="0.0" width="18" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKJ-iB-l6I">
-                                                        <rect key="frame" x="0.0" y="0.5" width="16" height="24"/>
+                                                        <rect key="frame" x="0.0" y="0.5" width="18" height="24"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="16" id="cDj-WQ-QSB"/>
+                                                            <constraint firstAttribute="width" constant="18" id="cDj-WQ-QSB"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                         <nil key="textColor"/>
@@ -66,7 +82,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="32" y="0.0" width="150" height="25"/>
+                                                <rect key="frame" x="54" y="0.0" width="128" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -133,10 +149,13 @@
             <size key="customSize" width="242" height="41"/>
             <connections>
                 <outlet property="checkMarkContainer" destination="zqj-I4-aLH" id="r1Y-a2-Wqm"/>
+                <outlet property="checkMarkIcon" destination="4aa-iL-vBS" id="Ql0-Nd-xke"/>
                 <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
                 <outlet property="deleteButtonWidthConstraint" destination="K6j-GX-Qho" id="2YA-6R-ncp"/>
                 <outlet property="hashTagContainer" destination="rdG-Yc-CjJ" id="Qpk-Qv-SfG"/>
                 <outlet property="hashTagLabel" destination="aKJ-iB-l6I" id="XSO-e8-ViS"/>
+                <outlet property="hiddenIcon" destination="Hk0-j3-SEW" id="cAK-0e-Kh6"/>
+                <outlet property="hiddenIconContainer" destination="155-GE-BhI" id="6d1-Xm-VPB"/>
                 <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
@@ -145,6 +164,7 @@
     </objects>
     <resources>
         <image name="checkmark" catalog="system" width="128" height="114"/>
+        <image name="eye.slash" catalog="system" width="128" height="86"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -43,8 +43,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
         set {
             self.deleteButtonContainer.isHidden = !newValue
             self.labelMaxWidthConstraint.constant = newValue
-                ? 240 - self.deleteButtonWidthConstraint.constant
-                : 240
+                ? 220 - self.deleteButtonWidthConstraint.constant
+                : 220
         }
     }
 
@@ -68,9 +68,15 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet var hashTagLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
+
+    @IBOutlet var checkMarkIcon: UIImageView!
+    @IBOutlet var hiddenIcon: UIImageView!
+
     @IBOutlet var checkMarkContainer: UIView!
+    @IBOutlet var hiddenIconContainer: UIView!
     @IBOutlet var deleteButtonContainer: UIView!
     @IBOutlet var hashTagContainer: UIView!
+
     @IBOutlet var labelMaxWidthConstraint: NSLayoutConstraint!
     @IBOutlet var deleteButtonWidthConstraint: NSLayoutConstraint!
 
@@ -107,6 +113,9 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         self.visibleDeleteButton = false
 
+        self.checkMarkIcon.tintColor = .white
+        self.hiddenIcon.tintColor = UIColor.label.withAlphaComponent(0.8)
+
         self.updateRadius()
         self.updateColors()
         self.updateAppearance()
@@ -125,25 +134,28 @@ public class TagCollectionViewCell: UICollectionViewCell {
         case (.checkAtSelect, true):
             self.contentView.backgroundColor = UIColor.systemGreen
             self.layer.borderWidth = 0
+
+            self.hiddenIconContainer.isHidden = true
             self.checkMarkContainer.isHidden = false
             self.hashTagContainer.isHidden = true
-            self.hashTagLabel.textColor = isHiddenTag
-                ? UIColor.white.withAlphaComponent(0.6)
-                : .white
+
             self.titleLabel.textColor = isHiddenTag
-                ? UIColor.white.withAlphaComponent(0.6)
+                ? UIColor.white.withAlphaComponent(0.8)
                 : .white
 
         default:
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 1
+
+            self.hiddenIconContainer.isHidden = isHiddenTag ? false : true
             self.checkMarkContainer.isHidden = true
-            self.hashTagContainer.isHidden = false
+            self.hashTagContainer.isHidden = isHiddenTag ? true : false
+
             self.hashTagLabel.textColor = isHiddenTag
-                ? UIColor.label.withAlphaComponent(0.6)
+                ? UIColor.label.withAlphaComponent(0.8)
                 : .label
             self.titleLabel.textColor = isHiddenTag
-                ? UIColor.label.withAlphaComponent(0.6)
+                ? UIColor.label.withAlphaComponent(0.8)
                 : .label
         }
 
