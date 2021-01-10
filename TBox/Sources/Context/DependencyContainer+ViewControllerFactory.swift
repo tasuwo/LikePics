@@ -64,11 +64,14 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
-        let viewModel = ClipPreviewPageViewModel(clipId: clipId,
-                                                 query: query,
-                                                 clipCommandService: self.clipCommandService,
-                                                 imageQueryService: self.imageQueryService,
-                                                 logger: self.logger)
+        guard let viewModel = ClipPreviewPageViewModel(clipId: clipId,
+                                                       query: query,
+                                                       clipCommandService: self.clipCommandService,
+                                                       imageQueryService: self.imageQueryService,
+                                                       logger: self.logger)
+        else {
+            return nil
+        }
 
         let barItemsViewModel = ClipPreviewPageBarViewModel()
         let barItemsProvider = ClipPreviewPageBarViewController(viewModel: barItemsViewModel)

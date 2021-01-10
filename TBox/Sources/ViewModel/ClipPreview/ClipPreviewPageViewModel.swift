@@ -108,12 +108,14 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     // MARK: - Lifecycle
 
-    init(clipId: Clip.Identity,
-         query: ClipQuery,
-         clipCommandService: ClipCommandServiceProtocol,
-         imageQueryService: ImageQueryServiceProtocol,
-         logger: TBoxLoggable)
+    init?(clipId: Clip.Identity,
+          query: ClipQuery,
+          clipCommandService: ClipCommandServiceProtocol,
+          imageQueryService: ImageQueryServiceProtocol,
+          logger: TBoxLoggable)
     {
+        guard let firstItem = query.clip.value.items.first else { return nil }
+
         self.clipId = clipId
         self.query = query
         self.clipCommandService = clipCommandService
@@ -122,7 +124,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
         let listingItems = Self.makeListingClipItems(for: query.clip.value)
         self._items = .init(listingItems.reduce(into: [ClipItem.Identity: ListingClipItem]()) { $0[$1.value.id] = $1 })
-        self._currentItemId = .init(query.clip.value.items.first!.id)
+        self._currentItemId = .init(firstItem.id)
         self._tags = .init(query.clip.value.tags)
 
         self.bind()
