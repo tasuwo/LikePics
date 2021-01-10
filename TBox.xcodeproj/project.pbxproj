@@ -207,7 +207,6 @@
 		2C8C4557259D466F00DEAABB /* OriginalImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8E9259C5FFD0097F8C5 /* OriginalImageLoader.swift */; };
 		2C8C4558259D466F00DEAABB /* ThumbnailLoadPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8D7259C5C970097F8C5 /* ThumbnailLoadPipeline.swift */; };
 		2C8C4559259D466F00DEAABB /* ThumbnailLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26BC259C92C700156958 /* ThumbnailLoader.swift */; };
-		2C8C4563259D469C00DEAABB /* Smoothie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8C4540259D464D00DEAABB /* Smoothie.framework */; };
 		2C8C4578259D46D800DEAABB /* ThumbnailRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26D6259C933B00156958 /* ThumbnailRequest.swift */; };
 		2C8C4582259D46E100DEAABB /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4F26AA259C874D00156958 /* ImageType.swift */; };
 		2C8C4596259D46EC00DEAABB /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE2D8A8259C4BCA0097F8C5 /* MemoryCache.swift */; };
@@ -1236,7 +1235,6 @@
 				2C6E09DA24E8150500B541D9 /* Common.framework in Frameworks */,
 				2C8FD64224E02DCE005887F9 /* TBoxUIKit.framework in Frameworks */,
 				2C8C4547259D464D00DEAABB /* Smoothie.framework in Frameworks */,
-				2C8C4563259D469C00DEAABB /* Smoothie.framework in Frameworks */,
 				EB2DA02CBD88EB7C2F01C67A /* Pods_TBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3603,7 +3601,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1200;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "Tasuku Tozawa";
 				TargetAttributes = {
 					2C21415A254858D50013F486 = {
