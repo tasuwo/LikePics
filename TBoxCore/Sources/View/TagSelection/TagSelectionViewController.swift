@@ -27,7 +27,7 @@ public class TagSelectionViewController: UIViewController {
     )
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: TagCollectionView!
@@ -71,66 +71,69 @@ public class TagSelectionViewController: UIViewController {
             $0?.isEmpty != true
         } completion: { [weak self] action in
             guard case let .saved(text: tag) = action else { return }
-            self?.viewModel.inputs.createdTag.send(tag)
+            self?.viewModel.inputs.create.send(tag)
         }
     }
 
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        dependency.outputs.tags
-            .filter { $0.isEmpty }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.searchBar.resignFirstResponder()
-                self?.searchBar.text = nil
-                self?.viewModel.inputs.inputtedQuery.send("")
-            }
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.displayCollectionView
+        dependency.outputs.isCollectionViewDisplaying
             .map { !$0 }
             .receive(on: DispatchQueue.main)
             .assignNoRetain(to: \.isHidden, on: self.searchBar)
-            .store(in: &self.cancellableBag)
-        dependency.outputs.displayCollectionView
+            .store(in: &self.subscriptions)
+        dependency.outputs.isCollectionViewDisplaying
             .map { !$0 }
             .receive(on: DispatchQueue.main)
             .assignNoRetain(to: \.isHidden, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        dependency.outputs.displayEmptyMessage
+        dependency.outputs.isEmptyMessageDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assignNoRetain(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        dependency.outputs.filteredTags
-            .combineLatest(dependency.outputs.selections)
+        dependency.outputs.selected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] selected in
+                guard let self = self else { return }
+                selected
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            }
+            .store(in: &self.subscriptions)
+
+        dependency.outputs.deselected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] deselected in
+                guard let self = self else { return }
+                deselected
+                    .compactMap { self.dataSource.indexPath(for: $0) }
+                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+            }
+            .store(in: &self.subscriptions)
+
+        dependency.outputs.tags
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] tags, selections in
+            .sink { [weak self] tags in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(tags)
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
-
-                DispatchQueue.main.async {
-                    let indexPaths = selections
-                        .compactMap { identity in dependency.outputs.tags.value.first(where: { $0.identity == identity }) }
-                        .compactMap { [weak self] item in self?.dataSource.indexPath(for: item) }
-                    self?.collectionView.applySelection(at: indexPaths)
-                }
+                self?.viewModel.inputs.dataSourceUpdated.send(())
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .sink { [weak self] message in
                 guard let self = self else { return }
                 let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Navigation Bar
@@ -153,7 +156,7 @@ public class TagSelectionViewController: UIViewController {
     @objc
     func didTapDone() {
         self.dismiss(animated: true) {
-            self.delegate?.didSelectTags(tags: self.viewModel.outputs.selectedTags)
+            self.delegate?.didSelectTags(tags: self.viewModel.outputs.selectedTagsValue)
         }
     }
 

@@ -370,7 +370,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let viewModel = TagSelectionViewModel(query: query,
-                                              selectedTags: selectedTags,
+                                              selectedTags: Set(selectedTags),
                                               context: context,
                                               clipCommandService: self.clipCommandService,
                                               settingStorage: self.userSettingsStorage,
