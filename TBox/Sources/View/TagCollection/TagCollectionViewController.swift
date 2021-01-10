@@ -336,8 +336,12 @@ extension TagCollectionViewController: UISearchBarDelegate {
     }
 
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let text = self.searchController.searchBar.text ?? ""
-        self.viewModel.inputs.inputtedQuery.send(text)
+        // HACK: marked text 入力を待つために遅延を設ける
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            RunLoop.main.perform {
+                self.viewModel.inputs.inputtedQuery.send(searchBar.text ?? "")
+            }
+        }
         return true
     }
 
