@@ -30,7 +30,7 @@
 "clips_list_alert_for_delete_in_album_action_delete" = "削除";
 "clips_list_alert_for_change_visibility_message" = "隠したクリップは、設定が有効な間は全ての場所から隠されます";
 "clips_list_alert_for_change_visibility_hide_action" = "%d件のクリップを隠す";
-"clips_list_alert_for_change_visibility_unhide_action" = "%d件のクリップを表示する";
+"clips_list_alert_for_change_visibility_reveal_action" = "%d件のクリップを表示する";
 "clips_list_alert_for_share_item_action" = "この画像のみ共有する";
 "clips_list_alert_for_share_items_action" = "クリップ内の%d件の画像を共有する";
 "clips_list_alert_for_purge_message" = "このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます";
@@ -40,7 +40,7 @@
 "clips_list_context_menu_add_tag" = "タグを追加";
 "clips_list_context_menu_add_to_album" = "アルバムへ追加";
 "clips_list_context_menu_hide" = "隠す";
-"clips_list_context_menu_unhide" = "表示する";
+"clips_list_context_menu_reveal" = "表示する";
 "clips_list_context_menu_remove_from_album" = "アルバムから削除";
 "clips_list_context_menu_share" = "共有";
 "clips_list_context_menu_delete" = "削除";
@@ -155,8 +155,8 @@
 "clip_collection_error_at_delete_clips" = "クリップの削除に失敗しました";
 "clip_collection_error_at_hide_clip" = "クリップの更新に失敗しました";
 "clip_collection_error_at_hide_clips" = "クリップの更新に失敗しました";
-"clip_collection_error_at_unhide_clip" = "クリップの更新に失敗しました";
-"clip_collection_error_at_unhide_clips" = "クリップの更新に失敗しました";
+"clip_collection_error_at_reveal_clip" = "クリップの更新に失敗しました";
+"clip_collection_error_at_reveal_clips" = "クリップの更新に失敗しました";
 "clip_collection_error_at_update_tags_to_clip" = "タグの更新に失敗しました";
 "clip_collection_error_at_update_tags_to_clips" = "タグの更新に失敗しました";
 "clip_collection_error_at_add_clip_to_album" = "アルバムへの追加に失敗しました";

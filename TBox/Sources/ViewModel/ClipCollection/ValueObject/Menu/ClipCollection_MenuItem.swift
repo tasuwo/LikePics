@@ -7,7 +7,7 @@ extension ClipCollection {
         case addTag
         case addToAlbum
         case hide(immediately: Bool)
-        case unhide
+        case reveal
         case removeFromAlbum
         case delete
         case share

@@ -382,7 +382,7 @@ extension ClipCollectionViewModel {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     選択中のクリップの表示に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtUnhideClips)
+                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtRevealClips)
                 }
                 self._operation.send(.none)
             }
@@ -459,9 +459,9 @@ extension ClipCollectionViewModel {
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipService.updateClips(having: [id], byHiding: false) {
                     self.logger.write(ConsoleLog(level: .error, message: """
-                    クリップのUnhideに失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
+                    クリップのRevealに失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtUnhideClip)
+                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtRevealClip)
                 }
             }
             .store(in: &self.subscriptions)

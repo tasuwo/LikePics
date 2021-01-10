@@ -30,7 +30,7 @@
 "clips_list_alert_for_delete_in_album_action_delete" = "Delete";
 "clips_list_alert_for_change_visibility_message" = "Hidden clips are hidden from all places while setting is enabled";
 "clips_list_alert_for_change_visibility_hide_action" = "Hide %d Clips";
-"clips_list_alert_for_change_visibility_unhide_action" = "Unhide %d Clips";
+"clips_list_alert_for_change_visibility_reveal_action" = "Reveal %d Clips";
 "clips_list_alert_for_share_item_action" = "Share this image";
 "clips_list_alert_for_share_items_action" = "Share %d images in this clip";
 "clips_list_alert_for_purge_message" = "Delete this clip and create new clips containing only one image using each images in this clip. Relation to tags, albums, and site/image urls are preserved.";
@@ -40,7 +40,7 @@
 "clips_list_context_menu_add_tag" = "Add Tags";
 "clips_list_context_menu_add_to_album" = "Add to Album";
 "clips_list_context_menu_hide" = "Hide";
-"clips_list_context_menu_unhide" = "Show";
+"clips_list_context_menu_reveal" = "Reveal";
 "clips_list_context_menu_remove_from_album" = "Remove from Album";
 "clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
@@ -155,8 +155,8 @@
 "clip_collection_error_at_delete_clips" = "Failed to delete clips.";
 "clip_collection_error_at_hide_clip" = "Failed to hide a clip.";
 "clip_collection_error_at_hide_clips" = "Failed to hide clips.";
-"clip_collection_error_at_unhide_clip" = "Failed to unhide a clip.";
-"clip_collection_error_at_unhide_clips" = "Failed to unhide clips.";
+"clip_collection_error_at_reveal_clip" = "Failed to reveal a clip.";
+"clip_collection_error_at_reveal_clips" = "Failed to reveal clips.";
 "clip_collection_error_at_update_tags_to_clip" = "Failed to update tags to a clip.";
 "clip_collection_error_at_update_tags_to_clips" = "Failed to update tags to clips.";
 "clip_collection_error_at_add_clip_to_album" = "Failed to add a clip to album.";

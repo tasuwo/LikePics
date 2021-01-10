@@ -11,7 +11,7 @@ protocol ClipCollectionToolBarProviderDelegate: AnyObject {
     func shouldDelete(_ provider: ClipCollectionToolBarProvider)
     func shouldRemoveFromAlbum(_ provider: ClipCollectionToolBarProvider)
     func shouldHide(_ provider: ClipCollectionToolBarProvider)
-    func shouldUnhide(_ provider: ClipCollectionToolBarProvider)
+    func shouldReveal(_ provider: ClipCollectionToolBarProvider)
     func shouldCancel(_ provider: ClipCollectionToolBarProvider)
     func shouldMerge(_ provider: ClipCollectionToolBarProvider)
     func shouldShare(_ provider: ClipCollectionToolBarProvider)
@@ -131,9 +131,9 @@ class ClipCollectionToolBarProvider {
         self.alertPresentable?.presentUpdateVisibilityAlert(at: item, targetCount: self.viewModel.outputs.selectionCount.value) { [weak self] in
             guard let self = self else { return }
             self.delegate?.shouldHide(self)
-        } unhideAction: { [weak self] in
+        } revealAction: { [weak self] in
             guard let self = self else { return }
-            self.delegate?.shouldUnhide(self)
+            self.delegate?.shouldReveal(self)
         }
     }
 

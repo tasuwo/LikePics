@@ -113,12 +113,12 @@ internal enum L10n {
     internal static let clipCollectionErrorAtRemoveItemFromClip = L10n.tr("Localizable", "clip_collection_error_at_remove_item_from_clip")
     /// 並び替えに失敗しました
     internal static let clipCollectionErrorAtReorder = L10n.tr("Localizable", "clip_collection_error_at_reorder")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtRevealClip = L10n.tr("Localizable", "clip_collection_error_at_reveal_clip")
+    /// クリップの更新に失敗しました
+    internal static let clipCollectionErrorAtRevealClips = L10n.tr("Localizable", "clip_collection_error_at_reveal_clips")
     /// 共有に失敗しました
     internal static let clipCollectionErrorAtShare = L10n.tr("Localizable", "clip_collection_error_at_share")
-    /// クリップの更新に失敗しました
-    internal static let clipCollectionErrorAtUnhideClip = L10n.tr("Localizable", "clip_collection_error_at_unhide_clip")
-    /// クリップの更新に失敗しました
-    internal static let clipCollectionErrorAtUnhideClips = L10n.tr("Localizable", "clip_collection_error_at_unhide_clips")
     /// タグの更新に失敗しました
     internal static let clipCollectionErrorAtUpdateTagsToClip = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clip")
     /// タグの更新に失敗しました
@@ -185,8 +185,8 @@ internal enum L10n {
     /// 隠したクリップは、設定が有効な間は全ての場所から隠されます
     internal static let clipsListAlertForChangeVisibilityMessage = L10n.tr("Localizable", "clips_list_alert_for_change_visibility_message")
     /// %d件のクリップを表示する
-    internal static func clipsListAlertForChangeVisibilityUnhideAction(_ p1: Int) -> String {
-        return L10n.tr("Localizable", "clips_list_alert_for_change_visibility_unhide_action", p1)
+    internal static func clipsListAlertForChangeVisibilityRevealAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_change_visibility_reveal_action", p1)
     }
 
     /// %d件のクリップを削除
@@ -229,10 +229,10 @@ internal enum L10n {
     internal static let clipsListContextMenuPurge = L10n.tr("Localizable", "clips_list_context_menu_purge")
     /// アルバムから削除
     internal static let clipsListContextMenuRemoveFromAlbum = L10n.tr("Localizable", "clips_list_context_menu_remove_from_album")
+    /// 表示する
+    internal static let clipsListContextMenuReveal = L10n.tr("Localizable", "clips_list_context_menu_reveal")
     /// 共有
     internal static let clipsListContextMenuShare = L10n.tr("Localizable", "clips_list_context_menu_share")
-    /// 表示する
-    internal static let clipsListContextMenuUnhide = L10n.tr("Localizable", "clips_list_context_menu_unhide")
     /// 全て選択解除
     internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
     /// 完了

@@ -31,7 +31,7 @@ extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
                                  isInline: false,
                                  children: [.item(.addTag), .item(.addToAlbum)])),
             clip.isHidden
-                ? .item(.unhide)
+                ? .item(.reveal)
                 : .item(.hide(immediately: storage.readShowHiddenItems())),
             .item(.share),
             .subMenu(.init(kind: .others,

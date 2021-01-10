@@ -407,7 +407,7 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
         }
     }
 
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath) {
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldReveal clipId: Clip.Identity, at indexPath: IndexPath) {
         self.viewModel.inputs.reveal.send(clipId)
     }
 
@@ -487,7 +487,7 @@ extension AlbumViewController: ClipCollectionToolBarProviderDelegate {
         self.viewModel.inputs.hideSelections.send(())
     }
 
-    func shouldUnhide(_ provider: ClipCollectionToolBarProvider) {
+    func shouldReveal(_ provider: ClipCollectionToolBarProvider) {
         self.viewModel.inputs.revealSelections.send(())
     }
 

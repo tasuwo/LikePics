@@ -21,7 +21,7 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddTagsTo clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldAddToAlbum clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldDelete clipId: Clip.Identity, at indexPath: IndexPath)
-    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldUnhide clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldReveal clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldHide clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath)
@@ -239,12 +239,12 @@ extension ClipCollectionProvider {
                 }
             }
 
-        case .unhide:
-            return UIAction(title: L10n.clipsListContextMenuUnhide,
+        case .reveal:
+            return UIAction(title: L10n.clipsListContextMenuReveal,
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
-                    self.delegate?.clipCollectionProvider(self, shouldUnhide: clip.identity, at: indexPath)
+                    self.delegate?.clipCollectionProvider(self, shouldReveal: clip.identity, at: indexPath)
                 }
             }
 

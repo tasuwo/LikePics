@@ -9,7 +9,7 @@ protocol ClipCollectionAlertPresentable: AnyObject {
     func presentDeleteAlert(at item: UIBarButtonItem, targetCount: Int, action: @escaping () -> Void)
     func presentDeleteAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void)
     func presentRemoveFromAlbumAlert(at item: UIBarButtonItem, targetCount: Int, deleteAction: @escaping () -> Void, removeFromAlbumAction: @escaping () -> Void)
-    func presentUpdateVisibilityAlert(at item: UIBarButtonItem, targetCount: Int, hideAction: @escaping () -> Void, unhideAction: @escaping () -> Void)
+    func presentUpdateVisibilityAlert(at item: UIBarButtonItem, targetCount: Int, hideAction: @escaping () -> Void, revealAction: @escaping () -> Void)
     func presentPurgeAlert(at cell: UICollectionViewCell, in collectionView: UICollectionView, action: @escaping () -> Void)
 }
 
@@ -83,7 +83,7 @@ extension ClipCollectionAlertPresentable where Self: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentUpdateVisibilityAlert(at item: UIBarButtonItem, targetCount: Int, hideAction: @escaping () -> Void, unhideAction: @escaping () -> Void) {
+    func presentUpdateVisibilityAlert(at item: UIBarButtonItem, targetCount: Int, hideAction: @escaping () -> Void, revealAction: @escaping () -> Void) {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForChangeVisibilityMessage,
                                       preferredStyle: .actionSheet)
@@ -91,8 +91,8 @@ extension ClipCollectionAlertPresentable where Self: UIViewController {
         alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityHideAction(targetCount), style: .destructive, handler: { _ in
             hideAction()
         }))
-        alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityUnhideAction(targetCount), style: .destructive, handler: { _ in
-            unhideAction()
+        alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityRevealAction(targetCount), style: .destructive, handler: { _ in
+            revealAction()
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 
