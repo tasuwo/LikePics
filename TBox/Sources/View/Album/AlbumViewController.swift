@@ -148,11 +148,6 @@ class AlbumViewController: UIViewController {
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] operation in self?.apply(operation) }
-            .store(in: &self.cancellableBag)
-
-        dependency.outputs.operation
-            .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
@@ -238,18 +233,6 @@ class AlbumViewController: UIViewController {
 
         self.navigationItemsProvider.bind(view: self, propagator: dependency.propagator)
         self.toolBarItemsProvider.bind(view: self, propagator: dependency.propagator)
-    }
-
-    private func apply(_ operation: ClipCollection.Operation) {
-        switch operation {
-        case .reordering:
-            self.collectionView.setCollectionViewLayout(GridLayout.make(), animated: true)
-
-        default:
-            let layout = ClipCollectionLayout()
-            layout.delegate = self.clipCollectionProvider
-            self.collectionView.setCollectionViewLayout(layout, animated: true)
-        }
     }
 
     private func updateHiddenIconAppearance() {
