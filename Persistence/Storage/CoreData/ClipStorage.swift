@@ -519,13 +519,26 @@ extension ClipStorage: ClipStorageProtocol {
 
     public func updateAlbum(having albumId: Domain.Album.Identity, byReorderingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         do {
-            guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
+            guard case let .success(album) = try self.fetchAlbum(for: albumId) else {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                更新対象のアルバムが見つからなかったため、アルバム内のアイテムの並び替えに失敗しました (id: \(albumId))
+                """))
+                return .failure(.notFound)
+            }
 
             let itemIds = album.items?
                 .allObjects
                 .compactMap { $0 as? AlbumItem }
                 .compactMap { $0.clip?.id } ?? []
-            guard Set(itemIds) == Set(clipIds) else { return .failure(.invalidParameter) }
+            guard Set(itemIds) == Set(clipIds) else {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                引数が不正だったため、アルバム内の並び替えに失敗しました
+                - albumId: \(albumId)
+                - アルバム内のアイテム数: \(Set(itemIds).count)
+                - 引数のアイテム数: \(Set(clipIds).count)
+                """))
+                return .failure(.invalidParameter)
+            }
 
             var currentIndex: Int64 = 1
             for clipId in clipIds {
@@ -583,7 +596,14 @@ extension ClipStorage: ClipStorageProtocol {
         do {
             let request: NSFetchRequest<Album> = Album.fetchRequest()
             let albums = try self.context.fetch(request)
-            guard Set(albums.compactMap({ $0.id })) == Set(albumIds) else { return .failure(.invalidParameter) }
+            guard Set(albums.compactMap({ $0.id })) == Set(albumIds) else {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                引数が不正だったため、アルバムの並び替えに失敗しました
+                - アルバム数: \(Set(albums.compactMap({ $0.id })).count)
+                - 引数のアルバム数: \(Set(albumIds).count)
+                """))
+                return .failure(.invalidParameter)
+            }
 
             var currentIndex: Int64 = 1
             for albumId in albumIds {
