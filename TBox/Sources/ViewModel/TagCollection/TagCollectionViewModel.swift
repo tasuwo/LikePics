@@ -26,6 +26,7 @@ protocol TagCollectionViewModelOutputs {
 
     var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { get }
     var isEmptyMessageViewDisplaying: AnyPublisher<Bool, Never> { get }
+    var isSearchBarEnabled: AnyPublisher<Bool, Never> { get }
 
     var displayErrorMessage: PassthroughSubject<String, Never> { get }
     var clearSearchBar: PassthroughSubject<Void, Never> { get }
@@ -60,6 +61,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { _isCollectionViewDisplaying.eraseToAnyPublisher() }
     var isEmptyMessageViewDisplaying: AnyPublisher<Bool, Never> { _isEmptyMessageViewDisplaying.eraseToAnyPublisher() }
+    var isSearchBarEnabled: AnyPublisher<Bool, Never> { _isSearchBarEnabled.eraseToAnyPublisher() }
 
     let displayErrorMessage: PassthroughSubject<String, Never> = .init()
     let clearSearchBar: PassthroughSubject<Void, Never> = .init()
@@ -72,6 +74,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
     private let _isEmptyMessageViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _isSearchBarEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let query: TagListQuery
     private let clipCommandService: ClipCommandServiceProtocol
@@ -141,9 +144,11 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                 if isEmpty {
                     self._isCollectionViewDisplaying.send(false)
                     self._isEmptyMessageViewDisplaying.send(true)
+                    self._isSearchBarEnabled.send(false)
                 } else {
                     self._isEmptyMessageViewDisplaying.send(false)
                     self._isCollectionViewDisplaying.send(true)
+                    self._isSearchBarEnabled.send(true)
                 }
             }
             .store(in: &self.cancellableBag)

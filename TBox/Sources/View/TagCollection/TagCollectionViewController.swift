@@ -121,6 +121,17 @@ class TagCollectionViewController: UIViewController {
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.cancellableBag)
+        dependency.outputs.isSearchBarEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isEnabled in
+                self?.searchController.resignFirstResponder()
+                self?.searchController.searchBar.isUserInteractionEnabled = isEnabled
+                self?.searchController.searchBar.alpha = isEnabled ? 1.0 : 0.3
+                if !isEnabled, self?.searchController.isActive == true {
+                    self?.searchController.isActive = false
+                }
+            }
+            .store(in: &self.cancellableBag)
 
         dependency.outputs.clearSearchBar
             .receive(on: DispatchQueue.main)
