@@ -26,8 +26,26 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
                                         <rect key="frame" x="8" y="8" width="182" height="25"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zqj-I4-aLH" userLabel="Checkmark Container">
                                                 <rect key="frame" x="0.0" y="0.0" width="16" height="25"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="4aa-iL-vBS">
+                                                        <rect key="frame" x="0.0" y="4.5" width="14" height="16.5"/>
+                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="14" id="DJh-UQ-4RQ"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="4aa-iL-vBS" firstAttribute="centerY" secondItem="zqj-I4-aLH" secondAttribute="centerY" id="633-C7-Shv"/>
+                                                    <constraint firstItem="4aa-iL-vBS" firstAttribute="leading" secondItem="zqj-I4-aLH" secondAttribute="leading" id="GHl-Jr-wus"/>
+                                                    <constraint firstAttribute="trailing" secondItem="4aa-iL-vBS" secondAttribute="trailing" constant="2" id="Gx6-qo-vof"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdG-Yc-CjJ" userLabel="Icon Image Container">
+                                                <rect key="frame" x="16" y="0.0" width="16" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKJ-iB-l6I">
                                                         <rect key="frame" x="0.0" y="0.5" width="16" height="24"/>
@@ -48,7 +66,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="16" y="0.0" width="166" height="25"/>
+                                                <rect key="frame" x="32" y="0.0" width="150" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -114,8 +132,10 @@
             </collectionViewCellContentView>
             <size key="customSize" width="242" height="41"/>
             <connections>
+                <outlet property="checkMarkContainer" destination="zqj-I4-aLH" id="r1Y-a2-Wqm"/>
                 <outlet property="deleteButtonContainer" destination="j6Q-YR-0Lx" id="khW-ES-OwF"/>
                 <outlet property="deleteButtonWidthConstraint" destination="K6j-GX-Qho" id="2YA-6R-ncp"/>
+                <outlet property="hashTagContainer" destination="rdG-Yc-CjJ" id="Qpk-Qv-SfG"/>
                 <outlet property="hashTagLabel" destination="aKJ-iB-l6I" id="XSO-e8-ViS"/>
                 <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
@@ -124,6 +144,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

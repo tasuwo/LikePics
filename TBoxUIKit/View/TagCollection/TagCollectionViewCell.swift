@@ -32,7 +32,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     public var displayMode: DisplayMode = .checkAtSelect {
         didSet {
-            self.updateForDisplayMode()
+            self.updateAppearance()
         }
     }
 
@@ -56,20 +56,21 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
     override public var isSelected: Bool {
         didSet {
-            self.updateForDisplayMode()
+            self.updateAppearance()
         }
     }
 
     public var isHiddenTag: Bool = false {
         didSet {
-            self.hashTagLabel.textColor = isHiddenTag ? .secondaryLabel : .label
-            self.titleLabel.textColor = isHiddenTag ? .secondaryLabel : .label
+            self.updateAppearance()
         }
     }
 
     @IBOutlet var hashTagLabel: UILabel!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var checkMarkContainer: UIView!
     @IBOutlet var deleteButtonContainer: UIView!
+    @IBOutlet var hashTagContainer: UIView!
     @IBOutlet var labelMaxWidthConstraint: NSLayoutConstraint!
     @IBOutlet var deleteButtonWidthConstraint: NSLayoutConstraint!
 
@@ -108,7 +109,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         self.updateRadius()
         self.updateColors()
-        self.updateForDisplayMode()
+        self.updateAppearance()
     }
 
     func updateRadius() {
@@ -119,15 +120,31 @@ public class TagCollectionViewCell: UICollectionViewCell {
         self.layer.borderColor = UIColor.systemGray3.cgColor
     }
 
-    func updateForDisplayMode() {
+    func updateAppearance() {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
             self.contentView.backgroundColor = UIColor.systemGreen
             self.layer.borderWidth = 0
+            self.checkMarkContainer.isHidden = false
+            self.hashTagContainer.isHidden = true
+            self.hashTagLabel.textColor = isHiddenTag
+                ? UIColor.white.withAlphaComponent(0.6)
+                : .white
+            self.titleLabel.textColor = isHiddenTag
+                ? UIColor.white.withAlphaComponent(0.6)
+                : .white
 
         default:
             self.contentView.backgroundColor = UIColor.systemBackground
             self.layer.borderWidth = 1
+            self.checkMarkContainer.isHidden = true
+            self.hashTagContainer.isHidden = false
+            self.hashTagLabel.textColor = isHiddenTag
+                ? UIColor.label.withAlphaComponent(0.6)
+                : .label
+            self.titleLabel.textColor = isHiddenTag
+                ? UIColor.label.withAlphaComponent(0.6)
+                : .label
         }
 
         self.updateLabel()
