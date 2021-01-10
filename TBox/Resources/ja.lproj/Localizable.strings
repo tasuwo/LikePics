@@ -103,8 +103,8 @@
 "tag_list_view_alert_for_update_message" = "このタグの新しい名前を入力してください";
 "tag_list_view_alert_for_update_placeholder" = "タグ名";
 
-"tag_list_view_alert_for_delete_message" = "選択中のタグを削除しますか？\n含まれるクリップは削除されません";
-"tag_list_view_alert_for_delete_action" = "%d件のタグを削除";
+"tag_list_view_alert_for_delete_message" = "タグ「%@」を削除しますか？\n含まれるクリップは削除されません";
+"tag_list_view_alert_for_delete_action" = "タグを削除";
 
 "tag_list_view_empty_title" = "タグがありません";
 "tag_list_view_empty_message" = "クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます";

@@ -103,8 +103,8 @@
 "tag_list_view_alert_for_update_message" = "Enter a new name for this tag.";
 "tag_list_view_alert_for_update_placeholder" = "Name";
 
-"tag_list_view_alert_for_delete_message" = "Are you sure you want to delete selected tags?\nThe clips will not be deleted.";
-"tag_list_view_alert_for_delete_action" = "Delete %d Tags";
+"tag_list_view_alert_for_delete_message" = "Are you sure you want to delete tag \"%@\"?\nThe clips will not be deleted.";
+"tag_list_view_alert_for_delete_action" = "Delete Tag";
 
 "tag_list_view_empty_title" = "No tags";
 "tag_list_view_empty_message" = "If you classify clips by tags, you can list the clips categorized with specific tag later.";

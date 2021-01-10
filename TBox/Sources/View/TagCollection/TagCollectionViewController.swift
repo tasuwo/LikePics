@@ -287,7 +287,10 @@ extension TagCollectionViewController {
             return UIAction(title: L10n.tagListViewContextMenuActionHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                //       アイテム削除を遅延させて自然なアニメーションにする
+                //       https://stackoverflow.com/a/57997005
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                     self.viewModel.inputs.hided.send(tag.id)
                 }
             }
@@ -296,16 +299,28 @@ extension TagCollectionViewController {
             return UIAction(title: L10n.tagListViewContextMenuActionReveal,
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.viewModel.inputs.revealed.send(tag.id)
-                }
+                self.viewModel.inputs.revealed.send(tag.id)
             }
 
         case .delete:
             return UIAction(title: L10n.tagListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.viewModel.inputs.deleted.send([tag])
+                guard let cell = self?.collectionView.cellForItem(at: indexPath) else { return }
+
+                let alert = UIAlertController(title: nil,
+                                              message: L10n.tagListViewAlertForDeleteMessage(tag.name),
+                                              preferredStyle: .actionSheet)
+
+                alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction, style: .destructive, handler: { _ in
+                    self?.viewModel.inputs.deleted.send([tag])
+                }))
+                alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+
+                alert.popoverPresentationController?.sourceView = self?.collectionView
+                alert.popoverPresentationController?.sourceRect = cell.frame
+
+                self?.present(alert, animated: true, completion: nil)
             }
 
         case .rename:

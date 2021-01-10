@@ -252,7 +252,10 @@ extension ClipCollectionProvider {
             return UIAction(title: L10n.clipsListContextMenuHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                DispatchQueue.main.async {
+                // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                //       アイテム削除を遅延させて自然なアニメーションにする
+                //       https://stackoverflow.com/a/57997005
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                     self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity, at: indexPath)
                 }
             }
@@ -262,6 +265,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
+                // 削除時は確認のアラートを挟むため、遅延は設けない
                 DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldRemoveFromAlbum: clip.identity, at: indexPath)
                 }
@@ -272,6 +276,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
+                // 削除時は確認のアラートを挟むため、遅延は設けない
                 DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldDelete: clip.identity, at: indexPath)
                 }
@@ -291,6 +296,7 @@ extension ClipCollectionProvider {
                             image: UIImage(systemName: "scissors"),
                             attributes: .destructive) { [weak self] _ in
                 guard let self = self else { return }
+                // 分割時は確認のアラートを挟むため、遅延は設けない
                 DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldPurge: clip.identity, at: indexPath)
                 }

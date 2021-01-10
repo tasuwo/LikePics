@@ -307,13 +307,13 @@ internal enum L10n {
     internal static let tagListViewAlertForAddPlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_add_placeholder")
     /// 新規タグ
     internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
-    /// %d件のタグを削除
-    internal static func tagListViewAlertForDeleteAction(_ p1: Int) -> String {
-        return L10n.tr("Localizable", "tag_list_view_alert_for_delete_action", p1)
+    /// タグを削除
+    internal static let tagListViewAlertForDeleteAction = L10n.tr("Localizable", "tag_list_view_alert_for_delete_action")
+    /// タグ「%@」を削除しますか？\n含まれるクリップは削除されません
+    internal static func tagListViewAlertForDeleteMessage(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "tag_list_view_alert_for_delete_message", String(describing: p1))
     }
 
-    /// 選択中のタグを削除しますか？\n含まれるクリップは削除されません
-    internal static let tagListViewAlertForDeleteMessage = L10n.tr("Localizable", "tag_list_view_alert_for_delete_message")
     /// このタグの新しい名前を入力してください
     internal static let tagListViewAlertForUpdateMessage = L10n.tr("Localizable", "tag_list_view_alert_for_update_message")
     /// タグ名
