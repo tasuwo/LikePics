@@ -26,7 +26,8 @@ protocol AlbumListViewModelInputs {
 protocol AlbumListViewModelOutputs {
     var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> { get }
     var operation: AnyPublisher<AlbumList.Operation, Never> { get }
-    var isDisplayingEmptyMessage: AnyPublisher<Bool, Never> { get }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { get }
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { get }
     var dragInteractionEnabled: AnyPublisher<Bool, Never> { get }
 
     var displayErrorMessage: PassthroughSubject<String, Never> { get }
@@ -58,7 +59,8 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> { _albums.eraseToAnyPublisher() }
     var operation: AnyPublisher<AlbumList.Operation, Never> { _operation.eraseToAnyPublisher() }
-    var isDisplayingEmptyMessage: AnyPublisher<Bool, Never> { _isDisplayingEmptyMessage.eraseToAnyPublisher() }
+    var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { _isCollectionViewDisplaying.eraseToAnyPublisher() }
+    var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { _isEmptyMessageDisplaying.eraseToAnyPublisher() }
     var dragInteractionEnabled: AnyPublisher<Bool, Never> { _dragInteractionEnabled.eraseToAnyPublisher() }
 
     let displayErrorMessage: PassthroughSubject<String, Never> = .init()
@@ -67,7 +69,8 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     private let _albums: CurrentValueSubject<[AlbumListViewLayout.Item], Never>
     private let _operation: CurrentValueSubject<AlbumList.Operation, Never> = .init(.none)
-    private let _isDisplayingEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _isEmptyMessageDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
     private let _dragInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let query: AlbumListQuery
@@ -110,17 +113,26 @@ extension AlbumListViewModel {
             .sink { [weak self] albums, showHiddenItems, operation in
                 guard let self = self else { return }
 
-                let newAlbums: [Album]
+                let newAlbums: [AlbumListViewLayout.Item]
                 if showHiddenItems {
                     newAlbums = albums
+                        .map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) })
                 } else {
                     newAlbums = albums
                         .filter { !$0.isHidden }
                         .map { $0.removingHiddenClips() }
+                        .map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) })
                 }
 
-                self._isDisplayingEmptyMessage.send(albums.isEmpty)
-                self._albums.send(newAlbums.map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) }))
+                if newAlbums.isEmpty {
+                    self._isCollectionViewDisplaying.send(false)
+                    self._isEmptyMessageDisplaying.send(true)
+                } else {
+                    self._isEmptyMessageDisplaying.send(false)
+                    self._isCollectionViewDisplaying.send(true)
+                }
+
+                self._albums.send(newAlbums)
 
                 if operation.isEditing, newAlbums.isEmpty {
                     self._operation.send(.none)

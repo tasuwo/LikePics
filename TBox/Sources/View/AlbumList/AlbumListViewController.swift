@@ -77,6 +77,7 @@ class AlbumListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupAppearance()
         self.setupNavigationBar()
         self.setupCollectionView()
         self.setupEmptyMessage()
@@ -128,6 +129,10 @@ class AlbumListViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
+    private func setupAppearance() {
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
+    }
+
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
@@ -147,7 +152,13 @@ class AlbumListViewController: UIViewController {
             .assignNoRetain(to: \.isEditing, on: self)
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.isDisplayingEmptyMessage
+        dependency.outputs.isCollectionViewDisplaying
+            .receive(on: DispatchQueue.main)
+            .map { $0 ? 1 : 0 }
+            .assign(to: \.alpha, on: self.collectionView)
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isEmptyMessageDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
