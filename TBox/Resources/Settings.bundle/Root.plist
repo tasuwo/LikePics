@@ -16,7 +16,7 @@
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 			<key>DefaultValue</key>
-			<string>0.3.1</string>
+			<string>0.4.0</string>
 			<key>Title</key>
 			<string>Version</string>
 			<key>Key</key>
