@@ -49,7 +49,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
                 return request
             }
             let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)
@@ -64,7 +64,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
                 request.predicate = NSPredicate(format: "tags.@count == 0")
                 return request
             }
@@ -84,7 +84,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
                 request.predicate = NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", tag.id as CVarArg)
                 return request
             }
