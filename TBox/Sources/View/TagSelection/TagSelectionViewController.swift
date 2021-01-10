@@ -81,7 +81,7 @@ class TagSelectionViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: tag) = action else { return }
-                self?.viewModel.inputs.createdTag.send(tag)
+                self?.viewModel.inputs.create.send(tag)
             }
         )
     }

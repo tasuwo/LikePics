@@ -95,7 +95,7 @@ class TagCollectionViewController: UIViewController {
                 $0?.isEmpty != true
             }, completion: { [weak self] action in
                 guard case let .saved(text: tagName) = action else { return }
-                self?.viewModel.inputs.created.send(tagName)
+                self?.viewModel.inputs.create.send(tagName)
             }
         )
     }
@@ -223,7 +223,7 @@ extension TagCollectionViewController: UICollectionViewDelegate {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
             if !self.isEditing {
-                self.viewModel.inputs.selected.send(tag.tag)
+                self.viewModel.inputs.select.send(tag.tag)
             }
 
         case .uncategorized:
@@ -291,7 +291,7 @@ extension TagCollectionViewController {
                 //       アイテム削除を遅延させて自然なアニメーションにする
                 //       https://stackoverflow.com/a/57997005
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                    self.viewModel.inputs.hided.send(tag.id)
+                    self.viewModel.inputs.hide.send(tag.id)
                 }
             }
 
@@ -299,7 +299,7 @@ extension TagCollectionViewController {
             return UIAction(title: L10n.tagListViewContextMenuActionReveal,
                             image: UIImage(systemName: "eye.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                self.viewModel.inputs.revealed.send(tag.id)
+                self.viewModel.inputs.reveal.send(tag.id)
             }
 
         case .delete:
@@ -313,7 +313,7 @@ extension TagCollectionViewController {
                                               preferredStyle: .actionSheet)
 
                 alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction, style: .destructive, handler: { _ in
-                    self?.viewModel.inputs.deleted.send([tag])
+                    self?.viewModel.inputs.delete.send([tag])
                 }))
                 alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
 

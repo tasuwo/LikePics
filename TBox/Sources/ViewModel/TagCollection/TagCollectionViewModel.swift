@@ -12,11 +12,11 @@ protocol TagCollectionViewModelType {
 }
 
 protocol TagCollectionViewModelInputs {
-    var created: PassthroughSubject<String, Never> { get }
-    var selected: PassthroughSubject<Tag, Never> { get }
-    var deleted: PassthroughSubject<[Tag], Never> { get }
-    var hided: PassthroughSubject<Tag.Identity, Never> { get }
-    var revealed: PassthroughSubject<Tag.Identity, Never> { get }
+    var create: PassthroughSubject<String, Never> { get }
+    var select: PassthroughSubject<Tag, Never> { get }
+    var delete: PassthroughSubject<[Tag], Never> { get }
+    var hide: PassthroughSubject<Tag.Identity, Never> { get }
+    var reveal: PassthroughSubject<Tag.Identity, Never> { get }
     var inputtedQuery: PassthroughSubject<String, Never> { get }
     func updateTag(having id: Tag.Identity, nameTo name: String)
 }
@@ -47,11 +47,11 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     // MARK: TagCollectionViewModelInputs
 
-    let created: PassthroughSubject<String, Never> = .init()
-    let selected: PassthroughSubject<Tag, Never> = .init()
-    let deleted: PassthroughSubject<[Tag], Never> = .init()
-    let hided: PassthroughSubject<Tag.Identity, Never> = .init()
-    let revealed: PassthroughSubject<Tag.Identity, Never> = .init()
+    let create: PassthroughSubject<String, Never> = .init()
+    let select: PassthroughSubject<Tag, Never> = .init()
+    let delete: PassthroughSubject<[Tag], Never> = .init()
+    let hide: PassthroughSubject<Tag.Identity, Never> = .init()
+    let reveal: PassthroughSubject<Tag.Identity, Never> = .init()
     let inputtedQuery: PassthroughSubject<String, Never> = .init()
 
     // MARK: TagCollectionViewModelOutputs
@@ -148,7 +148,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.created
+        self.create
             .sink { [weak self] name in
                 guard let self = self else { return }
                 guard case let .failure(error) = self.clipCommandService.create(tagWithName: name) else { return }
@@ -168,13 +168,13 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.selected
+        self.select
             .sink { [weak self] tag in
                 self?.presentTagsView.send(tag)
             }
             .store(in: &self.cancellableBag)
 
-        self.deleted
+        self.delete
             .sink { [weak self] tags in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.deleteTags(having: tags.map({ $0.identity })) {
@@ -187,7 +187,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.hided
+        self.hide
             .sink { [weak self] tagId in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateTag(having: tagId, byHiding: true) {
@@ -200,7 +200,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.revealed
+        self.reveal
             .sink { [weak self] tagId in
                 guard let self = self else { return }
                 if case let .failure(error) = self.clipCommandService.updateTag(having: tagId, byHiding: false) {

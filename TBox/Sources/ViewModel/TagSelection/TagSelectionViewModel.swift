@@ -16,10 +16,10 @@ public protocol TagSelectionViewModelType {
 }
 
 public protocol TagSelectionViewModelInputs {
+    var create: PassthroughSubject<String, Never> { get }
     var select: PassthroughSubject<Tag.Identity, Never> { get }
     var deselect: PassthroughSubject<Tag.Identity, Never> { get }
     var inputtedQuery: PassthroughSubject<String, Never> { get }
-    var createdTag: PassthroughSubject<String, Never> { get }
     var done: PassthroughSubject<Void, Never> { get }
 }
 
@@ -51,10 +51,10 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
 
     // MARK: TagSelectionViewModelInputs
 
+    public let create: PassthroughSubject<String, Never> = .init()
     public let select: PassthroughSubject<Tag.Identity, Never> = .init()
     public let deselect: PassthroughSubject<Tag.Identity, Never> = .init()
     public let inputtedQuery: PassthroughSubject<String, Never> = .init()
-    public let createdTag: PassthroughSubject<String, Never> = .init()
     public let done: PassthroughSubject<Void, Never> = .init()
 
     // MARK: TagSelectionViewModelOutputs
@@ -122,7 +122,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
             }
             .store(in: &self.cancellableBag)
 
-        self.createdTag
+        self.create
             .sink { [weak self] name in
                 guard let self = self else { return }
                 guard case let .failure(error) = self.clipCommandService.create(tagWithName: name) else { return }
