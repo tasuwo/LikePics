@@ -159,20 +159,16 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                 let filteringTags = tags.filter { showHiddenItems ? true : $0.isHidden == false }
                 let filteredTagIds = self.searchStorage.perform(query: query, to: filteringTags).map { $0.id }
 
+                if filteringTags.isEmpty {
+                    self._isCollectionViewDisplaying.send(false)
+                    self._isEmptyMessageDisplaying.send(true)
+                } else {
+                    self._isEmptyMessageDisplaying.send(false)
+                    self._isCollectionViewDisplaying.send(true)
+                }
+
                 self._tags.send(orderedTags)
                 self._filteredTagIds.send(filteredTagIds)
-            }
-            .store(in: &self.subscriptions)
-
-        self._filteredTagIds
-            .sink { [weak self] tags in
-                if tags.isEmpty {
-                    self?._isCollectionViewDisplaying.send(false)
-                    self?._isEmptyMessageDisplaying.send(true)
-                } else {
-                    self?._isEmptyMessageDisplaying.send(false)
-                    self?._isCollectionViewDisplaying.send(true)
-                }
             }
             .store(in: &self.subscriptions)
 
