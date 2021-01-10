@@ -89,7 +89,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
-            let fromIndex = from.currentIndex(self),
+            let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let toCell = to.animatingCell(self)
         else {
@@ -99,7 +99,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // Calculation
 
-        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
+        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)
@@ -265,7 +265,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
-            let fromIndex = from.currentIndex(self),
+            let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self),
@@ -311,7 +311,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
+            let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
             self.startEndAnimation(finalImageFrame: finalImageFrame,
                                    hideViews: [from.view, backgroundView],
                                    presentViews: [],

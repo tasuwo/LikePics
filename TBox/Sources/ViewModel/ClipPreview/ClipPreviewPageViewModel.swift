@@ -12,10 +12,10 @@ protocol ClipPreviewPageViewModelType {
 }
 
 protocol ClipPreviewPageViewModelInputs {
-    var changedPage: PassthroughSubject<ClipItem.Identity, Never> { get }
+    var pageChanged: PassthroughSubject<ClipItem.Identity, Never> { get }
 
     var deleteClip: PassthroughSubject<Void, Never> { get }
-    var removeClipItem: PassthroughSubject<ClipItem.Identity, Never> { get }
+    var removeItem: PassthroughSubject<ClipItem.Identity, Never> { get }
     var replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> { get }
     var addToAlbum: PassthroughSubject<Album.Identity, Never> { get }
 }
@@ -23,14 +23,18 @@ protocol ClipPreviewPageViewModelInputs {
 protocol ClipPreviewPageViewModelOutputs {
     var clipId: Clip.Identity { get }
 
-    var items: CurrentValueSubject<[ClipItem], Never> { get }
-    var currentItem: CurrentValueSubject<ClipItem?, Never> { get }
-    var tags: CurrentValueSubject<[Tag], Never> { get }
+    var items: AnyPublisher<[ClipItem], Never> { get }
+    var currentItem: AnyPublisher<ClipItem?, Never> { get }
+    var currentItemIdValue: ClipItem.Identity { get }
+    var tagIdsValue: [Tag.Identity] { get }
 
-    var errorMessage: PassthroughSubject<String, Never> { get }
-
-    var loadPageAt: PassthroughSubject<Int, Never> { get }
+    var displayErrorMessage: PassthroughSubject<String, Never> { get }
+    var reloadCurrentPage: PassthroughSubject<Void, Never> { get }
+    var loadPage: PassthroughSubject<ClipItem.Identity, Never> { get }
     var close: PassthroughSubject<Void, Never> { get }
+
+    func itemId(after: ClipItem.Identity) -> ClipItem.Identity?
+    func itemId(before: ClipItem.Identity) -> ClipItem.Identity?
 
     func fetchImage() -> Data?
     func fetchImagesInClip() -> [Data]
@@ -40,6 +44,12 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     ClipPreviewPageViewModelInputs,
     ClipPreviewPageViewModelOutputs
 {
+    struct ListingClipItem {
+        let value: ClipItem
+        let nextItemId: ClipItem.Identity?
+        let previousItemId: ClipItem.Identity?
+    }
+
     // MARK: - Properties
 
     // MARK: ClipPreviewPageViewModelType
@@ -49,35 +59,52 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     // MARK: ClipPreviewPageViewModelInputs
 
-    let changedPage: PassthroughSubject<ClipItem.Identity, Never> = .init()
+    let pageChanged: PassthroughSubject<ClipItem.Identity, Never> = .init()
 
     let deleteClip: PassthroughSubject<Void, Never> = .init()
-    let removeClipItem: PassthroughSubject<ClipItem.Identity, Never> = .init()
+    let removeItem: PassthroughSubject<ClipItem.Identity, Never> = .init()
     let replaceTags: PassthroughSubject<Set<Tag.Identity>, Never> = .init()
     let addToAlbum: PassthroughSubject<Album.Identity, Never> = .init()
 
     // MARK: ClipPreviewPageViewModelOutputs
 
     let clipId: Clip.Identity
-    let items: CurrentValueSubject<[ClipItem], Never>
-    let currentItem: CurrentValueSubject<ClipItem?, Never>
-    let tags: CurrentValueSubject<[Tag], Never>
 
-    let errorMessage: PassthroughSubject<String, Never> = .init()
+    var items: AnyPublisher<[ClipItem], Never> {
+        _items.map { $0
+            .map { $0.value.value }
+            .sorted(by: { $0.clipIndex < $1.clipIndex })
+        }
+        .eraseToAnyPublisher()
+    }
 
-    let loadPageAt: PassthroughSubject<Int, Never> = .init()
+    var currentItem: AnyPublisher<ClipItem?, Never> {
+        _currentItemId
+            .map { self._items.value[$0] }
+            .map { $0?.value }
+            .eraseToAnyPublisher()
+    }
+
+    var currentItemIdValue: ClipItem.Identity { _currentItemId.value }
+    var tagIdsValue: [Tag.Identity] { _tags.value.map({ $0.id }) }
+
+    let displayErrorMessage: PassthroughSubject<String, Never> = .init()
+    let reloadCurrentPage: PassthroughSubject<Void, Never> = .init()
+    let loadPage: PassthroughSubject<Clip.Identity, Never> = .init()
     let close: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
+
+    private let _items: CurrentValueSubject<[ClipItem.Identity: ListingClipItem], Never>
+    private let _tags: CurrentValueSubject<[Tag], Never>
+    private let _currentItemId: CurrentValueSubject<ClipItem.Identity, Never>
 
     private let query: ClipQuery
     private let clipCommandService: ClipCommandServiceProtocol
     private let imageQueryService: ImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
-    private let currentIndex: CurrentValueSubject<Int, Never>
-
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -93,15 +120,27 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
         self.imageQueryService = imageQueryService
         self.logger = logger
 
-        self.items = .init(query.clip.value.sortedItems)
-        self.currentItem = .init(query.clip.value.items.first)
-        self.currentIndex = .init(0)
-        self.tags = .init(query.clip.value.tags)
+        let listingItems = Self.makeListingClipItems(for: query.clip.value)
+        self._items = .init(listingItems.reduce(into: [ClipItem.Identity: ListingClipItem]()) { $0[$1.value.id] = $1 })
+        self._currentItemId = .init(query.clip.value.items.first!.id)
+        self._tags = .init(query.clip.value.tags)
 
         self.bind()
     }
 
     // MARK: - Methods
+
+    private static func makeListingClipItems(for clip: Clip) -> [ListingClipItem] {
+        var items: [ListingClipItem] = []
+
+        for (index, item) in clip.items.enumerated() {
+            items.append(.init(value: item,
+                               nextItemId: clip.items.indices.contains(index + 1) ? clip.items[index + 1].id : nil,
+                               previousItemId: clip.items.indices.contains(index - 1) ? clip.items[index - 1].id : nil))
+        }
+
+        return items
+    }
 
     private func bind() {
         self.bindInputs()
@@ -114,34 +153,28 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                 self?.close.send(())
             } receiveValue: { [weak self] clip in
                 guard let self = self else { return }
-                let oldItem = clip.items[self.currentIndex.value]
+                guard let firstItem = clip.items.first else {
+                    self.close.send(())
+                    return
+                }
 
-                self.items.send(clip.items)
-                self.tags.send(clip.tags)
+                let listingItems = Self.makeListingClipItems(for: clip)
+                self._items.send(listingItems.reduce(into: [ClipItem.Identity: ListingClipItem]()) { $0[$1.value.id] = $1 })
+                self._tags.send(clip.tags)
 
                 // 元のItemが削除されているようであれば、最初のページをロードする
-                let newIndex = clip.items.firstIndex(where: { $0.id == oldItem.id }) ?? 0
-                self.currentIndex.send(newIndex)
-                self.loadPageAt.send(newIndex)
+                if !clip.items.contains(where: { $0.id == self._currentItemId.value }) {
+                    self._currentItemId.send(firstItem.id)
+                    self.loadPage.send(self._currentItemId.value)
+                } else {
+                    self.reloadCurrentPage.send(())
+                }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.changedPage
-            .compactMap { [weak self] itemId in
-                self?.items.value.firstIndex(where: { $0.id == itemId })
-            }
-            .sink { [weak self] index in
-                self?.currentIndex.send(index)
-            }
-            .store(in: &self.cancellableBag)
-
-        self.items
-            .combineLatest(self.currentIndex)
-            .sink { [weak self] items, index in
-                guard items.indices.contains(index) else { return }
-                self?.currentItem.send(items[index])
-            }
-            .store(in: &self.cancellableBag)
+        self.pageChanged
+            .sink { [weak self] itemId in self?._currentItemId.send(itemId) }
+            .store(in: &self.subscriptions)
     }
 
     private func bindOutputs() {
@@ -152,23 +185,23 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     クリップの削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.clipCollectionErrorAtDeleteClip)
+                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtDeleteClip)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
-        self.removeClipItem
+        self.removeItem
             .sink { [weak self] itemId in
                 guard let self = self else { return }
-                guard let item = self.items.value.first(where: { $0.identity == itemId }) else { return }
+                guard let item = self._items.value[itemId]?.value else { return }
                 if case let .failure(error) = self.clipCommandService.deleteClipItem(item) {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     画像の削除に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send("\(L10n.clipCollectionErrorAtRemoveItemFromClip)\n\(error.makeErrorCode())")
+                    self.displayErrorMessage.send("\(L10n.clipCollectionErrorAtRemoveItemFromClip)\n\(error.makeErrorCode())")
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.replaceTags
             .sink { [weak self] tagIds in
@@ -177,10 +210,10 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     タグの更新に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.clipCollectionErrorAtUpdateTagsToClip)
+                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtUpdateTagsToClip)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.addToAlbum
             .sink { [weak self] albumId in
@@ -189,29 +222,38 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムへの追加に失敗 (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    self.errorMessage.send(L10n.clipCollectionErrorAtAddClipToAlbum)
+                    self.displayErrorMessage.send(L10n.clipCollectionErrorAtAddClipToAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
+    }
+
+    func itemId(after itemId: ClipItem.Identity) -> ClipItem.Identity? {
+        return _items.value[itemId]?.nextItemId
+    }
+
+    func itemId(before itemId: ClipItem.Identity) -> ClipItem.Identity? {
+        return _items.value[itemId]?.previousItemId
     }
 
     func fetchImage() -> Data? {
-        guard let item = self.currentItem.value else { return nil }
+        guard let currentItem = self._items.value[self._currentItemId.value]?.value else { return nil }
         do {
-            return try self.imageQueryService.read(having: item.imageId)
+            return try self.imageQueryService.read(having: currentItem.imageId)
         } catch {
-            self.errorMessage.send(L10n.clipCollectionErrorAtShare)
+            self.displayErrorMessage.send(L10n.clipCollectionErrorAtShare)
             return nil
         }
     }
 
     func fetchImagesInClip() -> [Data] {
         do {
-            return try self.items.value
+            return try self._items.value.values
+                .map { $0.value }
                 .map { $0.imageId }
                 .compactMap { try self.imageQueryService.read(having: $0) }
         } catch {
-            self.errorMessage.send(L10n.clipCollectionErrorAtShare)
+            self.displayErrorMessage.send(L10n.clipCollectionErrorAtShare)
             return []
         }
     }

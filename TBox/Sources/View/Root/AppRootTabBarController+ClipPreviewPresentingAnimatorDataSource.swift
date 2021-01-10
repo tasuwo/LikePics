@@ -43,32 +43,32 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         return [self.tabBar]
     }
 
-    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forIndex index: Int) -> CGRect {
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forItemId itemId: ClipItem.Identity?) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
         guard let selectedCell = viewController.previewingCell else { return .zero }
-        switch index {
-        case 0:
+        guard let clip = viewController.previewingClip else { return .zero }
+
+        guard let targetItem: ClipItem = {
+            guard let itemId = itemId else { return clip.items.first }
+            return clip.items.first(where: { $0.id == itemId })
+        }() else { return .zero }
+
+        switch targetItem.id {
+        case clip.primaryItem?.id where clip.primaryItem != nil:
             return selectedCell.convert(selectedCell.primaryImageView.frame, to: containerView)
 
-        case 1:
+        case clip.secondaryItem?.id where clip.secondaryItem != nil:
             return selectedCell.convert(selectedCell.secondaryImageView.frame, to: containerView)
 
-        case 2:
+        case clip.tertiaryItem?.id where clip.tertiaryItem != nil:
             return selectedCell.convert(selectedCell.tertiaryImageView.frame, to: containerView)
 
         default:
-            break
+            let imageSize = targetItem.imageSize
+            let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
+                                               on: selectedCell.bounds)
+            return selectedCell.convert(frame, to: containerView)
         }
-
-        guard let clip = viewController.previewingClip, clip.items.indices.contains(index) else {
-            return selectedCell.convert(selectedCell.bounds, to: containerView)
-        }
-        let imageSize = clip.items[index].imageSize
-
-        let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
-                                           on: selectedCell.bounds)
-
-        return selectedCell.convert(frame, to: containerView)
     }
 
     private func calcCenteredFrame(for size: CGSize, on frame: CGRect) -> CGRect {

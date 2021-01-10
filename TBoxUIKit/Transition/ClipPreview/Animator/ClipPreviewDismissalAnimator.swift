@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
-    static let transitionDuration: TimeInterval = 0.2
+    static let transitionDuration: TimeInterval = 3
 
     private weak var delegate: ClipPreviewAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -34,7 +34,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
-            let fromIndex = from.currentIndex(self),
+            let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let targetCell = to.animatingCell(self),
@@ -95,7 +95,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             delay: 0,
             options: [.curveEaseIn]
         ) {
-            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forIndex: fromIndex)
+            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
             animatingImageView.frame = animatingView.bounds
 
             from.view.alpha = 0
