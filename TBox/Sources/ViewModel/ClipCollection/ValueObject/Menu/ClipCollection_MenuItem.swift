@@ -6,7 +6,7 @@ extension ClipCollection {
     enum MenuItem {
         case addTag
         case addToAlbum
-        case hide
+        case hide(immediately: Bool)
         case unhide
         case removeFromAlbum
         case delete

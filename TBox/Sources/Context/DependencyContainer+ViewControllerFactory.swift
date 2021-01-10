@@ -46,7 +46,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                              clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                                              navigationItemsProvider: navigationItemsProvider,
                                                              toolBarItemsProvider: toolBarItemsProvider,
-                                                             menuBuilder: ClipCollectionMenuBuilder.self)
+                                                             menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -233,7 +233,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
-                                          menuBuilder: ClipCollectionMenuBuilder.self)
+                                          menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
     }
 
     func makeAlbumListViewController() -> UIViewController? {
@@ -299,7 +299,7 @@ extension DependencyContainer: ViewControllerFactory {
                                    clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
-                                   menuBuilder: ClipCollectionMenuBuilder.self)
+                                   menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
@@ -347,7 +347,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                logger: self.logger)
         let viewController = TagCollectionViewController(factory: self,
                                                          viewModel: viewModel,
-                                                         menuBuilder: TagCollectionMenuBuilder.self,
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: self.userSettingsStorage),
                                                          logger: self.logger)
 
         return UINavigationController(rootViewController: viewController)

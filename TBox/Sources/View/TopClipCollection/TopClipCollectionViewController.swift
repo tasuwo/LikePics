@@ -21,7 +21,7 @@ class TopClipCollectionViewController: UIViewController {
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
-    private let menuBuilder: ClipCollectionMenuBuildable.Type
+    private let menuBuilder: ClipCollectionMenuBuildable
 
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
@@ -36,7 +36,7 @@ class TopClipCollectionViewController: UIViewController {
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable)
     {
         self.factory = factory
         self.viewModel = viewModel
@@ -303,7 +303,7 @@ extension TopClipCollectionViewController: ClipCollectionProviderDataSource {
         return self.dataSource.itemIdentifier(for: indexPath)
     }
 
-    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
+    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable {
         return self.menuBuilder
     }
 

@@ -42,7 +42,7 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: Components
 
-    private let menuBuilder: TagCollectionMenuBuildable.Type
+    private let menuBuilder: TagCollectionMenuBuildable
 
     // MARK: States
 
@@ -53,7 +53,7 @@ class TagCollectionViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: TagCollectionViewModel,
-         menuBuilder: TagCollectionMenuBuildable.Type,
+         menuBuilder: TagCollectionMenuBuildable,
          logger: TBoxLoggable)
     {
         self.factory = factory
@@ -294,15 +294,19 @@ extension TagCollectionViewController {
                 UIPasteboard.general.string = tag.name
             }
 
-        case .hide:
+        case let .hide(immediately: immediately):
             return UIAction(title: L10n.tagListViewContextMenuActionHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
-                //       アイテム削除を遅延させて自然なアニメーションにする
-                //       https://stackoverflow.com/a/57997005
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                if immediately {
                     self.viewModel.inputs.hide.send(tag.id)
+                } else {
+                    // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                    //       アイテム削除を遅延させて自然なアニメーションにする
+                    //       https://stackoverflow.com/a/57997005
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        self.viewModel.inputs.hide.send(tag.id)
+                    }
                 }
             }
 

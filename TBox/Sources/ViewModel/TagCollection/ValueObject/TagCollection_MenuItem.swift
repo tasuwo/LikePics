@@ -5,7 +5,7 @@
 extension TagCollection {
     enum MenuItem {
         case copy
-        case hide
+        case hide(immediately: Bool)
         case reveal
         case delete
         case rename

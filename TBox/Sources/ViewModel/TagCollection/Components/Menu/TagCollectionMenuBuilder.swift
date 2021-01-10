@@ -5,17 +5,31 @@
 import Domain
 
 protocol TagCollectionMenuBuildable {
-    static func build(for tag: Tag) -> [TagCollection.MenuItem]
+    func build(for tag: Tag) -> [TagCollection.MenuItem]
 }
 
-enum TagCollectionMenuBuilder: TagCollectionMenuBuildable {
+struct TagCollectionMenuBuilder {
+    // MARK: - Properties
+
+    private let storage: UserSettingsStorageProtocol
+
+    // MAKR: - Lifecycle
+
+    init(storage: UserSettingsStorageProtocol) {
+        self.storage = storage
+    }
+}
+
+extension TagCollectionMenuBuilder: TagCollectionMenuBuildable {
     // MARK: - TagCollectionMenuBuildable
 
-    static func build(for tag: Tag) -> [TagCollection.MenuItem] {
+    func build(for tag: Tag) -> [TagCollection.MenuItem] {
         return [
             .copy,
             .rename,
-            tag.isHidden ? .reveal : .hide,
+            tag.isHidden
+                ? .reveal
+                : .hide(immediately: storage.readShowHiddenItems()),
             .delete
         ]
     }

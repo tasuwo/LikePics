@@ -11,7 +11,7 @@ import UIKit
 protocol ClipCollectionProviderDataSource: AnyObject {
     func isEditing(_ provider: ClipCollectionProvider) -> Bool
     func clipCollectionProvider(_ provider: ClipCollectionProvider, clipFor indexPath: IndexPath) -> Clip?
-    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type
+    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable
     func clipsListCollectionMenuContext(_ provider: ClipCollectionProvider) -> ClipCollection.Context
 }
 
@@ -248,15 +248,19 @@ extension ClipCollectionProvider {
                 }
             }
 
-        case .hide:
+        case let .hide(immediately: immediately):
             return UIAction(title: L10n.clipsListContextMenuHide,
                             image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
                 guard let self = self else { return }
-                // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
-                //       アイテム削除を遅延させて自然なアニメーションにする
-                //       https://stackoverflow.com/a/57997005
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                if immediately {
                     self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity, at: indexPath)
+                } else {
+                    // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                    //       アイテム削除を遅延させて自然なアニメーションにする
+                    //       https://stackoverflow.com/a/57997005
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        self.delegate?.clipCollectionProvider(self, shouldHide: clip.identity, at: indexPath)
+                    }
                 }
             }
 

@@ -5,20 +5,34 @@
 import Domain
 
 protocol ClipCollectionMenuBuildable {
-    static func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement]
+    func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement]
 }
 
-enum ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
+struct ClipCollectionMenuBuilder {
+    // MARK: - Properties
+
+    private let storage: UserSettingsStorageProtocol
+
+    // MARK: - Lifecycle
+
+    init(storage: UserSettingsStorageProtocol) {
+        self.storage = storage
+    }
+}
+
+extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
     // MARK: - ClipCollectionMenuBuildable
 
-    static func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement] {
+    func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement] {
         return [
             context.isAlbum
                 ? .item(.addTag)
                 : .subMenu(.init(kind: .add,
                                  isInline: false,
                                  children: [.item(.addTag), .item(.addToAlbum)])),
-            clip.isHidden ? .item(.unhide) : .item(.hide),
+            clip.isHidden
+                ? .item(.unhide)
+                : .item(.hide(immediately: storage.readShowHiddenItems())),
             .item(.share),
             .subMenu(.init(kind: .others,
                            isInline: true,

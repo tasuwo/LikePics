@@ -31,7 +31,7 @@ class AlbumViewController: UIViewController {
     private let clipCollectionProvider: ClipCollectionProvider
     private let navigationItemsProvider: ClipCollectionNavigationBarProvider
     private let toolBarItemsProvider: ClipCollectionToolBarProvider
-    private let menuBuilder: ClipCollectionMenuBuildable.Type
+    private let menuBuilder: ClipCollectionMenuBuildable
 
     // MARK: View
 
@@ -54,7 +54,7 @@ class AlbumViewController: UIViewController {
          clipCollectionProvider: ClipCollectionProvider,
          navigationItemsProvider: ClipCollectionNavigationBarProvider,
          toolBarItemsProvider: ClipCollectionToolBarProvider,
-         menuBuilder: ClipCollectionMenuBuildable.Type)
+         menuBuilder: ClipCollectionMenuBuildable)
     {
         self.factory = factory
         self.viewModel = viewModel
@@ -356,7 +356,7 @@ extension AlbumViewController: ClipCollectionProviderDataSource {
         return self.dataSource.itemIdentifier(for: indexPath)
     }
 
-    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable.Type {
+    func clipsListCollectionMenuBuilder(_ provider: ClipCollectionProvider) -> ClipCollectionMenuBuildable {
         return self.menuBuilder
     }
 
