@@ -190,7 +190,7 @@ extension AlbumListViewModel {
             .sink { [weak self] albumIds in
                 guard let self = self else { return }
 
-                let originals = self._albums.value.map({ $0.album.id })
+                let originals = self.query.albums.value.map({ $0.id })
                 guard Set(originals).count == originals.count, Set(albumIds).count == albumIds.count else {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムの並び替えに失敗しました。IDに重複が存在します
