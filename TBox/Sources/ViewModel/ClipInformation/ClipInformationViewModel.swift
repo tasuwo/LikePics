@@ -82,6 +82,14 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     // MARK: - Methods
 
     func bind() {
+        self.itemQuery.clipItem
+            .sink { [weak self] _ in
+                self?.close.send(())
+            } receiveValue: { _ in
+                // NOP
+            }
+            .store(in: &self.cancellableBag)
+
         self.clipQuery.clip
             .combineLatest(itemQuery.clipItem, settingStorage.showHiddenItems.mapError({ _ -> Error in NSError() }))
             .sink(receiveCompletion: { [weak self] completion in
