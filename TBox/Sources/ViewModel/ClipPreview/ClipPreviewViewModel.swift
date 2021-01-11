@@ -18,10 +18,12 @@ protocol ClipPreviewViewModelInputs {
 }
 
 protocol ClipPreviewViewModelOutputs {
-    var item: CurrentValueSubject<ClipItem, Never> { get }
-    var imageLoaded: PassthroughSubject<UIImage, Never> { get }
+    var itemIdValue: ClipItem.Identity { get }
+    var itemUrlValue: URL? { get }
+
+    var loadImage: PassthroughSubject<UIImage, Never> { get }
     var dismiss: PassthroughSubject<Void, Never> { get }
-    var errorMessage: PassthroughSubject<String, Never> { get }
+    var displayErrorMessage: PassthroughSubject<String, Never> { get }
 
     func readInitialImage() -> UIImage?
 }
@@ -75,12 +77,16 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
 
     // MARK: ClipPreviewViewModelOutputs
 
-    let item: CurrentValueSubject<ClipItem, Never>
-    let imageLoaded: PassthroughSubject<UIImage, Never> = .init()
+    var itemIdValue: ClipItem.Identity { _item.value.id }
+    var itemUrlValue: URL? { _item.value.url }
+
+    let loadImage: PassthroughSubject<UIImage, Never> = .init()
     let dismiss: PassthroughSubject<Void, Never> = .init()
-    let errorMessage: PassthroughSubject<String, Never> = .init()
+    let displayErrorMessage: PassthroughSubject<String, Never> = .init()
 
     // MARK: Privates
+
+    private let _item: CurrentValueSubject<ClipItem, Never>
 
     private let query: ClipItemQuery
     private let imageQueryService: ImageQueryServiceProtocol
@@ -102,7 +108,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
         self.imageQueryService = imageQueryService
         self.logger = logger
 
-        self.item = .init(query.clipItem.value)
+        self._item = .init(query.clipItem.value)
 
         self.bind()
     }
@@ -110,7 +116,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
     // MARK: - Methods
 
     func readInitialImage() -> UIImage? {
-        self.readInitialImage(for: self.item.value)
+        self.readInitialImage(for: self._item.value)
     }
 
     private func readInitialImage(for item: ClipItem) -> UIImage? {
@@ -121,7 +127,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
             guard let data = try? self.imageQueryService.read(having: item.imageId),
                 let image = UIImage(data: data)
             else {
-                self.errorMessage.send(L10n.clipPreviewErrorAtLoadImage)
+                self.displayErrorMessage.send(L10n.clipPreviewErrorAtLoadImage)
                 return nil
             }
             self.state = .imageLoaded
@@ -134,13 +140,13 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
         guard let data = try? self.imageQueryService.read(having: item.imageId),
             let image = UIImage(data: data)
         else {
-            self.errorMessage.send(L10n.clipPreviewErrorAtLoadImage)
+            self.displayErrorMessage.send(L10n.clipPreviewErrorAtLoadImage)
             return
         }
         self.queue.sync {
             self.state = .imageLoaded
         }
-        self.imageLoaded.send(image)
+        self.loadImage.send(image)
     }
 }
 
@@ -156,14 +162,14 @@ extension ClipPreviewViewModel {
         self.viewWillAppear
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.lazyReadImageIfNeeded(for: self.item.value, at: .viewWillAppear)
+                self.lazyReadImageIfNeeded(for: self._item.value, at: .viewWillAppear)
             }
             .store(in: &self.cancellableBag)
 
         self.viewDidAppear
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.lazyReadImageIfNeeded(for: self.item.value, at: .viewDidAppear)
+                self.lazyReadImageIfNeeded(for: self._item.value, at: .viewDidAppear)
             }
             .store(in: &self.cancellableBag)
     }
@@ -173,7 +179,7 @@ extension ClipPreviewViewModel {
             .sink { [weak self] _ in
                 self?.dismiss.send(())
             } receiveValue: { [weak self] item in
-                self?.item.send(item)
+                self?._item.send(item)
             }
             .store(in: &self.cancellableBag)
     }

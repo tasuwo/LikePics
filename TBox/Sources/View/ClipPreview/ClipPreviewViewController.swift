@@ -18,11 +18,11 @@ class ClipPreviewViewController: UIViewController {
     private var isInitialLoaded: Bool = false
 
     var itemId: ClipItem.Identity {
-        return self.viewModel.outputs.item.value.id
+        return self.viewModel.outputs.itemIdValue
     }
 
     var itemUrl: URL? {
-        return self.viewModel.outputs.item.value.url
+        return self.viewModel.outputs.itemUrlValue
     }
 
     private var cancellableBag = Set<AnyCancellable>()
@@ -84,14 +84,14 @@ class ClipPreviewViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.imageLoaded
+        dependency.outputs.loadImage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in
                 self?.previewView.source = (image, image.size)
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.errorMessage
+        dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
