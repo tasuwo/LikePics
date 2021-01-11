@@ -84,7 +84,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         self.bind(to: viewModel)
 
-        guard let viewController = factory.makeClipItemPreviewViewController(itemId: viewModel.outputs.currentItemIdValue) else { return }
+        guard let viewController = factory.makeClipPreviewViewController(itemId: viewModel.outputs.currentItemIdValue,
+                                                                         usesImageForPresentingAnimation: true) else { return }
         self.setViewControllers([viewController], direction: .forward, animated: false)
     }
 
@@ -128,7 +129,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         dependency.outputs.loadPage
             .sink { [weak self] itemId in
-                guard let viewController = self?.factory.makeClipItemPreviewViewController(itemId: itemId) else { return }
+                guard let viewController = self?.factory.makeClipPreviewViewController(itemId: itemId, usesImageForPresentingAnimation: false) else { return }
                 self?.setViewControllers([viewController], direction: .forward, animated: false) { completed in
                     guard completed else { return }
                     self?.didChangedCurrentPage(to: viewController, forced: true)
@@ -201,13 +202,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let itemId = viewModel.outputs.itemId(before: viewController.itemId) else { return nil }
-        return factory.makeClipItemPreviewViewController(itemId: itemId)
+        return factory.makeClipPreviewViewController(itemId: itemId, usesImageForPresentingAnimation: false)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let itemId = viewModel.outputs.itemId(after: viewController.itemId) else { return nil }
-        return factory.makeClipItemPreviewViewController(itemId: itemId)
+        return factory.makeClipPreviewViewController(itemId: itemId, usesImageForPresentingAnimation: false)
     }
 }
 

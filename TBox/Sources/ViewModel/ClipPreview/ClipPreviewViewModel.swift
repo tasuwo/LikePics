@@ -62,6 +62,7 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
 
     private let query: ClipItemQuery
     private let previewLoader: PreviewLoaderProtocol
+    private let usesImageForPresentingAnimation: Bool
     private let logger: TBoxLoggable
 
     private var subscriptions = Set<AnyCancellable>()
@@ -70,10 +71,12 @@ class ClipPreviewViewModel: ClipPreviewViewModelType,
 
     init(query: ClipItemQuery,
          previewLoader: PreviewLoaderProtocol,
+         usesImageForPresentingAnimation: Bool,
          logger: TBoxLoggable)
     {
         self.query = query
         self.previewLoader = previewLoader
+        self.usesImageForPresentingAnimation = usesImageForPresentingAnimation
         self.logger = logger
 
         self._item = .init(query.clipItem.value)
@@ -97,9 +100,29 @@ extension ClipPreviewViewModel {
             return .thumbnail(.init(uiImage: preview, originalSize: item.imageSize.cgSize))
         }
 
-        self.loadPreview()
+        if usesImageForPresentingAnimation {
+            // クリップ一覧からプレビュー画面への遷移時に、サムネイルのキャッシュが既に揮発している
+            // 可能性もある。そのような場合には遷移アニメーションが若干崩れてしまう
+            // これを防ぐため、若干の操作のスムーズさを犠牲にして同期的に downsampling する
+            var source: ClipPreviewView.Source?
+            let semaphore = DispatchSemaphore(value: 0)
 
-        return nil
+            self.previewLoader.loadPreview(forImageId: _item.value.imageId) { [weak self] image in
+                defer { semaphore.signal() }
+                guard let image = image else {
+                    self?.displayErrorMessage.send(L10n.clipPreviewErrorAtLoadImage)
+                    return
+                }
+                source = .image(.init(uiImage: image))
+            }
+
+            semaphore.wait()
+
+            return source
+        } else {
+            self.loadPreview()
+            return nil
+        }
     }
 
     private func loadPreview() {

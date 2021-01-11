@@ -10,8 +10,8 @@ import UIKit
 protocol ViewControllerFactory {
     func makeTopClipCollectionViewController() -> UIViewController?
 
-    func makeClipPreviewViewController(clipId: Clip.Identity) -> UIViewController?
-    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipPreviewViewController?
+    func makeClipPreviewPageViewController(clipId: Clip.Identity) -> UIViewController?
+    func makeClipPreviewViewController(itemId: ClipItem.Identity, usesImageForPresentingAnimation: Bool) -> ClipPreviewViewController?
 
     func makeClipInformationViewController(clipId: Clip.Identity,
                                            itemId: ClipItem.Identity,

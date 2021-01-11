@@ -51,7 +51,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewViewController(clipId: Domain.Clip.Identity) -> UIViewController? {
+    func makeClipPreviewPageViewController(clipId: Domain.Clip.Identity) -> UIViewController? {
         let query: ClipQuery
         switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
@@ -100,7 +100,7 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
-    func makeClipItemPreviewViewController(itemId: ClipItem.Identity) -> ClipPreviewViewController? {
+    func makeClipPreviewViewController(itemId: ClipItem.Identity, usesImageForPresentingAnimation: Bool) -> ClipPreviewViewController? {
         let query: ClipItemQuery
         switch self.clipQueryService.queryClipItem(having: itemId) {
         case let .success(result):
@@ -115,6 +115,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = ClipPreviewViewModel(query: query,
                                              previewLoader: self.previewLoader,
+                                             usesImageForPresentingAnimation: usesImageForPresentingAnimation,
                                              logger: self.logger)
         let viewController = ClipPreviewViewController(factory: self, viewModel: viewModel)
 

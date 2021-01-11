@@ -189,7 +189,7 @@ class AlbumViewController: UIViewController {
         dependency.outputs.previewed
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clipId in
-                guard let viewController = self?.factory.makeClipPreviewViewController(clipId: clipId) else {
+                guard let viewController = self?.factory.makeClipPreviewPageViewController(clipId: clipId) else {
                     self?.viewModel.inputs.previewCancelled.send(())
                     return
                 }
