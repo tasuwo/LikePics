@@ -297,7 +297,7 @@ extension ThumbnailLoadPipeline {
     }
 }
 
-private extension CGImageAlphaInfo {
+public extension CGImageAlphaInfo {
     var hasAlphaChannel: Bool {
         switch self {
         case .none, .noneSkipLast, .noneSkipFirst:

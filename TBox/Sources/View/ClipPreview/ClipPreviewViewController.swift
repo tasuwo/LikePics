@@ -44,26 +44,12 @@ class ClipPreviewViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.viewModel.inputs.viewWillAppear.send(())
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        self.viewModel.inputs.viewDidAppear.send(())
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.bind(to: viewModel)
 
-        if let image = self.viewModel.outputs.readInitialImage() {
-            self.previewView.source = (image, image.size)
-        }
+        self.previewView.source = self.viewModel.outputs.readPreview()
     }
 
     override func viewDidLayoutSubviews() {
@@ -84,11 +70,16 @@ class ClipPreviewViewController: UIViewController {
             }
             .store(in: &self.cancellableBag)
 
-        dependency.outputs.loadImage
+        dependency.outputs.displayImage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in
-                self?.previewView.source = (image, image.size)
+                self?.previewView.source = .image(.init(uiImage: image))
             }
+            .store(in: &self.cancellableBag)
+
+        dependency.outputs.isLoading
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.isLoading, on: self.previewView)
             .store(in: &self.cancellableBag)
 
         dependency.outputs.displayErrorMessage

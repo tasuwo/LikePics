@@ -67,6 +67,7 @@ extension DependencyContainer: ViewControllerFactory {
         guard let viewModel = ClipPreviewPageViewModel(clipId: clipId,
                                                        query: query,
                                                        clipCommandService: self.clipCommandService,
+                                                       previewLoader: self.previewLoader,
                                                        imageQueryService: self.imageQueryService,
                                                        logger: self.logger)
         else {
@@ -113,7 +114,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let viewModel = ClipPreviewViewModel(query: query,
-                                             imageQueryService: self.imageQueryService,
+                                             previewLoader: self.previewLoader,
                                              logger: self.logger)
         let viewController = ClipPreviewViewController(factory: self, viewModel: viewModel)
 

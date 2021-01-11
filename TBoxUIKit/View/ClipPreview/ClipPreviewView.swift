@@ -11,12 +11,57 @@ public protocol ClipPreviewPageViewDelegate: AnyObject {
 }
 
 public class ClipPreviewView: UIView {
-    public typealias Source = (image: UIImage, imageSize: CGSize)
+    public enum Source {
+        public struct Image {
+            let uiImage: UIImage
+
+            public init(uiImage: UIImage) {
+                self.uiImage = uiImage
+            }
+        }
+
+        public struct Thumbnail {
+            let uiImage: UIImage
+            let originalSize: CGSize
+
+            public init(uiImage: UIImage, originalSize: CGSize) {
+                self.uiImage = uiImage
+                self.originalSize = originalSize
+            }
+        }
+
+        case image(Image)
+        case thumbnail(Thumbnail)
+
+        var uiImage: UIImage {
+            switch self {
+            case let .image(image):
+                return image.uiImage
+
+            case let .thumbnail(thumbnail):
+                return thumbnail.uiImage
+            }
+        }
+
+        var imageSize: CGSize {
+            return self.uiImage.size
+        }
+
+        var originalSize: CGSize {
+            switch self {
+            case let .image(image):
+                return image.uiImage.size
+
+            case let .thumbnail(thumbnail):
+                return thumbnail.originalSize
+            }
+        }
+    }
 
     public var source: Source? {
         didSet {
             guard let source = self.source else { return }
-            self.imageView.image = source.image
+            self.imageView.image = source.uiImage
         }
     }
 
@@ -49,9 +94,9 @@ public class ClipPreviewView: UIView {
 
     public var initialImageFrame: CGRect {
         guard let source = self.source else { return .zero }
-        let scale = min(1, Self.calcScaleScaleToFit(forSize: source.imageSize, fittingIn: self.bounds.size))
-        let initialImageSize = CGSize(width: source.imageSize.width * scale,
-                                      height: source.imageSize.height * scale)
+        let scale = min(1, Self.calcScaleScaleToFit(forSize: source.originalSize, fittingIn: self.bounds.size))
+        let initialImageSize = CGSize(width: source.originalSize.width * scale,
+                                      height: source.originalSize.height * scale)
         return CGRect(origin: CGPoint(x: (self.bounds.width - initialImageSize.width) / 2,
                                       y: (self.bounds.height - initialImageSize.height) / 2),
                       size: initialImageSize)
@@ -59,6 +104,19 @@ public class ClipPreviewView: UIView {
 
     public var zoomGestureRecognizer: UITapGestureRecognizer {
         return self.doubleTapGestureRecognizer
+    }
+
+    public var isLoading: Bool {
+        get {
+            self.indicator.isAnimating
+        }
+        set {
+            if newValue {
+                self.indicator.startAnimating()
+            } else {
+                self.indicator.stopAnimating()
+            }
+        }
     }
 
     public weak var delegate: ClipPreviewPageViewDelegate?
@@ -70,6 +128,7 @@ public class ClipPreviewView: UIView {
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
+    @IBOutlet var indicator: UIActivityIndicatorView!
 
     @IBOutlet var leftInsetConstraint: NSLayoutConstraint!
     @IBOutlet var bottomInsetConstraint: NSLayoutConstraint!
@@ -127,6 +186,8 @@ public class ClipPreviewView: UIView {
     }
 
     private func setupAppearance() {
+        self.indicator.hidesWhenStopped = true
+        self.indicator.stopAnimating()
         self.scrollView.showsVerticalScrollIndicator = false
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.alwaysBounceVertical = false

@@ -19,6 +19,7 @@ class DependencyContainer {
     let clipThumbnailLoader: ThumbnailLoader
     let albumThumbnailLoader: ThumbnailLoader
     let temporaryThumbnailLoader: ThumbnailLoader
+    let previewLoader: PreviewLoader
 
     // MARK: Storage
 
@@ -91,7 +92,8 @@ class DependencyContainer {
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
         clipCacheConfig.diskCache = self.clipDiskCache
-        clipCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit, countLimit: Int.max))
+        let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
+        clipCacheConfig.memoryCache = clipMemoryCache
         self.clipThumbnailLoader = ThumbnailLoader(pipeline: .init(config: clipCacheConfig))
 
         var albumCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
@@ -99,13 +101,18 @@ class DependencyContainer {
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
         albumCacheConfig.diskCache = albumDiskCache
-        albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit / 4, countLimit: Int.max))
+        albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
         self.albumThumbnailLoader = ThumbnailLoader(pipeline: .init(config: albumCacheConfig))
 
         var temporaryCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
         temporaryCacheConfig.diskCache = nil
-        temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit / 4, countLimit: 50))
+        temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
         self.temporaryThumbnailLoader = ThumbnailLoader(pipeline: .init(config: temporaryCacheConfig))
+
+        let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
+        self.previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
+                                           imageQueryService: self.imageQueryService,
+                                           memoryCache: previewMemoryCache)
 
         self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                      referenceClipStorage: referenceClipStorage,

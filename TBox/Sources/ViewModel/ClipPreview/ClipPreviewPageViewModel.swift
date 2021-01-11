@@ -101,6 +101,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
     private let query: ClipQuery
     private let clipCommandService: ClipCommandServiceProtocol
+    private let previewLoader: PreviewLoaderProtocol
     private let imageQueryService: ImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
@@ -111,6 +112,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     init?(clipId: Clip.Identity,
           query: ClipQuery,
           clipCommandService: ClipCommandServiceProtocol,
+          previewLoader: PreviewLoaderProtocol,
           imageQueryService: ImageQueryServiceProtocol,
           logger: TBoxLoggable)
     {
@@ -119,6 +121,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
         self.clipId = clipId
         self.query = query
         self.clipCommandService = clipCommandService
+        self.previewLoader = previewLoader
         self.imageQueryService = imageQueryService
         self.logger = logger
 
@@ -176,6 +179,11 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
         self.pageChanged
             .sink { [weak self] itemId in self?._currentItemId.send(itemId) }
+            .store(in: &self.subscriptions)
+
+        self._currentItemId
+            .compactMap { [weak self] itemId in self?._items.value[itemId] }
+            .sink { [weak self] item in self?.preloadPreviews(for: item) }
             .store(in: &self.subscriptions)
     }
 
@@ -257,6 +265,47 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
         } catch {
             self.displayErrorMessage.send(L10n.clipCollectionErrorAtShare)
             return []
+        }
+    }
+}
+
+// MARK: - Preload previews
+
+extension ClipPreviewPageViewModel {
+    private func preloadPreviews(for item: ListingClipItem) {
+        self.reloadNextItems(8, from: item)
+        self.reloadPreviousItems(8, from: item)
+    }
+
+    private func reloadNextItems(_ count: Int, from item: ListingClipItem) {
+        let nextItem = { (clip: ListingClipItem) -> ListingClipItem? in
+            guard let itemId = clip.nextItemId else { return nil }
+            guard let item = self._items.value[itemId] else { return nil }
+            return item
+        }
+
+        var currentItem: ListingClipItem = item
+        for _ in 0 ..< count {
+            guard let nextItem = nextItem(currentItem) else { return }
+            currentItem = nextItem
+            self.previewLoader.preloadPreview(itemId: currentItem.value.id,
+                                              imageId: currentItem.value.imageId)
+        }
+    }
+
+    private func reloadPreviousItems(_ count: Int, from item: ListingClipItem) {
+        let prevItem = { (clip: ListingClipItem) -> ListingClipItem? in
+            guard let itemId = clip.previousItemId else { return nil }
+            guard let item = self._items.value[itemId] else { return nil }
+            return item
+        }
+
+        var currentItem: ListingClipItem = item
+        for _ in 0 ..< 8 {
+            guard let prevItem = prevItem(currentItem) else { return }
+            currentItem = prevItem
+            self.previewLoader.preloadPreview(itemId: currentItem.value.id,
+                                              imageId: currentItem.value.imageId)
         }
     }
 }

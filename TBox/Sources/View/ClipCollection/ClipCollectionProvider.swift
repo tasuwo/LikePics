@@ -104,6 +104,7 @@ class ClipCollectionProvider: NSObject {
                              context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue,
                              isPrefetch: Bool = false) -> ThumbnailRequest
     {
+        // - SeeAlso: PreviewLoader
         let info = ThumbnailRequest.ThumbnailInfo(id: "clip-collection-\(item.identity.uuidString)",
                                                   size: size,
                                                   scale: scale)

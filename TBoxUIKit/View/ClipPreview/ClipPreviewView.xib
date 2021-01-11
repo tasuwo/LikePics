@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +12,7 @@
                 <outlet property="baseView" destination="13Z-jz-dRy" id="tw9-3A-bo4"/>
                 <outlet property="bottomInsetConstraint" destination="Itk-D2-eZo" id="5Wg-MX-0Bd"/>
                 <outlet property="imageView" destination="S18-Kz-fUW" id="45t-fy-Inf"/>
+                <outlet property="indicator" destination="a0i-nG-mLK" id="le5-se-wrw"/>
                 <outlet property="leftInsetConstraint" destination="1QE-Vx-lmd" id="7lg-ZC-WDN"/>
                 <outlet property="rightInsetConstraint" destination="Z6l-iH-Sn9" id="4oa-9b-XZN"/>
                 <outlet property="scrollView" destination="Sye-px-Tdy" id="V84-h3-b9X"/>
@@ -24,6 +24,9 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="a0i-nG-mLK">
+                    <rect key="frame" x="188.5" y="434.5" width="37" height="37"/>
+                </activityIndicatorView>
                 <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sye-px-Tdy">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
@@ -47,9 +50,11 @@
             <viewLayoutGuide key="safeArea" id="1TV-Ab-u0R"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="a0i-nG-mLK" firstAttribute="centerY" secondItem="1TV-Ab-u0R" secondAttribute="centerY" id="EcK-Li-yvh"/>
                 <constraint firstItem="Sye-px-Tdy" firstAttribute="leading" secondItem="13Z-jz-dRy" secondAttribute="leading" id="IIT-y6-qrb"/>
                 <constraint firstItem="Sye-px-Tdy" firstAttribute="trailing" secondItem="13Z-jz-dRy" secondAttribute="trailing" id="aad-HV-Zvh"/>
                 <constraint firstAttribute="bottom" secondItem="Sye-px-Tdy" secondAttribute="bottom" id="d6C-EK-RXV"/>
+                <constraint firstItem="a0i-nG-mLK" firstAttribute="centerX" secondItem="1TV-Ab-u0R" secondAttribute="centerX" id="fzT-rH-gat"/>
                 <constraint firstItem="Sye-px-Tdy" firstAttribute="top" secondItem="13Z-jz-dRy" secondAttribute="top" id="ohq-Uj-wDe"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>

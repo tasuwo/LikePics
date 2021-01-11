@@ -11,7 +11,7 @@ public enum ImageType: CaseIterable {
     case heic
     case webp
 
-    var mimeType: String {
+    public var mimeType: String {
         switch self {
         case .gif:
             return "image/gif"
@@ -30,7 +30,7 @@ public enum ImageType: CaseIterable {
         }
     }
 
-    var uniformTypeIdentifier: String {
+    public var uniformTypeIdentifier: String {
         switch self {
         case .gif:
             return "com.compuserve.gif"
