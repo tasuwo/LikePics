@@ -124,6 +124,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipInformationViewController(clipId: Domain.Clip.Identity,
                                            itemId: ClipItem.Identity,
+                                           informationView: ClipInformationView,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
     {
@@ -161,6 +162,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = ClipInformationViewController(factory: self,
                                                            dataSource: dataSource,
                                                            viewModel: viewModel,
+                                                           informationView: informationView,
                                                            transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen

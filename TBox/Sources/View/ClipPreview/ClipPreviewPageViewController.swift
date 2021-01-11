@@ -46,6 +46,10 @@ class ClipPreviewPageViewController: UIPageViewController {
         return self.viewControllers?.first as? ClipPreviewViewController
     }
 
+    // HACK: CollectionViewの初回ロードが重く、Interactiveな画面遷移がカクついてしまうため、
+    //       ここで事前にロードしておいた View を利用する
+    private var informationView = ClipInformationView()
+
     // MARK: - Lifecycle
 
     init(factory: Factory,
@@ -87,6 +91,19 @@ class ClipPreviewPageViewController: UIPageViewController {
         guard let viewController = factory.makeClipPreviewViewController(itemId: viewModel.outputs.currentItemIdValue,
                                                                          usesImageForPresentingAnimation: true) else { return }
         self.setViewControllers([viewController], direction: .forward, animated: false)
+
+        // HACK: CollectionViewの初回ロードが重く、Interactiveな画面遷移がカクついてしまうため、
+        //       ここで事前に CollectionView の初回ロードを行っておく
+        informationView.alpha = 0
+        informationView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.insertSubview(informationView, at: 0)
+        NSLayoutConstraint.activate([
+            informationView.topAnchor.constraint(equalTo: view.topAnchor),
+            informationView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            informationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            informationView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        self.applyInitialValues()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -319,11 +336,40 @@ extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
     // MARK: - ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
+        // alpha利用側で元に戻す
+        // SeeAlso: ClipInformationViewController
+        self.informationView.alpha = 1
         return self.factory.makeClipInformationViewController(
             clipId: self.viewModel.outputs.clipId,
             itemId: viewModel.outputs.currentItemIdValue,
+            informationView: informationView,
             transitioningController: transitioningController,
             dataSource: self
         )
+    }
+
+    private func applyInitialValues() {
+        DispatchQueue.main.async {
+            self.informationView.setInfo(.init(clip: .init(id: UUID(),
+                                                           description: nil,
+                                                           items: [],
+                                                           tags: [],
+                                                           isHidden: false,
+                                                           dataSize: 0,
+                                                           registeredDate: Date(timeIntervalSince1970: 0),
+                                                           updatedDate: Date(timeIntervalSince1970: 0)),
+                                               item: .init(id: UUID(),
+                                                           url: nil,
+                                                           clipId: UUID(),
+                                                           clipIndex: 0,
+                                                           imageId: UUID(),
+                                                           imageFileName: "",
+                                                           imageUrl: nil,
+                                                           imageSize: .init(height: 0, width: 0),
+                                                           imageDataSize: 0,
+                                                           registeredDate: Date(timeIntervalSince1970: 0),
+                                                           updatedDate: Date(timeIntervalSince1970: 0))),
+                                         animated: false)
+        }
     }
 }

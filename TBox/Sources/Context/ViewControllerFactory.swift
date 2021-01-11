@@ -15,6 +15,7 @@ protocol ViewControllerFactory {
 
     func makeClipInformationViewController(clipId: Clip.Identity,
                                            itemId: ClipItem.Identity,
+                                           informationView: ClipInformationView,
                                            transitioningController: ClipInformationTransitioningControllerProtocol,
                                            dataSource: ClipInformationViewDataSource) -> UIViewController?
 

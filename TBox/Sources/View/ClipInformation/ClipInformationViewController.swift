@@ -29,21 +29,21 @@ class ClipInformationViewController: UIViewController {
         return self.shouldHideStatusBar
     }
 
-    private var isInitialLoaded = false
-
     private var subscriptions = Set<AnyCancellable>()
 
-    private var informationView: ClipInformationView!
+    private let informationView: ClipInformationView
 
     // MARK: - Lifecycle
 
     init(factory: Factory,
          dataSource: ClipInformationViewDataSource,
          viewModel: Dependency,
+         informationView: ClipInformationView,
          transitioningController: ClipInformationTransitioningControllerProtocol)
     {
         self.factory = factory
         self.viewModel = viewModel
+        self.informationView = informationView
         self.transitioningController = transitioningController
         self.dataSource = dataSource
 
@@ -53,6 +53,10 @@ class ClipInformationViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        informationView.alpha = 0
     }
 
     override func viewDidLoad() {
@@ -90,8 +94,6 @@ class ClipInformationViewController: UIViewController {
     }
 
     private func setupInformationView() {
-        self.informationView = ClipInformationView(frame: self.view.frame)
-        self.informationView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.informationView)
         NSLayoutConstraint.activate([
             self.informationView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -105,20 +107,9 @@ class ClipInformationViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.info
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] info in
-                if self?.isInitialLoaded == false {
-                    // HACK: Interactiveな画面遷移中にCollectionViewを更新すると操作がカクつくため、
-                    //       初回のみ微妙に更新を遅らせる
-                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-                        guard self?.isInitialLoaded == false else { return }
-                        self?.informationView.setInfo(info, animated: false)
-                        self?.isInitialLoaded = true
-                    }
-                } else {
-                    DispatchQueue.global().async {
-                        self?.informationView.setInfo(info, animated: true)
-                    }
-                }
+                self?.informationView.setInfo(info, animated: true)
             }
             .store(in: &self.subscriptions)
 
