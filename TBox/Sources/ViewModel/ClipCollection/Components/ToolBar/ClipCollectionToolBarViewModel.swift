@@ -45,7 +45,7 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
     // MARK: Privates
 
     private let context: ClipCollection.Context
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -56,12 +56,12 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
 
         self.selectedClipsCount
             .sink { [weak self] count in self?.selectionCount.send(count) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.operation
             .map { $0 == .selecting }
             .sink { [weak self] isEditing in self?.isHidden.send(!isEditing) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.selectedClipsCount
             .sink { [weak self] count in
@@ -79,6 +79,6 @@ class ClipCollectionToolBarViewModel: ClipCollectionToolBarViewModelType,
                     .init(kind: .merge, isEnabled: isEnabled && count > 1)
                 ])
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

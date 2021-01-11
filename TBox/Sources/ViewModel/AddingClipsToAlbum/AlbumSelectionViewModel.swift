@@ -59,7 +59,7 @@ class AlbumSelectionViewModel: AlbumSelectionViewModelType,
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     weak var delegate: AlbumSelectionPresenterDelegate?
 
@@ -108,7 +108,7 @@ extension AlbumSelectionViewModel {
                 self.albums.send(newAlbums)
                 self.displayEmptyMessage.send(albums.isEmpty)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.addedAlbum
             .sink { [weak self] title in
@@ -120,7 +120,7 @@ extension AlbumSelectionViewModel {
                     self.errorMessage.send(L10n.albumListViewErrorAtAddAlbum)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.selectedAlbum
             .sink { [weak self] albumId in
@@ -128,6 +128,6 @@ extension AlbumSelectionViewModel {
                 self.delegate?.albumSelectionPresenter(self, didSelectAlbumHaving: albumId, withContext: self.context)
                 self.close.send(())
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

@@ -16,7 +16,7 @@ class WebImageUrlFinder {
     let webView: WKWebView
     private let browser: Erik
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -129,6 +129,6 @@ extension WebImageUrlFinder: WebImageUrlFinderProtocol {
                     }
                 completion(.success(imageUrls))
             })
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

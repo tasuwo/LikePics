@@ -29,7 +29,7 @@ class AppRootTabBarController: UITabBarController {
     // MARK: Privates
 
     let logger: TBoxLoggable
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -74,7 +74,7 @@ class AppRootTabBarController: UITabBarController {
     private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isLoading
             .debounce(for: 0.2, scheduler: DispatchQueue.main)
@@ -86,7 +86,7 @@ class AppRootTabBarController: UITabBarController {
                     self?.removeLoadingView()
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.loadingTargetIndex
             .combineLatest(dependency.outputs.allLoadingTargetCount)
@@ -94,7 +94,7 @@ class AppRootTabBarController: UITabBarController {
             .sink { [weak self] loadingTargetIndex, allLoadingTargetCount in
                 self?.didStartLoad(at: loadingTargetIndex, in: allLoadingTargetCount)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: TabBar

@@ -30,7 +30,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
     private let cloudAvailabilityResolver: CurrentCloudAccountResolver.Type
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudAvailabilityObserver")
 
-    private var cancellableBag: Set<AnyCancellable> = []
+    private var subscriptions: Set<AnyCancellable> = []
 
     public private(set) var state: CurrentValueSubject<CloudAvailability?, Never>
 
@@ -48,11 +48,11 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
             .Publisher(center: .default, name: .CKAccountChanged)
             .flatMap { [unowned self] _ in self.resolveCurrentContext() }
             .sink { [unowned self] context in self.update(by: context) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.resolveCurrentContext()
             .sink { [unowned self] context in self.update(by: context) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: - Methods

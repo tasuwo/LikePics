@@ -42,7 +42,7 @@ class AlbumListNavigationBarViewModel: AlbumListNavigationBarViewModelType,
 
     // MARK: Privates
 
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -62,6 +62,6 @@ class AlbumListNavigationBarViewModel: AlbumListNavigationBarViewModelType,
                     self?.leftItems.send([.add(isEnabled: false)])
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

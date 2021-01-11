@@ -28,7 +28,7 @@ class AlbumListNavigationBarProvider {
 
     // MARK: Privates
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -46,12 +46,12 @@ class AlbumListNavigationBarProvider {
 
         propagator.operation
             .sink { [weak self] operation in self?.viewModel.inputs.operation.send(operation) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         propagator.albums
             .map { $0.count }
             .sink { [weak self] count in self?.viewModel.inputs.albumsCount.send(count) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // Outputs
 
@@ -63,7 +63,7 @@ class AlbumListNavigationBarProvider {
                     .reversed()
             }
             .assign(to: \.leftBarButtonItems, on: view.navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.viewModel.outputs.rightItems
             .compactMap { [weak self] items in
@@ -73,7 +73,7 @@ class AlbumListNavigationBarProvider {
                     .reversed()
             }
             .assign(to: \.rightBarButtonItems, on: view.navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Configurations

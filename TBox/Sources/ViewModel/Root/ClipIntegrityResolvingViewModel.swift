@@ -49,7 +49,7 @@ class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
     private let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipIntegrityResolvingViewModel", qos: .userInteractive)
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -86,7 +86,7 @@ extension ClipIntegrityResolvingViewModel {
                 self.integrityValidationService.validateAndFixIntegrityIfNeeded()
                 self.finishLoading()
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.inputs.sceneDidBecomeActive
             .receive(on: queue)
@@ -98,7 +98,7 @@ extension ClipIntegrityResolvingViewModel {
                 }
                 self.finishLoading()
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }
 

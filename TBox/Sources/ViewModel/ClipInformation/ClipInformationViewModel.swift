@@ -55,7 +55,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -88,7 +88,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
             } receiveValue: { _ in
                 // NOP
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.clipQuery.clip
             .combineLatest(itemQuery.clipItem, settingStorage.showHiddenItems.mapError({ _ -> Error in NSError() }))
@@ -105,7 +105,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
                 self?.clip.send(showHiddenItems ? clip : clip.removingHiddenTags())
                 self?.clipItem.send(item)
             })
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {

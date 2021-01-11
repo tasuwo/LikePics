@@ -50,7 +50,7 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
 
     // MARK: Privates
 
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -87,6 +87,6 @@ class ClipPreviewPageBarViewModel: ClipPreviewPageBarViewModelType,
                     self.rightItems.send([.init(kind: .info, isEnabled: true)])
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

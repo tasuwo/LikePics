@@ -38,7 +38,7 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: States
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     weak var delegate: ClipMergeViewControllerDelegate?
 
     // MARK: - Lifecycle
@@ -86,7 +86,7 @@ class ClipMergeViewController: UIViewController {
             .sink { [weak self] items, tags in
                 self?.dataSource.apply(ClipMergeViewLayout.createSnapshot(tags: tags, items: items))
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.errorMessage
             .receive(on: DispatchQueue.main)
@@ -96,7 +96,7 @@ class ClipMergeViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.close
             .receive(on: DispatchQueue.main)
@@ -105,7 +105,7 @@ class ClipMergeViewController: UIViewController {
                 self.dismiss(animated: true)
                 self.delegate?.didComplete(self)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Navigation Bar

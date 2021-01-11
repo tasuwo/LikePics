@@ -51,7 +51,7 @@ class AlbumListViewController: UIViewController {
 
     // MARK: States
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -144,25 +144,25 @@ class AlbumListViewController: UIViewController {
                 guard let self = self else { return }
                 Layout.apply(items: albums, to: self.dataSource, in: self.collectionView)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isCollectionViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isEmptyMessageDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
@@ -171,12 +171,12 @@ class AlbumListViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.dragInteractionEnabled
             .receive(on: DispatchQueue.main)
             .assign(to: \.dragInteractionEnabled, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // Navigation Bar
 
@@ -184,15 +184,15 @@ class AlbumListViewController: UIViewController {
 
         self.navigationBarProvider.didTapAdd
             .sink { [weak self] _ in self?.startAddingAlbum() }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.navigationBarProvider.didTapEdit
             .sink { _ in dependency.inputs.operationRequested.send(.editing) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.navigationBarProvider.didTapDone
             .sink { _ in dependency.inputs.operationRequested.send(.none) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Collection View

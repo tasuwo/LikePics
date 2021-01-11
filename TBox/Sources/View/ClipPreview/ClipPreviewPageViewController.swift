@@ -33,7 +33,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
-    private var currentPreviewCancellableBag: Set<AnyCancellable> = .init()
+    private var currentPreviewSubscriptions: Set<AnyCancellable> = .init()
     private var subscriptions: Set<AnyCancellable> = .init()
 
     override var prefersStatusBarHidden: Bool {
@@ -148,17 +148,17 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
 
-        self.currentPreviewCancellableBag.forEach { $0.cancel() }
+        self.currentPreviewSubscriptions.forEach { $0.cancel() }
         viewController.previewView.isMinimumZoomScale
             .sink { [weak self] isMinimumZoomScale in
                 self?.transitionController.inputs.isMinimumPreviewZoomScale.send(isMinimumZoomScale)
             }
-            .store(in: &self.currentPreviewCancellableBag)
+            .store(in: &self.currentPreviewSubscriptions)
         viewController.previewView.contentOffset
             .sink { [weak self] offset in
                 self?.transitionController.inputs.previewContentOffset.send(offset)
             }
-            .store(in: &self.currentPreviewCancellableBag)
+            .store(in: &self.currentPreviewSubscriptions)
         self.transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
 
         if !forced {

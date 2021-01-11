@@ -55,7 +55,7 @@ class ClipMergeViewModel: ClipMergeViewModelType,
     private let clips: [Clip]
     private let commandService: ClipCommandServiceProtocol
     private let logger: TBoxLoggable
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -90,25 +90,25 @@ extension ClipMergeViewModel {
                 }
                 return self.close.send(())
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.deleted
             .sink { [weak self] tagId in
                 guard let self = self else { return }
                 self.tags.send(self.tags.value.filter({ $0.id != tagId }))
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.tagsSelected
             .sink { [weak self] selections in
                 self?.tags.send(selections)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.reordered
             .sink { [weak self] items in
                 self?.items.send(items)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

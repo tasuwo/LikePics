@@ -17,7 +17,7 @@ class SettingsPresenter {
     private let storage: UserSettingsStorageProtocol
     private let availabilityStore: CloudAvailabilityStore
 
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     private(set) var shouldHideHiddenItems: CurrentValueSubject<Bool, Never>
     private(set) var shouldSyncICloudEnabled: CurrentValueSubject<Bool, Never>
@@ -40,7 +40,7 @@ class SettingsPresenter {
             .sink(receiveValue: { [weak self] value in
                 self?.shouldHideHiddenItems.send(value)
             })
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.storage.enabledICloudSync
             .combineLatest(self.availabilityStore.state)
@@ -50,7 +50,7 @@ class SettingsPresenter {
                 let isOn = settingEnabled && availability?.isAvailable == true
                 self?.shouldSyncICloudEnabled.send(isOn)
             })
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     func set(hideHiddenItems: Bool) {

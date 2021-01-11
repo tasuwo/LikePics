@@ -11,7 +11,7 @@ public protocol ImageLoaderProtocol {
 }
 
 public class ImageLoader {
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Methods
 
@@ -68,7 +68,7 @@ extension ImageLoader: ImageLoaderProtocol {
                         } receiveValue: { result in
                             promise(.success(result))
                         }
-                        .store(in: &self.cancellableBag)
+                        .store(in: &self.subscriptions)
                 } else {
                     Self.fetchImage(for: urlSet.url)
                         .sink { completion in
@@ -82,7 +82,7 @@ extension ImageLoader: ImageLoaderProtocol {
                         } receiveValue: { result in
                             promise(.success(result))
                         }
-                        .store(in: &self.cancellableBag)
+                        .store(in: &self.subscriptions)
                 }
             }
         }

@@ -129,7 +129,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     // MARK: Privates
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     private let imageLoadQueue = DispatchQueue(label: "net.tasuwo.ClipCollectionViewPresenter.imageLoadQueue")
 
@@ -190,23 +190,23 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                 guard let self = self else { return }
                 self.provider.viewDidLoad.send(view)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.urlAdded
             .sink { [weak self] url in self?.url.send(url) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.loadImages
             .sink { [weak self] _ in
                 self?.loadImageSources()
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.saveImages
             .sink { [weak self] _ in
                 self?.saveSelectedImages()
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.deletedTag
             .sink { [weak self] tag in
@@ -218,38 +218,38 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                 newTags.remove(at: index)
                 self?.tags.send(newTags)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.replacedTags
             .sink { [weak self] tags in
                 self?.tags.send(tags)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.selectedImage
             .sink { [weak self] index in self?.selectItem(at: index) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.deselectedImage
             .sink { [weak self] index in self?.deselectItem(at: index) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // MARK: Outputs
 
         self.isLoading
             .map { !$0 }
             .sink { [weak self] value in self?.isReloadItemEnabled.send(value) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.selectedIndices
             .combineLatest(isLoading)
             .map { selectedIndices, isLoading -> Bool in !selectedIndices.isEmpty && !isLoading }
             .sink { [weak self] value in self?.isDoneItemEnabled.send(value) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.images
             .sink { [weak self] _ in self?.selectedIndices.send([]) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.images
             .map { !$0.isEmpty }
@@ -257,13 +257,13 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .combineLatest(self.viewDidAppear)
             .debounce(for: 0.2, scheduler: DispatchQueue.main)
             .sink { [weak self] isEmpty, _ in self?.displayCollectionView.send(isEmpty) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.images
             .combineLatest(isLoading)
             .map { images, isLoading in images.isEmpty && !isLoading }
             .sink { [weak self] display in self?.displayEmptyMessage.send(display) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.displayReloadButton.send(configuration.isReloadable)
     }
@@ -299,7 +299,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                     self.selectedIndices.send(([Int])(0 ..< foundImages.count))
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     private func saveSelectedImages() {
@@ -331,7 +331,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             } receiveValue: { _ in
                 // NOP
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     private func selectItem(at index: Int) {

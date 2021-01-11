@@ -25,7 +25,7 @@ class ClipPreviewViewController: UIViewController {
         return self.viewModel.outputs.itemUrlValue
     }
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     @IBOutlet var previewView: ClipPreviewView!
 
@@ -68,19 +68,19 @@ class ClipPreviewViewController: UIViewController {
             .sink { [weak self] _ in
                 self?.dismiss(animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayImage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in
                 self?.previewView.source = .image(.init(uiImage: image))
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isLoading
             .receive(on: DispatchQueue.main)
             .assign(to: \.isLoading, on: self.previewView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
@@ -89,6 +89,6 @@ class ClipPreviewViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

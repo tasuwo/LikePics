@@ -63,7 +63,7 @@ class ClipPreviewPageBarViewController: UIViewController {
     weak var delegate: ClipPreviewPageBarButtonItemsProviderDelegate?
 
     private let viewModel: ClipPreviewPageBarViewModelType
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -102,18 +102,18 @@ class ClipPreviewPageBarViewController: UIViewController {
 
         viewModel.outputs.currentItem
             .sink { dependency.inputs.currentClipItem.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         viewModel.outputs.items
             .map { $0.count }
             .sink { dependency.inputs.clipItemCount.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // MARK: Outputs
 
         dependency.outputs.displayToolBar
             .sink { [weak view] display in view?.navigationController?.setToolbarHidden(!display, animated: false) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.leftItems
             .map { [weak self] items in
@@ -121,7 +121,7 @@ class ClipPreviewPageBarViewController: UIViewController {
                     .reversed()
             }
             .sink { [weak view] items in view?.navigationItem.setLeftBarButtonItems(items, animated: true) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.rightItems
             .map { [weak self] items in
@@ -129,14 +129,14 @@ class ClipPreviewPageBarViewController: UIViewController {
                     .reversed()
             }
             .sink { [weak view] items in view?.navigationItem.setRightBarButtonItems(items, animated: true) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.toolBarItems
             .map { [weak self] items in
                 self?.resolveBarButtonItems(for: items)
             }
             .sink { [weak view] items in view?.setToolbarItems(items, animated: false) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     @objc

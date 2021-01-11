@@ -70,7 +70,7 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: States
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Lifecycle
@@ -138,49 +138,49 @@ public class ClipCreationViewController: UIViewController {
                     self?.overlayView.isHidden = true
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isReloadItemEnabled
             .assign(to: \.isEnabled, on: self.itemReload)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isDoneItemEnabled
             .assign(to: \.isEnabled, on: self.itemDone)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayReloadButton
             .map { [weak self] display in display ? self?.itemReload : nil }
             .map { [$0].compactMap { $0 } }
             .assign(to: \.leftBarButtonItems, on: self.navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayCollectionView
             .map { !$0 }
             .assign(to: \.isHidden, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayEmptyMessage
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.url
             .combineLatest(dependency.outputs.tags, dependency.outputs.images)
             .receive(on: DispatchQueue.global())
             .sink { [weak self] url, tags, images in self?.apply(url: url, tags: tags, images: images) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.selectedIndices
             .receive(on: DispatchQueue.main)
             .sink { [weak self] indices in self?.apply(indices: indices) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.emptyErrorTitle
             .assign(to: \.title, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
         dependency.outputs.emptyErrorMessage
             .assign(to: \.message, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayAlert
             .sink { [weak self] title, message in
@@ -188,14 +188,14 @@ public class ClipCreationViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.didFinish
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.delegate?.didFinish(self)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {

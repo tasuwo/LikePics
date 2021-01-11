@@ -44,7 +44,7 @@ class AlbumSelectionViewController: UIViewController {
 
     // MARK: States
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -100,7 +100,7 @@ class AlbumSelectionViewController: UIViewController {
                 snapshot.appendItems(albums)
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.errorMessage
             .receive(on: DispatchQueue.main)
@@ -109,18 +109,18 @@ class AlbumSelectionViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayEmptyMessage
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.close
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Table View

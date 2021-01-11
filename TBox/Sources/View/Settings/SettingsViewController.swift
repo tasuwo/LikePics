@@ -10,7 +10,7 @@ class SettingsViewController: UITableViewController {
 
     var factory: Factory!
     var presenter: SettingsPresenter!
-    var cancellableBag: Set<AnyCancellable> = .init()
+    var subscriptions: Set<AnyCancellable> = .init()
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!
     @IBOutlet var syncICloudSwitch: UISwitch!
@@ -25,11 +25,11 @@ class SettingsViewController: UITableViewController {
 
         self.presenter.shouldHideHiddenItems
             .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.presenter.shouldSyncICloudEnabled
             .assign(to: \.isOn, on: self.syncICloudSwitch)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.presenter.displayVersion()
     }

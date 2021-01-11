@@ -20,7 +20,7 @@ class ShareNavigationRootPresenter {
     }
 
     weak var view: ShareNavigationViewProtocol?
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Methods
 
@@ -61,7 +61,7 @@ class ShareNavigationRootPresenter {
                 } receiveValue: { [weak self] images in
                     self?.view?.presentClipTargetSelectionView(by: images)
                 }
-                .store(in: &self.cancellableBag)
+                .store(in: &self.subscriptions)
             return
         }
 

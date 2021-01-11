@@ -38,7 +38,7 @@ class AlbumViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: UICollectionViewDiffableDataSource<Section, Clip>!
     var collectionView: ClipCollectionView!
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     var selectedClips: [Clip] {
         return self.collectionView.indexPathsForSelectedItems?
@@ -112,19 +112,19 @@ class AlbumViewController: UIViewController {
                     self?.updateHiddenIconAppearance()
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isEmptyMessageDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isCollectionViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.selected
             .receive(on: DispatchQueue.main)
@@ -134,7 +134,7 @@ class AlbumViewController: UIViewController {
                     .compactMap { self.dataSource.indexPath(for: $0) }
                     .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.deselected
             .receive(on: DispatchQueue.main)
@@ -144,37 +144,37 @@ class AlbumViewController: UIViewController {
                     .compactMap { self.dataSource.indexPath(for: $0) }
                     .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assignNoRetain(to: \.isEditing, on: self)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0.isEditing }
             .assign(to: \.hidesBackButton, on: navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0 == .reordering }
             .assign(to: \.dragInteractionEnabled, on: collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.operation
             .receive(on: DispatchQueue.main)
             .map { $0 == .selecting }
             .assign(to: \.allowsMultipleSelection, on: collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.title
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .assignNoRetain(to: \.title, on: self)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
@@ -184,7 +184,7 @@ class AlbumViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.previewed
             .receive(on: DispatchQueue.main)
@@ -195,7 +195,7 @@ class AlbumViewController: UIViewController {
                 }
                 self?.present(viewController, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.startMerging
             .receive(on: DispatchQueue.main)
@@ -204,7 +204,7 @@ class AlbumViewController: UIViewController {
                 let viewController = self.factory.makeMergeViewController(clips: clips, delegate: self)
                 self.present(viewController, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.startSharing
             .receive(on: DispatchQueue.main)
@@ -225,11 +225,11 @@ class AlbumViewController: UIViewController {
                 }
                 self.present(controller, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.close
             .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.navigationItemsProvider.bind(view: self, propagator: dependency.propagator)
         self.toolBarItemsProvider.bind(view: self, propagator: dependency.propagator)

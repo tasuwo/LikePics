@@ -17,7 +17,7 @@ class AppRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudAvailabilityObserver: CloudAvailabilityObserver
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     weak var view: AppRootSetupViewProtocol?
 
@@ -39,7 +39,7 @@ class AppRootSetupPresenter {
             .sink { [weak self] availability, enabledICloudSync in
                 self?.didFetch(availability: availability, enabledICloudSync: enabledICloudSync)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     func didConfirmAccountChanged() {
@@ -53,7 +53,7 @@ class AppRootSetupPresenter {
     }
 
     private func didFetch(availability: CloudAvailability, enabledICloudSync: Bool) {
-        self.cancellableBag.first?.cancel()
+        self.subscriptions.first?.cancel()
         self.view?.endLoading()
 
         switch (enabledICloudSync, availability) {

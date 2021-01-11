@@ -71,7 +71,7 @@ class ClipPreviewPageTransitionController: NSObject,
     private let informationTransitioningController: ClipInformationTransitioningControllerProtocol
 
     private var destination: TransitionDestination?
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -107,7 +107,7 @@ class ClipPreviewPageTransitionController: NSObject,
                 self.previewTransitioningController.beginTransition(.custom(interactive: false))
                 self.baseViewController?.dismiss(animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.beginPresentInformation
             .sink { [weak self] _ in
@@ -116,7 +116,7 @@ class ClipPreviewPageTransitionController: NSObject,
                 self.informationTransitioningController.beginTransition(.custom(interactive: false))
                 self.baseViewController?.present(viewController, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     @objc

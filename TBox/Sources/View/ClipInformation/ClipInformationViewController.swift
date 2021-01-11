@@ -29,7 +29,7 @@ class ClipInformationViewController: UIViewController {
         return self.shouldHideStatusBar
     }
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     @IBOutlet var informationView: ClipInformationView!
 
@@ -92,11 +92,11 @@ class ClipInformationViewController: UIViewController {
             .sink { [weak self] clip, item in
                 self?.informationView.info = .init(clip: clip, item: item)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.close
             .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.errorMessage
             .sink { [weak self] message in
@@ -104,7 +104,7 @@ class ClipInformationViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Gesture Recognizer

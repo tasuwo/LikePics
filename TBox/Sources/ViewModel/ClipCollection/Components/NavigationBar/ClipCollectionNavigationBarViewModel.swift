@@ -45,7 +45,7 @@ class ClipCollectionNavigationBarViewModel: ClipCollectionNavigationBarViewModel
     // MARK: Privates
 
     private let context: ClipCollection.Context
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -78,6 +78,6 @@ class ClipCollectionNavigationBarViewModel: ClipCollectionNavigationBarViewModel
                     self?.leftItems.send([])
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }

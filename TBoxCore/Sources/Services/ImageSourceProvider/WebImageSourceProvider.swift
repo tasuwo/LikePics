@@ -13,7 +13,7 @@ public class WebImageSourceProvider {
     private let finder = WebImageUrlFinder()
 
     private var urlFinderDelayMs: Int = 0
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     public var viewDidLoad: PassthroughSubject<UIView, Never> = .init()
 
@@ -35,7 +35,7 @@ public class WebImageSourceProvider {
                 view.addSubview(self.finder.webView)
                 self.finder.webView.isHidden = true
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 }
 

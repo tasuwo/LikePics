@@ -47,7 +47,7 @@ class TagCollectionViewController: UIViewController {
     // MARK: States
 
     private let logger: TBoxLoggable
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -109,18 +109,18 @@ class TagCollectionViewController: UIViewController {
                 guard let self = self else { return }
                 Layout.apply(items: items, to: self.dataSource, in: self.collectionView)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.isCollectionViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { !$0 }
             .assign(to: \.isHidden, on: self.collectionView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
         dependency.outputs.isEmptyMessageViewDisplaying
             .receive(on: DispatchQueue.main)
             .map { $0 ? 1 : 0 }
             .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
         dependency.outputs.isSearchBarEnabled
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isEnabled in
@@ -131,7 +131,7 @@ class TagCollectionViewController: UIViewController {
                     self?.searchController.isActive = false
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.clearSearchBar
             .receive(on: DispatchQueue.main)
@@ -139,7 +139,7 @@ class TagCollectionViewController: UIViewController {
                 self?.searchController.searchBar.resignFirstResponder()
                 self?.searchController.searchBar.text = nil
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.displayErrorMessage
             .receive(on: DispatchQueue.main)
@@ -149,7 +149,7 @@ class TagCollectionViewController: UIViewController {
                 alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.presentTagsView
             .receive(on: DispatchQueue.main)
@@ -161,7 +161,7 @@ class TagCollectionViewController: UIViewController {
                 }
                 self.show(viewController, sender: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     // MARK: Collection View

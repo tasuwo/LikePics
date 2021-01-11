@@ -15,7 +15,7 @@ public class CloudStackLoader {
     private let cloudStack: CloudStack
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudStackLoader")
 
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     public weak var observer: CloudStackLoaderObserver?
 
@@ -40,7 +40,7 @@ public class CloudStackLoader {
             .sink { [weak self] availability in
                 self?.queue.sync { self?.didUpdate(cloudAvailability: availability) }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.userSettingsStorage.enabledICloudSync
             // 初回起動時の分を除く
@@ -48,7 +48,7 @@ public class CloudStackLoader {
             .sink { [weak self] isICloudSyncEnabled in
                 self?.queue.sync { self?.didUpdate(isICloudSyncEnabled: isICloudSyncEnabled) }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     private func didUpdate(cloudAvailability: CloudAvailability) {

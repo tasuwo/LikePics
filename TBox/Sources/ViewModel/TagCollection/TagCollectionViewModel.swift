@@ -84,7 +84,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
     private var cancellable: AnyCancellable?
 
     private var searchStorage: SearchableTagsStorage = .init()
-    private var cancellableBag = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
@@ -126,7 +126,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                 self._tags.send(tags)
                 self._items.send(items)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self._tags
             .combineLatest(self.inputtedQuery)
@@ -135,7 +135,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self?.clearSearchBar.send(())
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self._tags
             .map { $0.isEmpty }
@@ -151,7 +151,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self._isSearchBarEnabled.send(true)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.create
             .sink { [weak self] name in
@@ -171,13 +171,13 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     self.displayErrorMessage.send(L10n.errorTagAddDefault)
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.select
             .sink { [weak self] tag in
                 self?.presentTagsView.send(tag)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.delete
             .sink { [weak self] tags in
@@ -190,7 +190,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     return
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.hide
             .sink { [weak self] tagId in
@@ -203,7 +203,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     return
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.reveal
             .sink { [weak self] tagId in
@@ -216,7 +216,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
                     return
                 }
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         self.inputtedQuery.send("")
     }

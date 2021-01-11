@@ -32,7 +32,7 @@ class ClipCollectionToolBarProvider {
     weak var delegate: ClipCollectionToolBarProviderDelegate?
 
     private let viewModel: ClipCollectionToolBarViewModel
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
@@ -54,11 +54,11 @@ class ClipCollectionToolBarProvider {
 
         propagator.selectionsCount
             .sink { dependency.inputs.selectedClipsCount.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         propagator.currentOperation
             .sink { dependency.inputs.operation.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         propagator.startShareForToolBar
             .sink { [weak self, weak view] data in
@@ -71,20 +71,20 @@ class ClipCollectionToolBarProvider {
                 }
                 view?.present(controller, animated: true, completion: nil)
             }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // MARK: Outputs
 
         dependency.outputs.isHidden
             .sink { [weak view] isHidden in view?.navigationController?.setToolbarHidden(isHidden, animated: true) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.items
             .map { [weak self] items in
                 self?.resolveBarButtonItems(for: items)
             }
             .sink { [weak view] items in view?.setToolbarItems(items, animated: true) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     @objc

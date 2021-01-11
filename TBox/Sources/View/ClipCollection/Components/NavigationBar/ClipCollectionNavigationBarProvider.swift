@@ -28,7 +28,7 @@ class ClipCollectionNavigationBarProvider {
 
     private let viewModel: Dependency
 
-    private var cancellableBag: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     weak var delegate: ClipCollectionNavigationBarProviderDelegate?
 
@@ -52,15 +52,15 @@ class ClipCollectionNavigationBarProvider {
 
         propagator.clipsCount
             .sink { dependency.inputs.clipsCount.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         propagator.selectionsCount
             .sink { dependency.inputs.selectedClipsCount.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         propagator.currentOperation
             .sink { dependency.inputs.operation.send($0) }
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         // MARK: Outputs
 
@@ -72,7 +72,7 @@ class ClipCollectionNavigationBarProvider {
                     .reversed()
             }
             .assign(to: \.leftBarButtonItems, on: view.navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
 
         dependency.outputs.rightItems
             .compactMap { [weak self] items in
@@ -82,7 +82,7 @@ class ClipCollectionNavigationBarProvider {
                     .reversed()
             }
             .assign(to: \.rightBarButtonItems, on: view.navigationItem)
-            .store(in: &self.cancellableBag)
+            .store(in: &self.subscriptions)
     }
 
     @objc
