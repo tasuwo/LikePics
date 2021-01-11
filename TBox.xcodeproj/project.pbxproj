@@ -91,7 +91,6 @@
 		2C2C9EED250BC7370020715B /* ClipInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEC250BC7370020715B /* ClipInformationView.xib */; };
 		2C2C9EEF250BC7710020715B /* ClipInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEE250BC7710020715B /* ClipInformationView.swift */; };
 		2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */; };
-		2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */; };
 		2C306CFE25721F2100947E77 /* CloudAccountIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C306CFD25721F2100947E77 /* CloudAccountIdentifier.swift */; };
 		2C306D08257220F200947E77 /* CurrentICloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C306D07257220F200947E77 /* CurrentICloudAccountResolver.swift */; };
 		2C35066C251780EC009248C6 /* ImageNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35066B251780EC009248C6 /* ImageNameResolver.swift */; };
@@ -788,7 +787,6 @@
 		2C2C9EEC250BC7370020715B /* ClipInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationView.xib; sourceTree = "<group>"; };
 		2C2C9EEE250BC7710020715B /* ClipInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationView.swift; sourceTree = "<group>"; };
 		2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewController.swift; sourceTree = "<group>"; };
-		2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationViewController.xib; sourceTree = "<group>"; };
 		2C306CFD25721F2100947E77 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
 		2C306D07257220F200947E77 /* CurrentICloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentICloudAccountResolver.swift; sourceTree = "<group>"; };
 		2C35066B251780EC009248C6 /* ImageNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNameResolver.swift; sourceTree = "<group>"; };
@@ -1631,7 +1629,6 @@
 			isa = PBXGroup;
 			children = (
 				2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */,
-				2C2C9EF3250BCE6B0020715B /* ClipInformationViewController.xib */,
 			);
 			path = ClipInformation;
 			sourceTree = "<group>";
@@ -3795,7 +3792,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C3ADF5924EEE308007C4AA0 /* AlbumViewController.xib in Resources */,
-				2C2C9EF7250BCFC00020715B /* ClipInformationViewController.xib in Resources */,
 				2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */,
 				2C6E09B624E8101900B541D9 /* Localizable.strings in Resources */,
 				2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */,

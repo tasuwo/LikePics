@@ -31,7 +31,7 @@ class ClipInformationViewController: UIViewController {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    @IBOutlet var informationView: ClipInformationView!
+    private var informationView: ClipInformationView!
 
     // MARK: - Lifecycle
 
@@ -44,6 +44,7 @@ class ClipInformationViewController: UIViewController {
         self.viewModel = viewModel
         self.transitioningController = transitioningController
         self.dataSource = dataSource
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,6 +57,7 @@ class ClipInformationViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupAppearance()
+        self.setupInformationView()
         self.setupGestureRecognizer()
 
         self.informationView.delegate = self
@@ -81,7 +83,20 @@ class ClipInformationViewController: UIViewController {
     // MARK: - Methods
 
     private func setupAppearance() {
+        self.view.backgroundColor = Asset.Color.backgroundClient.color
         self.modalTransitionStyle = .crossDissolve
+    }
+
+    private func setupInformationView() {
+        self.informationView = ClipInformationView(frame: self.view.frame)
+        self.informationView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.informationView)
+        NSLayoutConstraint.activate([
+            self.informationView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.informationView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.informationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.informationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+        ])
     }
 
     // MARK: Bind
