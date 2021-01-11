@@ -41,7 +41,7 @@
 		2C0F9B152528523400235B25 /* ListSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B142528523400235B25 /* ListSectionBackgroundDecorationView.swift */; };
 		2C0F9B272528ACDC00235B25 /* ListSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B262528ACDC00235B25 /* ListSectionHeader.swift */; };
 		2C0F9B312528AD0A00235B25 /* ListSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ListSectionHeader.xib */; };
-		2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */; };
+		2C0F9B3B2528E37A00235B25 /* ClipInformationLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B3A2528E37A00235B25 /* ClipInformationLayout.swift */; };
 		2C0F9B4D2528EF9000235B25 /* ClipInformationLayoutHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */; };
 		2C1040E8254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1040E7254D9618000DF7DE /* TemporariesPersistServiceProtocol.swift */; };
 		2C104108254D968E000DF7DE /* TemporariesPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C104107254D968E000DF7DE /* TemporariesPersistService.swift */; };
@@ -725,7 +725,7 @@
 		2C0F9B142528523400235B25 /* ListSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
 		2C0F9B262528ACDC00235B25 /* ListSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSectionHeader.swift; sourceTree = "<group>"; };
 		2C0F9B302528AD0A00235B25 /* ListSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListSectionHeader.xib; sourceTree = "<group>"; };
-		2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutFactory.swift; sourceTree = "<group>"; };
+		2C0F9B3A2528E37A00235B25 /* ClipInformationLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayout.swift; sourceTree = "<group>"; };
 		2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2924DFD8BF0006E10A /* ClipSelectionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		2C0F9D2B24DFD8CE0006E10A /* ClipSelectionCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSelectionCollectionViewHeader.xib; sourceTree = "<group>"; };
@@ -1812,7 +1812,7 @@
 				2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */,
 				2C8B306F252834E900A0A151 /* ClipInformationViewDataSource.swift */,
 				2C0F9B4C2528EF9000235B25 /* ClipInformationLayoutHeader.swift */,
-				2C0F9B3A2528E37A00235B25 /* ClipInformationLayoutFactory.swift */,
+				2C0F9B3A2528E37A00235B25 /* ClipInformationLayout.swift */,
 			);
 			path = ClipInformation;
 			sourceTree = "<group>";
@@ -4339,7 +4339,7 @@
 				2CE1C0F6258266A800A8FA07 /* GridLayout.swift in Sources */,
 				2C95EC4B24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift in Sources */,
 				2C570B6624E0505F00A1DC9F /* ClipCollectionView.swift in Sources */,
-				2C0F9B3B2528E37A00235B25 /* ClipInformationLayoutFactory.swift in Sources */,
+				2C0F9B3B2528E37A00235B25 /* ClipInformationLayout.swift in Sources */,
 				2C0596AF25198D8E008F11F5 /* String.swift in Sources */,
 				2C8B30542528348C00A0A151 /* ListCell.swift in Sources */,
 				2C0F9B272528ACDC00235B25 /* ListSectionHeader.swift in Sources */,

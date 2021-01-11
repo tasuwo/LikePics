@@ -7,19 +7,9 @@ import UIKit
 import WebKit
 
 public class ClipInformationView: UIView {
-    public typealias Factory = ClipInformationLayoutFactory
+    public typealias Factory = ClipInformationLayout
 
     public static let topImageHeight: CGFloat = 80
-
-    public var info: Factory.Information? {
-        didSet {
-            guard let info = self.info else { return }
-            let snapshot = Factory.makeSnapshot(for: info)
-            DispatchQueue.global(qos: .background).async {
-                self.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
-            }
-        }
-    }
 
     public var panGestureRecognizer: UIPanGestureRecognizer {
         self.collectionView.panGestureRecognizer
@@ -80,6 +70,12 @@ public class ClipInformationView: UIView {
     }
 
     // MARK: - Methods
+
+    /// - attention: 同一スレッドからのみセットする必要がある
+    public func setInfo(_ info: Factory.Information, animated: Bool) {
+        let snapshot = Factory.makeSnapshot(for: info)
+        self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+    }
 
     private func setupFromNib() {
         Bundle(for: type(of: self)).loadNibNamed("ClipInformationView", owner: self, options: nil)

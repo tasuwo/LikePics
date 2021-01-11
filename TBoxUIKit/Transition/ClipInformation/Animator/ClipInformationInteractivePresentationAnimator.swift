@@ -16,9 +16,9 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private static let startingAlpha: CGFloat = 1.0
     private static let finalAlpha: CGFloat = 0
 
-    private static let cancelAnimateDuration: TimeInterval = 0.25
-    private static let endAnimateDuration: TimeInterval = 0.25
-    private static let fallbackAnimateDuration: TimeInterval = 0.25
+    private static let cancelAnimateDuration: TimeInterval = 0.2
+    private static let endAnimateDuration: TimeInterval = 0.2
+    private static let fallbackAnimateDuration: TimeInterval = 0.2
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 

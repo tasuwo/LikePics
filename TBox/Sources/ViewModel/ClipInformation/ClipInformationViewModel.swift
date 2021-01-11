@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import TBoxUIKit
 
 protocol ClipInformationViewModelType {
     var inputs: ClipInformationViewModelInputs { get }
@@ -19,8 +20,9 @@ protocol ClipInformationViewModelInputs {
 }
 
 protocol ClipInformationViewModelOutputs {
-    var clip: CurrentValueSubject<Clip, Never> { get }
-    var clipItem: CurrentValueSubject<ClipItem, Never> { get }
+    var info: AnyPublisher<ClipInformationLayout.Information, Never> { get }
+    var tagIdsValue: [Tag.Identity] { get }
+
     var close: PassthroughSubject<Void, Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
 }
@@ -40,14 +42,17 @@ class ClipInformationViewModel: ClipInformationViewModelType,
 
     // MARK: ClipInformationViewModelOutputs
 
-    let clip: CurrentValueSubject<Clip, Never>
-    let clipItem: CurrentValueSubject<ClipItem, Never>
+    var info: AnyPublisher<ClipInformationLayout.Information, Never> { _info.eraseToAnyPublisher() }
+    var tagIdsValue: [Tag.Identity] { _info.value.clip.tags.map { $0.identity } }
+
     let close: PassthroughSubject<Void, Never> = .init()
     let errorMessage: PassthroughSubject<String, Never> = .init()
 
     // MARK: Privates
 
     let itemId: ClipItem.Identity
+
+    private let _info: CurrentValueSubject<ClipInformationLayout.Information, Never>
 
     private let clipQuery: ClipQuery
     private let itemQuery: ClipItemQuery
@@ -73,8 +78,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
         self.settingStorage = settingStorage
         self.logger = logger
 
-        self.clip = .init(clipQuery.clip.value)
-        self.clipItem = .init(itemQuery.clipItem.value)
+        self._info = .init(.init(clip: clipQuery.clip.value, item: itemQuery.clipItem.value))
 
         self.bind()
     }
@@ -102,28 +106,30 @@ class ClipInformationViewModel: ClipInformationViewModelType,
                     self?.errorMessage.send(L10n.clipInformationErrorAtReadClip)
                 }
             }, receiveValue: { [weak self] clip, item, showHiddenItems in
-                self?.clip.send(showHiddenItems ? clip : clip.removingHiddenTags())
-                self?.clipItem.send(item)
+                self?._info.send(.init(clip: showHiddenItems ? clip : clip.removingHiddenTags(), item: item))
             })
             .store(in: &self.subscriptions)
     }
 
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {
-        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.value.identity], byReplacingTagsHaving: Array(tagIds)) {
+        let clipId = _info.value.clip.id
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to replace tags. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtReplaceTags)
         }
     }
 
     func removeTagFromClip(_ tag: Tag) {
-        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.value.identity], byDeletingTagsHaving: [tag.identity]) {
+        let clipId = _info.value.clip.id
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byDeletingTagsHaving: [tag.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtRemoveTags)
         }
     }
 
     func update(isHidden: Bool) {
-        if case let .failure(error) = self.clipCommandService.updateClips(having: [self.clip.value.identity], byHiding: isHidden) {
+        let clipId = _info.value.clip.id
+        if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byHiding: isHidden) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to update. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtUpdateHidden)
         }

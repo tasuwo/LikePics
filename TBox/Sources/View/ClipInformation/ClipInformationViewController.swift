@@ -29,6 +29,8 @@ class ClipInformationViewController: UIViewController {
         return self.shouldHideStatusBar
     }
 
+    private var isInitialLoaded = false
+
     private var subscriptions = Set<AnyCancellable>()
 
     private var informationView: ClipInformationView!
@@ -102,10 +104,21 @@ class ClipInformationViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        dependency.outputs.clip
-            .combineLatest(dependency.outputs.clipItem)
-            .sink { [weak self] clip, item in
-                self?.informationView.info = .init(clip: clip, item: item)
+        dependency.outputs.info
+            .sink { [weak self] info in
+                if self?.isInitialLoaded == false {
+                    // HACK: Interactiveな画面遷移中にCollectionViewを更新すると操作がカクつくため、
+                    //       初回のみ微妙に更新を遅らせる
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                        guard self?.isInitialLoaded == false else { return }
+                        self?.informationView.setInfo(info, animated: false)
+                        self?.isInitialLoaded = true
+                    }
+                } else {
+                    DispatchQueue.global().async {
+                        self?.informationView.setInfo(info, animated: true)
+                    }
+                }
             }
             .store(in: &self.subscriptions)
 
@@ -156,7 +169,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func didTapAddTagButton(_ view: ClipInformationView) {
-        let tags = self.viewModel.outputs.clip.value.tags.map { $0.identity }
+        let tags = self.viewModel.outputs.tagIdsValue
         let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
         guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)

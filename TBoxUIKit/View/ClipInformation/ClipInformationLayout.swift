@@ -5,7 +5,7 @@
 import Domain
 import UIKit
 
-public enum ClipInformationLayoutFactory {
+public enum ClipInformationLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
 
     // MARK: Composition
