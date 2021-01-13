@@ -111,6 +111,7 @@ class DependencyContainer {
 
         let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
         self.previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
+                                           thumbnailDiskCache: self.clipDiskCache,
                                            imageQueryService: self.imageQueryService,
                                            memoryCache: previewMemoryCache)
 

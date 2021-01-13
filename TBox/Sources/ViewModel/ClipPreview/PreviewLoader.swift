@@ -14,7 +14,8 @@ protocol PreviewLoaderProtocol {
 }
 
 class PreviewLoader {
-    private let thumbnailCache: MemoryCaching
+    private let thumbnailMemoryCache: MemoryCaching
+    private let thumbnailDiskCache: DiskCaching
     private let memoryCache: MemoryCaching
     private let imageQueryService: ImageQueryServiceProtocol
 
@@ -27,10 +28,12 @@ class PreviewLoader {
     // MARK: - Lifecycle
 
     init(thumbnailCache: MemoryCaching,
+         thumbnailDiskCache: DiskCaching,
          imageQueryService: ImageQueryServiceProtocol,
          memoryCache: MemoryCaching)
     {
-        self.thumbnailCache = thumbnailCache
+        self.thumbnailMemoryCache = thumbnailCache
+        self.thumbnailDiskCache = thumbnailDiskCache
         self.memoryCache = memoryCache
         self.imageQueryService = imageQueryService
 
@@ -82,8 +85,15 @@ extension PreviewLoader: PreviewLoaderProtocol {
 
     func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage? {
         // - SeeAlso: ClipCollectionProvider
-        guard let data = thumbnailCache["clip-collection-\(itemId.uuidString)"] else { return nil }
-        return UIImage(data: data)
+        if let data = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
+            return UIImage(data: data)
+        }
+
+        if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"] {
+            return UIImage(data: data)
+        }
+
+        return nil
     }
 
     func readCache(forImageId imageId: UUID) -> UIImage? {
