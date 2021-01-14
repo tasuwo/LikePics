@@ -34,3 +34,7 @@
 "adding_alert_action_cancel" = "キャンセル";
 
 "album_list_collection_view_cell_count" = "%d件";
+
+"clip_item_edit_content_view_site_url_edit_title" = "編集";
+"clip_item_edit_content_view_site_title" = "サイトURL";
+"clip_item_edit_content_view_size_title" = "サイズ";

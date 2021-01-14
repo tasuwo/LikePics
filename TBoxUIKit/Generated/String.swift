@@ -55,6 +55,12 @@ internal enum L10n {
     internal static let clipInformationViewSectionLabelTag = L10n.tr("Localizable", "clip_information_view_section_label_tag")
     /// サイトのURL
     internal static let clipInformationViewSiteUrlTitle = L10n.tr("Localizable", "clip_information_view_site_url_title")
+    /// サイトURL
+    internal static let clipItemEditContentViewSiteTitle = L10n.tr("Localizable", "clip_item_edit_content_view_site_title")
+    /// 編集
+    internal static let clipItemEditContentViewSiteUrlEditTitle = L10n.tr("Localizable", "clip_item_edit_content_view_site_url_edit_title")
+    /// データサイズ
+    internal static let clipItemEditContentViewSizeTitle = L10n.tr("Localizable", "clip_item_edit_content_view_size_title")
     /// 未分類のクリップを閲覧する
     internal static let uncategorizedCellTitle = L10n.tr("Localizable", "uncategorized_cell_title")
 }
