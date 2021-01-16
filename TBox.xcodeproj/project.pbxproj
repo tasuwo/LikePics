@@ -163,7 +163,6 @@
 		2C5FCA9B25A75B2800C9B949 /* ClipCollection_MenuElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */; };
 		2C5FCAA625A75B4000C9B949 /* ClipCollection_SubMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */; };
 		2C69CF3D24E43ABA0008C7AA /* ClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */; };
-		2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */; };
 		2C6C79C1253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */; };
 		2C6C79CC253B409F00A8A9B8 /* ClipStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C79CB253B409F00A8A9B8 /* ClipStorageError.swift */; };
 		2C6C7A3E253B552700A8A9B8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2C6C7A3D253B552700A8A9B8 /* Settings.bundle */; };
@@ -880,7 +879,6 @@
 		2C5FCA9A25A75B2800C9B949 /* ClipCollection_MenuElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_MenuElement.swift; sourceTree = "<group>"; };
 		2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_SubMenu.swift; sourceTree = "<group>"; };
 		2C69CF3C24E43ABA0008C7AA /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
-		2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineUIButton.swift; sourceTree = "<group>"; };
 		2C6C79C0253B407A00A8A9B8 /* ClipQueryServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryServiceProtocol.swift; sourceTree = "<group>"; };
 		2C6C79CB253B409F00A8A9B8 /* ClipStorageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageError.swift; sourceTree = "<group>"; };
 		2C6C7A1C253B519E00A8A9B8 /* Domain.ProtocolMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Domain.ProtocolMocks.swift; sourceTree = "<group>"; };
@@ -1830,7 +1828,6 @@
 				2C41586725A5755A0039EFDF /* List */,
 				2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */,
 				2C2289ED24FA15750026E24A /* PaddingTextField.swift */,
-				2C6B2543250D46F100EB1623 /* MultilineUIButton.swift */,
 				2CEDB81B25452640007D9E02 /* EmptyMessageView.swift */,
 				2CEDB82525452650007D9E02 /* EmptyMessageView.xib */,
 				2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */,
@@ -4383,7 +4380,6 @@
 				2C8FD64D24E02E03005887F9 /* ClipSelectionCollectionViewCell.swift in Sources */,
 				2CABB5AE250E4EA7007B7F88 /* ClipInformationDismissalAnimator.swift in Sources */,
 				2CD3DA6124EECF830031A065 /* AlbumListCollectionLayout.swift in Sources */,
-				2C6B2544250D46F100EB1623 /* MultilineUIButton.swift in Sources */,
 				2C570B6D24E067D200A1DC9F /* ClipCollectionViewCell.swift in Sources */,
 				2CB7FFFD25B080DD000D8968 /* ClipItemEditListCell.swift in Sources */,
 				2C01B97E25B07E870089CFB4 /* ClipItemEditContentConfiguration.swift in Sources */,
