@@ -110,10 +110,12 @@ extension ClipEditViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.applySnapshot
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] snapshot in self?.dataSource.apply(snapshot) }
             .store(in: &subscriptions)
 
         dependency.outputs.applyDeletions
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] items in
                 guard let self = self else { return }
                 var snapshot = self.dataSource.snapshot()
@@ -123,6 +125,7 @@ extension ClipEditViewController {
             .store(in: &subscriptions)
 
         dependency.outputs.close
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.dismiss(animated: true, completion: nil) }
             .store(in: &subscriptions)
     }

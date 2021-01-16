@@ -149,7 +149,11 @@ extension ClipEditViewModel {
         clipQuery.clip
             .filter { [weak self] clip in
                 guard let self = self else { return false }
-                return clip != self._clip
+                return clip.id != self._clip.id
+                    || clip.items == self._clip.items
+                    || clip.tags == self._clip.tags
+                    || clip.dataSize == self._clip.dataSize
+                    || clip.isHidden == self._clip.isHidden
             }
             .sink { [weak self] _ in
                 self?.close.send(())
@@ -244,8 +248,16 @@ extension ClipEditViewModel {
                     return nil
                 }
             }
-        if case .failure = commandService.updateClip(having: _clip.id, byReorderingItemsHaving: orderedItems.map({ $0.itemId })) {
-            displayErrorMessage.send(L10n.failedToUpdateClip)
+
+        _items = orderedItems.compactMap { item in
+            _items.first(where: { $0.id == item.itemId })
+        }
+        _snapshot.send(Self.createSnapshot(clip: _clip, items: _items))
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
+            if case .failure = self.commandService.updateClip(having: self._clip.id, byReorderingItemsHaving: orderedItems.map({ $0.itemId })) {
+                self.displayErrorMessage.send(L10n.failedToUpdateClip)
+            }
         }
     }
 
