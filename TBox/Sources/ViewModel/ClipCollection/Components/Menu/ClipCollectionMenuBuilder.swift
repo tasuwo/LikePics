@@ -33,6 +33,7 @@ extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
             clip.isHidden
                 ? .item(.reveal)
                 : .item(.hide(immediately: storage.readShowHiddenItems())),
+            .item(.edit),
             .item(.share),
             .subMenu(.init(kind: .others,
                            isInline: true,

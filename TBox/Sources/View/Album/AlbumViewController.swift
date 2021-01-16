@@ -428,6 +428,11 @@ extension AlbumViewController: ClipCollectionProviderDelegate {
             self?.viewModel.inputs.purge.send(clipId)
         }
     }
+
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldEdit clipId: Clip.Identity, at indexPath: IndexPath) {
+        guard let viewController = factory.makeClipEditViewController(clipId: clipId) else { return }
+        self.present(viewController, animated: true, completion: nil)
+    }
 }
 
 extension AlbumViewController: ClipCollectionAlertPresentable {}

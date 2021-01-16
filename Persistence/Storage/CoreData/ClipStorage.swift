@@ -30,6 +30,15 @@ public class ClipStorage {
 
     // MARK: - Methods
 
+    private func fetchClip(for id: Domain.Clip.Identity) throws -> Result<Clip, ClipStorageError> {
+        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        guard let clip = try self.context.fetch(request).first else {
+            return .failure(.notFound)
+        }
+        return .success(clip)
+    }
+
     private func fetchAlbum(for id: Domain.Album.Identity) throws -> Result<Album, ClipStorageError> {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
@@ -422,6 +431,47 @@ extension ClipStorage: ClipStorageProtocol {
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             Failed to add update clips. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
+    public func updateClip(having clipId: Domain.Clip.Identity, byReorderingItemsHaving itemIds: [Domain.ClipItem.Identity]) -> Result<Void, ClipStorageError> {
+        do {
+            guard case let .success(clip) = try self.fetchClip(for: clipId) else {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                更新対象のクリップが見つからなかったため、クリップ内のアイテムの並び替えに失敗しました (id: \(clipId))
+                """))
+                return .failure(.notFound)
+            }
+
+            let clipItemIds = clip.clipItems?
+                .allObjects
+                .compactMap { $0 as? Item }
+                .compactMap { $0.id } ?? []
+            guard Set(clipItemIds) == Set(itemIds) else {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                引数が不正だったため、クリップ内の並び替えに失敗しました
+                - clipId: \(clipId)
+                - クリップ内のアイテム数: \(Set(clipItemIds).count)
+                - 引数のアイテム数: \(Set(itemIds).count)
+                """))
+                return .failure(.invalidParameter)
+            }
+
+            var currentIndex: Int64 = 1
+            for itemId in itemIds {
+                guard let item = clip.clipItems?.compactMap({ $0 as? Item }).first(where: { $0.id == itemId }) else {
+                    continue
+                }
+                item.index = currentIndex
+                currentIndex += 1
+            }
+
+            return .success(())
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to add update clip. (error=\(error.localizedDescription))
             """))
             return .failure(.internalError)
         }

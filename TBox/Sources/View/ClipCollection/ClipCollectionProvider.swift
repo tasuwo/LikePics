@@ -26,6 +26,7 @@ protocol ClipCollectionProviderDelegate: AnyObject {
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldRemoveFromAlbum clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldShare clipId: Clip.Identity, at indexPath: IndexPath)
     func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldPurge clipId: Clip.Identity, at indexPath: IndexPath)
+    func clipCollectionProvider(_ provider: ClipCollectionProvider, shouldEdit clipId: Clip.Identity, at indexPath: IndexPath)
 }
 
 class ClipCollectionProvider: NSObject {
@@ -304,6 +305,15 @@ extension ClipCollectionProvider {
                 // 分割時は確認のアラートを挟むため、遅延は設けない
                 DispatchQueue.main.async {
                     self.delegate?.clipCollectionProvider(self, shouldPurge: clip.identity, at: indexPath)
+                }
+            }
+
+        case .edit:
+            return UIAction(title: L10n.clipsListContextMenuEdit,
+                            image: UIImage(systemName: "pencil")) { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.delegate?.clipCollectionProvider(self, shouldEdit: clip.identity, at: indexPath)
                 }
             }
         }

@@ -5,6 +5,7 @@
 /// @mockable
 public protocol ClipQueryServiceProtocol {
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>
+    func queryClipItems(inClipHaving id: Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError>
     func queryClipItem(having id: ClipItem.Identity) -> Result<ClipItemQuery, ClipStorageError>
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
     func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError>

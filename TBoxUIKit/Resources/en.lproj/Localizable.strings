@@ -36,5 +36,6 @@
 "album_list_collection_view_cell_count" = "%d clips";
 
 "clip_item_edit_content_view_site_url_edit_title" = "Edit";
+"clip_item_edit_content_view_site_url_empty" = "No URL";
 "clip_item_edit_content_view_site_title" = "Site URL";
 "clip_item_edit_content_view_size_title" = "Size";

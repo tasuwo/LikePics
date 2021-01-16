@@ -25,6 +25,9 @@ class ClipItemEditContentView: UIView, UIContentView {
     @IBOutlet var dataSizeTitleLabel: UILabel!
     @IBOutlet var dataSizeLabel: UILabel!
 
+    @IBOutlet var thumbnailWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var thumbnailHeightConstraint: NSLayoutConstraint!
+
     // MARK: - Lifecycle
 
     init(configuration: ClipItemEditContentConfiguration) {
@@ -58,9 +61,22 @@ extension ClipItemEditContentView {
 
     private func setupAppearance() {
         siteUrlEditButton.setTitle(L10n.clipItemEditContentViewSiteUrlEditTitle, for: .normal)
+        siteUrlEditButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        siteUrlEditButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        siteUrlEditButton.setTitleColor(.secondaryLabel, for: .disabled)
+
         siteUrlTitleLabel.text = L10n.clipItemEditContentViewSiteTitle
+
+        siteUrlButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        siteUrlButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        siteUrlButton.setTitleColor(.secondaryLabel, for: .disabled)
+
         dataSizeTitleLabel.text = L10n.clipItemEditContentViewSizeTitle
         dataSizeTitleLabel.numberOfLines = 0
+
+        thumbnailImageView.contentMode = .scaleAspectFill
+        thumbnailImageView.layer.cornerRadius = 8
+        thumbnailImageView.layer.cornerCurve = .continuous
     }
 }
 
@@ -70,7 +86,13 @@ extension ClipItemEditContentView {
 
         thumbnailImageView.image = configuration.thumbnail
 
-        siteUrlButton.setTitle(configuration.siteUrl?.absoluteString, for: .normal)
+        if let siteUrl = configuration.siteUrl {
+            siteUrlButton.setTitle(siteUrl.absoluteString, for: .normal)
+            siteUrlButton.isEnabled = true
+        } else {
+            siteUrlButton.setTitle(L10n.clipItemEditContentViewSiteUrlEmpty, for: .disabled)
+            siteUrlButton.isEnabled = false
+        }
 
         if let dataSize = configuration.dataSize {
             dataSizeLabel.text = ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
@@ -78,26 +100,22 @@ extension ClipItemEditContentView {
             dataSizeLabel.text = nil
         }
 
+        if let width = configuration.imageWidth, let height = configuration.imageHeight {
+            thumbnailHeightConstraint.constant = thumbnailWidthConstraint.constant * CGFloat(height) / CGFloat(width)
+        } else {
+            thumbnailHeightConstraint.constant = thumbnailWidthConstraint.constant * 4 / 3
+        }
+
         let siteUrlEditAction = UIAction(identifier: .init("siteUrlEditAction"), handler: { [weak self] _ in
-            guard let self = self,
-                let text = self.siteUrlButton.titleLabel?.text,
-                let url = URL(string: text)
-            else {
-                return
-            }
-            configuration.delegate?.didTapSiteUrl(url, sender: self)
+            guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
+            configuration.delegate?.didTapSiteUrlEditButton(URL(string: text), sender: self)
         })
         siteUrlEditButton.removeAction(identifiedBy: .init("siteUrlEditAction"), for: .touchUpInside)
         siteUrlEditButton.addAction(siteUrlEditAction, for: .touchUpInside)
 
         let siteUrlTapAction = UIAction(identifier: .init("siteUrlTapAction"), handler: { [weak self] _ in
-            guard let self = self,
-                let text = self.siteUrlButton.titleLabel?.text,
-                let url = URL(string: text)
-            else {
-                return
-            }
-            configuration.delegate?.didTapSiteUrlEditButton(url, sender: self)
+            guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
+            configuration.delegate?.didTapSiteUrl(URL(string: text), sender: self)
         })
         siteUrlButton.removeAction(identifiedBy: .init("siteUrlTapAction"), for: .touchUpInside)
         siteUrlButton.addAction(siteUrlTapAction, for: .touchUpInside)

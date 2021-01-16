@@ -125,6 +125,20 @@ internal enum L10n {
     internal static let clipCollectionErrorAtUpdateTagsToClips = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clips")
     /// 画像を選択
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
+    /// クリップに含まれる全ての画像も同時に削除されます
+    internal static let clipEditViewAlertForDeleteClipMessage = L10n.tr("Localizable", "clip_edit_view_alert_for_delete_clip_message")
+    /// クリップを削除
+    internal static let clipEditViewAlertForDeleteClipTitle = L10n.tr("Localizable", "clip_edit_view_alert_for_delete_clip_title")
+    /// 全体のサイズ
+    internal static let clipEditViewClipDataSizeTitle = L10n.tr("Localizable", "clip_edit_view_clip_data_size_title")
+    /// 削除
+    internal static let clipEditViewDeleteClipItemTitle = L10n.tr("Localizable", "clip_edit_view_delete_clip_item_title")
+    /// このクリップを削除
+    internal static let clipEditViewDeleteClipTitle = L10n.tr("Localizable", "clip_edit_view_delete_clip_title")
+    /// 隠す
+    internal static let clipEditViewHiddenTitle = L10n.tr("Localizable", "clip_edit_view_hidden_title")
+    /// クリップを編集
+    internal static let clipEditViewTitle = L10n.tr("Localizable", "clip_edit_view_title")
     /// 画像の読み込みに失敗しました
     internal static let clipInformationErrorAtReadClip = L10n.tr("Localizable", "clip_information_error_at_read_clip")
     /// タグの削除に失敗しました
@@ -221,6 +235,8 @@ internal enum L10n {
     internal static let clipsListContextMenuAddToAlbum = L10n.tr("Localizable", "clips_list_context_menu_add_to_album")
     /// 削除
     internal static let clipsListContextMenuDelete = L10n.tr("Localizable", "clips_list_context_menu_delete")
+    /// 編集
+    internal static let clipsListContextMenuEdit = L10n.tr("Localizable", "clips_list_context_menu_edit")
     /// 隠す
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
     /// その他
@@ -277,6 +293,10 @@ internal enum L10n {
     internal static let errorTagRead = L10n.tr("Localizable", "error_tag_read")
     /// 同じ名前のタグが既に存在します
     internal static let errorTagRenameDuplicated = L10n.tr("Localizable", "error_tag_rename_duplicated")
+    /// クリップの削除に失敗しました
+    internal static let failedToDeleteClip = L10n.tr("Localizable", "failed_to_delete_clip")
+    /// クリップの更新に失敗しました
+    internal static let failedToUpdateClip = L10n.tr("Localizable", "failed_to_update_clip")
     /// 検索に失敗しました
     internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
     /// キーワード

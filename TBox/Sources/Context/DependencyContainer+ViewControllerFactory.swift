@@ -169,6 +169,20 @@ extension DependencyContainer: ViewControllerFactory {
         return viewController
     }
 
+    func makeClipEditViewController(clipId: Clip.Identity) -> UIViewController? {
+        guard let viewModel = ClipEditViewModel(id: clipId,
+                                                clipQueryService: self.clipQueryService,
+                                                clipCommandService: self.clipCommandService,
+                                                logger: self.logger)
+        else {
+            return nil
+        }
+        let viewController = ClipEditViewController(factory: self,
+                                                    viewModel: viewModel,
+                                                    thumbnailLoader: self.temporaryThumbnailLoader)
+        return UINavigationController(rootViewController: viewController)
+    }
+
     func makeSearchEntryViewController() -> UIViewController {
         let presenter = SearchEntryPresenter()
         let viewController = SearchEntryViewController(factory: self, presenter: presenter)

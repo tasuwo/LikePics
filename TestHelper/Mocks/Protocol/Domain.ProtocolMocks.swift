@@ -79,6 +79,16 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
         fatalError("updateClipsHavingByReplacingTagsHavingHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var updateClipCallCount = 0
+    public var updateClipHandler: ((Clip.Identity, [ClipItem.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateClip(having id: Clip.Identity, byReorderingItemsHaving: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
+        updateClipCallCount += 1
+        if let updateClipHandler = updateClipHandler {
+            return updateClipHandler(id, byReorderingItemsHaving)
+        }
+        fatalError("updateClipHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateClipItemsCallCount = 0
     public var updateClipItemsHandler: (([ClipItem.Identity], URL?) -> (Result<Void, ClipStorageError>))?
     public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl: URL?) -> Result<Void, ClipStorageError> {
@@ -241,6 +251,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
             return queryClipHandler(id)
         }
         fatalError("queryClipHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipItemsCallCount = 0
+    public var queryClipItemsHandler: ((Clip.Identity) -> (Result<ClipItemListQuery, ClipStorageError>))?
+    public func queryClipItems(inClipHaving id: Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError> {
+        queryClipItemsCallCount += 1
+        if let queryClipItemsHandler = queryClipItemsHandler {
+            return queryClipItemsHandler(id)
+        }
+        fatalError("queryClipItemsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var queryClipItemCallCount = 0
@@ -491,6 +511,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return updateClipsHavingByReplacingTagsHavingHandler(clipIds, tagIds)
         }
         fatalError("updateClipsHavingByReplacingTagsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateClipCallCount = 0
+    public var updateClipHandler: ((Clip.Identity, [ClipItem.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateClip(having clipId: Clip.Identity, byReorderingItemsHaving itemIds: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
+        updateClipCallCount += 1
+        if let updateClipHandler = updateClipHandler {
+            return updateClipHandler(clipId, itemIds)
+        }
+        fatalError("updateClipHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateClipItemsCallCount = 0
@@ -982,6 +1012,20 @@ public class AlbumQueryMock: AlbumQuery {
     public var album: CurrentValueSubject<Album, Error> {
         get { return _album }
         set { _album = newValue }
+    }
+}
+
+public class ClipItemListQueryMock: ClipItemListQuery {
+    public init() { }
+    public init(items: CurrentValueSubject<[ClipItem], Error>) {
+        self._items = items
+    }
+
+    public private(set) var itemsSetCallCount = 0
+    private var _items: CurrentValueSubject<[ClipItem], Error>! { didSet { itemsSetCallCount += 1 } }
+    public var items: CurrentValueSubject<[ClipItem], Error> {
+        get { return _items }
+        set { _items = newValue }
     }
 }
 

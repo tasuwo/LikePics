@@ -33,6 +33,22 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
+    public func queryClipItems(inClipHaving id: Domain.Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError> {
+        do {
+            let factory: CoreDataClipItemListQuery.RequestFactory = {
+                let request: NSFetchRequest<Item> = Item.fetchRequest()
+                request.predicate = NSPredicate(format: "clipId == %@", id as CVarArg)
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Item.index, ascending: true)]
+                return request
+            }
+            let query = try CoreDataClipItemListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItemQuery, ClipStorageError> {
         do {
             guard let query = try CoreDataClipItemQuery(id: id, context: self.context) else {

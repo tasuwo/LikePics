@@ -45,12 +45,23 @@
 "clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
 "clips_list_context_menu_purge" = "Purge";
+"clips_list_context_menu_edit" = "Edit";
 "clips_list_context_menu_others" = "Others";
-
-"clip_creation_view_title" = "Select image.";
 
 "top_clip_view_empty_title" = "No Clips";
 "top_clip_view_empty_message" = "Share the url of the site containing your favorite images using other apps.";
+
+"clip_creation_view_title" = "Select image.";
+
+"clip_edit_view_title" = "Edit Clip";
+
+"clip_edit_view_hidden_title" = "Hide";
+"clip_edit_view_clip_data_size_title" = "Total Size";
+"clip_edit_view_delete_clip_title" = "Delete Clip";
+"clip_edit_view_delete_clip_item_title" = "Delete";
+
+"clip_edit_view_alert_for_delete_clip_title" = "Delete Clip";
+"clip_edit_view_alert_for_delete_clip_message" = "All images in this clip will be deleted.";
 
 "album_list_view_title" = "Albums";
 
@@ -148,6 +159,11 @@
 "confirm_alert_cancel" = "Cancel";
 
 // MARK: - Error
+
+// MARK: Common
+
+"failed_to_update_clip" = "Failed to update clip";
+"failed_to_delete_clip" = "Failed to delete clip";
 
 // MARK: Clip
 
