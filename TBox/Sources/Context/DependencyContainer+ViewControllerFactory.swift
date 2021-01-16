@@ -173,6 +173,7 @@ extension DependencyContainer: ViewControllerFactory {
         guard let viewModel = ClipEditViewModel(id: clipId,
                                                 clipQueryService: self.clipQueryService,
                                                 clipCommandService: self.clipCommandService,
+                                                settingStorage: self.userSettingsStorage,
                                                 logger: self.logger)
         else {
             return nil
