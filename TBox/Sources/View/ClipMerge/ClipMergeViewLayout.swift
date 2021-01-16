@@ -46,7 +46,9 @@ extension ClipMergeViewLayout {
                 return self.createTagsLayoutSection()
 
             case .clip:
-                return self.createClipsLayoutSection(environment: environment)
+                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                configuration.backgroundColor = Asset.Color.backgroundClient.color
+                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .none:
                 return nil
@@ -71,35 +73,6 @@ extension ClipMergeViewLayout {
 
         return section
     }
-
-    private static func createClipsLayoutSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let count: CGFloat = {
-            switch environment.traitCollection.horizontalSizeClass {
-            case .compact:
-                return 2
-
-            case .regular, .unspecified:
-                return 4
-
-            @unknown default:
-                return 4
-            }
-        }()
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(1.0 / count))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: Int(count))
-        group.interItemSpacing = .fixed(16)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(16)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-
-        return section
-    }
 }
 
 // MARK: - DataSource
@@ -120,43 +93,14 @@ extension ClipMergeViewLayout {
             + items.map({ Item.item($0) })
     }
 
-    static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoader,
-                                    buttonCellDelegate: ButtonCellDelegate,
-                                    tagCellDelegate: TagCollectionViewCellDelegate) -> DataSource
+    static func createDataSource(collectionView: UICollectionView,
+                                 thumbnailLoader: ThumbnailLoader,
+                                 buttonCellDelegate: ButtonCellDelegate,
+                                 tagCellDelegate: TagCollectionViewCellDelegate) -> DataSource
     {
-        let tagAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
-            cell.title = L10n.clipMergeViewAddTagTitle
-            cell.delegate = buttonCellDelegate
-        }
-
-        let tagCellRegistration = UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak tagCellDelegate] cell, _, tag in
-            cell.title = tag.name
-            cell.displayMode = .normal
-            cell.visibleCountIfPossible = false
-            cell.visibleDeleteButton = true
-            cell.delegate = tagCellDelegate
-            cell.isHiddenTag = tag.isHidden
-        }
-
-        let imageCellRegistration = UICollectionView.CellRegistration<ClipMergeImageCell, ClipItem>(cellNib: ClipMergeImageCell.nib) { [weak thumbnailLoader] cell, _, clipItem in
-            let requestId = UUID().uuidString
-            cell.identifier = requestId
-            cell.thumbnail = nil
-
-            let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(clipItem.identity.uuidString)",
-                                                      size: cell.thumbnailDisplaySize,
-                                                      scale: cell.traitCollection.displayScale)
-            let imageRequest = ImageDataLoadRequest(imageId: clipItem.imageId)
-            let request = ThumbnailRequest(requestId: requestId,
-                                           originalImageRequest: imageRequest,
-                                           thumbnailInfo: info)
-            thumbnailLoader?.load(request: request, observer: cell)
-            cell.onReuse = { identifier in
-                guard identifier == requestId else { return }
-                thumbnailLoader?.cancel(request)
-            }
-        }
+        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: buttonCellDelegate)
+        let tagCellRegistration = self.configureTagCell(delegate: tagCellDelegate)
+        let itemCellRegistration = self.configureItemCell(thumbnailLoader: thumbnailLoader)
 
         return DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -167,8 +111,61 @@ extension ClipMergeViewLayout {
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
 
             case let .item(item):
-                return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: item)
+                return collectionView.dequeueConfiguredReusableCell(using: itemCellRegistration, for: indexPath, item: item)
             }
+        }
+    }
+
+    private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
+        return UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak delegate] cell, _, _ in
+            cell.title = L10n.clipMergeViewAddTagTitle
+            cell.delegate = delegate
+        }
+    }
+
+    private static func configureTagCell(delegate: TagCollectionViewCellDelegate) -> UICollectionView.CellRegistration<TagCollectionViewCell, Tag> {
+        return UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak delegate] cell, _, tag in
+            cell.title = tag.name
+            cell.displayMode = .normal
+            cell.visibleCountIfPossible = false
+            cell.visibleDeleteButton = true
+            cell.delegate = delegate
+            cell.isHiddenTag = tag.isHidden
+        }
+    }
+
+    private static func configureItemCell(thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
+        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { cell, _, item in
+            var contentConfiguration = ClipItemEditContentConfiguration()
+            contentConfiguration.siteUrl = item.url
+            contentConfiguration.isSiteUrlEditable = false
+            contentConfiguration.dataSize = Int(item.imageDataSize)
+            contentConfiguration.imageWidth = item.imageSize.width
+            contentConfiguration.imageHeight = item.imageSize.height
+            cell.contentConfiguration = contentConfiguration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = .systemBackground
+            cell.backgroundConfiguration = backgroundConfiguration
+
+            cell.accessories = [.reorder(displayed: .always)]
+
+            let requestId = UUID().uuidString
+            cell.identifier = requestId
+            let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(item.identity.uuidString)",
+                                                      size: contentConfiguration.calcThumbnailDisplaySize(),
+                                                      scale: cell.traitCollection.displayScale)
+            let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
+            let request = ThumbnailRequest(requestId: requestId,
+                                           originalImageRequest: imageRequest,
+                                           thumbnailInfo: info,
+                                           isPrefetch: false,
+                                           userInfo: nil)
+            cell.onReuse = { identifier in
+                guard identifier == requestId else { return }
+                thumbnailLoader.cancel(request)
+            }
+            thumbnailLoader.load(request: request, observer: cell)
         }
     }
 }

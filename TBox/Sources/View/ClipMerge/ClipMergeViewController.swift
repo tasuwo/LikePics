@@ -139,10 +139,10 @@ class ClipMergeViewController: UIViewController {
 
         // DataSource
 
-        self.dataSource = ClipMergeViewLayout.configureDataSource(collectionView: self.collectionView,
-                                                                  thumbnailLoader: self.thumbnailLoader,
-                                                                  buttonCellDelegate: self,
-                                                                  tagCellDelegate: self)
+        self.dataSource = ClipMergeViewLayout.createDataSource(collectionView: self.collectionView,
+                                                               thumbnailLoader: self.thumbnailLoader,
+                                                               buttonCellDelegate: self,
+                                                               tagCellDelegate: self)
 
         // Reorder settings
 
