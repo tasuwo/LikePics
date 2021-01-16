@@ -9,17 +9,17 @@ import UIKit
 
 protocol ClipEditViewDelegate: AnyObject {
     func trailingSwipeAction(indexPath: IndexPath) -> UISwipeActionsConfiguration?
-    func didSwitch(_ cell: UICollectionViewListCell, indexPath: IndexPath, meta: ClipEditViewLayout.Info, isOn: Bool)
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell)
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell)
+    func didTapSiteUrl(_ sender: UIView, url: URL?)
+    func didTapSiteUrlEditButton(_ sender: UIView, url: URL?)
 }
 
 enum ClipEditViewLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     typealias SectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>
-    typealias Delegate = ClipEditViewDelegate
-        & ButtonCellDelegate
-        & TagCollectionViewCellDelegate
-        & ClipItemEditContentDelegate
 
     enum Section: Int, CaseIterable {
         case tag
@@ -122,17 +122,22 @@ extension ClipEditViewLayout {
 // MARK: - DataSource
 
 extension ClipEditViewLayout {
-    static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoader,
-                                    delegate: Delegate) -> DataSource
+    class Proxy {
+        weak var delegate: ClipEditViewDelegate?
+    }
+
+    static func createDataSource(collectionView: UICollectionView,
+                                 thumbnailLoader: ThumbnailLoader) -> (DataSource, Proxy)
     {
-        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: delegate)
-        let tagCellRegistration = self.configureTagCell(delegate: delegate)
-        let metaCellRegistration = self.configureMetaCell(delegate: delegate)
-        let itemCellRegistration = self.configureItemCell(delegate: delegate, thumbnailLoader: thumbnailLoader)
+        let proxy = Proxy()
+
+        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
+        let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let metaCellRegistration = self.configureMetaCell(proxy: proxy)
+        let itemCellRegistration = self.configureItemCell(delegate: proxy, thumbnailLoader: thumbnailLoader)
         let deleteCellRegistration = self.configureDeleteClipCell()
 
-        return .init(collectionView: collectionView) { collectionView, indexPath, item in
+        let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
             case .tagAddition:
                 return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
@@ -150,6 +155,8 @@ extension ClipEditViewLayout {
                 return collectionView.dequeueConfiguredReusableCell(using: deleteCellRegistration, for: indexPath, item: ())
             }
         }
+
+        return (dataSource, proxy)
     }
 
     private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
@@ -170,7 +177,7 @@ extension ClipEditViewLayout {
         }
     }
 
-    private static func configureMetaCell(delegate: ClipEditViewDelegate) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
+    private static func configureMetaCell(proxy: Proxy) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = info.title
@@ -184,10 +191,10 @@ extension ClipEditViewLayout {
                 // swiftlint:disable:next identifier_name
                 let sw = UISwitch()
                 sw.isOn = isOn
-                sw.addAction(.init(handler: { [weak delegate] action in
+                sw.addAction(.init(handler: { [weak proxy] action in
                     // swiftlint:disable:next identifier_name
                     guard let sw = action.sender as? UISwitch else { return }
-                    delegate?.didSwitch(cell, indexPath: indexPath, meta: info, isOn: sw.isOn)
+                    proxy?.didSwitchHiding(cell, at: indexPath, isOn: sw.isOn)
                 }), for: .touchUpInside)
                 let configuration = UICellAccessory.CustomViewConfiguration(customView: sw,
                                                                             placement: .trailing(displayed: .always))
@@ -249,5 +256,45 @@ extension ClipEditViewLayout {
             }
             thumbnailLoader.load(request: request, observer: cell)
         }
+    }
+}
+
+// MARK: - Proxy DataSource Delegate
+
+extension ClipEditViewLayout.Proxy {
+    func trailingSwipeAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        return self.delegate?.trailingSwipeAction(indexPath: indexPath)
+    }
+
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        self.delegate?.didSwitchHiding(cell, at: indexPath, isOn: isOn)
+    }
+}
+
+extension ClipEditViewLayout.Proxy: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
+
+    func didTap(_ cell: ButtonCell) {
+        self.delegate?.didTapTagAdditionButton(cell)
+    }
+}
+
+extension ClipEditViewLayout.Proxy: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        self.delegate?.didTapTagDeletionButton(cell)
+    }
+}
+
+extension ClipEditViewLayout.Proxy: ClipItemEditContentDelegate {
+    // MARK: - ClipItemEditContentDelegate
+
+    func didTapSiteUrl(_ url: URL?, sender: UIView) {
+        self.delegate?.didTapSiteUrl(sender, url: url)
+    }
+
+    func didTapSiteUrlEditButton(_ url: URL?, sender: UIView) {
+        self.delegate?.didTapSiteUrlEditButton(sender, url: url)
     }
 }

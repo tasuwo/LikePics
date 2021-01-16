@@ -28,6 +28,7 @@ class ClipEditViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var proxy: Layout.Proxy!
     private lazy var editSiteUrlAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                              message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
@@ -79,9 +80,10 @@ class ClipEditViewController: UIViewController {
 
         self.view.addSubview(collectionView)
 
-        self.dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                     thumbnailLoader: thumbnailLoader,
-                                                     delegate: self)
+        let (dataSource, proxy) = Layout.createDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        self.dataSource = dataSource
+        self.proxy = proxy
+        self.proxy.delegate = self
         self.collectionView.delegate = self
 
         self.collectionView.dragInteractionEnabled = true
@@ -233,7 +235,7 @@ extension ClipEditViewController: ClipEditViewDelegate {
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 
-    func didSwitch(_ cell: UICollectionViewListCell, indexPath: IndexPath, meta: ClipEditViewLayout.Info, isOn: Bool) {
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
         guard case .meta = self.dataSource.itemIdentifier(for: indexPath) else { return }
         if isOn {
             viewModel.inputs.hideClip()
@@ -241,48 +243,27 @@ extension ClipEditViewController: ClipEditViewDelegate {
             viewModel.inputs.revealClip()
         }
     }
-}
 
-extension ClipEditViewController: ButtonCellDelegate {
-    // MARK: - ButtonCellDelegate
-
-    func didTap(_ cell: ButtonCell) {
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         let tagIds = viewModel.outputs.tags.map { $0.id }
         let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tagIds, context: nil, delegate: self)
         guard let viewController = nullableViewController else { return }
         self.present(viewController, animated: true, completion: nil)
     }
-}
 
-extension ClipEditViewController: TagSelectionDelegate {
-    // MARK: - TagSelectionViewControllerDelegate
-
-    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
-        let tagIds = Set(tags.map { $0.id })
-        viewModel.inputs.replaceTagsOfClip(tagIds)
-    }
-}
-
-extension ClipEditViewController: TagCollectionViewCellDelegate {
-    // MARK: - TagCollectionViewCellDelegate
-
-    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
             let item = dataSource.itemIdentifier(for: indexPath),
             case let .tag(tag) = item else { return }
         viewModel.inputs.removeTagFromClip(tag.id)
     }
-}
 
-extension ClipEditViewController: ClipItemEditContentDelegate {
-    // MARK: - ClipItemEditContentDelegate
-
-    func didTapSiteUrl(_ url: URL?, sender: UIView) {
+    func didTapSiteUrl(_ sender: UIView, url: URL?) {
         guard let url = url else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    func didTapSiteUrlEditButton(_ url: URL?, sender: UIView) {
+    func didTapSiteUrlEditButton(_ sender: UIView, url: URL?) {
         guard let cell = sender.next(ofType: UICollectionViewCell.self),
             let indexPath = collectionView.indexPath(for: cell),
             let item = dataSource.itemIdentifier(for: indexPath),
@@ -294,5 +275,14 @@ extension ClipEditViewController: ClipItemEditContentDelegate {
             guard case let .saved(text: text) = action else { return }
             self?.viewModel.inputs.update(siteUrl: URL(string: text), forItem: clipItem.itemId)
         }
+    }
+}
+
+extension ClipEditViewController: TagSelectionDelegate {
+    // MARK: - TagSelectionViewControllerDelegate
+
+    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+        let tagIds = Set(tags.map { $0.id })
+        viewModel.inputs.replaceTagsOfClip(tagIds)
     }
 }
