@@ -72,12 +72,10 @@ class CoreDataAlbumListQuery: NSObject {
             guard let self = self else { return }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
                 // AlbumItemの更新を検知する
-                if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
-                    for albumItem in objects.compactMap({ $0 as? AlbumItem }) {
-                        if let album = albumItem.album, let albumId = album.id, self.albumIds.contains(albumId) {
-                            context.refresh(album, mergeChanges: true)
-                            return
-                        }
+                for albumItem in objects.compactMap({ $0 as? AlbumItem }) {
+                    if let album = albumItem.album, let albumId = album.id, self.albumIds.contains(albumId) {
+                        context.refresh(album, mergeChanges: true)
+                        return
                     }
                 }
 
