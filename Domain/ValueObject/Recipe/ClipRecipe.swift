@@ -34,11 +34,11 @@ public struct ClipRecipe {
         self.updatedDate = updatedDate
     }
 
-    public init(_ clip: Clip) {
+    public init(_ clip: Clip, tagIds: [Tag.Identity]) {
         self.id = clip.id
         self.description = clip.description
         self.items = clip.items.map { .init($0) }
-        self.tagIds = clip.tags.map { $0.id }
+        self.tagIds = tagIds
         self.isHidden = clip.isHidden
         self.dataSize = clip.dataSize
         self.registeredDate = clip.registeredDate

@@ -15,6 +15,7 @@ public protocol ClipStorageProtocol {
 
     func readAllClips() -> Result<[Clip], ClipStorageError>
     func readAllTags() -> Result<[Tag], ClipStorageError>
+    func readTags(forClipHaving clipId: Clip.Identity) -> Result<[Tag], ClipStorageError>
     func readClipItems(having: [ClipItem.Identity]) -> Result<[ClipItem], ClipStorageError>
     func readAlbumIds(containsClipsHaving: [Clip.Identity]) -> Result<[Album.Identity], ClipStorageError>
 

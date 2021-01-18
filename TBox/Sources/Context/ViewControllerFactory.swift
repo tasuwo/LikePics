@@ -31,7 +31,7 @@ protocol ViewControllerFactory {
     func makeTagListViewController() -> UIViewController?
     func makeTagSelectionViewController(selectedTags: [Tag.Identity], context: Any?, delegate: TagSelectionDelegate) -> UIViewController?
 
-    func makeMergeViewController(clips: [Clip], delegate: ClipMergeViewControllerDelegate) -> UIViewController
+    func makeMergeViewController(clipIds: [Clip.Identity], delegate: ClipMergeViewControllerDelegate) -> UIViewController?
 
     func makeSettingsViewController() -> UIViewController
 }

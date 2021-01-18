@@ -177,6 +177,21 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func readTags(forClipHaving clipId: Domain.Clip.Identity) -> Result<[Domain.Tag], ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+            request.predicate = NSPredicate(format: "SUBQUERY(clips, $clip, $clip.id == %@).@count > 0", clipId as CVarArg)
+            let tags = try self.context.fetch(request)
+                .compactMap { $0.map(to: Domain.Tag.self) }
+            return .success(tags)
+        } catch {
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read tags. (error=\(error.localizedDescription))
+            """))
+            return .failure(.internalError)
+        }
+    }
+
     public func readClipItems(having itemIds: [Domain.ClipItem.Identity]) -> Result<[Domain.ClipItem], ClipStorageError> {
         do {
             guard case let .success(items) = try self.fetchClipItems(for: itemIds) else { return .failure(.notFound) }

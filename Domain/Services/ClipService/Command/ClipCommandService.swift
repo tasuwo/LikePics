@@ -481,6 +481,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(.internalError)
                 }
 
+                let originalTags: [Domain.Tag]
+                switch self.clipStorage.readTags(forClipHaving: id) {
+                case let .success(tags):
+                    originalTags = tags
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to purge clip. (error=\(error.localizedDescription))
+                    """))
+                    return .failure(error)
+                }
+
                 let originalClip: Domain.Clip
                 switch self.clipStorage.deleteClips(having: [id]) {
                 case let .success(clips) where clips.count == 1:
@@ -520,7 +533,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                                 registeredDate: item.registeredDate,
                                                 updatedDate: date)
                                       ],
-                                      tagIds: originalClip.tags.map { $0.id },
+                                      tagIds: originalTags.map { $0.id },
                                       isHidden: originalClip.isHidden,
                                       dataSize: item.imageDataSize,
                                       registeredDate: date,

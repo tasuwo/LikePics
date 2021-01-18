@@ -53,7 +53,7 @@ class ClipEditViewModel: ClipEditViewModelType,
     var applySnapshot: AnyPublisher<Layout.Snapshot, Never> { _snapshot.eraseToAnyPublisher() }
     let applyDeletions: PassthroughSubject<[Layout.Item], Never> = .init()
 
-    var tags: [Tag] { _clip.tags }
+    var tags: [Tag] { _tags }
     var isItemDeletable: Bool { _items.count > 1 }
 
     let close: PassthroughSubject<Void, Never> = .init()
@@ -66,12 +66,14 @@ class ClipEditViewModel: ClipEditViewModelType,
     // MARK: Source of truth
 
     private var _clip: Clip
+    private var _tags: [Tag]
     private var _items: [ClipItem]
 
     // MARK: Privates
 
     private let clipQuery: ClipQuery
     private let itemListQuery: ClipItemListQuery
+    private let tagListQuery: TagListQuery
     private let commandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
 
@@ -110,32 +112,49 @@ class ClipEditViewModel: ClipEditViewModelType,
             return nil
         }
 
+        let tagListQuery: TagListQuery
+        switch clipQueryService.queryTags(forClipHaving: id) {
+        case let .success(result):
+            tagListQuery = result
+
+        case let .failure(error):
+            logger.write(ConsoleLog(level: .error, message: """
+            Failed to initialize ClipEditViewModel. (\(error.rawValue))
+            """))
+            return nil
+        }
+
         self.clipQuery = clipQuery
         self.itemListQuery = itemListQuery
+        self.tagListQuery = tagListQuery
         self.commandService = clipCommandService
         self.settingStorage = settingStorage
 
         let clip = clipQuery.clip.value
         let items = itemListQuery.items.value
+        let tags = tagListQuery.tags.value
         self._clip = clip
+        self._tags = tags
         self._items = items
         self._snapshot = .init(Self.createSnapshot(clip: clip,
                                                    items: items,
+                                                   tags: tags,
                                                    hidingItems: !settingStorage.readShowHiddenItems()))
 
         self.bind()
     }
 
-    func createSnapshot(clip: Clip, items: [ClipItem]) -> ClipEditViewLayout.Snapshot {
+    func createSnapshot(clip: Clip, items: [ClipItem], tags: [Tag]) -> ClipEditViewLayout.Snapshot {
         Self.createSnapshot(clip: clip,
                             items: items,
+                            tags: tags,
                             hidingItems: !settingStorage.readShowHiddenItems())
     }
 
-    private static func createSnapshot(clip: Clip, items: [ClipItem], hidingItems: Bool) -> ClipEditViewLayout.Snapshot {
+    private static func createSnapshot(clip: Clip, items: [ClipItem], tags: [Tag], hidingItems: Bool) -> ClipEditViewLayout.Snapshot {
         var snapshot = ClipEditViewLayout.Snapshot()
         snapshot.appendSections([.tag])
-        let tags = clip.tags
+        let tags = tags
             .compactMap { tag in hidingItems ? (tag.isHidden ? nil : tag) : tag }
             .map { ClipEditViewLayout.Item.tag($0) }
         snapshot.appendItems([.tagAddition] + tags)
@@ -166,7 +185,6 @@ extension ClipEditViewModel {
                 guard let self = self else { return false }
                 return clip.id != self._clip.id
                     || clip.items != self._clip.items
-                    || clip.tags != self._clip.tags
                     || clip.dataSize != self._clip.dataSize
                     || clip.isHidden != self._clip.isHidden
             }
@@ -176,7 +194,7 @@ extension ClipEditViewModel {
             } receiveValue: { [weak self] clip in
                 guard let self = self else { return }
                 self._clip = clip
-                self._snapshot.send(self.createSnapshot(clip: clip, items: self._items))
+                self._snapshot.send(self.createSnapshot(clip: clip, items: self._items, tags: self._tags))
             }
             .store(in: &subscriptions)
 
@@ -191,7 +209,22 @@ extension ClipEditViewModel {
             } receiveValue: { [weak self] items in
                 guard let self = self else { return }
                 self._items = items
-                self._snapshot.send(self.createSnapshot(clip: self._clip, items: items))
+                self._snapshot.send(self.createSnapshot(clip: self._clip, items: items, tags: self._tags))
+            }
+            .store(in: &subscriptions)
+
+        tagListQuery.tags
+            .filter { [weak self] tags in
+                guard let self = self else { return false }
+                return tags != self._tags
+            }
+            .receive(on: queue)
+            .sink { [weak self] _ in
+                self?.close.send(())
+            } receiveValue: { [weak self] tags in
+                guard let self = self else { return }
+                self._tags = tags
+                self._snapshot.send(self.createSnapshot(clip: self._clip, items: self._items, tags: tags))
             }
             .store(in: &subscriptions)
 
@@ -199,7 +232,7 @@ extension ClipEditViewModel {
             .receive(on: queue)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self._snapshot.send(self.createSnapshot(clip: self._clip, items: self._items))
+                self._snapshot.send(self.createSnapshot(clip: self._clip, items: self._items, tags: self._tags))
             }
             .store(in: &subscriptions)
     }
@@ -277,7 +310,7 @@ extension ClipEditViewModel {
         _items = orderedItems.compactMap { item in
             _items.first(where: { $0.id == item.itemId })
         }
-        _snapshot.send(self.createSnapshot(clip: _clip, items: _items))
+        _snapshot.send(self.createSnapshot(clip: _clip, items: _items, tags: _tags))
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
             if case .failure = self.commandService.updateClip(having: self._clip.id, byReorderingItemsHaving: orderedItems.map({ $0.itemId })) {

@@ -59,12 +59,12 @@ class ClipMergeViewModel: ClipMergeViewModelType,
 
     // MARK: - Lifecycle
 
-    init(clips: [Clip], commandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
+    init(clips: [Clip], tags: [Tag], commandService: ClipCommandServiceProtocol, logger: TBoxLoggable) {
         self.clips = clips
         self.commandService = commandService
         self.logger = logger
         self.items = .init(Array(Set(clips.flatMap({ $0.items }))))
-        self.tags = .init(Array(Set(clips.flatMap({ $0.tags }))))
+        self.tags = .init(Array(Set(tags)))
 
         self.bind()
     }

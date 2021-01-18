@@ -26,6 +26,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let innerViewModel = ClipCollectionViewModel(clipService: self.clipCommandService,
+                                                     queryService: self.clipQueryService,
                                                      imageQueryService: self.imageQueryService,
                                                      logger: self.logger)
         let viewModel = TopClipCollectionViewModel(query: query,
@@ -52,10 +53,22 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewPageViewController(clipId: Domain.Clip.Identity) -> UIViewController? {
-        let query: ClipQuery
+        let clipQuery: ClipQuery
         switch self.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
-            query = result
+            clipQuery = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipPreviewView for clip having clip id \(clipId). (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let tagListQuery: TagListQuery
+        switch self.clipQueryService.queryTags(forClipHaving: clipId) {
+        case let .success(result):
+            tagListQuery = result
 
         case let .failure(error):
             self.logger.write(ConsoleLog(level: .error, message: """
@@ -65,7 +78,8 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         guard let viewModel = ClipPreviewPageViewModel(clipId: clipId,
-                                                       query: query,
+                                                       clipQuery: clipQuery,
+                                                       tagListQuery: tagListQuery,
                                                        clipCommandService: self.clipCommandService,
                                                        previewLoader: self.previewLoader,
                                                        imageQueryService: self.imageQueryService,
@@ -152,9 +166,22 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
+        let tagListQuery: TagListQuery
+        switch self.clipQueryService.queryTags(forClipHaving: clipId) {
+        case let .success(result):
+            tagListQuery = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipInformationViewModel for clip having clip id \(clipId). (\(error.rawValue))
+            """))
+            return nil
+        }
+
         let viewModel = ClipInformationViewModel(itemId: itemId,
                                                  clipQuery: clipQuery,
                                                  itemQuery: itemQuery,
+                                                 tagListQuery: tagListQuery,
                                                  clipCommandService: self.clipCommandService,
                                                  settingStorage: self.userSettingsStorage,
                                                  logger: self.logger)
@@ -231,6 +258,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let innerViewModel = ClipCollectionViewModel(clipService: self.clipCommandService,
+                                                     queryService: self.clipQueryService,
                                                      imageQueryService: self.imageQueryService,
                                                      logger: self.logger)
         let viewModel = SearchResultViewModel(context: context,
@@ -297,6 +325,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let innerViewModel = ClipCollectionViewModel(clipService: self.clipCommandService,
+                                                     queryService: self.clipQueryService,
                                                      imageQueryService: self.imageQueryService,
                                                      logger: self.logger)
         let viewModel = AlbumViewModel(query: query,
@@ -399,8 +428,23 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeMergeViewController(clips: [Clip], delegate: ClipMergeViewControllerDelegate) -> UIViewController {
+    func makeMergeViewController(clipIds: [Clip.Identity], delegate: ClipMergeViewControllerDelegate) -> UIViewController? {
+        let clips: [Clip]
+        let tags: [Tag]
+        switch self.clipQueryService.readClipAndTags(for: clipIds) {
+        case let .success((fetchedClips, fetchedTags)):
+            clips = fetchedClips
+            tags = fetchedTags
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open ClipMergeView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
         let viewModel = ClipMergeViewModel(clips: clips,
+                                           tags: tags,
                                            commandService: self.clipCommandService,
                                            logger: self.logger)
         let viewController = ClipMergeViewController(factory: self,

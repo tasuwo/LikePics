@@ -86,7 +86,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     }
 
     var currentItemIdValue: ClipItem.Identity { _currentItemId.value }
-    var tagIdsValue: [Tag.Identity] { _tags.value.map({ $0.id }) }
+    var tagIdsValue: [Tag.Identity] { tagListQuery.tags.value.map { $0.id } }
 
     let displayErrorMessage: PassthroughSubject<String, Never> = .init()
     let reloadCurrentPage: PassthroughSubject<Void, Never> = .init()
@@ -96,10 +96,10 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     // MARK: Privates
 
     private let _items: CurrentValueSubject<[ClipItem.Identity: ListingClipItem], Never>
-    private let _tags: CurrentValueSubject<[Tag], Never>
     private let _currentItemId: CurrentValueSubject<ClipItem.Identity, Never>
 
-    private let query: ClipQuery
+    private let clipQuery: ClipQuery
+    private let tagListQuery: TagListQuery
     private let clipCommandService: ClipCommandServiceProtocol
     private let previewLoader: PreviewLoaderProtocol
     private let imageQueryService: ImageQueryServiceProtocol
@@ -110,25 +110,26 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     // MARK: - Lifecycle
 
     init?(clipId: Clip.Identity,
-          query: ClipQuery,
+          clipQuery: ClipQuery,
+          tagListQuery: TagListQuery,
           clipCommandService: ClipCommandServiceProtocol,
           previewLoader: PreviewLoaderProtocol,
           imageQueryService: ImageQueryServiceProtocol,
           logger: TBoxLoggable)
     {
-        guard let firstItem = query.clip.value.items.first else { return nil }
+        guard let firstItem = clipQuery.clip.value.items.first else { return nil }
 
         self.clipId = clipId
-        self.query = query
+        self.clipQuery = clipQuery
+        self.tagListQuery = tagListQuery
         self.clipCommandService = clipCommandService
         self.previewLoader = previewLoader
         self.imageQueryService = imageQueryService
         self.logger = logger
 
-        let listingItems = Self.makeListingClipItems(for: query.clip.value)
+        let listingItems = Self.makeListingClipItems(for: clipQuery.clip.value)
         self._items = .init(listingItems.reduce(into: [ClipItem.Identity: ListingClipItem]()) { $0[$1.value.id] = $1 })
         self._currentItemId = .init(firstItem.id)
-        self._tags = .init(query.clip.value.tags)
 
         self.bind()
     }
@@ -153,7 +154,7 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
     }
 
     private func bindInputs() {
-        self.query.clip
+        self.clipQuery.clip
             .sink { [weak self] _ in
                 self?.close.send(())
             } receiveValue: { [weak self] clip in
@@ -165,7 +166,6 @@ class ClipPreviewPageViewModel: ClipPreviewPageViewModelType,
 
                 let listingItems = Self.makeListingClipItems(for: clip)
                 self._items.send(listingItems.reduce(into: [ClipItem.Identity: ListingClipItem]()) { $0[$1.value.id] = $1 })
-                self._tags.send(clip.tags)
 
                 // 元のItemが削除されているようであれば、最初のページをロードする
                 if !clip.items.contains(where: { $0.id == self._currentItemId.value }) {

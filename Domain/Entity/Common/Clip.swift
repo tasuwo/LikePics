@@ -8,7 +8,6 @@ public struct Clip {
     public let description: String?
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
-    public let tags: [Tag]
     public let isHidden: Bool
     public let dataSize: Int
     public let registeredDate: Date
@@ -38,7 +37,6 @@ public struct Clip {
     public init(id: UUID,
                 description: String?,
                 items: [ClipItem],
-                tags: [Tag],
                 isHidden: Bool,
                 dataSize: Int,
                 registeredDate: Date,
@@ -47,7 +45,6 @@ public struct Clip {
         self.id = id
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
-        self.tags = tags
         self.isHidden = isHidden
         self.dataSize = dataSize
         self.registeredDate = registeredDate
@@ -56,28 +53,6 @@ public struct Clip {
 
     // MARK: - Methods
 
-    public func updating(tags: [Tag]) -> Self {
-        return .init(id: self.id,
-                     description: self.description,
-                     items: self.items,
-                     tags: tags,
-                     isHidden: self.isHidden,
-                     dataSize: self.dataSize,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
-    }
-
-    public func removingHiddenTags() -> Self {
-        return .init(id: self.id,
-                     description: self.description,
-                     items: self.items,
-                     tags: self.tags.filter { $0.isHidden == false },
-                     isHidden: self.isHidden,
-                     dataSize: self.dataSize,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
-    }
-
     public func removedItem(at index: Int) -> Self {
         let newItems = self.items.enumerated()
             .filter { $0.offset != index }
@@ -85,7 +60,6 @@ public struct Clip {
         return .init(id: self.id,
                      description: self.description,
                      items: newItems,
-                     tags: self.tags,
                      isHidden: self.isHidden,
                      dataSize: self.dataSize,
                      registeredDate: self.registeredDate,
@@ -100,7 +74,6 @@ extension Clip: Equatable {
         return lhs.id == rhs.id
             && lhs.description == rhs.description
             && lhs.items == rhs.items
-            && lhs.tags == rhs.tags
             && lhs.dataSize == rhs.dataSize
             && lhs.registeredDate == rhs.registeredDate
             && lhs.updatedDate == rhs.updatedDate

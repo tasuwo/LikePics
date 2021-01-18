@@ -201,7 +201,7 @@ class AlbumViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] clips in
                 guard let self = self else { return }
-                let viewController = self.factory.makeMergeViewController(clips: clips, delegate: self)
+                guard let viewController = self.factory.makeMergeViewController(clipIds: clips.ids, delegate: self) else { return }
                 self.present(viewController, animated: true, completion: nil)
             }
             .store(in: &self.subscriptions)

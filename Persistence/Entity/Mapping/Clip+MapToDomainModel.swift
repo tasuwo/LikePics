@@ -13,10 +13,6 @@ extension Persistence.Clip {
             return nil
         }
 
-        let tags = self.tags?.allObjects
-            .compactMap { $0 as? Persistence.Tag }
-            .compactMap { $0.map(to: Domain.Tag.self) } ?? []
-
         let items = self.clipItems?
             .compactMap { $0 as? Persistence.Item }
             .compactMap { $0.map(to: Domain.ClipItem.self) } ?? []
@@ -24,7 +20,6 @@ extension Persistence.Clip {
         return Domain.Clip(id: id,
                            description: self.descriptionText,
                            items: items,
-                           tags: tags,
                            isHidden: self.isHidden,
                            dataSize: Int(self.imagesSize),
                            registeredDate: createdDate,

@@ -21,6 +21,30 @@ public class ClipQueryService {
 }
 
 extension ClipQueryService: ClipQueryServiceProtocol {
+    public func readClipAndTags(for clipIds: [Domain.Clip.Identity]) -> Result<([Domain.Clip], [Domain.Tag]), ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+            request.predicate = NSPredicate(format: "id IN %@", clipIds as CVarArg)
+            let clips = try self.context.fetch(request)
+
+            var resultClips: [Domain.Clip] = []
+            var resultTags: [Domain.Tag] = []
+            for clip in clips {
+                if let clip = clip.map(to: Domain.Clip.self) {
+                    resultClips.append(clip)
+                }
+                let tags = clip.tags?.allObjects
+                    .compactMap { $0 as? Tag }
+                    .compactMap { $0.map(to: Domain.Tag.self) } ?? []
+                resultTags += tags
+            }
+
+            return .success((resultClips, resultTags))
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryClip(having id: Domain.Clip.Identity) -> Result<Domain.ClipQuery, ClipStorageError> {
         do {
             guard let query = try CoreDataClipQuery(id: id, context: self.context) else {
@@ -85,6 +109,22 @@ extension ClipQueryService: ClipQueryServiceProtocol {
                 return request
             }
             let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
+    public func queryTags(forClipHaving clipId: Domain.Clip.Identity) -> Result<TagListQuery, ClipStorageError> {
+        do {
+            let factory: CoreDataTagListQuery.RequestFactory = {
+                let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
+                request.predicate = NSPredicate(format: "SUBQUERY(clips, $clip, $clip.id == %@).@count > 0", clipId as CVarArg)
+                return request
+            }
+            let query = try CoreDataTagListQuery(requestFactory: factory, context: self.context)
             self.observers.append(.init(value: query))
             return .success(query)
         } catch {

@@ -172,6 +172,7 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     private let _previewingClipId: CurrentValueSubject<Clip.Identity?, Never> = .init(nil)
 
     private let clipService: ClipCommandServiceProtocol
+    private let queryService: ClipQueryServiceProtocol
     private let imageQueryService: ImageQueryServiceProtocol
     private let logger: TBoxLoggable
 
@@ -189,10 +190,12 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
     // MARK: - Initializer
 
     init(clipService: ClipCommandServiceProtocol,
+         queryService: ClipQueryServiceProtocol,
          imageQueryService: ImageQueryServiceProtocol,
          logger: TBoxLoggable)
     {
         self.clipService = clipService
+        self.queryService = queryService
         self.imageQueryService = imageQueryService
         self.logger = logger
 
@@ -202,8 +205,14 @@ final class ClipCollectionViewModel: ClipCollectionViewModelType,
 
 extension ClipCollectionViewModel {
     func resolveTags(for clipId: Clip.Identity) -> [Tag.Identity] {
-        guard let clip = _clips.value[clipId]?.value else { return [] }
-        return clip.tags.map { $0.id }
+        switch queryService.queryTags(forClipHaving: clipId) {
+        case let .success(query):
+            return query.tags.value.map { $0.id }
+
+        case let .failure(error):
+            logger.write(ConsoleLog(level: .error, message: "タグの読み取りに失敗: \(error.localizedDescription)"))
+            return []
+        }
     }
 }
 

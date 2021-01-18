@@ -105,10 +105,12 @@ public enum ClipInformationLayout {
 
     public struct Information {
         public let clip: Clip
+        public let tags: [Tag]
         public let item: ClipItem
 
-        public init(clip: Clip, item: ClipItem) {
+        public init(clip: Clip, tags: [Tag], item: ClipItem) {
             self.clip = clip
+            self.tags = tags
             self.item = item
         }
     }
@@ -392,10 +394,10 @@ public enum ClipInformationLayout {
     static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.tag])
-        if info.clip.tags.isEmpty {
+        if info.tags.isEmpty {
             snapshot.appendItems([.empty])
         } else {
-            snapshot.appendItems(info.clip.tags.map { .tag($0) })
+            snapshot.appendItems(info.tags.map { .tag($0) })
         }
         snapshot.appendSections([.info])
         snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
