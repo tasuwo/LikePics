@@ -248,12 +248,20 @@ extension ThumbnailLoadPipeline: ThumbnailLoadTaskDelegate {
 
 extension ThumbnailLoadPipeline {
     private func decompress(_ data: Data) -> UIImage? {
-        let imageSourceOptions = [kCGImageSourceShouldCache: true] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions),
-            let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil)
-        else {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
             return nil
         }
+
+        let options = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+        ] as CFDictionary
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else {
+            return nil
+        }
+
         return UIImage(cgImage: cgImage)
     }
 
