@@ -24,11 +24,17 @@ public class ThumbnailLoader {
     // MARK: - Methods
 
     public func load(request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
-        if let cachedImage = pipeline.readCacheIfExists(for: request) {
-            observer?.didSuccessToLoad(request, image: cachedImage)
-        } else {
-            observer?.didStartLoading(request)
-            pipeline.load(for: request, observer: observer)
+        pipeline.readCacheIfExists(for: request) { [weak self] image in
+            guard let self = self else {
+                observer?.didFailedToLoad(request)
+                return
+            }
+            if let image = image {
+                observer?.didSuccessToLoad(request, image: image)
+            } else {
+                observer?.didStartLoading(request)
+                self.pipeline.load(for: request, observer: observer)
+            }
         }
     }
 

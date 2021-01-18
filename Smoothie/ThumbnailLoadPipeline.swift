@@ -15,6 +15,7 @@ public class ThumbnailLoadPipeline {
         public var compressionRatio: Float = 0.8
         public var dataLoader: OriginalImageLoader
 
+        public let cacheReadingQueue = OperationQueue()
         public let dataLoadingQueue = OperationQueue()
         public let dataCachingQueue = OperationQueue()
         public let downsamplingQueue = OperationQueue()
@@ -24,6 +25,7 @@ public class ThumbnailLoadPipeline {
         public init(dataLoader: OriginalImageLoader) {
             self.dataLoader = dataLoader
 
+            self.cacheReadingQueue.maxConcurrentOperationCount = 1
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
             self.dataCachingQueue.maxConcurrentOperationCount = 1
             self.downsamplingQueue.maxConcurrentOperationCount = 2
@@ -54,21 +56,31 @@ public class ThumbnailLoadPipeline {
 
     // MARK: - Methods
 
-    func readCacheIfExists(for request: ThumbnailRequest) -> UIImage? {
-        if let data = config.memoryCache[request.thumbnailInfo.id],
-            let image = decompress(data)
-        {
-            return image
-        }
+    func readCacheIfExists(for request: ThumbnailRequest, completion: @escaping (UIImage?) -> Void) {
+        let operation = BlockOperation { [weak self] in
+            guard let self = self else {
+                completion(nil)
+                return
+            }
 
-        if let data = config.diskCache?[request.thumbnailInfo.id],
-            let image = decompress(data)
-        {
-            config.memoryCache[request.thumbnailInfo.id] = data
-            return image
-        }
+            if let data = self.config.memoryCache[request.thumbnailInfo.id],
+                let image = self.decompress(data)
+            {
+                completion(image)
+                return
+            }
 
-        return nil
+            if let data = self.config.diskCache?[request.thumbnailInfo.id],
+                let image = self.decompress(data)
+            {
+                self.config.memoryCache[request.thumbnailInfo.id] = data
+                completion(image)
+                return
+            }
+
+            completion(nil)
+        }
+        self.config.cacheReadingQueue.addOperation(operation)
     }
 
     func load(for request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
