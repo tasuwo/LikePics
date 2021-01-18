@@ -362,17 +362,17 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
             if let item = clip.primaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary, isPrefetch: true)
-                self.thumbnailLoader.load(request: request, observer: nil)
+                self.thumbnailLoader.prefetch(for: request)
             }
             if let item = clip.secondaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary, isPrefetch: true)
-                self.thumbnailLoader.load(request: request, observer: nil)
+                self.thumbnailLoader.prefetch(for: request)
             }
             if let item = clip.tertiaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary, isPrefetch: true)
-                self.thumbnailLoader.load(request: request, observer: nil)
+                self.thumbnailLoader.prefetch(for: request)
             }
         }
     }
