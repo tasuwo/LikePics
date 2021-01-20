@@ -16,6 +16,7 @@ protocol ClipMergeViewControllerDelegate: AnyObject {
 class ClipMergeViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = ClipMergeViewModelType
+    typealias Layout = ClipMergeViewLayout
 
     // MARK: - Properties
 
@@ -31,6 +32,7 @@ class ClipMergeViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: ClipMergeViewLayout.DataSource!
+    private var proxy: Layout.Proxy!
 
     // MARK: Thumbnail
 
@@ -139,10 +141,11 @@ class ClipMergeViewController: UIViewController {
 
         // DataSource
 
-        self.dataSource = ClipMergeViewLayout.createDataSource(collectionView: self.collectionView,
-                                                               thumbnailLoader: self.thumbnailLoader,
-                                                               buttonCellDelegate: self,
-                                                               tagCellDelegate: self)
+        let (dataSource, proxy) = ClipMergeViewLayout.createDataSource(collectionView: self.collectionView,
+                                                                       thumbnailLoader: self.thumbnailLoader)
+        self.dataSource = dataSource
+        proxy.delegate = self
+        self.proxy = proxy
 
         // Reorder settings
 
@@ -182,24 +185,25 @@ class ClipMergeViewController: UIViewController {
     }
 }
 
-extension ClipMergeViewController: ButtonCellDelegate {
-    // MARK: - ButtonCellDelegate
+extension ClipMergeViewController: ClipMergeViewDelegate {
+    // MARK: - ClipMergeViewDelegate
 
-    func didTap(_ cell: ButtonCell) {
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         let tags = self.viewModel.outputs.tags.value.map { $0.identity }
         guard let viewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self) else { return }
         self.present(viewController, animated: true, completion: nil)
     }
-}
 
-extension ClipMergeViewController: TagCollectionViewCellDelegate {
-    // MARK: - TagCollectionViewCellDelegate
-
-    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
             let item = self.dataSource.itemIdentifier(for: indexPath),
             case let .tag(tag) = item else { return }
         self.viewModel.inputs.deleted.send(tag.id)
+    }
+
+    func didTapSiteUrl(_ sender: UIView, url: URL?) {
+        guard let url = url else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
 

@@ -7,6 +7,12 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
+protocol ClipMergeViewDelegate: AnyObject {
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell)
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell)
+    func didTapSiteUrl(_ sender: UIView, url: URL?)
+}
+
 enum ClipMergeViewLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
@@ -78,6 +84,10 @@ extension ClipMergeViewLayout {
 // MARK: - DataSource
 
 extension ClipMergeViewLayout {
+    class Proxy {
+        weak var delegate: ClipMergeViewDelegate?
+    }
+
     static func createSnapshot(tags: [Tag], items: [ClipItem]) -> Snapshot {
         var snapshot = Snapshot()
         snapshot.appendSections([.tag])
@@ -94,15 +104,15 @@ extension ClipMergeViewLayout {
     }
 
     static func createDataSource(collectionView: UICollectionView,
-                                 thumbnailLoader: ThumbnailLoader,
-                                 buttonCellDelegate: ButtonCellDelegate,
-                                 tagCellDelegate: TagCollectionViewCellDelegate) -> DataSource
+                                 thumbnailLoader: ThumbnailLoader) -> (DataSource, Proxy)
     {
-        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: buttonCellDelegate)
-        let tagCellRegistration = self.configureTagCell(delegate: tagCellDelegate)
-        let itemCellRegistration = self.configureItemCell(thumbnailLoader: thumbnailLoader)
+        let proxy = Proxy()
 
-        return DataSource(collectionView: collectionView) { collectionView, indexPath, item in
+        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
+        let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let itemCellRegistration = self.configureItemCell(delegate: proxy, thumbnailLoader: thumbnailLoader)
+
+        let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
             case .tagAddition:
                 return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
@@ -114,6 +124,8 @@ extension ClipMergeViewLayout {
                 return collectionView.dequeueConfiguredReusableCell(using: itemCellRegistration, for: indexPath, item: item)
             }
         }
+
+        return (dataSource, proxy)
     }
 
     private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
@@ -134,7 +146,7 @@ extension ClipMergeViewLayout {
         }
     }
 
-    private static func configureItemCell(thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
+    private static func configureItemCell(delegate: ClipItemEditContentDelegate, thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
         return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.url
@@ -142,6 +154,7 @@ extension ClipMergeViewLayout {
             contentConfiguration.dataSize = Int(item.imageDataSize)
             contentConfiguration.imageWidth = item.imageSize.width
             contentConfiguration.imageHeight = item.imageSize.height
+            contentConfiguration.delegate = delegate
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
@@ -167,5 +180,35 @@ extension ClipMergeViewLayout {
             }
             thumbnailLoader.load(request: request, observer: cell)
         }
+    }
+}
+
+// MARK: - Proxy DataSource Delegate
+
+extension ClipMergeViewLayout.Proxy: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
+
+    func didTap(_ cell: ButtonCell) {
+        self.delegate?.didTapTagAdditionButton(cell)
+    }
+}
+
+extension ClipMergeViewLayout.Proxy: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        self.delegate?.didTapTagDeletionButton(cell)
+    }
+}
+
+extension ClipMergeViewLayout.Proxy: ClipItemEditContentDelegate {
+    // MARK: - ClipItemEditContentDelegate
+
+    func didTapSiteUrl(_ url: URL?, sender: UIView) {
+        self.delegate?.didTapSiteUrl(sender, url: url)
+    }
+
+    func didTapSiteUrlEditButton(_ url: URL?, sender: UIView) {
+        // NOP
     }
 }
