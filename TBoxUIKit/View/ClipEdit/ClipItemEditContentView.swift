@@ -68,7 +68,7 @@ extension ClipItemEditContentView {
         siteUrlTitleLabel.text = L10n.clipItemEditContentViewSiteTitle
 
         siteUrlButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        siteUrlButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        siteUrlButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .callout)
         siteUrlButton.setTitleColor(.secondaryLabel, for: .disabled)
 
         dataSizeTitleLabel.text = L10n.clipItemEditContentViewSizeTitle

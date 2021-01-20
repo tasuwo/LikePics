@@ -33,7 +33,7 @@ class MultiLineButton: UIButton {
     // MARK: - Methods
 
     private func setupAppearance() {
-        self.titleLabel?.numberOfLines = 0
-        self.titleLabel?.lineBreakMode = .byWordWrapping
+        self.titleLabel?.numberOfLines = 2
+        self.titleLabel?.lineBreakMode = .byTruncatingTail
     }
 }
