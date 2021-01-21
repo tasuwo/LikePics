@@ -154,6 +154,9 @@
 "settings_confirm_icloud_sync_off_title" = "iCloud同期をオフにしますか？";
 "settings_confirm_icloud_sync_off_message" = "この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます";
 
+"url_context_menu_open" = "開く";
+"url_context_menu_copy" = "コピー";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";

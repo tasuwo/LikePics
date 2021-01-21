@@ -34,6 +34,11 @@ class ClipEditViewController: UIViewController {
                              message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                              placeholder: L10n.clipPreviewViewAlertForEditSiteUrlPlaceholder)
     )
+    private lazy var interactionHandler: URLButtonInteractionHandler = {
+        let handler = URLButtonInteractionHandler()
+        handler.baseView = view
+        return handler
+    }()
 
     // MARK: Thumbnail
 
@@ -84,6 +89,7 @@ class ClipEditViewController: UIViewController {
         self.dataSource = dataSource
         self.proxy = proxy
         self.proxy.delegate = self
+        self.proxy.interactionDelegate = interactionHandler
         self.collectionView.delegate = self
 
         self.collectionView.dragInteractionEnabled = true

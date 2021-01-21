@@ -33,6 +33,11 @@ class ClipMergeViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: ClipMergeViewLayout.DataSource!
     private var proxy: Layout.Proxy!
+    private lazy var interactionHandler: URLButtonInteractionHandler = {
+        let handler = URLButtonInteractionHandler()
+        handler.baseView = view
+        return handler
+    }()
 
     // MARK: Thumbnail
 
@@ -144,8 +149,9 @@ class ClipMergeViewController: UIViewController {
         let (dataSource, proxy) = ClipMergeViewLayout.createDataSource(collectionView: self.collectionView,
                                                                        thumbnailLoader: self.thumbnailLoader)
         self.dataSource = dataSource
-        proxy.delegate = self
         self.proxy = proxy
+        self.proxy.delegate = self
+        self.proxy.interactionDelegate = interactionHandler
 
         // Reorder settings
 

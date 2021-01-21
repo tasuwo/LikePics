@@ -86,6 +86,14 @@ extension ClipItemEditContentView {
 
         thumbnailImageView.image = configuration.thumbnail
 
+        siteUrlButton.interactions.forEach { interaction in
+            guard interaction is UIContextMenuInteraction else { return }
+            siteUrlButton.removeInteraction(interaction)
+        }
+        if let delegate = configuration.interactionDelegate {
+            siteUrlButton.addInteraction(UIContextMenuInteraction(delegate: delegate))
+        }
+
         if let siteUrl = configuration.siteUrl {
             siteUrlButton.setTitle(siteUrl.absoluteString, for: .normal)
         } else {

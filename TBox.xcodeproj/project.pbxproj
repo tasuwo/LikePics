@@ -71,6 +71,7 @@
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
 		2C1BA03724E08ABC00F96801 /* AppRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */; };
+		2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */; };
 		2C1CBAC42595B9510078FFB8 /* MultiLineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */; };
 		2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */; };
 		2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */; };
@@ -767,6 +768,7 @@
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
 		2C1BA03624E08ABC00F96801 /* AppRootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootTabBarController.swift; sourceTree = "<group>"; };
+		2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLButtonInteractionHandler.swift; sourceTree = "<group>"; };
 		2C1CBA8D2595902D0078FFB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBA9F259590350078FFB8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineButton.swift; sourceTree = "<group>"; };
@@ -1545,6 +1547,14 @@
 				2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		2C1C56C025B9B99C008271DD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		2C1E4432257B5A1900A067B1 /* ValueObject */ = {
@@ -2368,6 +2378,7 @@
 		2C810D0024E04A6600BC0FDF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2C1C56C025B9B99C008271DD /* Components */,
 				2C3CCDAD24F2C4B500FAC660 /* ClipCollection */,
 				2C1BA03324E08A0E00F96801 /* Root */,
 				2C45D3ED24EACA780045B6D3 /* Search */,
@@ -4536,6 +4547,7 @@
 				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2CFC5CF0250DA919001A02E4 /* TagCollectionViewModel.swift in Sources */,
+				2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */,
 				2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */,
 				2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */,
 				2C51A0BF25AC1FA000A79350 /* PreviewLoader.swift in Sources */,

@@ -366,6 +366,10 @@ internal enum L10n {
     internal static let topClipViewEmptyMessage = L10n.tr("Localizable", "top_clip_view_empty_message")
     /// クリップがありません
     internal static let topClipViewEmptyTitle = L10n.tr("Localizable", "top_clip_view_empty_title")
+    /// コピー
+    internal static let urlContextMenuCopy = L10n.tr("Localizable", "url_context_menu_copy")
+    /// 開く
+    internal static let urlContextMenuOpen = L10n.tr("Localizable", "url_context_menu_open")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

@@ -243,6 +243,16 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
+    public private(set) var readClipAndTagsCallCount = 0
+    public var readClipAndTagsHandler: (([Clip.Identity]) -> (Result<([Clip], [Tag]), ClipStorageError>))?
+    public func readClipAndTags(for clipIds: [Clip.Identity]) -> Result<([Clip], [Tag]), ClipStorageError> {
+        readClipAndTagsCallCount += 1
+        if let readClipAndTagsHandler = readClipAndTagsHandler {
+            return readClipAndTagsHandler(clipIds)
+        }
+        fatalError("readClipAndTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var queryClipCallCount = 0
     public var queryClipHandler: ((Clip.Identity) -> (Result<ClipQuery, ClipStorageError>))?
     public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
@@ -291,6 +301,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
             return queryUncategorizedClipsHandler()
         }
         fatalError("queryUncategorizedClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryTagsCallCount = 0
+    public var queryTagsHandler: ((Clip.Identity) -> (Result<TagListQuery, ClipStorageError>))?
+    public func queryTags(forClipHaving clipId: Clip.Identity) -> Result<TagListQuery, ClipStorageError> {
+        queryTagsCallCount += 1
+        if let queryTagsHandler = queryTagsHandler {
+            return queryTagsHandler(clipId)
+        }
+        fatalError("queryTagsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var queryClipsCallCount = 0
@@ -411,6 +431,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return readAllTagsHandler()
         }
         fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readTagsCallCount = 0
+    public var readTagsHandler: ((Clip.Identity) -> (Result<[Tag], ClipStorageError>))?
+    public func readTags(forClipHaving clipId: Clip.Identity) -> Result<[Tag], ClipStorageError> {
+        readTagsCallCount += 1
+        if let readTagsHandler = readTagsHandler {
+            return readTagsHandler(clipId)
+        }
+        fatalError("readTagsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var readClipItemsCallCount = 0

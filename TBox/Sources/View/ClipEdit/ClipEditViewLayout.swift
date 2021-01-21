@@ -124,6 +124,7 @@ extension ClipEditViewLayout {
 extension ClipEditViewLayout {
     class Proxy {
         weak var delegate: ClipEditViewDelegate?
+        weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
     static func createDataSource(collectionView: UICollectionView,
@@ -134,7 +135,7 @@ extension ClipEditViewLayout {
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
-        let itemCellRegistration = self.configureItemCell(delegate: proxy, thumbnailLoader: thumbnailLoader)
+        let itemCellRegistration = self.configureItemCell(proxy: proxy, thumbnailLoader: thumbnailLoader)
         let deleteCellRegistration = self.configureDeleteClipCell()
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -221,16 +222,17 @@ extension ClipEditViewLayout {
         }
     }
 
-    private static func configureItemCell(delegate: ClipItemEditContentDelegate,
+    private static func configureItemCell(proxy: Proxy,
                                           thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem>
     {
-        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak delegate] cell, _, item in
+        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy] cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.siteUrl
             contentConfiguration.dataSize = Int(item.dataSize)
             contentConfiguration.imageWidth = item.imageWidth
             contentConfiguration.imageHeight = item.imageHeight
-            contentConfiguration.delegate = delegate
+            contentConfiguration.delegate = proxy
+            contentConfiguration.interactionDelegate = proxy?.interactionDelegate
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
