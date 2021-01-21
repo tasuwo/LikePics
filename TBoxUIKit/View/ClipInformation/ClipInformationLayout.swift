@@ -5,100 +5,43 @@
 import Domain
 import UIKit
 
+protocol ClipInformationLayoutDelegate: AnyObject {
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell)
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell)
+    func didTapSiteUrl(_ cell: UICollectionViewCell, url: URL)
+    func didTapSiteUrlEditButton(_ cell: UICollectionViewCell, url: URL?)
+}
+
 public enum ClipInformationLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-
-    // MARK: Composition
-
-    enum ElementKind: String {
-        case layoutHeader
-        case sectionHeader
-        case sectionBackground
-    }
-
-    enum HeaderType {
-        case layout
-        case section
-
-        var identifier: String {
-            switch self {
-            case .layout:
-                return "header-layout"
-
-            case .section:
-                return "header-section"
-            }
-        }
-    }
 
     enum Section: Int {
         case tag
         case info
     }
 
-    enum ItemType {
-        case tag
-        case row
-        case empty
-
-        var identifier: String {
-            switch self {
-            case .tag:
-                return "item-tag"
-
-            case .row:
-                return "item-row"
-
-            case .empty:
-                return "item-empty"
-            }
-        }
-
-        var `class`: UICollectionViewCell.Type {
-            switch self {
-            case .tag:
-                return TagCollectionViewCell.self
-
-            case .row:
-                return ListCell.self
-
-            case .empty:
-                return TagCollectionEmptyCell.self
-            }
-        }
+    enum Item: Hashable, Equatable {
+        case tagAddition
+        case tag(Tag)
+        case meta(Info)
+        case url(UrlSetting)
     }
 
-    enum Item: Hashable, Equatable {
-        struct Cell: Equatable, Hashable {
-            enum Accessory: Equatable, Hashable {
-                case label(title: String)
-                case button(title: String)
-                case `switch`(isOn: Bool)
-            }
-
-            let id: String
-            let title: String
-            let rightAccessory: Accessory?
-            let bottomAccessory: Accessory?
-            let visibleSeparator: Bool
+    struct Info: Equatable, Hashable {
+        enum Accessory: Equatable, Hashable {
+            case label(title: String)
+            case `switch`(isOn: Bool)
         }
 
-        case tag(Tag)
-        case row(Cell)
-        case empty
+        let title: String
+        let accessory: Accessory
+    }
 
-        var type: ItemType {
-            switch self {
-            case .tag:
-                return .tag
-
-            case .row:
-                return .row
-
-            case .empty:
-                return .empty
-            }
-        }
+    struct UrlSetting: Equatable, Hashable {
+        let title: String
+        let url: URL?
+        let isEditable: Bool
     }
 
     // MARK: DataSource
@@ -114,67 +57,30 @@ public enum ClipInformationLayout {
             self.item = item
         }
     }
+}
 
-    // MARK: - Methods
+// MARK: - Layout
 
-    // MARK: Preparation
-
-    static func registerCells(to collectionView: UICollectionView) {
-        collectionView.register(ClipInformationLayoutHeader.self,
-                                forSupplementaryViewOfKind: ElementKind.layoutHeader.rawValue,
-                                withReuseIdentifier: HeaderType.layout.identifier)
-        collectionView.register(ListSectionHeader.nib,
-                                forSupplementaryViewOfKind: ElementKind.sectionHeader.rawValue,
-                                withReuseIdentifier: HeaderType.section.identifier)
-        collectionView.register(TagCollectionViewCell.nib,
-                                forCellWithReuseIdentifier: ItemType.tag.identifier)
-        collectionView.register(ListCell.nib,
-                                forCellWithReuseIdentifier: ItemType.row.identifier)
-        collectionView.register(TagCollectionEmptyCell.nib,
-                                forCellWithReuseIdentifier: ItemType.empty.identifier)
-    }
-
-    // MARK: Layout
-
+extension ClipInformationLayout {
     static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
             case .tag:
                 return self.createTagsLayoutSection()
 
             case .info:
-                return self.createRowsLayoutSection()
+                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                configuration.backgroundColor = Asset.Color.background.color
+                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .none:
                 return nil
             }
         }
-
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 12
-        config.contentInsetsReference = .layoutMargins
-
-        let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                      heightDimension: .absolute(16))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize,
-                                                                 elementKind: ElementKind.layoutHeader.rawValue,
-                                                                 alignment: .top)
-        let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize,
-                                                                 elementKind: ElementKind.layoutHeader.rawValue,
-                                                                 alignment: .bottom)
-        config.boundarySupplementaryItems = [header, footer]
-
-        layout.configuration = config
-
-        layout.register(ListSectionBackgroundDecorationView.self,
-                        forDecorationViewOfKind: ElementKind.sectionBackground.rawValue)
-
         return layout
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        // Base
-
         let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
                                               heightDimension: .estimated(32))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -186,199 +92,45 @@ public enum ClipInformationLayout {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
-
-        // Header
-
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                        elementKind: ElementKind.sectionHeader.rawValue,
-                                                                        alignment: .top)
-        section.boundarySupplementaryItems = [sectionHeader]
-        section.supplementariesFollowContentInsets = false
-
-        // Background
-
-        let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(
-            elementKind: ElementKind.sectionBackground.rawValue
-        )
-        section.decorationItems = [sectionBackgroundDecoration]
+        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
 
         return section
     }
+}
 
-    private static func createRowsLayoutSection() -> NSCollectionLayoutSection {
-        // Base
+// MARK: - Snapshot
 
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
-                                              heightDimension: .estimated(44))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(44))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-
-        // Header
-
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                        elementKind: ElementKind.sectionHeader.rawValue,
-                                                                        alignment: .top)
-        section.boundarySupplementaryItems = [sectionHeader]
-
-        // Background
-
-        let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(
-            elementKind: ElementKind.sectionBackground.rawValue
-        )
-        section.decorationItems = [sectionBackgroundDecoration]
-
-        return section
+extension ClipInformationLayout {
+    static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.tag])
+        snapshot.appendItems([.tagAddition] + info.tags.map { .tag($0) })
+        snapshot.appendSections([.info])
+        snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
+        return snapshot
     }
 
-    // MARK: DataSource
+    private static func createCells(for clipItem: ClipItem, clip: Clip) -> [Item] {
+        var items: [Item] = []
 
-    static func makeDataSource(for collectionView: UICollectionView,
-                               infoCellDelegate: ListCellDelegate?,
-                               tagCellDelegate: TagCollectionViewCellDelegate?,
-                               sectionHeaderDelegate: ListSectionHeaderDelegate?) -> DataSource
-    {
-        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak tagCellDelegate, weak infoCellDelegate] collectionView, indexPath, item -> UICollectionViewCell? in
-            switch Section(rawValue: indexPath.section) {
-            case .tag:
-                return self.tagsSectionCellProvider(delegate: tagCellDelegate)(collectionView, indexPath, item)
+        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
+                                url: clipItem.imageUrl,
+                                isEditable: false)))
+        items.append(.url(.init(title: L10n.clipInformationViewLabelClipUrl,
+                                url: clipItem.url,
+                                isEditable: true)))
 
-            case .info:
-                return self.infoSectionCellProvider(delegate: infoCellDelegate)(collectionView, indexPath, item)
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemSize,
+                                 accessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
+                                                                                    countStyle: .binary)))))
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
+                                 accessory: .switch(isOn: clip.isHidden))))
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+                                 accessory: .label(title: self.format(clipItem.registeredDate)))))
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+                                 accessory: .label(title: self.format(clipItem.updatedDate)))))
 
-            case .none:
-                return nil
-            }
-        }
-
-        dataSource.supplementaryViewProvider = self.headerProvider(delegate: sectionHeaderDelegate)
-
-        return dataSource
-    }
-
-    private static func tagsSectionCellProvider(delegate: TagCollectionViewCellDelegate?) -> DataSource.CellProvider {
-        return { [weak delegate] collectionView, indexPath, item -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
-                                                                  for: indexPath)
-
-            switch item.type {
-            case .empty:
-                guard let cell = dequeuedCell as? TagCollectionEmptyCell else { return dequeuedCell }
-                guard case .empty = item else { return cell }
-                cell.message = L10n.clipInformationViewLabelEmpty
-                return cell
-
-            case .tag:
-                guard let cell = dequeuedCell as? TagCollectionViewCell else { return dequeuedCell }
-                guard case let .tag(tag) = item else { return cell }
-                cell.title = tag.name
-                cell.displayMode = .normal
-                cell.visibleDeleteButton = true
-                cell.delegate = delegate
-                cell.isHiddenTag = tag.isHidden
-
-                return cell
-
-            default:
-                return nil
-            }
-        }
-    }
-
-    private static func infoSectionCellProvider(delegate: ListCellDelegate?) -> DataSource.CellProvider {
-        return { [weak delegate] collectionView, indexPath, item -> UICollectionViewCell? in
-            let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: item.type.identifier,
-                                                                  for: indexPath)
-            guard let cell = dequeuedCell as? ListCell else { return dequeuedCell }
-            guard case let .row(info) = item else { return cell }
-
-            cell.title = info.title
-            cell.delegate = delegate
-
-            switch info.rightAccessory {
-            case let .label(title: title):
-                cell.rightAccessoryType = .label(title: title)
-
-            case let .switch(isOn: isOn):
-                cell.rightAccessoryType = .switch(isOn: isOn)
-
-            case let .button(title: title):
-                cell.rightAccessoryType = .button(title: title)
-
-            default:
-                cell.rightAccessoryType = nil
-            }
-
-            switch info.bottomAccessory {
-            case let .button(title: title):
-                cell.bottomAccessoryType = .button(title: title)
-
-            case let .label(title: title):
-                cell.bottomAccessoryType = .label(title: title)
-
-            default:
-                cell.bottomAccessoryType = nil
-            }
-
-            cell.visibleSeparator = info.visibleSeparator
-
-            return cell
-        }
-    }
-
-    private static func headerProvider(delegate: ListSectionHeaderDelegate?) -> UICollectionViewDiffableDataSource<Section, Item>.SupplementaryViewProvider {
-        return { [weak delegate] collectionView, kind, indexPath -> UICollectionReusableView? in
-            let identifier: String
-            switch ElementKind(rawValue: kind) {
-            case .layoutHeader:
-                identifier = HeaderType.layout.identifier
-
-            case .sectionHeader:
-                identifier = HeaderType.section.identifier
-
-            case .sectionBackground, .none:
-                return nil
-            }
-
-            let dequeuedHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath)
-
-            guard ElementKind(rawValue: kind) != .layoutHeader else {
-                return dequeuedHeader
-            }
-
-            guard let header = dequeuedHeader as? ListSectionHeader else {
-                return nil
-            }
-
-            header.delegate = delegate
-
-            switch Section(rawValue: indexPath.section) {
-            case .tag:
-                header.identifier = "\(Section.tag.rawValue)"
-                header.title = L10n.clipInformationViewSectionLabelTag
-                header.visibleAddButton = true
-
-            case .info:
-                header.identifier = "\(Section.info.rawValue)"
-                header.title = L10n.clipInformationViewSectionLabelClipItem
-                header.visibleAddButton = false
-
-            case .none:
-                return nil
-            }
-
-            return header
-        }
+        return items
     }
 
     private static func format(_ date: Date) -> String {
@@ -388,77 +140,146 @@ public enum ClipInformationLayout {
         formatter.locale = Locale.current
         return formatter.string(from: date)
     }
+}
 
-    // MARK: Snapshot
+// MARK: - DataSource
 
-    static func makeSnapshot(for info: Information) -> NSDiffableDataSourceSnapshot<Section, Item> {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.tag])
-        if info.tags.isEmpty {
-            snapshot.appendItems([.empty])
-        } else {
-            snapshot.appendItems(info.tags.map { .tag($0) })
-        }
-        snapshot.appendSections([.info])
-        snapshot.appendItems(self.createCells(for: info.item, clip: info.clip))
-        return snapshot
+extension ClipInformationLayout {
+    class Proxy: NSObject {
+        weak var delegate: ClipInformationLayoutDelegate?
+        weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
-    // MARK: Privates
+    static func makeDataSource(for collectionView: UICollectionView) -> (DataSource, Proxy) {
+        let proxy = Proxy()
 
-    private static func createCells(for clipItem: ClipItem, clip: Clip) -> [Item] {
-        var items: [Item.Cell] = []
+        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
+        let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let metaCellRegistration = self.configureMetaCell(proxy: proxy)
+        let urlCellRegistration = self.configureUrlCell(proxy: proxy)
 
-        if let imageUrl = clipItem.imageUrl {
-            items.append(Item.Cell(id: "imageUrl",
-                                   title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightAccessory: nil,
-                                   bottomAccessory: .button(title: imageUrl.absoluteString),
-                                   visibleSeparator: false))
-        } else {
-            items.append(Item.Cell(id: "imageUrl",
-                                   title: L10n.clipInformationViewLabelClipItemUrl,
-                                   rightAccessory: nil,
-                                   bottomAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
-                                   visibleSeparator: false))
+        let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
+            switch item {
+            case .tagAddition:
+                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
+
+            case let .tag(tag):
+                return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
+
+            case let .meta(meta):
+                return collectionView.dequeueConfiguredReusableCell(using: metaCellRegistration, for: indexPath, item: meta)
+
+            case let .url(setting):
+                return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: setting)
+            }
         }
+        return (dataSource, proxy)
+    }
 
-        if let siteUrl = clipItem.url {
-            items.append(Item.Cell(id: "siteUrl",
-                                   title: L10n.clipInformationViewLabelClipUrl,
-                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipEditUrl),
-                                   bottomAccessory: .button(title: siteUrl.absoluteString),
-                                   visibleSeparator: true))
-        } else {
-            items.append(Item.Cell(id: "siteUrl",
-                                   title: L10n.clipInformationViewLabelClipUrl,
-                                   rightAccessory: .button(title: L10n.clipInformationViewLabelClipEditUrl),
-                                   bottomAccessory: .label(title: L10n.clipInformationViewLabelClipItemNoUrl),
-                                   visibleSeparator: true))
+    private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
+        return UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak delegate] cell, _, _ in
+            cell.title = L10n.clipInformationViewLabelTagAddition
+            cell.delegate = delegate
         }
+    }
 
-        return (items + [
-            Item.Cell(id: "size",
-                      title: L10n.clipInformationViewLabelClipItemSize,
-                      rightAccessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
-                                                                              countStyle: .binary)),
-                      bottomAccessory: nil,
-                      visibleSeparator: true),
-            Item.Cell(id: "hidden",
-                      title: L10n.clipInformationViewLabelClipHide,
-                      rightAccessory: .switch(isOn: clip.isHidden),
-                      bottomAccessory: nil,
-                      visibleSeparator: true),
-            Item.Cell(id: "registeredDate",
-                      title: L10n.clipInformationViewLabelClipItemRegisteredDate,
-                      rightAccessory: .label(title: self.format(clipItem.registeredDate)),
-                      bottomAccessory: nil,
-                      visibleSeparator: true),
-            Item.Cell(id: "updatedDate",
-                      title: L10n.clipInformationViewLabelClipItemUpdatedDate,
-                      rightAccessory: .label(title: self.format(clipItem.updatedDate)),
-                      bottomAccessory: nil,
-                      visibleSeparator: true)
-        ]).map { .row($0) }
+    private static func configureTagCell(delegate: TagCollectionViewCellDelegate) -> UICollectionView.CellRegistration<TagCollectionViewCell, Tag> {
+        return UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak delegate] cell, _, tag in
+            cell.title = tag.name
+            cell.displayMode = .normal
+            cell.visibleCountIfPossible = false
+            cell.visibleDeleteButton = true
+            cell.delegate = delegate
+            cell.isHiddenTag = tag.isHidden
+        }
+    }
+
+    private static func configureMetaCell(proxy: Proxy) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
+            var contentConfiguration = UIListContentConfiguration.valueCell()
+            contentConfiguration.text = info.title
+            cell.contentConfiguration = contentConfiguration
+
+            switch info.accessory {
+            case let .label(title: title):
+                cell.accessories = [.label(text: title)]
+
+            case let .switch(isOn: isOn):
+                // swiftlint:disable:next identifier_name
+                let sw = UISwitch()
+                sw.isOn = isOn
+                sw.addAction(.init(handler: { [weak proxy] action in
+                    // swiftlint:disable:next identifier_name
+                    guard let sw = action.sender as? UISwitch else { return }
+                    proxy?.delegate?.didSwitchHiding(cell, at: indexPath, isOn: sw.isOn)
+                }), for: .touchUpInside)
+                let configuration = UICellAccessory.CustomViewConfiguration(customView: sw, placement: .trailing(displayed: .always))
+                cell.accessories = [.customView(configuration: configuration)]
+            }
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = .systemBackground
+            cell.backgroundConfiguration = backgroundConfiguration
+        }
+    }
+
+    private static func configureUrlCell(proxy: Proxy) -> UICollectionView.CellRegistration<ListCell, UrlSetting> {
+        return UICollectionView.CellRegistration<ListCell, UrlSetting>(cellNib: ListCell.nib) { cell, _, setting in
+            cell.backgroundColor = .systemBackground
+
+            cell.title = setting.title
+            cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipEditUrl) : nil
+
+            if let url = setting.url {
+                cell.bottomAccessoryType = .button(title: url.absoluteString)
+            } else {
+                cell.bottomAccessoryType = .label(title: L10n.clipInformationViewLabelClipItemNoUrl)
+            }
+
+            cell.delegate = proxy
+            cell.interactionDelegate = proxy.interactionDelegate
+        }
+    }
+}
+
+// MARK: - Proxy DataSource Delegate
+
+extension ClipInformationLayout.Proxy: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
+
+    func didTap(_ cell: ButtonCell) {
+        self.delegate?.didTapTagAdditionButton(cell)
+    }
+}
+
+extension ClipInformationLayout.Proxy: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        self.delegate?.didTapTagDeletionButton(cell)
+    }
+}
+
+extension ClipInformationLayout.Proxy: ListCellDelegate {
+    // MARK: - ListCellDelegate
+
+    func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch) {
+        // NOP
+    }
+
+    func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton) {
+        let url: URL? = {
+            if case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) {
+                return url
+            } else {
+                return nil
+            }
+        }()
+        self.delegate?.didTapSiteUrlEditButton(cell, url: url)
+    }
+
+    func listCell(_ cell: ListCell, didTapBottomAccessory button: UIButton) {
+        guard case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) else { return }
+        self.delegate?.didTapSiteUrl(cell, url: url)
     }
 }

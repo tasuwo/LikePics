@@ -4,7 +4,7 @@
 
 import UIKit
 
-public protocol ListCellDelegate: UIContextMenuInteractionDelegate {
+public protocol ListCellDelegate: AnyObject {
     func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch)
     func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton)
     func listCell(_ cell: ListCell, didTapBottomAccessory button: UIButton)
@@ -47,19 +47,16 @@ public class ListCell: UICollectionViewCell {
         }
     }
 
-    public var visibleSeparator: Bool {
-        get {
-            return !self.separator.isHidden
-        }
-        set {
-            self.separator.isHidden = !newValue
-        }
-    }
-
-    public weak var delegate: ListCellDelegate? {
+    public weak var delegate: ListCellDelegate?
+    public weak var interactionDelegate: UIContextMenuInteractionDelegate? {
         didSet {
-            guard let delegate = self.delegate else { return }
-            self.bottomAccessoryButton.addInteraction(UIContextMenuInteraction(delegate: delegate))
+            bottomAccessoryButton.interactions.forEach { interaction in
+                guard interaction is UIContextMenuInteraction else { return }
+                bottomAccessoryButton.removeInteraction(interaction)
+            }
+            if let delegate = interactionDelegate {
+                bottomAccessoryButton.addInteraction(UIContextMenuInteraction(delegate: delegate))
+            }
         }
     }
 
@@ -69,7 +66,6 @@ public class ListCell: UICollectionViewCell {
     @IBOutlet private var rightAccessorySwitch: UISwitch!
     @IBOutlet private var bottomAccessoryButton: MultiLineButton!
     @IBOutlet private var bottomAccessoryLabel: UILabel!
-    @IBOutlet private var separator: UIView!
 
     // MARK: - Lifecycle
 
@@ -96,8 +92,6 @@ public class ListCell: UICollectionViewCell {
     // MARK: - Methods
 
     private func setupAppearance() {
-        self.separator.backgroundColor = .separator
-
         [
             self.titleLabel,
             self.rightAccessoryLabel,

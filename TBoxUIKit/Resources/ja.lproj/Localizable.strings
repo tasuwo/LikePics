@@ -20,7 +20,7 @@
 "clip_information_view_label_clip_hide" = "隠す";
 "clip_information_view_label_clip_registered_date" = "登録日";
 "clip_information_view_label_clip_updated_date" = "更新日";
-"clip_information_view_label_empty" = "タグは登録されていません";
+"clip_information_view_label_tag_addition" = "タグを追加する";
 
 "clip_information_view_label_clip_item_url" = "画像のURL";
 "clip_information_view_label_clip_item_no_url" = "なし";

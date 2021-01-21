@@ -20,7 +20,7 @@
 "clip_information_view_label_clip_hide" = "Hidden";
 "clip_information_view_label_clip_registered_date" = "Created";
 "clip_information_view_label_clip_updated_date" = "Modified";
-"clip_information_view_label_empty" = "No Tags";
+"clip_information_view_label_tag_addition" = "Add Tags";
 
 "clip_information_view_label_clip_item_url" = "Image URL";
 "clip_information_view_label_clip_item_no_url" = "No URL";

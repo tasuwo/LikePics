@@ -80,21 +80,11 @@
                             <constraint firstItem="2Wp-nK-Gm4" firstAttribute="leading" secondItem="Rp7-v4-EsN" secondAttribute="leading" id="v8O-k7-Rea"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7D5-Ab-yu5" userLabel="Separator">
-                        <rect key="frame" x="20" y="0.0" width="360" height="0.5"/>
-                        <color key="backgroundColor" systemColor="separatorColor"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="0.5" id="Kz7-RJ-ULC"/>
-                        </constraints>
-                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="7D5-Ab-yu5" firstAttribute="leading" secondItem="HKQ-ua-NAJ" secondAttribute="leading" constant="20" id="8d9-Bl-v7c"/>
                     <constraint firstItem="Rp7-v4-EsN" firstAttribute="top" secondItem="HKQ-ua-NAJ" secondAttribute="top" constant="10" id="As9-LR-yZc"/>
-                    <constraint firstAttribute="trailing" secondItem="7D5-Ab-yu5" secondAttribute="trailing" id="Dzq-r8-4uE"/>
                     <constraint firstAttribute="trailing" secondItem="Rp7-v4-EsN" secondAttribute="trailing" constant="20" id="Oge-0I-xMC"/>
                     <constraint firstItem="Rp7-v4-EsN" firstAttribute="leading" secondItem="HKQ-ua-NAJ" secondAttribute="leading" constant="20" id="RYO-Q0-r5e"/>
-                    <constraint firstItem="7D5-Ab-yu5" firstAttribute="top" secondItem="HKQ-ua-NAJ" secondAttribute="top" id="VVP-WJ-6l5"/>
                     <constraint firstAttribute="bottom" secondItem="Rp7-v4-EsN" secondAttribute="bottom" constant="10" id="aDg-g0-LQG"/>
                 </constraints>
                 <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
@@ -106,7 +96,6 @@
                 <outlet property="rightAccessoryButton" destination="DFc-je-sK7" id="uJj-FE-kQy"/>
                 <outlet property="rightAccessoryLabel" destination="ikk-Fz-cDB" id="zF7-Od-OEM"/>
                 <outlet property="rightAccessorySwitch" destination="cjm-Yj-HHA" id="JvV-oD-cPK"/>
-                <outlet property="separator" destination="7D5-Ab-yu5" id="f3A-NJ-AMu"/>
                 <outlet property="titleLabel" destination="Oh4-Z7-uQP" id="paa-jZ-LwZ"/>
             </connections>
             <point key="canvasLocation" x="-297.10144927536237" y="131.58482142857142"/>
@@ -115,9 +104,6 @@
     <resources>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="separatorColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

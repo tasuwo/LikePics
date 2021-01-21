@@ -8,6 +8,7 @@ import WebKit
 
 public class ClipInformationView: UIView {
     public typealias Factory = ClipInformationLayout
+    typealias Layout = ClipInformationLayout
 
     public static let topImageHeight: CGFloat = 80
 
@@ -42,6 +43,7 @@ public class ClipInformationView: UIView {
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var collectionView: UICollectionView!
+    private var proxy: Layout.Proxy!
 
     // MARK: - Lifecycle
 
@@ -96,12 +98,14 @@ public class ClipInformationView: UIView {
         self.collectionView.collectionViewLayout = Factory.createLayout()
         self.collectionView.contentInset = .init(top: Self.topImageHeight, left: 0, bottom: 0, right: 0)
         self.collectionView.layoutMargins = .init(top: 0, left: 18, bottom: 0, right: 18)
-        Factory.registerCells(to: self.collectionView)
         self.collectionView.delegate = self
-        self.collectionViewDataSource = Factory.makeDataSource(for: self.collectionView,
-                                                               infoCellDelegate: self,
-                                                               tagCellDelegate: self,
-                                                               sectionHeaderDelegate: self)
+
+        let (dataSource, proxy) = Factory.makeDataSource(for: collectionView)
+
+        self.collectionViewDataSource = dataSource
+        self.proxy = proxy
+        self.proxy.delegate = self
+        self.proxy.interactionDelegate = self
     }
 
     // MARK: Image View
@@ -161,7 +165,7 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
     }
 
     private func makeActionProvider(for url: URL) -> UIContextMenuActionProvider {
-        let open = UIAction(title: L10n.clipInformationViewContextMenuOpen, image: UIImage(systemName: "square.and.arrow.up.fill")) { _ in
+        let open = UIAction(title: L10n.clipInformationViewContextMenuOpen, image: UIImage(systemName: "globe")) { _ in
             self.delegate?.clipInformationView(self, shouldOpen: url)
         }
         let copy = UIAction(title: L10n.clipInformationViewContextMenuCopy, image: UIImage(systemName: "square.on.square.fill")) { _ in
@@ -171,59 +175,30 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
     }
 }
 
-extension ClipInformationView: ListSectionHeaderDelegate {
-    // MARK: - ListSectionHeaderDelegate
+extension ClipInformationView: ClipInformationLayoutDelegate {
+    // MARK: - ClipInformationLayoutDelegate
 
-    public func didTapAdd(_ header: ListSectionHeader) {
-        guard let identifier = header.identifier,
-            let number = Int(identifier),
-            let section = Factory.Section(rawValue: number),
-            case .tag = section
-        else {
-            return
-        }
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        self.delegate?.clipInformationView(self, shouldHide: isOn)
+    }
+
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         self.delegate?.didTapAddTagButton(self)
     }
-}
 
-extension ClipInformationView: TagCollectionViewCellDelegate {
-    // MARK: - TagCollectionViewCellDelegate
-
-    public func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
-        switch item {
-        case let .tag(value):
-            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            self.delegate?.clipInformationView(self, didSelectTag: value, at: cell)
-
-        case .row, .empty:
-            break
-        }
+            case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+        self.delegate?.clipInformationView(self, didSelectTag: tag, at: cell)
     }
-}
 
-extension ClipInformationView: ListCellDelegate {
-    // MARK: - ListCellDelegate
-
-    public func listCell(_ cell: ListCell, didTapBottomAccessory button: UIButton) {
-        guard case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) else { return }
+    func didTapSiteUrl(_ cell: UICollectionViewCell, url: URL) {
         self.delegate?.clipInformationView(self, shouldOpen: url)
     }
 
-    public func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton) {
-        let url: URL? = {
-            if case let .button(title: title) = cell.bottomAccessoryType, let url = URL(string: title) {
-                return url
-            } else {
-                return nil
-            }
-        }()
+    func didTapSiteUrlEditButton(_ cell: UICollectionViewCell, url: URL?) {
         self.delegate?.clipInformationView(self, startEditingSiteUrl: url)
-    }
-
-    public func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch) {
-        self.delegate?.clipInformationView(self, shouldHide: `switch`.isOn)
     }
 }
 
