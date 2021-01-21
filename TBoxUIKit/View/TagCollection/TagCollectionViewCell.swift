@@ -144,7 +144,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
                 : .white
 
         default:
-            self.contentView.backgroundColor = UIColor.systemBackground
+            self.contentView.backgroundColor = Asset.Color.secondaryBackground.color
             self.layer.borderWidth = 1
 
             self.hiddenIconContainer.isHidden = isHiddenTag ? false : true

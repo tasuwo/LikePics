@@ -75,7 +75,7 @@ extension ClipMergeViewLayout {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.contentInsets = .init(top: 30, leading: 20, bottom: 10, trailing: 20)
 
         return section
     }
@@ -160,7 +160,7 @@ extension ClipMergeViewLayout {
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = .systemBackground
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
             cell.backgroundConfiguration = backgroundConfiguration
 
             cell.accessories = [.reorder(displayed: .always)]

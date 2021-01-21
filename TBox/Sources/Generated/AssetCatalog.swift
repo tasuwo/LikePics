@@ -23,6 +23,7 @@ internal enum Asset {
         internal static let backgroundClient = ColorAsset(name: "background_client")
         internal static let likePicsRedClient = ColorAsset(name: "like_pics_red_client")
         internal static let likePicsSwitchClient = ColorAsset(name: "like_pics_switch_client")
+        internal static let secondaryBackgroundClient = ColorAsset(name: "secondary_background_client")
     }
 }
 

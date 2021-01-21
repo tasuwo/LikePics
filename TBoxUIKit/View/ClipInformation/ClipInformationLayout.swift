@@ -92,7 +92,7 @@ extension ClipInformationLayout {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+        section.contentInsets = .init(top: 30, leading: 20, bottom: 10, trailing: 20)
 
         return section
     }
@@ -218,14 +218,14 @@ extension ClipInformationLayout {
             }
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = .systemBackground
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 
     private static func configureUrlCell(proxy: Proxy) -> UICollectionView.CellRegistration<ListCell, UrlSetting> {
         return UICollectionView.CellRegistration<ListCell, UrlSetting>(cellNib: ListCell.nib) { cell, _, setting in
-            cell.backgroundColor = .systemBackground
+            cell.backgroundColor = Asset.Color.secondaryBackground.color
 
             cell.title = setting.title
             cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipEditUrl) : nil
