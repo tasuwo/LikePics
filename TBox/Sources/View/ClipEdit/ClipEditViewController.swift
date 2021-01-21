@@ -124,11 +124,11 @@ extension ClipEditViewController {
 
         dependency.outputs.applyDeletions
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] items in
+            .sink { [weak self] items, completion in
                 guard let self = self else { return }
                 var snapshot = self.dataSource.snapshot()
                 snapshot.deleteItems(items)
-                self.dataSource.apply(snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: true, completion: completion)
             }
             .store(in: &subscriptions)
 
@@ -235,7 +235,7 @@ extension ClipEditViewController: ClipEditViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive,
                                               title: L10n.clipEditViewDeleteClipItemTitle) { [weak self] _, _, completion in
             guard let self = self else { completion(false); return }
-            completion(self.viewModel.inputs.delete(itemAt: indexPath.row))
+            self.viewModel.inputs.delete(itemAt: indexPath.row, completion: completion)
         }
 
         return UISwipeActionsConfiguration(actions: [deleteAction])

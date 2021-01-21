@@ -17,7 +17,7 @@ protocol ClipEditViewModelInputs {
     func revealClip()
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>)
     func removeTagFromClip(_ tagId: Tag.Identity)
-    func delete(itemAt index: Int) -> Bool
+    func delete(itemAt index: Int, completion: @escaping (Bool) -> Void)
     func update(isHidden: Bool)
     func update(siteUrl: URL?, forItem: ClipItem.Identity)
     func reordered(_ snapshot: ClipEditViewLayout.Snapshot)
@@ -26,7 +26,7 @@ protocol ClipEditViewModelInputs {
 
 protocol ClipEditViewModelOutputs {
     var applySnapshot: AnyPublisher<ClipEditViewLayout.Snapshot, Never> { get }
-    var applyDeletions: PassthroughSubject<[ClipEditViewLayout.Item], Never> { get }
+    var applyDeletions: PassthroughSubject<([ClipEditViewLayout.Item], () -> Void), Never> { get }
 
     var tags: [Tag] { get }
     var isItemDeletable: Bool { get }
@@ -51,7 +51,7 @@ class ClipEditViewModel: ClipEditViewModelType,
     // MARK: ClipEditViewModelOutputs
 
     var applySnapshot: AnyPublisher<Layout.Snapshot, Never> { _snapshot.eraseToAnyPublisher() }
-    let applyDeletions: PassthroughSubject<[Layout.Item], Never> = .init()
+    var applyDeletions: PassthroughSubject<([ClipEditViewLayout.Item], () -> Void), Never> = .init()
 
     var tags: [Tag] { _tags }
     var isItemDeletable: Bool { _items.count > 1 }
@@ -265,8 +265,11 @@ extension ClipEditViewModel {
         }
     }
 
-    func delete(itemAt index: Int) -> Bool {
-        guard _items.indices.contains(index) else { return false }
+    func delete(itemAt index: Int, completion: @escaping (Bool) -> Void) {
+        guard _items.indices.contains(index) else {
+            completion(false)
+            return
+        }
 
         let snapshot = _items
         let removingItem = _items.remove(at: index)
@@ -274,13 +277,14 @@ extension ClipEditViewModel {
         guard case .success = commandService.deleteClipItem(removingItem) else {
             displayErrorMessage.send(L10n.failedToUpdateClip)
             _items = snapshot
-            return false
+            completion(false)
+            return
         }
 
         let removedItem = removingItem.converted()
-        applyDeletions.send([.clipItem(removedItem)])
+        applyDeletions.send(([.clipItem(removedItem)], { completion(true) }))
 
-        return true
+        return
     }
 
     func update(isHidden: Bool) {
