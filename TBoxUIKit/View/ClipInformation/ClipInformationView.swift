@@ -96,8 +96,7 @@ public class ClipInformationView: UIView {
 
     private func setupCollectionView() {
         self.collectionView.collectionViewLayout = Factory.createLayout()
-        self.collectionView.contentInset = .init(top: Self.topImageHeight, left: 0, bottom: 0, right: 0)
-        self.collectionView.layoutMargins = .init(top: 0, left: 18, bottom: 0, right: 18)
+        self.collectionView.contentInset = .init(top: Self.topImageHeight + self.safeAreaInsets.top, left: 0, bottom: 0, right: 0)
         self.collectionView.delegate = self
 
         let (dataSource, proxy) = Factory.makeDataSource(for: collectionView)
