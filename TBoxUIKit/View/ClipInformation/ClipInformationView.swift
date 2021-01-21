@@ -65,6 +65,8 @@ public class ClipInformationView: UIView {
 
     override public func layoutSubviews() {
         super.layoutSubviews()
+
+        // HACK: 描画直後にズレが生じるケースがあるので、再調整をかける
         self.updateImageViewFrame()
 
         // HACK: 複数行あるセルの描画が少しずれるため、再描画をかける
@@ -109,16 +111,23 @@ public class ClipInformationView: UIView {
 
     // MARK: Image View
 
+    public func updateImageViewFrame(for size: CGSize) {
+        self.imageView.frame = self.calcInitialFrame(for: size)
+    }
+
+    public func calcInitialFrame() -> CGRect {
+        guard let dataSource = self.dataSource else { return .zero }
+        let bounds = dataSource.previewPageBounds(self)
+        return self.calcInitialFrame(for: bounds.size)
+    }
+
     private func updateImageViewFrame() {
         self.imageView.frame = self.calcInitialFrame()
     }
 
-    public func calcInitialFrame() -> CGRect {
-        guard let dataSource = self.dataSource, let image = dataSource.previewImage(self) else {
-            return .zero
-        }
-        let bounds = dataSource.previewPageBounds(self)
-        let scale = ClipPreviewView.calcScaleScaleToFit(forSize: image.size, fittingIn: bounds.size)
+    private func calcInitialFrame(for size: CGSize) -> CGRect {
+        guard let dataSource = self.dataSource, let image = dataSource.previewImage(self) else { return .zero }
+        let scale = ClipPreviewView.calcScaleScaleToFit(forSize: image.size, fittingIn: size)
         let resizedImageSize = image.size.scaled(by: scale)
         return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
                                     y: -resizedImageSize.height + self.safeAreaInsets.top + Self.topImageHeight),

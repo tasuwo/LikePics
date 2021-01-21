@@ -86,6 +86,16 @@ class ClipInformationViewController: UIViewController {
         self.setNeedsStatusBarAppearanceUpdate()
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate { _ in
+            self.informationView.updateImageViewFrame(for: size)
+        } completion: { _ in
+            // NOP
+        }
+    }
+
     // MARK: - Methods
 
     private func setupAppearance() {
