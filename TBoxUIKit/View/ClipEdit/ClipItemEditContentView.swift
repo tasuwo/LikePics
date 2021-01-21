@@ -95,8 +95,10 @@ extension ClipItemEditContentView {
         }
 
         if let siteUrl = configuration.siteUrl {
+            siteUrlButton.isEnabled = true
             siteUrlButton.setTitle(siteUrl.absoluteString, for: .normal)
         } else {
+            siteUrlButton.isEnabled = false
             siteUrlButton.setTitle(L10n.clipItemEditContentViewSiteUrlEmpty, for: .disabled)
         }
         siteUrlEditButton.isHidden = !configuration.isSiteUrlEditable
