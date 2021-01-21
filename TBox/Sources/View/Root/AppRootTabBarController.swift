@@ -77,7 +77,7 @@ class AppRootTabBarController: UITabBarController {
             .store(in: &self.subscriptions)
 
         dependency.outputs.isLoading
-            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 if isLoading {
