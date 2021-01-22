@@ -82,6 +82,7 @@ class ClipEditViewController: UIViewController {
                                                collectionViewLayout: Layout.createLayout(delegate: self))
         self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.collectionView.backgroundColor = Asset.Color.backgroundClient.color
+        self.collectionView.allowsMultipleSelectionDuringEditing = true
 
         self.view.addSubview(collectionView)
 
@@ -93,7 +94,9 @@ class ClipEditViewController: UIViewController {
         self.collectionView.delegate = self
 
         self.collectionView.dragInteractionEnabled = true
-        self.dataSource.reorderingHandlers.canReorderItem = { $0.canReorder }
+        self.dataSource.reorderingHandlers.canReorderItem = { [weak self] item in
+            item.canReorder && self?.collectionView.isEditing == false
+        }
         self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             self?.viewModel.inputs.reordered(transaction.finalSnapshot)
         }
@@ -120,6 +123,11 @@ extension ClipEditViewController {
         dependency.outputs.applySnapshot
             .receive(on: DispatchQueue.main)
             .sink { [weak self] snapshot in self?.dataSource.apply(snapshot) }
+            .store(in: &subscriptions)
+
+        dependency.outputs.applySnapshot
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.collectionView.isEditing = false }
             .store(in: &subscriptions)
 
         dependency.outputs.applyDeletions
@@ -164,9 +172,17 @@ extension ClipEditViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard let item = dataSource.itemIdentifier(for: indexPath),
-            case .deleteClip = item else { return false }
-        return true
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return false }
+        switch item {
+        case .deleteClip:
+            return true
+
+        case .clipItem where collectionView.isEditing:
+            return true
+
+        default:
+            return false
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -279,7 +295,36 @@ extension ClipEditViewController: ClipEditViewDelegate {
             return text.isEmpty || URL(string: text) != nil
         } completion: { [weak self] action in
             guard case let .saved(text: text) = action else { return }
-            self?.viewModel.inputs.update(siteUrl: URL(string: text), forItem: clipItem.itemId)
+            self?.viewModel.inputs.update(siteUrl: URL(string: text), forItems: [clipItem.itemId])
+        }
+    }
+
+    func didTapSelectionButton() {
+        self.collectionView.isEditing = true
+        self.collectionView.dragInteractionEnabled = false
+    }
+
+    func didTapCancelSelectionButton() {
+        self.collectionView.isEditing = false
+        self.collectionView.dragInteractionEnabled = true
+    }
+
+    func didTapEditSiteUrlsForSelectionButton() {
+        let itemIds = collectionView.indexPathsForSelectedItems?
+            .map { dataSource.itemIdentifier(for: $0) }
+            .compactMap { item -> Layout.ClipItem? in
+                guard case let .clipItem(item) = item else { return nil }
+                return item
+            }
+            .map { $0.itemId } ?? []
+        guard !itemIds.isEmpty else { return }
+
+        self.editSiteUrlAlertContainer.present(withText: nil, on: self) {
+            guard let text = $0 else { return true }
+            return text.isEmpty || URL(string: text) != nil
+        } completion: { [weak self] action in
+            guard case let .saved(text: text) = action else { return }
+            self?.viewModel.inputs.update(siteUrl: URL(string: text), forItems: itemIds)
         }
     }
 }

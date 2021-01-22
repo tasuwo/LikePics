@@ -137,6 +137,12 @@ internal enum L10n {
     internal static let clipEditViewDeleteClipTitle = L10n.tr("Localizable", "clip_edit_view_delete_clip_title")
     /// 隠す
     internal static let clipEditViewHiddenTitle = L10n.tr("Localizable", "clip_edit_view_hidden_title")
+    /// キャンセル
+    internal static let clipEditViewMultiselectCancel = L10n.tr("Localizable", "clip_edit_view_multiselect_cancel")
+    /// サイトURLを編集
+    internal static let clipEditViewMultiselectEditUrl = L10n.tr("Localizable", "clip_edit_view_multiselect_edit_url")
+    /// 選択
+    internal static let clipEditViewMultiselectSelect = L10n.tr("Localizable", "clip_edit_view_multiselect_select")
     /// クリップを編集
     internal static let clipEditViewTitle = L10n.tr("Localizable", "clip_edit_view_title")
     /// 画像の読み込みに失敗しました

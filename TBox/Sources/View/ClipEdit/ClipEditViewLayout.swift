@@ -14,6 +14,9 @@ protocol ClipEditViewDelegate: AnyObject {
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
     func didTapSiteUrl(_ sender: UIView, url: URL?)
     func didTapSiteUrlEditButton(_ sender: UIView, url: URL?)
+    func didTapSelectionButton()
+    func didTapCancelSelectionButton()
+    func didTapEditSiteUrlsForSelectionButton()
 }
 
 enum ClipEditViewLayout {
@@ -82,12 +85,7 @@ extension ClipEditViewLayout {
                 return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .clipItem:
-                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                configuration.backgroundColor = Asset.Color.backgroundClient.color
-                configuration.trailingSwipeActionsConfigurationProvider = { [weak delegate] indexPath in
-                    return delegate?.trailingSwipeAction(indexPath: indexPath)
-                }
-                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+                return self.createItemLayoutSection(delegate: delegate, environment: environment)
 
             case .footer:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -116,6 +114,28 @@ extension ClipEditViewLayout {
         section.contentInsets = .init(top: 30, leading: 20, bottom: 10, trailing: 20)
 
         return section
+    }
+
+    private static func createItemLayoutSection(delegate: ClipEditViewDelegate, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        configuration.backgroundColor = Asset.Color.backgroundClient.color
+        configuration.trailingSwipeActionsConfigurationProvider = { [weak delegate] indexPath in
+            return delegate?.trailingSwipeAction(indexPath: indexPath)
+        }
+
+        let layout = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+        let lastInsets = layout.contentInsets
+        layout.contentInsets = .init(top: 0,
+                                     leading: lastInsets.leading,
+                                     bottom: lastInsets.bottom,
+                                     trailing: lastInsets.trailing)
+
+        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
+        layout.boundarySupplementaryItems = [
+            .init(layoutSize: size, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        ]
+
+        return layout
     }
 }
 
@@ -154,6 +174,18 @@ extension ClipEditViewLayout {
 
             case .deleteClip:
                 return collectionView.dequeueConfiguredReusableCell(using: deleteCellRegistration, for: indexPath, item: ())
+            }
+        }
+
+        let itemHeaderRegistration = self.configureItemHeader(proxy: proxy)
+
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            switch elementKind {
+            case UICollectionView.elementKindSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: itemHeaderRegistration, for: indexPath)
+
+            default:
+                return nil
             }
         }
 
@@ -239,7 +271,10 @@ extension ClipEditViewLayout {
             backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
             cell.backgroundConfiguration = backgroundConfiguration
 
-            cell.accessories = [.reorder(displayed: .always)]
+            cell.accessories = [
+                .multiselect(displayed: .whenEditing),
+                .reorder(displayed: .whenNotEditing)
+            ]
 
             let requestId = UUID().uuidString
             cell.identifier = requestId
@@ -257,6 +292,43 @@ extension ClipEditViewLayout {
                 thumbnailLoader.cancel(request)
             }
             thumbnailLoader.load(request: request, observer: cell)
+        }
+    }
+
+    private static func configureItemHeader(proxy: Proxy) -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { headerView, _, _ in
+            let selectButton = UIButton()
+            selectButton.setTitle(L10n.clipEditViewMultiselectSelect, for: .normal)
+            selectButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            let selectButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: selectButton,
+                                                                                    placement: .trailing(displayed: .whenNotEditing))
+            selectButton.addAction(.init(handler: { [weak proxy] _ in
+                proxy?.delegate?.didTapSelectionButton()
+            }), for: .touchUpInside)
+
+            let cancelButton = UIButton()
+            cancelButton.setTitle(L10n.clipEditViewMultiselectCancel, for: .normal)
+            cancelButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            let cancelButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: cancelButton,
+                                                                                    placement: .trailing(displayed: .whenEditing))
+            cancelButton.addAction(.init(handler: { [weak proxy] _ in
+                proxy?.delegate?.didTapCancelSelectionButton()
+            }), for: .touchUpInside)
+
+            let editSiteUrlsButton = UIButton()
+            editSiteUrlsButton.setTitle(L10n.clipEditViewMultiselectEditUrl, for: .normal)
+            editSiteUrlsButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            let editSiteUrlsButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: editSiteUrlsButton,
+                                                                                          placement: .leading(displayed: .whenEditing))
+            editSiteUrlsButton.addAction(.init(handler: { [weak proxy] _ in
+                proxy?.delegate?.didTapEditSiteUrlsForSelectionButton()
+            }), for: .touchUpInside)
+
+            headerView.accessories = [
+                .customView(configuration: selectButtonConfiguration),
+                .customView(configuration: cancelButtonConfiguration),
+                .customView(configuration: editSiteUrlsButtonConfiguration)
+            ]
         }
     }
 }

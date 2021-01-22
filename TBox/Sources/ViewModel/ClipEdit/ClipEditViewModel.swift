@@ -19,7 +19,7 @@ protocol ClipEditViewModelInputs {
     func removeTagFromClip(_ tagId: Tag.Identity)
     func delete(itemAt index: Int, completion: @escaping (Bool) -> Void)
     func update(isHidden: Bool)
-    func update(siteUrl: URL?, forItem: ClipItem.Identity)
+    func update(siteUrl: URL?, forItems: [ClipItem.Identity])
     func reordered(_ snapshot: ClipEditViewLayout.Snapshot)
     func deleteClip()
 }
@@ -293,8 +293,8 @@ extension ClipEditViewModel {
         }
     }
 
-    func update(siteUrl: URL?, forItem itemId: ClipItem.Identity) {
-        if case .failure = commandService.updateClipItems(having: [itemId], byUpdatingSiteUrl: siteUrl) {
+    func update(siteUrl: URL?, forItems itemIds: [ClipItem.Identity]) {
+        if case .failure = commandService.updateClipItems(having: itemIds, byUpdatingSiteUrl: siteUrl) {
             displayErrorMessage.send(L10n.failedToUpdateClip)
         }
     }

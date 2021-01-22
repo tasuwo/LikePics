@@ -63,6 +63,10 @@
 "clip_edit_view_alert_for_delete_clip_title" = "クリップを削除";
 "clip_edit_view_alert_for_delete_clip_message" = "クリップに含まれる全ての画像も同時に削除されます";
 
+"clip_edit_view_multiselect_select" = "選択";
+"clip_edit_view_multiselect_cancel" = "キャンセル";
+"clip_edit_view_multiselect_edit_url" = "サイトURLを編集";
+
 "album_list_view_title" = "アルバム";
 
 "album_list_view_alert_for_add_title" = "新規アルバム";

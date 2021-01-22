@@ -97,11 +97,16 @@ extension ClipItemEditContentView {
         if let siteUrl = configuration.siteUrl {
             siteUrlButton.isEnabled = true
             siteUrlButton.setTitle(siteUrl.absoluteString, for: .normal)
+            siteUrlButton.setTitle(siteUrl.absoluteString, for: .disabled)
         } else {
             siteUrlButton.isEnabled = false
+            siteUrlButton.setTitle(L10n.clipItemEditContentViewSiteUrlEmpty, for: .normal)
             siteUrlButton.setTitle(L10n.clipItemEditContentViewSiteUrlEmpty, for: .disabled)
         }
         siteUrlEditButton.isHidden = !configuration.isSiteUrlEditable
+
+        siteUrlButton.isEnabled = configuration.siteUrlDisabledForce ? false : siteUrlButton.isEnabled
+        siteUrlEditButton.isHidden = configuration.siteUrlDisabledForce ? true : siteUrlEditButton.isHidden
 
         if let dataSize = configuration.dataSize {
             dataSizeLabel.text = ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)

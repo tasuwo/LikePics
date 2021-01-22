@@ -63,6 +63,10 @@
 "clip_edit_view_alert_for_delete_clip_title" = "Delete Clip";
 "clip_edit_view_alert_for_delete_clip_message" = "All images in this clip will be deleted.";
 
+"clip_edit_view_multiselect_select" = "Select";
+"clip_edit_view_multiselect_cancel" = "Cancel";
+"clip_edit_view_multiselect_edit_url" = "Edit Site Urls";
+
 "album_list_view_title" = "Albums";
 
 "album_list_view_alert_for_add_title" = "New Album";
