@@ -35,12 +35,17 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         return viewController.previewingCell
     }
 
-    func presentingView(_ animator: ClipPreviewAnimator) -> UIView? {
-        return self.selectedViewController?.view
+    func baseView(_ animator: ClipPreviewAnimator) -> UIView? {
+        if let navigationController = self.selectedViewController as? UINavigationController {
+            return navigationController.viewControllers.last?.view
+        } else {
+            return self.selectedViewController?.view
+        }
     }
 
-    func componentsOverPresentingView(_ animator: ClipPreviewAnimator) -> [UIView] {
-        return [self.tabBar]
+    func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView] {
+        let navigationBar = (self.selectedViewController as? UINavigationController)?.navigationBar
+        return ([self.tabBar, navigationBar] as [UIView?]).compactMap { $0 }
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forItemId itemId: ClipItem.Identity?) -> CGRect {

@@ -38,7 +38,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let targetCell = to.animatingCell(self),
-            let presentingView = to.presentingView(self)
+            let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -49,16 +49,16 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         containerView.insertSubview(to.view, belowSubview: from.view)
 
-        let backgroundView = UIView()
-        backgroundView.frame = presentingView.frame
-        backgroundView.backgroundColor = from.view.backgroundColor
+        let fromViewBackgroundView = UIView()
+        fromViewBackgroundView.frame = toViewBaseView.frame
+        fromViewBackgroundView.backgroundColor = from.view.backgroundColor
         from.view.backgroundColor = .clear
-        presentingView.addSubview(backgroundView)
+        toViewBaseView.addSubview(fromViewBackgroundView)
 
         let animatingView = UIView()
         ClipCollectionViewCell.setupAppearance(shadowView: animatingView)
         animatingView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
-        presentingView.insertSubview(animatingView, aboveSubview: backgroundView)
+        toViewBaseView.insertSubview(animatingView, aboveSubview: fromViewBackgroundView)
 
         let animatingImageView = UIImageView(image: fromImage)
         ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
@@ -69,16 +69,16 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         fromImageView.isHidden = true
 
         from.navigationController?.navigationBar.alpha = 1.0
-        backgroundView.alpha = 1.0
+        fromViewBackgroundView.alpha = 1.0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
             fromImageView.isHidden = false
             targetCell.isHidden = false
-            backgroundView.removeFromSuperview()
+            fromViewBackgroundView.removeFromSuperview()
             animatingView.removeFromSuperview()
-            from.view.backgroundColor = backgroundView.backgroundColor
+            from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             transitionContext.completeTransition(true)
         }
 
@@ -99,7 +99,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             animatingImageView.frame = animatingView.bounds
 
             from.view.alpha = 0
-            backgroundView.alpha = 0
+            fromViewBackgroundView.alpha = 0
         }
 
         CATransaction.commit()

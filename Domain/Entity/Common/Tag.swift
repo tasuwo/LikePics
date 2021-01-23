@@ -31,7 +31,8 @@ public struct Tag: Equatable {
          name: String,
          isHidden: Bool,
          clipCount: Int? = nil,
-         searchableName: String? = nil) {
+         searchableName: String? = nil)
+    {
         self.id = id
         self.name = name
         self.isHidden = isHidden

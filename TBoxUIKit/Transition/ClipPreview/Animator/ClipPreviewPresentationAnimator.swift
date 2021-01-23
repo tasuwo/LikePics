@@ -37,30 +37,74 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let selectedCell = from.animatingCell(self),
             let selectedImageView = selectedCell.primaryImageView,
             let selectedImage = selectedImageView.image,
-            let presentingView = from.presentingView(self)
+            let fromViewBaseView = from.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
         }
+
+        /*
+         アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
+         このために、以下のような構成を取る
+
+         ポイントは下記
+
+         - アニメーション中 toView の背景色は clear にし、裏の View が見えるようにしておく
+         - toView の背景色を徐々に表示するための ToViewBackgroundView を準備しておく
+         - 最終的に toView に表示することになる画像Viewは ToViewBackgroundView の手前に配置する
+         - Tab/Navigation Bar に画像が被らないように、画像Viewは Tab/NavigationBar の手前に配置する
+         - アニメーション時は、以下を行う
+             - ToViewBackgroundView を fadeIn
+             - toView を fadeIn
+             - Components over base views を fadeOut
+
+         +-+       +-+       +-+  +-+
+         | |       | |       | |  | |
+         +-+       +-+       | |  | |
+                    |        | |  | |
+                    |   +-+  | |  | |
+                    |   | |  | |  | |
+                    |   +-+  | |  | |
+                    |    |   | |  | |
+         +-+  +-+   |    |   | |  | |
+         | |  | |   |    |   | |  | |
+         +-+  +-+   |    |   +-+  +-+
+          |    |    |    |    |    |
+          |    |    |    |    |    +--- BaseView
+          |    |    |    |    +-------- ToViewBackgroundView
+          |    |    |    +------------- AnimatingImageView
+          |    |    +------------------ NavigationBar
+          |    +----------------------- TabBar
+          |   |     |               |
+          |   +--+--+               |
+          |   |  |                  |
+          |   |  +--------------------- Components over base view
+          |   |                     |
+          |   +---------+-----------+
+          |             |
+          |             +-------------- FromView
+          |
+          +---------------------------- toView
+         */
 
         targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
         containerView.insertSubview(to.view, aboveSubview: from.view)
 
-        let backgroundView = UIView()
-        backgroundView.frame = presentingView.frame
-        backgroundView.backgroundColor = to.view.backgroundColor
+        let toViewBackgroundView = UIView()
+        toViewBackgroundView.frame = fromViewBaseView.frame
+        toViewBackgroundView.backgroundColor = to.view.backgroundColor
         to.view.backgroundColor = .clear
-        presentingView.addSubview(backgroundView)
+        fromViewBaseView.addSubview(toViewBackgroundView)
 
         let animatingImageView = UIImageView(image: selectedImage)
         ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: nil)
-        presentingView.insertSubview(animatingImageView, aboveSubview: backgroundView)
+        fromViewBaseView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
         to.view.alpha = 0
-        backgroundView.alpha = 0
+        toViewBackgroundView.alpha = 0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
@@ -68,10 +112,10 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             targetImageView.isHidden = false
             selectedImageView.isHidden = false
             selectedCell.alpha = 1
-            from.componentsOverPresentingView(self).forEach { $0.alpha = 1.0 }
-            to.view.backgroundColor = backgroundView.backgroundColor
+            from.componentsOverBaseView(self).forEach { $0.alpha = 1.0 }
+            to.view.backgroundColor = toViewBackgroundView.backgroundColor
             animatingImageView.removeFromSuperview()
-            backgroundView.removeFromSuperview()
+            toViewBackgroundView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }
 
@@ -93,7 +137,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView)
 
             to.view.alpha = 1.0
-            backgroundView.alpha = 1.0
+            toViewBackgroundView.alpha = 1.0
         }
 
         UIView.animate(
@@ -101,7 +145,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             delay: (self.transitionDuration(using: transitionContext) / 3) * 2,
             options: [.curveEaseIn]
         ) {
-            from.componentsOverPresentingView(self).forEach { $0.alpha = 0.0 }
+            from.componentsOverBaseView(self).forEach { $0.alpha = 0.0 }
         }
 
         CATransaction.commit()
