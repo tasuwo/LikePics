@@ -22,6 +22,23 @@ public struct Tag: Equatable {
         self.searchableName = Self.transformToSearchableText(text: name)
     }
 
+    /**
+     * Mock生成用のInitializer
+     *
+     * プロダクションで利用すべきでない
+     */
+    init(id: UUID,
+         name: String,
+         isHidden: Bool,
+         clipCount: Int? = nil,
+         searchableName: String? = nil) {
+        self.id = id
+        self.name = name
+        self.isHidden = isHidden
+        self.clipCount = clipCount
+        self.searchableName = searchableName
+    }
+
     // MARK: - Methods
 
     static func transformToSearchableText(text: String) -> String? {
