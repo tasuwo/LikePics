@@ -65,8 +65,13 @@ extension ClipPreviewBaseViewController: ClipInformationPresentingAnimatorDataSo
         return self.pageViewController?.currentViewController?.previewView
     }
 
-    func presentingView(_ animator: ClipInformationAnimator) -> UIView? {
+    func baseView(_ animator: ClipInformationAnimator) -> UIView? {
         return self.viewControllers.first?.view
+    }
+
+    func componentsOverBaseView(_ animator: ClipInformationAnimator) -> [UIView] {
+        let toolBar = self.viewControllers.first?.navigationController?.toolbar
+        return ([self.navigationBar, toolBar] as [UIView?]).compactMap { $0 }
     }
 
     func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {

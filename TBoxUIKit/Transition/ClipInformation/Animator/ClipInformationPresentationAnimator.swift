@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipInformationPresentationAnimator: NSObject {
-    private static let transitionDuration: TimeInterval = 0.25
+    private static let transitionDuration: TimeInterval = 3
 
     private weak var delegate: ClipInformationAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -37,50 +37,76 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             let selectedPage = from.animatingPageView(self),
             let selectedImageView = selectedPage.imageView,
             let selectedImage = selectedImageView.image,
-            let presentingView = from.presentingView(self)
+            let fromViewBaseView = from.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
         }
 
+        /*
+         アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
+         このために、以下のような構成を取る
+
+         ポイントは以下
+         - ToViewはFromViewの裏に配置する
+         - ToViewが見えるよう、FromViewの背景色をclearに設定する
+         - containerViewの背景色は、ToViewの背景色と合わせておく
+
+         +-+            +-+  +-+
+         | |       +-+  | |  | |
+         +-+       | |  | |  | |
+          |        | |  | |  | |
+          |        | |  | |  | |
+          |        | |  | |  | |
+          |        | |  | |  | |
+          |        | |  | |  | |
+          |   +-+  | |  | |  | |
+          |   | |  +-+  | |  | |
+          |   +-+   |   +-+  +-+
+          |    |    |    |    |
+          |    |    |    |    +--- ToView
+          |    |    |    +-------- FromViewBaseView
+          |    |    +------------- AnimatingImageView
+          |    +------------------ ToolBAr
+          +----------------------- NavigationBar
+         |     |          |
+         +--+--+          |
+         |  |             |
+         |  +--------------------- Components over base view
+         |                |
+         +---------+------+
+                   |
+                   +-------------- FromView
+         */
+
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
+        // キャッシュ
+        let toViewBackgroundColor = to.view.backgroundColor
+
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
+        from.view.backgroundColor = .clear
 
-        containerView.backgroundColor = .clear
-        containerView.insertSubview(to.view, aboveSubview: from.view)
-
-        let backgroundView = UIView()
-        backgroundView.frame = presentingView.frame
-        backgroundView.backgroundColor = to.view.backgroundColor
-        to.view.backgroundColor = .clear
-        presentingView.addSubview(backgroundView)
-
-        let backgroundAnimatingImageView = UIImageView(image: selectedImage)
-        backgroundAnimatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-        containerView.addSubview(backgroundAnimatingImageView)
-        presentingView.insertSubview(backgroundAnimatingImageView, aboveSubview: backgroundView)
+        containerView.backgroundColor = to.view.backgroundColor
+        containerView.insertSubview(to.view, belowSubview: from.view)
 
         let animatingImageView = UIImageView(image: selectedImage)
         animatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-        containerView.addSubview(animatingImageView)
+        fromViewBaseView.insertSubview(animatingImageView, aboveSubview: to.view)
 
         to.view.alpha = 0
-        backgroundView.alpha = 0
-        animatingImageView.alpha = 0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
             targetInformationView.imageView.isHidden = false
             selectedImageView.isHidden = false
-            from.view.alpha = 1.0
-            to.view.backgroundColor = backgroundView.backgroundColor
+            from.view.backgroundColor = toViewBackgroundColor
+
             animatingImageView.removeFromSuperview()
-            backgroundView.removeFromSuperview()
-            backgroundAnimatingImageView.removeFromSuperview()
+
             transitionContext.completeTransition(true)
         }
 
@@ -90,17 +116,15 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             options: [.curveEaseInOut]
         ) {
             animatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-            backgroundAnimatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
             to.view.alpha = 1.0
-            backgroundView.alpha = 1.0
         }
 
         UIView.animate(
             withDuration: self.transitionDuration(using: transitionContext) / 3,
             delay: 0,
-            options: [.curveEaseInOut]
+            options: [.curveEaseIn]
         ) {
-            animatingImageView.alpha = 1.0
+            from.componentsOverBaseView(self).forEach { $0.alpha = 0.0 }
         }
 
         CATransaction.commit()
