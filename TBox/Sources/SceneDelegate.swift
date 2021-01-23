@@ -28,20 +28,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         #endif
 
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = self.makeAppRootSetupViewController()
+        window.makeKeyAndVisible()
+
+        self.window = window
+
+        self.setupAppearance()
+    }
+
+    private func makeAppRootSetupViewController() -> UIViewController {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         let cloudAvailabilityResolver = CurrentICloudAccountResolver.self
         let cloudAvailabilityObserver = CloudAvailabilityObserver(cloudUsageContextStorage: cloudUsageContextStorage,
                                                                   cloudAvailabilityResolver: cloudAvailabilityResolver)
         let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
                                               cloudAvailabilityStore: cloudAvailabilityObserver)
-
-        let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = AppRootSetupViewController(presenter: presenter, launcher: self)
-        window.makeKeyAndVisible()
-
-        self.window = window
-
-        self.setupAppearance()
+        return AppRootSetupViewController(presenter: presenter, launcher: self)
     }
 
     private func setupAppearance() {

@@ -1786,12 +1786,12 @@
 			path = AlbumSelection;
 			sourceTree = "<group>";
 		};
-		2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */ = {
+		2C3ADF6224EEE6E6007C4AA0 /* AlbumSelection */ = {
 			isa = PBXGroup;
 			children = (
 				2C0596CA251992C5008F11F5 /* AlbumSelectionViewModel.swift */,
 			);
-			path = AddingClipsToAlbum;
+			path = AlbumSelection;
 			sourceTree = "<group>";
 		};
 		2C3CCDAB24F2C49C00FAC660 /* ClipCreation */ = {
@@ -2077,20 +2077,20 @@
 		2C570B5C24E04FA400A1DC9F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				2CDF4ED0257223680030342B /* Root */,
+				2C3ADF5A24EEE436007C4AA0 /* Album */,
+				2C45D40624EEBDF30045B6D3 /* AlbumList */,
+				2C3ADF6224EEE6E6007C4AA0 /* AlbumSelection */,
 				2C3CCDAE24F2C4BF00FAC660 /* ClipCollection */,
-				2C45D3F224EC1E490045B6D3 /* Search */,
-				2C3ADF6224EEE6E6007C4AA0 /* AddingClipsToAlbum */,
-				2C570B5D24E04FAB00A1DC9F /* TopClipCollection */,
 				2C01B8E825ADCE8C0089CFB4 /* ClipEdit */,
 				2C86CC4E24E12E220091A89E /* ClipPreview */,
 				2C447A76250D437400EAA448 /* ClipInformation */,
 				2C753C4425963C5100715482 /* ClipMerge */,
-				2CFC5CEE250DA906001A02E4 /* TagCollection */,
-				2C45D40624EEBDF30045B6D3 /* AlbumList */,
-				2C3ADF5A24EEE436007C4AA0 /* Album */,
-				2C38C706250AF3B900F32102 /* TagSelection */,
+				2CDF4ED0257223680030342B /* Root */,
+				2C45D3F224EC1E490045B6D3 /* Search */,
 				2CF4658C2511192F00DF78E6 /* Settings */,
+				2CFC5CEE250DA906001A02E4 /* TagCollection */,
+				2C38C706250AF3B900F32102 /* TagSelection */,
+				2C570B5D24E04FAB00A1DC9F /* TopClipCollection */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2378,21 +2378,21 @@
 		2C810D0024E04A6600BC0FDF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2C3ADF5524EEE2DC007C4AA0 /* Album */,
+				2C45D40324EEB3F30045B6D3 /* AlbumList */,
+				2C3ADF5F24EEE6C5007C4AA0 /* AlbumSelection */,
 				2C1C56C025B9B99C008271DD /* Components */,
 				2C3CCDAD24F2C4B500FAC660 /* ClipCollection */,
-				2C1BA03324E08A0E00F96801 /* Root */,
-				2C45D3ED24EACA780045B6D3 /* Search */,
-				2C570B6024E04FEF00A1DC9F /* TopClipCollection */,
-				2C45D40324EEB3F30045B6D3 /* AlbumList */,
-				2CFC5CEB250DA8D0001A02E4 /* TagCollection */,
 				2C01B8E725ADCE7F0089CFB4 /* ClipEdit */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2C2C9EF5250BCE7B0020715B /* ClipInformation */,
 				2C753C3125963BB300715482 /* ClipMerge */,
-				2C3ADF5F24EEE6C5007C4AA0 /* AlbumSelection */,
-				2C38C703250AF31900F32102 /* TagSelection */,
-				2C3ADF5524EEE2DC007C4AA0 /* Album */,
+				2C1BA03324E08A0E00F96801 /* Root */,
+				2C45D3ED24EACA780045B6D3 /* Search */,
 				2CF46587251112D900DF78E6 /* Settings */,
+				2CFC5CEB250DA8D0001A02E4 /* TagCollection */,
+				2C38C703250AF31900F32102 /* TagSelection */,
+				2C570B6024E04FEF00A1DC9F /* TopClipCollection */,
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 			);
 			path = View;
