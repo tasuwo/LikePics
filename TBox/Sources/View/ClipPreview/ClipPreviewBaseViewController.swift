@@ -81,4 +81,8 @@ extension ClipPreviewBaseViewController: ClipInformationPresentingAnimatorDataSo
         }
         return pageView.convert(pageView.initialImageFrame, to: containerView)
     }
+
+    func set(_ animator: ClipInformationAnimator, isUserInteractionEnabled: Bool) {
+        self.view.isUserInteractionEnabled = isUserInteractionEnabled
+    }
 }
