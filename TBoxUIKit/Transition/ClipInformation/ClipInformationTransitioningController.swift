@@ -58,8 +58,6 @@ extension ClipInformationTransitioningController: ClipInformationAnimatorDelegat
 
     func clipInformationAnimatorDelegate(_ animator: ClipInformationAnimator, didComplete: Bool) {
         self.transitionMode = .initialValue
-        self.presentationInteractiveAnimator = nil
-        self.dismissalInteractiveAnimator = nil
     }
 }
 

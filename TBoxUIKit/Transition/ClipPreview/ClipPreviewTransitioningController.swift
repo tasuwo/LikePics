@@ -52,7 +52,6 @@ extension ClipPreviewTransitioningController: ClipPreviewAnimatorDelegate {
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, didComplete: Bool) {
         self.transitionMode = .initialValue
-        self.dismissalInteractiveAnimator = nil
     }
 }
 
