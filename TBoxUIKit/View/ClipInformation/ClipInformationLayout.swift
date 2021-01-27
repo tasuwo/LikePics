@@ -46,7 +46,7 @@ public enum ClipInformationLayout {
 
     // MARK: DataSource
 
-    public struct Information {
+    public struct Information: Equatable {
         public let clip: Clip
         public let tags: [Tag]
         public let item: ClipItem

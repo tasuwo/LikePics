@@ -116,7 +116,17 @@ class ClipInformationViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
+        // HACK: Interactiveな画面遷移時に引っ掛かりが生じるため、初回時のみアニメーションをオフにする
         dependency.outputs.info
+            .prefix(1)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] info in
+                self?.informationView.setInfo(info, animated: false)
+            }
+            .store(in: &self.subscriptions)
+
+        dependency.outputs.info
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] info in
                 self?.informationView.setInfo(info, animated: true)

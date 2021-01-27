@@ -111,9 +111,11 @@ class ClipInformationViewModel: ClipInformationViewModelType,
                     self?.errorMessage.send(L10n.clipInformationErrorAtReadClip)
                 }
             }, receiveValue: { [weak self] clip, item, tags, showHiddenItems in
-                self?._info.send(.init(clip: clip,
-                                       tags: showHiddenItems ? tags : tags.filter({ !$0.isHidden }),
-                                       item: item))
+                let information = ClipInformationLayout.Information(clip: clip,
+                                                                    tags: showHiddenItems ? tags : tags.filter({ !$0.isHidden }),
+                                                                    item: item)
+                guard information != self?._info.value else { return }
+                self?._info.send(information)
             })
             .store(in: &self.subscriptions)
     }
