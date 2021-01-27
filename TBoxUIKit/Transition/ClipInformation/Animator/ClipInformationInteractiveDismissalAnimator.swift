@@ -27,7 +27,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     private static let toComponentsStartingAlpha: CGFloat = 0.0
     private static let toComponentsFinalAlpha: CGFloat = 1.0
 
-    private static let cancelAnimateDuration: Double = 0.2
+    private static let cancelAnimateDuration: Double = 0.15
     private static let endAnimateDuration: Double = 0.2
     private static let fallbackAnimateDuration: Double = 0.2
 
