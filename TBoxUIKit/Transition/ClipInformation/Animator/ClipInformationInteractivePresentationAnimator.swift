@@ -145,6 +145,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
+            params.to.view.removeFromSuperview()
+
             params.targetInformationView.imageView.isHidden = false
             params.selectedImageView.isHidden = false
             params.from.view.backgroundColor = params.innerContext.toViewBackgroundColor
