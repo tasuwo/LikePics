@@ -52,19 +52,10 @@ class AppRootTabBarController: UITabBarController {
         super.viewDidLoad()
 
         self.setupTabBar()
-        self.updateAppearance()
 
         self.bind(to: integrityViewModel)
 
         self.integrityViewModel.inputs.didLaunchApp.send(())
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.updateAppearance()
-        }, completion: nil)
     }
 
     // MARK: - Methods
@@ -147,24 +138,6 @@ class AppRootTabBarController: UITabBarController {
             // searchEntryViewController,
             settingsViewController
         ]
-    }
-
-    // MARK: Appearance
-
-    private func updateAppearance() {
-        guard let viewController = self.selectedViewController else {
-            self.tabBar.isHidden = false
-            return
-        }
-
-        guard viewController is TopClipCollectionViewController
-            || (viewController as? UINavigationController)?.viewControllers.contains(where: { $0 is TopClipCollectionViewController }) ?? false
-        else {
-            self.tabBar.isHidden = false
-            return
-        }
-
-        self.tabBar.isHidden = self.traitCollection.verticalSizeClass == .compact
     }
 }
 
