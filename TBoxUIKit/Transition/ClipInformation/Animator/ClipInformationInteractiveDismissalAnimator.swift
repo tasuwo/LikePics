@@ -11,14 +11,12 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         let initialImageFrame: CGRect
         let animatingImageView: UIImageView
         let toViewBackgroundColor: UIColor?
+        let postprocess: () -> Void
     }
 
     struct FinishAnimationParameters {
-        let targetPageView: ClipPreviewView
-        let fromImageView: UIView
         let from: ClipInformationPresentedAnimatorDataSource & UIViewController
         let to: ClipInformationPresentingAnimatorDataSource & UIViewController
-        let containerView: UIView
         let innerContext: InnerContext
     }
 
@@ -28,7 +26,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     private static let toComponentsFinalAlpha: CGFloat = 1.0
 
     private static let cancelAnimateDuration: Double = 0.15
-    private static let endAnimateDuration: Double = 0.2
+    private static let endAnimateDuration: Double = 0.17
     private static let fallbackAnimateDuration: Double = 0.2
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -90,10 +88,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipInformationPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipInformationPresentingAnimatorDataSource & UIViewController),
-            let fromInformationView = from.animatingInformationView(self),
-            let fromImageView = fromInformationView.imageView,
-            let targetPage = to.animatingPageView(self)
+            let to = transitionContext.viewController(forKey: .to) as? (ClipInformationPresentingAnimatorDataSource & UIViewController)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -122,15 +117,12 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         // End Animation
 
         if sender.state == .ended {
-            let params = FinishAnimationParameters(targetPageView: targetPage,
-                                                   fromImageView: fromImageView,
-                                                   from: from,
-                                                   to: to,
-                                                   containerView: containerView,
-                                                   innerContext: innerContext)
+            let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
+
             let velocity = sender.velocity(in: from.view)
             let scrollToUp = velocity.y < 0
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
+
             if scrollToUp || releaseAboveInitialPosition {
                 self.startCancelAnimation(params: params)
             } else {
@@ -147,12 +139,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         CATransaction.setCompletionBlock {
             params.to.view.removeFromSuperview()
 
-            params.to.set(self, isUserInteractionEnabled: true)
-            params.targetPageView.imageView.isHidden = false
-            params.fromImageView.isHidden = false
-            params.to.view.backgroundColor = params.innerContext.toViewBackgroundColor
-
-            params.innerContext.animatingImageView.removeFromSuperview()
+            params.innerContext.postprocess()
 
             params.innerContext.transitionContext.cancelInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(false)
@@ -186,12 +173,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.to.set(self, isUserInteractionEnabled: true)
-            params.targetPageView.imageView.isHidden = false
-            params.fromImageView.isHidden = false
-            params.to.view.backgroundColor = params.innerContext.toViewBackgroundColor
-
-            params.innerContext.animatingImageView.removeFromSuperview()
+            params.innerContext.postprocess()
 
             params.innerContext.transitionContext.finishInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(true)
@@ -203,7 +185,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             delay: 0,
             options: [.curveEaseInOut],
             animations: {
-                params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: params.containerView)
+                let containerView = params.innerContext.transitionContext.containerView
+                params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
                 params.from.view.alpha = 0.0
             }
         )
@@ -244,22 +227,32 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        // キャッシュ
         let toViewBackgroundColor = to.view.backgroundColor
+
+        containerView.backgroundColor = toViewBackgroundColor
+        containerView.insertSubview(to.view, aboveSubview: from.view)
+
+        let initialImageFrame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+        let animatingImageView = UIImageView(image: fromImage)
+        animatingImageView.frame = initialImageFrame
+
+        // Preprocess
 
         to.set(self, isUserInteractionEnabled: false)
         targetPage.imageView.isHidden = true
         fromImageView.isHidden = true
         to.view.backgroundColor = .clear
 
-        containerView.backgroundColor = toViewBackgroundColor
-        containerView.insertSubview(to.view, aboveSubview: from.view)
-
-        let initialImageFrame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-
-        let animatingImageView = UIImageView(image: fromImage)
-        animatingImageView.frame = initialImageFrame
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: from.view)
+
+        let postprocess = {
+            to.set(self, isUserInteractionEnabled: true)
+            targetPage.imageView.isHidden = false
+            fromImageView.isHidden = false
+            to.view.backgroundColor = toViewBackgroundColor
+
+            animatingImageView.removeFromSuperview()
+        }
 
         to.componentsOverBaseView(self).forEach { $0.alpha = 0.0 }
 
@@ -267,17 +260,13 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingImageView: animatingImageView,
-            toViewBackgroundColor: toViewBackgroundColor
+            toViewBackgroundColor: toViewBackgroundColor,
+            postprocess: postprocess
         )
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let params = FinishAnimationParameters(targetPageView: targetPage,
-                                                   fromImageView: fromImageView,
-                                                   from: from,
-                                                   to: to,
-                                                   containerView: containerView,
-                                                   innerContext: innerContext)
+            let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
             self.startEndAnimation(params: params)
             return
         }
