@@ -37,7 +37,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
-            let targetCell = to.animatingCell(self),
+            let toCell = to.animatingCell(self),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -52,21 +52,30 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         let fromViewBackgroundView = UIView()
         fromViewBackgroundView.frame = toViewBaseView.frame
         fromViewBackgroundView.backgroundColor = from.view.backgroundColor
-        from.view.backgroundColor = .clear
-        toViewBaseView.addSubview(fromViewBackgroundView)
-
-        let animatingView = UIView()
-        ClipCollectionViewCell.setupAppearance(shadowView: animatingView)
-        animatingView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
-        toViewBaseView.insertSubview(animatingView, aboveSubview: fromViewBackgroundView)
 
         let animatingImageView = UIImageView(image: fromImage)
-        ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
-        animatingImageView.frame = animatingView.bounds
-        animatingView.addSubview(animatingImageView)
+        ClipCollectionViewCell.setupAppearance(shadowView: animatingImageView)
+        animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
+        animatingImageView.layer.cornerCurve = .continuous
+        animatingImageView.layer.masksToBounds = true
 
-        targetCell.isHidden = true
+        // Preprocess
+
+        from.view.backgroundColor = .clear
+        toCell.isHidden = true
         fromImageView.isHidden = true
+
+        toViewBaseView.addSubview(fromViewBackgroundView)
+        toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
+
+        let postprocess = {
+            from.view.backgroundColor = fromViewBackgroundView.backgroundColor
+            toCell.isHidden = false
+            fromImageView.isHidden = false
+
+            fromViewBackgroundView.removeFromSuperview()
+            animatingImageView.removeFromSuperview()
+        }
 
         from.navigationController?.navigationBar.alpha = 1.0
         fromViewBackgroundView.alpha = 1.0
@@ -74,19 +83,14 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
-            fromImageView.isHidden = false
-            targetCell.isHidden = false
-            fromViewBackgroundView.removeFromSuperview()
-            animatingView.removeFromSuperview()
-            from.view.backgroundColor = fromViewBackgroundView.backgroundColor
+            postprocess()
+
             transitionContext.completeTransition(true)
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = 0
         cornerAnimation.toValue = ClipCollectionViewCell.cornerRadius
-        animatingView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
-        animatingView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
         animatingImageView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
@@ -95,8 +99,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             delay: 0,
             options: [.curveEaseIn]
         ) {
-            animatingView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
-            animatingImageView.frame = animatingView.bounds
+            animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
 
             from.view.alpha = 0
             fromViewBackgroundView.alpha = 0

@@ -70,7 +70,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
          | |  | |   |    |   | |  | |
          +-+  +-+   |    |   +-+  +-+
           |    |    |    |    |    |
-          |    |    |    |    |    +--- BaseView
+          |    |    |    |    |    +--- FromViewBaseView
           |    |    |    |    +-------- ToViewBackgroundView
           |    |    |    +------------- AnimatingImageView
           |    |    +------------------ NavigationBar
