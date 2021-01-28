@@ -88,6 +88,11 @@ extension DependencyContainer: ViewControllerFactory {
             return nil
         }
 
+        let preLoadViewModel = PreLoadingClipInformationViewModel(clipQueryService: clipQueryService,
+                                                                  settingStorage: userSettingsStorage)
+        let preLoadViewController = PreLoadingClipInformationViewController(clipId: clipId,
+                                                                            preLoadViewModel: preLoadViewModel)
+
         let barItemsViewModel = ClipPreviewPageBarViewModel()
         let barItemsProvider = ClipPreviewPageBarViewController(viewModel: barItemsViewModel)
 
@@ -103,6 +108,7 @@ extension DependencyContainer: ViewControllerFactory {
         let pageViewController = ClipPreviewPageViewController(
             factory: self,
             viewModel: viewModel,
+            preLoadViewController: preLoadViewController,
             barItemsProvider: barItemsProvider,
             transitionControllerBuilder: builder
         )

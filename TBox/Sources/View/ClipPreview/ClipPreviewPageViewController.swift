@@ -17,6 +17,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let factory: Factory
     private let viewModel: Dependency
     private let barItemsProvider: ClipPreviewPageBarViewController
+    private let preLoadViewController: PreLoadingClipInformationViewController
+
     private var transitionController: ClipPreviewPageTransitionControllerType!
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var isInitialLoaded: Bool = false
@@ -46,20 +48,18 @@ class ClipPreviewPageViewController: UIPageViewController {
         return self.viewControllers?.first as? ClipPreviewViewController
     }
 
-    // HACK: CollectionViewの初回ロードが重く、Interactiveな画面遷移がカクついてしまうため、
-    //       ここで事前にロードしておいた View を利用する
-    private var informationView = ClipInformationView()
-
     // MARK: - Lifecycle
 
     init(factory: Factory,
          viewModel: Dependency,
+         preLoadViewController: PreLoadingClipInformationViewController,
          barItemsProvider: ClipPreviewPageBarViewController,
          transitionControllerBuilder: @escaping TransitionControllerBuilder)
     {
         self.factory = factory
         self.viewModel = viewModel
         self.barItemsProvider = barItemsProvider
+        self.preLoadViewController = preLoadViewController
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             UIPageViewController.OptionsKey.interPageSpacing: 40
@@ -67,7 +67,12 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         self.transitionController = transitionControllerBuilder(self, self)
 
+        preLoadViewController.currentPageViewControllerProvider = { [weak self] in
+            self?.currentViewController
+        }
+
         self.addChild(barItemsProvider)
+        self.addChild(preLoadViewController)
     }
 
     @available(*, unavailable)
@@ -84,6 +89,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.setupAppearance()
         self.setupAccessibilityIdentifiers()
         self.setupBar()
+        self.setupPreLoadView()
         self.setupGestureRecognizer()
 
         self.bind(to: viewModel)
@@ -92,18 +98,7 @@ class ClipPreviewPageViewController: UIPageViewController {
                                                                          usesImageForPresentingAnimation: true) else { return }
         self.setViewControllers([viewController], direction: .forward, animated: false)
 
-        // HACK: CollectionViewの初回ロードが重く、Interactiveな画面遷移がカクついてしまうため、
-        //       ここで事前に CollectionView の初回ロードを行っておく
-        informationView.alpha = 0
-        informationView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.insertSubview(informationView, at: 0)
-        NSLayoutConstraint.activate([
-            informationView.topAnchor.constraint(equalTo: view.topAnchor),
-            informationView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            informationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            informationView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        self.applyInitialValues()
+        preLoadViewController.pageViewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -115,6 +110,16 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        preLoadViewController.pageViewWillDisappear()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        preLoadViewController.pageViewDidAppear()
+    }
+
     // MARK: - Methods
 
     private func setupAppearance() {
@@ -124,6 +129,12 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private func setupAccessibilityIdentifiers() {
         self.navigationController?.navigationBar.accessibilityIdentifier = "\(String(describing: Self.self)).navigationBar"
+    }
+
+    private func setupPreLoadView() {
+        view.insertSubview(preLoadViewController.view, at: 0)
+        preLoadViewController.view.backgroundColor = .clear
+        NSLayoutConstraint.activate(preLoadViewController.view.constraints(fittingIn: view))
     }
 
     // MARK: Bind
@@ -162,6 +173,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     private func didChangedCurrentPage(to viewController: ClipPreviewViewController, forced: Bool = false) {
+        self.preLoadViewController.pageViewDidChangedCurrentPage(to: viewController)
+
         self.tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
 
@@ -336,40 +349,12 @@ extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
     // MARK: - ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
-        // alpha利用側で元に戻す
-        // SeeAlso: ClipInformationViewController
-        self.informationView.alpha = 1
         return self.factory.makeClipInformationViewController(
             clipId: self.viewModel.outputs.clipId,
             itemId: viewModel.outputs.currentItemIdValue,
-            informationView: informationView,
+            informationView: preLoadViewController.preLoadingInformationView,
             transitioningController: transitioningController,
             dataSource: self
         )
-    }
-
-    private func applyInitialValues() {
-        DispatchQueue.main.async {
-            self.informationView.setInfo(.init(clip: .init(id: UUID(),
-                                                           description: nil,
-                                                           items: [],
-                                                           isHidden: false,
-                                                           dataSize: 0,
-                                                           registeredDate: Date(timeIntervalSince1970: 0),
-                                                           updatedDate: Date(timeIntervalSince1970: 0)),
-                                               tags: [],
-                                               item: .init(id: UUID(),
-                                                           url: nil,
-                                                           clipId: UUID(),
-                                                           clipIndex: 0,
-                                                           imageId: UUID(),
-                                                           imageFileName: "",
-                                                           imageUrl: nil,
-                                                           imageSize: .init(height: 0, width: 0),
-                                                           imageDataSize: 0,
-                                                           registeredDate: Date(timeIntervalSince1970: 0),
-                                                           updatedDate: Date(timeIntervalSince1970: 0))),
-                                         animated: false)
-        }
     }
 }

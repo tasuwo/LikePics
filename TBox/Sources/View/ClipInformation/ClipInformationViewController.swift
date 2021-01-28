@@ -48,6 +48,8 @@ class ClipInformationViewController: UIViewController {
         self.dataSource = dataSource
 
         super.init(nibName: nil, bundle: nil)
+
+        self.informationView.alpha = 1
     }
 
     @available(*, unavailable)
@@ -116,15 +118,7 @@ class ClipInformationViewController: UIViewController {
     // MARK: Bind
 
     private func bind(to dependency: Dependency) {
-        // HACK: Interactiveな画面遷移時に引っ掛かりが生じるため、初回時のみアニメーションをオフにする
-        dependency.outputs.info
-            .prefix(1)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] info in
-                self?.informationView.setInfo(info, animated: false)
-            }
-            .store(in: &self.subscriptions)
-
+        // HACK: Interactiveな画面遷移時に引っ掛かりが生じるため、初回はPreLoad分を表示する
         dependency.outputs.info
             .dropFirst()
             .receive(on: DispatchQueue.main)
