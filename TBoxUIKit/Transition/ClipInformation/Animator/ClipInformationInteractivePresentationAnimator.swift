@@ -11,14 +11,12 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         let initialImageFrame: CGRect
         let animatingImageView: UIImageView
         let toViewBackgroundColor: UIColor?
+        let postproces: () -> Void
     }
 
     struct FinishAnimationParameters {
-        let targetInformationView: ClipInformationView
-        let selectedImageView: UIView
         let from: ClipInformationPresentingAnimatorDataSource & UIViewController
         let to: ClipInformationPresentedAnimatorDataSource & UIViewController
-        let containerView: UIView
         let innerContext: InnerContext
     }
 
@@ -90,10 +88,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipInformationPresentingAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipInformationPresentedAnimatorDataSource & UIViewController),
-            let targetInformationView = to.animatingInformationView(self),
-            let selectedPage = from.animatingPageView(self),
-            let selectedImageView = selectedPage.imageView
+            let to = transitionContext.viewController(forKey: .to) as? (ClipInformationPresentedAnimatorDataSource & UIViewController)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -122,11 +117,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         // End Animation
 
         if sender.state == .ended {
-            let params = FinishAnimationParameters(targetInformationView: targetInformationView,
-                                                   selectedImageView: selectedImageView,
-                                                   from: from,
+            let params = FinishAnimationParameters(from: from,
                                                    to: to,
-                                                   containerView: containerView,
                                                    innerContext: innerContext)
             let velocity = sender.velocity(in: from.view)
             let scrollToDown = velocity.y > 0
@@ -147,11 +139,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         CATransaction.setCompletionBlock {
             params.to.view.removeFromSuperview()
 
-            params.targetInformationView.imageView.isHidden = false
-            params.selectedImageView.isHidden = false
-            params.from.view.backgroundColor = params.innerContext.toViewBackgroundColor
-
-            params.innerContext.animatingImageView.removeFromSuperview()
+            params.innerContext.postproces()
 
             params.innerContext.transitionContext.cancelInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(false)
@@ -182,11 +170,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.targetInformationView.imageView.isHidden = false
-            params.selectedImageView.isHidden = false
-            params.from.view.backgroundColor = params.innerContext.toViewBackgroundColor
-
-            params.innerContext.animatingImageView.removeFromSuperview()
+            params.innerContext.postproces()
 
             params.innerContext.transitionContext.finishInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(true)
@@ -198,7 +182,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
             delay: 0,
             options: [.curveEaseInOut]
         ) {
-            params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: params.containerView)
+            let containerView = params.innerContext.transitionContext.containerView
+            params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
             params.to.view.alpha = 1.0
         }
 
@@ -274,20 +259,30 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        // キャッシュ
-        let toViewBackgroundColor = to.view.backgroundColor
-
-        targetInformationView.imageView.isHidden = true
-        selectedImageView.isHidden = true
-        from.view.backgroundColor = .clear
-
         containerView.backgroundColor = to.view.backgroundColor
         containerView.insertSubview(to.view, belowSubview: from.view)
 
         let initialImageFrame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         let animatingImageView = UIImageView(image: selectedImage)
         animatingImageView.frame = initialImageFrame
+
+        // Preprocess
+
+        let toViewBackgroundColor = to.view.backgroundColor
+
+        targetInformationView.imageView.isHidden = true
+        selectedImageView.isHidden = true
+        from.view.backgroundColor = .clear
+
         fromViewBaseView.insertSubview(animatingImageView, aboveSubview: to.view)
+
+        let postprocess = {
+            targetInformationView.imageView.isHidden = false
+            selectedImageView.isHidden = false
+            from.view.backgroundColor = toViewBackgroundColor
+
+            animatingImageView.removeFromSuperview()
+        }
 
         to.view.alpha = 0
 
@@ -295,16 +290,14 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
             transitionContext: transitionContext,
             initialImageFrame: initialImageFrame,
             animatingImageView: animatingImageView,
-            toViewBackgroundColor: toViewBackgroundColor
+            toViewBackgroundColor: toViewBackgroundColor,
+            postproces: postprocess
         )
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let params = FinishAnimationParameters(targetInformationView: targetInformationView,
-                                                   selectedImageView: selectedImageView,
-                                                   from: from,
+            let params = FinishAnimationParameters(from: from,
                                                    to: to,
-                                                   containerView: containerView,
                                                    innerContext: innerContext)
             self.startCancelAnimation(params: params)
             return

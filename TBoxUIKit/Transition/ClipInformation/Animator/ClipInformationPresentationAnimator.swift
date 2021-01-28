@@ -82,30 +82,36 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        // キャッシュ
+        containerView.backgroundColor = to.view.backgroundColor
+        containerView.insertSubview(to.view, belowSubview: from.view)
+
+        let animatingImageView = UIImageView(image: selectedImage)
+        animatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
+
+        // Preprocess
+
         let toViewBackgroundColor = to.view.backgroundColor
 
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
         from.view.backgroundColor = .clear
 
-        containerView.backgroundColor = to.view.backgroundColor
-        containerView.insertSubview(to.view, belowSubview: from.view)
-
-        let animatingImageView = UIImageView(image: selectedImage)
-        animatingImageView.frame = from.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         fromViewBaseView.insertSubview(animatingImageView, aboveSubview: to.view)
+
+        let postprocess = {
+            targetInformationView.imageView.isHidden = false
+            selectedImageView.isHidden = false
+            from.view.backgroundColor = toViewBackgroundColor
+
+            animatingImageView.removeFromSuperview()
+        }
 
         to.view.alpha = 0
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
-            targetInformationView.imageView.isHidden = false
-            selectedImageView.isHidden = false
-            from.view.backgroundColor = toViewBackgroundColor
-
-            animatingImageView.removeFromSuperview()
+            postprocess()
 
             transitionContext.completeTransition(true)
         }
