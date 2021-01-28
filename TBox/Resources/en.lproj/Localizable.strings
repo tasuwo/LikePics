@@ -212,6 +212,7 @@
 "album_list_view_error_at_reorder_album" = "Failed to reorder albums.";
 "album_list_view_error_at_edit_album" = "Failed to update album title.";
 "album_list_view_error_at_read_image_data" = "Failed to read image data.";
+"error_album_add_duplicated" = "Duplicated album name.";
 
 // MARK: Tag
 

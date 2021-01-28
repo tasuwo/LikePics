@@ -271,6 +271,8 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
+    /// 同名のアルバムを追加することはできません
+    internal static let errorAlbumAddDuplicated = L10n.tr("Localizable", "error_album_add_duplicated")
     /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
     internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
     /// iCloudアカウントが異なります
