@@ -66,7 +66,6 @@
 		2C168D27256FE52B00080114 /* CloudUsageContextStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */; };
 		2C168D39256FF1DB00080114 /* CloudUsageContextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D38256FF1DB00080114 /* CloudUsageContextStorage.swift */; };
 		2C168D6A257148FC00080114 /* CloudAvailabilityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D14256FE1E400080114 /* CloudAvailabilityObserver.swift */; };
-		2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */; };
 		2C170BA0253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */; };
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
@@ -372,6 +371,7 @@
 		2CF46586251111BC00DF78E6 /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF46585251111BC00DF78E6 /* UserSettingsStorage.swift */; };
 		2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658A2511134300DF78E6 /* SettingsViewController.swift */; };
 		2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF4658D2511193B00DF78E6 /* SettingsPresenter.swift */; };
+		2CF4921925C44E9F00214238 /* UISwitch+setOnSmoothly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */; };
 		2CF5ABB124FB47D10084695F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB024FB47D10084695F /* Tag.swift */; };
 		2CF5ABB324FB486A0084695F /* Tag+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF5ABB224FB486A0084695F /* Tag+MapToDomainModel.swift */; };
 		2CF68D7B2596BE160095A3E3 /* ClipMergeImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF68D7A2596BE160095A3E3 /* ClipMergeImageCell.swift */; };
@@ -1508,7 +1508,6 @@
 			isa = PBXGroup;
 			children = (
 				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
-				2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2542,6 +2541,7 @@
 		2C95EC4924E15DB600D6EEB4 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				2C168D7B257153B900080114 /* UISwitch+setOnSmoothly.swift */,
 				2C3D649F2512E48B009C0749 /* UICollectionView+ApplySelection.swift */,
 				2C95EC4A24E15DC700D6EEB4 /* UIImage+AspectRatioConstraint.swift */,
 				2CA9DBEA258598E700D88ED4 /* UIView+ConstraintFittingIn.swift */,
@@ -4384,6 +4384,7 @@
 				2C8B3070252834E900A0A151 /* ClipInformationViewDataSource.swift in Sources */,
 				2C51D45224E19533006811F6 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				2CB6DA0D24E115E200D527FB /* ClipPreviewPresentationAnimator.swift in Sources */,
+				2CF4921925C44E9F00214238 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */,
 				2CE22D4924E2A45A00449210 /* ClipPreviewView.swift in Sources */,
 				2CB0712C250904E90000E7E1 /* TagCollectionView.swift in Sources */,
@@ -4546,7 +4547,6 @@
 				2C0B119324E2ABB90054016C /* ClipPreviewViewController.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
 				2C11718325A8802400BE75AB /* ClipCollection_ShareContext.swift in Sources */,
-				2C168D7C257153B900080114 /* UISwitch+setOnSmoothly.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
 				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
