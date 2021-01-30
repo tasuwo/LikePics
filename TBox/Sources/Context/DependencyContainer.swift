@@ -135,7 +135,7 @@ class DependencyContainer {
 
         self.cloudChangeDetecter = CloudKitChangeDetecter()
 
-        self.coreDataStack.dependency = self
+        self.coreDataStack.observer = self
         self.cloudChangeDetecter.set(self.integrityValidationService)
         self.cloudChangeDetecter.startObserve(self.coreDataStack)
     }
@@ -194,10 +194,10 @@ class DependencyContainer {
     }
 }
 
-extension DependencyContainer: CoreDataStackDependency {
-    // MARK: - CoreDataStackDependency
+extension DependencyContainer: CoreDataStackObserver {
+    // MARK: - CoreDataStackObserver
 
-    func coreDataStack(_ coreDataStack: CoreDataStack, replaced container: NSPersistentCloudKitContainer) {
+    func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer) {
         let newImageQueryContext = coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         let newCommandContext = coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
 
@@ -215,14 +215,3 @@ extension DependencyContainer: CoreDataStackDependency {
 }
 
 extension ClipCommandService: ClipStorable {}
-
-extension CoreDataStack {
-    func newBackgroundContext(on queue: DispatchQueue) -> NSManagedObjectContext {
-        return queue.sync {
-            let context = self.newBackgroundContext
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            context.transactionAuthor = CoreDataStack.transactionAuthor
-            return context
-        }
-    }
-}

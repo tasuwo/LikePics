@@ -6,8 +6,8 @@ import Common
 import CoreData
 import Domain
 
-public protocol CoreDataStackDependency: AnyObject {
-    func coreDataStack(_ coreDataStack: CoreDataStack, replaced container: NSPersistentCloudKitContainer)
+public protocol CoreDataStackObserver: AnyObject {
+    func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer)
 }
 
 public class CoreDataStack {
@@ -15,19 +15,15 @@ public class CoreDataStack {
 
     // MARK: Internals
 
-    public static let transactionAuthor = "app"
-
     public var viewContext: NSManagedObjectContext {
         return self.persistentContainer.viewContext
     }
 
-    public var newBackgroundContext: NSManagedObjectContext {
-        return self.persistentContainer.newBackgroundContext()
-    }
-
-    public weak var dependency: CoreDataStackDependency?
+    public weak var observer: CoreDataStackObserver?
 
     // MARK: Privates
+
+    private static let transactionAuthor = "app"
 
     private var persistentContainer: NSPersistentCloudKitContainer
     private var isICloudSyncEnabled: Bool
@@ -108,6 +104,19 @@ public class CoreDataStack {
 
     // MARK: - Methods
 
+    public func newBackgroundContext(on queue: DispatchQueue) -> NSManagedObjectContext {
+        return queue.sync {
+            let context = self.persistentContainer.newBackgroundContext()
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            context.transactionAuthor = CoreDataStack.transactionAuthor
+            return context
+        }
+    }
+}
+
+// MARK: - Load/Reload Stack
+
+extension CoreDataStack {
     private static func makeContainer(isICloudSyncEnabled: Bool) -> NSPersistentCloudKitContainer {
         let container = PersistentContainerLoader.load()
 
@@ -150,10 +159,14 @@ public class CoreDataStack {
             self.persistentContainer = newPersistentContainer
             self.isICloudSyncEnabled = isICloudSyncEnabled
 
-            self.dependency?.coreDataStack(self, replaced: newPersistentContainer)
+            self.observer?.coreDataStack(self, reloaded: newPersistentContainer)
         }
     }
+}
 
+// MARK: - Persistent History
+
+extension CoreDataStack {
     @objc
     private func storeRemoteChange(_ notification: Notification) {
         self.historyQueue.addOperation {
@@ -185,9 +198,9 @@ public class CoreDataStack {
     }
 }
 
-extension CoreDataStack: CloudStack {
-    // MARK: - CloudStack
+// MARK: - CloudStack
 
+extension CoreDataStack: CloudStack {
     public var isCloudSyncEnabled: Bool {
         return self.isICloudSyncEnabled
     }
