@@ -90,6 +90,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let _tags: CurrentValueSubject<[Tag.Identity: OrderedTag], Never> = .init([:])
     private let _selections: CurrentValueSubject<Set<Tag.Identity>, Never> = .init([])
     private let _filteredTagIds: CurrentValueSubject<[Tag.Identity], Never> = .init([])
+    private let _creatingTagName: CurrentValueSubject<String?, Never> = .init(nil)
 
     private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
     private let _isEmptyMessageDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
@@ -172,11 +173,27 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
             }
             .store(in: &self.subscriptions)
 
+        self.query.tags
+            .catch { _ in Just([]) }
+            // HACK: CollectionViewへの反映を待ってから選択する必要があるため、若干遅延させる
+            .delay(for: 0.1, scheduler: DispatchQueue.global())
+            .sink { [weak self] tags in
+                guard let self = self else { return }
+                if let creatingTagName = self._creatingTagName.value,
+                    let createdTag = tags.first(where: { $0.name == creatingTagName })
+                {
+                    self.select.send(createdTag.id)
+                    self._creatingTagName.send(nil)
+                }
+            }
+            .store(in: &self.subscriptions)
+
         self.inputtedQuery.send("")
 
         self.create
             .sink { [weak self] name in
                 guard let self = self else { return }
+                self._creatingTagName.send(name)
                 guard case let .failure(error) = self.clipCommandService.create(tagWithName: name) else { return }
                 switch error {
                 case .duplicated:
@@ -184,12 +201,14 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                     Duplicated tag name "\(name)". (code: \(error.rawValue))
                     """))
                     self.displayErrorMessage.send(L10n.errorTagAddDuplicated)
+                    self._creatingTagName.send(nil)
 
                 default:
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to add tag. (code: \(error.rawValue))
                     """))
                     self.displayErrorMessage.send(L10n.errorTagAddDefault)
+                    self._creatingTagName.send(nil)
                 }
             }
             .store(in: &self.subscriptions)
