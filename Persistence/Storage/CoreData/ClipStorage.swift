@@ -328,10 +328,6 @@ extension ClipStorage: ClipStorageProtocol {
 
     public func create(albumWithTitle title: String) -> Result<Domain.Album, ClipStorageError> {
         do {
-            guard case .failure = try self.fetchAlbum(for: title) else {
-                self.logger.write(ConsoleLog(level: .error, message: "Failed to create album. Duplicated."))
-                return .failure(.duplicated)
-            }
             let request: NSFetchRequest<Album> = Album.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
             let albums = try self.context.fetch(request)

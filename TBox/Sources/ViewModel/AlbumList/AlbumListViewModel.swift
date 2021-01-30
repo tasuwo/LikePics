@@ -157,13 +157,7 @@ extension AlbumListViewModel {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to add album. (message: \(error.localizedDescription), code: \(error.rawValue))
                     """))
-                    switch error {
-                    case .duplicated:
-                        self.displayErrorMessage.send(L10n.errorAlbumAddDuplicated)
-
-                    default:
-                        self.displayErrorMessage.send(L10n.albumListViewErrorAtAddAlbum)
-                    }
+                    self.displayErrorMessage.send(L10n.albumListViewErrorAtAddAlbum)
                 }
             }
             .store(in: &self.subscriptions)

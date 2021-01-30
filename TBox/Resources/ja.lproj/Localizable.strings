@@ -212,7 +212,6 @@
 "album_list_view_error_at_reorder_album" = "アルバムの並べ替えに失敗しました";
 "album_list_view_error_at_edit_album" = "アルバムタイトルの更新に失敗しました";
 "album_list_view_error_at_read_image_data" = "画像の読み込みに失敗しました";
-"error_album_add_duplicated" = "同名のアルバムを追加することはできません";
 
 // MARK: Tag
 
