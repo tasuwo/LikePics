@@ -18,7 +18,8 @@ public struct SearchableTagsStorage {
     // MARK: - Methods
 
     public mutating func perform(query: String, to tags: [Tag]) -> [Tag] {
-        let ids = Set(tags.map({ $0.id }))
+        let tagByIds = tags.reduce(into: [Tag.Identity: Tag]()) { $0[$1.id] = $1 }
+        let ids = Set(tagByIds.keys)
 
         defer {
             cache = ids
@@ -28,7 +29,10 @@ public struct SearchableTagsStorage {
         if cache != ids {
             return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
         } else if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
-            return lastResult.tags
+            let appliedTags = lastResult.tags.applying(tagByIds)
+            self.lastResult = .init(lastComparableFilterQuery: comparableFilterQuery,
+                                    tags: appliedTags)
+            return appliedTags
         } else {
             return self.perform(comparableFilterQuery: comparableFilterQuery, to: tags)
         }
@@ -50,5 +54,13 @@ public struct SearchableTagsStorage {
                                 tags: filteredTags)
 
         return filteredTags
+    }
+}
+
+extension Array where Element == Tag {
+    func applying(_ tagByIds: [Tag.Identity: Tag]) -> Self {
+        return self
+            .map { $0.id }
+            .compactMap { tagByIds[$0] }
     }
 }
