@@ -38,7 +38,6 @@ class DependencyContainer {
     let imageQueryService: ImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporariesPersistServiceProtocol
-    let cloudChangeDetecter: CloudKitChangeDetecter
 
     // MARK: Core Data
 
@@ -133,11 +132,8 @@ class DependencyContainer {
                                                         logger: self.logger,
                                                         queue: self.clipCommandQueue)
 
-        self.cloudChangeDetecter = CloudKitChangeDetecter()
-
-        self.coreDataStack.observer = self
-        self.cloudChangeDetecter.set(self.integrityValidationService)
-        self.cloudChangeDetecter.startObserve(self.coreDataStack)
+        self.coreDataStack.coreDataStackObserver = self
+        self.coreDataStack.cloudStackObserver = integrityValidationService
     }
 
     // MARK: - Methods

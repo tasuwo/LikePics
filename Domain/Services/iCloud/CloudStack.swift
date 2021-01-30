@@ -5,4 +5,5 @@
 public protocol CloudStack: AnyObject {
     var isCloudSyncEnabled: Bool { get }
     func reload(isCloudSyncEnabled: Bool)
+    func set(_ observer: CloudStackObserver)
 }

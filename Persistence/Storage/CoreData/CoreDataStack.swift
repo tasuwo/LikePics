@@ -19,7 +19,8 @@ public class CoreDataStack {
         return self.persistentContainer.viewContext
     }
 
-    public weak var observer: CoreDataStackObserver?
+    public weak var coreDataStackObserver: CoreDataStackObserver?
+    public weak var cloudStackObserver: CloudStackObserver?
 
     // MARK: Privates
 
@@ -86,14 +87,14 @@ public class CoreDataStack {
         self.notificationCenter = notificationCenter
         self.logger = logger
 
-        guard let tokenData = try? Data(contentsOf: self.tokenFile) else { return }
-        do {
-            self.lastHistoryToken = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self,
-                                                                           from: tokenData)
-        } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to unarchive NSPersistentHistoryToken. Error = \(error)
-            """))
+        if let tokenData = try? Data(contentsOf: self.tokenFile) {
+            do {
+                self.lastHistoryToken = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: tokenData)
+            } catch {
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to unarchive NSPersistentHistoryToken. Error = \(error)
+                """))
+            }
         }
 
         self.notificationCenter.addObserver(self,
@@ -159,7 +160,7 @@ extension CoreDataStack {
             self.persistentContainer = newPersistentContainer
             self.isICloudSyncEnabled = isICloudSyncEnabled
 
-            self.observer?.coreDataStack(self, reloaded: newPersistentContainer)
+            self.coreDataStackObserver?.coreDataStack(self, reloaded: newPersistentContainer)
         }
     }
 }
@@ -189,12 +190,44 @@ extension CoreDataStack {
                 return
             }
 
-            self.notificationCenter.post(name: .didFindRelevantTransactions,
-                                         object: self,
-                                         userInfo: ["transactions": transactions])
+            var insertedTagObjectIDs = [NSManagedObjectID]()
+            var updatedTagObjectIDs = [NSManagedObjectID]()
+            var deletedTagObjectIDs = [NSManagedObjectID]()
+            for transaction in transactions where transaction.changes != nil {
+                // swiftlint:disable:next force_unwrapping
+                for change in transaction.changes! where change.isTagChange {
+                    switch change.changeType {
+                    case .insert:
+                        insertedTagObjectIDs.append(change.changedObjectID)
+
+                    case .update:
+                        updatedTagObjectIDs.append(change.changedObjectID)
+
+                    case .delete:
+                        deletedTagObjectIDs.append(change.changedObjectID)
+
+                    @unknown default:
+                        break
+                    }
+                }
+            }
+
+            self.cloudStackObserver?.didRemoteChangedTags(inserted: insertedTagObjectIDs,
+                                                          updated: updatedTagObjectIDs,
+                                                          deleted: deletedTagObjectIDs)
 
             self.lastHistoryToken = transactions.last?.token
         }
+    }
+}
+
+private extension NSPersistentHistoryChange {
+    var isTagChange: Bool {
+        return self.changedObjectID.entity.name == Tag.entity().name
+    }
+
+    var isInsertOrUpdate: Bool {
+        return self.changeType == .insert || self.changeType == .update
     }
 }
 
@@ -207,5 +240,9 @@ extension CoreDataStack: CloudStack {
 
     public func reload(isCloudSyncEnabled: Bool) {
         self.reloadStack(isICloudSyncEnabled: isCloudSyncEnabled)
+    }
+
+    public func set(_ observer: CloudStackObserver) {
+        self.cloudStackObserver = observer
     }
 }

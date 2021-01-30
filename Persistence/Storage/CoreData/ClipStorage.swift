@@ -820,7 +820,14 @@ extension ClipStorage: ClipStorageProtocol {
         return .failure(.internalError)
     }
 
-    public func deduplicateTag(for id: NSManagedObjectID) -> [Domain.Tag.Identity] {
+    public func deduplicateTag(for id: ObjectID) -> [Domain.Tag.Identity] {
+        guard let id = id as? NSManagedObjectID else {
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Invalid ID for deduplicate.
+            """))
+            return []
+        }
+
         guard let tag = context.object(with: id) as? Tag, let name = tag.name else {
             self.logger.write(ConsoleLog(level: .info, message: """
             Failed to retrieve a valid tag with ID: \(id).

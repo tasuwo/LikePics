@@ -50,4 +50,8 @@ public protocol ClipStorageProtocol {
     func deleteAlbum(having id: Album.Identity) -> Result<Album, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<[Tag], ClipStorageError>
     func deleteAll() -> Result<Void, ClipStorageError>
+
+    // MARK: Deduplicate
+
+    func deduplicateTag(for id: ObjectID) -> [Domain.Tag.Identity]
 }

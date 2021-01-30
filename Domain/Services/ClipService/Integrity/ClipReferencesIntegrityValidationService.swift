@@ -120,13 +120,32 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
     }
 }
 
-extension ClipReferencesIntegrityValidationService: RemoteChangeDetecterDelegate {
-    // MARK: - RemoteChangeDetecterDelegate
+extension ClipReferencesIntegrityValidationService: CloudStackObserver {
+    // MARK: - CloudStackObserver
 
-    public func didDetectChangedTag(_ remoteChangeDetecter: RemoteChangeDetecter) {
-        self.queue.sync {
+    public func didRemoteChangedTags(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID]) {
+        queue.async {
             do {
-                try self.validateAndFixTagsIntegrityIfNeeded()
+                let insertOrUpdatedIDs = inserted + updated
+                if !insertOrUpdatedIDs.isEmpty {
+                    try self.clipStorage.beginTransaction()
+                    insertOrUpdatedIDs.forEach { objectId in
+                        _ = self.clipStorage.deduplicateTag(for: objectId)
+                    }
+                    try self.clipStorage.commitTransaction()
+                }
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to deduplicate: \(error.localizedDescription)
+                """))
+            }
+
+            do {
+                if !inserted.isEmpty || !updated.isEmpty || !deleted.isEmpty {
+                    // TODO: パフォーマンス向上を検討する
+                    try self.validateAndFixTagsIntegrityIfNeeded()
+                }
             } catch {
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
