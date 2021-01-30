@@ -75,6 +75,14 @@ class SearchResultViewController: UIViewController {
         self.viewModel.inputs.viewDidAppear.send(())
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
     // MARK: - Methods
 
     // MARK: Bind

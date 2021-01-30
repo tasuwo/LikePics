@@ -91,6 +91,14 @@ class AlbumViewController: UIViewController {
         self.viewModel.inputs.viewDidAppear.send(())
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
     @IBAction func didTapAlbumView(_ sender: UITapGestureRecognizer) {
         self.navigationItem.titleView?.endEditing(true)
     }
