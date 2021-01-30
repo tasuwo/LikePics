@@ -1117,5 +1117,126 @@ class ClipStorageSpec: QuickSpec {
                 }
             }
         }
+
+        describe("deduplicateTag(for:)") {
+            var results: [Domain.Tag.Identity]!
+
+            context("重複したタグが存在しない") {
+                beforeEach {
+                    let tag1 = Persistence.Tag(context: managedContext)
+                    tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    tag1.name = "tag1"
+                    let tag2 = Persistence.Tag(context: managedContext)
+                    tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    tag2.name = "tag2"
+                    let clip = Persistence.Clip(context: managedContext)
+                    clip.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    clip.tags = [tag1, tag2]
+                    try! managedContext.save()
+
+                    results = service.deduplicateTag(for: tag1.objectID)
+                    try! managedContext.save()
+                }
+                it("空が返ってくる") {
+                    expect(results).to(beEmpty())
+                }
+                it("Tagは削除されない") {
+                    let request: NSFetchRequest<Persistence.Tag> = Tag.fetchRequest()
+                    let tags = try! managedContext.fetch(request)
+                    expect(tags).to(haveCount(2))
+                }
+                it("Clipに紐づいたTagは削除されない") {
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
+                    let clips = try! managedContext.fetch(request)
+                    expect(clips).to(haveCount(1))
+                    guard let tags = (clips.first?.tags?.allObjects as? [Persistence.Tag])?.sorted(by: { $0.name! < $1.name! }) else {
+                        fail("クリップにタグが存在しない")
+                        return
+                    }
+                    expect(tags).to(haveCount(2))
+                }
+            }
+
+            context("重複したタグが存在する") {
+                beforeEach {
+                    let tag1 = Persistence.Tag(context: managedContext)
+                    tag1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    tag1.name = "duplicated"
+                    let tag2 = Persistence.Tag(context: managedContext)
+                    tag2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    tag2.name = "tag1"
+                    let tag3 = Persistence.Tag(context: managedContext)
+                    tag3.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")
+                    tag3.name = "duplicated"
+                    let tag4 = Persistence.Tag(context: managedContext)
+                    tag4.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")
+                    tag4.name = "tag2"
+                    let tag5 = Persistence.Tag(context: managedContext)
+                    tag5.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")
+                    tag5.name = "duplicated"
+
+                    let clip1 = Persistence.Clip(context: managedContext)
+                    clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                    clip1.tags = [tag1, tag2, tag3]
+                    let clip2 = Persistence.Clip(context: managedContext)
+                    clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                    clip2.tags = [tag3, tag4, tag5]
+
+                    try! managedContext.save()
+
+                    results = service.deduplicateTag(for: tag1.objectID)
+                    try! managedContext.save()
+                }
+                it("重複したタグのIDが返ってくる") {
+                    expect(results).to(equal([
+                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53"),
+                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")
+                    ]))
+                }
+                it("重複したタグが削除される") {
+                    let request: NSFetchRequest<Persistence.Tag> = Tag.fetchRequest()
+                    let tags = (try! managedContext.fetch(request))
+                        .sorted(by: { $0.id!.uuidString < $1.id!.uuidString })
+
+                    expect(tags).to(haveCount(3))
+                    guard tags.count == 3 else { return }
+
+                    expect(tags[0].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")))
+                    expect(tags[0].name).to(equal("duplicated"))
+                    expect(tags[1].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")))
+                    expect(tags[1].name).to(equal("tag1"))
+                    expect(tags[2].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")))
+                    expect(tags[2].name).to(equal("tag2"))
+                }
+                it("Clipに紐づいた重複したタグが削除され、優先されたタグに差し替えられる") {
+                    let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
+                    let clips = (try! managedContext.fetch(request)).sorted(by: { $0.id!.uuidString < $1.id!.uuidString })
+                    expect(clips).to(haveCount(2))
+                    guard clips.count == 2 else { return }
+
+                    expect(clips[0].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")))
+                    let clip1Tags = clips[0].tags?.allObjects
+                        .compactMap({ $0 as? Persistence.Tag })
+                        .sorted(by: { $0.id!.uuidString < $1.id!.uuidString })
+                    expect(clip1Tags).to(haveCount(2))
+                    guard clip1Tags?.count == 2 else { return }
+                    expect(clip1Tags?[0].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")))
+                    expect(clip1Tags?[0].name).to(equal("duplicated"))
+                    expect(clip1Tags?[1].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")))
+                    expect(clip1Tags?[1].name).to(equal("tag1"))
+
+                    expect(clips[1].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")))
+                    let clip2Tags = clips[1].tags?.allObjects
+                        .compactMap({ $0 as? Persistence.Tag })
+                        .sorted(by: { $0.id!.uuidString < $1.id!.uuidString })
+                    expect(clip2Tags).to(haveCount(2))
+                    guard clip2Tags?.count == 2 else { return }
+                    expect(clip2Tags?[0].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")))
+                    expect(clip2Tags?[0].name).to(equal("duplicated"))
+                    expect(clip2Tags?[1].id).to(equal(UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")))
+                    expect(clip2Tags?[1].name).to(equal("tag2"))
+                }
+            }
+        }
     }
 }

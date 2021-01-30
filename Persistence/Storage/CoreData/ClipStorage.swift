@@ -819,4 +819,46 @@ extension ClipStorage: ClipStorageProtocol {
     public func deleteAll() -> Result<Void, ClipStorageError> {
         return .failure(.internalError)
     }
+
+    public func deduplicateTag(for id: NSManagedObjectID) -> [Domain.Tag.Identity] {
+        guard let tag = context.object(with: id) as? Tag, let name = tag.name else {
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Failed to retrieve a valid tag with ID: \(id).
+            """))
+            return []
+        }
+
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.id, ascending: true)]
+        request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
+
+        guard var duplicates = try? context.fetch(request),
+            duplicates.count > 1,
+            let winner = duplicates.first
+        else {
+            return []
+        }
+
+        duplicates.removeFirst()
+        remove(duplicates: duplicates, winner: winner)
+
+        return duplicates.compactMap { $0.id }
+    }
+
+    private func remove(duplicates: [Tag], winner: Tag) {
+        duplicates.forEach { tag in
+            defer { context.delete(tag) }
+            guard let clips = tag.clips else { return }
+
+            for case let clip as Clip in clips {
+                let mutableTags = clip.mutableSetValue(forKey: "tags")
+
+                guard mutableTags.contains(tag) else { continue }
+                mutableTags.remove(tag)
+
+                guard !mutableTags.contains(winner) else { continue }
+                mutableTags.add(winner)
+            }
+        }
+    }
 }
