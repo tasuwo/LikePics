@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import TBoxCore
 
 protocol ClipIntegrityResolvingViewModelType: AnyObject {
     var inputs: ClipIntegrityResolvingViewModelInputs { get }
@@ -47,6 +48,7 @@ class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
 
     private let persistService: TemporariesPersistServiceProtocol
     private let integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
+    private let darwinNotificationCenter: DarwinNotificationCenterProtocol
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipIntegrityResolvingViewModel", qos: .userInteractive)
 
     private var subscriptions = Set<AnyCancellable>()
@@ -54,12 +56,24 @@ class ClipIntegrityResolvingViewModel: ClipIntegrityResolvingViewModelType,
     // MARK: - Lifecycle
 
     init(persistService: TemporariesPersistServiceProtocol,
-         integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol)
+         integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol,
+         darwinNotificationCenter: DarwinNotificationCenterProtocol)
     {
         self.persistService = persistService
         self.integrityValidationService = integrityValidationService
+        self.darwinNotificationCenter = darwinNotificationCenter
 
         self.bind()
+
+        darwinNotificationCenter.addObserver(self, for: .shareExtensionDidCompleteRequest) { [weak self] _ in
+            self?.queue.async {
+                self?.isLoading.send(true)
+                if self?.persistService.persistIfNeeded() == false {
+                    self?.integrityValidationService.validateAndFixIntegrityIfNeeded()
+                }
+                self?.finishLoading()
+            }
+        }
     }
 
     // MARK: - Methods
@@ -84,18 +98,6 @@ extension ClipIntegrityResolvingViewModel {
                 self.isLoading.send(true)
                 _ = self.persistService.persistIfNeeded()
                 self.integrityValidationService.validateAndFixIntegrityIfNeeded()
-                self.finishLoading()
-            }
-            .store(in: &self.subscriptions)
-
-        self.inputs.sceneDidBecomeActive
-            .receive(on: queue)
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.isLoading.send(true)
-                if self.persistService.persistIfNeeded() == false {
-                    self.integrityValidationService.validateAndFixIntegrityIfNeeded()
-                }
                 self.finishLoading()
             }
             .store(in: &self.subscriptions)

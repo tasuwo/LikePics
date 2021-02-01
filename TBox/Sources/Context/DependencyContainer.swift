@@ -146,7 +146,8 @@ class DependencyContainer {
 
     func makeClipIntegrityResolvingViewModel() -> ClipIntegrityResolvingViewModelType {
         return ClipIntegrityResolvingViewModel(persistService: self.persistService,
-                                               integrityValidationService: self.integrityValidationService)
+                                               integrityValidationService: self.integrityValidationService,
+                                               darwinNotificationCenter: DarwinNotificationCenter.default)
     }
 
     private static func sweepLegacyThumbnailCachesIfExists() {

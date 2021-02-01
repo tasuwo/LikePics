@@ -69,6 +69,7 @@ extension ShareNavigationRootViewController: ClipCreationDelegate {
     // MARK: - ClipTargetCollectionViewControllerDelegate
 
     func didFinish(_ viewController: ClipCreationViewController) {
+        DarwinNotificationCenter.default.post(name: .shareExtensionDidCompleteRequest)
         self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
     }
 
