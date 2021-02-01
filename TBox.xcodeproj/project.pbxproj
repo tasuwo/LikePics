@@ -83,7 +83,10 @@
 		2C1F299E2560FF2B00B89AE9 /* ImageQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F299D2560FF2B00B89AE9 /* ImageQueryService.swift */; };
 		2C1F29AA2561007800B89AE9 /* NSManagedObjectContext+Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29A92561007800B89AE9 /* NSManagedObjectContext+Block.swift */; };
 		2C21415E254858D50013F486 /* TBoxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C21415D254858D50013F486 /* TBoxUITests.swift */; };
+		2C21A6D425C859E200DEEF61 /* DarwinNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C21A6D325C859E200DEEF61 /* DarwinNotificationCenter.swift */; };
 		2C2289EE24FA15750026E24A /* PaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2289ED24FA15750026E24A /* PaddingTextField.swift */; };
+		2C23536225C860EF00A54184 /* DarwinNotification_Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C23536125C860EF00A54184 /* DarwinNotification_Name.swift */; };
+		2C23536D25C8610300A54184 /* DarwinNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C23536C25C8610300A54184 /* DarwinNotification.swift */; };
 		2C236D73251A10D000AB5EDD /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C236D72251A10D000AB5EDD /* ClipQuery.swift */; };
 		2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C25841D254FDCC300373A31 /* AppDataLoader.swift */; };
 		2C27D7B524E254A3006B5DA9 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C99275E24DDC7D300672CA7 /* Domain.framework */; platformFilter = ios; };
@@ -785,7 +788,10 @@
 		2C21415B254858D50013F486 /* TBoxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C21415D254858D50013F486 /* TBoxUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUITests.swift; sourceTree = "<group>"; };
 		2C21415F254858D50013F486 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C21A6D325C859E200DEEF61 /* DarwinNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarwinNotificationCenter.swift; sourceTree = "<group>"; };
 		2C2289ED24FA15750026E24A /* PaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTextField.swift; sourceTree = "<group>"; };
+		2C23536125C860EF00A54184 /* DarwinNotification_Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarwinNotification_Name.swift; sourceTree = "<group>"; };
+		2C23536C25C8610300A54184 /* DarwinNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarwinNotification.swift; sourceTree = "<group>"; };
 		2C236D72251A10D000AB5EDD /* ClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQuery.swift; sourceTree = "<group>"; };
 		2C25841D254FDCC300373A31 /* AppDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataLoader.swift; sourceTree = "<group>"; };
 		2C2727A224DED48500FEF1BD /* WebImageUrlFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlFinder.swift; sourceTree = "<group>"; };
@@ -1580,6 +1586,16 @@
 			path = TBoxUITests;
 			sourceTree = "<group>";
 		};
+		2C21A6D225C859D100DEEF61 /* DarwinNotification */ = {
+			isa = PBXGroup;
+			children = (
+				2C23536C25C8610300A54184 /* DarwinNotification.swift */,
+				2C21A6D325C859E200DEEF61 /* DarwinNotificationCenter.swift */,
+				2C23536125C860EF00A54184 /* DarwinNotification_Name.swift */,
+			);
+			path = DarwinNotification;
+			sourceTree = "<group>";
+		};
 		2C236D71251A10C300AB5EDD /* Query */ = {
 			isa = PBXGroup;
 			children = (
@@ -1968,6 +1984,7 @@
 		2C523CD9254AED850099F6DD /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				2C21A6D225C859D100DEEF61 /* DarwinNotification */,
 				2CA9DC3725861ADE00D88ED4 /* Context */,
 				2C2727A624DED57100FEF1BD /* Extensions */,
 				2CFC5CFE250DF294001A02E4 /* Generated */,
@@ -4276,6 +4293,7 @@
 				2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */,
 				2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */,
 				2C0512A2254EECF9007964B7 /* WebImageProvidingService_Pixiv.swift in Sources */,
+				2C21A6D425C859E200DEEF61 /* DarwinNotificationCenter.swift in Sources */,
 				2CE4B10A25922A4E003CE9FF /* ImageSource.swift in Sources */,
 				2CB8C5C02580F9D300FC812B /* ClipBuilder.swift in Sources */,
 				2CF2FE0925924CB400412FC7 /* ImageSourceProvider.swift in Sources */,
@@ -4289,12 +4307,14 @@
 				2C6E09A224E6DD5A00B541D9 /* ClipCreationViewModel.swift in Sources */,
 				2C05128C254EECEF007964B7 /* WebImageUrlFinder.swift in Sources */,
 				2C0512A4254EECF9007964B7 /* WebImageProvider.swift in Sources */,
+				2C23536225C860EF00A54184 /* DarwinNotification_Name.swift in Sources */,
 				2C0512B7254EED19007964B7 /* OnMainThread.swift in Sources */,
 				2C6E09A024E6DD4400B541D9 /* ClipCreationViewController.swift in Sources */,
 				2CA9DC3925861AEC00D88ED4 /* ViewControllerFactory.swift in Sources */,
 				2C553298259252730086B36B /* RawImageSourceProvider.swift in Sources */,
 				2C0512A0254EECF9007964B7 /* WebImageProvidingService_Twitter.swift in Sources */,
 				2C0512FA254EF0F1007964B7 /* WebImageUrlSet.swift in Sources */,
+				2C23536D25C8610300A54184 /* DarwinNotification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
