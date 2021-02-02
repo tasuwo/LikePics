@@ -15,6 +15,8 @@ protocol AlbumListViewModelType {
 protocol AlbumListViewModelInputs {
     var operationRequested: PassthroughSubject<AlbumList.Operation, Never> { get }
 
+    var inputtedQuery: PassthroughSubject<String, Never> { get }
+
     var createAlbum: PassthroughSubject<String, Never> { get }
     var deleteAlbum: PassthroughSubject<Album.Identity, Never> { get }
     var hideAlbum: PassthroughSubject<Album.Identity, Never> { get }
@@ -48,6 +50,8 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     let operationRequested: PassthroughSubject<AlbumList.Operation, Never> = .init()
 
+    let inputtedQuery: PassthroughSubject<String, Never> = .init()
+
     let createAlbum: PassthroughSubject<String, Never> = .init()
     let deleteAlbum: PassthroughSubject<Album.Identity, Never> = .init()
     let hideAlbum: PassthroughSubject<Album.Identity, Never> = .init()
@@ -57,7 +61,20 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     // MARK: AlbumListViewModelOutputs
 
-    var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> { _albums.eraseToAnyPublisher() }
+    var albums: AnyPublisher<[AlbumListViewLayout.Item], Never> {
+        _filteredItemIds
+            .map { $0.compactMap { [weak self] id in self?._items.value[id] } }
+            .combineLatest(self.settingStorage.showHiddenItems)
+            .map { items, showHiddenItems in
+                guard showHiddenItems == false else { return items }
+                return items.map { item -> AlbumListViewLayout.Item in
+                    return .init(album: item.album.removingHiddenClips(),
+                                 isEditing: item.isEditing)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
     var operation: AnyPublisher<AlbumList.Operation, Never> { _operation.eraseToAnyPublisher() }
     var isCollectionViewDisplaying: AnyPublisher<Bool, Never> { _isCollectionViewDisplaying.eraseToAnyPublisher() }
     var isEmptyMessageDisplaying: AnyPublisher<Bool, Never> { _isEmptyMessageDisplaying.eraseToAnyPublisher() }
@@ -67,7 +84,8 @@ class AlbumListViewModel: AlbumListViewModelType,
 
     // MARK: Privates
 
-    private let _albums: CurrentValueSubject<[AlbumListViewLayout.Item], Never>
+    private let _items: CurrentValueSubject<[Album.Identity: AlbumListViewLayout.Item], Never> = .init([:])
+    private let _filteredItemIds: CurrentValueSubject<[Album.Identity], Never> = .init([])
     private let _operation: CurrentValueSubject<AlbumList.Operation, Never> = .init(.none)
     private let _isCollectionViewDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
     private let _isEmptyMessageDisplaying: CurrentValueSubject<Bool, Never> = .init(false)
@@ -77,6 +95,7 @@ class AlbumListViewModel: AlbumListViewModelType,
     private let clipCommandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
+    private var searchStorage: SearchableStorage<Album> = .init()
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -92,10 +111,6 @@ class AlbumListViewModel: AlbumListViewModelType,
         self.settingStorage = settingStorage
         self.logger = logger
 
-        let albums = query.albums.value
-            .map { AlbumListViewLayout.Item(album: $0, isEditing: false) }
-        self._albums = .init(albums)
-
         self.bind()
     }
 }
@@ -109,22 +124,18 @@ extension AlbumListViewModel {
                 return Just([Album]()).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-            .combineLatest(self.settingStorage.showHiddenItems, self._operation)
-            .sink { [weak self] albums, showHiddenItems, operation in
+            .combineLatest(inputtedQuery, settingStorage.showHiddenItems, _operation)
+            .sink { [weak self] originalAlbums, query, showHiddenItems, operation in
                 guard let self = self else { return }
 
-                let newAlbums: [AlbumListViewLayout.Item]
-                if showHiddenItems {
-                    newAlbums = albums
-                        .map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) })
-                } else {
-                    newAlbums = albums
-                        .filter { !$0.isHidden }
-                        .map { $0.removingHiddenClips() }
-                        .map({ AlbumListViewLayout.Item(album: $0, isEditing: operation.isEditing) })
+                let albums = originalAlbums.reduce(into: [Album.Identity: AlbumListViewLayout.Item]()) { dict, value in
+                    dict[value.id] = AlbumListViewLayout.Item(album: value, isEditing: operation.isEditing)
                 }
 
-                if newAlbums.isEmpty {
+                let filteringAlbums = originalAlbums.filter { showHiddenItems ? true : $0.isHidden == false }
+                let filteredAlbumIds = self.searchStorage.perform(query: query, to: filteringAlbums).map { $0.id }
+
+                if filteringAlbums.isEmpty {
                     self._isCollectionViewDisplaying.send(false)
                     self._isEmptyMessageDisplaying.send(true)
                 } else {
@@ -132,14 +143,17 @@ extension AlbumListViewModel {
                     self._isCollectionViewDisplaying.send(true)
                 }
 
-                self._albums.send(newAlbums)
+                self._items.send(albums)
+                self._filteredItemIds.send(filteredAlbumIds)
 
-                if operation.isEditing, newAlbums.isEmpty {
+                if operation.isEditing, filteringAlbums.isEmpty {
                     self._operation.send(.none)
                     return
                 }
             }
             .store(in: &self.subscriptions)
+
+        self.inputtedQuery.send("")
 
         self.operationRequested
             .sink { [weak self] requested in self?._operation.send(requested) }

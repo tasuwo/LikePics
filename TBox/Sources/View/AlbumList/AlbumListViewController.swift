@@ -39,6 +39,7 @@ class AlbumListViewController: UIViewController {
     )
     private var collectionView: AlbumListCollectionView!
     private var dataSource: Layout.DataSource!
+    private let searchController = UISearchController(searchResultsController: nil)
 
     // MARK: Components
 
@@ -80,6 +81,7 @@ class AlbumListViewController: UIViewController {
         self.setupAppearance()
         self.setupNavigationBar()
         self.setupCollectionView()
+        self.setupSearchController()
         self.setupEmptyMessage()
 
         self.bind(to: viewModel)
@@ -139,7 +141,7 @@ class AlbumListViewController: UIViewController {
         // Dependency Outputs
 
         dependency.outputs.albums
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .sink { [weak self] albums in
                 guard let self = self else { return }
                 Layout.apply(items: albums, to: self.dataSource, in: self.collectionView)
@@ -229,6 +231,17 @@ class AlbumListViewController: UIViewController {
 
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.albumListViewTitle
+    }
+
+    // MARK: SearchController
+
+    func setupSearchController() {
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = L10n.tagListViewPlaceholder
+        searchController.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
 
     // MARK: EmptyMessage
@@ -425,5 +438,51 @@ extension AlbumListViewController {
         // HACK: nilだとデフォルトの影が描画されてしまうため、空の BezierPath を指定する
         parameters.shadowPath = UIBezierPath()
         return parameters
+    }
+}
+
+extension AlbumListViewController: UISearchBarDelegate {
+    // MARK: - UISearchBarDelegate
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        RunLoop.main.perform {
+            self.viewModel.inputs.inputtedQuery.send(searchBar.text ?? "")
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // HACK: marked text 入力を待つために遅延を設ける
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            RunLoop.main.perform {
+                self.viewModel.inputs.inputtedQuery.send(searchBar.text ?? "")
+            }
+        }
+        return true
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchController.searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchController.searchBar.setShowsCancelButton(false, animated: true)
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchController.searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchController.searchBar.resignFirstResponder()
+    }
+}
+
+extension AlbumListViewController: UISearchResultsUpdating {
+    // MARK: - UISearchResultsUpdating
+
+    func updateSearchResults(for searchController: UISearchController) {
+        RunLoop.main.perform {
+            self.viewModel.inputs.inputtedQuery.send(searchController.searchBar.text ?? "")
+        }
     }
 }
