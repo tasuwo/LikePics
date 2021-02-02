@@ -10,7 +10,8 @@ extension Album {
         clips: [Clip] = [],
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
-        updatedDate: Date = Date(timeIntervalSince1970: 0)
+        updatedDate: Date = Date(timeIntervalSince1970: 0),
+        _searchableTitle: String? = nil
     ) -> Self {
         return .init(
             id: id,
@@ -18,7 +19,8 @@ extension Album {
             clips: clips,
             isHidden: isHidden,
             registeredDate: registeredDate,
-            updatedDate: updatedDate
+            updatedDate: updatedDate,
+            _searchableTitle: _searchableTitle
         )
     }
 }
