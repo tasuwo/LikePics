@@ -197,8 +197,9 @@ public class TagSelectionViewController: UIViewController {
     // MARK: SearchBar
 
     private func setupSearchBar() {
-        self.searchBar.delegate = self
-        self.searchBar.showsCancelButton = false
+        searchBar.delegate = self
+        searchBar.showsCancelButton = false
+        searchBar.placeholder = L10n.placeholderSearchTag
     }
 
     // MARK: EmptyMessage

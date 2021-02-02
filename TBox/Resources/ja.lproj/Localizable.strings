@@ -71,11 +71,9 @@
 
 "album_list_view_alert_for_add_title" = "新規アルバム";
 "album_list_view_alert_for_add_message" = "このアルバムの名前を入力してください";
-"album_list_view_alert_for_add_placeholder" = "アルバム名";
 
 "album_list_view_alert_for_edit_title" = "アルバム名の編集";
 "album_list_view_alert_for_edit_message" = "このアルバムの名前を入力してください";
-"album_list_view_alert_for_edit_placeholder" = "アルバム名";
 
 "album_list_view_alert_for_delete_title" = "\"%@\"を削除";
 "album_list_view_alert_for_delete_message" = "アルバム\"%@\"を削除しますか？\n含まれるクリップは削除されません";
@@ -93,7 +91,6 @@
 "album_view_empty_title" = "アルバム内にクリップがありません";
 
 "search_entry_view_title" = "検索";
-"search_entry_view_search_bar_placeholder" = "キーワード";
 "search_entry_view_error_at_search" = "検索に失敗しました";
 
 "search_result_title_uncategorized" = "未分類";
@@ -102,7 +99,6 @@
 "search_result_for_uncategorized_empty_title" = "未分類のクリップはありません";
 
 "tag_list_view_title" = "タグ";
-"tag_list_view_placeholder" = "タグを探す";
 
 "tag_list_view_context_menu_action_copy" = "コピー";
 "tag_list_view_context_menu_action_delete" = "削除";
@@ -112,11 +108,9 @@
 
 "tag_list_view_alert_for_add_title" = "新規タグ";
 "tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
-"tag_list_view_alert_for_add_placeholder" = "タグ名";
 
 "tag_list_view_alert_for_update_title" = "タグ名の変更";
 "tag_list_view_alert_for_update_message" = "このタグの新しい名前を入力してください";
-"tag_list_view_alert_for_update_placeholder" = "タグ名";
 
 "tag_list_view_alert_for_delete_message" = "タグ「%@」を削除しますか？\n含まれるクリップは削除されません";
 "tag_list_view_alert_for_delete_action" = "タグを削除";
@@ -131,7 +125,6 @@
 
 "clip_preview_view_alert_for_edit_site_url_title" = "サイトのURL";
 "clip_preview_view_alert_for_edit_site_url_message" = "この画像の保存元のサイトのURLを入力してください";
-"clip_preview_view_alert_for_edit_site_url_placeholder" = "https://www...";
 
 "clip_preview_view_alert_for_delete_message" = "クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます";
 "clip_preview_view_alert_for_add_to_album" = "アルバムに追加する";
@@ -164,6 +157,15 @@
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";
+
+// MARK: Placeholder
+
+"placeholder_search_tag" = "タグを探す";
+"placeholder_search_album" = "アルバムを探す";
+
+"placeholder_tag_name" = "タグ名";
+"placeholder_album_name" = "アルバム名";
+"placeholder_url" = "https://www...";
 
 // MARK: - Error
 

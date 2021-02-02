@@ -50,7 +50,7 @@ class SearchEntryViewController: UIViewController {
 
     private func makeSearchController() -> UISearchController {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = L10n.searchEntryViewSearchBarPlaceholder
+        // searchController.searchBar.placeholder = L10n.searchEntryViewSearchBarPlaceholder
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.delegate = self
         searchController.delegate = self

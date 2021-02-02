@@ -60,6 +60,8 @@ internal enum L10n {
     internal static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
     /// 同名のタグを追加することはできません
     internal static let errorTagAddDuplicated = L10n.tr("Localizable", "error_tag_add_duplicated")
+    /// タグを探す
+    internal static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
     /// このタグの名前を入力してください
     internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
     /// タグ名

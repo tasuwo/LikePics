@@ -29,7 +29,7 @@ class AlbumSelectionViewController: UIViewController {
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
-                             placeholder: L10n.albumListViewAlertForAddPlaceholder)
+                             placeholder: L10n.placeholderAlbumName)
     )
     private var dataSource: Layout.DataSource!
 
@@ -150,8 +150,9 @@ class AlbumSelectionViewController: UIViewController {
     // MARK: SearchBar
 
     private func setupSearchBar() {
-        self.searchBar.delegate = self
-        self.searchBar.showsCancelButton = false
+        searchBar.delegate = self
+        searchBar.placeholder = L10n.placeholderSearchAlbum
+        searchBar.showsCancelButton = false
     }
 
     // MARK: EmptyMessage

@@ -48,3 +48,7 @@
 "error_tag_add_duplicated" = "Duplicated tag name.";
 
 "confirm_alert_ok" = "OK";
+
+// MARK: - Placeholder
+
+"placeholder_search_tag" = "タグを探す";

@@ -30,12 +30,12 @@ class AlbumListViewController: UIViewController {
     private lazy var addAlbumAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForAddTitle,
                              message: L10n.albumListViewAlertForAddMessage,
-                             placeholder: L10n.albumListViewAlertForAddPlaceholder)
+                             placeholder: L10n.placeholderAlbumName)
     )
     private lazy var editAlbumTitleAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.albumListViewAlertForEditTitle,
                              message: L10n.albumListViewAlertForEditMessage,
-                             placeholder: L10n.albumListViewAlertForEditPlaceholder)
+                             placeholder: L10n.placeholderAlbumName)
     )
     private var collectionView: AlbumListCollectionView!
     private var dataSource: Layout.DataSource!
@@ -238,7 +238,7 @@ class AlbumListViewController: UIViewController {
     func setupSearchController() {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = L10n.tagListViewPlaceholder
+        searchController.searchBar.placeholder = L10n.placeholderSearchAlbum
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         definesPresentationContext = true

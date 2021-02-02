@@ -48,3 +48,7 @@
 "error_tag_add_duplicated" = "同名のタグを追加することはできません";
 
 "confirm_alert_ok" = "OK";
+
+// MARK: - Placeholder
+
+"placeholder_search_tag" = "タグを探す";

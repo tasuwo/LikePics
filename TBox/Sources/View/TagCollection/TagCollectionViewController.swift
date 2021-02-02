@@ -29,12 +29,12 @@ class TagCollectionViewController: UIViewController {
     private lazy var addAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
-                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+                             placeholder: L10n.placeholderTagName)
     )
     private lazy var updateAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForUpdateTitle,
                              message: L10n.tagListViewAlertForUpdateMessage,
-                             placeholder: L10n.tagListViewAlertForUpdatePlaceholder)
+                             placeholder: L10n.placeholderTagName)
     )
     private var dataSource: Layout.DataSource!
     private var collectionView: UICollectionView!
@@ -197,7 +197,7 @@ class TagCollectionViewController: UIViewController {
     func setupSearchController() {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = L10n.tagListViewPlaceholder
+        searchController.searchBar.placeholder = L10n.placeholderSearchTag
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         definesPresentationContext = true

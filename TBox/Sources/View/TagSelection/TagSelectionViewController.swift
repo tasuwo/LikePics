@@ -31,7 +31,7 @@ class TagSelectionViewController: UIViewController {
     private lazy var alertContainer = TextEditAlert(
         configuration: .init(title: L10n.tagListViewAlertForAddTitle,
                              message: L10n.tagListViewAlertForAddMessage,
-                             placeholder: L10n.tagListViewAlertForAddPlaceholder)
+                             placeholder: L10n.placeholderTagName)
     )
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
@@ -215,8 +215,9 @@ class TagSelectionViewController: UIViewController {
     // MARK: SearchBar
 
     private func setupSearchBar() {
-        self.searchBar.delegate = self
-        self.searchBar.showsCancelButton = false
+        searchBar.delegate = self
+        searchBar.showsCancelButton = false
+        searchBar.placeholder = L10n.placeholderSearchTag
     }
 
     // MARK: EmptyMessage

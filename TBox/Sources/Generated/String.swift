@@ -12,8 +12,6 @@ import Foundation
 internal enum L10n {
     /// このアルバムの名前を入力してください
     internal static let albumListViewAlertForAddMessage = L10n.tr("Localizable", "album_list_view_alert_for_add_message")
-    /// アルバム名
-    internal static let albumListViewAlertForAddPlaceholder = L10n.tr("Localizable", "album_list_view_alert_for_add_placeholder")
     /// 新規アルバム
     internal static let albumListViewAlertForAddTitle = L10n.tr("Localizable", "album_list_view_alert_for_add_title")
     /// アルバムを削除
@@ -30,8 +28,6 @@ internal enum L10n {
 
     /// このアルバムの名前を入力してください
     internal static let albumListViewAlertForEditMessage = L10n.tr("Localizable", "album_list_view_alert_for_edit_message")
-    /// アルバム名
-    internal static let albumListViewAlertForEditPlaceholder = L10n.tr("Localizable", "album_list_view_alert_for_edit_placeholder")
     /// アルバム名の編集
     internal static let albumListViewAlertForEditTitle = L10n.tr("Localizable", "album_list_view_alert_for_edit_title")
     /// 削除
@@ -181,8 +177,6 @@ internal enum L10n {
     internal static let clipPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_message")
     /// この画像の保存元のサイトのURLを入力してください
     internal static let clipPreviewViewAlertForEditSiteUrlMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_message")
-    /// https://www...
-    internal static let clipPreviewViewAlertForEditSiteUrlPlaceholder = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_placeholder")
     /// サイトのURL
     internal static let clipPreviewViewAlertForEditSiteUrlTitle = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_title")
     /// 隠す
@@ -303,10 +297,18 @@ internal enum L10n {
     internal static let failedToDeleteClip = L10n.tr("Localizable", "failed_to_delete_clip")
     /// クリップの更新に失敗しました
     internal static let failedToUpdateClip = L10n.tr("Localizable", "failed_to_update_clip")
+    /// アルバム名
+    internal static let placeholderAlbumName = L10n.tr("Localizable", "placeholder_album_name")
+    /// アルバムを探す
+    internal static let placeholderSearchAlbum = L10n.tr("Localizable", "placeholder_search_album")
+    /// タグを探す
+    internal static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
+    /// タグ名
+    internal static let placeholderTagName = L10n.tr("Localizable", "placeholder_tag_name")
+    /// https://www...
+    internal static let placeholderUrl = L10n.tr("Localizable", "placeholder_url")
     /// 検索に失敗しました
     internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
-    /// キーワード
-    internal static let searchEntryViewSearchBarPlaceholder = L10n.tr("Localizable", "search_entry_view_search_bar_placeholder")
     /// 検索
     internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
     /// キーワード「%@」に一致するクリップは見つかりませんでした
@@ -329,8 +331,6 @@ internal enum L10n {
     internal static let settingsConfirmIcloudSyncOffTitle = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_title")
     /// このタグの名前を入力してください
     internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
-    /// タグ名
-    internal static let tagListViewAlertForAddPlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_add_placeholder")
     /// 新規タグ
     internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
     /// タグを削除
@@ -342,8 +342,6 @@ internal enum L10n {
 
     /// このタグの新しい名前を入力してください
     internal static let tagListViewAlertForUpdateMessage = L10n.tr("Localizable", "tag_list_view_alert_for_update_message")
-    /// タグ名
-    internal static let tagListViewAlertForUpdatePlaceholder = L10n.tr("Localizable", "tag_list_view_alert_for_update_placeholder")
     /// タグ名の変更
     internal static let tagListViewAlertForUpdateTitle = L10n.tr("Localizable", "tag_list_view_alert_for_update_title")
     /// コピー
@@ -362,8 +360,6 @@ internal enum L10n {
     internal static let tagListViewEmptyMessage = L10n.tr("Localizable", "tag_list_view_empty_message")
     /// タグがありません
     internal static let tagListViewEmptyTitle = L10n.tr("Localizable", "tag_list_view_empty_title")
-    /// タグを探す
-    internal static let tagListViewPlaceholder = L10n.tr("Localizable", "tag_list_view_placeholder")
     /// タグ
     internal static let tagListViewTitle = L10n.tr("Localizable", "tag_list_view_title")
     /// タグを選択
