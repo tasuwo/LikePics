@@ -83,7 +83,7 @@ class TagCollectionViewModel: TagCollectionViewModelType,
 
     private var cancellable: AnyCancellable?
 
-    private var searchStorage: SearchableTagsStorage = .init()
+    private var searchStorage: SearchableStorage<Tag> = .init()
     private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Lifecycle

@@ -302,7 +302,7 @@
 		2CC5CA162571576200B0472B /* CloudAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5CA152571576200B0472B /* CloudAvailability.swift */; };
 		2CC5CA202571577F00B0472B /* CloudAvailabilityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5CA1F2571577F00B0472B /* CloudAvailabilityStore.swift */; };
 		2CCB8C8E252DEF730062A25A /* TagSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */; };
-		2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */; };
+		2CCB8C99252E07760062A25A /* SearchablesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCB8C98252E07760062A25A /* SearchablesStorage.swift */; };
 		2CCC1432257FC54C0061C212 /* Publisher+assignNotRetain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */; };
 		2CCCC0F125C55DD800A2B163 /* CloudStackObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCCC0F025C55DD800A2B163 /* CloudStackObserver.swift */; };
 		2CCCC10525C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCCC10425C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift */; };
@@ -406,6 +406,7 @@
 		2CFCCC3C25A4A0B900EF31A4 /* ClipRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFCCC3B25A4A0B900EF31A4 /* ClipRecipe.swift */; };
 		2CFCCC5025A4A0DE00EF31A4 /* ClipItemRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFCCC4F25A4A0DE00EF31A4 /* ClipItemRecipe.swift */; };
 		2CFDF212259AF3A800C97A6A /* ImageUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF211259AF3A800C97A6A /* ImageUtility.swift */; };
+		2CFEA95925C9975100434423 /* Searchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA95825C9975100434423 /* Searchable.swift */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
 		A23DF61484F1653DE1630077 /* Pods_TBoxTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */; };
@@ -1020,7 +1021,7 @@
 		2CC5CA1F2571577F00B0472B /* CloudAvailabilityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityStore.swift; sourceTree = "<group>"; };
 		2CC6F62B24E1034D006AC87D /* ClipPreviewPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentationAnimator.swift; sourceTree = "<group>"; };
 		2CCB8C8D252DEF730062A25A /* TagSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSelectionViewController.xib; sourceTree = "<group>"; };
-		2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableTagsStorage.swift; sourceTree = "<group>"; };
+		2CCB8C98252E07760062A25A /* SearchablesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchablesStorage.swift; sourceTree = "<group>"; };
 		2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+assignNotRetain.swift"; sourceTree = "<group>"; };
 		2CCCC0F025C55DD800A2B163 /* CloudStackObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStackObserver.swift; sourceTree = "<group>"; };
 		2CCCC10425C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObjectID+NSManagedObjectID.swift"; sourceTree = "<group>"; };
@@ -1119,6 +1120,7 @@
 		2CFCCC3B25A4A0B900EF31A4 /* ClipRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipRecipe.swift; sourceTree = "<group>"; };
 		2CFCCC4F25A4A0DE00EF31A4 /* ClipItemRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemRecipe.swift; sourceTree = "<group>"; };
 		2CFDF211259AF3A800C97A6A /* ImageUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtility.swift; sourceTree = "<group>"; };
+		2CFEA95825C9975100434423 /* Searchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Searchable.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debugdev.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debugdev.xcconfig"; sourceTree = "<group>"; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2007,6 +2009,8 @@
 		2C523CF8254AEE5C0099F6DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2CFEA96C25C997C900434423 /* Search */,
+				2CCB8C98252E07760062A25A /* SearchablesStorage.swift */,
 				2CD893BA256EAD1E00EACB80 /* iCloud */,
 				2C54462C254B1E110088C8BC /* ClipService */,
 				2C4D6C7E25812331006FB988 /* TagService */,
@@ -2646,7 +2650,6 @@
 				2C6C79CA253B409300A8A9B8 /* ClipStorage */,
 				2CF465832511115000DF78E6 /* UserSettingsStorageProtocol.swift */,
 				2C168D26256FE52B00080114 /* CloudUsageContextStorageProtocol.swift */,
-				2CCB8C98252E07760062A25A /* SearchableTagsStorage.swift */,
 			);
 			path = Storages;
 			sourceTree = "<group>";
@@ -3235,6 +3238,22 @@
 				2CFDF211259AF3A800C97A6A /* ImageUtility.swift */,
 			);
 			path = ImageProcessing;
+			sourceTree = "<group>";
+		};
+		2CFEA96C25C997C900434423 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2CFEA96D25C997CF00434423 /* ValueObject */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		2CFEA96D25C997CF00434423 /* ValueObject */ = {
+			isa = PBXGroup;
+			children = (
+				2CFEA95825C9975100434423 /* Searchable.swift */,
+			);
+			path = ValueObject;
 			sourceTree = "<group>";
 		};
 		365F1EF69CF3A637940810AE /* Pods */ = {
@@ -4440,7 +4459,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C10411C254D9B21000DF7DE /* ClipReferencesIntegrityValidationService.swift in Sources */,
-				2CCB8C99252E07760062A25A /* SearchableTagsStorage.swift in Sources */,
+				2CCB8C99252E07760062A25A /* SearchablesStorage.swift in Sources */,
 				2C4D6C8125812349006FB988 /* TagCommandServiceProtocol.swift in Sources */,
 				2C306D08257220F200947E77 /* CurrentICloudAccountResolver.swift in Sources */,
 				2CBA83EB254C6FA000DA5045 /* ReferenceTag.swift in Sources */,
@@ -4480,6 +4499,7 @@
 				2CFCCBA425A4952000EF31A4 /* TemporaryClipStorageProtocol.swift in Sources */,
 				2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */,
 				2C1F29882560F7A800B89AE9 /* ImageContainer.swift in Sources */,
+				2CFEA95925C9975100434423 /* Searchable.swift in Sources */,
 				2CD25B24251E46EA00BEE210 /* TagQuery.swift in Sources */,
 				2C99278624DDCAAC00672CA7 /* ClipStorageProtocol.swift in Sources */,
 				2C16050825207C6A00A39E58 /* Identifiable.swift in Sources */,

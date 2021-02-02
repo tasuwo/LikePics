@@ -107,7 +107,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let clipCommandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
-    private var searchStorage: SearchableTagsStorage = .init()
+    private var searchStorage: SearchableStorage<Tag> = .init()
     private var subscriptions = Set<AnyCancellable>()
 
     private let initialSelections: Set<Tag.Identity>

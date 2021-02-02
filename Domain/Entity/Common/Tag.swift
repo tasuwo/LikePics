@@ -9,44 +9,35 @@ public struct Tag: Equatable {
     public let isHidden: Bool
     public let clipCount: Int?
 
-    public let searchableName: String?
+    private let _searchableName: String?
 
     // MARK: - Lifecycle
 
-    public init(id: UUID, name: String, isHidden: Bool, clipCount: Int? = nil) {
-        self.id = id
-        self.name = name
-        self.isHidden = isHidden
-        self.clipCount = clipCount
-
-        self.searchableName = Self.transformToSearchableText(text: name)
-    }
-
-    /**
-     * Mock生成用のInitializer
-     *
-     * プロダクションで利用すべきでない
-     */
-    init(id: UUID,
-         name: String,
-         isHidden: Bool,
-         clipCount: Int? = nil,
-         searchableName: String? = nil)
+    public init(id: UUID,
+                name: String,
+                isHidden: Bool,
+                clipCount: Int? = nil)
     {
         self.id = id
         self.name = name
         self.isHidden = isHidden
         self.clipCount = clipCount
-        self.searchableName = searchableName
+
+        self._searchableName = name.transformToSearchableText()
     }
 
-    // MARK: - Methods
-
-    static func transformToSearchableText(text: String) -> String? {
-        return text
-            .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
-            .applyingTransform(.hiraganaToKatakana, reverse: false)?
-            .lowercased()
+    init(id: UUID,
+         name: String,
+         isHidden: Bool,
+         clipCount: Int?,
+         // swiftlint:disable:next identifier_name
+         _searchableName: String?)
+    {
+        self.id = id
+        self.name = name
+        self.isHidden = isHidden
+        self.clipCount = clipCount
+        self._searchableName = _searchableName
     }
 }
 
@@ -59,3 +50,9 @@ extension Tag: Identifiable {
 }
 
 extension Tag: Hashable {}
+
+extension Tag: Searchable {
+    public var searchableText: String? {
+        return _searchableName
+    }
+}

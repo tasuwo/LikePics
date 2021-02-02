@@ -163,14 +163,14 @@ extension Tag {
         name: String = "",
         isHidden: Bool = false,
         clipCount: Int? = nil,
-        searchableName: String? = nil
+        _searchableName: String? = nil
     ) -> Self {
         return .init(
             id: id,
             name: name,
             isHidden: isHidden,
             clipCount: clipCount,
-            searchableName: searchableName
+            _searchableName: _searchableName
         )
     }
 }
