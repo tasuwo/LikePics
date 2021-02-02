@@ -11,10 +11,7 @@ import UIKit
 class AlbumSelectionViewController: UIViewController {
     typealias Factory = ViewControllerFactory
     typealias Dependency = AlbumSelectionViewModelType
-
-    enum Section {
-        case main
-    }
+    typealias Layout = AlbumSelectionViewLayout
 
     // MARK: - Properties
 
@@ -34,9 +31,10 @@ class AlbumSelectionViewController: UIViewController {
                              message: L10n.albumListViewAlertForAddMessage,
                              placeholder: L10n.albumListViewAlertForAddPlaceholder)
     )
+    private var dataSource: Layout.DataSource!
 
-    private var dataSource: UITableViewDiffableDataSource<Section, Album>!
-    private var tableView: AlbumSelectionTableView!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var collectionView: UICollectionView!
 
     // MARK: Thumbnail
 
@@ -66,8 +64,9 @@ class AlbumSelectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupTableView()
+        self.configureCollectionView()
         self.setupNavigationBar()
+        self.setupSearchBar()
         self.setupEmptyMessage()
 
         self.bind(to: viewModel)
@@ -92,10 +91,9 @@ class AlbumSelectionViewController: UIViewController {
 
     private func bind(to dependency: Dependency) {
         dependency.outputs.albums
-            .debounce(for: 0.2, scheduler: DispatchQueue.global())
             .receive(on: DispatchQueue.global())
             .sink { [weak self] albums in
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Album>()
+                var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(albums)
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
@@ -123,48 +121,16 @@ class AlbumSelectionViewController: UIViewController {
             .store(in: &self.subscriptions)
     }
 
-    // MARK: Table View
+    // MARK: CollectionView
 
-    private func setupTableView() {
-        self.tableView = AlbumSelectionTableView(frame: self.view.bounds, style: .plain)
-        self.tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.tableView.backgroundColor = Asset.Color.backgroundClient.color
-        self.view.addSubview(self.tableView)
-        self.tableView.delegate = self
-        self.configureDataSource()
-    }
+    private func configureCollectionView() {
+        collectionView.setCollectionViewLayout(Layout.createLayout(), animated: false)
 
-    private func configureDataSource() {
-        self.dataSource = .init(tableView: self.tableView) { [weak self] tableView, indexPath, album in
-            let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: AlbumSelectionTableView.cellIdentifier, for: indexPath)
-            guard let cell = dequeuedCell as? AlbumSelectionCell else { return dequeuedCell }
+        collectionView.delegate = self
 
-            cell.title = album.title
-
-            if let thumbnailTarget = album.clips.first?.items.first {
-                let requestId = UUID().uuidString
-                cell.identifier = requestId
-                let info = ThumbnailRequest.ThumbnailInfo(id: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
-                                                          size: cell.thumbnailDisplaySize,
-                                                          scale: cell.traitCollection.displayScale)
-                let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
-                let request = ThumbnailRequest(requestId: requestId,
-                                               originalImageRequest: imageRequest,
-                                               thumbnailInfo: info)
-                self?.thumbnailLoader.load(request: request, observer: cell)
-                cell.onReuse = { [weak self] identifier in
-                    guard identifier == requestId else { return }
-                    self?.thumbnailLoader.cancel(request)
-                }
-            } else {
-                cell.identifier = nil
-                cell.thumbnail = nil
-                cell.onReuse = nil
-            }
-
-            return cell
-        }
-        self.dataSource.defaultRowAnimation = .fade
+        let dataSource = Layout.createDataSource(collectionView: collectionView,
+                                                 thumbnailLoader: thumbnailLoader)
+        self.dataSource = dataSource
     }
 
     // MARK: Navigation Bar
@@ -179,6 +145,13 @@ class AlbumSelectionViewController: UIViewController {
     @objc
     func didTapAdd() {
         self.startAddingAlbum()
+    }
+
+    // MARK: SearchBar
+
+    private func setupSearchBar() {
+        self.searchBar.delegate = self
+        self.searchBar.showsCancelButton = false
     }
 
     // MARK: EmptyMessage
@@ -197,10 +170,10 @@ class AlbumSelectionViewController: UIViewController {
     }
 }
 
-extension AlbumSelectionViewController: UITableViewDelegate {
-    // MARK: - UITableViewDelegate
+extension AlbumSelectionViewController: UICollectionViewDelegate {
+    // MARK: - UICollectionViewDelegate
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
         self.viewModel.inputs.selectedAlbum.send(album.id)
     }
@@ -211,5 +184,41 @@ extension AlbumSelectionViewController: EmptyMessageViewDelegate {
 
     func didTapActionButton(_ view: EmptyMessageView) {
         self.startAddingAlbum()
+    }
+}
+
+extension AlbumSelectionViewController: UISearchBarDelegate {
+    // MARK: - UISearchBarDelegate
+
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        RunLoop.main.perform {
+            self.viewModel.inputs.inputtedQuery.send(searchBar.text ?? "")
+        }
+    }
+
+    public func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // HACK: marked text 入力を待つために遅延を設ける
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            RunLoop.main.perform {
+                self.viewModel.inputs.inputtedQuery.send(searchBar.text ?? "")
+            }
+        }
+        return true
+    }
+
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(false, animated: true)
+    }
+
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
+    }
+
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
     }
 }

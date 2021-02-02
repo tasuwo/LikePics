@@ -13,14 +13,15 @@ protocol AlbumSelectionViewModelType {
 }
 
 protocol AlbumSelectionViewModelInputs {
+    var inputtedQuery: PassthroughSubject<String, Never> { get }
     var addedAlbum: PassthroughSubject<String, Never> { get }
     var selectedAlbum: PassthroughSubject<Album.Identity, Never> { get }
 }
 
 protocol AlbumSelectionViewModelOutputs {
-    var albums: CurrentValueSubject<[Album], Never> { get }
+    var albums: AnyPublisher<[Album], Never> { get }
     var errorMessage: PassthroughSubject<String, Never> { get }
-    var displayEmptyMessage: CurrentValueSubject<Bool, Never> { get }
+    var displayEmptyMessage: AnyPublisher<Bool, Never> { get }
     var close: PassthroughSubject<Void, Never> { get }
 }
 
@@ -41,23 +42,39 @@ class AlbumSelectionViewModel: AlbumSelectionViewModelType,
 
     // MARK: AlbumSelectionViewModelInputs
 
+    let inputtedQuery: PassthroughSubject<String, Never> = .init()
     let addedAlbum: PassthroughSubject<String, Never> = .init()
     let selectedAlbum: PassthroughSubject<Album.Identity, Never> = .init()
 
     // MARK: AlbumSelectionViewModelOutputs
 
-    let albums: CurrentValueSubject<[Album], Never>
+    var albums: AnyPublisher<[Album], Never> {
+        _filteredAlbumIds
+            .map { $0.compactMap { [weak self] id in self?._albums.value[id] } }
+            .combineLatest(settingStorage.showHiddenItems)
+            .map { albums, showHiddenItems in
+                guard showHiddenItems == false else { return albums }
+                return albums.map { $0.removingHiddenClips() }
+            }
+            .eraseToAnyPublisher()
+    }
+
     let errorMessage: PassthroughSubject<String, Never> = .init()
-    let displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
+    var displayEmptyMessage: AnyPublisher<Bool, Never> { _displayEmptyMessage.eraseToAnyPublisher() }
     let close: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
+
+    private let _albums: CurrentValueSubject<[Album.Identity: Album], Never> = .init([:])
+    private let _filteredAlbumIds: CurrentValueSubject<[Album.Identity], Never> = .init([])
+    private let _displayEmptyMessage: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let query: AlbumListQuery
     private let context: Any?
     private let clipCommandService: ClipCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
     private let logger: TBoxLoggable
+    private var searchStorage: SearchableStorage<Album> = .init()
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -77,8 +94,6 @@ class AlbumSelectionViewModel: AlbumSelectionViewModelType,
         self.settingStorage = settingStorage
         self.logger = logger
 
-        self.albums = .init(query.albums.value)
-
         self.bind()
     }
 }
@@ -92,23 +107,29 @@ extension AlbumSelectionViewModel {
                 return Just([Album]()).eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-            .combineLatest(self.settingStorage.showHiddenItems)
-            .sink { [weak self] albums, showHiddenItems in
+            .combineLatest(inputtedQuery, settingStorage.showHiddenItems)
+            .sink { [weak self] originalAlbums, query, showHiddenItems in
                 guard let self = self else { return }
 
-                let newAlbums: [Album]
-                if showHiddenItems {
-                    newAlbums = albums
-                } else {
-                    newAlbums = albums
-                        .filter { !$0.isHidden }
-                        .map { $0.removingHiddenClips() }
+                let albums = originalAlbums.reduce(into: [Album.Identity: Album]()) { dict, value in
+                    dict[value.id] = value
                 }
 
-                self.albums.send(newAlbums)
-                self.displayEmptyMessage.send(albums.isEmpty)
+                let filteringAlbums = originalAlbums.filter { showHiddenItems ? true : $0.isHidden == false }
+                let filteredAlbumIds = self.searchStorage.perform(query: query, to: filteringAlbums).map { $0.id }
+
+                if filteringAlbums.isEmpty {
+                    self._displayEmptyMessage.send(true)
+                } else {
+                    self._displayEmptyMessage.send(false)
+                }
+
+                self._albums.send(albums)
+                self._filteredAlbumIds.send(filteredAlbumIds)
             }
             .store(in: &self.subscriptions)
+
+        self.inputtedQuery.send("")
 
         self.addedAlbum
             .sink { [weak self] title in

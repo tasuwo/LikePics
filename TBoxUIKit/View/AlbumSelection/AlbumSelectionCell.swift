@@ -6,7 +6,7 @@ import Domain
 import Smoothie
 import UIKit
 
-public class AlbumSelectionCell: UITableViewCell {
+public class AlbumSelectionCell: UICollectionViewCell {
     public static var nib: UINib {
         return UINib(nibName: "AlbumSelectionCell", bundle: Bundle(for: Self.self))
     }
@@ -35,10 +35,23 @@ public class AlbumSelectionCell: UITableViewCell {
         thumbnailImageView.bounds.size
     }
 
+    public var clipCount: Int? {
+        didSet {
+            if let count = self.clipCount {
+                self.countLabel.text = L10n.albumListCollectionViewCellCount(count)
+                self.countLabel.isHidden = false
+            } else {
+                self.countLabel.text = nil
+                self.countLabel.isHidden = true
+            }
+        }
+    }
+
     public var onReuse: ((String?) -> Void)?
 
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var countLabel: UILabel!
 
     // MARK: - Methods
 
@@ -58,6 +71,7 @@ public class AlbumSelectionCell: UITableViewCell {
         self.thumbnailImageView.layer.cornerCurve = .continuous
         self.thumbnailImageView.contentMode = .scaleAspectFill
         self.thumbnailImageView.clipsToBounds = true
+        self.clipCount = nil
     }
 }
 
