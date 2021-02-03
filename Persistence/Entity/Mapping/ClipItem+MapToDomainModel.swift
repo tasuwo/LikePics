@@ -7,10 +7,10 @@ import Domain
 extension Persistence.Item {
     func map(to: Domain.ClipItem.Type) -> Domain.ClipItem? {
         guard let id = self.id,
-            let clipId = self.clip?.id,
-            let imageId = self.imageId,
-            let createdDate = self.createdDate,
-            let updatedDate = self.updatedDate
+              let clipId = self.clip?.id,
+              let imageId = self.imageId,
+              let createdDate = self.createdDate,
+              let updatedDate = self.updatedDate
         else {
             return nil
         }

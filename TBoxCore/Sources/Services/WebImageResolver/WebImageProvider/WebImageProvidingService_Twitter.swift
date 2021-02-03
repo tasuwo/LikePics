@@ -6,8 +6,8 @@ import Combine
 import Common
 import Erik
 
-extension WebImageProvidingService {
-    public enum Twitter: WebImageProvider {
+public extension WebImageProvidingService {
+    enum Twitter: WebImageProvider {
         struct Context {
             struct DisplayElement {
                 let existsImages: Bool
@@ -190,17 +190,17 @@ extension WebImageProvidingService {
     }
 }
 
-extension WebImageProvidingService.Twitter {
+public extension WebImageProvidingService.Twitter {
     // MARK: - WebImageProvider
 
-    public static func isProviding(url: URL) -> Bool {
+    static func isProviding(url: URL) -> Bool {
         guard let host = url.host else { return false }
         return host.contains("twitter") || host.contains("twimg")
     }
 
-    public static func modifyUrlForProcessing(_ url: URL) -> URL {
+    static func modifyUrlForProcessing(_ url: URL) -> URL {
         guard var components = URLComponents(string: url.absoluteString),
-            let queryItems = components.queryItems
+              let queryItems = components.queryItems
         else {
             return url
         }
@@ -211,15 +211,15 @@ extension WebImageProvidingService.Twitter {
         return components.url ?? url
     }
 
-    public static func shouldPreprocess(for url: URL) -> Bool {
+    static func shouldPreprocess(for url: URL) -> Bool {
         return url.host?.contains("twitter") == true
     }
 
-    public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
+    static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
         return StateMachine.start(on: browser)
     }
 
-    public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
+    static func resolveHighQualityImageUrl(of url: URL) -> URL? {
         guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
             return nil
         }
@@ -235,11 +235,11 @@ extension WebImageProvidingService.Twitter {
         return components.url
     }
 
-    public static func shouldModifyRequest(for url: URL) -> Bool {
+    static func shouldModifyRequest(for url: URL) -> Bool {
         return false
     }
 
-    public static func modifyRequest(_ request: URLRequest) -> URLRequest {
+    static func modifyRequest(_ request: URLRequest) -> URLRequest {
         return request
     }
 }

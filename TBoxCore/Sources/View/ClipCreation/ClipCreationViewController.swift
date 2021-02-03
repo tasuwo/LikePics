@@ -330,8 +330,8 @@ extension ClipCreationViewController: TagCollectionViewCellDelegate {
 
     public func didTapDeleteButton(_ cell: TagCollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.dataSource.itemIdentifier(for: indexPath),
-            case let .tag(tag) = item
+              let item = self.dataSource.itemIdentifier(for: indexPath),
+              case let .tag(tag) = item
         else {
             return
         }
@@ -344,7 +344,7 @@ extension ClipCreationViewController: ButtonCellDelegate {
 
     public func didTap(_ cell: ButtonCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
-            let section = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
+              let section = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
         switch section {
         // case .url:
         //     self.startUrlEditing()

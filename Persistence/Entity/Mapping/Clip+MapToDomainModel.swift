@@ -7,8 +7,8 @@ import Domain
 extension Persistence.Clip {
     func map(to type: Domain.Clip.Type) -> Domain.Clip? {
         guard let id = self.id,
-            let createdDate = self.createdDate,
-            let updatedDate = self.updatedDate
+              let createdDate = self.createdDate,
+              let updatedDate = self.updatedDate
         else {
             return nil
         }

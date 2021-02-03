@@ -15,7 +15,7 @@ class ClipStorageSpec: QuickSpec {
     func coreDataStack() -> NSPersistentContainer {
         let bundle = Bundle(for: PersistentContainerLoader.Class.self)
         guard let url = bundle.url(forResource: "Model", withExtension: "momd"),
-            let model = NSManagedObjectModel(contentsOf: url)
+              let model = NSManagedObjectModel(contentsOf: url)
         else {
             fatalError("Unable to load Core Data Model")
         }

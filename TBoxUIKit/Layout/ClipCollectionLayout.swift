@@ -83,8 +83,8 @@ public class ClipCollectionLayout: UICollectionViewLayout {
 
     private func setupAttributes() {
         guard cache.isEmpty == true,
-            let collectionView = collectionView,
-            collectionView.numberOfSections > 0
+              let collectionView = collectionView,
+              collectionView.numberOfSections > 0
         else {
             return
         }

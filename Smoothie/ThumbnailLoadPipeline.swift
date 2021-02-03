@@ -64,14 +64,14 @@ public class ThumbnailLoadPipeline {
             }
 
             if let data = self.config.memoryCache[request.thumbnailInfo.id],
-                let image = self.decompress(data)
+               let image = self.decompress(data)
             {
                 completion(image)
                 return
             }
 
             if let data = self.config.diskCache?[request.thumbnailInfo.id],
-                let image = self.decompress(data)
+               let image = self.decompress(data)
             {
                 self.config.memoryCache[request.thumbnailInfo.id] = data
                 completion(image)

@@ -2,13 +2,13 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-extension TemporaryImageStorage.Configuration {
-    public enum Kind {
+public extension TemporaryImageStorage.Configuration {
+    enum Kind {
         case document
         case group
     }
 
-    public static func resolve(for bundle: Bundle, kind: Kind) -> Self {
+    static func resolve(for bundle: Bundle, kind: Kind) -> Self {
         return .init(targetUrl: self.resolveUrl(for: bundle, kind: kind))
     }
 

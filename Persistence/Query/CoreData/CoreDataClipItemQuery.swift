@@ -18,7 +18,7 @@ class CoreDataClipItemQuery: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let item = try context.fetch(request).first,
-            let domainItem = item.map(to: Domain.ClipItem.self)
+              let domainItem = item.map(to: Domain.ClipItem.self)
         else {
             return nil
         }
@@ -49,14 +49,14 @@ class CoreDataClipItemQuery: NSObject {
         context.perform { [weak self] in
             guard let self = self else { return }
             if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
-                objects.compactMap({ $0 as? Item }).contains(where: { $0.objectID == self.objectId })
+               objects.compactMap({ $0 as? Item }).contains(where: { $0.objectID == self.objectId })
             {
                 self.subject.send(completion: .finished)
                 return
             }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
-                let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
-                let item = object.map(to: Domain.ClipItem.self)
+               let object = objects.compactMap({ $0 as? Item }).first(where: { $0.objectID == self.objectId }),
+               let item = object.map(to: Domain.ClipItem.self)
             {
                 self.subject.send(item)
                 return

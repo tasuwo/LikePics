@@ -111,13 +111,13 @@ extension TagCollectionViewLayout {
     }
 
     private static func configureUncategorizedCell(delegate: UncategorizedCellDelegate) -> UICollectionView.CellRegistration<UncategorizedCell, Void> {
-        return .init(cellNib: UncategorizedCell.nib) { [weak delegate] cell, indexPath, item in
+        return .init(cellNib: UncategorizedCell.nib) { [weak delegate] cell, _, _ in
             cell.delegate = delegate
         }
     }
 
     private static func configureTagCell() -> UICollectionView.CellRegistration<TagCollectionViewCell, Item.ListingTag> {
-        return .init(cellNib: TagCollectionViewCell.nib) { cell, indexPath, item in
+        return .init(cellNib: TagCollectionViewCell.nib) { cell, _, item in
             cell.title = item.tag.name
             cell.displayMode = .normal
             cell.visibleCountIfPossible = item.displayCount

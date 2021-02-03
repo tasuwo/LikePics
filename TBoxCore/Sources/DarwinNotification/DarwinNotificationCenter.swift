@@ -96,13 +96,13 @@ extension DarwinNotificationCenter: DarwinNotificationCenterProtocol {
     }
 }
 
-extension DarwinNotificationCenter.Subscription {
-    fileprivate func startObserve() {
+private extension DarwinNotificationCenter.Subscription {
+    func startObserve() {
         guard let cfCenter = DarwinNotificationCenter.default.underlyingNotificationCenter else {
             fatalError("Invalid Darwin observation info.")
         }
 
-        let callback: CFNotificationCallback = { center, observer, name, object, userInfo in
+        let callback: CFNotificationCallback = { _, _, name, _, _ in
             guard let cfName = name else { return }
             let notificationName = DarwinNotification.Name(cfName)
             DarwinNotificationCenter.default.signal(name: notificationName)
@@ -112,7 +112,7 @@ extension DarwinNotificationCenter.Subscription {
         CFNotificationCenterAddObserver(cfCenter, observer, callback, name.rawValue, nil, .coalesce)
     }
 
-    fileprivate func endObserve() {
+    func endObserve() {
         guard let cfCenter = DarwinNotificationCenter.default.underlyingNotificationCenter else {
             fatalError("Invalid Darwin observation info.")
         }

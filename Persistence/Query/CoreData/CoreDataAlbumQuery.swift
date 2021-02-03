@@ -18,7 +18,7 @@ class CoreDataAlbumQuery: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let album = try context.fetch(request).first,
-            let domainAlbum = album.map(to: Domain.Album.self)
+              let domainAlbum = album.map(to: Domain.Album.self)
         else {
             return nil
         }
@@ -49,14 +49,14 @@ class CoreDataAlbumQuery: NSObject {
         context.perform { [weak self] in
             guard let self = self else { return }
             if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
-                objects.compactMap({ $0 as? Album }).contains(where: { $0.objectID == self.objectId })
+               objects.compactMap({ $0 as? Album }).contains(where: { $0.objectID == self.objectId })
             {
                 self.subject.send(completion: .finished)
                 return
             }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
-                let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
-                let album = object.map(to: Domain.Album.self)
+               let object = objects.compactMap({ $0 as? Album }).first(where: { $0.objectID == self.objectId }),
+               let album = object.map(to: Domain.Album.self)
             {
                 self.subject.send(album)
                 return

@@ -7,9 +7,9 @@ import Domain
 extension Persistence.Album {
     func map(to: Domain.Album.Type) -> Domain.Album? {
         guard let id = self.id,
-            let title = self.title,
-            let createdDate = self.createdDate,
-            let updateDate = self.updatedDate
+              let title = self.title,
+              let createdDate = self.createdDate,
+              let updateDate = self.updatedDate
         else {
             return nil
         }

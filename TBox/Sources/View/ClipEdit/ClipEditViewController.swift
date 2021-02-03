@@ -187,8 +187,8 @@ extension ClipEditViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-            let cell = collectionView.cellForItem(at: indexPath),
-            case .deleteClip = item else { return }
+              let cell = collectionView.cellForItem(at: indexPath),
+              case .deleteClip = item else { return }
         self.presentDeleteAlert(at: cell) { [weak self] in
             self?.viewModel.inputs.deleteClip()
         }
@@ -222,8 +222,8 @@ extension ClipEditViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         guard let sectionValue = destinationIndexPath?.section,
-            let section = ClipEditViewLayout.Section(rawValue: sectionValue),
-            section == .clipItem
+              let section = ClipEditViewLayout.Section(rawValue: sectionValue),
+              section == .clipItem
         else {
             return UICollectionViewDropProposal(operation: .forbidden)
         }
@@ -246,7 +246,7 @@ extension ClipEditViewController: ClipEditViewDelegate {
 
     func trailingSwipeAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard case .clipItem = Layout.Section(rawValue: indexPath.section),
-            viewModel.outputs.isItemDeletable else { return nil }
+              viewModel.outputs.isItemDeletable else { return nil }
 
         let deleteAction = UIContextualAction(style: .destructive,
                                               title: L10n.clipEditViewDeleteClipItemTitle) { [weak self] _, _, completion in
@@ -275,8 +275,8 @@ extension ClipEditViewController: ClipEditViewDelegate {
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
-            let item = dataSource.itemIdentifier(for: indexPath),
-            case let .tag(tag) = item else { return }
+              let item = dataSource.itemIdentifier(for: indexPath),
+              case let .tag(tag) = item else { return }
         viewModel.inputs.removeTagFromClip(tag.id)
     }
 
@@ -287,9 +287,9 @@ extension ClipEditViewController: ClipEditViewDelegate {
 
     func didTapSiteUrlEditButton(_ sender: UIView, url: URL?) {
         guard let cell = sender.next(ofType: UICollectionViewCell.self),
-            let indexPath = collectionView.indexPath(for: cell),
-            let item = dataSource.itemIdentifier(for: indexPath),
-            case let .clipItem(clipItem) = item else { return }
+              let indexPath = collectionView.indexPath(for: cell),
+              let item = dataSource.itemIdentifier(for: indexPath),
+              case let .clipItem(clipItem) = item else { return }
         self.editSiteUrlAlertContainer.present(withText: url?.absoluteString, on: self) {
             guard let text = $0 else { return true }
             return text.isEmpty || URL(string: text) != nil

@@ -13,8 +13,8 @@ extension URLButtonInteractionHandler: UIContextMenuInteractionDelegate {
 
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let button = interaction.view as? UIButton,
-            let text = button.titleLabel?.text,
-            let url = URL(string: text)
+              let text = button.titleLabel?.text,
+              let url = URL(string: text)
         else {
             return nil
         }

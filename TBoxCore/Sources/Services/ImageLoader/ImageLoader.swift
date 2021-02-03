@@ -18,7 +18,7 @@ public class ImageLoader {
     private static func fetchImage(for url: URL) -> AnyPublisher<ImageLoaderResult, ImageLoaderError> {
         let request: URLRequest
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
-            provider.shouldModifyRequest(for: url)
+           provider.shouldModifyRequest(for: url)
         {
             request = provider.modifyRequest(URLRequest(url: url))
         } else {

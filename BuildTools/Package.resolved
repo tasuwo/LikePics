@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/jpsim/SourceKitten.git",
         "state": {
           "branch": null,
-          "revision": "b7a7df0d25981998bb9f4770ff8faf7a28a6e649",
-          "version": "0.30.0"
+          "revision": "c0f960f72fa1e6151695074ffa696e4da6c45ce8",
+          "version": "0.30.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/nicklockwood/SwiftFormat",
         "state": {
           "branch": null,
-          "revision": "337d787cae2ac7c53f3574c107d12c557002a883",
-          "version": "0.46.3"
+          "revision": "d1c8a16cc21a3dfc577fe5e881509501ed22d0ce",
+          "version": "0.47.11"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/realm/SwiftLint.git",
         "state": {
           "branch": null,
-          "revision": "9ab72060b6d57d62a601250c15879ada088a2d99",
-          "version": "0.40.2"
+          "revision": "d53fc2664df92ef322bfa9ce5238d34f1461526a",
+          "version": "0.42.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/jpsim/Yams.git",
         "state": {
           "branch": null,
-          "revision": "88caa2e6fffdbef2e91c2022d038576062042907",
-          "version": "4.0.0"
+          "revision": "9003d51672e516cc59297b7e96bff1dfdedcb4ea",
+          "version": "4.0.4"
         }
       }
     ]

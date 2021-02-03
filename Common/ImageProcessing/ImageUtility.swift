@@ -6,16 +6,16 @@ import UIKit
 
 public enum ImageUtility {}
 
-extension ImageUtility {
+public extension ImageUtility {
     // MARK: - Resolve Size
 
-    public static func resolveSize(for url: URL) -> CGSize? {
+    static func resolveSize(for url: URL) -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else { return nil }
         return self.resolveSize(for: imageSource)
     }
 
-    public static func resolveSize(for data: Data) -> CGSize? {
+    static func resolveSize(for data: Data) -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else { return nil }
         return self.resolveSize(for: imageSource)
@@ -43,16 +43,16 @@ extension ImageUtility {
     }
 }
 
-extension ImageUtility {
+public extension ImageUtility {
     // MARK: - Downsampling
 
-    public static func downsampling(imageAt imageUrl: URL, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
+    static func downsampling(imageAt imageUrl: URL, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithURL(imageUrl as CFURL, imageSourceOptions) else { return nil }
         return self.downsampling(imageSource, to: pointSize, scale: scale)
     }
 
-    public static func downsampling(_ data: Data, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
+    static func downsampling(_ data: Data, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else { return nil }
         return self.downsampling(imageSource, to: pointSize, scale: scale)

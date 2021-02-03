@@ -24,7 +24,7 @@ struct SelectableImage {
     static func make(by url: URL, using session: URLSession) -> AnyPublisher<Self, Never> {
         let request: URLRequest
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
-            provider.shouldModifyRequest(for: url)
+           provider.shouldModifyRequest(for: url)
         {
             request = provider.modifyRequest(URLRequest(url: url))
         } else {

@@ -218,9 +218,9 @@ class AlbumViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] context in
                 guard case let .menu(clip) = context.source,
-                    let self = self,
-                    let indexPath = self.dataSource.indexPath(for: clip),
-                    let cell = self.collectionView.cellForItem(at: indexPath)
+                      let self = self,
+                      let indexPath = self.dataSource.indexPath(for: clip),
+                      let cell = self.collectionView.cellForItem(at: indexPath)
                 else {
                     return
                 }

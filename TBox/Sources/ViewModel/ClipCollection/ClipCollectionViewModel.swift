@@ -320,7 +320,7 @@ extension ClipCollectionViewModel {
                 self.selected.send(Set([clip]))
 
                 if !self._operation.value.isAllowedMultipleSelection,
-                    let clip = self._clips.value[clipId]?.value
+                   let clip = self._clips.value[clipId]?.value
                 {
                     self._previewingClipId.send(clip.id)
                     self.previewed.send(clipId)
@@ -339,8 +339,8 @@ extension ClipCollectionViewModel {
         self.deselect
             .sink { [weak self] clipId in
                 guard let self = self,
-                    self._selections.value.contains(clipId),
-                    let clip = self._clips.value[clipId]?.value else { return }
+                      self._selections.value.contains(clipId),
+                      let clip = self._clips.value[clipId]?.value else { return }
                 self._selections.send(self._selections.value.subtracting(Set([clipId])))
                 self.deselected.send(Set([clip]))
             }

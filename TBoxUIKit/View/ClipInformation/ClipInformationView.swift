@@ -152,8 +152,8 @@ extension ClipInformationView: UIContextMenuInteractionDelegate {
 
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let button = interaction.view as? UIButton,
-            let text = button.titleLabel?.text,
-            let url = URL(string: text)
+              let text = button.titleLabel?.text,
+              let url = URL(string: text)
         else {
             return nil
         }
@@ -196,7 +196,7 @@ extension ClipInformationView: ClipInformationLayoutDelegate {
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+              case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         self.delegate?.clipInformationView(self, didSelectTag: tag, at: cell)
     }

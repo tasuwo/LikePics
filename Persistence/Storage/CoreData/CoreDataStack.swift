@@ -34,8 +34,8 @@ public class CoreDataStack {
     private var lastHistoryToken: NSPersistentHistoryToken? {
         didSet {
             guard let token = lastHistoryToken,
-                let data = try? NSKeyedArchiver.archivedData(withRootObject: token,
-                                                             requiringSecureCoding: true)
+                  let data = try? NSKeyedArchiver.archivedData(withRootObject: token,
+                                                               requiringSecureCoding: true)
             else {
                 return
             }

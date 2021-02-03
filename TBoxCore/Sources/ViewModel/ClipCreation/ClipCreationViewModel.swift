@@ -211,7 +211,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         self.deletedTag
             .sink { [weak self] tag in
                 guard var newTags = self?.tags.value,
-                    let index = newTags.firstIndex(of: tag)
+                      let index = newTags.firstIndex(of: tag)
                 else {
                     return
                 }

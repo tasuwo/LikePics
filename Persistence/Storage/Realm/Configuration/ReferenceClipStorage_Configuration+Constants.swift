@@ -4,8 +4,8 @@
 
 import RealmSwift
 
-extension ReferenceClipStorage.Configuration {
-    public static func resolve(for bundle: Bundle) -> ReferenceClipStorage.Configuration {
+public extension ReferenceClipStorage.Configuration {
+    static func resolve(for bundle: Bundle) -> ReferenceClipStorage.Configuration {
         let realmFileName = "reference-clips.realm"
 
         var configuration = Realm.Configuration(

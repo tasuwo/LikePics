@@ -202,8 +202,8 @@ extension ClipMergeViewController: ClipMergeViewDelegate {
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-            let item = self.dataSource.itemIdentifier(for: indexPath),
-            case let .tag(tag) = item else { return }
+              let item = self.dataSource.itemIdentifier(for: indexPath),
+              case let .tag(tag) = item else { return }
         self.viewModel.inputs.deleted.send(tag.id)
     }
 
@@ -248,8 +248,8 @@ extension ClipMergeViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         guard let sectionValue = destinationIndexPath?.section,
-            let section = ClipMergeViewLayout.Section(rawValue: sectionValue),
-            section == .clip
+              let section = ClipMergeViewLayout.Section(rawValue: sectionValue),
+              section == .clip
         else {
             return UICollectionViewDropProposal(operation: .forbidden)
         }

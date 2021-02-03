@@ -5,8 +5,8 @@
 import Combine
 import Erik
 
-extension WebImageProvidingService {
-    public enum Pixiv: WebImageProvider {
+public extension WebImageProvidingService {
+    enum Pixiv: WebImageProvider {
         // MARK: - WebImageProvider
 
         public static func isProviding(url: URL) -> Bool {

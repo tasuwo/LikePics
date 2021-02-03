@@ -836,8 +836,8 @@ extension ClipStorage: ClipStorageProtocol {
         request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
 
         guard var duplicates = try? context.fetch(request),
-            duplicates.count > 1,
-            let winner = duplicates.first
+              duplicates.count > 1,
+              let winner = duplicates.first
         else {
             return []
         }

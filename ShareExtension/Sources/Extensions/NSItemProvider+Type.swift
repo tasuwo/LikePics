@@ -11,20 +11,20 @@ public enum NSItemProviderResolutionError: Error {
     case internalError
 }
 
-extension NSItemProvider {
-    public var isUrl: Bool {
+public extension NSItemProvider {
+    var isUrl: Bool {
         return self.hasItemConformingToTypeIdentifier(kUTTypeURL as String)
     }
 
-    public var isText: Bool {
+    var isText: Bool {
         return self.hasItemConformingToTypeIdentifier(kUTTypeText as String)
     }
 
-    public var isImage: Bool {
+    var isImage: Bool {
         return hasItemConformingToTypeIdentifier(kUTTypeImage as String)
     }
 
-    public func resolveUrl(completion: @escaping (Result<URL, NSItemProviderResolutionError>) -> Void) {
+    func resolveUrl(completion: @escaping (Result<URL, NSItemProviderResolutionError>) -> Void) {
         guard self.isUrl else {
             completion(.failure(.invalidType))
             return
@@ -38,7 +38,7 @@ extension NSItemProvider {
         }
     }
 
-    public func resolveText(completion: @escaping (Result<String, NSItemProviderResolutionError>) -> Void) {
+    func resolveText(completion: @escaping (Result<String, NSItemProviderResolutionError>) -> Void) {
         guard self.isText else {
             completion(.failure(.invalidType))
             return
@@ -52,7 +52,7 @@ extension NSItemProvider {
         }
     }
 
-    public func resolveImage(completion: @escaping (Result<Data, NSItemProviderResolutionError>) -> Void) {
+    func resolveImage(completion: @escaping (Result<Data, NSItemProviderResolutionError>) -> Void) {
         if self.isImage {
             self.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { data, _ in
                 switch data {

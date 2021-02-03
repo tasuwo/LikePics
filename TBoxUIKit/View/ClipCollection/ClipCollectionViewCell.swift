@@ -127,8 +127,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public var isLoading: Bool {
         guard let primaryImage = self.primaryImage,
-            let secondaryImage = self.secondaryImage,
-            let tertiaryImage = self.tertiaryImage
+              let secondaryImage = self.secondaryImage,
+              let tertiaryImage = self.tertiaryImage
         else {
             return true
         }
@@ -273,7 +273,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
             switch kind {
             case .primary:
                 self.primaryImage = .loading
@@ -291,7 +291,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
             switch kind {
             case .primary:
                 self.primaryImage = .loaded(image)
@@ -309,7 +309,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
+                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
             switch kind {
             case .primary:
                 self.primaryImage = .failedToLoad

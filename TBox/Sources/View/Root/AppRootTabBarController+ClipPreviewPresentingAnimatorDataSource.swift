@@ -19,7 +19,7 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
         }
 
         if let navigationController = selectedViewController as? UINavigationController,
-            let viewController = navigationController.viewControllers.compactMap({ $0 as? ClipPreviewPresentingViewController }).first
+           let viewController = navigationController.viewControllers.compactMap({ $0 as? ClipPreviewPresentingViewController }).first
         {
             return viewController
         }

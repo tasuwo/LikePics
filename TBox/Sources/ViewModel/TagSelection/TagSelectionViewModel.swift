@@ -180,7 +180,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
             .sink { [weak self] tags in
                 guard let self = self else { return }
                 if let creatingTagName = self._creatingTagName.value,
-                    let createdTag = tags.first(where: { $0.name == creatingTagName })
+                   let createdTag = tags.first(where: { $0.name == creatingTagName })
                 {
                     self.select.send(createdTag.id)
                     self._creatingTagName.send(nil)

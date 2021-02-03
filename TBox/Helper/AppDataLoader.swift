@@ -30,8 +30,8 @@ enum AppDataLoader {
 
         while let sourceURL = enumerator.nextObject() as? URL {
             guard let resourceValues = try? sourceURL.resourceValues(forKeys: [.isDirectoryKey]),
-                let isDirectory = resourceValues.isDirectory,
-                !isDirectory
+                  let isDirectory = resourceValues.isDirectory,
+                  !isDirectory
             else {
                 continue
             }
