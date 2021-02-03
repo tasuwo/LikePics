@@ -49,6 +49,10 @@
 
 "confirm_alert_ok" = "OK";
 
+// MARK: - Clip Meta
+
+"clip_meta_should_hides" = "保存した画像を隠す";
+
 // MARK: - Placeholder
 
 "placeholder_search_tag" = "タグを探す";

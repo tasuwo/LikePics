@@ -16,7 +16,7 @@ public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
     var viewDidAppear: PassthroughSubject<Void, Never> { get }
 
-    var urlAdded: PassthroughSubject<URL?, Never> { get }
+    var hidingUpdated: PassthroughSubject<Bool, Never> { get }
 
     var loadImages: PassthroughSubject<Void, Never> { get }
     var saveImages: PassthroughSubject<Void, Never> { get }
@@ -29,11 +29,11 @@ public protocol ClipCreationViewModelInputs {
 }
 
 public protocol ClipCreationViewModelOutputs: AnyObject {
+    var applySnapshot: AnyPublisher<ClipCreationViewLayout.Snapshot, Never> { get }
+
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
-    var url: CurrentValueSubject<URL?, Never> { get }
     var tags: CurrentValueSubject<[Tag], Never> { get }
-    var images: CurrentValueSubject<[ImageSource], Never> { get }
     var selectedIndices: CurrentValueSubject<[Int], Never> { get }
 
     var isReloadItemEnabled: CurrentValueSubject<Bool, Never> { get }
@@ -79,6 +79,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         case internalError
     }
 
+    public typealias Layout = ClipCreationViewLayout
+
     // MARK: - Properties
 
     // MARK: ClipCreationViewModelType
@@ -91,7 +93,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
     public let viewDidAppear: PassthroughSubject<Void, Never> = .init()
 
-    public let urlAdded: PassthroughSubject<URL?, Never> = .init()
+    public let hidingUpdated: PassthroughSubject<Bool, Never> = .init()
 
     public var loadImages: PassthroughSubject<Void, Never> = .init()
     public var saveImages: PassthroughSubject<Void, Never> = .init()
@@ -106,11 +108,11 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     // MARK: ClipCreationViewModelOutputs
 
+    public var applySnapshot: AnyPublisher<Layout.Snapshot, Never> { _snapshot.eraseToAnyPublisher() }
+
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    public let url: CurrentValueSubject<URL?, Never>
     public var tags: CurrentValueSubject<[Tag], Never> = .init([])
-    public var images: CurrentValueSubject<[ImageSource], Never> = .init([])
     public var selectedIndices: CurrentValueSubject<[Int], Never> = .init([])
 
     public var isReloadItemEnabled: CurrentValueSubject<Bool, Never> = .init(false)
@@ -128,6 +130,11 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public let displayAlert: PassthroughSubject<(title: String, body: String), Never> = .init()
 
     // MARK: Privates
+
+    private let _shouldClipHide: CurrentValueSubject<Bool, Never> = .init(false)
+    private let _url: CurrentValueSubject<URL?, Never>
+    private let _images: CurrentValueSubject<[ImageSource], Never> = .init([])
+    private let _snapshot: CurrentValueSubject<Layout.Snapshot, Never>
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -157,7 +164,11 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         self.configuration = configuration
         self.urlSession = urlSession
 
-        self.url = .init(url)
+        self._url = .init(url)
+        self._snapshot = .init(Self.createSnapshot(url: _url.value,
+                                                   tags: tags.value,
+                                                   images: _images.value,
+                                                   hides: _shouldClipHide.value))
 
         self.bind()
     }
@@ -177,13 +188,37 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                   configuration: configuration,
                   urlSession: urlSession)
     }
+}
 
-    // MARK: - Methods
+extension ClipCreationViewModel {
+    private static func createSnapshot(url: URL?, tags: [Tag], images: [ImageSource], hides: Bool) -> Layout.Snapshot {
+        var snapshot = Layout.Snapshot()
+        snapshot.appendSections([.tag])
+        snapshot.appendItems([Layout.Item.tagAddition] + tags.map({ Layout.Item.tag($0) }))
 
+        snapshot.appendSections([.meta])
+        snapshot.appendItems([
+            .meta(.init(title: L10n.clipMetaShouldHides, accessory: .switch(isOn: hides)))
+        ])
+
+        snapshot.appendSections([.image])
+        snapshot.appendItems(images.map({ Layout.Item.image($0) }))
+        return snapshot
+    }
+}
+
+extension ClipCreationViewModel {
     // MARK: Bind
 
     private func bind() {
         // MARK: Inputs
+
+        _url
+            .combineLatest(tags, _images, _shouldClipHide)
+            .sink { [weak self] url, tags, images, shouldHides in
+                self?._snapshot.send(Self.createSnapshot(url: url, tags: tags, images: images, hides: shouldHides))
+            }
+            .store(in: &self.subscriptions)
 
         self.viewLoaded
             .sink { [weak self] view in
@@ -192,8 +227,8 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             }
             .store(in: &self.subscriptions)
 
-        self.urlAdded
-            .sink { [weak self] url in self?.url.send(url) }
+        self.hidingUpdated
+            .sink { [weak self] shouldHide in self?._shouldClipHide.send(shouldHide) }
             .store(in: &self.subscriptions)
 
         self.loadImages
@@ -247,11 +282,11 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .sink { [weak self] value in self?.isDoneItemEnabled.send(value) }
             .store(in: &self.subscriptions)
 
-        self.images
+        self._images
             .sink { [weak self] _ in self?.selectedIndices.send([]) }
             .store(in: &self.subscriptions)
 
-        self.images
+        self._images
             .map { !$0.isEmpty }
             // 描画直後はCollectionViewのboundsが不正なので、調整されるまで待つ
             .combineLatest(self.viewDidAppear)
@@ -259,7 +294,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
             .sink { [weak self] isEmpty, _ in self?.displayCollectionView.send(isEmpty) }
             .store(in: &self.subscriptions)
 
-        self.images
+        self._images
             .combineLatest(isLoading)
             .map { images, isLoading in images.isEmpty && !isLoading }
             .sink { [weak self] display in self?.displayEmptyMessage.send(display) }
@@ -271,7 +306,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     private func loadImageSources() {
         self.isLoading.send(true)
 
-        self.images.send([])
+        self._images.send([])
 
         self.provider.resolveSources()
             .map { sources in sources.filter { $0.isValid } }
@@ -294,7 +329,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
                 }
             } receiveValue: { [weak self] foundImages in
                 guard let self = self else { return }
-                self.images.send(foundImages)
+                self._images.send(foundImages)
                 if self.configuration.selectAllAfterLoading {
                     self.selectedIndices.send(([Int])(0 ..< foundImages.count))
                 }
@@ -306,7 +341,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
         self.isLoading.send(true)
 
         let selections: [(index: Int, ImageSource)] = self.selectedIndices.value.enumerated()
-            .map { ($0.offset, self.images.value[$0.element]) }
+            .map { ($0.offset, self._images.value[$0.element]) }
 
         self.fetchImages(for: selections)
             .flatMap { [weak self] sources -> AnyPublisher<Void, DownloadError> in
@@ -335,7 +370,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     }
 
     private func selectItem(at index: Int) {
-        guard self.images.value.indices.contains(index) else { return }
+        guard self._images.value.indices.contains(index) else { return }
         self.selectedIndices.send(self.selectedIndices.value + [index])
     }
 
@@ -377,7 +412,10 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     // MARK: Save Images
 
     private func save(sources: [ClipItemSource]) -> Result<Void, DownloadError> {
-        let result = self.clipBuilder.build(url: self.url.value, sources: sources, tagIds: self.tags.value.map { $0.id })
+        let result = self.clipBuilder.build(url: self._url.value,
+                                            hidesClip: _shouldClipHide.value,
+                                            sources: sources,
+                                            tagIds: self.tags.value.map { $0.id })
         switch self.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
         case .success:
             return .success(())

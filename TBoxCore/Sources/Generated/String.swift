@@ -54,6 +54,8 @@ internal enum L10n {
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// 画像取得元のURLを追加する
     internal static let clipCreationViewUrlAdditionCellTitle = L10n.tr("Localizable", "clip_creation_view_url_addition_cell_title")
+    /// 保存した画像を隠す
+    internal static let clipMetaShouldHides = L10n.tr("Localizable", "clip_meta_should_hides")
     /// OK
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// タグの追加に失敗しました

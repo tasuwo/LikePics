@@ -8,41 +8,37 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-enum ClipCreationViewLayout {
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+public protocol ClipCreationViewDelegate: AnyObject {
+    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
+    func didTapTagAdditionButton(_ cell: UICollectionViewCell)
+    func didTapTagDeletionButton(_ cell: UICollectionViewCell)
+}
 
-    enum Section: Int {
-        // case url
+public enum ClipCreationViewLayout {
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
+    public typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+
+    public enum Section: Int {
         case tag
+        case meta
         case image
     }
 
-    enum Item: Hashable {
-        // case urlAddition
-        // case url(URL)
+    public enum Item: Hashable {
         case tagAddition
         case tag(Tag)
+        case meta(Info)
         case image(ImageSource)
+    }
 
-        var identifier: String {
-            switch self {
-            // case .urlAddition:
-            //     return "url-addition"
-
-            // case .url:
-            //     return "url"
-
-            case .tagAddition:
-                return "tag-addition"
-
-            case let .tag(tag):
-                return tag.id.uuidString
-
-            case let .image(source):
-                return source.identifier.uuidString
-            }
+    public struct Info: Equatable, Hashable {
+        enum Accessory: Equatable, Hashable {
+            case label(title: String)
+            case `switch`(isOn: Bool)
         }
+
+        let title: String
+        let accessory: Accessory
     }
 }
 
@@ -70,11 +66,13 @@ extension ClipCreationViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
-            // case .url:
-            //     return self.createUrlLayoutSection()
-
             case .tag:
                 return self.createTagsLayoutSection()
+
+            case .meta:
+                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                configuration.backgroundColor = Asset.Color.background.color
+                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .image:
                 return self.createImageLayoutSection(for: environment)
@@ -84,21 +82,6 @@ extension ClipCreationViewLayout {
             }
         }
         return layout
-    }
-
-    private static func createUrlLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16)
-
-        return section
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
@@ -113,7 +96,7 @@ extension ClipCreationViewLayout {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 24, leading: 20, bottom: 5, trailing: 20)
 
         return section
     }
@@ -142,7 +125,7 @@ extension ClipCreationViewLayout {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(16)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 10, trailing: 20)
 
         return section
     }
@@ -151,52 +134,92 @@ extension ClipCreationViewLayout {
 // MARK: - DataSource
 
 extension ClipCreationViewLayout {
-    static func createSnapshot(url: URL?, tags: [Tag], images: [ImageSource]) -> Snapshot {
-        var snapshot = Snapshot()
-        // snapshot.appendSections([.url])
-        // if let url = url {
-        //     snapshot.appendItems([.url(url)])
-        // } else {
-        //     snapshot.appendItems([.urlAddition])
-        // }
-        snapshot.appendSections([.tag])
-        snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
-        snapshot.appendSections([.image])
-        snapshot.appendItems(images.map({ Item.image($0) }))
-        return snapshot
+    class Proxy {
+        weak var delegate: ClipCreationViewDelegate?
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    buttonCellDelegate: ButtonCellDelegate,
-                                    tagCellDelegate: TagCollectionViewCellDelegate,
                                     thumbnailLoader: Smoothie.ThumbnailLoader,
-                                    outputs: ClipCreationViewModelOutputs) -> DataSource
+                                    outputs: ClipCreationViewModelOutputs) -> (Proxy, DataSource)
     {
-        // let urlAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
-        //     cell.title = L10n.clipCreationViewUrlAdditionCellTitle
-        //     cell.delegate = buttonCellDelegate
-        // }
+        let proxy = Proxy()
 
-        // let urlCellRegistration = UICollectionView.CellRegistration<ButtonCell, URL>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, url in
-        //     cell.title = url.absoluteString
-        //     cell.delegate = buttonCellDelegate
-        // }
+        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
+        let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let metaCellRegistration = self.configureMetaCell(proxy: proxy)
+        let imageCellRegistration = self.configureImageCell(thumbnailLoader: thumbnailLoader, outputs: outputs)
 
-        let tagAdditionCellRegistration = UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak buttonCellDelegate] cell, _, _ in
-            cell.title = L10n.clipCreationViewTagAdditionCellTitle
-            cell.delegate = buttonCellDelegate
+        let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
+            switch item {
+            case let .meta(info):
+                return collectionView.dequeueConfiguredReusableCell(using: metaCellRegistration, for: indexPath, item: info)
+
+            case .tagAddition:
+                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
+
+            case let .tag(tag):
+                return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
+
+            case let .image(source):
+                return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: source)
+            }
         }
 
-        let tagCellRegistration = UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak tagCellDelegate] cell, _, tag in
+        return (proxy, dataSource)
+    }
+
+    private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
+        return UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak delegate] cell, _, _ in
+            cell.title = L10n.clipCreationViewTagAdditionCellTitle
+            cell.delegate = delegate
+        }
+    }
+
+    private static func configureTagCell(delegate: TagCollectionViewCellDelegate) -> UICollectionView.CellRegistration<TagCollectionViewCell, Tag> {
+        return UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak delegate] cell, _, tag in
             cell.title = tag.name
             cell.displayMode = .normal
             cell.visibleCountIfPossible = false
             cell.visibleDeleteButton = true
-            cell.delegate = tagCellDelegate
+            cell.delegate = delegate
             cell.isHiddenTag = tag.isHidden
         }
+    }
 
-        let imageCellRegistration = UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in
+    private static func configureMetaCell(proxy: Proxy) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
+            var contentConfiguration = UIListContentConfiguration.valueCell()
+            contentConfiguration.text = info.title
+            cell.contentConfiguration = contentConfiguration
+
+            switch info.accessory {
+            case let .label(title: title):
+                cell.accessories = [.label(text: title)]
+
+            case let .switch(isOn: isOn):
+                // swiftlint:disable:next identifier_name
+                let sw = UISwitch()
+                sw.isOn = isOn
+                sw.addAction(.init(handler: { [weak proxy] action in
+                    // swiftlint:disable:next identifier_name
+                    guard let sw = action.sender as? UISwitch else { return }
+                    proxy?.didSwitchInfo(cell, at: indexPath, isOn: sw.isOn)
+                }), for: .touchUpInside)
+                let configuration = UICellAccessory.CustomViewConfiguration(customView: sw,
+                                                                            placement: .trailing(displayed: .always))
+                cell.accessories = [.customView(configuration: configuration)]
+            }
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
+            cell.backgroundConfiguration = backgroundConfiguration
+        }
+    }
+
+    private static func configureImageCell(thumbnailLoader: ThumbnailLoader,
+                                           outputs: ClipCreationViewModelOutputs) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>
+    {
+        return UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in
             let requestId = UUID().uuidString
             cell.identifier = requestId
             cell.image = nil
@@ -215,24 +238,29 @@ extension ClipCreationViewLayout {
                 cell.selectionOrder = indexInSelection + 1
             }
         }
+    }
+}
 
-        return .init(collectionView: collectionView) { collectionView, indexPath, item in
-            switch item {
-            // case .urlAddition:
-            //     return collectionView.dequeueConfiguredReusableCell(using: urlAdditionCellRegistration, for: indexPath, item: ())
+// MARK: - Proxy
 
-            // case let .url(url):
-            //     return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: url)
+extension ClipCreationViewLayout.Proxy {
+    func didSwitchInfo(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        self.delegate?.didSwitchHiding(cell, at: indexPath, isOn: isOn)
+    }
+}
 
-            case .tagAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
+extension ClipCreationViewLayout.Proxy: ButtonCellDelegate {
+    // MARK: - ButtonCellDelegate
 
-            case let .tag(tag):
-                return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
+    func didTap(_ cell: ButtonCell) {
+        self.delegate?.didTapTagAdditionButton(cell)
+    }
+}
 
-            case let .image(source):
-                return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: source)
-            }
-        }
+extension ClipCreationViewLayout.Proxy: TagCollectionViewCellDelegate {
+    // MARK: - TagCollectionViewCellDelegate
+
+    func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+        self.delegate?.didTapTagDeletionButton(cell)
     }
 }

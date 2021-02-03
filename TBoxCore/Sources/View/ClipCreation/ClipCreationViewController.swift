@@ -25,6 +25,7 @@ public class ClipCreationViewController: UIViewController {
 
     typealias Factory = ViewControllerFactory
     typealias Dependency = ClipCreationViewModelType
+    typealias Layout = ClipCreationViewLayout
 
     // MARK: - Properties
 
@@ -62,7 +63,8 @@ public class ClipCreationViewController: UIViewController {
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
     private var collectionView: UICollectionView!
-    private var dataSource: ClipCreationViewLayout.DataSource!
+    private var dataSource: Layout.DataSource!
+    private var proxy: Layout.Proxy!
 
     // MARK: Services
 
@@ -164,10 +166,14 @@ public class ClipCreationViewController: UIViewController {
             .assign(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.subscriptions)
 
-        dependency.outputs.url
-            .combineLatest(dependency.outputs.tags, dependency.outputs.images)
+        dependency.outputs.applySnapshot
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] url, tags, images in self?.apply(url: url, tags: tags, images: images) }
+            .sink { [weak self] snapshot in
+                self?.dataSource.apply(snapshot, animatingDifferences: true) {
+                    guard let self = self else { return }
+                    self.apply(indices: self.viewModel.outputs.selectedIndices.value)
+                }
+            }
             .store(in: &self.subscriptions)
 
         dependency.outputs.selectedIndices
@@ -198,16 +204,8 @@ public class ClipCreationViewController: UIViewController {
             .store(in: &self.subscriptions)
     }
 
-    private func apply(url: URL?, tags: [Tag], images: [ImageSource]) {
-        let snapshot = ClipCreationViewLayout.createSnapshot(url: url, tags: tags, images: images)
-        self.dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
-            guard let self = self else { return }
-            self.apply(indices: self.viewModel.outputs.selectedIndices.value)
-        }
-    }
-
     private func apply(indices: [Int]) {
-        let indexPaths = indices.map { IndexPath(row: $0, section: ClipCreationViewLayout.Section.image.rawValue) }
+        let indexPaths = indices.map { IndexPath(row: $0, section: Layout.Section.image.rawValue) }
         let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems ?? []
 
         // 足りない分を選択する
@@ -230,7 +228,7 @@ public class ClipCreationViewController: UIViewController {
 
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds,
-                                          collectionViewLayout: ClipCreationViewLayout.createLayout())
+                                          collectionViewLayout: Layout.createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = Asset.Color.background.color
         collectionView.contentInsetAdjustmentBehavior = .always
@@ -241,11 +239,12 @@ public class ClipCreationViewController: UIViewController {
 
         view.addSubview(collectionView)
 
-        self.dataSource = ClipCreationViewLayout.configureDataSource(collectionView: collectionView,
-                                                                     buttonCellDelegate: self,
-                                                                     tagCellDelegate: self,
-                                                                     thumbnailLoader: self.thumbnailLoader,
-                                                                     outputs: viewModel.outputs)
+        let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
+                                                             thumbnailLoader: self.thumbnailLoader,
+                                                             outputs: viewModel.outputs)
+        self.dataSource = dataSource
+        proxy.delegate = self
+        self.proxy = proxy
     }
 
     // MARK: NavigationBar
@@ -292,27 +291,27 @@ extension ClipCreationViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
+        guard case .image = Layout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
+        guard case .image = Layout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return false }
+        guard case .image = Layout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
+        guard case .image = Layout.Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.selectedImage.send(indexPath.row)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard case .image = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
+        guard case .image = Layout.Section(rawValue: indexPath.section) else { return }
         self.viewModel.inputs.deselectedImage.send(indexPath.row)
     }
 }
@@ -325,10 +324,34 @@ extension ClipCreationViewController: EmptyMessageViewDelegate {
     }
 }
 
-extension ClipCreationViewController: TagCollectionViewCellDelegate {
-    // MARK: - TagCollectionViewCellDelegate
+extension ClipCreationViewController: TagSelectionViewControllerDelegate {
+    // MARK: - TagSelectionViewControllerDelegate
 
-    public func didTapDeleteButton(_ cell: TagCollectionViewCell) {
+    public func didSelectTags(tags: [Tag]) {
+        self.viewModel.inputs.replacedTags.send(tags)
+    }
+}
+
+extension ClipCreationViewController: ClipCreationViewDelegate {
+    // MARK: - ClipCreationViewDelegate
+
+    public func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        self.viewModel.inputs.hidingUpdated.send(isOn)
+    }
+
+    public func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell),
+              let section = Layout.Section(rawValue: indexPath.section) else { return }
+        switch section {
+        case .tag:
+            self.presentTagSelectionView()
+
+        default:
+            return
+        }
+    }
+
+    public func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
               let item = self.dataSource.itemIdentifier(for: indexPath),
               case let .tag(tag) = item
@@ -336,53 +359,6 @@ extension ClipCreationViewController: TagCollectionViewCellDelegate {
             return
         }
         self.viewModel.inputs.deletedTag.send(tag)
-    }
-}
-
-extension ClipCreationViewController: ButtonCellDelegate {
-    // MARK: - ButtonCellDelegate
-
-    public func didTap(_ cell: ButtonCell) {
-        guard let indexPath = collectionView.indexPath(for: cell),
-              let section = ClipCreationViewLayout.Section(rawValue: indexPath.section) else { return }
-        switch section {
-        // case .url:
-        //     self.startUrlEditing()
-
-        case .tag:
-            self.presentTagSelectionView()
-
-        case .image:
-            return
-        }
-    }
-
-    private func startUrlEditing() {
-        if let url = viewModel.outputs.url.value {
-            self.editUrlAlertContainer.present(
-                withText: url.absoluteString,
-                on: self,
-                validator: { text in
-                    guard let text = text else { return true }
-                    return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
-                    guard case let .saved(text: text) = action else { return }
-                    self?.viewModel.inputs.urlAdded.send(URL(string: text))
-                }
-            )
-        } else {
-            self.addUrlAlertContainer.present(
-                withText: nil,
-                on: self,
-                validator: { text in
-                    guard let text = text else { return true }
-                    return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
-                    guard case let .saved(text: text) = action else { return }
-                    self?.viewModel.inputs.urlAdded.send(URL(string: text))
-                }
-            )
-        }
     }
 
     private func presentTagSelectionView() {
@@ -396,13 +372,5 @@ extension ClipCreationViewController: ButtonCellDelegate {
             return
         }
         parent.present(nextVC, animated: true, completion: nil)
-    }
-}
-
-extension ClipCreationViewController: TagSelectionViewControllerDelegate {
-    // MARK: - TagSelectionViewControllerDelegate
-
-    public func didSelectTags(tags: [Tag]) {
-        self.viewModel.inputs.replacedTags.send(tags)
     }
 }

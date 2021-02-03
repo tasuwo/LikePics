@@ -49,6 +49,10 @@
 
 "confirm_alert_ok" = "OK";
 
+// MARK: - Clip Meta
+
+"clip_meta_should_hides" = "Hide saved images";
+
 // MARK: - Placeholder
 
-"placeholder_search_tag" = "タグを探す";
+"placeholder_search_tag" = "Search Tag";

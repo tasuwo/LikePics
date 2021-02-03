@@ -5,7 +5,7 @@
 import Domain
 
 protocol ClipBuildable {
-    func build(url: URL?, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    func build(url: URL?, hidesClip: Bool, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
 }
 
 struct ClipBuilder {
@@ -23,7 +23,11 @@ struct ClipBuilder {
 extension ClipBuilder: ClipBuildable {
     // MARK: - ClipBuildable
 
-    func build(url: URL?, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer]) {
+    func build(url: URL?,
+               hidesClip: Bool,
+               sources: [ClipItemSource],
+               tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
         let itemAndContainers: [(ClipItemRecipe, ImageContainer)] = sources.map { source in
@@ -40,6 +44,7 @@ extension ClipBuilder: ClipBuildable {
             return (item, container)
         }
         let clip = ClipRecipe(clipId: clipId,
+                              isHidden: hidesClip,
                               clipItems: itemAndContainers.map { $0.0 },
                               tagIds: tagIds,
                               dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
@@ -50,12 +55,12 @@ extension ClipBuilder: ClipBuildable {
 }
 
 private extension ClipRecipe {
-    init(clipId: Clip.Identity, clipItems: [ClipItemRecipe], tagIds: [Tag.Identity], dataSize: Int, registeredDate: Date, currentDate: Date) {
+    init(clipId: Clip.Identity, isHidden: Bool, clipItems: [ClipItemRecipe], tagIds: [Tag.Identity], dataSize: Int, registeredDate: Date, currentDate: Date) {
         self.init(id: clipId,
                   description: nil,
                   items: clipItems,
                   tagIds: tagIds,
-                  isHidden: false,
+                  isHidden: isHidden,
                   dataSize: dataSize,
                   registeredDate: registeredDate,
                   updatedDate: currentDate)
