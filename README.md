@@ -5,6 +5,8 @@ LikePics
 
 [<img width=200 src="images/icon.png" style="border-radius: 30px;">](#logo)
 
+[![Download_on_the_App_Store_Badge](./images/Download_on_the_App_Store_Badge.svg)](https://apps.apple.com/jp/app/likepics/id1537307877)
+
 LikePics is photo app for iOS/iPadOS.
 
 - Download images
