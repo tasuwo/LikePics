@@ -55,6 +55,7 @@ public class TagSelectionViewController: UIViewController {
         // HACK: nibから読み込んでいるため初期サイズがnibに引きずられる
         //       これによりCollectionViewのレイアウトが初回表示時にズレるのを防ぐ
         self.view.frame = self.navigationController?.view.frame ?? self.view.frame
+        self.view.backgroundColor = Asset.Color.background.color
 
         self.setupNavigationBar()
         self.setupCollectionView()
@@ -167,6 +168,7 @@ public class TagSelectionViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = true
+        self.collectionView.backgroundColor = Asset.Color.background.color
         self.dataSource = .init(collectionView: self.collectionView,
                                 cellProvider: self.cellProvider())
     }
@@ -200,6 +202,7 @@ public class TagSelectionViewController: UIViewController {
         searchBar.delegate = self
         searchBar.showsCancelButton = false
         searchBar.placeholder = L10n.placeholderSearchTag
+        searchBar.backgroundColor = Asset.Color.background.color
     }
 
     // MARK: EmptyMessage
