@@ -9,7 +9,7 @@ end
 target 'TBox' do
   pod 'LicensePlist', '~> 3.0.4'
   pod 'SwiftGen', '~> 6.4.0'
-  pod 'Sourcery', '~> 1.0.2'
+  pod 'Sourcery', '~> 1.0.3'
 
   target 'TBoxTests' do
     inherit! :search_paths
@@ -18,7 +18,7 @@ target 'TBox' do
 end
 
 target 'Persistence' do
-  pod 'RealmSwift', '~> 10.0.0'
+  pod 'RealmSwift', '~> 10.5.1'
 
   target 'PersistenceTests' do
     inherit! :search_paths
