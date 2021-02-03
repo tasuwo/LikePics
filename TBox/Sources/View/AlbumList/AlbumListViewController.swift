@@ -48,7 +48,7 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: States
 
@@ -60,7 +60,7 @@ class AlbumListViewController: UIViewController {
          viewModel: AlbumListViewModel,
          navigationBarProvider: AlbumListNavigationBarProvider,
          menuBuilder: AlbumListMenuBuildable.Type,
-         thumbnailLoader: ThumbnailLoader)
+         thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.factory = factory
         self.viewModel = viewModel

@@ -139,7 +139,7 @@ extension ClipCreationViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: Smoothie.ThumbnailLoader,
+                                    thumbnailLoader: Smoothie.ThumbnailLoaderProtocol,
                                     outputs: ClipCreationViewModelOutputs) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
@@ -216,7 +216,7 @@ extension ClipCreationViewLayout {
         }
     }
 
-    private static func configureImageCell(thumbnailLoader: ThumbnailLoader,
+    private static func configureImageCell(thumbnailLoader: ThumbnailLoaderProtocol,
                                            outputs: ClipCreationViewModelOutputs) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>
     {
         return UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in
@@ -230,7 +230,7 @@ extension ClipCreationViewLayout {
             let request = ThumbnailRequest(requestId: requestId,
                                            originalImageRequest: source,
                                            thumbnailInfo: info)
-            thumbnailLoader?.load(request: request, observer: cell)
+            thumbnailLoader?.load(request, observer: cell)
 
             // モデルにIndexを含めることも検討したが、選択状態更新毎にDataSourceを更新させると見た目がイマイチだったため、
             // selectionOrderについてはPushではなくPull方式を取る

@@ -23,7 +23,7 @@ class ThumbnailLoadTask {
 
     let thumbnailId: String
 
-    private var requests: [RequestId: RequestContext] = [:]
+    private var requestPool: [RequestId: RequestContext] = [:]
 
     weak var delegate: ThumbnailLoadTaskDelegate?
     weak var dependentOperation: Operation?
@@ -37,31 +37,31 @@ class ThumbnailLoadTask {
     // MARK: - Methods
 
     func append(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
-        self.requests[request.requestId] = RequestContext(request: request, observer: observer)
+        self.requestPool[request.requestId] = RequestContext(request: request, observer: observer)
     }
 
-    func didLoad(image: UIImage?) {
-        if let image = image {
-            self.requests.forEach { $1.observer?.didSuccessToLoad($1.request, image: image) }
+    func didLoad(thumbnail: UIImage?) {
+        if let image = thumbnail {
+            self.requestPool.forEach { $1.observer?.didSuccessToLoad($1.request, image: image) }
         } else {
-            self.requests.forEach { $1.observer?.didFailedToLoad($1.request) }
+            self.requestPool.forEach { $1.observer?.didFailedToLoad($1.request) }
         }
-        self.requests = [:]
+        self.requestPool = [:]
         self.delegate?.didComplete(self)
     }
 
-    func finish(requestId: RequestId) -> Bool {
-        guard self.requests.keys.contains(requestId) else {
-            return self.requests.isEmpty
+    func didFinish(requestHaving requestId: RequestId) -> Bool {
+        guard self.requestPool.keys.contains(requestId) else {
+            return self.requestPool.isEmpty
         }
-        self.requests.removeValue(forKey: requestId)
-        return self.requests.isEmpty
+        self.requestPool.removeValue(forKey: requestId)
+        return self.requestPool.isEmpty
     }
 
-    func cancel(requestId: RequestId) {
-        guard self.requests.keys.contains(requestId) else { return }
-        self.requests.removeValue(forKey: requestId)
-        if self.requests.isEmpty {
+    func didCancel(requestHaving requestId: RequestId) {
+        guard self.requestPool.keys.contains(requestId) else { return }
+        self.requestPool.removeValue(forKey: requestId)
+        if self.requestPool.isEmpty {
             self.dependentOperation?.cancel()
             self.delegate?.didComplete(self)
         }

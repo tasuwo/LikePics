@@ -105,7 +105,7 @@ extension ClipMergeViewLayout {
     }
 
     static func createDataSource(collectionView: UICollectionView,
-                                 thumbnailLoader: ThumbnailLoader) -> (DataSource, Proxy)
+                                 thumbnailLoader: ThumbnailLoaderProtocol) -> (DataSource, Proxy)
     {
         let proxy = Proxy()
 
@@ -147,8 +147,8 @@ extension ClipMergeViewLayout {
         }
     }
 
-    private static func configureItemCell(proxy: Proxy, thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
-        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy] cell, _, item in
+    private static func configureItemCell(proxy: Proxy, thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
+        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailLoader] cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.url
             contentConfiguration.isSiteUrlEditable = false
@@ -178,9 +178,9 @@ extension ClipMergeViewLayout {
                                            userInfo: nil)
             cell.onReuse = { identifier in
                 guard identifier == requestId else { return }
-                thumbnailLoader.cancel(request)
+                thumbnailLoader?.cancel(request)
             }
-            thumbnailLoader.load(request: request, observer: cell)
+            thumbnailLoader?.load(request, observer: cell)
         }
     }
 }

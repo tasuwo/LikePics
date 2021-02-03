@@ -38,7 +38,7 @@ class AlbumSelectionViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: States
 
@@ -48,7 +48,7 @@ class AlbumSelectionViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: AlbumSelectionViewModel,
-         thumbnailLoader: ThumbnailLoader)
+         thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.factory = factory
         self.viewModel = viewModel

@@ -52,10 +52,10 @@ class DependencyContainer {
 
         self.userSettingsStorage = UserSettingsStorage(bundle: mainBundle)
 
-        var config = ThumbnailLoadPipeline.Configuration(dataLoader: ImageSourceLoader())
+        var config = ThumbnailLoadQueue.Configuration(originalImageLoader: ImageSourceLoader())
         config.diskCache = nil
         config.memoryCache = MemoryCache(config: .default)
-        self.thumbnailLoader = ThumbnailLoader(pipeline: .init(config: config))
+        self.thumbnailLoader = ThumbnailLoader(queue: .init(config: config))
     }
 }
 

@@ -6,14 +6,14 @@ import Combine
 import os
 import UIKit
 
-public class ThumbnailLoadPipeline {
+public class ThumbnailLoadQueue {
     typealias ThumbnailId = String
 
     public struct Configuration {
         public var memoryCache: MemoryCaching = MemoryCache()
         public var diskCache: DiskCaching?
         public var compressionRatio: Float = 0.8
-        public var dataLoader: OriginalImageLoader
+        public var originalImageLoader: OriginalImageLoader
 
         public let cacheReadingQueue = OperationQueue()
         public let dataLoadingQueue = OperationQueue()
@@ -22,8 +22,8 @@ public class ThumbnailLoadPipeline {
         public let imageEncodingQueue = OperationQueue()
         public let imageDecompressingQueue = OperationQueue()
 
-        public init(dataLoader: OriginalImageLoader) {
-            self.dataLoader = dataLoader
+        public init(originalImageLoader: OriginalImageLoader) {
+            self.originalImageLoader = originalImageLoader
 
             self.cacheReadingQueue.maxConcurrentOperationCount = 1
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
@@ -44,18 +44,20 @@ public class ThumbnailLoadPipeline {
     public let config: Configuration
 
     private let logger = Logger()
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadPipeline", target: .global(qos: .userInitiated))
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadQueue", target: .global(qos: .userInitiated))
 
-    private var tasks: [ThumbnailId: ThumbnailLoadTask] = [:]
+    private var loadTaskPool: [ThumbnailId: ThumbnailLoadTask] = [:]
 
     // MARK: - Lifecycle
 
     public init(config: Configuration) {
         self.config = config
     }
+}
 
-    // MARK: - Methods
+// MARK: - Load/Cancel
 
+extension ThumbnailLoadQueue {
     func readCacheIfExists(for request: ThumbnailRequest, completion: @escaping (UIImage?) -> Void) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else {
@@ -83,11 +85,11 @@ public class ThumbnailLoadPipeline {
         self.config.cacheReadingQueue.addOperation(operation)
     }
 
-    func load(for request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
+    func load(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
         queue.async { [weak self, weak observer] in
             guard let self = self else { return }
 
-            if let task = self.tasks[request.thumbnailInfo.id] {
+            if let task = self.loadTaskPool[request.thumbnailInfo.id] {
                 task.append(request, observer: observer)
                 return
             }
@@ -95,13 +97,13 @@ public class ThumbnailLoadPipeline {
             let task = ThumbnailLoadTask(thumbnailId: request.thumbnailInfo.id)
             task.delegate = self
             task.append(request, observer: observer)
-            self.tasks[request.thumbnailInfo.id] = task
+            self.loadTaskPool[request.thumbnailInfo.id] = task
 
             let context = Context(request: request, task: task) {
-                task.didLoad(image: $0)
+                task.didLoad(thumbnail: $0)
             } didFinish: {
-                if task.finish(requestId: request.requestId) {
-                    self.tasks.removeValue(forKey: request.thumbnailInfo.id)
+                if task.didFinish(requestHaving: request.requestId) {
+                    self.loadTaskPool.removeValue(forKey: request.thumbnailInfo.id)
                     return true
                 }
                 return false
@@ -118,15 +120,15 @@ public class ThumbnailLoadPipeline {
 
     func cancel(_ request: ThumbnailRequest) {
         queue.async { [weak self] in
-            guard let self = self, let task = self.tasks[request.thumbnailInfo.id] else { return }
-            task.cancel(requestId: request.requestId)
+            guard let self = self, let task = self.loadTaskPool[request.thumbnailInfo.id] else { return }
+            task.didCancel(requestHaving: request.requestId)
         }
     }
 }
 
 // MARK: Operations
 
-extension ThumbnailLoadPipeline {
+extension ThumbnailLoadQueue {
     private func enqueueCheckCacheOperation(context: Context) {
         let operation = BlockOperation { [weak self, context] in
             guard let self = self else { return }
@@ -155,7 +157,7 @@ extension ThumbnailLoadPipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Load Original Data")
-            let data = self.config.dataLoader.loadData(with: context.request.imageRequest)
+            let data = self.config.originalImageLoader.loadData(with: context.request.imageRequest)
             log.log(.end, name: "Load Original Data")
 
             self.queue.async {
@@ -248,17 +250,17 @@ extension ThumbnailLoadPipeline {
     }
 }
 
-extension ThumbnailLoadPipeline: ThumbnailLoadTaskDelegate {
-    // MARK: - ThumbnailLoadTaskDelegate
+// MARK: - ThumbnailLoadTaskDelegate
 
+extension ThumbnailLoadQueue: ThumbnailLoadTaskDelegate {
     func didComplete(_ task: ThumbnailLoadTask) {
-        self.tasks.removeValue(forKey: task.thumbnailId)
+        self.loadTaskPool.removeValue(forKey: task.thumbnailId)
     }
 }
 
 // MARK: Image Processing
 
-extension ThumbnailLoadPipeline {
+extension ThumbnailLoadQueue {
     private func decompress(_ data: Data) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {

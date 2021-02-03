@@ -68,7 +68,7 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: Services
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: States
 
@@ -79,7 +79,7 @@ public class ClipCreationViewController: UIViewController {
 
     public init(factory: ViewControllerFactory,
                 viewModel: ClipCreationViewModelType,
-                thumbnailLoader: ThumbnailLoader,
+                thumbnailLoader: ThumbnailLoaderProtocol,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory

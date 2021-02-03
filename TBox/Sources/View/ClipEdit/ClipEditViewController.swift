@@ -42,7 +42,7 @@ class ClipEditViewController: UIViewController {
 
     // MARK: Thumbnail
 
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: States
 
@@ -52,7 +52,7 @@ class ClipEditViewController: UIViewController {
 
     init(factory: Factory,
          viewModel: Dependency,
-         thumbnailLoader: ThumbnailLoader)
+         thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.factory = factory
         self.viewModel = viewModel

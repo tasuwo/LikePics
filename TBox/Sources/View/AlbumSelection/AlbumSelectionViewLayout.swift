@@ -41,7 +41,7 @@ extension AlbumSelectionViewLayout {
 
 extension AlbumSelectionViewLayout {
     static func createDataSource(collectionView: UICollectionView,
-                                 thumbnailLoader: ThumbnailLoader) -> DataSource
+                                 thumbnailLoader: ThumbnailLoaderProtocol) -> DataSource
     {
         let cellRegistration = self.configureCell(thumbnailLoader: thumbnailLoader)
 
@@ -52,7 +52,7 @@ extension AlbumSelectionViewLayout {
         return dataSource
     }
 
-    private static func configureCell(thumbnailLoader: ThumbnailLoader) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album> {
+    private static func configureCell(thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album> {
         return .init(cellNib: AlbumSelectionCell.nib) { [weak thumbnailLoader] cell, _, album in
             cell.title = album.title
             cell.clipCount = album.clips.count
@@ -67,7 +67,7 @@ extension AlbumSelectionViewLayout {
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)
-                thumbnailLoader?.load(request: request, observer: cell)
+                thumbnailLoader?.load(request, observer: cell)
                 cell.onReuse = { identifier in
                     guard identifier == requestId else { return }
                     thumbnailLoader?.cancel(request)

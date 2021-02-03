@@ -86,27 +86,27 @@ class DependencyContainer {
 
         let defaultCostLimit = Int(MemoryCache.Configuration.defaultCostLimit())
 
-        var clipCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        var clipCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
         clipCacheConfig.diskCache = self.clipDiskCache
         let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
         clipCacheConfig.memoryCache = clipMemoryCache
-        self.clipThumbnailLoader = ThumbnailLoader(pipeline: .init(config: clipCacheConfig))
+        self.clipThumbnailLoader = ThumbnailLoader(queue: .init(config: clipCacheConfig))
 
-        var albumCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
-        self.albumThumbnailLoader = ThumbnailLoader(pipeline: .init(config: albumCacheConfig))
+        self.albumThumbnailLoader = ThumbnailLoader(queue: .init(config: albumCacheConfig))
 
-        var temporaryCacheConfig = ThumbnailLoadPipeline.Configuration(dataLoader: self.imageQueryService)
+        var temporaryCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
-        self.temporaryThumbnailLoader = ThumbnailLoader(pipeline: .init(config: temporaryCacheConfig))
+        self.temporaryThumbnailLoader = ThumbnailLoader(queue: .init(config: temporaryCacheConfig))
 
         let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
         self.previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,

@@ -37,11 +37,11 @@ class ClipCollectionProvider: NSObject {
 
     // MARK: ThumbnailRenderable
 
-    let thumbnailLoader: ThumbnailLoader
+    let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: - Lifecycle
 
-    init(thumbnailLoader: ThumbnailLoader) {
+    init(thumbnailLoader: ThumbnailLoaderProtocol) {
         self.thumbnailLoader = thumbnailLoader
     }
 
@@ -61,7 +61,7 @@ class ClipCollectionProvider: NSObject {
 
         if let item = clip.primaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
-            self.thumbnailLoader.load(request: request, observer: cell)
+            self.thumbnailLoader.load(request, observer: cell)
             cell.onReuse = { [weak self] identifier in
                 guard identifier == requestId else { return }
                 self?.thumbnailLoader.cancel(request)
@@ -72,7 +72,7 @@ class ClipCollectionProvider: NSObject {
         }
         if let item = clip.secondaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
-            self.thumbnailLoader.load(request: request, observer: cell)
+            self.thumbnailLoader.load(request, observer: cell)
             cell.onReuse = { [weak self] identifier in
                 guard identifier == requestId else { return }
                 self?.thumbnailLoader.cancel(request)
@@ -83,7 +83,7 @@ class ClipCollectionProvider: NSObject {
         }
         if let item = clip.tertiaryItem {
             let request = self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
-            self.thumbnailLoader.load(request: request, observer: cell)
+            self.thumbnailLoader.load(request, observer: cell)
             cell.onReuse = { [weak self] identifier in
                 guard identifier == requestId else { return }
                 self?.thumbnailLoader.cancel(request)
@@ -362,17 +362,17 @@ extension ClipCollectionProvider: UICollectionViewDataSourcePrefetching {
             if let item = clip.primaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .primary, isPrefetch: true)
-                self.thumbnailLoader.prefetch(for: request)
+                self.thumbnailLoader.prefetch(request)
             }
             if let item = clip.secondaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .secondary, isPrefetch: true)
-                self.thumbnailLoader.prefetch(for: request)
+                self.thumbnailLoader.prefetch(request)
             }
             if let item = clip.tertiaryItem {
                 let requestId = self.prefetchRequestIdIssuer(item: item, indexPath: indexPath)
                 let request = self.makeRequest(for: item, id: requestId, size: attribute.frame.size, scale: scale, context: .tertiary, isPrefetch: true)
-                self.thumbnailLoader.prefetch(for: request)
+                self.thumbnailLoader.prefetch(request)
             }
         }
     }

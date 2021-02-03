@@ -93,7 +93,7 @@ extension AlbumListViewLayout {
         }
     }
 
-    static func configureAlbumCell(thumbnailLoader: ThumbnailLoader,
+    static func configureAlbumCell(thumbnailLoader: ThumbnailLoaderProtocol,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
         return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak delegate] cell, _, item in
@@ -118,7 +118,7 @@ extension AlbumListViewLayout {
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
                                                thumbnailInfo: info)
-                thumbnailLoader?.load(request: request, observer: cell)
+                thumbnailLoader?.load(request, observer: cell)
                 cell.onReuse = { identifier in
                     guard identifier == requestId else { return }
                     thumbnailLoader?.cancel(request)
@@ -131,7 +131,7 @@ extension AlbumListViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoader,
+                                    thumbnailLoader: ThumbnailLoaderProtocol,
                                     delegate: AlbumListCollectionViewCellDelegate) -> DataSource
     {
         let albumCellRegistration = self.configureAlbumCell(thumbnailLoader: thumbnailLoader, delegate: delegate)
