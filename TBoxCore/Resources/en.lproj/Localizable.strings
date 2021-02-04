@@ -34,6 +34,10 @@
 "clip_creation_view_download_error_failed_to_download_body" = "Sorry, something went wrong. Please try again later.";
 "clip_creation_view_download_error_action" = "OK";
 
+"clip_creation_view_meta_url_title" = "URL";
+"clip_creation_view_meta_url_no" = "No URL";
+"clip_creation_view_meta_url_edit" = "Edit";
+
 "tag_selection_view_title" = "Select Tags";
 
 "tag_list_view_alert_for_add_title" = "New Tag";

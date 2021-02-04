@@ -16,6 +16,7 @@ public protocol ClipCreationViewModelInputs {
     var viewLoaded: PassthroughSubject<UIView, Never> { get }
     var viewDidAppear: PassthroughSubject<Void, Never> { get }
 
+    var urlEdited: PassthroughSubject<URL?, Never> { get }
     var hidingUpdated: PassthroughSubject<Bool, Never> { get }
 
     var loadImages: PassthroughSubject<Void, Never> { get }
@@ -33,6 +34,7 @@ public protocol ClipCreationViewModelOutputs: AnyObject {
 
     var isLoading: CurrentValueSubject<Bool, Never> { get }
 
+    var url: URL? { get }
     var tags: CurrentValueSubject<[Tag], Never> { get }
     var selectedIndices: CurrentValueSubject<[Int], Never> { get }
 
@@ -93,6 +95,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
     public var viewLoaded: PassthroughSubject<UIView, Never> = .init()
     public let viewDidAppear: PassthroughSubject<Void, Never> = .init()
 
+    public var urlEdited: PassthroughSubject<URL?, Never> = .init()
     public let hidingUpdated: PassthroughSubject<Bool, Never> = .init()
 
     public var loadImages: PassthroughSubject<Void, Never> = .init()
@@ -112,6 +115,7 @@ public class ClipCreationViewModel: ClipCreationViewModelType,
 
     public var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
+    public var url: URL? { _url.value }
     public var tags: CurrentValueSubject<[Tag], Never> = .init([])
     public var selectedIndices: CurrentValueSubject<[Int], Never> = .init([])
 
@@ -198,7 +202,12 @@ extension ClipCreationViewModel {
 
         snapshot.appendSections([.meta])
         snapshot.appendItems([
-            .meta(.init(title: L10n.clipMetaShouldHides, accessory: .switch(isOn: hides)))
+            .meta(.init(title: L10n.clipCreationViewMetaUrlTitle,
+                        secondaryTitle: url?.absoluteString ?? L10n.clipCreationViewMetaUrlNo,
+                        accessory: .button(title: L10n.clipCreationViewMetaUrlEdit))),
+            .meta(.init(title: L10n.clipMetaShouldHides,
+                        secondaryTitle: nil,
+                        accessory: .switch(isOn: hides)))
         ])
 
         snapshot.appendSections([.image])
@@ -225,6 +234,10 @@ extension ClipCreationViewModel {
                 guard let self = self else { return }
                 self.provider.viewDidLoad.send(view)
             }
+            .store(in: &self.subscriptions)
+
+        self.urlEdited
+            .sink { [weak self] url in self?._url.send(url) }
             .store(in: &self.subscriptions)
 
         self.hidingUpdated

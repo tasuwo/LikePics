@@ -339,6 +339,38 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
         self.viewModel.inputs.hidingUpdated.send(isOn)
     }
 
+    public func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
+        self.startUrlEditing()
+    }
+
+    private func startUrlEditing() {
+        if let url = viewModel.outputs.url {
+            self.editUrlAlertContainer.present(
+                withText: url.absoluteString,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.viewModel.inputs.urlEdited.send(URL(string: text))
+                }
+            )
+        } else {
+            self.addUrlAlertContainer.present(
+                withText: nil,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.viewModel.inputs.urlEdited.send(URL(string: text))
+                }
+            )
+        }
+    }
+
     public func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
               let section = Layout.Section(rawValue: indexPath.section) else { return }

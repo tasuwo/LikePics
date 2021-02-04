@@ -34,6 +34,10 @@
 "clip_creation_view_download_error_failed_to_download_body" = "保存時に問題が発生しました。後ほどもう一度お試しください";
 "clip_creation_view_download_error_action" = "OK";
 
+"clip_creation_view_meta_url_title" = "URL";
+"clip_creation_view_meta_url_no" = "URLなし";
+"clip_creation_view_meta_url_edit" = "編集";
+
 "tag_selection_view_title" = "タグを選択";
 
 "tag_list_view_alert_for_add_title" = "新規タグ";

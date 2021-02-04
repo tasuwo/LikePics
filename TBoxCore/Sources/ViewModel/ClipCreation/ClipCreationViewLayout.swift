@@ -9,6 +9,7 @@ import TBoxUIKit
 import UIKit
 
 public protocol ClipCreationViewDelegate: AnyObject {
+    func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath)
     func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
     func didTapTagAdditionButton(_ cell: UICollectionViewCell)
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
@@ -33,11 +34,12 @@ public enum ClipCreationViewLayout {
 
     public struct Info: Equatable, Hashable {
         enum Accessory: Equatable, Hashable {
-            case label(title: String)
+            case button(title: String)
             case `switch`(isOn: Bool)
         }
 
         let title: String
+        let secondaryTitle: String?
         let accessory: Accessory
     }
 }
@@ -190,11 +192,20 @@ extension ClipCreationViewLayout {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = info.title
+            contentConfiguration.secondaryText = info.secondaryTitle
             cell.contentConfiguration = contentConfiguration
 
             switch info.accessory {
-            case let .label(title: title):
-                cell.accessories = [.label(text: title)]
+            case let .button(title: title):
+                let button = UIButton()
+                button.setTitle(title, for: .normal)
+                button.setTitleColor(button.tintColor, for: .normal)
+                button.addAction(.init(handler: { [weak proxy] _ in
+                    proxy?.didTapButton(cell, at: indexPath)
+                }), for: .touchUpInside)
+                let configuration = UICellAccessory.CustomViewConfiguration(customView: button,
+                                                                            placement: .trailing(displayed: .always))
+                cell.accessories = [.customView(configuration: configuration)]
 
             case let .switch(isOn: isOn):
                 // swiftlint:disable:next identifier_name
@@ -246,6 +257,10 @@ extension ClipCreationViewLayout {
 extension ClipCreationViewLayout.Proxy {
     func didSwitchInfo(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
         self.delegate?.didSwitchHiding(cell, at: indexPath, isOn: isOn)
+    }
+
+    func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
+        self.delegate?.didTapButton(cell, at: indexPath)
     }
 }
 

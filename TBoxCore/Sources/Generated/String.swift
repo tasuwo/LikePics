@@ -48,6 +48,12 @@ internal enum L10n {
     internal static let clipCreationViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
     internal static let clipCreationViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_title")
+    /// 編集
+    internal static let clipCreationViewMetaUrlEdit = L10n.tr("Localizable", "clip_creation_view_meta_url_edit")
+    /// URLなし
+    internal static let clipCreationViewMetaUrlNo = L10n.tr("Localizable", "clip_creation_view_meta_url_no")
+    /// URL
+    internal static let clipCreationViewMetaUrlTitle = L10n.tr("Localizable", "clip_creation_view_meta_url_title")
     /// タグを追加する
     internal static let clipCreationViewTagAdditionCellTitle = L10n.tr("Localizable", "clip_creation_view_tag_addition_cell_title")
     /// 画像を選択
