@@ -1,3 +1,5 @@
+# vim: syntax=ruby
+
 app_identifier("net.tasuwo.TBox") # The bundle identifier of your app
 apple_id("kamuhata.you@gmail.com") # Your Apple email address
 

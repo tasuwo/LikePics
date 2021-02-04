@@ -1,3 +1,5 @@
+# vim: syntax=ruby
+
 git_url("git@github.com:tasuwo/certificates.git")
 storage_mode("git")
 
