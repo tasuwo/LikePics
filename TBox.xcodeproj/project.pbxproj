@@ -123,9 +123,9 @@
 		2C3CCDC024F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDBF24F2E3BA00FAC660 /* AppRootTabBarController+ClipPreviewPresentingAnimatorDataSource.swift */; };
 		2C3CCDC624F40D9500FAC660 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */; };
 		2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C447A77250D438F00EAA448 /* ClipInformationViewModel.swift */; };
-		2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */; };
+		2C45D3EF24EACAA50045B6D3 /* SearchEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3EE24EACAA50045B6D3 /* SearchEntryViewController.swift */; };
 		2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */; };
-		2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */; };
+		2C45D3F424EC1E560045B6D3 /* SearchEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3F324EC1E560045B6D3 /* SearchEntryViewModel.swift */; };
 		2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FB24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift */; };
 		2C45D40024EEACF80045B6D3 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D3FF24EEACF80045B6D3 /* Album.swift */; };
 		2C45D40224EEAD750045B6D3 /* Album+MapToDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C45D40124EEAD750045B6D3 /* Album+MapToDomainModel.swift */; };
@@ -859,9 +859,9 @@
 		2C3CCDC524F40D9500FAC660 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		2C3D649F2512E48B009C0749 /* UICollectionView+ApplySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ApplySelection.swift"; sourceTree = "<group>"; };
 		2C447A77250D438F00EAA448 /* ClipInformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewModel.swift; sourceTree = "<group>"; };
-		2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntiryViewController.swift; sourceTree = "<group>"; };
+		2C45D3EE24EACAA50045B6D3 /* SearchEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewController.swift; sourceTree = "<group>"; };
 		2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
-		2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryPresenter.swift; sourceTree = "<group>"; };
+		2C45D3F324EC1E560045B6D3 /* SearchEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewModel.swift; sourceTree = "<group>"; };
 		2C45D3FB24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPresentingViewController.swift; sourceTree = "<group>"; };
 		2C45D3FF24EEACF80045B6D3 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		2C45D40124EEAD750045B6D3 /* Album+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Album+MapToDomainModel.swift"; sourceTree = "<group>"; };
@@ -1930,7 +1930,7 @@
 		2C45D3ED24EACA780045B6D3 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				2C45D3EE24EACAA50045B6D3 /* SearchEntiryViewController.swift */,
+				2C45D3EE24EACAA50045B6D3 /* SearchEntryViewController.swift */,
 				2C45D3F024EC1E2F0045B6D3 /* SearchResultViewController.swift */,
 			);
 			path = Search;
@@ -1939,7 +1939,7 @@
 		2C45D3F224EC1E490045B6D3 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				2C45D3F324EC1E560045B6D3 /* SearchEntryPresenter.swift */,
+				2C45D3F324EC1E560045B6D3 /* SearchEntryViewModel.swift */,
 				2CB6054F257FC85C00F7579F /* SearchResultViewModel.swift */,
 			);
 			path = Search;
@@ -4607,13 +4607,13 @@
 				2CEE6BD625A365FA005DA31C /* TagCollection.swift in Sources */,
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2CDA49D32516EF400043DC14 /* ClipPreviewPageBarViewModel.swift in Sources */,
-				2C45D3F424EC1E560045B6D3 /* SearchEntryPresenter.swift in Sources */,
+				2C45D3F424EC1E560045B6D3 /* SearchEntryViewModel.swift in Sources */,
 				2CD3DE6225C30B3C00777416 /* PreLoadingClipInformationViewController.swift in Sources */,
 				2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */,
 				2CD3DE3C25C2FFCE00777416 /* PreLoadingClipInformationViewModel.swift in Sources */,
 				2C01B8EA25ADCE9D0089CFB4 /* ClipEditViewController.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipPreviewViewController.swift in Sources */,
-				2C45D3EF24EACAA50045B6D3 /* SearchEntiryViewController.swift in Sources */,
+				2C45D3EF24EACAA50045B6D3 /* SearchEntryViewController.swift in Sources */,
 				2C11718325A8802400BE75AB /* ClipCollection_ShareContext.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
 				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,

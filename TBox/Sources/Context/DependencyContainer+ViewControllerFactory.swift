@@ -218,8 +218,8 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchEntryViewController() -> UIViewController {
-        let presenter = SearchEntryPresenter()
-        let viewController = SearchEntryViewController(factory: self, presenter: presenter)
+        let viewModel = SearchEntryViewModel()
+        let viewController = SearchEntryViewController(factory: self, viewModel: viewModel)
         return UINavigationController(rootViewController: viewController)
     }
 

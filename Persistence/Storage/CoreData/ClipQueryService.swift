@@ -133,7 +133,22 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError> {
-        return .failure(.internalError)
+        do {
+            let factory: CoreDataClipListQuery.RequestFactory = {
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+                let predicates = keywords.map { keyword in
+                    NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl CONTAINS[cd] %@).@count > 0", keyword as CVarArg)
+                }
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+                return request
+            }
+            let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
     }
 
     public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
