@@ -9,5 +9,5 @@ import UIKit
 protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingClip: Clip? { get }
     var previewingCell: ClipCollectionViewCell? { get }
-    func displayOnScreenPreviewingCellIfNeeded()
+    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool)
 }

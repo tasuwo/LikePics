@@ -96,7 +96,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let fromPage = from.animatingPage(self),
             let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
-            let toCell = to.animatingCell(self)
+            let toCell = to.animatingCell(self, shouldAdjust: true)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -232,7 +232,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self),
+            let toCell = to.animatingCell(self, shouldAdjust: true),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)

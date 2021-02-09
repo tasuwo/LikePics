@@ -34,7 +34,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let targetImageView = to.animatingPage(self),
-            let selectedCell = from.animatingCell(self),
+            let selectedCell = from.animatingCell(self, shouldAdjust: false),
             let selectedImageView = selectedCell.primaryImageView,
             let selectedImage = selectedImageView.image,
             let fromViewBaseView = from.baseView(self)

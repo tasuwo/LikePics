@@ -37,7 +37,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self),
+            let toCell = to.animatingCell(self, shouldAdjust: true),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)

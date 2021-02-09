@@ -281,7 +281,7 @@ extension TopClipCollectionViewController: ClipPreviewPresentingViewController {
         return self.collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
     }
 
-    func displayOnScreenPreviewingCellIfNeeded() {
+    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
         guard
             let clip = self.previewingClip,
             let indexPath = self.dataSource.indexPath(for: clip)
@@ -292,7 +292,7 @@ extension TopClipCollectionViewController: ClipPreviewPresentingViewController {
         self.view.layoutIfNeeded()
         self.collectionView.layoutIfNeeded()
 
-        if !self.collectionView.indexPathsForVisibleItems.contains(indexPath) {
+        if shouldAdjust {
             self.collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
             self.view.layoutIfNeeded()
             self.collectionView.layoutIfNeeded()
