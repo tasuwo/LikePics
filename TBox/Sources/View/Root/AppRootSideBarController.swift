@@ -1,0 +1,151 @@
+//
+//  Copyright © 2021 Tasuku Tozawa. All rights reserved.
+//
+
+import UIKit
+
+protocol AppRootSideBarControllerDelegate: AnyObject {
+    func appRootSideBarController(_ controller: AppRootSideBarController, didSelect item: AppRootSideBarController.Item)
+}
+
+class AppRootSideBarController: UIViewController {
+    typealias Factory = ViewControllerFactory
+
+    enum Section: Int {
+        case main
+    }
+
+    enum Item: CaseIterable {
+        case top
+        case tags
+        case albums
+        case setting
+
+        var image: UIImage? {
+            switch self {
+            case .top:
+                return UIImage(systemName: "house")
+
+            case .tags:
+                return UIImage(systemName: "tag")
+
+            case .albums:
+                return UIImage(systemName: "square.stack")
+
+            case .setting:
+                return UIImage(systemName: "gear")
+            }
+        }
+
+        var title: String {
+            switch self {
+            case .top:
+                return "Top"
+            case .tags:
+                return "Tags"
+            case .albums:
+                return "Albums"
+            case .setting:
+                return "Setting"
+            }
+        }
+    }
+
+    // MARK: - Properties
+
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+
+    weak var delegate: AppRootSideBarControllerDelegate?
+
+    private var isAppliedInitialValues: Bool = false
+
+    // MARK: - Lifecycle
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        navigationItem.title = "LikePics"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        configureHierarchy()
+        configureDataSource()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyInitialValuesIfNeeded()
+    }
+
+    private func applyInitialValuesIfNeeded() {
+        guard !isAppliedInitialValues else { return }
+
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(Item.allCases)
+        dataSource.apply(snapshot)
+
+        collectionView.selectItem(at: IndexPath(row: 0, section: 0),
+                                  animated: false,
+                                  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+
+        isAppliedInitialValues = true
+    }
+}
+
+// MARK: - Layout
+
+extension AppRootSideBarController {
+    private func createLayout() -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
+            var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
+            configuration.backgroundColor = Asset.Color.backgroundClient.color
+            return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+        }
+    }
+}
+
+extension AppRootSideBarController {
+    private func configureHierarchy() {
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
+        collectionView.backgroundColor = Asset.Color.backgroundClient.color
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        collectionView.delegate = self
+    }
+
+    private func configureDataSource() {
+        let registration: UICollectionView.CellRegistration<UICollectionViewListCell, Item> = .init { cell, _, item in
+            var contentConfiguration = UIListContentConfiguration.sidebarCell()
+            contentConfiguration.image = item.image
+            contentConfiguration.text = item.title
+            cell.contentConfiguration = contentConfiguration
+        }
+        dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
+            return collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: item)
+        }
+        collectionView.dataSource = dataSource
+    }
+}
+
+extension AppRootSideBarController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        self.delegate?.appRootSideBarController(self, didSelect: item)
+    }
+}
