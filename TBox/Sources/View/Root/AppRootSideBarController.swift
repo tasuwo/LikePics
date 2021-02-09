@@ -15,49 +15,26 @@ class AppRootSideBarController: UIViewController {
         case main
     }
 
-    enum Item: CaseIterable {
-        case top
-        case tags
-        case albums
-        case setting
-
-        var image: UIImage? {
-            switch self {
-            case .top:
-                return UIImage(systemName: "house")
-
-            case .tags:
-                return UIImage(systemName: "tag")
-
-            case .albums:
-                return UIImage(systemName: "square.stack")
-
-            case .setting:
-                return UIImage(systemName: "gear")
-            }
-        }
-
-        var title: String {
-            switch self {
-            case .top:
-                return "Top"
-            case .tags:
-                return "Tags"
-            case .albums:
-                return "Albums"
-            case .setting:
-                return "Setting"
-            }
-        }
-    }
+    typealias Item = AppRoot.SideBarItem
 
     // MARK: - Properties
+
+    var currentItem: AppRoot.SideBarItem {
+        guard isViewLoaded else { return initialItem }
+        guard let indexPath = collectionView.indexPathsForSelectedItems?.first,
+              let item = dataSource.itemIdentifier(for: indexPath)
+        else {
+            return .top
+        }
+        return item
+    }
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     weak var delegate: AppRootSideBarControllerDelegate?
 
+    private var initialItem: AppRoot.SideBarItem = .top
     private var isAppliedInitialValues: Bool = false
 
     // MARK: - Lifecycle
@@ -86,6 +63,16 @@ class AppRootSideBarController: UIViewController {
         applyInitialValuesIfNeeded()
     }
 
+    func select(_ item: AppRoot.SideBarItem) {
+        guard isViewLoaded else {
+            initialItem = item
+            return
+        }
+        collectionView.selectItem(at: IndexPath(row: item.rawValue, section: 0),
+                                  animated: false,
+                                  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+    }
+
     private func applyInitialValuesIfNeeded() {
         guard !isAppliedInitialValues else { return }
 
@@ -94,7 +81,7 @@ class AppRootSideBarController: UIViewController {
         snapshot.appendItems(Item.allCases)
         dataSource.apply(snapshot)
 
-        collectionView.selectItem(at: IndexPath(row: 0, section: 0),
+        collectionView.selectItem(at: IndexPath(row: initialItem.rawValue, section: 0),
                                   animated: false,
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
 
