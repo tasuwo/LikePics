@@ -63,14 +63,15 @@ extension SceneDelegate: MainAppLauncher {
             self.dependencyContainer = container
 
             let rootViewModel = container.makeClipIntegrityResolvingViewModel()
-            let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel)
+            // let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel)
+            let rootViewController = AppRootSplitViewController(factory: container, integrityViewModel: rootViewModel)
 
             self.window?.rootViewController?.dismiss(animated: true) {
                 self.window?.rootViewController = rootViewController
             }
 
             self.cloudStackLoader = container.makeCloudStackLoader()
-            self.cloudStackLoader?.observer = rootViewController
+            // self.cloudStackLoader?.observer = rootViewController
 
             self.cloudStackLoader?.startObserveCloudAvailability()
         } catch {

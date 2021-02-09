@@ -471,6 +471,6 @@ extension DependencyContainer: ViewControllerFactory {
         viewController.factory = self
         viewController.presenter = presenter
 
-        return viewController
+        return UINavigationController(rootViewController: viewController)
     }
 }

@@ -4,7 +4,7 @@
 
 import UIKit
 
-extension AppRootTabBarController {
+extension AppRootSplitViewController {
     func didStartLoad(at index: Int?, in count: Int?) {
         guard let index = index, let count = count else {
             self.loadingLabel?.text = L10n.appRootLoadingMessage

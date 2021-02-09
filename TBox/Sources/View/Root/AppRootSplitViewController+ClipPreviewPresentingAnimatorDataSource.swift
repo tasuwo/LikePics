@@ -7,9 +7,9 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
+extension AppRootSplitViewController: ClipPreviewPresentingAnimatorDataSource {
     private func resolvePresentingViewController() -> ClipPreviewPresentingViewController? {
-        guard let selectedViewController = self.selectedViewController else {
+        guard let selectedViewController = self.currentDetailViewController else {
             self.logger.write(ConsoleLog(level: .error, message: "No selected ViewController found for PreviewView transition."))
             return nil
         }
@@ -36,16 +36,16 @@ extension AppRootTabBarController: ClipPreviewPresentingAnimatorDataSource {
     }
 
     func baseView(_ animator: ClipPreviewAnimator) -> UIView? {
-        if let navigationController = self.selectedViewController as? UINavigationController {
+        if let navigationController = self.currentDetailViewController as? UINavigationController {
             return navigationController.viewControllers.last?.view
         } else {
-            return self.selectedViewController?.view
+            return self.currentDetailViewController?.view
         }
     }
 
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView] {
-        let navigationBar = (self.selectedViewController as? UINavigationController)?.navigationBar
-        return ([self.tabBar, navigationBar] as [UIView?]).compactMap { $0 }
+        let navigationBar = (self.currentDetailViewController as? UINavigationController)?.navigationBar
+        return ([navigationBar] as [UIView?]).compactMap { $0 }
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forItemId itemId: ClipItem.Identity?) -> CGRect {
