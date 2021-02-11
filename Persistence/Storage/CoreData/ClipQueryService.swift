@@ -167,6 +167,22 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
+    public func queryClips(tagged tagId: Domain.Tag.Identity) -> Result<ClipListQuery, ClipStorageError> {
+        do {
+            let factory: CoreDataClipListQuery.RequestFactory = {
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
+                request.predicate = NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", tagId as CVarArg)
+                return request
+            }
+            let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryAlbum(having id: Domain.Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
         do {
             guard let query = try CoreDataAlbumQuery(id: id, context: self.context) else {
