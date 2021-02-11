@@ -69,6 +69,7 @@
 		2C170BA0253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */; };
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
+		2C1B1C7425D58FD900450AC9 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1B1C7325D58FD900450AC9 /* Action.swift */; };
 		2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */; };
 		2C1CBAC42595B9510078FFB8 /* MultiLineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */; };
 		2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */; };
@@ -815,6 +816,7 @@
 		2C170B9F253199E4001B1542 /* ClipPreviewAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
+		2C1B1C7325D58FD900450AC9 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLButtonInteractionHandler.swift; sourceTree = "<group>"; };
 		2C1CBA8D2595902D0078FFB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBA9F259590350078FFB8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
@@ -1629,6 +1631,14 @@
 			path = Transition;
 			sourceTree = "<group>";
 		};
+		2C1B1C7225D58F7800450AC9 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				2C1B1C7325D58FD900450AC9 /* Action.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
 		2C1BA03324E08A0E00F96801 /* Root */ = {
 			isa = PBXGroup;
 			children = (
@@ -1797,6 +1807,7 @@
 		2C2D227E25D43521001489F4 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
+				2C1B1C7225D58F7800450AC9 /* Core */,
 				2CBCCB0825D54E2D004CD1ED /* UIExtension */,
 				2CB47B7925D534D9008E38B8 /* Service */,
 				2CFA2BAB25D4D3C0007F574B /* Dependency */,
@@ -4765,6 +4776,7 @@
 				2CB3CB3E2515EFF900BE06E5 /* ClipCollectionAlertPresentable.swift in Sources */,
 				2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */,
 				2CB478EF25986A4C00BB87A3 /* ClipCollectionStatePropagable.swift in Sources */,
+				2C1B1C7425D58FD900450AC9 /* Action.swift in Sources */,
 				2C45D40824EEBE020045B6D3 /* AlbumListViewModel.swift in Sources */,
 				2C1E4446257B5A6F00A067B1 /* ClipCollection_MenuItem.swift in Sources */,
 				2C294342257FDFF7000E95EA /* ClipCollectionViewProtocol.swift in Sources */,

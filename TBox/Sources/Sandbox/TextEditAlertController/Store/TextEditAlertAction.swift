@@ -7,3 +7,5 @@ enum TextEditAlertAction {
     case saveActionTapped
     case cancelActionTapped
 }
+
+extension TextEditAlertAction: Action {}

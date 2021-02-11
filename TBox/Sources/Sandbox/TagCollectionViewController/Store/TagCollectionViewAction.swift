@@ -22,3 +22,5 @@ enum TagCollectionViewAction {
     case tagAdditionButtonTapped
     case uncategorizedTagButtonTapped
 }
+
+extension TagCollectionViewAction: Action {}
