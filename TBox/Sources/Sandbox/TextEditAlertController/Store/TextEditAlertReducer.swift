@@ -3,7 +3,7 @@
 //
 
 enum TextEditAlertReducer {
-    typealias Dependency = HasTextValidator & HasTextEditAlertDelegate
+    typealias Dependency = HasTextValidator
     typealias State = TextEditAlertState
     typealias Action = TextEditAlertAction
 
@@ -15,11 +15,9 @@ enum TextEditAlertReducer {
             return state.updating(text: text, shouldReturn: dependency.textValidator(text))
 
         case .saveActionTapped:
-            dependency.textEditAlertCompleted(state.text)
             return state
 
         case .cancelActionTapped:
-            dependency.textEditAlertCancelled()
             return state
         }
     }

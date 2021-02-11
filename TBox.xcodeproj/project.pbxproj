@@ -407,7 +407,6 @@
 		2CFA2BD525D4DB45007F574B /* TextEditAlertAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */; };
 		2CFA2BE925D4DB6B007F574B /* TextEditAlertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */; };
 		2CFA2BF425D4DB94007F574B /* TextEditAlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */; };
-		2CFA2C0025D4DBD6007F574B /* HasTextEditAlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */; };
 		2CFB118C255C1A6400451C15 /* CoreDataClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
@@ -1164,7 +1163,6 @@
 		2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertAction.swift; sourceTree = "<group>"; };
 		2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertState.swift; sourceTree = "<group>"; };
 		2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertReducer.swift; sourceTree = "<group>"; };
-		2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipQuery.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
@@ -3278,18 +3276,9 @@
 			path = Dependency;
 			sourceTree = "<group>";
 		};
-		2CFA2BFE25D4DBC9007F574B /* Dependency */ = {
-			isa = PBXGroup;
-			children = (
-				2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */,
-			);
-			path = Dependency;
-			sourceTree = "<group>";
-		};
 		2CFA2C1C25D4DCB2007F574B /* Store */ = {
 			isa = PBXGroup;
 			children = (
-				2CFA2BFE25D4DBC9007F574B /* Dependency */,
 				2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */,
 				2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */,
 				2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */,
@@ -4829,7 +4818,6 @@
 				2CFCCB3625A4251C00EF31A4 /* AlbumListNavigationBarViewModel.swift in Sources */,
 				2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */,
 				2C5C256925CF48AB008BA8D1 /* AppRootSplitViewController.swift in Sources */,
-				2CFA2C0025D4DBD6007F574B /* HasTextEditAlertDelegate.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarViewController.swift in Sources */,
 				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
 				2CDF4F4F2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift in Sources */,
