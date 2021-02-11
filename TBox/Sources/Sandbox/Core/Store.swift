@@ -10,6 +10,8 @@ class Store<S: Equatable, A: Action, D> {
     var stateValue: S { _state.value }
     var state: AnyPublisher<S, Never> { _state.eraseToAnyPublisher() }
 
+    weak var republisher: ActionRepublisher?
+
     private let dependency: D
     private let reducer: Reducer
     private let _state: CurrentValueSubject<S, Never>
@@ -25,6 +27,7 @@ class Store<S: Equatable, A: Action, D> {
     // MARK: - Methods
 
     func execute(_ action: A) {
+        if republisher?.republishIfNeeded(action) == true { return }
         _state.send(reducer(action, _state.value, dependency))
     }
 }
