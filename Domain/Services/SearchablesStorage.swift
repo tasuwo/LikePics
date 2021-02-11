@@ -2,8 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct SearchableStorage<Item: Searchable> {
-    struct History {
+public struct SearchableStorage<Item: Searchable>: Equatable {
+    struct History: Equatable {
         let lastComparableFilterQuery: String
         let items: [Item]
     }
