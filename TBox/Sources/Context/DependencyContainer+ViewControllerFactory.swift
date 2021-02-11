@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import Smoothie
@@ -403,6 +404,43 @@ extension DependencyContainer: ViewControllerFactory {
                                                          viewModel: viewModel,
                                                          menuBuilder: TagCollectionMenuBuilder(storage: self.userSettingsStorage),
                                                          logger: self.logger)
+
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeNewTagListViewController() -> UIViewController? {
+        let query: TagListQuery
+        switch self.clipQueryService.queryAllTags() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to open TagSelectionView. (\(error.rawValue))
+            """))
+            return nil
+        }
+
+        let state = TagCollectionViewState(items: [],
+                                           searchQuery: "",
+                                           isHiddenItemEnabled: userSettingsStorage.readShowHiddenItems(),
+                                           isCollectionViewDisplaying: false,
+                                           isEmptyMessageViewDisplaying: false,
+                                           isSearchBarEnabled: false,
+                                           errorMessageAlert: nil,
+                                           _tags: [],
+                                           _searchStorage: .init())
+
+        let viewController = NewTagCollectionViewController(dependency: self, state: state) { store, subscriptions in
+            userSettingsStorage.showHiddenItems
+                .sink { store.execute(.settingUpdated(isHiddenItemEnabled: !$0)) }
+                .store(in: &subscriptions)
+
+            query.tags
+                .catch { _ in Just([]) }
+                .sink { store.execute(.tagsUpdated($0)) }
+                .store(in: &subscriptions)
+        }
 
         return UINavigationController(rootViewController: viewController)
     }

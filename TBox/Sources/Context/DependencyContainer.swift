@@ -212,3 +212,15 @@ extension DependencyContainer: CoreDataStackObserver {
 }
 
 extension ClipCommandService: ClipStorable {}
+
+extension DependencyContainer: HasRouter {
+    var router: Router { self }
+}
+
+extension DependencyContainer: HasPasteboard {
+    var pasteboard: Pasteboard { UIPasteboard.general }
+}
+
+extension DependencyContainer: HasClipCommandService {
+    var commandService: ClipCommandServiceProtocol { clipCommandService }
+}
