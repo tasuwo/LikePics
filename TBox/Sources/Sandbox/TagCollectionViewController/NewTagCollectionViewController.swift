@@ -8,6 +8,7 @@ import UIKit
 
 class NewTagCollectionViewController: UIViewController {
     typealias Layout = TagCollectionViewLayout
+    typealias TagCollectionViewStore = Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
 
     // MARK: - Properties
 
@@ -21,11 +22,13 @@ class NewTagCollectionViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(dependency: TagCollectionViewStore.Reducer.Dependency,
-         state: TagCollectionViewStore.Reducer.State,
+    init(dependency: TagCollectionViewDependency,
+         state: TagCollectionViewState,
          observe: (TagCollectionViewStore, inout Set<AnyCancellable>) -> Void)
     {
-        self.store = TagCollectionViewStore(dependency: dependency, state: state)
+        self.store = TagCollectionViewStore(initialState: state, dependency: dependency) {
+            TagCollectionViewReducer.execute(action: $0, state: $1, dependency: $2)
+        }
         super.init(nibName: nil, bundle: nil)
         observe(store, &subscriptions)
     }

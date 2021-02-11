@@ -7,6 +7,8 @@ import Common
 import UIKit
 
 class TextEditAlertController: NSObject {
+    typealias TextEditAlertStore = Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
+
     private var store: TextEditAlertStore
 
     weak var presentingAlert: UIAlertController?
