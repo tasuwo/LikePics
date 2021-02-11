@@ -96,6 +96,7 @@
 		2C2C9EED250BC7370020715B /* ClipInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEC250BC7370020715B /* ClipInformationView.xib */; };
 		2C2C9EEF250BC7710020715B /* ClipInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEE250BC7710020715B /* ClipInformationView.swift */; };
 		2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */; };
+		2C2D228225D43579001489F4 /* TextEditAlertStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2D228125D43579001489F4 /* TextEditAlertStore.swift */; };
 		2C306CFE25721F2100947E77 /* CloudAccountIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C306CFD25721F2100947E77 /* CloudAccountIdentifier.swift */; };
 		2C306D08257220F200947E77 /* CurrentICloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C306D07257220F200947E77 /* CurrentICloudAccountResolver.swift */; };
 		2C35066C251780EC009248C6 /* ImageNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C35066B251780EC009248C6 /* ImageNameResolver.swift */; };
@@ -388,6 +389,12 @@
 		2CF68D7B2596BE160095A3E3 /* ClipMergeImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF68D7A2596BE160095A3E3 /* ClipMergeImageCell.swift */; };
 		2CF68D8D2596BE270095A3E3 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CF68D8C2596BE270095A3E3 /* ClipMergeImageCell.xib */; };
 		2CF9E0DF2511699D00223848 /* WeakContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF9E0DE2511699D00223848 /* WeakContainer.swift */; };
+		2CFA2BAD25D4D3CD007F574B /* HasTextValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BAC25D4D3CD007F574B /* HasTextValidator.swift */; };
+		2CFA2BC125D4D73A007F574B /* TextEditAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BC025D4D73A007F574B /* TextEditAlertController.swift */; };
+		2CFA2BD525D4DB45007F574B /* TextEditAlertAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */; };
+		2CFA2BE925D4DB6B007F574B /* TextEditAlertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */; };
+		2CFA2BF425D4DB94007F574B /* TextEditAlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */; };
+		2CFA2C0025D4DBD6007F574B /* HasTextEditAlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */; };
 		2CFB118C255C1A6400451C15 /* CoreDataClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */; };
 		2CFC054E24E6D0A100076BBE /* ShareNavigationRootPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */; };
 		2CFC055024E6D6FE00076BBE /* ShareNavigationRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */; };
@@ -832,6 +839,7 @@
 		2C2C9EEC250BC7370020715B /* ClipInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipInformationView.xib; sourceTree = "<group>"; };
 		2C2C9EEE250BC7710020715B /* ClipInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationView.swift; sourceTree = "<group>"; };
 		2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewController.swift; sourceTree = "<group>"; };
+		2C2D228125D43579001489F4 /* TextEditAlertStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertStore.swift; sourceTree = "<group>"; };
 		2C306CFD25721F2100947E77 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
 		2C306D07257220F200947E77 /* CurrentICloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentICloudAccountResolver.swift; sourceTree = "<group>"; };
 		2C35066B251780EC009248C6 /* ImageNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNameResolver.swift; sourceTree = "<group>"; };
@@ -1125,6 +1133,12 @@
 		2CF68D7A2596BE160095A3E3 /* ClipMergeImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeImageCell.swift; sourceTree = "<group>"; };
 		2CF68D8C2596BE270095A3E3 /* ClipMergeImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipMergeImageCell.xib; sourceTree = "<group>"; };
 		2CF9E0DE2511699D00223848 /* WeakContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakContainer.swift; sourceTree = "<group>"; };
+		2CFA2BAC25D4D3CD007F574B /* HasTextValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTextValidator.swift; sourceTree = "<group>"; };
+		2CFA2BC025D4D73A007F574B /* TextEditAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertController.swift; sourceTree = "<group>"; };
+		2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertAction.swift; sourceTree = "<group>"; };
+		2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertState.swift; sourceTree = "<group>"; };
+		2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertReducer.swift; sourceTree = "<group>"; };
+		2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		2CFB118B255C1A6400451C15 /* CoreDataClipQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipQuery.swift; sourceTree = "<group>"; };
 		2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		2CFC054F24E6D6FE00076BBE /* ShareNavigationRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootViewController.swift; sourceTree = "<group>"; };
@@ -1734,6 +1748,24 @@
 				2C2C9EF1250BCE330020715B /* ClipInformationViewController.swift */,
 			);
 			path = ClipInformation;
+			sourceTree = "<group>";
+		};
+		2C2D227E25D43521001489F4 /* Sandbox */ = {
+			isa = PBXGroup;
+			children = (
+				2CFA2BAB25D4D3C0007F574B /* Dependency */,
+				2C2D228025D43556001489F4 /* TextEditAlertController */,
+			);
+			path = Sandbox;
+			sourceTree = "<group>";
+		};
+		2C2D228025D43556001489F4 /* TextEditAlertController */ = {
+			isa = PBXGroup;
+			children = (
+				2CFA2BC025D4D73A007F574B /* TextEditAlertController.swift */,
+				2CFA2C1C25D4DCB2007F574B /* Store */,
+			);
+			path = TextEditAlertController;
 			sourceTree = "<group>";
 		};
 		2C2F623624DDC4C4000A8CDB /* Entity */ = {
@@ -2486,6 +2518,7 @@
 		2C810D0224E04A8100BC0FDF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				2C2D227E25D43521001489F4 /* Sandbox */,
 				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
 				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
 				2CFC5CF5250DEFF7001A02E4 /* Generated */,
@@ -3148,6 +3181,34 @@
 				2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		2CFA2BAB25D4D3C0007F574B /* Dependency */ = {
+			isa = PBXGroup;
+			children = (
+				2CFA2BAC25D4D3CD007F574B /* HasTextValidator.swift */,
+			);
+			path = Dependency;
+			sourceTree = "<group>";
+		};
+		2CFA2BFE25D4DBC9007F574B /* Dependency */ = {
+			isa = PBXGroup;
+			children = (
+				2CFA2BFF25D4DBD6007F574B /* HasTextEditAlertDelegate.swift */,
+			);
+			path = Dependency;
+			sourceTree = "<group>";
+		};
+		2CFA2C1C25D4DCB2007F574B /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				2CFA2BFE25D4DBC9007F574B /* Dependency */,
+				2CFA2BD425D4DB45007F574B /* TextEditAlertAction.swift */,
+				2CFA2BF325D4DB93007F574B /* TextEditAlertReducer.swift */,
+				2CFA2BE825D4DB6B007F574B /* TextEditAlertState.swift */,
+				2C2D228125D43579001489F4 /* TextEditAlertStore.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 		2CFB118A255C1A5600451C15 /* CoreData */ = {
@@ -4623,6 +4684,7 @@
 				2C3ADF5E24EEE6BD007C4AA0 /* AlbumSelectionViewController.swift in Sources */,
 				2CA0228D24DD9F5E00329251 /* AppDelegate.swift in Sources */,
 				2C0B119524E2AC270054016C /* ClipPreviewViewModel.swift in Sources */,
+				2CFA2BF425D4DB94007F574B /* TextEditAlertReducer.swift in Sources */,
 				2C1171A325A886CC00BE75AB /* ClipCollection_AddingToAlbumRequest.swift in Sources */,
 				2CB3CB3E2515EFF900BE06E5 /* ClipCollectionAlertPresentable.swift in Sources */,
 				2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */,
@@ -4650,6 +4712,7 @@
 				2CD3DE3C25C2FFCE00777416 /* PreLoadingClipInformationViewModel.swift in Sources */,
 				2C01B8EA25ADCE9D0089CFB4 /* ClipEditViewController.swift in Sources */,
 				2C0B119324E2ABB90054016C /* ClipPreviewViewController.swift in Sources */,
+				2CFA2BAD25D4D3CD007F574B /* HasTextValidator.swift in Sources */,
 				2C45D3EF24EACAA50045B6D3 /* SearchEntryViewController.swift in Sources */,
 				2C11718325A8802400BE75AB /* ClipCollection_ShareContext.swift in Sources */,
 				2C5A4361251588D400830D82 /* ClipCollectionNavigationBarProvider.swift in Sources */,
@@ -4672,11 +4735,13 @@
 				2CFCCB3625A4251C00EF31A4 /* AlbumListNavigationBarViewModel.swift in Sources */,
 				2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */,
 				2C5C256925CF48AB008BA8D1 /* AppRootSplitViewController.swift in Sources */,
+				2CFA2C0025D4DBD6007F574B /* HasTextEditAlertDelegate.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarViewController.swift in Sources */,
 				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
 				2CDF4F4F2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift in Sources */,
 				2C1E445A257B5AC200A067B1 /* ClipCollection_NavigationItem.swift in Sources */,
 				2CB3CB342515EEBC00BE06E5 /* ClipCollectionToolBarProvider.swift in Sources */,
+				2CFA2BE925D4DB6B007F574B /* TextEditAlertState.swift in Sources */,
 				2C753C4625963C6200715482 /* ClipMergeViewModel.swift in Sources */,
 				2CF4658B2511134300DF78E6 /* SettingsViewController.swift in Sources */,
 				2C0596CB251992C5008F11F5 /* AlbumSelectionViewModel.swift in Sources */,
@@ -4690,6 +4755,7 @@
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2C5FCA3B25A6130100C9B949 /* AlbumListViewLayout.swift in Sources */,
 				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,
+				2C2D228225D43579001489F4 /* TextEditAlertStore.swift in Sources */,
 				2C753C3325963BD000715482 /* ClipMergeViewController.swift in Sources */,
 				2CEE6BE125A3660E005DA31C /* TagCollection_MenuItem.swift in Sources */,
 				2CFCCB4A25A4256200EF31A4 /* AlbumList_NavigationItem.swift in Sources */,
@@ -4704,6 +4770,7 @@
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2C11717825A87D7A00BE75AB /* ClipCollectionViewModel.swift in Sources */,
 				2C3ADF5724EEE2FC007C4AA0 /* AlbumViewController.swift in Sources */,
+				2CFA2BC125D4D73A007F574B /* TextEditAlertController.swift in Sources */,
 				2C45D3F124EC1E2F0045B6D3 /* SearchResultViewController.swift in Sources */,
 				2C835A672594444A002F6085 /* ClipPreviewPageTransitionController.swift in Sources */,
 				2C1524322532EB0A00C51847 /* Array+identifiable.swift in Sources */,
@@ -4711,6 +4778,7 @@
 				2C5FCA9B25A75B2800C9B949 /* ClipCollection_MenuElement.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
 				2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */,
+				2CFA2BD525D4DB45007F574B /* TextEditAlertAction.swift in Sources */,
 				2CFEA98325C9AC2400434423 /* AlbumSelectionViewLayout.swift in Sources */,
 				2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */,
 				2C1E4450257B5A8F00A067B1 /* ClipCollection_Context.swift in Sources */,
