@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-enum TextEditAlertReducer {
+enum TextEditAlertReducer: Reducer {
     typealias Dependency = HasTextValidator
     typealias State = TextEditAlertState
     typealias Action = TextEditAlertAction

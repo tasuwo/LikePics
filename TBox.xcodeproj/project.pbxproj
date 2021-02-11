@@ -70,6 +70,7 @@
 		2C170BAC25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */; };
 		2C170BBF2531A136001B1542 /* FadeTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */; };
 		2C1B1C7425D58FD900450AC9 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1B1C7325D58FD900450AC9 /* Action.swift */; };
+		2C1B1C9125D5907400450AC9 /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1B1C9025D5907400450AC9 /* Reducer.swift */; };
 		2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */; };
 		2C1CBAC42595B9510078FFB8 /* MultiLineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */; };
 		2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */; };
@@ -817,6 +818,7 @@
 		2C170BAB25319A1B001B1542 /* ClipInformationAnimatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationAnimatorDelegate.swift; sourceTree = "<group>"; };
 		2C170BBE2531A136001B1542 /* FadeTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeTransitionAnimator.swift; sourceTree = "<group>"; };
 		2C1B1C7325D58FD900450AC9 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		2C1B1C9025D5907400450AC9 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
 		2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLButtonInteractionHandler.swift; sourceTree = "<group>"; };
 		2C1CBA8D2595902D0078FFB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBA9F259590350078FFB8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
@@ -1635,6 +1637,7 @@
 			isa = PBXGroup;
 			children = (
 				2C1B1C7325D58FD900450AC9 /* Action.swift */,
+				2C1B1C9025D5907400450AC9 /* Reducer.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -4861,6 +4864,7 @@
 				2C5FCAA625A75B4000C9B949 /* ClipCollection_SubMenu.swift in Sources */,
 				2CFC5CF7250DEFF7001A02E4 /* String.swift in Sources */,
 				2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */,
+				2C1B1C9125D5907400450AC9 /* Reducer.swift in Sources */,
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
 				2C01B90925ADCFA10089CFB4 /* ClipEditViewLayout.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,
