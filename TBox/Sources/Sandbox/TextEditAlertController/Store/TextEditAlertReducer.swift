@@ -16,10 +16,7 @@ enum TextEditAlertReducer: Reducer {
         case let .textChanged(text: text):
             return state.updating(text: text, shouldReturn: dependency.textValidator(text))
 
-        case .saveActionTapped:
-            return state
-
-        case .cancelActionTapped:
+        case .saveActionTapped, .cancelActionTapped, .dismissed:
             return state
         }
     }

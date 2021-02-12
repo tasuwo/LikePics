@@ -9,10 +9,17 @@ import UIKit
 class TextEditAlertController: NSObject {
     typealias TextEditAlertStore = Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
 
+    private class AlertController: UIAlertController {
+        weak var store: Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>?
+        deinit {
+            store?.execute(.dismissed)
+        }
+    }
+
     private var store: TextEditAlertStore
 
-    weak var presentingAlert: UIAlertController?
-    weak var presentingSaveAction: UIAlertAction?
+    private weak var presentingAlert: AlertController?
+    private weak var presentingSaveAction: UIAlertAction?
 
     var subscriptions: Set<AnyCancellable> = .init()
 
@@ -27,17 +34,21 @@ class TextEditAlertController: NSObject {
 
     // MARK: - Methods
 
-    func present(with text: String, on viewController: UIViewController) {
+    func present(with text: String,
+                 validator: @escaping (String?) -> Bool,
+                 on viewController: UIViewController)
+    {
         guard presentingAlert == nil else {
             RootLogger.shared.write(ConsoleLog(level: .info, message: "既にアラート表示中のためpresentを無視します"))
             return
         }
 
         store.execute(.textChanged(text: text))
+        _validator = validator
 
-        let alert = UIAlertController(title: store.stateValue.title,
-                                      message: store.stateValue.message,
-                                      preferredStyle: .alert)
+        let alert = AlertController(title: store.stateValue.title,
+                                    message: store.stateValue.message,
+                                    preferredStyle: .alert)
 
         let saveAction = UIAlertAction(title: L10n.confirmAlertSave, style: .default) { [weak self] _ in
             self?.store.execute(.saveActionTapped)
@@ -58,6 +69,7 @@ class TextEditAlertController: NSObject {
             textField.addTarget(self, action: #selector(self.textFieldDidChange(sender:)), for: .editingChanged)
         }
 
+        alert.store = store
         presentingAlert = alert
         presentingSaveAction = saveAction
 
