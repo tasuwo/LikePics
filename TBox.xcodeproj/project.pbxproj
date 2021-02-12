@@ -359,6 +359,7 @@
 		2CD6739725812FCB00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD6C20025D6421D0000D5C3 /* HasClipQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */; };
 		2CD6C21425D64E290000D5C3 /* HasUserSettingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6C21325D64E290000D5C3 /* HasUserSettingStorage.swift */; };
+		2CD6C21F25D652E80000D5C3 /* Effect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6C21E25D652E80000D5C3 /* Effect.swift */; };
 		2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */; };
 		2CD893B1256D5C6000EACB80 /* ViewContextObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */; };
 		2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */; };
@@ -1120,6 +1121,7 @@
 		2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceSpec.swift; sourceTree = "<group>"; };
 		2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipQueryService.swift; sourceTree = "<group>"; };
 		2CD6C21325D64E290000D5C3 /* HasUserSettingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasUserSettingStorage.swift; sourceTree = "<group>"; };
+		2CD6C21E25D652E80000D5C3 /* Effect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effect.swift; sourceTree = "<group>"; };
 		2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContextObserver.swift; sourceTree = "<group>"; };
 		2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCloudAccountResolver.swift; sourceTree = "<group>"; };
@@ -1643,6 +1645,7 @@
 				2C1B1C7325D58FD900450AC9 /* Action.swift */,
 				2C1B1CCC25D59F3D00450AC9 /* ActionRepublisher.swift */,
 				2C1B1C9B25D5922E00450AC9 /* Store.swift */,
+				2CD6C21E25D652E80000D5C3 /* Effect.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -4838,6 +4841,7 @@
 				2CF4658E2511193B00DF78E6 /* SettingsPresenter.swift in Sources */,
 				2C38C708250AF3D100F32102 /* TagSelectionViewModel.swift in Sources */,
 				2CB3CB482515F29C00BE06E5 /* ClipCollectionToolBarViewModel.swift in Sources */,
+				2CD6C21F25D652E80000D5C3 /* Effect.swift in Sources */,
 				2CFCCB3625A4251C00EF31A4 /* AlbumListNavigationBarViewModel.swift in Sources */,
 				2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */,
 				2C5C256925CF48AB008BA8D1 /* AppRootSplitViewController.swift in Sources */,

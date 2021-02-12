@@ -6,8 +6,7 @@ import Combine
 import Foundation
 
 class Store<State: Equatable, A: Action, Dependency> {
-    typealias Reducer = (A, State, Dependency) -> (State, Effect?)
-    typealias Effect = AnyPublisher<A?, Never>
+    typealias Reducer = (A, State, Dependency) -> (State, Effect<A>?)
 
     var stateValue: State { _state.value }
     var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
@@ -18,7 +17,7 @@ class Store<State: Equatable, A: Action, Dependency> {
     private let reducer: Reducer
     private let _state: CurrentValueSubject<State, Never>
 
-    private var effects: [UUID: Effect] = [:]
+    private var effects: [UUID: Effect<A>] = [:]
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
@@ -50,12 +49,12 @@ class Store<State: Equatable, A: Action, Dependency> {
         if let effect = effect { schedule(effect) }
     }
 
-    private func schedule(_ effect: Effect) {
+    private func schedule(_ effect: Effect<A>) {
         let id = UUID()
 
         effects[id] = effect
 
-        effect
+        effect.upstream
             .sink { [weak self] _ in
                 self?.effects.removeValue(forKey: id)
             } receiveValue: { [weak self] action in

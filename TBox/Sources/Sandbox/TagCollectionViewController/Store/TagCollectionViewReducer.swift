@@ -14,13 +14,12 @@ enum TagCollectionViewReducer {
     typealias Dependency = TagCollectionViewDependency
     typealias State = TagCollectionViewState
     typealias Action = TagCollectionViewAction
-    typealias Effect = AnyPublisher<TagCollectionViewAction?, Never>
 
     typealias Layout = TagCollectionViewLayout
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, Effect?) {
+    static func execute(action: Action, state: State, dependency: Dependency) -> (State, Effect<Action>?) {
         switch action {
         case let .tagsUpdated(tags):
             var nextState = performFilter(by: tags, previousState: state)
