@@ -17,4 +17,9 @@ class Effect<Action: LikePics.Action> {
         self.upstream = publisher.eraseToAnyPublisher()
         self.underlyingObject = object
     }
+
+    init(value action: Action) {
+        self.upstream = Just(action as Action?).eraseToAnyPublisher()
+        self.underlyingObject = nil
+    }
 }

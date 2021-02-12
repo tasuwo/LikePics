@@ -7,6 +7,8 @@ enum TextEditAlertAction {
     case saveActionTapped
     case cancelActionTapped
     case dismissed
+
+    case completed(withText: String)
 }
 
 extension TextEditAlertAction: Action {}

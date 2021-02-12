@@ -22,7 +22,7 @@ class NewTagCollectionViewController: UIViewController {
 
     // MARK: Component
 
-    private let republisher: TagCollectionViewActionRepublisher
+    private let pubsub: TagCollectionViewActionPubSub
     private let tagAdditionAlert: TextEditAlertController
     private let tagEditAlert: TextEditAlertController
 
@@ -42,9 +42,9 @@ class NewTagCollectionViewController: UIViewController {
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 
-        self.republisher = TagCollectionViewActionRepublisher(tagCollectionViewStore: self.store,
-                                                              tagEditAlertStore: self.tagEditAlert.store,
-                                                              tagAdditionAlertStore: self.tagAdditionAlert.store)
+        self.pubsub = TagCollectionViewActionPubSub(tagCollectionViewStore: store,
+                                                    tagEditAlertStore: tagEditAlert.store,
+                                                    tagAdditionAlertStore: tagAdditionAlert.store)
 
         super.init(nibName: nil, bundle: nil)
     }
