@@ -16,7 +16,7 @@ struct TagCollectionViewState: Equatable {
 
     let items: [TagCollectionViewLayout.Item]
     let searchQuery: String
-    let isHiddenItemEnabled: Bool
+    let isSomeItemsHidden: Bool
 
     let isCollectionViewDisplaying: Bool
     let isEmptyMessageViewDisplaying: Bool
@@ -32,7 +32,7 @@ struct TagCollectionViewState: Equatable {
     func updating(searchQuery: String) -> Self {
         return .init(items: items,
                      searchQuery: searchQuery,
-                     isHiddenItemEnabled: isHiddenItemEnabled,
+                     isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
@@ -44,7 +44,7 @@ struct TagCollectionViewState: Equatable {
     func updating(alert: Alert?) -> Self {
         return .init(items: items,
                      searchQuery: searchQuery,
-                     isHiddenItemEnabled: isHiddenItemEnabled,
+                     isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
@@ -59,7 +59,7 @@ struct TagCollectionViewState: Equatable {
     {
         return .init(items: items,
                      searchQuery: searchQuery,
-                     isHiddenItemEnabled: isHiddenItemEnabled,
+                     isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
@@ -70,13 +70,13 @@ struct TagCollectionViewState: Equatable {
 
     func updating(items: [TagCollectionViewLayout.Item],
                   searchQuery: String,
-                  isHiddenItemEnabled: Bool,
+                  isSomeItemsHidden: Bool,
                   _tags: [Tag],
                   _searchStorage: SearchableStorage<Tag>) -> Self
     {
         return .init(items: items,
                      searchQuery: searchQuery,
-                     isHiddenItemEnabled: isHiddenItemEnabled,
+                     isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,

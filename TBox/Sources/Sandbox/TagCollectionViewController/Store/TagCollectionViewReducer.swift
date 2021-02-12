@@ -42,8 +42,8 @@ enum TagCollectionViewReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .settingUpdated(isHiddenItemEnabled: isHiddenItemEnabled):
-            return (performFilter(byHiddenItemAvailability: isHiddenItemEnabled, previousState: state), .none)
+        case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
+            return (performFilter(byItemsVisibility: isSomeItemsHidden, previousState: state), .none)
 
         case let .select(tag):
             dependency.router.showClipCollectionView(for: tag)
@@ -70,7 +70,7 @@ enum TagCollectionViewReducer: Reducer {
             return (state, .none)
 
         case let .hideMenuSelected(tag):
-            if state.isHiddenItemEnabled {
+            if state.isSomeItemsHidden {
                 let stream = Future<Action?, Never> { promise in
                     // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
                     //       アイテム削除を遅延させて自然なアニメーションにする
@@ -173,7 +173,7 @@ extension TagCollectionViewReducer {
         let tagsEffect = Effect(tagsStream, underlying: query)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
-            .map { Action.settingUpdated(isHiddenItemEnabled: !$0) as Action? }
+            .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
         return [tagsEffect, settingsEffect]
@@ -186,43 +186,43 @@ extension TagCollectionViewReducer {
     private static func performFilter(by tags: [Tag], previousState: State) -> State {
         return performFilter(tags: tags,
                              searchQuery: previousState.searchQuery,
-                             isHiddenItemEnabled: previousState.isHiddenItemEnabled,
+                             isSomeItemsHidden: previousState.isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(bySearchQuery searchQuery: String, previousState: State) -> State {
         return performFilter(tags: previousState._tags,
                              searchQuery: searchQuery,
-                             isHiddenItemEnabled: previousState.isHiddenItemEnabled,
+                             isSomeItemsHidden: previousState.isSomeItemsHidden,
                              previousState: previousState)
     }
 
-    private static func performFilter(byHiddenItemAvailability isHiddenItemEnabled: Bool, previousState: State) -> State {
+    private static func performFilter(byItemsVisibility isSomeItemsHidden: Bool, previousState: State) -> State {
         return performFilter(tags: previousState._tags,
                              searchQuery: previousState.searchQuery,
-                             isHiddenItemEnabled: isHiddenItemEnabled,
+                             isSomeItemsHidden: isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(tags: [Tag],
                                       searchQuery: String,
-                                      isHiddenItemEnabled: Bool,
+                                      isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
         var searchStorage = previousState._searchStorage
 
         let tags = tags
-            .filter { isHiddenItemEnabled ? $0.isHidden == false : true }
+            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
 
         let filteredTags = searchStorage.perform(query: searchQuery, to: tags)
         let items: [Layout.Item] = (
             [searchQuery.isEmpty ? .uncategorized : nil]
-                + filteredTags.map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !isHiddenItemEnabled)) }
+                + filteredTags.map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !isSomeItemsHidden)) }
         ).compactMap { $0 }
 
         return previousState.updating(items: items,
                                       searchQuery: searchQuery,
-                                      isHiddenItemEnabled: isHiddenItemEnabled,
+                                      isSomeItemsHidden: isSomeItemsHidden,
                                       _tags: tags,
                                       _searchStorage: searchStorage)
     }

@@ -411,7 +411,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeNewTagListViewController() -> UIViewController? {
         let state = TagCollectionViewState(items: [],
                                            searchQuery: "",
-                                           isHiddenItemEnabled: _userSettingStorage.readShowHiddenItems(),
+                                           isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,

@@ -9,7 +9,7 @@ enum TagCollectionViewAction {
 
     case tagsUpdated([Tag])
     case searchQueryChanged(String)
-    case settingUpdated(isHiddenItemEnabled: Bool)
+    case settingUpdated(isSomeItemsHidden: Bool)
 
     case select(Tag)
     case hide(Tag)
