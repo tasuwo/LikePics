@@ -9,6 +9,7 @@ typealias TagCollectionViewDependency = HasClipCommandService
     & HasRouter
     & HasPasteboard
     & HasClipQueryService
+    & HasUserSettingStorage
 
 enum TagCollectionViewReducer {
     typealias Dependency = TagCollectionViewDependency
@@ -21,6 +22,9 @@ enum TagCollectionViewReducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
+        case .viewDidLoad:
+            return (state, prepareQueryEffects(dependency))
+
         case let .tagsUpdated(tags):
             var nextState = performFilter(by: tags, previousState: state)
             if nextState.shouldClearQuery {
@@ -124,6 +128,30 @@ enum TagCollectionViewReducer {
         case .alertDismissed:
             return (state.updating(alert: nil), .none)
         }
+    }
+}
+
+extension TagCollectionViewReducer {
+    private static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
+        let query: TagListQuery
+        switch dependency.clipQueryService.queryAllTags() {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            fatalError("Failed to load tags: \(error.localizedDescription)")
+        }
+
+        let tagsStream = query.tags
+            .catch { _ in Just([]) }
+            .map { Action.tagsUpdated($0) as Action? }
+        let tagsEffect = Effect(tagsStream, underlying: query)
+
+        let settingsStream = dependency.userSettingStorage.showHiddenItems
+            .map { Action.settingUpdated(isHiddenItemEnabled: !$0) as Action? }
+        let settingsEffect = Effect(settingsStream)
+
+        return [tagsEffect, settingsEffect]
     }
 }
 

@@ -26,11 +26,6 @@ class NewTagCollectionViewController: UIViewController {
     private let tagAdditionAlert: TextEditAlertController
     private let tagEditAlert: TextEditAlertController
 
-    // MARK: Dependency
-
-    private let userSettingStorage: UserSettingsStorageProtocol
-    private let tagListQuery: TagListQuery
-
     // MARK: Store
 
     private var store: TagCollectionViewStore
@@ -41,9 +36,7 @@ class NewTagCollectionViewController: UIViewController {
     init(state: TagCollectionViewState,
          tagAdditionAlertState: TextEditAlertState,
          tagEditAlertState: TextEditAlertState,
-         dependency: TagCollectionViewDependency,
-         userSettingStorage: UserSettingsStorageProtocol,
-         tagListQuery: TagListQuery)
+         dependency: TagCollectionViewDependency)
     {
         self.store = TagCollectionViewStore(initialState: state, dependency: dependency) {
             TagCollectionViewReducer.execute(action: $0, state: $1, dependency: $2)
@@ -55,18 +48,7 @@ class NewTagCollectionViewController: UIViewController {
                                                               tagEditAlertStore: self.tagEditAlert.store,
                                                               tagAdditionAlertStore: self.tagAdditionAlert.store)
 
-        self.userSettingStorage = userSettingStorage
-        self.tagListQuery = tagListQuery
-
         super.init(nibName: nil, bundle: nil)
-
-        userSettingStorage.showHiddenItems
-            .sink { [weak self] isEnabled in self?.store.execute(.settingUpdated(isHiddenItemEnabled: !isEnabled)) }
-            .store(in: &subscriptions)
-        tagListQuery.tags
-            .catch { _ in Just([]) }
-            .sink { [weak self] tags in self?.store.execute(.tagsUpdated(tags)) }
-            .store(in: &subscriptions)
     }
 
     @available(*, unavailable)
@@ -88,6 +70,8 @@ class NewTagCollectionViewController: UIViewController {
         configureEmptyMessageView()
 
         bind(to: store)
+
+        store.execute(.viewDidLoad)
     }
 }
 

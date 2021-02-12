@@ -5,6 +5,8 @@
 import Domain
 
 enum TagCollectionViewAction {
+    case viewDidLoad
+
     case tagsUpdated([Tag])
     case searchQueryChanged(String)
     case settingUpdated(isHiddenItemEnabled: Bool)

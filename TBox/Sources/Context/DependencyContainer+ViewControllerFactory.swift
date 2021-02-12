@@ -409,18 +409,6 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeNewTagListViewController() -> UIViewController? {
-        let query: TagListQuery
-        switch self._clipQueryService.queryAllTags() {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to open TagSelectionView. (\(error.rawValue))
-            """))
-            return nil
-        }
-
         let state = TagCollectionViewState(items: [],
                                            searchQuery: "",
                                            isHiddenItemEnabled: _userSettingStorage.readShowHiddenItems(),
@@ -444,9 +432,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = NewTagCollectionViewController(state: state,
                                                             tagAdditionAlertState: tagAdditionAlertState,
                                                             tagEditAlertState: tagEditAlertState,
-                                                            dependency: self,
-                                                            userSettingStorage: _userSettingStorage,
-                                                            tagListQuery: query)
+                                                            dependency: self)
 
         return UINavigationController(rootViewController: viewController)
     }
