@@ -81,13 +81,7 @@ enum TagCollectionViewReducer: Reducer {
                 }
                 return (state, [Effect(stream)])
             } else {
-                switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: true) {
-                case .success:
-                    return (state, .none)
-
-                case .failure:
-                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
-                }
+                return (state, [Effect(value: .hide(tag))])
             }
 
         case let .revealMenuSelected(tag):
