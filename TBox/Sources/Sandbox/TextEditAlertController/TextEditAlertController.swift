@@ -10,13 +10,14 @@ class TextEditAlertController: NSObject {
     typealias TextEditAlertStore = Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
 
     private class AlertController: UIAlertController {
-        weak var store: Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>?
+        weak var store: TextEditAlertStore?
         deinit {
             store?.execute(.dismissed)
         }
     }
 
-    private var store: TextEditAlertStore
+    private(set) var store: TextEditAlertStore!
+    private var _validator: ((String?) -> Bool)?
 
     private weak var presentingAlert: AlertController?
     private weak var presentingSaveAction: UIAlertAction?
@@ -25,9 +26,12 @@ class TextEditAlertController: NSObject {
 
     // MARK: - Lifecycle
 
-    init(store: TextEditAlertStore) {
-        self.store = store
+    init(state: TextEditAlertState) {
         super.init()
+
+        self.store = .init(initialState: state, dependency: self) {
+            TextEditAlertReducer.execute(action: $0, state: $1, dependency: $2)
+        }
 
         bind()
     }
@@ -109,5 +113,16 @@ extension TextEditAlertController {
                 self?.presentingSaveAction?.isEnabled = state.shouldReturn
             }
             .store(in: &subscriptions)
+    }
+}
+
+extension TextEditAlertController: HasTextValidator {
+    // MARK: - HasTextValidator
+
+    var textValidator: (String?) -> Bool {
+        return { [weak self] text in
+            guard let validator = self?._validator else { return true }
+            return validator(text)
+        }
     }
 }
