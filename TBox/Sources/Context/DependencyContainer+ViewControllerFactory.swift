@@ -31,7 +31,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                      imageQueryService: self.imageQueryService,
                                                      logger: self.logger)
         let viewModel = TopClipCollectionViewModel(query: query,
-                                                   settingStorage: self.userSettingsStorage,
+                                                   settingStorage: self._userSettingStorage,
                                                    logger: self.logger,
                                                    viewModel: innerViewModel)
 
@@ -48,7 +48,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                              clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                                              navigationItemsProvider: navigationItemsProvider,
                                                              toolBarItemsProvider: toolBarItemsProvider,
-                                                             menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
+                                                             menuBuilder: ClipCollectionMenuBuilder(storage: self._userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -90,7 +90,7 @@ extension DependencyContainer: ViewControllerFactory {
         }
 
         let preLoadViewModel = PreLoadingClipInformationViewModel(clipQueryService: _clipQueryService,
-                                                                  settingStorage: userSettingsStorage)
+                                                                  settingStorage: _userSettingStorage)
         let preLoadViewController = PreLoadingClipInformationViewController(clipId: clipId,
                                                                             preLoadViewModel: preLoadViewModel)
 
@@ -190,7 +190,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                  itemQuery: itemQuery,
                                                  tagListQuery: tagListQuery,
                                                  clipCommandService: self._clipCommandService,
-                                                 settingStorage: self.userSettingsStorage,
+                                                 settingStorage: self._userSettingStorage,
                                                  logger: self.logger)
 
         let viewController = ClipInformationViewController(factory: self,
@@ -207,7 +207,7 @@ extension DependencyContainer: ViewControllerFactory {
         guard let viewModel = ClipEditViewModel(id: clipId,
                                                 clipQueryService: self._clipQueryService,
                                                 clipCommandService: self._clipCommandService,
-                                                settingStorage: self.userSettingsStorage,
+                                                settingStorage: self._userSettingStorage,
                                                 logger: self.logger)
         else {
             return nil
@@ -270,7 +270,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                      logger: self.logger)
         let viewModel = SearchResultViewModel(context: context,
                                               query: query,
-                                              settingStorage: self.userSettingsStorage,
+                                              settingStorage: self._userSettingStorage,
                                               logger: self.logger,
                                               viewModel: innerViewModel)
 
@@ -287,7 +287,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                           navigationItemsProvider: navigationItemsProvider,
                                           toolBarItemsProvider: toolBarItemsProvider,
-                                          menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
+                                          menuBuilder: ClipCollectionMenuBuilder(storage: self._userSettingStorage))
     }
 
     func makeAlbumListViewController() -> UIViewController? {
@@ -308,7 +308,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = AlbumListViewModel(query: query,
                                            clipCommandService: self._clipCommandService,
-                                           settingStorage: self.userSettingsStorage,
+                                           settingStorage: self._userSettingStorage,
                                            logger: self.logger)
         let viewController = AlbumListViewController(factory: self,
                                                      viewModel: viewModel,
@@ -337,7 +337,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                      logger: self.logger)
         let viewModel = AlbumViewModel(query: query,
                                        clipService: self._clipCommandService,
-                                       settingStorage: self.userSettingsStorage,
+                                       settingStorage: self._userSettingStorage,
                                        logger: self.logger,
                                        viewModel: innerViewModel)
 
@@ -354,7 +354,7 @@ extension DependencyContainer: ViewControllerFactory {
                                    clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: self.clipThumbnailLoader),
                                    navigationItemsProvider: navigationItemsProvider,
                                    toolBarItemsProvider: toolBarItemsProvider,
-                                   menuBuilder: ClipCollectionMenuBuilder(storage: self.userSettingsStorage))
+                                   menuBuilder: ClipCollectionMenuBuilder(storage: self._userSettingStorage))
     }
 
     func makeAlbumSelectionViewController(context: Any?, delegate: AlbumSelectionPresenterDelegate) -> UIViewController? {
@@ -373,7 +373,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewModel = AlbumSelectionViewModel(query: query,
                                                 context: context,
                                                 clipCommandService: self._clipCommandService,
-                                                settingStorage: self.userSettingsStorage,
+                                                settingStorage: self._userSettingStorage,
                                                 logger: self.logger)
         viewModel.delegate = delegate
         let viewController = AlbumSelectionViewController(factory: self,
@@ -398,11 +398,11 @@ extension DependencyContainer: ViewControllerFactory {
 
         let viewModel = TagCollectionViewModel(query: query,
                                                clipCommandService: self._clipCommandService,
-                                               settingStorage: self.userSettingsStorage,
+                                               settingStorage: self._userSettingStorage,
                                                logger: self.logger)
         let viewController = TagCollectionViewController(factory: self,
                                                          viewModel: viewModel,
-                                                         menuBuilder: TagCollectionMenuBuilder(storage: self.userSettingsStorage),
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: self._userSettingStorage),
                                                          logger: self.logger)
 
         return UINavigationController(rootViewController: viewController)
@@ -423,7 +423,7 @@ extension DependencyContainer: ViewControllerFactory {
 
         let state = TagCollectionViewState(items: [],
                                            searchQuery: "",
-                                           isHiddenItemEnabled: userSettingsStorage.readShowHiddenItems(),
+                                           isHiddenItemEnabled: _userSettingStorage.readShowHiddenItems(),
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,
@@ -445,7 +445,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                             tagAdditionAlertState: tagAdditionAlertState,
                                                             tagEditAlertState: tagEditAlertState,
                                                             dependency: self,
-                                                            userSettingStorage: userSettingsStorage,
+                                                            userSettingStorage: _userSettingStorage,
                                                             tagListQuery: query)
 
         return UINavigationController(rootViewController: viewController)
@@ -471,7 +471,7 @@ extension DependencyContainer: ViewControllerFactory {
                                               selectedTags: Set(selectedTags),
                                               context: context,
                                               clipCommandService: self._clipCommandService,
-                                              settingStorage: self.userSettingsStorage,
+                                              settingStorage: self._userSettingStorage,
                                               logger: self.logger)
         viewModel.delegate = delegate
         let viewController = TagSelectionViewController(factory: self, viewModel: viewModel)
@@ -510,7 +510,7 @@ extension DependencyContainer: ViewControllerFactory {
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
-        let presenter = SettingsPresenter(storage: self.userSettingsStorage,
+        let presenter = SettingsPresenter(storage: self._userSettingStorage,
                                           availabilityStore: self.cloudAvailabilityObserver)
         viewController.factory = self
         viewController.presenter = presenter

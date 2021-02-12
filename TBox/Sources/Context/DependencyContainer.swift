@@ -30,7 +30,7 @@ class DependencyContainer {
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: ImageStorage
     let tmpImageStorage: TemporaryImageStorageProtocol
-    let userSettingsStorage: UserSettingsStorageProtocol
+    let _userSettingStorage: UserSettingsStorageProtocol
     let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
     // MARK: Service
@@ -71,7 +71,7 @@ class DependencyContainer {
 
         let userSettingsStorage = UserSettingsStorage()
         let cloudUsageContextStorage = CloudUsageContextStorage()
-        self.userSettingsStorage = userSettingsStorage
+        self._userSettingStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
         self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
@@ -141,7 +141,7 @@ class DependencyContainer {
     // MARK: - Methods
 
     func makeCloudStackLoader() -> CloudStackLoader {
-        return CloudStackLoader(userSettingsStorage: self.userSettingsStorage,
+        return CloudStackLoader(userSettingsStorage: self._userSettingStorage,
                                 cloudAvailabilityStore: self.cloudAvailabilityObserver,
                                 cloudStack: self.coreDataStack)
     }
@@ -229,4 +229,8 @@ extension DependencyContainer: HasClipCommandService {
 
 extension DependencyContainer: HasClipQueryService {
     var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
+}
+
+extension DependencyContainer: HasUserSettingStorage {
+    var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
 }

@@ -31,7 +31,7 @@ extension DependencyContainer {
                                                      logger: logger)
         let viewModel = SearchResultViewModel(context: context,
                                               query: query,
-                                              settingStorage: userSettingsStorage,
+                                              settingStorage: _userSettingStorage,
                                               logger: logger,
                                               viewModel: innerViewModel)
 
@@ -48,7 +48,7 @@ extension DependencyContainer {
                                                         clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: clipThumbnailLoader),
                                                         navigationItemsProvider: navigationItemsProvider,
                                                         toolBarItemsProvider: toolBarItemsProvider,
-                                                        menuBuilder: ClipCollectionMenuBuilder(storage: userSettingsStorage))
+                                                        menuBuilder: ClipCollectionMenuBuilder(storage: _userSettingStorage))
 
         rootViewController.currentDetailViewController?.show(viewController, sender: self)
     }
