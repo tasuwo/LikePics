@@ -6,7 +6,7 @@ import Domain
 
 typealias TagCollectionViewDependency = HasClipCommandService & HasRouter & HasPasteboard
 
-enum TagCollectionViewReducer: Reducer {
+enum TagCollectionViewReducer {
     typealias Dependency = TagCollectionViewDependency
     typealias State = TagCollectionViewState
     typealias Action = TagCollectionViewAction

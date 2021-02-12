@@ -4,7 +4,7 @@
 
 typealias TextEditAlertDependency = HasTextValidator
 
-enum TextEditAlertReducer: Reducer {
+enum TextEditAlertReducer {
     typealias Dependency = TextEditAlertDependency
     typealias State = TextEditAlertState
     typealias Action = TextEditAlertAction
