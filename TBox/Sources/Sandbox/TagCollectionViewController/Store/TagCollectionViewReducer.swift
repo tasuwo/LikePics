@@ -211,10 +211,8 @@ extension TagCollectionViewReducer {
     {
         var searchStorage = previousState._searchStorage
 
-        let tags = tags
-            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
-
-        let filteredTags = searchStorage.perform(query: searchQuery, to: tags)
+        let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
+        let filteredTags = searchStorage.perform(query: searchQuery, to: filteringTags)
         let items: [Layout.Item] = (
             [searchQuery.isEmpty ? .uncategorized : nil]
                 + filteredTags.map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !isSomeItemsHidden)) }
