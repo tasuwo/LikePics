@@ -5,32 +5,30 @@
 import Combine
 import Foundation
 
-class Store<State: Equatable, A: Action, Dependency> {
-    typealias Reducer = (A, State, Dependency) -> (State, [Effect<A>]?)
-
+class Store<State: Equatable, Action: LikePics.Action, Dependency> {
     var stateValue: State { _state.value }
     var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 
     weak var republisher: ActionRepublisher?
 
     private let dependency: Dependency
-    private let reducer: Reducer
+    private let reducer: AnyReducer<Action, State, Dependency>
     private let _state: CurrentValueSubject<State, Never>
 
-    private var effects: [UUID: Effect<A>] = [:]
+    private var effects: [UUID: Effect<Action>] = [:]
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
 
-    init(initialState: State, dependency: Dependency, reducer: @escaping Reducer) {
-        self.dependency = dependency
-        self.reducer = reducer
+    init<R: Reducer>(initialState: State, dependency: Dependency, reducer: R.Type) where R.Action == Action, R.State == State, R.Dependency == Dependency {
         self._state = .init(initialState)
+        self.dependency = dependency
+        self.reducer = reducer.eraseToAnyReducer()
     }
 
     // MARK: - Methods
 
-    func execute(_ action: A) {
+    func execute(_ action: Action) {
         if Thread.isMainThread {
             _execute(action)
         } else {
@@ -40,8 +38,8 @@ class Store<State: Equatable, A: Action, Dependency> {
         }
     }
 
-    private func _execute(_ action: A) {
-        let (nextState, effects) = reducer(action, _state.value, dependency)
+    private func _execute(_ action: Action) {
+        let (nextState, effects) = reducer.execute(action: action, state: _state.value, dependency: dependency)
 
         _state.send(nextState)
         republisher?.republishIfNeeded(action, for: self)
@@ -49,7 +47,7 @@ class Store<State: Equatable, A: Action, Dependency> {
         if let effects = effects { effects.forEach { schedule($0) } }
     }
 
-    private func schedule(_ effect: Effect<A>) {
+    private func schedule(_ effect: Effect<Action>) {
         let id = UUID()
 
         effects[id] = effect

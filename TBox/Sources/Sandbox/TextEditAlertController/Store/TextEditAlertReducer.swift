@@ -6,7 +6,7 @@ import Combine
 
 typealias TextEditAlertDependency = HasTextValidator
 
-enum TextEditAlertReducer {
+enum TextEditAlertReducer: Reducer {
     typealias Dependency = TextEditAlertDependency
     typealias State = TextEditAlertState
     typealias Action = TextEditAlertAction

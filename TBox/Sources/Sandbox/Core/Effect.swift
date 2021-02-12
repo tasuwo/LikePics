@@ -4,16 +4,16 @@
 
 import Combine
 
-class Effect<A: Action> {
-    let upstream: AnyPublisher<A?, Never>
+class Effect<Action: LikePics.Action> {
+    let upstream: AnyPublisher<Action?, Never>
     private let underlyingObject: Any?
 
-    init<P: Publisher>(_ publisher: P) where P.Output == A?, P.Failure == Never {
+    init<P: Publisher>(_ publisher: P) where P.Output == Action?, P.Failure == Never {
         self.upstream = publisher.eraseToAnyPublisher()
         self.underlyingObject = nil
     }
 
-    init<P: Publisher>(_ publisher: P, underlying object: Any) where P.Output == A?, P.Failure == Never {
+    init<P: Publisher>(_ publisher: P, underlying object: Any) where P.Output == Action?, P.Failure == Never {
         self.upstream = publisher.eraseToAnyPublisher()
         self.underlyingObject = object
     }

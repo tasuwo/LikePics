@@ -11,7 +11,7 @@ typealias TagCollectionViewDependency = HasClipCommandService
     & HasClipQueryService
     & HasUserSettingStorage
 
-enum TagCollectionViewReducer {
+enum TagCollectionViewReducer: Reducer {
     typealias Dependency = TagCollectionViewDependency
     typealias State = TagCollectionViewState
     typealias Action = TagCollectionViewAction

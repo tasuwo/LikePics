@@ -38,9 +38,7 @@ class NewTagCollectionViewController: UIViewController {
          tagEditAlertState: TextEditAlertState,
          dependency: TagCollectionViewDependency)
     {
-        self.store = TagCollectionViewStore(initialState: state, dependency: dependency) {
-            TagCollectionViewReducer.execute(action: $0, state: $1, dependency: $2)
-        }
+        self.store = TagCollectionViewStore(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer.self)
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 

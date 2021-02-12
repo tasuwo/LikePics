@@ -29,9 +29,7 @@ class TextEditAlertController: NSObject {
     init(state: TextEditAlertState) {
         super.init()
 
-        self.store = .init(initialState: state, dependency: self) {
-            TextEditAlertReducer.execute(action: $0, state: $1, dependency: $2)
-        }
+        self.store = .init(initialState: state, dependency: self, reducer: TextEditAlertReducer.self)
 
         bind()
     }
