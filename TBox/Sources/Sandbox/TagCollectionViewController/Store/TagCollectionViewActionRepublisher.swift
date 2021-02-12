@@ -11,7 +11,8 @@ class TagCollectionViewActionRepublisher {
 
     init(tagCollectionViewStore: Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>,
          tagEditAlertStore: Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>,
-         tagAdditionAlertStore: Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>) {
+         tagAdditionAlertStore: Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>)
+    {
         self.tagCollectionViewStore = tagCollectionViewStore
         self.tagEditAlertStore = tagEditAlertStore
         self.tagAdditionAlertStore = tagAdditionAlertStore

@@ -2,20 +2,25 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 
-typealias TagCollectionViewDependency = HasClipCommandService & HasRouter & HasPasteboard
+typealias TagCollectionViewDependency = HasClipCommandService
+    & HasRouter
+    & HasPasteboard
+    & HasClipQueryService
 
 enum TagCollectionViewReducer {
     typealias Dependency = TagCollectionViewDependency
     typealias State = TagCollectionViewState
     typealias Action = TagCollectionViewAction
+    typealias Effect = AnyPublisher<TagCollectionViewAction?, Never>
 
     typealias Layout = TagCollectionViewLayout
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> State {
+    static func execute(action: Action, state: State, dependency: Dependency) -> (State, Effect?) {
         switch action {
         case let .tagsUpdated(tags):
             var nextState = performFilter(by: tags, previousState: state)
@@ -25,100 +30,100 @@ enum TagCollectionViewReducer {
             nextState = nextState.updating(isCollectionViewDisplaying: !tags.isEmpty,
                                            isEmptyMessageViewDisplaying: tags.isEmpty,
                                            isSearchBarEnabled: !tags.isEmpty)
-            return nextState
+            return (nextState, .none)
 
         case let .searchQueryChanged(query):
             var nextState = performFilter(bySearchQuery: query, previousState: state)
             if nextState.shouldClearQuery {
                 nextState = nextState.updating(searchQuery: "")
             }
-            return nextState
+            return (nextState, .none)
 
         case let .settingUpdated(isHiddenItemEnabled: isHiddenItemEnabled):
-            return performFilter(byHiddenItemAvailability: isHiddenItemEnabled, previousState: state)
+            return (performFilter(byHiddenItemAvailability: isHiddenItemEnabled, previousState: state), .none)
 
         case let .select(tag):
             dependency.router.showClipCollectionView(for: tag)
-            return state
+            return (state, .none)
 
         case let .delete(tagIds):
-            switch dependency.commandService.deleteTags(having: tagIds) {
+            switch dependency.clipCommandService.deleteTags(having: tagIds) {
             case .success:
-                return state
+                return (state, .none)
 
             case .failure:
-                return state.updating(alert: .error(L10n.errorTagDelete))
+                return (state.updating(alert: .error(L10n.errorTagDelete)), .none)
             }
 
         case let .hide(tagId):
-            switch dependency.commandService.updateTag(having: tagId, byHiding: true) {
+            switch dependency.clipCommandService.updateTag(having: tagId, byHiding: true) {
             case .success:
-                return state
+                return (state, .none)
 
             case .failure:
-                return state.updating(alert: .error(L10n.errorTagDefault))
+                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
             }
 
         case let .reveal(tagId):
-            switch dependency.commandService.updateTag(having: tagId, byHiding: false) {
+            switch dependency.clipCommandService.updateTag(having: tagId, byHiding: false) {
             case .success:
-                return state
+                return (state, .none)
 
             case .failure:
-                return state.updating(alert: .error(L10n.errorTagDefault))
+                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
             }
 
         case let .update(tagId, name: name):
-            switch dependency.commandService.updateTag(having: tagId, nameTo: name) {
+            switch dependency.clipCommandService.updateTag(having: tagId, nameTo: name) {
             case .success:
-                return state
+                return (state, .none)
 
             case .failure(.duplicated):
-                return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
+                return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
 
             case .failure:
-                return state.updating(alert: .error(L10n.errorTagDefault))
+                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
             }
 
         case .emptyMessageViewActionButtonTapped, .tagAdditionButtonTapped:
-            return state.updating(alert: .addition)
+            return (state.updating(alert: .addition), .none)
 
         case .uncategorizedTagButtonTapped:
             dependency.router.showUncategorizedClipCollectionView()
-            return state
+            return (state, .none)
 
         case let .alertSaveButtonTapped(text: text):
             switch state.alert {
             case .addition:
-                switch dependency.commandService.create(tagWithName: text) {
+                switch dependency.clipCommandService.create(tagWithName: text) {
                 case .success:
-                    return state.updating(alert: nil)
+                    return (state.updating(alert: nil), .none)
 
                 case .failure(.duplicated):
-                    return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
+                    return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
 
                 case .failure:
-                    return state.updating(alert: .error(L10n.errorTagDefault))
+                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
                 }
 
             case let .edit(tagId: tagId, name: _):
-                switch dependency.commandService.updateTag(having: tagId, nameTo: text) {
+                switch dependency.clipCommandService.updateTag(having: tagId, nameTo: text) {
                 case .success:
-                    return state.updating(alert: nil)
+                    return (state.updating(alert: nil), .none)
 
                 case .failure(.duplicated):
-                    return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
+                    return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
 
                 case .failure:
-                    return state.updating(alert: .error(L10n.errorTagDefault))
+                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
                 }
 
             default:
-                return state.updating(alert: nil)
+                return (state.updating(alert: nil), .none)
             }
 
         case .alertDismissed:
-            return state.updating(alert: nil)
+            return (state.updating(alert: nil), .none)
         }
     }
 }
