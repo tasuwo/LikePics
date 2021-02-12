@@ -55,8 +55,8 @@ class TextEditAlertController: NSObject {
             return
         }
 
-        store.execute(.textChanged(text: text))
         dependency._textValidator = validator
+        store.execute(.textChanged(text: text))
 
         let alert = AlertController(title: store.stateValue.title,
                                     message: store.stateValue.message,
