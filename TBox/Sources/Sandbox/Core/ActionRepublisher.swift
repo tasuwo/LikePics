@@ -3,5 +3,6 @@
 //
 
 protocol ActionRepublisher: AnyObject {
-    func republishIfNeeded(_ action: Action) -> Bool
+    @discardableResult
+    func republishIfNeeded(_ action: Action, for store: AnyObject) -> Bool
 }

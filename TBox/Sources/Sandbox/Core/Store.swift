@@ -27,7 +27,7 @@ class Store<S: Equatable, A: Action, D> {
     // MARK: - Methods
 
     func execute(_ action: A) {
-        if republisher?.republishIfNeeded(action) == true { return }
         _state.send(reducer(action, _state.value, dependency))
+        republisher?.republishIfNeeded(action, for: self)
     }
 }
