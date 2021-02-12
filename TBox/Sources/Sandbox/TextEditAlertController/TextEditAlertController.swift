@@ -16,8 +16,20 @@ class TextEditAlertController: NSObject {
         }
     }
 
-    private(set) var store: TextEditAlertStore!
-    private var _validator: ((String?) -> Bool)?
+    private class Dependency: HasTextValidator {
+        // swiftlint:disable identifier_name
+        var _textValidator: ((String?) -> Bool)?
+
+        var textValidator: (String?) -> Bool {
+            return { [weak self] text in
+                guard let validator = self?._textValidator else { return true }
+                return validator(text)
+            }
+        }
+    }
+
+    private(set) var store: TextEditAlertStore
+    private let dependency = Dependency()
 
     private weak var presentingAlert: AlertController?
     private weak var presentingSaveAction: UIAlertAction?
@@ -27,10 +39,8 @@ class TextEditAlertController: NSObject {
     // MARK: - Lifecycle
 
     init(state: TextEditAlertState) {
+        self.store = .init(initialState: state, dependency: dependency, reducer: TextEditAlertReducer.self)
         super.init()
-
-        self.store = .init(initialState: state, dependency: self, reducer: TextEditAlertReducer.self)
-
         bind()
     }
 
@@ -46,7 +56,7 @@ class TextEditAlertController: NSObject {
         }
 
         store.execute(.textChanged(text: text))
-        _validator = validator
+        dependency._textValidator = validator
 
         let alert = AlertController(title: store.stateValue.title,
                                     message: store.stateValue.message,
@@ -111,16 +121,5 @@ extension TextEditAlertController {
                 self?.presentingSaveAction?.isEnabled = state.shouldReturn
             }
             .store(in: &subscriptions)
-    }
-}
-
-extension TextEditAlertController: HasTextValidator {
-    // MARK: - HasTextValidator
-
-    var textValidator: (String?) -> Bool {
-        return { [weak self] text in
-            guard let validator = self?._validator else { return true }
-            return validator(text)
-        }
     }
 }
