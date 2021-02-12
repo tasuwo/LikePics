@@ -357,6 +357,7 @@
 		2CD6736D25812F7F00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD6738325812FAA00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD6739725812FCB00007CCF /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE0143C2562E72D00D15A57 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2CD6C20025D6421D0000D5C3 /* HasClipQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */; };
 		2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */; };
 		2CD893B1256D5C6000EACB80 /* ViewContextObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */; };
 		2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */; };
@@ -1116,6 +1117,7 @@
 		2CD62F9C259D508B0067D8AD /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		2CD62FB0259D5A5E0067D8AD /* ThumbnailLoadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailLoadTask.swift; sourceTree = "<group>"; };
 		2CD6732125812CD600007CCF /* TemporariesPersistServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporariesPersistServiceSpec.swift; sourceTree = "<group>"; };
+		2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipQueryService.swift; sourceTree = "<group>"; };
 		2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		2CD893B0256D5C6000EACB80 /* ViewContextObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewContextObserver.swift; sourceTree = "<group>"; };
 		2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCloudAccountResolver.swift; sourceTree = "<group>"; };
@@ -3287,6 +3289,7 @@
 				2CB47B2925D52494008E38B8 /* HasPasteboard.swift */,
 				2CB47AED25D5143C008E38B8 /* HasRouter.swift */,
 				2CFA2BAC25D4D3CD007F574B /* HasTextValidator.swift */,
+				2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */,
 			);
 			path = Dependency;
 			sourceTree = "<group>";
@@ -4854,6 +4857,7 @@
 				2C98110425A32D1400B89A47 /* AppRootSplitViewController+LoadingView.swift in Sources */,
 				2C11718F25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift in Sources */,
 				2C076A4025D4EF58007295DD /* TagCollectionViewState.swift in Sources */,
+				2CD6C20025D6421D0000D5C3 /* HasClipQueryService.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2C5FCA3B25A6130100C9B949 /* AlbumListViewLayout.swift in Sources */,
 				2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */,

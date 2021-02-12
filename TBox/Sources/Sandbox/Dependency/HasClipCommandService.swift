@@ -5,5 +5,5 @@
 import Domain
 
 protocol HasClipCommandService {
-    var commandService: ClipCommandServiceProtocol { get }
+    var clipCommandService: ClipCommandServiceProtocol { get }
 }

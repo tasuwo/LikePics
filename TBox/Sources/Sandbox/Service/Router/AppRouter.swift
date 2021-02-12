@@ -25,8 +25,8 @@ extension DependencyContainer {
             return
         }
 
-        let innerViewModel = ClipCollectionViewModel(clipService: clipCommandService,
-                                                     queryService: clipQueryService,
+        let innerViewModel = ClipCollectionViewModel(clipService: _clipCommandService,
+                                                     queryService: _clipQueryService,
                                                      imageQueryService: imageQueryService,
                                                      logger: logger)
         let viewModel = SearchResultViewModel(context: context,
@@ -59,7 +59,7 @@ extension DependencyContainer: Router {
 
     func showUncategorizedClipCollectionView() {
         let query: ClipListQuery
-        switch self.clipQueryService.queryUncategorizedClips() {
+        switch self._clipQueryService.queryUncategorizedClips() {
         case let .success(result):
             query = result
 
@@ -74,7 +74,7 @@ extension DependencyContainer: Router {
 
     func showClipCollectionView(for tag: Tag) {
         let query: ClipListQuery
-        switch clipQueryService.queryClips(tagged: tag.id) {
+        switch _clipQueryService.queryClips(tagged: tag.id) {
         case let .success(result):
             query = result
 

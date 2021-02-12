@@ -10,6 +10,8 @@ import Smoothie
 import TBoxCore
 import UIKit
 
+// swiftlint:disable identifier_name
+
 class DependencyContainer {
     // MARK: - Properties
 
@@ -33,8 +35,8 @@ class DependencyContainer {
 
     // MARK: Service
 
-    let clipCommandService: ClipCommandService
-    let clipQueryService: ClipQueryService
+    let _clipCommandService: ClipCommandService
+    let _clipQueryService: ClipQueryService
     let imageQueryService: ImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporariesPersistServiceProtocol
@@ -79,7 +81,7 @@ class DependencyContainer {
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
         self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = ImageStorage(context: self.commandContext)
-        self.clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
+        self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self.imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         Self.sweepLegacyThumbnailCachesIfExists()
@@ -114,12 +116,12 @@ class DependencyContainer {
                                            imageQueryService: self.imageQueryService,
                                            memoryCache: previewMemoryCache)
 
-        self.clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
-                                                     referenceClipStorage: referenceClipStorage,
-                                                     imageStorage: self.imageStorage,
-                                                     diskCache: self.clipDiskCache,
-                                                     logger: self.logger,
-                                                     queue: self.clipCommandQueue)
+        self._clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
+                                                      referenceClipStorage: referenceClipStorage,
+                                                      imageStorage: self.imageStorage,
+                                                      diskCache: self.clipDiskCache,
+                                                      logger: self.logger,
+                                                      queue: self.clipCommandQueue)
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
                                                                                    referenceClipStorage: self.referenceClipStorage,
                                                                                    logger: self.logger,
@@ -206,7 +208,7 @@ extension DependencyContainer: CoreDataStackObserver {
             self.imageStorage.context = newCommandContext
         }
 
-        self.clipQueryService.context = self.coreDataStack.viewContext
+        self._clipQueryService.context = self.coreDataStack.viewContext
         self.imageQueryService.context = newImageQueryContext
     }
 }
@@ -222,5 +224,9 @@ extension DependencyContainer: HasPasteboard {
 }
 
 extension DependencyContainer: HasClipCommandService {
-    var commandService: ClipCommandServiceProtocol { clipCommandService }
+    var clipCommandService: ClipCommandServiceProtocol { _clipCommandService }
+}
+
+extension DependencyContainer: HasClipQueryService {
+    var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
 }
