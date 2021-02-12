@@ -20,6 +20,8 @@ class NewTagCollectionViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private let searchController = UISearchController(searchResultsController: nil)
 
+    private let menuBuilder: TagCollectionMenuBuildable
+
     // MARK: Component
 
     private let pubsub: TagCollectionViewActionPubSub
@@ -36,7 +38,8 @@ class NewTagCollectionViewController: UIViewController {
     init(state: TagCollectionViewState,
          tagAdditionAlertState: TextEditAlertState,
          tagEditAlertState: TextEditAlertState,
-         dependency: TagCollectionViewDependency)
+         dependency: TagCollectionViewDependency,
+         menuBuilder: TagCollectionMenuBuildable)
     {
         self.store = TagCollectionViewStore(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer.self)
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
@@ -45,6 +48,8 @@ class NewTagCollectionViewController: UIViewController {
         self.pubsub = TagCollectionViewActionPubSub(tagCollectionViewStore: store,
                                                     tagEditAlertStore: tagEditAlert.store,
                                                     tagAdditionAlertStore: tagAdditionAlert.store)
+
+        self.menuBuilder = menuBuilder
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -109,6 +114,9 @@ extension NewTagCollectionViewController {
         case let .edit(tagId: _, name: name):
             tagEditAlert.present(with: name, validator: { $0?.isEmpty == false && $0 != name }, on: self)
 
+        case let .deletion(tagId: _, tagName: name, at: indexPath):
+            presentDeleteConfirmationAlert(tagName: name, indexPath: indexPath)
+
         case .none:
             break
         }
@@ -120,6 +128,26 @@ extension NewTagCollectionViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentDeleteConfirmationAlert(tagName: String, indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.tagListViewAlertForDeleteMessage(tagName),
+                                      preferredStyle: .actionSheet)
+
+        alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertDeleteConfirmTapped)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -190,6 +218,74 @@ extension NewTagCollectionViewController: UICollectionViewDelegate {
             store.execute(.select(listingTag.tag))
 
         default: () // NOP
+        }
+    }
+}
+
+extension NewTagCollectionViewController {
+    // MARK: - UICollectionViewDelegate (Context Menu)
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        switch self.dataSource.itemIdentifier(for: indexPath) {
+        case let .tag(tag):
+            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                              previewProvider: nil,
+                                              actionProvider: self.makeActionProvider(for: tag.tag, at: indexPath))
+
+        default:
+            return nil
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return UITargetedPreview.create(for: configuration, collectionView: collectionView)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return UITargetedPreview.create(for: configuration, collectionView: collectionView)
+    }
+
+    private func makeActionProvider(for tag: Tag, at indexPath: IndexPath) -> UIContextMenuActionProvider {
+        let items = self.menuBuilder.build(for: tag).map {
+            self.makeAction(from: $0, for: tag, at: indexPath)
+        }
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: items)
+        }
+    }
+
+    private func makeAction(from item: TagCollection.MenuItem, for tag: Tag, at indexPath: IndexPath) -> UIAction {
+        switch item {
+        case .copy:
+            return UIAction(title: L10n.tagListViewContextMenuActionCopy,
+                            image: UIImage(systemName: "square.on.square.fill")) { [weak self] _ in
+                self?.store.execute(.copyMenuSelected(tag))
+            }
+
+        case .hide:
+            return UIAction(title: L10n.tagListViewContextMenuActionHide,
+                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                self?.store.execute(.hideMenuSelected(tag))
+            }
+
+        case .reveal:
+            return UIAction(title: L10n.tagListViewContextMenuActionReveal,
+                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                self?.store.execute(.revealMenuSelected(tag))
+            }
+
+        case .delete:
+            return UIAction(title: L10n.tagListViewContextMenuActionDelete,
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
+                self?.store.execute(.deleteMenuSelected(tag, indexPath))
+            }
+
+        case .rename:
+            return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
+                            image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+                self?.store.execute(.renameMenuSelected(tag))
+            }
         }
     }
 }

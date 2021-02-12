@@ -49,40 +49,10 @@ enum TagCollectionViewReducer: Reducer {
             dependency.router.showClipCollectionView(for: tag)
             return (state, .none)
 
-        case let .delete(tagIds):
-            switch dependency.clipCommandService.deleteTags(having: tagIds) {
+        case let .hide(tag):
+            switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: true) {
             case .success:
                 return (state, .none)
-
-            case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDelete)), .none)
-            }
-
-        case let .hide(tagId):
-            switch dependency.clipCommandService.updateTag(having: tagId, byHiding: true) {
-            case .success:
-                return (state, .none)
-
-            case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
-            }
-
-        case let .reveal(tagId):
-            switch dependency.clipCommandService.updateTag(having: tagId, byHiding: false) {
-            case .success:
-                return (state, .none)
-
-            case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
-            }
-
-        case let .update(tagId, name: name):
-            switch dependency.clipCommandService.updateTag(having: tagId, nameTo: name) {
-            case .success:
-                return (state, .none)
-
-            case .failure(.duplicated):
-                return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
 
             case .failure:
                 return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
@@ -94,6 +64,61 @@ enum TagCollectionViewReducer: Reducer {
         case .uncategorizedTagButtonTapped:
             dependency.router.showUncategorizedClipCollectionView()
             return (state, .none)
+
+        case let .copyMenuSelected(tag):
+            dependency.pasteboard.set(tag.name)
+            return (state, .none)
+
+        case let .hideMenuSelected(tag):
+            if state.isHiddenItemEnabled {
+                let stream = Future<Action?, Never> { promise in
+                    // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                    //       アイテム削除を遅延させて自然なアニメーションにする
+                    //       https://stackoverflow.com/a/57997005
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        promise(.success(.hide(tag)))
+                    }
+                }
+                return (state, [Effect(stream)])
+            } else {
+                switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: true) {
+                case .success:
+                    return (state, .none)
+
+                case .failure:
+                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                }
+            }
+
+        case let .revealMenuSelected(tag):
+            switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: false) {
+            case .success:
+                return (state, .none)
+
+            case .failure:
+                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+            }
+
+        case let .deleteMenuSelected(tag, indexPath):
+            return (state.updating(alert: .deletion(tagId: tag.id, tagName: tag.name, at: indexPath)), .none)
+
+        case let .renameMenuSelected(tag):
+            return (state.updating(alert: .edit(tagId: tag.id, name: tag.name)), .none)
+
+        case .alertDeleteConfirmTapped:
+            switch state.alert {
+            case let .deletion(tagId: tagId, tagName: _, at: _):
+                switch dependency.clipCommandService.deleteTags(having: [tagId]) {
+                case .success:
+                    return (state.updating(alert: nil), .none)
+
+                case .failure:
+                    return (state.updating(alert: .error(L10n.errorTagDelete)), .none)
+                }
+
+            default:
+                return (state.updating(alert: nil), .none)
+            }
 
         case let .alertSaveButtonTapped(text: text):
             switch state.alert {

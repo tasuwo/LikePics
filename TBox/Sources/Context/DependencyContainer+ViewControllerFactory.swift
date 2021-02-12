@@ -432,7 +432,8 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = NewTagCollectionViewController(state: state,
                                                             tagAdditionAlertState: tagAdditionAlertState,
                                                             tagEditAlertState: tagEditAlertState,
-                                                            dependency: self)
+                                                            dependency: self,
+                                                            menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }

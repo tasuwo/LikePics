@@ -11,16 +11,20 @@ enum TagCollectionViewAction {
     case searchQueryChanged(String)
     case settingUpdated(isHiddenItemEnabled: Bool)
 
-    case delete([Tag.Identity])
     case select(Tag)
-    case hide(Tag.Identity)
-    case reveal(Tag.Identity)
-    case update(Tag.Identity, name: String)
+    case hide(Tag)
 
     case emptyMessageViewActionButtonTapped
     case tagAdditionButtonTapped
     case uncategorizedTagButtonTapped
 
+    case copyMenuSelected(Tag)
+    case hideMenuSelected(Tag)
+    case revealMenuSelected(Tag)
+    case deleteMenuSelected(Tag, IndexPath)
+    case renameMenuSelected(Tag)
+
+    case alertDeleteConfirmTapped
     case alertSaveButtonTapped(text: String)
     case alertDismissed
 }
