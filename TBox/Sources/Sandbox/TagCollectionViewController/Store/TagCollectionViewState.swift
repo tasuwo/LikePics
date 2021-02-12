@@ -7,6 +7,12 @@
 import Domain
 
 struct TagCollectionViewState: Equatable {
+    enum Alert: Equatable {
+        case error(String?)
+        case edit(tagId: Tag.Identity, name: String)
+        case addition
+    }
+
     let items: [TagCollectionViewLayout.Item]
     let searchQuery: String
     let isHiddenItemEnabled: Bool
@@ -15,7 +21,7 @@ struct TagCollectionViewState: Equatable {
     let isEmptyMessageViewDisplaying: Bool
     let isSearchBarEnabled: Bool
 
-    let errorMessageAlert: String?
+    let alert: Alert?
 
     let _tags: [Tag]
     let _searchStorage: SearchableStorage<Tag>
@@ -29,19 +35,19 @@ struct TagCollectionViewState: Equatable {
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
-                     errorMessageAlert: errorMessageAlert,
+                     alert: alert,
                      _tags: _tags,
                      _searchStorage: _searchStorage)
     }
 
-    func updating(errorMessageAlert: String?) -> Self {
+    func updating(alert: Alert?) -> Self {
         return .init(items: items,
                      searchQuery: searchQuery,
                      isHiddenItemEnabled: isHiddenItemEnabled,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
-                     errorMessageAlert: errorMessageAlert,
+                     alert: alert,
                      _tags: _tags,
                      _searchStorage: _searchStorage)
     }
@@ -56,7 +62,7 @@ struct TagCollectionViewState: Equatable {
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
-                     errorMessageAlert: errorMessageAlert,
+                     alert: alert,
                      _tags: _tags,
                      _searchStorage: _searchStorage)
     }
@@ -73,7 +79,7 @@ struct TagCollectionViewState: Equatable {
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
-                     errorMessageAlert: errorMessageAlert,
+                     alert: alert,
                      _tags: _tags,
                      _searchStorage: _searchStorage)
     }

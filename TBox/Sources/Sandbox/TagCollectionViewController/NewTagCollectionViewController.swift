@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Domain
 import TBoxUIKit
 import UIKit
 
@@ -12,25 +13,60 @@ class NewTagCollectionViewController: UIViewController {
 
     // MARK: - Properties
 
+    // MARK: View
+
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
     private let emptyMessageView = EmptyMessageView()
     private let searchController = UISearchController(searchResultsController: nil)
+
+    // MARK: Component
+
+    private let republisher: TagCollectionViewActionRepublisher
+    private let tagAdditionAlert: TextEditAlertController
+    private let tagEditAlert: TextEditAlertController
+
+    // MARK: Dependency
+
+    private let userSettingStorage: UserSettingsStorageProtocol
+    private let tagListQuery: TagListQuery
+
+    // MARK: Store
 
     private var store: TagCollectionViewStore
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
 
-    init(dependency: TagCollectionViewDependency,
-         state: TagCollectionViewState,
-         observe: (TagCollectionViewStore, inout Set<AnyCancellable>) -> Void)
+    init(state: TagCollectionViewState,
+         tagAdditionAlertState: TextEditAlertState,
+         tagEditAlertState: TextEditAlertState,
+         dependency: TagCollectionViewDependency,
+         userSettingStorage: UserSettingsStorageProtocol,
+         tagListQuery: TagListQuery)
     {
         self.store = TagCollectionViewStore(initialState: state, dependency: dependency) {
             TagCollectionViewReducer.execute(action: $0, state: $1, dependency: $2)
         }
+        self.tagAdditionAlert = .init(state: tagAdditionAlertState)
+        self.tagEditAlert = .init(state: tagEditAlertState)
+
+        self.republisher = TagCollectionViewActionRepublisher(tagCollectionViewStore: self.store,
+                                                              tagEditAlertStore: self.tagEditAlert.store,
+                                                              tagAdditionAlertStore: self.tagAdditionAlert.store)
+
+        self.userSettingStorage = userSettingStorage
+        self.tagListQuery = tagListQuery
+
         super.init(nibName: nil, bundle: nil)
-        observe(store, &subscriptions)
+
+        userSettingStorage.showHiddenItems
+            .sink { [weak self] isEnabled in self?.store.execute(.settingUpdated(isHiddenItemEnabled: !isEnabled)) }
+            .store(in: &subscriptions)
+        tagListQuery.tags
+            .catch { _ in Just([]) }
+            .sink { [weak self] tags in self?.store.execute(.tagsUpdated(tags)) }
+            .store(in: &subscriptions)
     }
 
     @available(*, unavailable)
@@ -75,17 +111,31 @@ extension NewTagCollectionViewController {
             self.searchController.set(isEnabled: state.isSearchBarEnabled)
             self.searchController.set(text: state.searchQuery)
 
-            if let message = state.errorMessageAlert {
-                self.presentErrorMessageAlertIfNeeded(message: message)
-            }
+            self.presentAlertIfNeeded(for: state.alert)
         }
         .store(in: &subscriptions)
     }
 
-    private func presentErrorMessageAlertIfNeeded(message: String) {
+    private func presentAlertIfNeeded(for alert: TagCollectionViewState.Alert?) {
+        switch alert {
+        case let .error(message):
+            presentErrorMessageAlertIfNeeded(message: message)
+
+        case .addition:
+            tagAdditionAlert.present(with: "", validator: { $0?.isEmpty == false }, on: self)
+
+        case let .edit(tagId: _, name: name):
+            tagEditAlert.present(with: name, validator: { $0?.isEmpty == false && $0 != name }, on: self)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.errorAlertDismissed)
+            self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
     }

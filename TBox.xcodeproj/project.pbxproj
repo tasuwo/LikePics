@@ -363,6 +363,7 @@
 		2CD893BC256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */; };
 		2CDA49D32516EF400043DC14 /* ClipPreviewPageBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49D22516EF400043DC14 /* ClipPreviewPageBarViewModel.swift */; };
 		2CDA49DD2516F2A40043DC14 /* ClipPreviewAlertPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDA49DC2516F2A40043DC14 /* ClipPreviewAlertPresentable.swift */; };
+		2CDC9A9225D61C7C00C54EBC /* TagCollectionViewActionRepublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC9A9125D61C7C00C54EBC /* TagCollectionViewActionRepublisher.swift */; };
 		2CDE2E8B259970EA00B49D7A /* UICollectionView+indexPathForSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDE2E8A259970EA00B49D7A /* UICollectionView+indexPathForSupplementaryView.swift */; };
 		2CDF4EE42572399F0030342B /* CloudStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4EE32572399F0030342B /* CloudStack.swift */; };
 		2CDF4F0F25727DAE0030342B /* AppRootSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */; };
@@ -1122,6 +1123,7 @@
 		2CD893BB256EAD2D00EACB80 /* CurrentCloudAccountResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCloudAccountResolver.swift; sourceTree = "<group>"; };
 		2CDA49D22516EF400043DC14 /* ClipPreviewPageBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageBarViewModel.swift; sourceTree = "<group>"; };
 		2CDA49DC2516F2A40043DC14 /* ClipPreviewAlertPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewAlertPresentable.swift; sourceTree = "<group>"; };
+		2CDC9A9125D61C7C00C54EBC /* TagCollectionViewActionRepublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewActionRepublisher.swift; sourceTree = "<group>"; };
 		2CDE2E8A259970EA00B49D7A /* UICollectionView+indexPathForSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+indexPathForSupplementaryView.swift"; sourceTree = "<group>"; };
 		2CDF4EE32572399F0030342B /* CloudStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStack.swift; sourceTree = "<group>"; };
 		2CDF4F0E25727DAE0030342B /* AppRootSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootSetupViewController.swift; sourceTree = "<group>"; };
@@ -1480,6 +1482,7 @@
 			children = (
 				2C076A3F25D4EF58007295DD /* TagCollectionViewState.swift */,
 				2C076A5325D4F8F0007295DD /* TagCollectionViewAction.swift */,
+				2CDC9A9125D61C7C00C54EBC /* TagCollectionViewActionRepublisher.swift */,
 				2C076A5E25D4F9AE007295DD /* TagCollectionViewReducer.swift */,
 			);
 			path = Store;
@@ -4804,6 +4807,7 @@
 				2CD3DE6225C30B3C00777416 /* PreLoadingClipInformationViewController.swift in Sources */,
 				2CFC5CED250DA8E0001A02E4 /* TagCollectionViewController.swift in Sources */,
 				2CD3DE3C25C2FFCE00777416 /* PreLoadingClipInformationViewModel.swift in Sources */,
+				2CDC9A9225D61C7C00C54EBC /* TagCollectionViewActionRepublisher.swift in Sources */,
 				2C01B8EA25ADCE9D0089CFB4 /* ClipEditViewController.swift in Sources */,
 				2CBCCB0A25D54E42004CD1ED /* UISearchController.swift in Sources */,
 				2CBCCAFE25D53BD8004CD1ED /* AppRouter.swift in Sources */,

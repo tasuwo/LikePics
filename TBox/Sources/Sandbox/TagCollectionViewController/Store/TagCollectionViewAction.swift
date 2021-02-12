@@ -9,9 +9,6 @@ enum TagCollectionViewAction {
     case searchQueryChanged(String)
     case settingUpdated(isHiddenItemEnabled: Bool)
 
-    case errorAlertDismissed
-
-    case createTag(name: String)
     case delete([Tag.Identity])
     case select(Tag)
     case hide(Tag.Identity)
@@ -21,6 +18,9 @@ enum TagCollectionViewAction {
     case emptyMessageViewActionButtonTapped
     case tagAdditionButtonTapped
     case uncategorizedTagButtonTapped
+
+    case alertSaveButtonTapped(text: String)
+    case alertDismissed
 }
 
 extension TagCollectionViewAction: Action {}

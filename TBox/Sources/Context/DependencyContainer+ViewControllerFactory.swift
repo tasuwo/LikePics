@@ -427,20 +427,26 @@ extension DependencyContainer: ViewControllerFactory {
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,
-                                           errorMessageAlert: nil,
+                                           alert: nil,
                                            _tags: [],
                                            _searchStorage: .init())
+        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
+                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                       placeholder: L10n.placeholderTagName,
+                                                       text: "",
+                                                       shouldReturn: false)
+        let tagEditAlertState = TextEditAlertState(title: L10n.tagListViewAlertForUpdateTitle,
+                                                   message: L10n.tagListViewAlertForUpdateMessage,
+                                                   placeholder: L10n.placeholderTagName,
+                                                   text: "",
+                                                   shouldReturn: false)
 
-        let viewController = NewTagCollectionViewController(dependency: self, state: state) { store, subscriptions in
-            userSettingsStorage.showHiddenItems
-                .sink { store.execute(.settingUpdated(isHiddenItemEnabled: !$0)) }
-                .store(in: &subscriptions)
-
-            query.tags
-                .catch { _ in Just([]) }
-                .sink { store.execute(.tagsUpdated($0)) }
-                .store(in: &subscriptions)
-        }
+        let viewController = NewTagCollectionViewController(state: state,
+                                                            tagAdditionAlertState: tagAdditionAlertState,
+                                                            tagEditAlertState: tagEditAlertState,
+                                                            dependency: self,
+                                                            userSettingStorage: userSettingsStorage,
+                                                            tagListQuery: query)
 
         return UINavigationController(rootViewController: viewController)
     }

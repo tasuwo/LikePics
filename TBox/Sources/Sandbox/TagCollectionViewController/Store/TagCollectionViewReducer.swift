@@ -37,21 +37,6 @@ enum TagCollectionViewReducer: Reducer {
         case let .settingUpdated(isHiddenItemEnabled: isHiddenItemEnabled):
             return performFilter(byHiddenItemAvailability: isHiddenItemEnabled, previousState: state)
 
-        case .errorAlertDismissed:
-            return state.updating(errorMessageAlert: nil)
-
-        case let .createTag(name: name):
-            switch dependency.commandService.create(tagWithName: name) {
-            case .success:
-                return state
-
-            case .failure(.duplicated):
-                return state.updating(errorMessageAlert: L10n.errorTagAddDuplicated)
-
-            default:
-                return state.updating(errorMessageAlert: L10n.errorTagAddDefault)
-            }
-
         case let .select(tag):
             dependency.router.showClipCollectionView(for: tag)
             return state
@@ -62,7 +47,7 @@ enum TagCollectionViewReducer: Reducer {
                 return state
 
             case .failure:
-                return state.updating(errorMessageAlert: L10n.errorTagDelete)
+                return state.updating(alert: .error(L10n.errorTagDelete))
             }
 
         case let .hide(tagId):
@@ -71,7 +56,7 @@ enum TagCollectionViewReducer: Reducer {
                 return state
 
             case .failure:
-                return state.updating(errorMessageAlert: L10n.errorTagDefault)
+                return state.updating(alert: .error(L10n.errorTagDefault))
             }
 
         case let .reveal(tagId):
@@ -80,7 +65,7 @@ enum TagCollectionViewReducer: Reducer {
                 return state
 
             case .failure:
-                return state.updating(errorMessageAlert: L10n.errorTagDefault)
+                return state.updating(alert: .error(L10n.errorTagDefault))
             }
 
         case let .update(tagId, name: name):
@@ -89,23 +74,51 @@ enum TagCollectionViewReducer: Reducer {
                 return state
 
             case .failure(.duplicated):
-                return state.updating(errorMessageAlert: L10n.errorTagRenameDuplicated)
+                return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
 
             case .failure:
-                return state.updating(errorMessageAlert: L10n.errorTagDefault)
+                return state.updating(alert: .error(L10n.errorTagDefault))
             }
 
-        case .emptyMessageViewActionButtonTapped:
-            // TODO:
-            return state
-
-        case .tagAdditionButtonTapped:
-            // TODO:
-            return state
+        case .emptyMessageViewActionButtonTapped, .tagAdditionButtonTapped:
+            return state.updating(alert: .addition)
 
         case .uncategorizedTagButtonTapped:
             dependency.router.showUncategorizedClipCollectionView()
             return state
+
+        case let .alertSaveButtonTapped(text: text):
+            switch state.alert {
+            case .addition:
+                switch dependency.commandService.create(tagWithName: text) {
+                case .success:
+                    return state.updating(alert: nil)
+
+                case .failure(.duplicated):
+                    return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
+
+                case .failure:
+                    return state.updating(alert: .error(L10n.errorTagDefault))
+                }
+
+            case let .edit(tagId: tagId, name: _):
+                switch dependency.commandService.updateTag(having: tagId, nameTo: text) {
+                case .success:
+                    return state.updating(alert: nil)
+
+                case .failure(.duplicated):
+                    return state.updating(alert: .error(L10n.errorTagRenameDuplicated))
+
+                case .failure:
+                    return state.updating(alert: .error(L10n.errorTagDefault))
+                }
+
+            default:
+                return state.updating(alert: nil)
+            }
+
+        case .alertDismissed:
+            return state.updating(alert: nil)
         }
     }
 }
