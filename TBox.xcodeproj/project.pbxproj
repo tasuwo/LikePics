@@ -1701,6 +1701,15 @@
 			path = ValueObject;
 			sourceTree = "<group>";
 		};
+		2C1E7E9F25D68ED2009A8D5C /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				2C076A3D25D4EF32007295DD /* TagCollectionViewController */,
+				2C2D228025D43556001489F4 /* TextEditAlertController */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		2C1F29A82561006300B89AE9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1833,12 +1842,11 @@
 		2C2D227E25D43521001489F4 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
+				2C1E7E9F25D68ED2009A8D5C /* Component */,
 				2C1B1C7225D58F7800450AC9 /* Core */,
 				2CBCCB0825D54E2D004CD1ED /* UIExtension */,
 				2CB47B7925D534D9008E38B8 /* Service */,
 				2CFA2BAB25D4D3C0007F574B /* Dependency */,
-				2C076A3D25D4EF32007295DD /* TagCollectionViewController */,
-				2C2D228025D43556001489F4 /* TextEditAlertController */,
 			);
 			path = Sandbox;
 			sourceTree = "<group>";
