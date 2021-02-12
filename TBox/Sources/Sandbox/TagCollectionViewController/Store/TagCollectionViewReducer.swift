@@ -19,7 +19,7 @@ enum TagCollectionViewReducer {
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, Effect<Action>?) {
+    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
         case let .tagsUpdated(tags):
             var nextState = performFilter(by: tags, previousState: state)

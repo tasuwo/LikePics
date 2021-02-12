@@ -6,7 +6,7 @@ import Combine
 import Foundation
 
 class Store<State: Equatable, A: Action, Dependency> {
-    typealias Reducer = (A, State, Dependency) -> (State, Effect<A>?)
+    typealias Reducer = (A, State, Dependency) -> (State, [Effect<A>]?)
 
     var stateValue: State { _state.value }
     var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
@@ -41,12 +41,12 @@ class Store<State: Equatable, A: Action, Dependency> {
     }
 
     private func _execute(_ action: A) {
-        let (nextState, effect) = reducer(action, _state.value, dependency)
+        let (nextState, effects) = reducer(action, _state.value, dependency)
 
         _state.send(nextState)
         republisher?.republishIfNeeded(action, for: self)
 
-        if let effect = effect { schedule(effect) }
+        if let effects = effects { effects.forEach { schedule($0) } }
     }
 
     private func schedule(_ effect: Effect<A>) {

@@ -13,7 +13,7 @@ enum TextEditAlertReducer {
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, Effect<Action>?) {
+    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
         case let .textChanged(text: text):
             return (state.updating(text: text, shouldReturn: dependency.textValidator(text)), .none)
