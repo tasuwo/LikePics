@@ -5,6 +5,11 @@
 import Domain
 
 extension ClipCollection {
+    enum ShareSource {
+        case menu(Clip.Identity)
+        case toolBar
+    }
+
     struct ShareContext {
         enum ActionSource: Equatable {
             case menu(Clip)
