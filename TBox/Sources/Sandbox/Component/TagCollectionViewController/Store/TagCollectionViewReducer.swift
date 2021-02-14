@@ -71,12 +71,14 @@ enum TagCollectionViewReducer: Reducer {
 
         case let .hideMenuSelected(tag):
             if state.isSomeItemsHidden {
-                let stream = Future<Action?, Never> { promise in
-                    // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
-                    //       アイテム削除を遅延させて自然なアニメーションにする
-                    //       https://stackoverflow.com/a/57997005
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                        promise(.success(.hide(tag)))
+                let stream = Deferred {
+                    Future<Action?, Never> { promise in
+                        // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
+                        //       アイテム削除を遅延させて自然なアニメーションにする
+                        //       https://stackoverflow.com/a/57997005
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                            promise(.success(.hide(tag)))
+                        }
                     }
                 }
                 return (state, [Effect(stream)])
