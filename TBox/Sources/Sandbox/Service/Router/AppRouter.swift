@@ -17,12 +17,13 @@ extension DependencyContainer {
         return rootViewController
     }
 
-    private func showCollectionView(by query: ClipListQuery, for context: ClipCollection.SearchContext) {
+    @discardableResult
+    private func showCollectionView(by query: ClipListQuery, for context: ClipCollection.SearchContext) -> Bool {
         guard let rootViewController = self.rootViewController else {
             RootLogger.shared.write(ConsoleLog(level: .error, message: """
             Failed to open SearchResultView.
             """))
-            return
+            return false
         }
 
         let innerViewModel = ClipCollectionViewModel(clipService: _clipCommandService,
@@ -51,15 +52,17 @@ extension DependencyContainer {
                                                         menuBuilder: ClipCollectionMenuBuilder(storage: _userSettingStorage))
 
         rootViewController.currentDetailViewController?.show(viewController, sender: self)
+
+        return true
     }
 }
 
 extension DependencyContainer: Router {
     // MARK: - Router
 
-    func showUncategorizedClipCollectionView() {
+    func showUncategorizedClipCollectionView() -> Bool {
         let query: ClipListQuery
-        switch self._clipQueryService.queryUncategorizedClips() {
+        switch _clipQueryService.queryUncategorizedClips() {
         case let .success(result):
             query = result
 
@@ -67,12 +70,12 @@ extension DependencyContainer: Router {
             RootLogger.shared.write(ConsoleLog(level: .error, message: """
             Failed to open SearchResultView for uncategorized clips. (\(error.rawValue))
             """))
-            return
+            return false
         }
-        self.showCollectionView(by: query, for: .tag(.uncategorized))
+        return showCollectionView(by: query, for: .tag(.uncategorized))
     }
 
-    func showClipCollectionView(for tag: Tag) {
+    func showClipCollectionView(for tag: Tag) -> Bool {
         let query: ClipListQuery
         switch _clipQueryService.queryClips(tagged: tag.id) {
         case let .success(result):
@@ -82,8 +85,45 @@ extension DependencyContainer: Router {
             RootLogger.shared.write(ConsoleLog(level: .error, message: """
             Failed to open SearchResultView for tag \(tag.id). (\(error.rawValue))
             """))
-            return
+            return false
         }
-        self.showCollectionView(by: query, for: .tag(.categorized(tag)))
+        return showCollectionView(by: query, for: .tag(.categorized(tag)))
+    }
+
+    func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
+        guard let viewController = self.makeClipPreviewPageViewController(clipId: clipId) else { return false }
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        detailViewController.present(viewController, animated: true, completion: nil)
+        return true
+    }
+
+    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag.Identity>?) -> Void)?) -> Bool {
+        // TODO:
+        print(#function)
+        return false
+    }
+
+    func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool {
+        // TODO:
+        print(#function)
+        return false
+    }
+
+    func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool {
+        // TODO:
+        print(#function)
+        return false
+    }
+
+    func showClipMergeModal(for clips: [Clip], completion: ((Bool) -> Void)?) -> Bool {
+        // TODO:
+        print(#function)
+        return false
+    }
+
+    func showClipEditModal(for clip: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
+        // TODO:
+        print(#function)
+        return false
     }
 }
