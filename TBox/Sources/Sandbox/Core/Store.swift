@@ -9,8 +9,6 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
     var stateValue: State { _state.value }
     var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 
-    weak var publisher: ActionPublisher?
-
     private let dependency: Dependency
     private let reducer: AnyReducer<Action, State, Dependency>
     private let _state: CurrentValueSubject<State, Never>
@@ -42,7 +40,6 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
         let (nextState, effects) = reducer.execute(action: action, state: _state.value, dependency: dependency)
 
         _state.send(nextState)
-        publisher?.publish(action, for: self)
 
         if let effects = effects { effects.forEach { schedule($0) } }
     }
