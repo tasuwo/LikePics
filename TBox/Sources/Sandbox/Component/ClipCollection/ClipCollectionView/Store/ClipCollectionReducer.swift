@@ -146,7 +146,7 @@ enum ClipCollectionReducer: Reducer {
 
         case let .tagsSelected(tagIds, for: clipIds):
             guard let tagIds = tagIds else { return (state, .none) }
-            switch dependency.clipCommandService.updateClips(having: Array(clipIds), byAddingTagsHaving: Array(tagIds)) {
+            switch dependency.clipCommandService.updateClips(having: Array(clipIds), byReplacingTagsHaving: Array(tagIds)) {
             case .success:
                 return (state.endEditing(), .none)
 
