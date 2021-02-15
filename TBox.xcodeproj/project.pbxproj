@@ -90,6 +90,7 @@
 		2C1F29932560FF1B00B89AE9 /* ImageQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29922560FF1B00B89AE9 /* ImageQueryService.swift */; };
 		2C1F299E2560FF2B00B89AE9 /* ImageQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F299D2560FF2B00B89AE9 /* ImageQueryService.swift */; };
 		2C1F29AA2561007800B89AE9 /* NSManagedObjectContext+Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1F29A92561007800B89AE9 /* NSManagedObjectContext+Block.swift */; };
+		2C2128A925DAB317006214FB /* TagSelectionModalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2128A825DAB317006214FB /* TagSelectionModalLayout.swift */; };
 		2C2128BE25DACDDA006214FB /* TextEditAlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2128BD25DACDDA006214FB /* TextEditAlertDelegate.swift */; };
 		2C2128D225DACE58006214FB /* HasTextEditAlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2128D125DACE58006214FB /* HasTextEditAlertDelegate.swift */; };
 		2C21415E254858D50013F486 /* TBoxUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C21415D254858D50013F486 /* TBoxUITests.swift */; };
@@ -103,6 +104,10 @@
 		2C27D7BE24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */; };
 		2C27D7C024E29887006B5DA9 /* ClipPreviewTransitioningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */; };
 		2C294342257FDFF7000E95EA /* ClipCollectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C294341257FDFF7000E95EA /* ClipCollectionViewProtocol.swift */; };
+		2C2A5C9525D976D60032C30E /* TagSelectionModalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A5C9425D976D60032C30E /* TagSelectionModalState.swift */; };
+		2C2A5CA925D9784D0032C30E /* TagSelectionModalAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A5CA825D9784D0032C30E /* TagSelectionModalAction.swift */; };
+		2C2A5CB425D9795A0032C30E /* TagSelectionModalReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A5CB325D9795A0032C30E /* TagSelectionModalReducer.swift */; };
+		2C2A5CBF25D9815C0032C30E /* TagSelectionModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A5CBE25D9815C0032C30E /* TagSelectionModalController.swift */; };
 		2C2AB06224DEF8BA007E2B18 /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */; };
 		2C2C9EED250BC7370020715B /* ClipInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEC250BC7370020715B /* ClipInformationView.xib */; };
 		2C2C9EEF250BC7710020715B /* ClipInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2C9EEE250BC7710020715B /* ClipInformationView.swift */; };
@@ -866,6 +871,7 @@
 		2C1F29922560FF1B00B89AE9 /* ImageQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageQueryService.swift; sourceTree = "<group>"; };
 		2C1F299D2560FF2B00B89AE9 /* ImageQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageQueryService.swift; sourceTree = "<group>"; };
 		2C1F29A92561007800B89AE9 /* NSManagedObjectContext+Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Block.swift"; sourceTree = "<group>"; };
+		2C2128A825DAB317006214FB /* TagSelectionModalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalLayout.swift; sourceTree = "<group>"; };
 		2C2128BD25DACDDA006214FB /* TextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		2C2128D125DACE58006214FB /* HasTextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		2C21415B254858D50013F486 /* TBoxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBoxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -883,6 +889,10 @@
 		2C27D7BD24E29359006B5DA9 /* ClipPreviewInteractiveDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewInteractiveDismissalAnimator.swift; sourceTree = "<group>"; };
 		2C27D7BF24E29887006B5DA9 /* ClipPreviewTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewTransitioningController.swift; sourceTree = "<group>"; };
 		2C294341257FDFF7000E95EA /* ClipCollectionViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionViewProtocol.swift; sourceTree = "<group>"; };
+		2C2A5C9425D976D60032C30E /* TagSelectionModalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalState.swift; sourceTree = "<group>"; };
+		2C2A5CA825D9784D0032C30E /* TagSelectionModalAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalAction.swift; sourceTree = "<group>"; };
+		2C2A5CB325D9795A0032C30E /* TagSelectionModalReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalReducer.swift; sourceTree = "<group>"; };
+		2C2A5CBE25D9815C0032C30E /* TagSelectionModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalController.swift; sourceTree = "<group>"; };
 		2C2AB05F24DEF7BA007E2B18 /* ClipCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationViewController.swift; sourceTree = "<group>"; };
 		2C2AB06124DEF8BA007E2B18 /* ShareNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
 		2C2AB06524DEFAF1007E2B18 /* ClipCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationViewModel.swift; sourceTree = "<group>"; };
@@ -1745,6 +1755,7 @@
 			children = (
 				2C1E7EA025D68EF5009A8D5C /* ClipCollection */,
 				2C076A3D25D4EF32007295DD /* TagCollectionViewController */,
+				2C2A5C9225D975060032C30E /* TagSelection */,
 				2C2D228025D43556001489F4 /* TextEditAlertController */,
 			);
 			path = Component;
@@ -1880,6 +1891,26 @@
 				2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */,
 			);
 			path = Menu;
+			sourceTree = "<group>";
+		};
+		2C2A5C9225D975060032C30E /* TagSelection */ = {
+			isa = PBXGroup;
+			children = (
+				2C2A5CBE25D9815C0032C30E /* TagSelectionModalController.swift */,
+				2C2128A825DAB317006214FB /* TagSelectionModalLayout.swift */,
+				2C2A5C9325D976AB0032C30E /* Store */,
+			);
+			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2C2A5C9325D976AB0032C30E /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				2C2A5C9425D976D60032C30E /* TagSelectionModalState.swift */,
+				2C2A5CA825D9784D0032C30E /* TagSelectionModalAction.swift */,
+				2C2A5CB325D9795A0032C30E /* TagSelectionModalReducer.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 		2C2AB06424DEFAD8007E2B18 /* Presenter */ = {
@@ -4975,6 +5006,7 @@
 				2CB47AE325D51419008E38B8 /* HasClipCommandService.swift in Sources */,
 				2C1E7EA225D68FA0009A8D5C /* ClipCollectionState.swift in Sources */,
 				2CEEB3CB25D919B2006CF5AD /* HasClipCollectionToolBarDelegate.swift in Sources */,
+				2C2A5CBF25D9815C0032C30E /* TagSelectionModalController.swift in Sources */,
 				2C076A5F25D4F9AE007295DD /* TagCollectionViewReducer.swift in Sources */,
 				2C02E3292593773E00BC274B /* ClipPreview.swift in Sources */,
 				2CB60550257FC85C00F7579F /* SearchResultViewModel.swift in Sources */,
@@ -5013,6 +5045,7 @@
 				2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */,
 				2CB30F2E25D2D618005BD40D /* AppRoot_TabBarItem.swift in Sources */,
 				2C62772A25D7D1F000E3B289 /* ClipCollectionViewLayout.swift in Sources */,
+				2C2A5CB425D9795A0032C30E /* TagSelectionModalReducer.swift in Sources */,
 				2CB47B2A25D52494008E38B8 /* HasPasteboard.swift in Sources */,
 				2C51A0BF25AC1FA000A79350 /* PreviewLoader.swift in Sources */,
 				2C2128BE25DACDDA006214FB /* TextEditAlertDelegate.swift in Sources */,
@@ -5029,6 +5062,7 @@
 				2C98112425A352EC00B89A47 /* AlbumList.swift in Sources */,
 				2CBF62D025D92D3B002AEFE8 /* ClipCollectionNavigationBarDelegate.swift in Sources */,
 				2C5C256925CF48AB008BA8D1 /* AppRootSplitViewController.swift in Sources */,
+				2C2A5CA925D9784D0032C30E /* TagSelectionModalAction.swift in Sources */,
 				2C0596B925199250008F11F5 /* ClipPreviewPageBarViewController.swift in Sources */,
 				2CDF4F2B257280610030342B /* DependencyContainerConfiguration.swift in Sources */,
 				2CDF4F4F2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift in Sources */,
@@ -5053,6 +5087,7 @@
 				2C11718F25A886B600BE75AB /* ClipCollection_TagsReplacingRequest.swift in Sources */,
 				2C076A4025D4EF58007295DD /* TagCollectionViewState.swift in Sources */,
 				2CD6C20025D6421D0000D5C3 /* HasClipQueryService.swift in Sources */,
+				2C2A5C9525D976D60032C30E /* TagSelectionModalState.swift in Sources */,
 				2CD6C23625D65C4E0000D5C3 /* AnyReducer.swift in Sources */,
 				2C45D3FC24EC3B3E0045B6D3 /* ClipPreviewPresentingViewController.swift in Sources */,
 				2CEEB38C25D8F18B006CF5AD /* ClipCollectionToolBarState.swift in Sources */,
@@ -5073,6 +5108,7 @@
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
 				2C01B90925ADCFA10089CFB4 /* ClipEditViewLayout.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,
+				2C2128A925DAB317006214FB /* TagSelectionModalLayout.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2CB47B0D25D51FF5008E38B8 /* NewTagCollectionViewController.swift in Sources */,
 				2C11717825A87D7A00BE75AB /* ClipCollectionViewModel.swift in Sources */,

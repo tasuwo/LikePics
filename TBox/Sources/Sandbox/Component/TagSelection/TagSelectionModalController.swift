@@ -1,0 +1,302 @@
+//
+//  Copyright © 2021 Tasuku Tozawa. All rights reserved.
+//
+
+import Combine
+import Domain
+import TBoxUIKit
+import UIKit
+
+class TagSelectionModalController: UIViewController {
+    typealias Layout = TagSelectionModalLayout
+    typealias Store = LikePics.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
+
+    // MARK: - Properties
+
+    // MARK: View
+
+    private var collectionView: UICollectionView!
+    private var searchBar: UISearchBar!
+    private let emptyMessageView = EmptyMessageView()
+    private var dataSource: Layout.DataSource!
+
+    // MARK: Component
+
+    private let tagAdditionAlert: TextEditAlertController
+
+    // MARK: Store
+
+    private let completion: ((Set<Tag.Identity>?) -> Void)?
+    private var store: Store
+    private var subscriptions: Set<AnyCancellable> = .init()
+
+    // MARK: Temporary
+
+    private var _previousState: TagSelectionModalState?
+
+    // MARK: - Initializers
+
+    init(state: TagSelectionModalState,
+         tagAdditionAlertState: TextEditAlertState,
+         dependency: TagSelectionModalDependency,
+         completion: ((Set<Tag.Identity>?) -> Void)?)
+    {
+        self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer.self)
+        self.tagAdditionAlert = .init(state: tagAdditionAlertState)
+        self.completion = completion
+        super.init(nibName: nil, bundle: nil)
+
+        tagAdditionAlert.textEditAlertDelegate = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: View Life-Cycle Methods
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        configureViewHierarchy()
+        configureDataSource()
+        configureSearchBar()
+        configureNavigationBar()
+        configureEmptyMessageView()
+
+        bind(to: store)
+
+        store.execute(.viewDidLoad)
+    }
+}
+
+// MARK: - Bind
+
+extension TagSelectionModalController {
+    private func bind(to store: Store) {
+        store.state.sink { [weak self] state in
+            guard let self = self else { return }
+
+            DispatchQueue.global().async {
+                var snapshot = Layout.Snapshot()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(state.tags)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.applySelections(for: state)
+                }
+            }
+
+            self.searchBar.isHidden = !state.isCollectionViewDisplaying
+            self.collectionView.isHidden = !state.isCollectionViewDisplaying
+
+            self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
+
+            self.presentAlertIfNeeded(for: state.alert)
+        }
+        .store(in: &subscriptions)
+    }
+
+    private func applySelections(for state: TagSelectionModalState) {
+        defer { _previousState = state }
+
+        guard let previousState = _previousState else {
+            // `_previousState` がnil == 初回表示時はCollectionViewの選択状態が空であることが前提なので、deselectは行わずselectのみ反映する
+            state
+                .selectedTags
+                .compactMap { self.dataSource.indexPath(for: $0) }
+                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            return
+        }
+
+        // NOTE: パフォーマンスのために、選択状態は差分のみ更新する
+
+        state.newSelectedTags(from: previousState)
+            .compactMap { self.dataSource.indexPath(for: $0) }
+            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+
+        state.newDeselectedTags(from: previousState)
+            .compactMap { self.dataSource.indexPath(for: $0) }
+            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+    }
+
+    private func presentAlertIfNeeded(for alert: TagSelectionModalState.Alert?) {
+        switch alert {
+        case let .error(message):
+            presentErrorMessageAlertIfNeeded(message: message)
+
+        case .addition:
+            tagAdditionAlert.present(with: "", validator: { $0?.isEmpty == false }, on: self)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentErrorMessageAlertIfNeeded(message: String?) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Configuration
+
+extension TagSelectionModalController {
+    private func configureViewHierarchy() {
+        view.backgroundColor = Asset.Color.backgroundClient.color
+
+        searchBar = UISearchBar()
+        searchBar.backgroundColor = .clear
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
+        collectionView.backgroundColor = .clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyMessageView)
+        NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
+    }
+
+    private func configureDataSource() {
+        collectionView.delegate = self
+        collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = true
+        dataSource = Layout.configureDataSource(collectionView)
+    }
+
+    private func configureSearchBar() {
+        searchBar.barStyle = .default
+        searchBar.searchBarStyle = .minimal
+        searchBar.delegate = self
+        searchBar.showsCancelButton = false
+        searchBar.placeholder = L10n.placeholderSearchTag
+        searchBar.backgroundColor = Asset.Color.backgroundClient.color
+    }
+
+    private func configureNavigationBar() {
+        navigationItem.title = L10n.tagSelectionViewTitle
+
+        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: .init(handler: { [weak self] _ in
+            self?.store.execute(.addButtonTapped)
+        }), menu: nil)
+        let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.completion?(self.store.stateValue.selections)
+            self.dismiss(animated: true)
+        }), menu: nil)
+
+        navigationItem.leftBarButtonItem = addItem
+        navigationItem.rightBarButtonItem = doneItem
+    }
+
+    private func configureEmptyMessageView() {
+        emptyMessageView.alpha = 0
+        emptyMessageView.title = L10n.tagListViewEmptyTitle
+        emptyMessageView.message = L10n.tagListViewEmptyMessage
+        emptyMessageView.actionButtonTitle = L10n.tagListViewEmptyActionTitle
+        emptyMessageView.delegate = self
+    }
+}
+
+extension TagSelectionModalController: UICollectionViewDelegate {
+    // MARK: - UICollectionViewDelegate
+
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        store.execute(.selected(tagId))
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        store.execute(.deselected(tagId))
+    }
+}
+
+extension TagSelectionModalController: UISearchBarDelegate {
+    // MARK: - UISearchBarDelegate
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        RunLoop.main.perform {
+            self.store.execute(.searchQueryChanged(searchBar.text ?? ""))
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // HACK: marked text 入力を待つために遅延を設ける
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            RunLoop.main.perform {
+                self.store.execute(.searchQueryChanged(searchBar.text ?? ""))
+            }
+        }
+        return true
+    }
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+}
+
+extension TagSelectionModalController: EmptyMessageViewDelegate {
+    // MARK: - EmptyMessageViewDelegate
+
+    func didTapActionButton(_ view: EmptyMessageView) {
+        store.execute(.emptyMessageViewActionButtonTapped)
+    }
+}
+
+extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate {
+    // MARK: - UIAdaptivePresentationControllerDelegate
+
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        self.completion?(nil)
+    }
+}
+
+extension TagSelectionModalController: TextEditAlertDelegate {
+    // MARK: - TextEditAlertDelegate
+
+    func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
+        store.execute(.alertSaveButtonTapped(text: text))
+    }
+
+    func textEditAlertDidCancel(_ id: UUID) {
+        store.execute(.alertDismissed)
+    }
+}

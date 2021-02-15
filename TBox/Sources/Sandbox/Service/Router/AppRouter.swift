@@ -98,9 +98,39 @@ extension DependencyContainer: Router {
     }
 
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag.Identity>?) -> Void)?) -> Bool {
-        // TODO:
-        print(#function)
-        return false
+        let state = TagSelectionModalState(searchQuery: "",
+                                           initialSelections: selections,
+                                           selections: .init(),
+                                           isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                           isCollectionViewDisplaying: false,
+                                           isEmptyMessageViewDisplaying: false,
+                                           isSearchBarEnabled: false,
+                                           alert: nil,
+                                           _tags: [:],
+                                           _filteredTagIds: .init(),
+                                           _searchStorage: .init())
+        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
+                                                       title: L10n.tagListViewAlertForAddTitle,
+                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                       placeholder: L10n.placeholderTagName,
+                                                       text: "",
+                                                       shouldReturn: false,
+                                                       isPresenting: false)
+        let viewController = TagSelectionModalController(state: state,
+                                                         tagAdditionAlertState: tagAdditionAlertState,
+                                                         dependency: self,
+                                                         completion: completion)
+
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        detailViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 
     func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool {

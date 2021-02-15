@@ -508,4 +508,38 @@ extension DependencyContainer: ViewControllerFactory {
 
         return UINavigationController(rootViewController: viewController)
     }
+
+    func makeNewClipCollectionViewController() -> UIViewController? {
+        let state = ClipCollectionState(selections: .init(),
+                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                        operation: .none,
+                                        isEmptyMessageViewDisplaying: false,
+                                        isCollectionViewDisplaying: false,
+                                        alert: nil,
+                                        context: .init(albumId: nil),
+                                        _clips: [:],
+                                        _filteredClipIds: .init(),
+                                        _previewingClipId: nil)
+        let navigationBarState = ClipCollectionNavigationBarState(context: .init(albumId: nil),
+                                                                  rightItems: [],
+                                                                  leftItems: [],
+                                                                  clipCount: 0,
+                                                                  selectionCount: 0,
+                                                                  operation: .none)
+        let toolBarState = ClipCollectionToolBarState(context: .init(albumId: nil),
+                                                      items: [],
+                                                      isHidden: true,
+                                                      _targetCount: 0,
+                                                      _operation: .none,
+                                                      alert: nil)
+
+        let viewController = ClipCollectionViewController(state: state,
+                                                          navigationBarState: navigationBarState,
+                                                          toolBarState: toolBarState,
+                                                          dependency: self,
+                                                          thumbnailLoader: clipThumbnailLoader,
+                                                          menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
+
+        return UINavigationController(rootViewController: viewController)
+    }
 }

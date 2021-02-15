@@ -35,4 +35,6 @@ protocol ViewControllerFactory {
     func makeMergeViewController(clipIds: [Clip.Identity], delegate: ClipMergeViewControllerDelegate) -> UIViewController?
 
     func makeSettingsViewController() -> UIViewController
+
+    func makeNewClipCollectionViewController() -> UIViewController?
 }
