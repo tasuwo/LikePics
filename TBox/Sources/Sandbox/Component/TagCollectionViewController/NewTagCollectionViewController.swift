@@ -24,7 +24,6 @@ class NewTagCollectionViewController: UIViewController {
 
     // MARK: Component
 
-    private let pubsub: TagCollectionViewActionPubSub
     private let tagAdditionAlert: TextEditAlertController
     private let tagEditAlert: TextEditAlertController
 
@@ -45,13 +44,12 @@ class NewTagCollectionViewController: UIViewController {
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 
-        self.pubsub = TagCollectionViewActionPubSub(tagCollectionViewStore: store,
-                                                    tagEditAlertStore: tagEditAlert.store,
-                                                    tagAdditionAlertStore: tagAdditionAlert.store)
-
         self.menuBuilder = menuBuilder
 
         super.init(nibName: nil, bundle: nil)
+
+        tagAdditionAlert.textEditAlertDelegate = self
+        tagEditAlert.textEditAlertDelegate = self
     }
 
     @available(*, unavailable)
@@ -347,5 +345,17 @@ extension NewTagCollectionViewController: EmptyMessageViewDelegate {
 
     func didTapActionButton(_ view: EmptyMessageView) {
         store.execute(.emptyMessageViewActionButtonTapped)
+    }
+}
+
+extension NewTagCollectionViewController: TextEditAlertDelegate {
+    // MARK: - TextEditAlertDelegate
+
+    func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
+        store.execute(.alertSaveButtonTapped(text: text))
+    }
+
+    func textEditAlertDidCancel(_ id: UUID) {
+        store.execute(.alertDismissed)
     }
 }

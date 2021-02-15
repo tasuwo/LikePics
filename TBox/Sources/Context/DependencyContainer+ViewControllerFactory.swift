@@ -418,16 +418,20 @@ extension DependencyContainer: ViewControllerFactory {
                                            alert: nil,
                                            _tags: [],
                                            _searchStorage: .init())
-        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
+        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
+                                                       title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName,
                                                        text: "",
-                                                       shouldReturn: false)
-        let tagEditAlertState = TextEditAlertState(title: L10n.tagListViewAlertForUpdateTitle,
+                                                       shouldReturn: false,
+                                                       isPresenting: false)
+        let tagEditAlertState = TextEditAlertState(id: UUID(),
+                                                   title: L10n.tagListViewAlertForUpdateTitle,
                                                    message: L10n.tagListViewAlertForUpdateMessage,
                                                    placeholder: L10n.placeholderTagName,
                                                    text: "",
-                                                   shouldReturn: false)
+                                                   shouldReturn: false,
+                                                   isPresenting: false)
 
         let viewController = NewTagCollectionViewController(state: state,
                                                             tagAdditionAlertState: tagAdditionAlertState,

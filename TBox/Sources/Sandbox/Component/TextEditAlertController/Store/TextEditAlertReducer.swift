@@ -5,6 +5,7 @@
 import Combine
 
 typealias TextEditAlertDependency = HasTextValidator
+    & HasTextEditAlertDelegate
 
 enum TextEditAlertReducer: Reducer {
     typealias Dependency = TextEditAlertDependency
@@ -15,14 +16,22 @@ enum TextEditAlertReducer: Reducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
+        case .presented:
+            return (state.updating(isPresenting: true), .none)
+
         case let .textChanged(text: text):
-            return (state.updating(text: text, shouldReturn: dependency.textValidator(text)), .none)
+            let newState = state
+                .updating(text: text)
+                .updating(shouldReturn: dependency.textValidator(text))
+            return (newState, .none)
 
         case .saveActionTapped:
-            return (state, [Effect<Action>(value: .completed(withText: state.text))])
+            dependency.textEditAlertDelegate?.textEditAlert(state.id, didTapSaveWithText: state.text)
+            return (state.updating(isPresenting: false), .none)
 
-        case .cancelActionTapped, .dismissed, .completed:
-            return (state, .none)
+        case .cancelActionTapped, .dismissed:
+            dependency.textEditAlertDelegate?.textEditAlertDidCancel(state.id)
+            return (state.updating(isPresenting: false), .none)
         }
     }
 }

@@ -3,12 +3,11 @@
 //
 
 enum TextEditAlertAction {
+    case presented
     case textChanged(text: String)
     case saveActionTapped
     case cancelActionTapped
     case dismissed
-
-    case completed(withText: String)
 }
 
 extension TextEditAlertAction: Action {}

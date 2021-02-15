@@ -16,9 +16,10 @@ class TextEditAlertController: NSObject {
         }
     }
 
-    private class Dependency: HasTextValidator {
+    private class Dependency: TextEditAlertDependency {
         // swiftlint:disable identifier_name
         var _textValidator: ((String?) -> Bool)?
+        weak var _textEditAlertDelegate: TextEditAlertDelegate?
 
         var textValidator: (String?) -> Bool {
             return { [weak self] text in
@@ -26,6 +27,8 @@ class TextEditAlertController: NSObject {
                 return validator(text)
             }
         }
+
+        var textEditAlertDelegate: TextEditAlertDelegate? { _textEditAlertDelegate }
     }
 
     private(set) var store: TextEditAlertStore
@@ -34,7 +37,16 @@ class TextEditAlertController: NSObject {
     private weak var presentingAlert: AlertController?
     private weak var presentingSaveAction: UIAlertAction?
 
-    var subscriptions: Set<AnyCancellable> = .init()
+    private var subscriptions: Set<AnyCancellable> = .init()
+
+    var textEditAlertDelegate: TextEditAlertDelegate? {
+        set {
+            dependency._textEditAlertDelegate = newValue
+        }
+        get {
+            dependency._textEditAlertDelegate
+        }
+    }
 
     // MARK: - Lifecycle
 
@@ -85,7 +97,9 @@ class TextEditAlertController: NSObject {
         presentingAlert = alert
         presentingSaveAction = saveAction
 
-        viewController.present(alert, animated: true, completion: nil)
+        viewController.present(alert, animated: true) { [weak self] in
+            self?.store.execute(.presented)
+        }
     }
 
     @objc
