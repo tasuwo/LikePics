@@ -70,12 +70,12 @@ struct ClipCollectionState: Equatable {
     // MARK: - Methods
 
     func newSelectedClips(from previous: Self) -> Set<Clip> {
-        let additions = previous.selections.subtracting(selections)
+        let additions = selections.subtracting(previous.selections)
         return Set(additions.compactMap { _clips[$0]?.value })
     }
 
     func newDeselectedClips(from previous: Self) -> Set<Clip> {
-        let deletions = selections.subtracting(previous.selections)
+        let deletions = previous.selections.subtracting(selections)
         return Set(deletions.compactMap { _clips[$0]?.value })
     }
 
