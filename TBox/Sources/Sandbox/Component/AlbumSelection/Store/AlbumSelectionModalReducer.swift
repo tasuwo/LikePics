@@ -5,14 +5,14 @@
 import Combine
 import Domain
 
-typealias TagSelectionModalDependency = HasUserSettingStorage
+typealias AlbumSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
 
-enum TagSelectionModalReducer: Reducer {
-    typealias Dependency = TagSelectionModalDependency
-    typealias State = TagSelectionModalState
-    typealias Action = TagSelectionModalAction
+enum AlbumSelectionModalReducer: Reducer {
+    typealias Dependency = AlbumSelectionModalDependency
+    typealias State = AlbumSelectionModalState
+    typealias Action = AlbumSelectionModalAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
@@ -23,8 +23,8 @@ enum TagSelectionModalReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .tagsUpdated(tags):
-            var nextState = performFilter(tags: tags, previousState: state)
+        case let .albumsUpdated(albums):
+            var nextState = performFilter(albums: albums, previousState: state)
             if nextState.shouldClearQuery {
                 nextState = nextState.updating(searchQuery: "")
             }
@@ -40,16 +40,6 @@ enum TagSelectionModalReducer: Reducer {
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
-        // MARK: Selection
-
-        case let .selected(tagId):
-            let newState = state.updating(selections: state.selections.union(Set([tagId])))
-            return (newState, .none)
-
-        case let .deselected(tagId):
-            let newState = state.updating(selections: state.selections.subtracting(Set([tagId])))
-            return (newState, .none)
-
         // MARK: Button Action
 
         case .emptyMessageViewActionButtonTapped, .addButtonTapped:
@@ -57,17 +47,13 @@ enum TagSelectionModalReducer: Reducer {
 
         // MARK: Alert Completion
 
-        case let .alertSaveButtonTapped(text: name):
-            // TODO: 生成したタグを選択する
-            switch dependency.clipCommandService.create(tagWithName: name) {
+        case let .alertSaveButtonTapped(text: text):
+            switch dependency.clipCommandService.create(albumWithTitle: text) {
             case .success:
                 return (state.updating(alert: nil), .none)
 
-            case .failure(.duplicated):
-                return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
-
             case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                return (state.updating(alert: .error(L10n.albumListViewErrorAtAddAlbum)), .none)
             }
 
         case .alertDismissed:
@@ -78,37 +64,37 @@ enum TagSelectionModalReducer: Reducer {
 
 // MARK: - Preparation
 
-extension TagSelectionModalReducer {
+extension AlbumSelectionModalReducer {
     static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
-        let query: TagListQuery
-        switch dependency.clipQueryService.queryAllTags() {
+        let query: AlbumListQuery
+        switch dependency.clipQueryService.queryAllAlbums() {
         case let .success(result):
             query = result
 
         case let .failure(error):
-            fatalError("Failed to load tags: \(error.localizedDescription)")
+            fatalError("Failed to load albums: \(error.localizedDescription)")
         }
 
-        let tagsStream = query.tags
+        let albumsStream = query.albums
             .catch { _ in Just([]) }
-            .map { Action.tagsUpdated($0) as Action? }
-        let tagsEffect = Effect(tagsStream, underlying: query)
+            .map { Action.albumsUpdated($0) as Action? }
+        let albumsEffect = Effect(albumsStream, underlying: query)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [tagsEffect, settingsEffect]
+        return [albumsEffect, settingsEffect]
     }
 }
 
 // MARK: - Filter
 
-extension TagSelectionModalReducer {
-    private static func performFilter(tags: [Tag],
+extension AlbumSelectionModalReducer {
+    private static func performFilter(albums: [Album],
                                       previousState: State) -> State
     {
-        performFilter(tags: tags,
+        performFilter(albums: albums,
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -117,7 +103,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState._orderedTags,
+        performFilter(albums: previousState._orderedAlbums,
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -126,45 +112,37 @@ extension TagSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState._orderedTags,
+        performFilter(albums: previousState._orderedAlbums,
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
 
-    private static func performFilter(tags: [Tag],
+    private static func performFilter(albums: [Album],
                                       searchQuery: String,
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
         var searchStorage = previousState._searchStorage
 
-        let dict = tags.enumerated().reduce(into: [Tag.Identity: State.OrderedTag]()) { dict, value in
-            dict[value.element.id] = State.OrderedTag(index: value.offset, value: value.element)
+        let dict = albums.enumerated().reduce(into: [Album.Identity: State.OrderedAlbum]()) { dict, value in
+            dict[value.element.id] = State.OrderedAlbum(index: value.offset, value: value.element)
         }
 
-        let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
-        let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
+        let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
+        let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
 
-        var newState = previousState.updating(searchQuery: searchQuery)
-
-        // 初回の選択処理を行う
-        if !tags.isEmpty, !previousState.initialSelections.isEmpty {
-            newState = newState
-                .updating(initialSelections: .init())
-                .updating(selections: previousState.initialSelections)
-        }
-
-        return newState
+        return previousState
+            .updating(searchQuery: searchQuery)
             .updating(isSomeItemsHidden: isSomeItemsHidden)
-            .updating(isCollectionViewDisplaying: !filteringTags.isEmpty,
-                      isEmptyMessageViewDisplaying: filteringTags.isEmpty)
-            .updating(_filteredTagIds: Set(filteredTagIds),
-                      _tags: dict,
-                      _searchStorage: searchStorage)
+            .updating(isCollectionViewDisplaying: !filteringAlbums.isEmpty)
+            .updating(isEmptyMessageViewDisplaying: filteringAlbums.isEmpty)
+            .updating(_filteredAlbumIds: Set(filteredAlbumIds))
+            .updating(_albums: dict)
+            .updating(_searchStorage: searchStorage)
     }
 }
 
-private extension TagSelectionModalState {
-    var shouldClearQuery: Bool { _tags.isEmpty && !searchQuery.isEmpty }
+private extension AlbumSelectionModalState {
+    var shouldClearQuery: Bool { _albums.isEmpty && !searchQuery.isEmpty }
 }

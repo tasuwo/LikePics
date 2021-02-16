@@ -134,9 +134,38 @@ extension DependencyContainer: Router {
     }
 
     func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool {
-        // TODO:
-        print(#function)
-        return false
+        let state = AlbumSelectionModalState(searchQuery: "",
+                                             isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                             isCollectionViewDisplaying: false,
+                                             isEmptyMessageViewDisplaying: false,
+                                             isSearchBarEnabled: false,
+                                             alert: nil,
+                                             _albums: [:],
+                                             _filteredAlbumIds: .init(),
+                                             _searchStorage: .init())
+        let albumAdditionAlertState = TextEditAlertState(id: UUID(),
+                                                         title: L10n.albumListViewAlertForAddTitle,
+                                                         message: L10n.albumListViewAlertForAddMessage,
+                                                         placeholder: L10n.placeholderAlbumName,
+                                                         text: "",
+                                                         shouldReturn: false,
+                                                         isPresenting: false)
+        let viewController = AlbumSelectionModalController(state: state,
+                                                           albumAdditionAlertState: albumAdditionAlertState,
+                                                           dependency: self,
+                                                           thumbnailLoader: albumThumbnailLoader,
+                                                           completion: completion)
+
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        detailViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 
     func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool {

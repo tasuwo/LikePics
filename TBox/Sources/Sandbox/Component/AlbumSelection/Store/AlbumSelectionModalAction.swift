@@ -4,21 +4,16 @@
 
 import Domain
 
-enum TagSelectionModalAction: Action {
+enum AlbumSelectionModalAction: Action {
     // MARK: View Life-Cycle Methods
 
     case viewDidLoad
 
     // MARK: State Observation
 
-    case tagsUpdated([Tag])
+    case albumsUpdated([Album])
     case searchQueryChanged(String)
     case settingUpdated(isSomeItemsHidden: Bool)
-
-    // MARK: Selection
-
-    case selected(Tag.Identity)
-    case deselected(Tag.Identity)
 
     // MARK: Button Action
 

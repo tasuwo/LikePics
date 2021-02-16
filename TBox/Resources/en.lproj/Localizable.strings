@@ -222,7 +222,7 @@
 "error_tag_add_duplicated" = "Duplicated tag name.";
 "error_tag_delete" = "Failed to delete tag";
 "error_tag_rename_duplicated" = "Duplicated tag name.";
-"error_tag_default" = "タグの更新に失敗しました";
+"error_tag_default" = "Failed to update tag";
 
 // MARK: Setting
 

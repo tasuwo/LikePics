@@ -4,12 +4,13 @@
 
 import Combine
 import Domain
+import Smoothie
 import TBoxUIKit
 import UIKit
 
-class TagSelectionModalController: UIViewController {
-    typealias Layout = TagSelectionModalLayout
-    typealias Store = LikePics.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
+class AlbumSelectionModalController: UIViewController {
+    typealias Layout = AlbumSelectionViewLayout
+    typealias Store = LikePics.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
 
     // MARK: - Properties
 
@@ -20,33 +21,33 @@ class TagSelectionModalController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: Layout.DataSource!
 
+    private let thumbnailLoader: ThumbnailLoaderProtocol
+
     // MARK: Component
 
-    private let tagAdditionAlert: TextEditAlertController
+    private let albumAdditionAlert: TextEditAlertController
 
     // MARK: Store
 
-    private let completion: ((Set<Tag.Identity>?) -> Void)?
+    private let completion: ((Album.Identity?) -> Void)?
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    // MARK: Temporary
-
-    private var _previousState: TagSelectionModalState?
-
     // MARK: - Initializers
 
-    init(state: TagSelectionModalState,
-         tagAdditionAlertState: TextEditAlertState,
-         dependency: TagSelectionModalDependency,
-         completion: ((Set<Tag.Identity>?) -> Void)?)
+    init(state: AlbumSelectionModalState,
+         albumAdditionAlertState: TextEditAlertState,
+         dependency: AlbumSelectionModalDependency,
+         thumbnailLoader: ThumbnailLoaderProtocol,
+         completion: ((Album.Identity?) -> Void)?)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer.self)
-        self.tagAdditionAlert = .init(state: tagAdditionAlertState)
+        self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer.self)
+        self.albumAdditionAlert = .init(state: albumAdditionAlertState)
+        self.thumbnailLoader = thumbnailLoader
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
 
-        tagAdditionAlert.textEditAlertDelegate = self
+        albumAdditionAlert.textEditAlertDelegate = self
     }
 
     @available(*, unavailable)
@@ -73,7 +74,7 @@ class TagSelectionModalController: UIViewController {
 
 // MARK: - Bind
 
-extension TagSelectionModalController {
+extension AlbumSelectionModalController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -81,10 +82,8 @@ extension TagSelectionModalController {
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.tags)
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.applySelections(for: state)
-                }
+                snapshot.appendItems(state.albums)
+                self.dataSource.apply(snapshot, animatingDifferences: true)
             }
 
             self.searchBar.isHidden = !state.isCollectionViewDisplaying
@@ -97,36 +96,13 @@ extension TagSelectionModalController {
         .store(in: &subscriptions)
     }
 
-    private func applySelections(for state: TagSelectionModalState) {
-        defer { _previousState = state }
-
-        guard let previousState = _previousState else {
-            // `_previousState` がnil == 初回表示時はCollectionViewの選択状態が空であることが前提なので、deselectは行わずselectのみ反映する
-            state
-                .selectedTags
-                .compactMap { self.dataSource.indexPath(for: $0) }
-                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            return
-        }
-
-        // NOTE: パフォーマンスのために、選択状態は差分のみ更新する
-
-        state.newSelectedTags(from: previousState)
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-
-        state.newDeselectedTags(from: previousState)
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-    }
-
-    private func presentAlertIfNeeded(for alert: TagSelectionModalState.Alert?) {
+    private func presentAlertIfNeeded(for alert: AlbumSelectionModalState.Alert?) {
         switch alert {
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
 
         case .addition:
-            tagAdditionAlert.present(with: "", validator: { $0?.isEmpty == false }, on: self)
+            albumAdditionAlert.present(with: "", validator: { $0?.isEmpty == false }, on: self)
 
         case .none:
             break
@@ -144,7 +120,7 @@ extension TagSelectionModalController {
 
 // MARK: - Configuration
 
-extension TagSelectionModalController {
+extension AlbumSelectionModalController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -178,7 +154,8 @@ extension TagSelectionModalController {
         collectionView.delegate = self
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
-        dataSource = Layout.configureDataSource(collectionView)
+        dataSource = Layout.createDataSource(collectionView: collectionView,
+                                             thumbnailLoader: thumbnailLoader)
     }
 
     private func configureSearchBar() {
@@ -186,58 +163,40 @@ extension TagSelectionModalController {
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
         searchBar.showsCancelButton = false
-        searchBar.placeholder = L10n.placeholderSearchTag
+        searchBar.placeholder = L10n.placeholderSearchAlbum
         searchBar.backgroundColor = Asset.Color.backgroundClient.color
     }
 
     private func configureNavigationBar() {
-        navigationItem.title = L10n.tagSelectionViewTitle
+        navigationItem.title = L10n.albumSelectionViewTitle
 
         let addItem = UIBarButtonItem(systemItem: .add, primaryAction: .init(handler: { [weak self] _ in
             self?.store.execute(.addButtonTapped)
         }), menu: nil)
-        let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.completion?(self.store.stateValue.selections)
-            self.dismiss(animated: true)
-        }), menu: nil)
 
         navigationItem.leftBarButtonItem = addItem
-        navigationItem.rightBarButtonItem = doneItem
     }
 
     private func configureEmptyMessageView() {
         emptyMessageView.alpha = 0
-        emptyMessageView.title = L10n.tagListViewEmptyTitle
-        emptyMessageView.message = L10n.tagListViewEmptyMessage
-        emptyMessageView.actionButtonTitle = L10n.tagListViewEmptyActionTitle
+        emptyMessageView.title = L10n.albumListViewEmptyTitle
+        emptyMessageView.message = L10n.albumListViewEmptyMessage
+        emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
         emptyMessageView.delegate = self
     }
 }
 
-extension TagSelectionModalController: UICollectionViewDelegate {
+extension AlbumSelectionModalController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
-        store.execute(.selected(tagId))
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
-        store.execute(.deselected(tagId))
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        completion?(album.identity)
+        dismiss(animated: true, completion: nil)
     }
 }
 
-extension TagSelectionModalController: UISearchBarDelegate {
+extension AlbumSelectionModalController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -273,7 +232,7 @@ extension TagSelectionModalController: UISearchBarDelegate {
     }
 }
 
-extension TagSelectionModalController: EmptyMessageViewDelegate {
+extension AlbumSelectionModalController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     func didTapActionButton(_ view: EmptyMessageView) {
@@ -281,7 +240,7 @@ extension TagSelectionModalController: EmptyMessageViewDelegate {
     }
 }
 
-extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate {
+extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
@@ -289,7 +248,7 @@ extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate 
     }
 }
 
-extension TagSelectionModalController: TextEditAlertDelegate {
+extension AlbumSelectionModalController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
     func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
