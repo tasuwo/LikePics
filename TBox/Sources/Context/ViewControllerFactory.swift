@@ -37,4 +37,5 @@ protocol ViewControllerFactory {
     func makeSettingsViewController() -> UIViewController
 
     func makeNewClipCollectionViewController() -> UIViewController?
+    func makeNewAlbumListViewController() -> UIViewController?
 }

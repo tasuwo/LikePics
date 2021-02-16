@@ -90,6 +90,12 @@ extension DependencyContainer: Router {
         return showCollectionView(by: query, for: .tag(.categorized(tag)))
     }
 
+    func showClipCollectionView(for albumId: Album.Identity) -> Bool {
+        // TODO:
+        print(#function)
+        return false
+    }
+
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
         guard let viewController = self.makeClipPreviewPageViewController(clipId: clipId) else { return false }
         guard let detailViewController = rootViewController?.currentDetailViewController else { return false }

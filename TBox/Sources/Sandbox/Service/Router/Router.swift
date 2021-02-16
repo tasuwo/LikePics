@@ -12,6 +12,9 @@ protocol Router {
     func showClipCollectionView(for tag: Tag) -> Bool
 
     @discardableResult
+    func showClipCollectionView(for albumId: Album.Identity) -> Bool
+
+    @discardableResult
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool
 
     @discardableResult
