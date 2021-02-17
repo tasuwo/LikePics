@@ -26,7 +26,7 @@ class TagSelectionModalController: UIViewController {
 
     // MARK: Store
 
-    private let completion: ((Set<Tag.Identity>?) -> Void)?
+    private let completion: ((Set<Tag>?) -> Void)?
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -39,7 +39,7 @@ class TagSelectionModalController: UIViewController {
     init(state: TagSelectionModalState,
          tagAdditionAlertState: TextEditAlertState,
          dependency: TagSelectionModalDependency,
-         completion: ((Set<Tag.Identity>?) -> Void)?)
+         completion: ((Set<Tag>?) -> Void)?)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer.self)
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
@@ -198,7 +198,7 @@ extension TagSelectionModalController {
         }), menu: nil)
         let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
             guard let self = self else { return }
-            self.completion?(self.store.stateValue.selections)
+            self.completion?(Set(self.store.stateValue.selectedTags))
             self.dismiss(animated: true)
         }), menu: nil)
 

@@ -17,6 +17,15 @@ extension DependencyContainer {
         return rootViewController
     }
 
+    private var topViewController: UIViewController? {
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return nil }
+        var topViewController = detailViewController
+        while let presentedViewController = topViewController.presentedViewController {
+            topViewController = presentedViewController
+        }
+        return topViewController
+    }
+
     @discardableResult
     private func showCollectionView(by query: ClipListQuery, for context: ClipCollection.SearchContext) -> Bool {
         guard let rootViewController = self.rootViewController else {
@@ -103,7 +112,7 @@ extension DependencyContainer: Router {
         return true
     }
 
-    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag.Identity>?) -> Void)?) -> Bool {
+    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag>?) -> Void)?) -> Bool {
         let state = TagSelectionModalState(searchQuery: "",
                                            initialSelections: selections,
                                            selections: .init(),
@@ -127,14 +136,14 @@ extension DependencyContainer: Router {
                                                          dependency: self,
                                                          completion: completion)
 
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
-        detailViewController.present(navigationViewController, animated: true, completion: nil)
+        topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
     }
@@ -162,14 +171,14 @@ extension DependencyContainer: Router {
                                                            thumbnailLoader: albumThumbnailLoader,
                                                            completion: completion)
 
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
-        detailViewController.present(navigationViewController, animated: true, completion: nil)
+        topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
     }
@@ -181,9 +190,35 @@ extension DependencyContainer: Router {
     }
 
     func showClipMergeModal(for clips: [Clip], completion: ((Bool) -> Void)?) -> Bool {
-        // TODO:
-        print(#function)
-        return false
+        let tags: [Tag]
+        switch clipQueryService.readClipAndTags(for: clips.map({ $0.id })) {
+        case let .success((_, fetchedTags)):
+            tags = fetchedTags
+
+        case .failure:
+            return false
+        }
+
+        let state = ClipMergeViewState(items: clips.flatMap({ $0.items }),
+                                       tags: tags,
+                                       alert: nil,
+                                       sourceClipIds: Set(clips.map({ $0.id })),
+                                       isPresenting: true)
+        let viewController = NewClipMergeViewController(state: state,
+                                                        dependency: self,
+                                                        thumbnailLoader: temporaryThumbnailLoader,
+                                                        completion: completion)
+
+        guard let topViewController = topViewController else { return false }
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 
     func showClipEditModal(for clip: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {

@@ -231,7 +231,11 @@ extension ClipCollectionReducer {
     static func showTagSelectionModal(for clipIds: Set<Clip.Identity>, selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
         let stream = Deferred {
             Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tagIds in
+                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
+                    let tagIds: Set<Tag.Identity>? = {
+                        guard let tags = tags else { return nil }
+                        return Set(tags.map({ $0.id }))
+                    }()
                     promise(.success(.tagsSelected(tagIds, for: clipIds)))
                 }
                 if !isPresented {

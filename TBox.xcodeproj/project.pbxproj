@@ -47,6 +47,9 @@
 		2C0B5C98254D469C00FA43F8 /* ClipReferencesIntegrityValidationServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5C97254D469C00FA43F8 /* ClipReferencesIntegrityValidationServiceProtocol.swift */; };
 		2C0B5CAC254D515400FA43F8 /* SampleImageGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */; };
 		2C0B5CC9254D651C00FA43F8 /* TransferringClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B5CC8254D651C00FA43F8 /* TransferringClip.swift */; };
+		2C0F8C8E25DD3FB1006A37C1 /* ClipMergeViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F8C8D25DD3FB1006A37C1 /* ClipMergeViewState.swift */; };
+		2C0F8C9925DD4055006A37C1 /* ClipMergeViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F8C9825DD4055006A37C1 /* ClipMergeViewAction.swift */; };
+		2C0F8CA425DD4191006A37C1 /* ClipMergeViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F8CA325DD4191006A37C1 /* ClipMergeViewReducer.swift */; };
 		2C0F9B152528523400235B25 /* ListSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B142528523400235B25 /* ListSectionBackgroundDecorationView.swift */; };
 		2C0F9B272528ACDC00235B25 /* ListSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F9B262528ACDC00235B25 /* ListSectionHeader.swift */; };
 		2C0F9B312528AD0A00235B25 /* ListSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C0F9B302528AD0A00235B25 /* ListSectionHeader.xib */; };
@@ -345,6 +348,7 @@
 		2CCC1432257FC54C0061C212 /* Publisher+assignNotRetain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */; };
 		2CCCC0F125C55DD800A2B163 /* CloudStackObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCCC0F025C55DD800A2B163 /* CloudStackObserver.swift */; };
 		2CCCC10525C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCCC10425C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift */; };
+		2CCCEF6525DD57A7005BE170 /* NewClipMergeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCCEF6425DD57A7005BE170 /* NewClipMergeViewController.swift */; };
 		2CCECE1D24DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
 		2CCECE2624DDC0CB00ADFE54 /* Persistence.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CCECE1624DDC0CB00ADFE54 /* Persistence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CCECE2924DDC0CB00ADFE54 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */; };
@@ -829,6 +833,9 @@
 		2C0B5C97254D469C00FA43F8 /* ClipReferencesIntegrityValidationServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipReferencesIntegrityValidationServiceProtocol.swift; sourceTree = "<group>"; };
 		2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SampleImageGray.png; sourceTree = "<group>"; };
 		2C0B5CC8254D651C00FA43F8 /* TransferringClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferringClip.swift; sourceTree = "<group>"; };
+		2C0F8C8D25DD3FB1006A37C1 /* ClipMergeViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewState.swift; sourceTree = "<group>"; };
+		2C0F8C9825DD4055006A37C1 /* ClipMergeViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewAction.swift; sourceTree = "<group>"; };
+		2C0F8CA325DD4191006A37C1 /* ClipMergeViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewReducer.swift; sourceTree = "<group>"; };
 		2C0F9B142528523400235B25 /* ListSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
 		2C0F9B262528ACDC00235B25 /* ListSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSectionHeader.swift; sourceTree = "<group>"; };
 		2C0F9B302528AD0A00235B25 /* ListSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListSectionHeader.xib; sourceTree = "<group>"; };
@@ -1146,6 +1153,7 @@
 		2CCC1431257FC54C0061C212 /* Publisher+assignNotRetain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+assignNotRetain.swift"; sourceTree = "<group>"; };
 		2CCCC0F025C55DD800A2B163 /* CloudStackObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStackObserver.swift; sourceTree = "<group>"; };
 		2CCCC10425C55F3F00A2B163 /* ObjectID+NSManagedObjectID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObjectID+NSManagedObjectID.swift"; sourceTree = "<group>"; };
+		2CCCEF6425DD57A7005BE170 /* NewClipMergeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClipMergeViewController.swift; sourceTree = "<group>"; };
 		2CCECE1424DDC0CB00ADFE54 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCECE1624DDC0CB00ADFE54 /* Persistence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Persistence.h; sourceTree = "<group>"; };
 		2CCECE1724DDC0CB00ADFE54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1586,6 +1594,16 @@
 			path = Reference;
 			sourceTree = "<group>";
 		};
+		2C0F8C8325DD3F76006A37C1 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				2C0F8C8D25DD3FB1006A37C1 /* ClipMergeViewState.swift */,
+				2C0F8C9825DD4055006A37C1 /* ClipMergeViewAction.swift */,
+				2C0F8CA325DD4191006A37C1 /* ClipMergeViewReducer.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
 		2C1040DB254D9509000DF7DE /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -1761,6 +1779,8 @@
 				2CE1E1AE25DC0240008CA68C /* AlbumList */,
 				2C21292425DAD6B6006214FB /* AlbumSelection */,
 				2C1E7EA025D68EF5009A8D5C /* ClipCollection */,
+				2CE1E1EF25DC257B008CA68C /* ClipEdit */,
+				2CE1E1EE25DC2571008CA68C /* ClipMerge */,
 				2C076A3D25D4EF32007295DD /* TagCollectionViewController */,
 				2C2A5C9225D975060032C30E /* TagSelection */,
 				2C2D228025D43556001489F4 /* TextEditAlertController */,
@@ -3329,6 +3349,22 @@
 				2CE1E1CF25DC0B01008CA68C /* AlbumListViewReducer.swift */,
 			);
 			path = Store;
+			sourceTree = "<group>";
+		};
+		2CE1E1EE25DC2571008CA68C /* ClipMerge */ = {
+			isa = PBXGroup;
+			children = (
+				2CCCEF6425DD57A7005BE170 /* NewClipMergeViewController.swift */,
+				2C0F8C8325DD3F76006A37C1 /* Store */,
+			);
+			path = ClipMerge;
+			sourceTree = "<group>";
+		};
+		2CE1E1EF25DC257B008CA68C /* ClipEdit */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ClipEdit;
 			sourceTree = "<group>";
 		};
 		2CE22D4724E2A0D600449210 /* DataSource */ = {
@@ -5157,9 +5193,11 @@
 				2C1604F42520438400A39E58 /* TopClipCollectionViewModel.swift in Sources */,
 				2CD6C22A25D65A1F0000D5C3 /* Reducer.swift in Sources */,
 				2CE4298E257B681300BB4783 /* ClipCollection_Operation.swift in Sources */,
+				2C0F8C9925DD4055006A37C1 /* ClipMergeViewAction.swift in Sources */,
 				2C01B90925ADCFA10089CFB4 /* ClipEditViewLayout.swift in Sources */,
 				2C38C705250AF33B00F32102 /* TagSelectionViewController.swift in Sources */,
 				2C2128A925DAB317006214FB /* TagSelectionModalLayout.swift in Sources */,
+				2C0F8C8E25DD3FB1006A37C1 /* ClipMergeViewState.swift in Sources */,
 				2C45D40524EEB4050045B6D3 /* AlbumListViewController.swift in Sources */,
 				2CB47B0D25D51FF5008E38B8 /* NewTagCollectionViewController.swift in Sources */,
 				2CE1E17025DBE728008CA68C /* AlbumSelectionModalState.swift in Sources */,
@@ -5176,7 +5214,9 @@
 				2C2128D225DACE58006214FB /* HasTextEditAlertDelegate.swift in Sources */,
 				2C2C9EF6250BCFB20020715B /* ClipInformationViewController.swift in Sources */,
 				2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */,
+				2C0F8CA425DD4191006A37C1 /* ClipMergeViewReducer.swift in Sources */,
 				2CBF62E425D92D4A002AEFE8 /* ClipCollectionNavigationBarEvent.swift in Sources */,
+				2CCCEF6525DD57A7005BE170 /* NewClipMergeViewController.swift in Sources */,
 				2CFA2BD525D4DB45007F574B /* TextEditAlertAction.swift in Sources */,
 				2CFEA98325C9AC2400434423 /* AlbumSelectionViewLayout.swift in Sources */,
 				2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */,
