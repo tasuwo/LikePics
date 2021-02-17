@@ -41,6 +41,10 @@ class ClipCollectionViewController: UIViewController, ClipCollectionAlertPresent
     private var store: ClipCollectionViewStore
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    // MARK: Temporary
+
+    private var _previousState: ClipCollectionState?
+
     // MARK: - Initializers
 
     init(state: ClipCollectionState,
@@ -125,6 +129,7 @@ extension ClipCollectionViewController {
                 .compactMap { $0 as? ClipCollectionViewCell }
                 .forEach { $0.visibleSelectedMark = state.operation.isEditing }
 
+            self.applySelections(for: state)
             self.presentAlertIfNeeded(for: state.alert)
 
             // Propagation
@@ -136,26 +141,29 @@ extension ClipCollectionViewController {
                                                                      operation: state.operation))
         }
         .store(in: &subscriptions)
+    }
+
+    private func applySelections(for state: ClipCollectionState) {
+        defer { _previousState = state }
+
+        guard let previousState = _previousState else {
+            // `_previousState` がnil == 初回表示時はCollectionViewの選択状態が空であることが前提なので、deselectは行わずselectのみ反映する
+            state
+                .selectedClips
+                .compactMap { self.dataSource.indexPath(for: $0) }
+                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            return
+        }
 
         // NOTE: パフォーマンスのために、選択状態は差分のみ更新する
-        Publishers.Zip(store.state.dropFirst(), store.state)
-            .sink { [weak self] previousState, state in
-                guard let self = self else { return }
 
-                state.newSelectedClips(from: previousState)
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+        state.newSelectedClips(from: previousState)
+            .compactMap { self.dataSource.indexPath(for: $0) }
+            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
 
-                state.newDeselectedClips(from: previousState)
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-            }
-            .store(in: &subscriptions)
-
-        store.stateValue
-            .selectedClips
-            .compactMap { dataSource.indexPath(for: $0) }
-            .forEach { collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+        state.newDeselectedClips(from: previousState)
+            .compactMap { self.dataSource.indexPath(for: $0) }
+            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }
 
     private func presentAlertIfNeeded(for alert: ClipCollectionState.Alert?) {
