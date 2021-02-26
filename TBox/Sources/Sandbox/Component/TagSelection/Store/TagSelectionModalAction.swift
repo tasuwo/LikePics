@@ -5,7 +5,7 @@
 import Domain
 
 enum TagSelectionModalAction: Action {
-    // MARK: View Life-Cycle Methods
+    // MARK: View Life-Cycle
 
     case viewDidLoad
 

@@ -16,7 +16,7 @@ enum TagSelectionModalReducer: Reducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
-        // MARK: View Life-Cycle Methods
+        // MARK: View Life-Cycle
 
         case .viewDidLoad:
             return (state, prepareQueryEffects(dependency))
