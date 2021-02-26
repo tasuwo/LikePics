@@ -43,11 +43,13 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: Selection
 
         case let .selected(tagId):
-            let newState = state.updating(selections: state.selections.union(Set([tagId])))
+            let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
+            let newState = state.updated(tags: newTags)
             return (newState, .none)
 
         case let .deselected(tagId):
-            let newState = state.updating(selections: state.selections.subtracting(Set([tagId])))
+            let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.subtracting(Set([tagId])))
+            let newState = state.updated(tags: newTags)
             return (newState, .none)
 
         // MARK: Button Action
@@ -117,7 +119,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState._orderedTags,
+        performFilter(tags: previousState.tags.orderedValues,
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -126,7 +128,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState._orderedTags,
+        performFilter(tags: previousState.tags.orderedValues,
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -146,25 +148,20 @@ extension TagSelectionModalReducer {
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
-        var newState = previousState.updating(searchQuery: searchQuery)
+        let newTags = previousState.tags
+            .updated(_values: dict)
+            .updated(_displayableIds: Set(filteredTagIds))
 
-        // 初回の選択処理を行う
-        if !tags.isEmpty, !previousState.initialSelections.isEmpty {
-            newState = newState
-                .updating(initialSelections: .init())
-                .updating(selections: previousState.initialSelections)
-        }
-
-        return newState
+        return previousState
+            .updating(searchQuery: searchQuery)
             .updating(isSomeItemsHidden: isSomeItemsHidden)
             .updating(isCollectionViewDisplaying: !filteringTags.isEmpty,
                       isEmptyMessageViewDisplaying: filteringTags.isEmpty)
-            .updating(_filteredTagIds: Set(filteredTagIds),
-                      _tags: dict,
-                      _searchStorage: searchStorage)
+            .updating(_searchStorage: searchStorage)
+            .updated(tags: newTags)
     }
 }
 
 private extension TagSelectionModalState {
-    var shouldClearQuery: Bool { _tags.isEmpty && !searchQuery.isEmpty }
+    var shouldClearQuery: Bool { tags._values.isEmpty && !searchQuery.isEmpty }
 }

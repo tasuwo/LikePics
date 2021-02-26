@@ -113,16 +113,15 @@ extension DependencyContainer: Router {
     }
 
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag>?) -> Void)?) -> Bool {
-        let state = TagSelectionModalState(searchQuery: "",
-                                           initialSelections: selections,
-                                           selections: .init(),
+        let state = TagSelectionModalState(tags: .init(_values: [:],
+                                                       _selectedIds: selections,
+                                                       _displayableIds: .init()),
+                                           searchQuery: "",
                                            isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,
                                            alert: nil,
-                                           _tags: [:],
-                                           _filteredTagIds: .init(),
                                            _searchStorage: .init())
         let tagAdditionAlertState = TextEditAlertState(id: UUID(),
                                                        title: L10n.tagListViewAlertForAddTitle,

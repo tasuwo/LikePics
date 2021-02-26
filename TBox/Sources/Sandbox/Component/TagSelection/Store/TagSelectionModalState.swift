@@ -12,9 +12,9 @@ struct TagSelectionModalState: Equatable {
         case addition
     }
 
+    let tags: Collection<Tag>
+
     let searchQuery: String
-    let initialSelections: Set<Tag.Identity>
-    let selections: Set<Tag.Identity>
     let isSomeItemsHidden: Bool
 
     let isCollectionViewDisplaying: Bool
@@ -23,151 +23,75 @@ struct TagSelectionModalState: Equatable {
 
     let alert: Alert?
 
-    let _tags: [Tag.Identity: Ordered<Tag>]
-    let _filteredTagIds: Set<Tag.Identity>
     let _searchStorage: SearchableStorage<Tag>
 }
 
 extension TagSelectionModalState {
-    var tags: [Tag] {
-        _filteredTagIds
-            .compactMap { id in _tags[id] }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-
-    var selectedTags: [Tag] {
-        selections
-            .compactMap { id in _tags[id] }
-            .sorted(by: { $0.index < $1.index })
-            .compactMap { $0.value }
-    }
-
-    var displayableSelections: Set<Tag.Identity> {
-        selections.filter { _filteredTagIds.contains($0) }
-    }
-
-    var _orderedTags: [Tag] {
-        _tags
-            .map { $0.value }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-}
-
-extension TagSelectionModalState {
-    func newSelectedTags(from previous: Self) -> Set<Tag> {
-        let additions = displayableSelections.subtracting(previous.displayableSelections)
-        return Set(additions.compactMap { _tags[$0]?.value })
-    }
-
-    func newDeselectedTags(from previous: Self) -> Set<Tag> {
-        let deletions = previous.displayableSelections.subtracting(displayableSelections)
-        return Set(deletions.compactMap { _tags[$0]?.value })
-    }
-}
-
-extension TagSelectionModalState {
-    func updating(alert: Alert?) -> Self {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+    func updated(tags: Collection<Tag>) -> Self {
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 
-    func updating(selections: Set<Tag.Identity>) -> Self {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+    func updating(alert: Alert?) -> Self {
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 
     func updating(searchQuery: String) -> Self {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(initialSelections: Set<Tag.Identity>) -> Self {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 
     func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 
     func updating(isCollectionViewDisplaying: Bool,
                   isEmptyMessageViewDisplaying: Bool) -> Self
     {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 
-    func updating(_filteredTagIds: Set<Tag.Identity>,
-                  _tags: [Tag.Identity: Ordered<Tag>],
-                  _searchStorage: SearchableStorage<Tag>) -> Self
-    {
-        return .init(searchQuery: searchQuery,
-                     initialSelections: initialSelections,
-                     selections: selections,
+    func updating(_searchStorage: SearchableStorage<Tag>) -> Self {
+        return .init(tags: tags,
+                     searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isSearchBarEnabled: isSearchBarEnabled,
                      alert: alert,
-                     _tags: _tags,
-                     _filteredTagIds: _filteredTagIds,
                      _searchStorage: _searchStorage)
     }
 }

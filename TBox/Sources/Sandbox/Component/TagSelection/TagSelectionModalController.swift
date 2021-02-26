@@ -77,11 +77,12 @@ extension TagSelectionModalController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
+            defer { self._previousState = state }
 
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.tags)
+                snapshot.appendItems(state.tags.displayableValues)
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
                     self.applySelections(for: state)
                 }
@@ -98,26 +99,13 @@ extension TagSelectionModalController {
     }
 
     private func applySelections(for state: TagSelectionModalState) {
-        defer { _previousState = state }
+        state.tags.selections(from: _previousState?.tags)
+            .compactMap { dataSource.indexPath(for: $0) }
+            .forEach { collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
 
-        guard let previousState = _previousState else {
-            // `_previousState` がnil == 初回表示時はCollectionViewの選択状態が空であることが前提なので、deselectは行わずselectのみ反映する
-            state
-                .selectedTags
-                .compactMap { self.dataSource.indexPath(for: $0) }
-                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            return
-        }
-
-        // NOTE: パフォーマンスのために、選択状態は差分のみ更新する
-
-        state.newSelectedTags(from: previousState)
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-
-        state.newDeselectedTags(from: previousState)
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        state.tags.deselections(from: _previousState?.tags)
+            .compactMap { dataSource.indexPath(for: $0) }
+            .forEach { collectionView.deselectItem(at: $0, animated: false) }
     }
 
     private func presentAlertIfNeeded(for alert: TagSelectionModalState.Alert?) {
@@ -198,7 +186,7 @@ extension TagSelectionModalController {
         }), menu: nil)
         let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
             guard let self = self else { return }
-            self.completion?(Set(self.store.stateValue.selectedTags))
+            self.completion?(Set(self.store.stateValue.tags.selectedValues))
             self.dismiss(animated: true)
         }), menu: nil)
 
