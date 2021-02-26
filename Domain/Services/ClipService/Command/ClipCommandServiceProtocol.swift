@@ -6,9 +6,9 @@
 public protocol ClipCommandServiceProtocol {
     // MARK: Create
 
-    func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError>
-    func create(tagWithName name: String) -> Result<Void, ClipStorageError>
-    func create(albumWithTitle: String) -> Result<Void, ClipStorageError>
+    func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError>
+    func create(tagWithName name: String) -> Result<Tag.Identity, ClipStorageError>
+    func create(albumWithTitle: String) -> Result<Album.Identity, ClipStorageError>
 
     // MARK: Update
 

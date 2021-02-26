@@ -23,7 +23,7 @@ public class TemporaryClipCommandService {
 extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
     // MARK: - TemporaryClipCommandServiceProtocol
 
-    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
         return self.queue.sync {
             do {
                 let containsFilesFor = { (item: ClipItemRecipe) in
@@ -61,7 +61,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                return .success((createdClip.id))
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """

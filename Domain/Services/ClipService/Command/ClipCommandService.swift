@@ -38,7 +38,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
     // MARK: Create
 
-    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
         return self.queue.sync {
             do {
                 let containsFilesFor = { (item: ClipItemRecipe) in
@@ -56,9 +56,10 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
+                let clipId: Clip.Identity
                 switch self.clipStorage.create(clip: clip) {
-                case .success:
-                    break
+                case let .success(clip):
+                    clipId = clip.id
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
@@ -76,7 +77,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
-                return .success(())
+                return .success((clipId))
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
@@ -88,7 +89,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
-    public func create(tagWithName name: String) -> Result<Void, ClipStorageError> {
+    public func create(tagWithName name: String) -> Result<Tag.Identity, ClipStorageError> {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
@@ -124,7 +125,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
-                return .success(())
+                return .success((tag.id))
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -136,11 +137,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
-    public func create(albumWithTitle title: String) -> Result<Void, ClipStorageError> {
+    public func create(albumWithTitle title: String) -> Result<Album.Identity, ClipStorageError> {
         return self.queue.sync {
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.create(albumWithTitle: title).map { _ in () }
+                let result = self.clipStorage.create(albumWithTitle: title).map { $0.id }
                 try self.clipStorage.commitTransaction()
                 return result
             } catch {
