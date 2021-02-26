@@ -61,7 +61,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
-                return .success((createdClip.id))
+                return .success(createdClip.id)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """

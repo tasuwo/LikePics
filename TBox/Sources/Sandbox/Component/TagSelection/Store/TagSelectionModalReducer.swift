@@ -60,10 +60,11 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: name):
-            // TODO: 生成したタグを選択する
             switch dependency.clipCommandService.create(tagWithName: name) {
-            case .success:
-                return (state.updating(alert: nil), .none)
+            case let .success(tagId):
+                let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
+                let newState = state.updating(alert: nil).updated(tags: newTags)
+                return (newState, .none)
 
             case .failure(.duplicated):
                 return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)

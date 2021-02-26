@@ -77,7 +77,6 @@ extension TagSelectionModalController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
-            defer { self._previousState = state }
 
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
@@ -99,6 +98,8 @@ extension TagSelectionModalController {
     }
 
     private func applySelections(for state: TagSelectionModalState) {
+        defer { self._previousState = state }
+
         state.tags.selections(from: _previousState?.tags)
             .compactMap { dataSource.indexPath(for: $0) }
             .forEach { collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }

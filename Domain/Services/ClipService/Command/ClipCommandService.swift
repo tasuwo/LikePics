@@ -77,7 +77,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
-                return .success((clipId))
+                return .success(clipId)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
@@ -125,7 +125,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
-                return .success((tag.id))
+                return .success(tag.id)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
