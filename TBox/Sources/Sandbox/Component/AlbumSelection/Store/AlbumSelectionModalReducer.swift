@@ -125,8 +125,8 @@ extension AlbumSelectionModalReducer {
     {
         var searchStorage = previousState._searchStorage
 
-        let dict = albums.enumerated().reduce(into: [Album.Identity: State.OrderedAlbum]()) { dict, value in
-            dict[value.element.id] = State.OrderedAlbum(index: value.offset, value: value.element)
+        let dict = albums.enumerated().reduce(into: [Album.Identity: Ordered<Album>]()) { dict, value in
+            dict[value.element.id] = .init(index: value.offset, value: value.element)
         }
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }

@@ -302,8 +302,8 @@ extension ClipCollectionReducer {
     {
         var newState = previousState
 
-        let dict = clips.enumerated().reduce(into: [Clip.Identity: State.OrderedClip]()) { dict, value in
-            dict[value.element.id] = State.OrderedClip(index: value.offset, value: value.element)
+        let dict = clips.enumerated().reduce(into: [Clip.Identity: Ordered<Clip>]()) { dict, value in
+            dict[value.element.id] = .init(index: value.offset, value: value.element)
         }
 
         let filteredClipIds = clips

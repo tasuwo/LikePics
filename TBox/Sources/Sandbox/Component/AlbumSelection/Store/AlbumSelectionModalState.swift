@@ -12,11 +12,6 @@ struct AlbumSelectionModalState: Equatable {
         case addition
     }
 
-    struct OrderedAlbum: Equatable {
-        let index: Int
-        let value: Album
-    }
-
     let searchQuery: String
     let isSomeItemsHidden: Bool
 
@@ -26,7 +21,7 @@ struct AlbumSelectionModalState: Equatable {
 
     let alert: Alert?
 
-    let _albums: [Album.Identity: OrderedAlbum]
+    let _albums: [Album.Identity: Ordered<Album>]
     let _filteredAlbumIds: Set<Album.Identity>
     let _searchStorage: SearchableStorage<Album>
 }
@@ -84,7 +79,7 @@ extension AlbumSelectionModalState {
                      _searchStorage: _searchStorage)
     }
 
-    func updating(_albums: [Album.Identity: OrderedAlbum]) -> Self {
+    func updating(_albums: [Album.Identity: Ordered<Album>]) -> Self {
         return .init(searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,

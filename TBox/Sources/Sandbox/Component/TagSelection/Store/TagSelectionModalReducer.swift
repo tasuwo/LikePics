@@ -139,8 +139,8 @@ extension TagSelectionModalReducer {
     {
         var searchStorage = previousState._searchStorage
 
-        let dict = tags.enumerated().reduce(into: [Tag.Identity: State.OrderedTag]()) { dict, value in
-            dict[value.element.id] = State.OrderedTag(index: value.offset, value: value.element)
+        let dict = tags.enumerated().reduce(into: [Tag.Identity: Ordered<Tag>]()) { dict, value in
+            dict[value.element.id] = .init(index: value.offset, value: value.element)
         }
 
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }

@@ -13,11 +13,6 @@ struct ClipCollectionState: Equatable {
         case purge(clipId: Clip.Identity, at: IndexPath)
     }
 
-    struct OrderedClip: Equatable {
-        let index: Int
-        let value: Clip
-    }
-
     struct Context: Equatable {
         let albumId: Album.Identity?
 
@@ -37,7 +32,7 @@ struct ClipCollectionState: Equatable {
 
     let context: Context
 
-    let _clips: [Clip.Identity: OrderedClip]
+    let _clips: [Clip.Identity: Ordered<Clip>]
     let _filteredClipIds: Set<Clip.Identity>
     let _previewingClipId: Clip.Identity?
 }
@@ -135,7 +130,7 @@ extension ClipCollectionState {
                      _previewingClipId: _previewingClipId)
     }
 
-    func updating(_clips: [Clip.Identity: OrderedClip]) -> Self {
+    func updating(_clips: [Clip.Identity: Ordered<Clip>]) -> Self {
         return .init(selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,

@@ -12,11 +12,6 @@ struct TagSelectionModalState: Equatable {
         case addition
     }
 
-    struct OrderedTag: Equatable {
-        let index: Int
-        let value: Tag
-    }
-
     let searchQuery: String
     let initialSelections: Set<Tag.Identity>
     let selections: Set<Tag.Identity>
@@ -28,7 +23,7 @@ struct TagSelectionModalState: Equatable {
 
     let alert: Alert?
 
-    let _tags: [Tag.Identity: OrderedTag]
+    let _tags: [Tag.Identity: Ordered<Tag>]
     let _filteredTagIds: Set<Tag.Identity>
     let _searchStorage: SearchableStorage<Tag>
 }
@@ -160,7 +155,7 @@ extension TagSelectionModalState {
     }
 
     func updating(_filteredTagIds: Set<Tag.Identity>,
-                  _tags: [Tag.Identity: OrderedTag],
+                  _tags: [Tag.Identity: Ordered<Tag>],
                   _searchStorage: SearchableStorage<Tag>) -> Self
     {
         return .init(searchQuery: searchQuery,
