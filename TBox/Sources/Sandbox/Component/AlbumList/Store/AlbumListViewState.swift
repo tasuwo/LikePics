@@ -19,20 +19,6 @@ struct AlbumListViewState: Equatable {
         let value: Album
     }
 
-    var albums: [Album] {
-        _filteredAlbumIds
-            .compactMap { id in _albums[id] }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-
-    var _orderedAlbums: [Album] {
-        _albums
-            .map { $0.value }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-
     let searchQuery: String
     let isSomeItemsHidden: Bool
 
@@ -48,6 +34,22 @@ struct AlbumListViewState: Equatable {
     let _albums: [Album.Identity: OrderedAlbum]
     let _filteredAlbumIds: Set<Album.Identity>
     let _searchStorage: SearchableStorage<Album>
+}
+
+extension AlbumListViewState {
+    var albums: [Album] {
+        _filteredAlbumIds
+            .compactMap { id in _albums[id] }
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.value }
+    }
+
+    var _orderedAlbums: [Album] {
+        _albums
+            .map { $0.value }
+            .sorted(by: { $0.index < $1.index })
+            .map { $0.value }
+    }
 }
 
 extension AlbumListViewState {

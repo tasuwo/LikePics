@@ -17,6 +17,21 @@ struct AlbumSelectionModalState: Equatable {
         let value: Album
     }
 
+    let searchQuery: String
+    let isSomeItemsHidden: Bool
+
+    let isCollectionViewDisplaying: Bool
+    let isEmptyMessageViewDisplaying: Bool
+    let isSearchBarEnabled: Bool
+
+    let alert: Alert?
+
+    let _albums: [Album.Identity: OrderedAlbum]
+    let _filteredAlbumIds: Set<Album.Identity>
+    let _searchStorage: SearchableStorage<Album>
+}
+
+extension AlbumSelectionModalState {
     var albums: [Album] {
         _filteredAlbumIds
             .compactMap { id in _albums[id] }
@@ -30,19 +45,6 @@ struct AlbumSelectionModalState: Equatable {
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
-
-    let searchQuery: String
-    let isSomeItemsHidden: Bool
-
-    let isCollectionViewDisplaying: Bool
-    let isEmptyMessageViewDisplaying: Bool
-    let isSearchBarEnabled: Bool
-
-    let alert: Alert?
-
-    let _albums: [Album.Identity: OrderedAlbum]
-    let _filteredAlbumIds: Set<Album.Identity>
-    let _searchStorage: SearchableStorage<Album>
 }
 
 extension AlbumSelectionModalState {

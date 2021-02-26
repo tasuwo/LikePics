@@ -5,7 +5,7 @@
 import Domain
 
 enum AlbumSelectionModalAction: Action {
-    // MARK: View Life-Cycle Methods
+    // MARK: View Life-Cycle
 
     case viewDidLoad
 

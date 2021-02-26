@@ -5,7 +5,11 @@
 import Domain
 
 enum ClipCollectionAction: Action {
+    // MARK: View Life-Cycle
+
     case viewDidLoad
+
+    // MARK: State Observation
 
     case clipsUpdated([Clip])
     case settingUpdated(isSomeItemsHidden: Bool)

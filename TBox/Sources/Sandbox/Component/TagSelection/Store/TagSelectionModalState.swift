@@ -17,6 +17,23 @@ struct TagSelectionModalState: Equatable {
         let value: Tag
     }
 
+    let searchQuery: String
+    let initialSelections: Set<Tag.Identity>
+    let selections: Set<Tag.Identity>
+    let isSomeItemsHidden: Bool
+
+    let isCollectionViewDisplaying: Bool
+    let isEmptyMessageViewDisplaying: Bool
+    let isSearchBarEnabled: Bool
+
+    let alert: Alert?
+
+    let _tags: [Tag.Identity: OrderedTag]
+    let _filteredTagIds: Set<Tag.Identity>
+    let _searchStorage: SearchableStorage<Tag>
+}
+
+extension TagSelectionModalState {
     var tags: [Tag] {
         _filteredTagIds
             .compactMap { id in _tags[id] }
@@ -35,27 +52,12 @@ struct TagSelectionModalState: Equatable {
         selections.filter { _filteredTagIds.contains($0) }
     }
 
-    let searchQuery: String
-    let initialSelections: Set<Tag.Identity>
-    let selections: Set<Tag.Identity>
-    let isSomeItemsHidden: Bool
-
-    let isCollectionViewDisplaying: Bool
-    let isEmptyMessageViewDisplaying: Bool
-    let isSearchBarEnabled: Bool
-
-    let alert: Alert?
-
     var _orderedTags: [Tag] {
         _tags
             .map { $0.value }
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
-
-    let _tags: [Tag.Identity: OrderedTag]
-    let _filteredTagIds: Set<Tag.Identity>
-    let _searchStorage: SearchableStorage<Tag>
 }
 
 extension TagSelectionModalState {

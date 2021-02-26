@@ -17,7 +17,7 @@ enum AlbumListViewReducer: Reducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
-        // MARK: View Life-Cycle Methods
+        // MARK: View Life-Cycle
 
         case .viewDidLoad:
             return (state, prepareQueryEffects(dependency))
@@ -62,7 +62,7 @@ enum AlbumListViewReducer: Reducer {
 
         // MARK: Button Action
 
-        case let .removerTapped(albumId, at: indexPath):
+        case let .removerTapped(albumId, indexPath):
             guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
             return (state.updating(alert: .deletion(albumId: albumId, title: title, at: indexPath)), .none)
 
@@ -118,7 +118,7 @@ enum AlbumListViewReducer: Reducer {
                 return (state.updating(alert: .error(L10n.albumListViewErrorAtRevealAlbum)), .none)
             }
 
-        case let .deleteMenuTapped(albumId, at: indexPath):
+        case let .deleteMenuTapped(albumId, indexPath):
             guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
             return (state.updating(alert: .deletion(albumId: albumId, title: title, at: indexPath)), .none)
 
@@ -187,7 +187,10 @@ extension AlbumListViewReducer {
         }
 
         let albumsStream = query.albums
-            .catch { _ in Just([]) }
+            .catch { _ in
+                // TODO: Error state
+                Just([])
+            }
             .map { Action.albumsUpdated($0) as Action? }
         let albumsEffect = Effect(albumsStream, underlying: query)
 

@@ -26,6 +26,23 @@ struct ClipCollectionState: Equatable {
         }
     }
 
+    let selections: Set<Clip.Identity>
+    let isSomeItemsHidden: Bool
+
+    let operation: ClipCollection.Operation
+    let isEmptyMessageViewDisplaying: Bool
+    let isCollectionViewDisplaying: Bool
+
+    let alert: Alert?
+
+    let context: Context
+
+    let _clips: [Clip.Identity: OrderedClip]
+    let _filteredClipIds: Set<Clip.Identity>
+    let _previewingClipId: Clip.Identity?
+}
+
+extension ClipCollectionState {
     var clips: [Clip] {
         _filteredClipIds
             .compactMap { id in _clips[id] }
@@ -45,30 +62,15 @@ struct ClipCollectionState: Equatable {
         return _clips[clipId]?.value
     }
 
-    let selections: Set<Clip.Identity>
-    let isSomeItemsHidden: Bool
-
-    let operation: ClipCollection.Operation
-    let isEmptyMessageViewDisplaying: Bool
-    let isCollectionViewDisplaying: Bool
-
-    let alert: Alert?
-
-    let context: Context
-
     var _orderedClips: [Clip] {
         _clips
             .map { $0.value }
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
+}
 
-    let _clips: [Clip.Identity: OrderedClip]
-    let _filteredClipIds: Set<Clip.Identity>
-    let _previewingClipId: Clip.Identity?
-
-    // MARK: - Methods
-
+extension ClipCollectionState {
     func newSelectedClips(from previous: Self) -> Set<Clip> {
         let additions = selections.subtracting(previous.selections)
         return Set(additions.compactMap { _clips[$0]?.value })
@@ -78,7 +80,9 @@ struct ClipCollectionState: Equatable {
         let deletions = previous.selections.subtracting(selections)
         return Set(deletions.compactMap { _clips[$0]?.value })
     }
+}
 
+extension ClipCollectionState {
     func updating(selections: Set<Clip.Identity>) -> Self {
         return .init(selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,

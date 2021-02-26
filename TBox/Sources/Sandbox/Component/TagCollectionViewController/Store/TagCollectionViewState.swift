@@ -26,9 +26,9 @@ struct TagCollectionViewState: Equatable {
 
     let _tags: [Tag]
     let _searchStorage: SearchableStorage<Tag>
+}
 
-    // MARK: - Methods
-
+extension TagCollectionViewState {
     func updating(searchQuery: String) -> Self {
         return .init(items: items,
                      searchQuery: searchQuery,

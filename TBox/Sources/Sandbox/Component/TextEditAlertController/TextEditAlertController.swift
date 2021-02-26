@@ -40,11 +40,11 @@ class TextEditAlertController: NSObject {
     private var subscriptions: Set<AnyCancellable> = .init()
 
     var textEditAlertDelegate: TextEditAlertDelegate? {
-        set {
-            dependency._textEditAlertDelegate = newValue
-        }
         get {
             dependency._textEditAlertDelegate
+        }
+        set {
+            dependency._textEditAlertDelegate = newValue
         }
     }
 

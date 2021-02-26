@@ -17,14 +17,20 @@ enum ClipCollectionReducer: Reducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
+        // MARK: View Life-Cycle
+
         case .viewDidLoad:
             return (state, prepareQueryEffects(dependency))
+
+        // MARK: State Observation
 
         case let .clipsUpdated(clips):
             return (performFilter(clips: clips, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+
+        // MARK: Selection
 
         case let .selected(clipId):
             var nextState: State

@@ -5,7 +5,7 @@
 import Domain
 
 enum AlbumListViewAction: Action {
-    // MARK: View Life-Cycle Methods
+    // MARK: View Life-Cycle
 
     case viewDidLoad
 
@@ -26,7 +26,7 @@ enum AlbumListViewAction: Action {
 
     // MARK: Button Action
 
-    case removerTapped(Album.Identity, at: IndexPath)
+    case removerTapped(Album.Identity, IndexPath)
     case editingTitleTapped(Album.Identity)
     case emptyMessageViewActionButtonTapped
 
@@ -39,7 +39,7 @@ enum AlbumListViewAction: Action {
     case renameMenuTapped(Album.Identity)
     case hideMenuTapped(Album.Identity)
     case revealMenuTapped(Album.Identity)
-    case deleteMenuTapped(Album.Identity, at: IndexPath)
+    case deleteMenuTapped(Album.Identity, IndexPath)
 
     case deferredHide(Album.Identity)
 

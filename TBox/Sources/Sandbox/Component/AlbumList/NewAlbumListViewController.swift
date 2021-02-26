@@ -302,7 +302,7 @@ extension NewAlbumListViewController {
             return UIAction(title: L10n.albumListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.deleteMenuTapped(album.id, at: indexPath))
+                self?.store.execute(.deleteMenuTapped(album.id, indexPath))
             }
         }
     }
@@ -327,7 +327,7 @@ extension NewAlbumListViewController: AlbumListCollectionViewCellDelegate {
     func didTapRemover(_ cell: AlbumListCollectionViewCell) {
         // TODO: indexPath(for:) がうまく動かないケースがあるので修正する
         guard let albumId = cell.albumId, let indexPath = collectionView.indexPath(for: cell) else { return }
-        store.execute(.removerTapped(albumId, at: indexPath))
+        store.execute(.removerTapped(albumId, indexPath))
     }
 }
 
