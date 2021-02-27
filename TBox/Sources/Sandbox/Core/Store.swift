@@ -50,7 +50,8 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
         effects[id] = effect
 
         effect.upstream
-            .sink { [weak self] _ in
+            .sink { [weak self, weak effect] _ in
+                if let action = effect?.actionAtCompleted { self?.execute(action) }
                 self?.effects.removeValue(forKey: id)
             } receiveValue: { [weak self] action in
                 guard let action = action else { return }
