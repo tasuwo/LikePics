@@ -245,9 +245,38 @@ extension DependencyContainer: Router {
         return true
     }
 
-    func showClipEditModal(for clip: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
-        // TODO:
-        print(#function)
-        return false
+    func showClipEditModal(for clipId: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
+        let state = ClipEditViewState(clip: .init(id: clipId,
+                                                  // 初回は適当な値で埋めておく
+                                                  dataSize: 0,
+                                                  isHidden: false),
+                                      tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
+                                      items: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
+                                      isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                      isItemsEditing: false,
+                                      alert: nil,
+                                      isDismissed: false)
+        let siteUrlEditAlertState = TextEditAlertState(id: UUID(),
+                                                       title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
+                                                       message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
+                                                       placeholder: L10n.placeholderUrl,
+                                                       text: "",
+                                                       shouldReturn: false,
+                                                       isPresenting: false)
+        let viewController = NewClipEditViewController(state: state,
+                                                       siteUrlEditAlertState: siteUrlEditAlertState,
+                                                       dependency: self,
+                                                       thumbnailLoader: temporaryThumbnailLoader)
+
+        guard let topViewController = topViewController else { return false }
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
