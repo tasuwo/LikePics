@@ -8,6 +8,7 @@ enum ClipMergeViewAction: Action {
     // MARK: - NavigationBar
 
     case saveButtonTapped
+    case cancelButtonTapped
 
     // MARK: - Button Action
 
@@ -21,9 +22,12 @@ enum ClipMergeViewAction: Action {
     // MARK: - Modal Completion
 
     case tagsSelected(Set<Tag>?)
-    case modalCompleted(Bool)
 
     // MARK: - Alert Completion
 
     case alertDismissed
+
+    // MARK: Transition
+
+    case didDismissedManually
 }

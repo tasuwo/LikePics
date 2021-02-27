@@ -29,7 +29,6 @@ class NewClipMergeViewController: UIViewController {
 
     // MARK: Store
 
-    private let completion: ((Bool) -> Void)?
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -37,12 +36,10 @@ class NewClipMergeViewController: UIViewController {
 
     init(state: ClipMergeViewState,
          dependency: ClipMergeViewDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol,
-         completion: ((Bool) -> Void)?)
+         thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer.self)
         self.thumbnailLoader = thumbnailLoader
-        self.completion = completion
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,18 +70,15 @@ extension NewClipMergeViewController {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
 
-            // TODO: 閉じる操作の伝播ついて再考する
-            if !state.isPresenting {
-                self.completion?(true)
-                self.dismiss(animated: true, completion: nil)
-                return
-            }
-
             DispatchQueue.global().async {
                 self.dataSource.apply(Layout.createSnapshot(tags: state.tags, items: state.items))
             }
 
             self.presentAlertIfNeeded(for: state.alert)
+
+            if state.isDismissed {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         .store(in: &subscriptions)
     }
@@ -163,8 +157,7 @@ extension NewClipMergeViewController {
     private func configureNavigationBar() {
         navigationItem.title = L10n.clipMergeViewTitle
         navigationItem.leftBarButtonItem = .init(systemItem: .cancel, primaryAction: UIAction(handler: { [weak self] _ in
-            self?.completion?(false)
-            self?.dismiss(animated: true, completion: nil)
+            self?.store.execute(.cancelButtonTapped)
         }), menu: nil)
         navigationItem.rightBarButtonItem = .init(systemItem: .save, primaryAction: UIAction(handler: { [weak self] _ in
             self?.store.execute(.saveButtonTapped)
@@ -243,6 +236,6 @@ extension NewClipMergeViewController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        completion?(false)
+        store.execute(.didDismissedManually)
     }
 }

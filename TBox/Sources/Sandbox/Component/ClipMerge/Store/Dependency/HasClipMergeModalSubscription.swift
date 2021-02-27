@@ -3,5 +3,5 @@
 //
 
 protocol HasClipMergeModalSubscription {
-    
+    var clipMergeCompleted: (Bool) -> Void { get }
 }

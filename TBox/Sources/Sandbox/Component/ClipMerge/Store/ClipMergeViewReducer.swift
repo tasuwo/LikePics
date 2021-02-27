@@ -7,6 +7,7 @@ import Domain
 
 typealias ClipMergeViewDependency = HasRouter
     & HasClipCommandService
+    & HasClipMergeModalSubscription
 
 enum ClipMergeViewReducer: Reducer {
     typealias Dependency = ClipMergeViewDependency
@@ -22,11 +23,16 @@ enum ClipMergeViewReducer: Reducer {
             let tagIds = state.tags.map({ $0.id })
             switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
             case .success:
-                return (state.updating(isPresenting: false), .none)
+                dependency.clipMergeCompleted(true)
+                return (state.updating(isDismissed: true), .none)
 
             case .failure:
                 return (state.updating(alert: .error(L10n.clipMergeViewErrorAtMerge)), .none)
             }
+
+        case .cancelButtonTapped:
+            dependency.clipMergeCompleted(false)
+            return (state.updating(isDismissed: true), .none)
 
         // MARK: - Button Action
 
@@ -49,13 +55,16 @@ enum ClipMergeViewReducer: Reducer {
             let sortedTags = Array(tags).sorted(by: { $0.name < $1.name })
             return (state.updating(tags: sortedTags), .none)
 
-        case .modalCompleted:
-            return (state, .none) // NOP
-
         // MARK: - Alert Completion
 
         case .alertDismissed:
             return (state.updating(alert: nil), .none)
+
+        // MARK: Transition
+
+        case .didDismissedManually:
+            dependency.clipMergeCompleted(false)
+            return (state.updating(isDismissed: true), .none)
         }
     }
 }
@@ -70,7 +79,7 @@ extension ClipMergeViewReducer {
                     promise(.success(.tagsSelected(tags)))
                 }
                 if !isPresented {
-                    promise(.success(.modalCompleted(false)))
+                    promise(.success(.tagsSelected(nil)))
                 }
             }
         }

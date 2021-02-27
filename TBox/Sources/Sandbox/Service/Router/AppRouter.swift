@@ -199,7 +199,16 @@ extension DependencyContainer: Router {
         return false
     }
 
-    func showClipMergeModal(for clips: [Clip], completion: ((Bool) -> Void)?) -> Bool {
+    func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool {
+        struct Dependency: ClipMergeViewDependency {
+            let router: Router
+            let clipCommandService: ClipCommandServiceProtocol
+            let clipMergeCompleted: (Bool) -> Void
+        }
+        let dependency = Dependency(router: self,
+                                    clipCommandService: clipCommandService,
+                                    clipMergeCompleted: completion)
+
         let tags: [Tag]
         switch clipQueryService.readClipAndTags(for: clips.map({ $0.id })) {
         case let .success((_, fetchedTags)):
@@ -213,11 +222,10 @@ extension DependencyContainer: Router {
                                        tags: tags,
                                        alert: nil,
                                        sourceClipIds: Set(clips.map({ $0.id })),
-                                       isPresenting: true)
+                                       isDismissed: false)
         let viewController = NewClipMergeViewController(state: state,
-                                                        dependency: self,
-                                                        thumbnailLoader: temporaryThumbnailLoader,
-                                                        completion: completion)
+                                                        dependency: dependency,
+                                                        thumbnailLoader: temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

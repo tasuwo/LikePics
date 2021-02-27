@@ -27,7 +27,7 @@ protocol Router {
     func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool
 
     @discardableResult
-    func showClipMergeModal(for clips: [Clip], completion: ((Bool) -> Void)?) -> Bool
+    func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool
 
     @discardableResult
     func showClipEditModal(for clip: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool

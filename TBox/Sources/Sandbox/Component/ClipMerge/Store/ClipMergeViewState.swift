@@ -15,7 +15,8 @@ struct ClipMergeViewState: Equatable {
     let alert: Alert?
 
     let sourceClipIds: Set<Clip.Identity>
-    let isPresenting: Bool
+
+    let isDismissed: Bool
 }
 
 extension ClipMergeViewState {
@@ -24,7 +25,7 @@ extension ClipMergeViewState {
                      tags: tags,
                      alert: alert,
                      sourceClipIds: sourceClipIds,
-                     isPresenting: isPresenting)
+                     isDismissed: isDismissed)
     }
 
     func updating(tags: [Tag]) -> Self {
@@ -32,7 +33,7 @@ extension ClipMergeViewState {
                      tags: tags,
                      alert: alert,
                      sourceClipIds: sourceClipIds,
-                     isPresenting: isPresenting)
+                     isDismissed: isDismissed)
     }
 
     func updating(alert: Alert?) -> Self {
@@ -40,14 +41,14 @@ extension ClipMergeViewState {
                      tags: tags,
                      alert: alert,
                      sourceClipIds: sourceClipIds,
-                     isPresenting: isPresenting)
+                     isDismissed: isDismissed)
     }
 
-    func updating(isPresenting: Bool) -> Self {
+    func updating(isDismissed: Bool) -> Self {
         return .init(items: items,
                      tags: tags,
                      alert: alert,
                      sourceClipIds: sourceClipIds,
-                     isPresenting: isPresenting)
+                     isDismissed: isDismissed)
     }
 }

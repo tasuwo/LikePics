@@ -20,6 +20,7 @@
 		2C0217502533704400AE4A43 /* Object+makeDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02174F2533704400AE4A43 /* Object+makeDefault.swift */; };
 		2C02E3292593773E00BC274B /* ClipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02E3282593773E00BC274B /* ClipPreview.swift */; };
 		2C02E33B2593775C00BC274B /* ClipPreview_BarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C02E33A2593775C00BC274B /* ClipPreview_BarItem.swift */; };
+		2C05037A25EA0C06002690EE /* HasClipMergeModalSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05037925EA0C06002690EE /* HasClipMergeModalSubscription.swift */; };
 		2C051278254E5740007964B7 /* ReferenceClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */; };
 		2C05128C254EECEF007964B7 /* WebImageUrlFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A224DED48500FEF1BD /* WebImageUrlFinder.swift */; };
 		2C051296254EECF3007964B7 /* WebImageUrlFinderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2727A424DED4C600FEF1BD /* WebImageUrlFinderError.swift */; };
@@ -816,6 +817,7 @@
 		2C02174F2533704400AE4A43 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
 		2C02E3282593773E00BC274B /* ClipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreview.swift; sourceTree = "<group>"; };
 		2C02E33A2593775C00BC274B /* ClipPreview_BarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreview_BarItem.swift; sourceTree = "<group>"; };
+		2C05037925EA0C06002690EE /* HasClipMergeModalSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipMergeModalSubscription.swift; sourceTree = "<group>"; };
 		2C051277254E5740007964B7 /* ReferenceClipStorageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageSpec.swift; sourceTree = "<group>"; };
 		2C0512F9254EF0F1007964B7 /* WebImageUrlSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageUrlSet.swift; sourceTree = "<group>"; };
 		2C05969B25198C90008F11F5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1535,6 +1537,14 @@
 			path = ValueObject;
 			sourceTree = "<group>";
 		};
+		2C05037825EA0BF6002690EE /* Dependency */ = {
+			isa = PBXGroup;
+			children = (
+				2C05037925EA0C06002690EE /* HasClipMergeModalSubscription.swift */,
+			);
+			path = Dependency;
+			sourceTree = "<group>";
+		};
 		2C051282254EECDB007964B7 /* WebImageResolver */ = {
 			isa = PBXGroup;
 			children = (
@@ -1603,6 +1613,7 @@
 		2C0F8C8325DD3F76006A37C1 /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				2C05037825EA0BF6002690EE /* Dependency */,
 				2C0F8C8D25DD3FB1006A37C1 /* ClipMergeViewState.swift */,
 				2C0F8C9825DD4055006A37C1 /* ClipMergeViewAction.swift */,
 				2C0F8CA325DD4191006A37C1 /* ClipMergeViewReducer.swift */,
@@ -5114,6 +5125,7 @@
 				2CB47AE325D51419008E38B8 /* HasClipCommandService.swift in Sources */,
 				2C1E7EA225D68FA0009A8D5C /* ClipCollectionState.swift in Sources */,
 				2CEEB3CB25D919B2006CF5AD /* HasClipCollectionToolBarDelegate.swift in Sources */,
+				2C05037A25EA0C06002690EE /* HasClipMergeModalSubscription.swift in Sources */,
 				2C2A5CBF25D9815C0032C30E /* TagSelectionModalController.swift in Sources */,
 				2C076A5F25D4F9AE007295DD /* TagCollectionViewReducer.swift in Sources */,
 				2C02E3292593773E00BC274B /* ClipPreview.swift in Sources */,
