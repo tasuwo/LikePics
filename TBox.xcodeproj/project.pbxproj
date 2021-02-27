@@ -1555,6 +1555,35 @@
 			path = Dependency;
 			sourceTree = "<group>";
 		};
+		2C0503B325EAA9EC002690EE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2CBCCB0925D54E42004CD1ED /* UISearchController.swift */,
+				2CECD5C425D673E500EB6DDE /* UITargetdPreview.swift */,
+				2C05039F25EA6AE5002690EE /* Array+Indexed.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2C0503B425EAAA10002690EE /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				2C21292425DAD6B6006214FB /* AlbumSelection */,
+				2CE1E1EF25DC257B008CA68C /* ClipEdit */,
+				2CE1E1EE25DC2571008CA68C /* ClipMerge */,
+				2C2A5C9225D975060032C30E /* TagSelection */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		2C0503B525EAAA24002690EE /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				2C2D228025D43556001489F4 /* TextEditAlertController */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
 		2C051282254EECDB007964B7 /* WebImageResolver */ = {
 			isa = PBXGroup;
 			children = (
@@ -1576,13 +1605,13 @@
 			path = Protocol;
 			sourceTree = "<group>";
 		};
-		2C076A3D25D4EF32007295DD /* TagCollectionViewController */ = {
+		2C076A3D25D4EF32007295DD /* TagCollection */ = {
 			isa = PBXGroup;
 			children = (
 				2CB47B0C25D51FF5008E38B8 /* NewTagCollectionViewController.swift */,
 				2C076A3E25D4EF46007295DD /* Store */,
 			);
-			path = TagCollectionViewController;
+			path = TagCollection;
 			sourceTree = "<group>";
 		};
 		2C076A3E25D4EF46007295DD /* Store */ = {
@@ -1803,14 +1832,11 @@
 		2C1E7E9F25D68ED2009A8D5C /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				2C0503B525EAAA24002690EE /* Alert */,
+				2C0503B425EAAA10002690EE /* Modal */,
 				2CE1E1AE25DC0240008CA68C /* AlbumList */,
-				2C21292425DAD6B6006214FB /* AlbumSelection */,
 				2C1E7EA025D68EF5009A8D5C /* ClipCollection */,
-				2CE1E1EF25DC257B008CA68C /* ClipEdit */,
-				2CE1E1EE25DC2571008CA68C /* ClipMerge */,
-				2C076A3D25D4EF32007295DD /* TagCollectionViewController */,
-				2C2A5C9225D975060032C30E /* TagSelection */,
-				2C2D228025D43556001489F4 /* TextEditAlertController */,
+				2C076A3D25D4EF32007295DD /* TagCollection */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1996,10 +2022,10 @@
 		2C2D227E25D43521001489F4 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
+				2C0503B325EAA9EC002690EE /* Extensions */,
 				2C83ADC325E94C84007122D5 /* ValueObject */,
 				2C1E7E9F25D68ED2009A8D5C /* Component */,
 				2C1B1C7225D58F7800450AC9 /* Core */,
-				2CBCCB0825D54E2D004CD1ED /* UIExtension */,
 				2CB47B7925D534D9008E38B8 /* Service */,
 				2CFA2BAB25D4D3C0007F574B /* Dependency */,
 			);
@@ -2782,7 +2808,6 @@
 			children = (
 				2C83ADC425E94CA3007122D5 /* Ordered.swift */,
 				2CEE66A625E9543F005A6323 /* Collection.swift */,
-				2C05039F25EA6AE5002690EE /* Array+Indexed.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -3242,15 +3267,6 @@
 				2C5C070125A5B77800351A97 /* ImageSourceLoader.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		2CBCCB0825D54E2D004CD1ED /* UIExtension */ = {
-			isa = PBXGroup;
-			children = (
-				2CBCCB0925D54E42004CD1ED /* UISearchController.swift */,
-				2CECD5C425D673E500EB6DDE /* UITargetdPreview.swift */,
-			);
-			path = UIExtension;
 			sourceTree = "<group>";
 		};
 		2CBF62CE25D92D29002AEFE8 /* Dependency */ = {
