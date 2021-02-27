@@ -38,6 +38,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
                     .compactMap { $0.map(to: Domain.Tag.self) } ?? []
                 resultTags += tags
             }
+            resultTags = Array(Set(resultTags))
 
             return .success((resultClips, resultTags))
         } catch {
