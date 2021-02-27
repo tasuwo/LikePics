@@ -26,7 +26,6 @@ class TagSelectionModalController: UIViewController {
 
     // MARK: Store
 
-    private let completion: ((Set<Tag>?) -> Void)?
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -38,12 +37,10 @@ class TagSelectionModalController: UIViewController {
 
     init(state: TagSelectionModalState,
          tagAdditionAlertState: TextEditAlertState,
-         dependency: TagSelectionModalDependency,
-         completion: ((Set<Tag>?) -> Void)?)
+         dependency: TagSelectionModalDependency)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer.self)
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
-        self.completion = completion
         super.init(nibName: nil, bundle: nil)
 
         tagAdditionAlert.textEditAlertDelegate = self
@@ -93,6 +90,10 @@ extension TagSelectionModalController {
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
 
             self.presentAlertIfNeeded(for: state.alert)
+
+            if state.isDismissed {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         .store(in: &subscriptions)
     }
@@ -186,9 +187,7 @@ extension TagSelectionModalController {
             self?.store.execute(.addButtonTapped)
         }), menu: nil)
         let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.completion?(Set(self.store.stateValue.tags.selectedValues))
-            self.dismiss(animated: true)
+            self?.store.execute(.doneButtonTapped)
         }), menu: nil)
 
         navigationItem.leftBarButtonItem = addItem
@@ -274,7 +273,7 @@ extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate 
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        completion?(nil)
+        store.execute(.didDismissedManually)
     }
 }
 

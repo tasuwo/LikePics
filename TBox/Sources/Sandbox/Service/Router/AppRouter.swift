@@ -112,8 +112,20 @@ extension DependencyContainer: Router {
         return true
     }
 
-    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag>?) -> Void)?) -> Bool {
-        let state = TagSelectionModalState(tags: .init(_values: [:],
+    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool {
+        struct Dependency: TagSelectionModalDependency {
+            let userSettingStorage: UserSettingsStorageProtocol
+            let clipCommandService: ClipCommandServiceProtocol
+            let clipQueryService: ClipQueryServiceProtocol
+            let tagSelectionCompleted: (Set<Tag>?) -> Void
+        }
+        let dependency = Dependency(userSettingStorage: userSettingStorage,
+                                    clipCommandService: clipCommandService,
+                                    clipQueryService: clipQueryService,
+                                    tagSelectionCompleted: completion)
+
+        let state = TagSelectionModalState(isDismissed: false,
+                                           tags: .init(_values: [:],
                                                        _selectedIds: selections,
                                                        _displayableIds: .init()),
                                            searchQuery: "",
@@ -132,8 +144,7 @@ extension DependencyContainer: Router {
                                                        isPresenting: false)
         let viewController = TagSelectionModalController(state: state,
                                                          tagAdditionAlertState: tagAdditionAlertState,
-                                                         dependency: self,
-                                                         completion: completion)
+                                                         dependency: dependency)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

@@ -12,6 +12,8 @@ struct TagSelectionModalState: Equatable {
         case addition
     }
 
+    let isDismissed: Bool
+
     let tags: Collection<Tag>
 
     let searchQuery: String
@@ -27,8 +29,21 @@ struct TagSelectionModalState: Equatable {
 }
 
 extension TagSelectionModalState {
+    func updating(isDismissed: Bool) -> Self {
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
+                     searchQuery: searchQuery,
+                     isSomeItemsHidden: isSomeItemsHidden,
+                     isCollectionViewDisplaying: isCollectionViewDisplaying,
+                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
+                     isSearchBarEnabled: isSearchBarEnabled,
+                     alert: alert,
+                     _searchStorage: _searchStorage)
+    }
+
     func updated(tags: Collection<Tag>) -> Self {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
@@ -39,7 +54,8 @@ extension TagSelectionModalState {
     }
 
     func updating(alert: Alert?) -> Self {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
@@ -50,7 +66,8 @@ extension TagSelectionModalState {
     }
 
     func updating(searchQuery: String) -> Self {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
@@ -61,7 +78,8 @@ extension TagSelectionModalState {
     }
 
     func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
@@ -74,7 +92,8 @@ extension TagSelectionModalState {
     func updating(isCollectionViewDisplaying: Bool,
                   isEmptyMessageViewDisplaying: Bool) -> Self
     {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
@@ -85,7 +104,8 @@ extension TagSelectionModalState {
     }
 
     func updating(_searchStorage: SearchableStorage<Tag>) -> Self {
-        return .init(tags: tags,
+        return .init(isDismissed: isDismissed,
+                     tags: tags,
                      searchQuery: searchQuery,
                      isSomeItemsHidden: isSomeItemsHidden,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,

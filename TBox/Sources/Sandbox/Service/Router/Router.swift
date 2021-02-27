@@ -18,7 +18,7 @@ protocol Router {
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool
 
     @discardableResult
-    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: ((Set<Tag>?) -> Void)?) -> Bool
+    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool
 
     @discardableResult
     func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool

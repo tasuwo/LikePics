@@ -8,6 +8,7 @@ import Domain
 typealias TagSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
+    & HasTagSelectionModalSubscription
 
 enum TagSelectionModalReducer: Reducer {
     typealias Dependency = TagSelectionModalDependency
@@ -57,6 +58,10 @@ enum TagSelectionModalReducer: Reducer {
         case .emptyMessageViewActionButtonTapped, .addButtonTapped:
             return (state.updating(alert: .addition), .none)
 
+        case .doneButtonTapped:
+            dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
+            return (state.updating(isDismissed: true), .none)
+
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: name):
@@ -75,6 +80,12 @@ enum TagSelectionModalReducer: Reducer {
 
         case .alertDismissed:
             return (state.updating(alert: nil), .none)
+
+        // MARK: Transition
+
+        case .didDismissedManually:
+            dependency.tagSelectionCompleted(nil)
+            return (state.updating(isDismissed: true), .none)
         }
     }
 }
