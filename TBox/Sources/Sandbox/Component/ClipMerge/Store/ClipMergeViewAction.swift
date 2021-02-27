@@ -14,6 +14,7 @@ enum ClipMergeViewAction: Action {
 
     case tagAdditionButtonTapped
     case tagDeleteButtonTapped(Tag.Identity)
+    case siteUrlButtonTapped(URL)
 
     // MARK: - CollectionView
 

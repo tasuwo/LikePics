@@ -6,6 +6,9 @@ import Domain
 
 protocol Router {
     @discardableResult
+    func open(_ url: URL) -> Bool
+
+    @discardableResult
     func showUncategorizedClipCollectionView() -> Bool
 
     @discardableResult

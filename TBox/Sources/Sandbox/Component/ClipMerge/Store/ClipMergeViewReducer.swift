@@ -43,6 +43,10 @@ enum ClipMergeViewReducer: Reducer {
         case let .tagDeleteButtonTapped(tagId):
             return (state.updating(tags: state.tags.filter({ $0.id != tagId })), .none)
 
+        case let .siteUrlButtonTapped(url):
+            dependency.router.open(url)
+            return (state, .none)
+
         // MARK: - CollectionView
 
         case let .itemReordered(items):

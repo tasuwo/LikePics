@@ -69,6 +69,12 @@ extension DependencyContainer {
 extension DependencyContainer: Router {
     // MARK: - Router
 
+    func open(_ url: URL) -> Bool {
+        guard UIApplication.shared.canOpenURL(url) else { return false }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        return true
+    }
+
     func showUncategorizedClipCollectionView() -> Bool {
         let query: ClipListQuery
         switch _clipQueryService.queryUncategorizedClips() {

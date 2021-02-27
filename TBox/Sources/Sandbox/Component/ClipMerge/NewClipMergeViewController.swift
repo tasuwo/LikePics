@@ -181,8 +181,7 @@ extension NewClipMergeViewController: ClipMergeViewDelegate {
 
     func didTapSiteUrl(_ sender: UIView, url: URL?) {
         guard let url = url else { return }
-        // TODO:
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        store.execute(.siteUrlButtonTapped(url))
     }
 }
 
