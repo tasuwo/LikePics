@@ -289,15 +289,17 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 
     func shouldAddToAlbum(_ provider: ClipPreviewPageBarViewController) {
-        guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
-        self.present(viewController, animated: true, completion: nil)
+        // TODO:
+        // guard let viewController = self.factory.makeAlbumSelectionViewController(context: nil, delegate: self) else { return }
+        // self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldAddTags(_ provider: ClipPreviewPageBarViewController) {
-        let tagIds = viewModel.outputs.tagIdsValue
-        let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tagIds, context: nil, delegate: self)
-        guard let viewController = nullableViewController else { return }
-        self.present(viewController, animated: true, completion: nil)
+        // TODO:
+        // let tagIds = viewModel.outputs.tagIdsValue
+        // let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tagIds, context: nil, delegate: self)
+        // guard let viewController = nullableViewController else { return }
+        // self.present(viewController, animated: true, completion: nil)
     }
 
     func shouldOpenWeb(_ provider: ClipPreviewPageBarViewController) {
@@ -326,22 +328,24 @@ extension ClipPreviewPageViewController: ClipPreviewPageBarButtonItemsProviderDe
     }
 }
 
-extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
-    // MARK: - AlbumSelectionPresenterDelegate
+/*
+ extension ClipPreviewPageViewController: AlbumSelectionPresenterDelegate {
+     // MARK: - AlbumSelectionPresenterDelegate
 
-    func albumSelectionPresenter(_ presenter: AlbumSelectionViewModel, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
-        self.viewModel.inputs.addToAlbum.send(albumId)
-    }
-}
+     func albumSelectionPresenter(_ presenter: AlbumSelectionViewModel, didSelectAlbumHaving albumId: Album.Identity, withContext context: Any?) {
+         self.viewModel.inputs.addToAlbum.send(albumId)
+     }
+ }
 
-extension ClipPreviewPageViewController: TagSelectionDelegate {
-    // MARK: - TagSelectionPresenterDelegate
+ extension ClipPreviewPageViewController: TagSelectionDelegate {
+     // MARK: - TagSelectionPresenterDelegate
 
-    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
-        let tagIds = Set(tags.map { $0.id })
-        self.viewModel.inputs.replaceTags.send(tagIds)
-    }
-}
+     func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+         let tagIds = Set(tags.map { $0.id })
+         self.viewModel.inputs.replaceTags.send(tagIds)
+     }
+ }
+  */
 
 extension ClipPreviewPageViewController: ClipPreviewPageViewProtocol {}
 

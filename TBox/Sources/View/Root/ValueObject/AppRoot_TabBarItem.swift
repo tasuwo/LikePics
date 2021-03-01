@@ -75,21 +75,21 @@ extension AppRoot {
             switch self {
             case .top:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeTopClipCollectionViewController() else {
+                guard let vc = factory.makeNewClipCollectionViewController() else {
                     fatalError("Unable to initialize TopClipCollectionView.")
                 }
                 viewController = vc
 
             case .tags:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeTagListViewController() else {
+                guard let vc = factory.makeNewTagListViewController() else {
                     fatalError("Unable to initialize TagListViewController.")
                 }
                 viewController = vc
 
             case .albums:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeAlbumListViewController() else {
+                guard let vc = factory.makeNewAlbumListViewController() else {
                     fatalError("Unable to initialize AlbumListViewController.")
                 }
                 viewController = vc

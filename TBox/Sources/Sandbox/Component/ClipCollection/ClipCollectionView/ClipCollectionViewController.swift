@@ -8,7 +8,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-class ClipCollectionViewController: UIViewController, ClipCollectionAlertPresentable {
+class ClipCollectionViewController: UIViewController {
     typealias Layout = ClipCollectionViewLayout
     typealias ClipCollectionViewStore = Store<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
 
@@ -186,15 +186,15 @@ extension ClipCollectionViewController {
 
         case let .deletion(clipId: _, at: indexPath):
             guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            presentDeleteAlert(at: cell, in: collectionView) { [weak self] in
-                self?.store.execute(.alertDeleteConfirmed)
-            }
+            // presentDeleteAlert(at: cell, in: collectionView) { [weak self] in
+            //     self?.store.execute(.alertDeleteConfirmed)
+            // }
 
         case let .purge(clipId: _, at: indexPath):
             guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            presentPurgeAlert(at: cell, in: collectionView) { [weak self] in
-                self?.store.execute(.alertPurgeConfirmed)
-            }
+            // presentPurgeAlert(at: cell, in: collectionView) { [weak self] in
+            //     self?.store.execute(.alertPurgeConfirmed)
+            // }
 
         case .none:
             break
@@ -306,8 +306,7 @@ extension ClipCollectionViewController {
     }
 
     private func makeActionProvider(for clip: Clip, at indexPath: IndexPath) -> UIContextMenuActionProvider {
-        let context: ClipCollection.Context = .init(isAlbum: store.stateValue.source.isAlbum)
-        let items = menuBuilder.build(for: clip, context: context).map {
+        let items = menuBuilder.build(for: clip, source: store.stateValue.source).map {
             self.makeElement(from: $0, for: clip, at: indexPath)
         }
         return { _ in

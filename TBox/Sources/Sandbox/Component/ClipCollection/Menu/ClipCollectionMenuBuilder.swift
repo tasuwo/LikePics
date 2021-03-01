@@ -5,7 +5,7 @@
 import Domain
 
 protocol ClipCollectionMenuBuildable {
-    func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement]
+    func build(for clip: Clip, source: ClipCollectionState.Source) -> [ClipCollection.MenuElement]
 }
 
 struct ClipCollectionMenuBuilder {
@@ -23,9 +23,9 @@ struct ClipCollectionMenuBuilder {
 extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
     // MARK: - ClipCollectionMenuBuildable
 
-    func build(for clip: Clip, context: ClipCollection.Context) -> [ClipCollection.MenuElement] {
+    func build(for clip: Clip, source: ClipCollectionState.Source) -> [ClipCollection.MenuElement] {
         return [
-            context.isAlbum
+            source.isAlbum
                 ? .item(.addTag)
                 : .subMenu(.init(kind: .add,
                                  isInline: false,
@@ -39,7 +39,7 @@ extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
                            isInline: true,
                            children: [
                                clip.items.count > 1 ? .item(.purge) : nil,
-                               context.isAlbum ? .item(.removeFromAlbum) : .item(.delete)
+                               source.isAlbum ? .item(.removeFromAlbum) : .item(.delete)
                            ].compactMap { $0 }))
         ].compactMap { $0 }
     }

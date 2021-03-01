@@ -174,10 +174,11 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func didTapAddTagButton(_ view: ClipInformationView) {
-        let tags = self.viewModel.outputs.tagIdsValue
-        let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
-        guard let viewController = nullableViewController else { return }
-        self.present(viewController, animated: true, completion: nil)
+        // TODO:
+        // let tags = self.viewModel.outputs.tagIdsValue
+        // let nullableViewController = self.factory.makeTagSelectionViewController(selectedTags: tags, context: nil, delegate: self)
+        // guard let viewController = nullableViewController else { return }
+        // self.present(viewController, animated: true, completion: nil)
     }
 
     func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag, at placement: UIView) {
@@ -219,14 +220,16 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     }
 }
 
-extension ClipInformationViewController: TagSelectionDelegate {
-    // MARK: - TagSelectionDelegate
+/*
+ extension ClipInformationViewController: TagSelectionDelegate {
+     // MARK: - TagSelectionDelegate
 
-    func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
-        let tagIds = Set(tags.map { $0.id })
-        self.viewModel.inputs.replaceTagsOfClip(tagIds)
-    }
-}
+     func tagSelection(_ sender: AnyObject, didSelectTags tags: [Tag], withContext context: Any?) {
+         let tagIds = Set(tags.map { $0.id })
+         self.viewModel.inputs.replaceTagsOfClip(tagIds)
+     }
+ }
+  */
 
 extension ClipInformationViewController: UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
