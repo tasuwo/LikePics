@@ -13,6 +13,128 @@ import UIKit
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
+    func makeTopClipCollectionViewController() -> UIViewController? {
+        let state = ClipCollectionState(title: nil,
+                                        selections: .init(),
+                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                        operation: .none,
+                                        isEmptyMessageViewDisplaying: false,
+                                        isCollectionViewDisplaying: false,
+                                        alert: nil,
+                                        source: .all,
+                                        isDismissed: false,
+                                        _clips: [:],
+                                        _filteredClipIds: .init(),
+                                        _previewingClipId: nil)
+        let navigationBarState = ClipCollectionNavigationBarState(context: .init(albumId: nil),
+                                                                  rightItems: [],
+                                                                  leftItems: [],
+                                                                  clipCount: 0,
+                                                                  selectionCount: 0,
+                                                                  operation: .none)
+        let toolBarState = ClipCollectionToolBarState(context: .init(albumId: nil),
+                                                      items: [],
+                                                      isHidden: true,
+                                                      _targetCount: 0,
+                                                      _operation: .none,
+                                                      alert: nil)
+
+        let viewController = ClipCollectionViewController(state: state,
+                                                          navigationBarState: navigationBarState,
+                                                          toolBarState: toolBarState,
+                                                          dependency: self,
+                                                          thumbnailLoader: clipThumbnailLoader,
+                                                          menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
+
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeTagCollectionViewController() -> UIViewController? {
+        let state = TagCollectionViewState(items: [],
+                                           searchQuery: "",
+                                           isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
+                                           isCollectionViewDisplaying: false,
+                                           isEmptyMessageViewDisplaying: false,
+                                           isSearchBarEnabled: false,
+                                           alert: nil,
+                                           _tags: [],
+                                           _searchStorage: .init())
+        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
+                                                       title: L10n.tagListViewAlertForAddTitle,
+                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                       placeholder: L10n.placeholderTagName,
+                                                       text: "",
+                                                       shouldReturn: false,
+                                                       isPresenting: false)
+        let tagEditAlertState = TextEditAlertState(id: UUID(),
+                                                   title: L10n.tagListViewAlertForUpdateTitle,
+                                                   message: L10n.tagListViewAlertForUpdateMessage,
+                                                   placeholder: L10n.placeholderTagName,
+                                                   text: "",
+                                                   shouldReturn: false,
+                                                   isPresenting: false)
+
+        let viewController = NewTagCollectionViewController(state: state,
+                                                            tagAdditionAlertState: tagAdditionAlertState,
+                                                            tagEditAlertState: tagEditAlertState,
+                                                            dependency: self,
+                                                            menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
+
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeAlbumListViewController() -> UIViewController? {
+        let state = AlbumListViewState(searchQuery: "",
+                                       isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                       isEditing: false,
+                                       isEmptyMessageViewDisplaying: false,
+                                       isCollectionViewDisplaying: false,
+                                       isSearchBarEnabled: false,
+                                       isAddButtonEnabled: true,
+                                       isDragInteractionEnabled: false,
+                                       alert: nil,
+                                       _albums: [:],
+                                       _filteredAlbumIds: .init(),
+                                       _searchStorage: .init())
+        let addAlbumAlertState = TextEditAlertState(id: UUID(),
+                                                    title: L10n.albumListViewAlertForAddTitle,
+                                                    message: L10n.albumListViewAlertForAddMessage,
+                                                    placeholder: L10n.placeholderAlbumName,
+                                                    text: "",
+                                                    shouldReturn: false,
+                                                    isPresenting: false)
+        let editAlbumAlertState = TextEditAlertState(id: UUID(),
+                                                     title: L10n.albumListViewAlertForEditTitle,
+                                                     message: L10n.albumListViewAlertForEditMessage,
+                                                     placeholder: L10n.placeholderAlbumName,
+                                                     text: "",
+                                                     shouldReturn: false,
+                                                     isPresenting: false)
+
+        let viewController = NewAlbumListViewController(state: state,
+                                                        albumAdditionAlertState: addAlbumAlertState,
+                                                        albumEditAlertState: editAlbumAlertState,
+                                                        dependency: self,
+                                                        thumbnailLoader: albumThumbnailLoader,
+                                                        menuBuilder: AlbumListMenuBuilder.self)
+
+        return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeSettingsViewController() -> UIViewController {
+        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
+
+        // swiftlint:disable:next force_cast
+        let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
+
+        let presenter = SettingsPresenter(storage: self._userSettingStorage,
+                                          availabilityStore: self.cloudAvailabilityObserver)
+        viewController.factory = self
+        viewController.presenter = presenter
+
+        return UINavigationController(rootViewController: viewController)
+    }
+
     func makeClipPreviewPageViewController(clipId: Domain.Clip.Identity) -> UIViewController? {
         let clipQuery: ClipQuery
         switch self._clipQueryService.queryClip(having: clipId) {
@@ -161,127 +283,5 @@ extension DependencyContainer: ViewControllerFactory {
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
         return viewController
-    }
-
-    func makeNewClipCollectionViewController() -> UIViewController? {
-        let state = ClipCollectionState(title: nil,
-                                        selections: .init(),
-                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                        operation: .none,
-                                        isEmptyMessageViewDisplaying: false,
-                                        isCollectionViewDisplaying: false,
-                                        alert: nil,
-                                        source: .all,
-                                        isDismissed: false,
-                                        _clips: [:],
-                                        _filteredClipIds: .init(),
-                                        _previewingClipId: nil)
-        let navigationBarState = ClipCollectionNavigationBarState(context: .init(albumId: nil),
-                                                                  rightItems: [],
-                                                                  leftItems: [],
-                                                                  clipCount: 0,
-                                                                  selectionCount: 0,
-                                                                  operation: .none)
-        let toolBarState = ClipCollectionToolBarState(context: .init(albumId: nil),
-                                                      items: [],
-                                                      isHidden: true,
-                                                      _targetCount: 0,
-                                                      _operation: .none,
-                                                      alert: nil)
-
-        let viewController = ClipCollectionViewController(state: state,
-                                                          navigationBarState: navigationBarState,
-                                                          toolBarState: toolBarState,
-                                                          dependency: self,
-                                                          thumbnailLoader: clipThumbnailLoader,
-                                                          menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
-
-        return UINavigationController(rootViewController: viewController)
-    }
-
-    func makeNewTagListViewController() -> UIViewController? {
-        let state = TagCollectionViewState(items: [],
-                                           searchQuery: "",
-                                           isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
-                                           isCollectionViewDisplaying: false,
-                                           isEmptyMessageViewDisplaying: false,
-                                           isSearchBarEnabled: false,
-                                           alert: nil,
-                                           _tags: [],
-                                           _searchStorage: .init())
-        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
-                                                       title: L10n.tagListViewAlertForAddTitle,
-                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName,
-                                                       text: "",
-                                                       shouldReturn: false,
-                                                       isPresenting: false)
-        let tagEditAlertState = TextEditAlertState(id: UUID(),
-                                                   title: L10n.tagListViewAlertForUpdateTitle,
-                                                   message: L10n.tagListViewAlertForUpdateMessage,
-                                                   placeholder: L10n.placeholderTagName,
-                                                   text: "",
-                                                   shouldReturn: false,
-                                                   isPresenting: false)
-
-        let viewController = NewTagCollectionViewController(state: state,
-                                                            tagAdditionAlertState: tagAdditionAlertState,
-                                                            tagEditAlertState: tagEditAlertState,
-                                                            dependency: self,
-                                                            menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
-
-        return UINavigationController(rootViewController: viewController)
-    }
-
-    func makeNewAlbumListViewController() -> UIViewController? {
-        let state = AlbumListViewState(searchQuery: "",
-                                       isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                       isEditing: false,
-                                       isEmptyMessageViewDisplaying: false,
-                                       isCollectionViewDisplaying: false,
-                                       isSearchBarEnabled: false,
-                                       isAddButtonEnabled: true,
-                                       isDragInteractionEnabled: false,
-                                       alert: nil,
-                                       _albums: [:],
-                                       _filteredAlbumIds: .init(),
-                                       _searchStorage: .init())
-        let addAlbumAlertState = TextEditAlertState(id: UUID(),
-                                                    title: L10n.albumListViewAlertForAddTitle,
-                                                    message: L10n.albumListViewAlertForAddMessage,
-                                                    placeholder: L10n.placeholderAlbumName,
-                                                    text: "",
-                                                    shouldReturn: false,
-                                                    isPresenting: false)
-        let editAlbumAlertState = TextEditAlertState(id: UUID(),
-                                                     title: L10n.albumListViewAlertForEditTitle,
-                                                     message: L10n.albumListViewAlertForEditMessage,
-                                                     placeholder: L10n.placeholderAlbumName,
-                                                     text: "",
-                                                     shouldReturn: false,
-                                                     isPresenting: false)
-
-        let viewController = NewAlbumListViewController(state: state,
-                                                        albumAdditionAlertState: addAlbumAlertState,
-                                                        albumEditAlertState: editAlbumAlertState,
-                                                        dependency: self,
-                                                        thumbnailLoader: albumThumbnailLoader,
-                                                        menuBuilder: AlbumListMenuBuilder.self)
-
-        return UINavigationController(rootViewController: viewController)
-    }
-
-    func makeSettingsViewController() -> UIViewController {
-        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
-
-        // swiftlint:disable:next force_cast
-        let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
-
-        let presenter = SettingsPresenter(storage: self._userSettingStorage,
-                                          availabilityStore: self.cloudAvailabilityObserver)
-        viewController.factory = self
-        viewController.presenter = presenter
-
-        return UINavigationController(rootViewController: viewController)
     }
 }
