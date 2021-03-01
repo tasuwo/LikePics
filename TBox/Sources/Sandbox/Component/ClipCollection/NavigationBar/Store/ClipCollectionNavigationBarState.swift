@@ -34,7 +34,7 @@ struct ClipCollectionNavigationBarState: Equatable {
 
     let clipCount: Int
     let selectionCount: Int
-    let operation: ClipCollection.Operation
+    let operation: ClipCollectionState.Operation
 }
 
 extension ClipCollectionNavigationBarState {
@@ -67,7 +67,7 @@ extension ClipCollectionNavigationBarState {
                      operation: operation)
     }
 
-    func updating(operation: ClipCollection.Operation) -> Self {
+    func updating(operation: ClipCollectionState.Operation) -> Self {
         return .init(context: context,
                      rightItems: rightItems,
                      leftItems: leftItems,

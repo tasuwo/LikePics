@@ -8,7 +8,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-class NewAlbumListViewController: UIViewController {
+class AlbumListViewController: UIViewController {
     typealias Layout = AlbumListViewLayout
     typealias Store = LikePics.Store<AlbumListViewState, AlbumListViewAction, AlbumListViewDependency>
 
@@ -84,7 +84,7 @@ class NewAlbumListViewController: UIViewController {
     }
 }
 
-extension NewAlbumListViewController {
+extension AlbumListViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -157,7 +157,7 @@ extension NewAlbumListViewController {
 
 // MARK: - Configuration
 
-extension NewAlbumListViewController {
+extension AlbumListViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -223,7 +223,7 @@ extension NewAlbumListViewController {
     }
 }
 
-extension NewAlbumListViewController: UICollectionViewDelegate {
+extension AlbumListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -240,7 +240,7 @@ extension NewAlbumListViewController: UICollectionViewDelegate {
     }
 }
 
-extension NewAlbumListViewController {
+extension AlbumListViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -308,7 +308,7 @@ extension NewAlbumListViewController {
     }
 }
 
-extension NewAlbumListViewController: EmptyMessageViewDelegate {
+extension AlbumListViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     func didTapActionButton(_ view: EmptyMessageView) {
@@ -316,7 +316,7 @@ extension NewAlbumListViewController: EmptyMessageViewDelegate {
     }
 }
 
-extension NewAlbumListViewController: AlbumListCollectionViewCellDelegate {
+extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     // MARK: - AlbumListCollectionViewCellDelegate
 
     func didTapTitleEditButton(_ cell: AlbumListCollectionViewCell) {
@@ -331,7 +331,7 @@ extension NewAlbumListViewController: AlbumListCollectionViewCellDelegate {
     }
 }
 
-extension NewAlbumListViewController: UICollectionViewDragDelegate {
+extension AlbumListViewController: UICollectionViewDragDelegate {
     // MARK: - UICollectionViewDragDelegate
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -347,7 +347,7 @@ extension NewAlbumListViewController: UICollectionViewDragDelegate {
     }
 }
 
-extension NewAlbumListViewController: UICollectionViewDropDelegate {
+extension AlbumListViewController: UICollectionViewDropDelegate {
     // MARK: - UICollectionViewDropDelegate
 
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -370,7 +370,7 @@ extension NewAlbumListViewController: UICollectionViewDropDelegate {
 
 // MARK: Drag & Drop
 
-extension NewAlbumListViewController {
+extension AlbumListViewController {
     static func makePreviewParameter(for cell: AlbumListCollectionViewCell) -> UIDragPreviewParameters {
         let parameters = UIDragPreviewParameters()
         // HACK: 左上のRemoverアイコンが見切れてしまうため、描画範囲を広げる
@@ -391,7 +391,7 @@ extension NewAlbumListViewController {
     }
 }
 
-extension NewAlbumListViewController: UISearchBarDelegate {
+extension AlbumListViewController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -427,7 +427,7 @@ extension NewAlbumListViewController: UISearchBarDelegate {
     }
 }
 
-extension NewAlbumListViewController: UISearchResultsUpdating {
+extension AlbumListViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating
 
     func updateSearchResults(for searchController: UISearchController) {
@@ -437,7 +437,7 @@ extension NewAlbumListViewController: UISearchResultsUpdating {
     }
 }
 
-extension NewAlbumListViewController: TextEditAlertDelegate {
+extension AlbumListViewController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
     func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {

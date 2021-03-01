@@ -11,7 +11,7 @@ enum ClipCollectionNavigationBarAction: Action {
 
     case stateChanged(clipCount: Int,
                       selectionCount: Int,
-                      operation: ClipCollection.Operation)
+                      operation: ClipCollectionState.Operation)
 
     // MARK: - NavigationBar
 

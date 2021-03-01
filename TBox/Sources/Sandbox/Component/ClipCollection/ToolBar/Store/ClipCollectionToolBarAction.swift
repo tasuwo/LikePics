@@ -12,7 +12,7 @@ enum ClipCollectionToolBarAction: Action {
     // MARK: - State Observation
 
     case stateChanged(selectionCount: Int,
-                      operation: ClipCollection.Operation)
+                      operation: ClipCollectionState.Operation)
 
     // MARK: - ToolBar
 

@@ -209,9 +209,9 @@ extension DependencyContainer: Router {
                                        alert: nil,
                                        sourceClipIds: Set(clips.map({ $0.id })),
                                        isDismissed: false)
-        let viewController = NewClipMergeViewController(state: state,
-                                                        dependency: dependency,
-                                                        thumbnailLoader: temporaryThumbnailLoader)
+        let viewController = ClipMergeViewController(state: state,
+                                                     dependency: dependency,
+                                                     thumbnailLoader: temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
@@ -243,10 +243,10 @@ extension DependencyContainer: Router {
                                                        text: "",
                                                        shouldReturn: false,
                                                        isPresenting: false)
-        let viewController = NewClipEditViewController(state: state,
-                                                       siteUrlEditAlertState: siteUrlEditAlertState,
-                                                       dependency: self,
-                                                       thumbnailLoader: temporaryThumbnailLoader)
+        let viewController = ClipEditViewController(state: state,
+                                                    siteUrlEditAlertState: siteUrlEditAlertState,
+                                                    dependency: self,
+                                                    thumbnailLoader: temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

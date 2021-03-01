@@ -74,11 +74,11 @@ extension DependencyContainer: ViewControllerFactory {
                                                    shouldReturn: false,
                                                    isPresenting: false)
 
-        let viewController = NewTagCollectionViewController(state: state,
-                                                            tagAdditionAlertState: tagAdditionAlertState,
-                                                            tagEditAlertState: tagEditAlertState,
-                                                            dependency: self,
-                                                            menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
+        let viewController = TagCollectionViewController(state: state,
+                                                         tagAdditionAlertState: tagAdditionAlertState,
+                                                         tagEditAlertState: tagEditAlertState,
+                                                         dependency: self,
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -111,12 +111,12 @@ extension DependencyContainer: ViewControllerFactory {
                                                      shouldReturn: false,
                                                      isPresenting: false)
 
-        let viewController = NewAlbumListViewController(state: state,
-                                                        albumAdditionAlertState: addAlbumAlertState,
-                                                        albumEditAlertState: editAlbumAlertState,
-                                                        dependency: self,
-                                                        thumbnailLoader: albumThumbnailLoader,
-                                                        menuBuilder: AlbumListMenuBuilder.self)
+        let viewController = AlbumListViewController(state: state,
+                                                     albumAdditionAlertState: addAlbumAlertState,
+                                                     albumEditAlertState: editAlbumAlertState,
+                                                     dependency: self,
+                                                     thumbnailLoader: albumThumbnailLoader,
+                                                     menuBuilder: AlbumListMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }

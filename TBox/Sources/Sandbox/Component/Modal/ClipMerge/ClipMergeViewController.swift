@@ -8,7 +8,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-class NewClipMergeViewController: UIViewController {
+class ClipMergeViewController: UIViewController {
     typealias Layout = ClipMergeViewLayout
     typealias Store = LikePics.Store<ClipMergeViewState, ClipMergeViewAction, ClipMergeViewDependency>
 
@@ -65,7 +65,7 @@ class NewClipMergeViewController: UIViewController {
 
 // MARK: - Bind
 
-extension NewClipMergeViewController {
+extension ClipMergeViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -104,7 +104,7 @@ extension NewClipMergeViewController {
 
 // MARK: - Configuration
 
-extension NewClipMergeViewController {
+extension ClipMergeViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -165,7 +165,7 @@ extension NewClipMergeViewController {
     }
 }
 
-extension NewClipMergeViewController: ClipMergeViewDelegate {
+extension ClipMergeViewController: ClipMergeViewDelegate {
     // MARK: - ClipMergeViewDelegate
 
     func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
@@ -185,7 +185,7 @@ extension NewClipMergeViewController: ClipMergeViewDelegate {
     }
 }
 
-extension NewClipMergeViewController: UICollectionViewDragDelegate {
+extension ClipMergeViewController: UICollectionViewDragDelegate {
     // MARK: - UICollectionViewDragDelegate
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -203,7 +203,7 @@ extension NewClipMergeViewController: UICollectionViewDragDelegate {
     }
 }
 
-extension NewClipMergeViewController: UICollectionViewDropDelegate {
+extension ClipMergeViewController: UICollectionViewDropDelegate {
     // MARK: - UICollectionViewDropDelegate
 
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -231,7 +231,7 @@ extension NewClipMergeViewController: UICollectionViewDropDelegate {
     }
 }
 
-extension NewClipMergeViewController: UIAdaptivePresentationControllerDelegate {
+extension ClipMergeViewController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

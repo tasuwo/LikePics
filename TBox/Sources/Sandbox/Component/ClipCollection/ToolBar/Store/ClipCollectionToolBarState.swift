@@ -40,7 +40,7 @@ struct ClipCollectionToolBarState: Equatable {
     let isHidden: Bool
 
     let _targetCount: Int
-    let _operation: ClipCollection.Operation
+    let _operation: ClipCollectionState.Operation
 
     let alert: Alert?
 }
@@ -64,7 +64,7 @@ extension ClipCollectionToolBarState {
                      alert: alert)
     }
 
-    func updating(operation: ClipCollection.Operation) -> Self {
+    func updating(operation: ClipCollectionState.Operation) -> Self {
         return .init(context: context,
                      items: items,
                      isHidden: isHidden,

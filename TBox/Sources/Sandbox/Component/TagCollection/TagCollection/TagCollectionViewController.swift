@@ -7,7 +7,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class NewTagCollectionViewController: UIViewController {
+class TagCollectionViewController: UIViewController {
     typealias Layout = TagCollectionViewLayout
     typealias TagCollectionViewStore = Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
 
@@ -78,7 +78,7 @@ class NewTagCollectionViewController: UIViewController {
 
 // MARK: - Bind
 
-extension NewTagCollectionViewController {
+extension TagCollectionViewController {
     private func bind(to store: TagCollectionViewStore) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -151,7 +151,7 @@ extension NewTagCollectionViewController {
 
 // MARK: - Configuration
 
-extension NewTagCollectionViewController {
+extension TagCollectionViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -199,7 +199,7 @@ extension NewTagCollectionViewController {
     }
 }
 
-extension NewTagCollectionViewController: UICollectionViewDelegate {
+extension TagCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -220,7 +220,7 @@ extension NewTagCollectionViewController: UICollectionViewDelegate {
     }
 }
 
-extension NewTagCollectionViewController {
+extension TagCollectionViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -288,7 +288,7 @@ extension NewTagCollectionViewController {
     }
 }
 
-extension NewTagCollectionViewController: UISearchBarDelegate {
+extension TagCollectionViewController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -324,7 +324,7 @@ extension NewTagCollectionViewController: UISearchBarDelegate {
     }
 }
 
-extension NewTagCollectionViewController: UISearchResultsUpdating {
+extension TagCollectionViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating
 
     func updateSearchResults(for searchController: UISearchController) {
@@ -332,7 +332,7 @@ extension NewTagCollectionViewController: UISearchResultsUpdating {
     }
 }
 
-extension NewTagCollectionViewController: UncategorizedCellDelegate {
+extension TagCollectionViewController: UncategorizedCellDelegate {
     // MARK: - UncategorizedCellDelegate
 
     func didTap(_ cell: UncategorizedCell) {
@@ -340,7 +340,7 @@ extension NewTagCollectionViewController: UncategorizedCellDelegate {
     }
 }
 
-extension NewTagCollectionViewController: EmptyMessageViewDelegate {
+extension TagCollectionViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     func didTapActionButton(_ view: EmptyMessageView) {
@@ -348,7 +348,7 @@ extension NewTagCollectionViewController: EmptyMessageViewDelegate {
     }
 }
 
-extension NewTagCollectionViewController: TextEditAlertDelegate {
+extension TagCollectionViewController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
     func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {

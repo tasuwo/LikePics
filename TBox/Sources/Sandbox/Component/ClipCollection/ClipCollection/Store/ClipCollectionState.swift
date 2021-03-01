@@ -34,12 +34,38 @@ struct ClipCollectionState: Equatable {
         }
     }
 
+    enum Operation {
+        case none
+        case selecting
+        case reordering
+
+        var isAllowedMultipleSelection: Bool {
+            switch self {
+            case .selecting:
+                return true
+
+            default:
+                return false
+            }
+        }
+
+        var isEditing: Bool {
+            switch self {
+            case .none:
+                return false
+
+            case .selecting, .reordering:
+                return true
+            }
+        }
+    }
+
     let title: String?
 
     let selections: Set<Clip.Identity>
     let isSomeItemsHidden: Bool
 
-    let operation: ClipCollection.Operation
+    let operation: Operation
     let isEmptyMessageViewDisplaying: Bool
     let isCollectionViewDisplaying: Bool
 
@@ -140,7 +166,7 @@ extension ClipCollectionState {
                      _previewingClipId: _previewingClipId)
     }
 
-    func updating(operation: ClipCollection.Operation) -> Self {
+    func updating(operation: ClipCollectionState.Operation) -> Self {
         return .init(title: title,
                      selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,

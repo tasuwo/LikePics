@@ -8,7 +8,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-class NewClipEditViewController: UIViewController {
+class ClipEditViewController: UIViewController {
     typealias Layout = ClipEditViewLayout
     typealias Store = LikePics.Store<ClipEditViewState, ClipEditViewAction, ClipEditViewDependency>
 
@@ -77,7 +77,7 @@ class NewClipEditViewController: UIViewController {
     }
 }
 
-extension NewClipEditViewController {
+extension ClipEditViewController {
     func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -163,7 +163,7 @@ extension NewClipEditViewController {
     }
 }
 
-extension NewClipEditViewController {
+extension ClipEditViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -220,7 +220,7 @@ extension NewClipEditViewController {
     }
 }
 
-extension NewClipEditViewController: UICollectionViewDelegate {
+extension ClipEditViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -263,7 +263,7 @@ extension NewClipEditViewController: UICollectionViewDelegate {
     }
 }
 
-extension NewClipEditViewController: UICollectionViewDragDelegate {
+extension ClipEditViewController: UICollectionViewDragDelegate {
     // MARK: - UICollectionViewDragDelegate
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -281,7 +281,7 @@ extension NewClipEditViewController: UICollectionViewDragDelegate {
     }
 }
 
-extension NewClipEditViewController: UICollectionViewDropDelegate {
+extension ClipEditViewController: UICollectionViewDropDelegate {
     // MARK: - UICollectionViewDropDelegate
 
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -309,7 +309,7 @@ extension NewClipEditViewController: UICollectionViewDropDelegate {
     }
 }
 
-extension NewClipEditViewController: ClipEditViewDelegate {
+extension ClipEditViewController: ClipEditViewDelegate {
     // MARK: - ClipEditViewDelegate
 
     func trailingSwipeAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -364,7 +364,7 @@ extension NewClipEditViewController: ClipEditViewDelegate {
     }
 }
 
-extension NewClipEditViewController: TextEditAlertDelegate {
+extension ClipEditViewController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
     func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
@@ -376,7 +376,7 @@ extension NewClipEditViewController: TextEditAlertDelegate {
     }
 }
 
-extension NewClipEditViewController: UIAdaptivePresentationControllerDelegate {
+extension ClipEditViewController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
