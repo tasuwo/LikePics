@@ -239,9 +239,10 @@ extension ClipCollectionViewController {
     }
 
     private func configureEmptyMessageView() {
-        emptyMessageView.title = L10n.topClipViewEmptyTitle
-        emptyMessageView.message = L10n.topClipViewEmptyMessage
-        emptyMessageView.isActionButtonHidden = true
+        emptyMessageView.title = store.stateValue.source.emptyMessageViewTitle
+        emptyMessageView.message = store.stateValue.source.emptyMessageViewMessage
+        emptyMessageView.isMessageHidden = store.stateValue.source.isEmptyMessageViewMessageHidden
+        emptyMessageView.isActionButtonHidden = store.stateValue.source.isEmptyMessageViewActionButtonHidden
     }
 }
 
@@ -432,6 +433,59 @@ extension ClipCollectionViewController: ClipsCollectionLayoutDelegate {
 
         default:
             return width
+        }
+    }
+}
+
+// MARK: - Empty Message View Configuration
+
+extension ClipCollectionState.Source {
+    var emptyMessageViewTitle: String {
+        switch self {
+        case .all:
+            return L10n.topClipViewEmptyTitle
+
+        case .album:
+            return L10n.albumViewEmptyTitle
+
+        case let .search(.keywords(keywords)):
+            return L10n.searchResultForKeywordsEmptyTitle(keywords.joined(separator: " "))
+
+        case let .search(.tag(.some(tag))):
+            return L10n.searchResultForTagEmptyTitle(tag.name)
+
+        case .search(.tag(.none)):
+            return L10n.searchResultForUncategorizedEmptyTitle
+        }
+    }
+
+    var emptyMessageViewMessage: String? {
+        switch self {
+        case .all:
+            return L10n.topClipViewEmptyMessage
+
+        case .album, .search:
+            return nil
+        }
+    }
+
+    var isEmptyMessageViewMessageHidden: Bool {
+        switch self {
+        case .album:
+            return false
+
+        case .all, .search:
+            return true
+        }
+    }
+
+    var isEmptyMessageViewActionButtonHidden: Bool {
+        switch self {
+        case .all:
+            return false
+
+        case .album, .search:
+            return true
         }
     }
 }
