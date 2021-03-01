@@ -510,7 +510,8 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeNewClipCollectionViewController() -> UIViewController? {
-        let state = ClipCollectionState(selections: .init(),
+        let state = ClipCollectionState(title: nil,
+                                        selections: .init(),
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                         operation: .none,
                                         isEmptyMessageViewDisplaying: false,

@@ -34,6 +34,8 @@ struct ClipCollectionState: Equatable {
         }
     }
 
+    let title: String?
+
     let selections: Set<Clip.Identity>
     let isSomeItemsHidden: Bool
 
@@ -93,8 +95,24 @@ extension ClipCollectionState {
 }
 
 extension ClipCollectionState {
+    func updating(title: String?) -> Self {
+        return .init(title: title,
+                     selections: selections,
+                     isSomeItemsHidden: isSomeItemsHidden,
+                     operation: operation,
+                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
+                     isCollectionViewDisplaying: isCollectionViewDisplaying,
+                     alert: alert,
+                     source: source,
+                     isDismissed: isDismissed,
+                     _clips: _clips,
+                     _filteredClipIds: _filteredClipIds,
+                     _previewingClipId: _previewingClipId)
+    }
+
     func updating(selections: Set<Clip.Identity>) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -108,7 +126,8 @@ extension ClipCollectionState {
     }
 
     func updating(_previewingClipId: Clip.Identity) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -122,7 +141,8 @@ extension ClipCollectionState {
     }
 
     func updating(operation: ClipCollection.Operation) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -136,7 +156,8 @@ extension ClipCollectionState {
     }
 
     func updating(alert: Alert?) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -150,7 +171,8 @@ extension ClipCollectionState {
     }
 
     func updating(_clips: [Clip.Identity: Ordered<Clip>]) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -164,7 +186,8 @@ extension ClipCollectionState {
     }
 
     func updating(_filteredClipIds: Set<Clip.Identity>) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -180,7 +203,8 @@ extension ClipCollectionState {
     func updating(isEmptyMessageViewDisplaying: Bool,
                   isCollectionViewDisplaying: Bool) -> Self
     {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -194,7 +218,8 @@ extension ClipCollectionState {
     }
 
     func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -208,7 +233,8 @@ extension ClipCollectionState {
     }
 
     func updating(isDismissed: Bool) -> Self {
-        return .init(selections: selections,
+        return .init(title: title,
+                     selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: operation,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,

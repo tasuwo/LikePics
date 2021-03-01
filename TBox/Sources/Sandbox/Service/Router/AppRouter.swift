@@ -27,7 +27,8 @@ extension DependencyContainer {
     }
 
     private func makeClipCollectionView(from source: ClipCollectionState.Source) -> UIViewController {
-        let state = ClipCollectionState(selections: .init(),
+        let state = ClipCollectionState(title: nil,
+                                        selections: .init(),
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                         operation: .none,
                                         isEmptyMessageViewDisplaying: false,

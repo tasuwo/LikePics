@@ -118,6 +118,8 @@ extension ClipCollectionViewController {
                 }
             }
 
+            self.title = state.title
+
             self.collectionView.isHidden = !state.isCollectionViewDisplaying
 
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
@@ -214,7 +216,6 @@ extension ClipCollectionViewController {
 
 extension ClipCollectionViewController {
     private func configureViewHierarchy() {
-        title = store.stateValue.source.title
         view.backgroundColor = Asset.Color.backgroundClient.color
 
         collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout(with: self))
@@ -434,26 +435,6 @@ extension ClipCollectionViewController: ClipsCollectionLayoutDelegate {
 
         default:
             return width
-        }
-    }
-}
-
-// MARK: - Title
-
-extension ClipCollectionState.Source {
-    var title: String? {
-        switch self {
-        case .all:
-            return nil
-
-        case let .search(.keywords(value)):
-            return value.joined(separator: ", ")
-
-        case let .search(.tag(.some(tag))):
-            return tag.name
-
-        case .search(.tag(.none)):
-            return L10n.searchResultTitleUncategorized
         }
     }
 }

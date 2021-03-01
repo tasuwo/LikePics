@@ -20,7 +20,7 @@ enum ClipCollectionReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(state: state, dependency: dependency))
+            return prepare(state: state, dependency: dependency)
 
         // MARK: State Observation
 
@@ -213,8 +213,9 @@ enum ClipCollectionReducer: Reducer {
 // MARK: - Preparation
 
 extension ClipCollectionReducer {
-    static func prepareQueryEffects(state: State, dependency: Dependency) -> [Effect<Action>] {
+    static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         let queryEffect: Effect<Action>
+        let title: String?
 
         switch state.source {
         case .all:
@@ -230,6 +231,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+            title = state.source.title
 
         case let .album(albumId):
             let query: AlbumQuery
@@ -244,6 +246,7 @@ extension ClipCollectionReducer {
                 .flatMap { Just(Action.clipsUpdated($0.clips) as Action?) }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(albumStream, underlying: query, completeWith: .albumDeleted)
+            title = query.album.value.title
 
         case .search(.tag(.none)):
             let query: ClipListQuery
@@ -258,6 +261,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+            title = state.source.title
 
         case let .search(.tag(.some(tag))):
             let query: ClipListQuery
@@ -272,6 +276,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+            title = state.source.title
 
         case .search(.keywords):
             fatalError("Not implemented yet.")
@@ -281,7 +286,7 @@ extension ClipCollectionReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [queryEffect, settingsEffect]
+        return (state.updating(title: title), [queryEffect, settingsEffect])
     }
 }
 
@@ -504,7 +509,8 @@ extension ClipCollectionReducer {
 
 private extension ClipCollectionState {
     func endEditing() -> Self {
-        return .init(selections: .init(),
+        return .init(title: title,
+                     selections: .init(),
                      isSomeItemsHidden: isSomeItemsHidden,
                      operation: .none,
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
@@ -515,5 +521,26 @@ private extension ClipCollectionState {
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
+    }
+}
+
+private extension ClipCollectionState.Source {
+    var title: String? {
+        switch self {
+        case .all:
+            return nil
+
+        case .album:
+            return nil
+
+        case let .search(.keywords(value)):
+            return value.joined(separator: ", ")
+
+        case let .search(.tag(.some(tag))):
+            return tag.name
+
+        case .search(.tag(.none)):
+            return L10n.searchResultTitleUncategorized
+        }
     }
 }
