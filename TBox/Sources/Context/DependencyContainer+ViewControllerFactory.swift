@@ -551,7 +551,7 @@ extension DependencyContainer: ViewControllerFactory {
                                        isEmptyMessageViewDisplaying: false,
                                        isCollectionViewDisplaying: false,
                                        isSearchBarEnabled: false,
-                                       isAddButtonEnabled: false,
+                                       isAddButtonEnabled: true,
                                        isDragInteractionEnabled: false,
                                        alert: nil,
                                        _albums: [:],
