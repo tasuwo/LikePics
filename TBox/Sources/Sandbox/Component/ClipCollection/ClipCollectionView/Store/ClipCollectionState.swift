@@ -125,7 +125,7 @@ extension ClipCollectionState {
                      _previewingClipId: _previewingClipId)
     }
 
-    func updating(_previewingClipId: Clip.Identity) -> Self {
+    func updating(_previewingClipId: Clip.Identity?) -> Self {
         return .init(title: title,
                      selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,

@@ -94,6 +94,12 @@ class ClipCollectionViewController: UIViewController, ClipCollectionAlertPresent
         store.execute(.viewDidLoad)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        store.execute(.viewDidAppear)
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 

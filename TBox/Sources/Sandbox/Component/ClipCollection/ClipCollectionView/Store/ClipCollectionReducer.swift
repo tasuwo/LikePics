@@ -15,12 +15,16 @@ enum ClipCollectionReducer: Reducer {
     typealias State = ClipCollectionState
     typealias Action = ClipCollectionAction
 
+    // swiftlint:disable:next function_body_length
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
             return prepare(state: state, dependency: dependency)
+
+        case .viewDidAppear:
+            return (state.updating(_previewingClipId: nil), .none)
 
         // MARK: State Observation
 
@@ -46,7 +50,6 @@ enum ClipCollectionReducer: Reducer {
 
             if !state.operation.isAllowedMultipleSelection {
                 dependency.router.showClipPreviewView(for: clipId)
-                // TODO:
                 nextState = state.updating(_previewingClipId: clipId)
             }
 
