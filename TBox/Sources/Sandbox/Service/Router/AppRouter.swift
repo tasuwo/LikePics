@@ -26,43 +26,37 @@ extension DependencyContainer {
         return topViewController
     }
 
-    @discardableResult
-    private func showCollectionView(by query: ClipListQuery, for context: ClipCollection.SearchContext) -> Bool {
-        guard let rootViewController = self.rootViewController else {
-            RootLogger.shared.write(ConsoleLog(level: .error, message: """
-            Failed to open SearchResultView.
-            """))
-            return false
-        }
+    private func makeClipCollectionView(from source: ClipCollectionState.Source) -> UIViewController {
+        let state = ClipCollectionState(selections: .init(),
+                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+                                        operation: .none,
+                                        isEmptyMessageViewDisplaying: false,
+                                        isCollectionViewDisplaying: false,
+                                        alert: nil,
+                                        source: source,
+                                        isDismissed: false,
+                                        _clips: [:],
+                                        _filteredClipIds: .init(),
+                                        _previewingClipId: nil)
+        let navigationBarState = ClipCollectionNavigationBarState(context: .init(albumId: nil),
+                                                                  rightItems: [],
+                                                                  leftItems: [],
+                                                                  clipCount: 0,
+                                                                  selectionCount: 0,
+                                                                  operation: .none)
+        let toolBarState = ClipCollectionToolBarState(context: .init(albumId: nil),
+                                                      items: [],
+                                                      isHidden: true,
+                                                      _targetCount: 0,
+                                                      _operation: .none,
+                                                      alert: nil)
 
-        let innerViewModel = ClipCollectionViewModel(clipService: _clipCommandService,
-                                                     queryService: _clipQueryService,
-                                                     imageQueryService: imageQueryService,
-                                                     logger: logger)
-        let viewModel = SearchResultViewModel(context: context,
-                                              query: query,
-                                              settingStorage: _userSettingStorage,
-                                              logger: logger,
-                                              viewModel: innerViewModel)
-
-        let context = ClipCollection.Context(isAlbum: false)
-
-        let navigationItemsViewModel = ClipCollectionNavigationBarViewModel(context: context)
-        let navigationItemsProvider = ClipCollectionNavigationBarProvider(viewModel: navigationItemsViewModel)
-
-        let toolBarItemsViewModel = ClipCollectionToolBarViewModel(context: context)
-        let toolBarItemsProvider = ClipCollectionToolBarProvider(viewModel: toolBarItemsViewModel)
-
-        let viewController = SearchResultViewController(factory: self,
-                                                        viewModel: viewModel,
-                                                        clipCollectionProvider: ClipCollectionProvider(thumbnailLoader: clipThumbnailLoader),
-                                                        navigationItemsProvider: navigationItemsProvider,
-                                                        toolBarItemsProvider: toolBarItemsProvider,
-                                                        menuBuilder: ClipCollectionMenuBuilder(storage: _userSettingStorage))
-
-        rootViewController.currentDetailViewController?.show(viewController, sender: self)
-
-        return true
+        return ClipCollectionViewController(state: state,
+                                            navigationBarState: navigationBarState,
+                                            toolBarState: toolBarState,
+                                            dependency: self,
+                                            thumbnailLoader: clipThumbnailLoader,
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
     }
 }
 
@@ -76,39 +70,24 @@ extension DependencyContainer: Router {
     }
 
     func showUncategorizedClipCollectionView() -> Bool {
-        let query: ClipListQuery
-        switch _clipQueryService.queryUncategorizedClips() {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            RootLogger.shared.write(ConsoleLog(level: .error, message: """
-            Failed to open SearchResultView for uncategorized clips. (\(error.rawValue))
-            """))
-            return false
-        }
-        return showCollectionView(by: query, for: .tag(.uncategorized))
+        let viewController = makeClipCollectionView(from: .search(.tag(nil)))
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        detailViewController.show(viewController, sender: nil)
+        return true
     }
 
     func showClipCollectionView(for tag: Tag) -> Bool {
-        let query: ClipListQuery
-        switch _clipQueryService.queryClips(tagged: tag.id) {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            RootLogger.shared.write(ConsoleLog(level: .error, message: """
-            Failed to open SearchResultView for tag \(tag.id). (\(error.rawValue))
-            """))
-            return false
-        }
-        return showCollectionView(by: query, for: .tag(.categorized(tag)))
+        let viewController = makeClipCollectionView(from: .search(.tag(tag)))
+        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        detailViewController.show(viewController, sender: nil)
+        return true
     }
 
     func showClipCollectionView(for albumId: Album.Identity) -> Bool {
-        // TODO:
-        print(#function)
-        return false
+        let viewController = makeClipCollectionView(from: .album(albumId))
+        guard let detailViewController = rootViewController?.currentDetailViewController as? UINavigationController else { return false }
+        detailViewController.show(viewController, sender: nil)
+        return true
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
