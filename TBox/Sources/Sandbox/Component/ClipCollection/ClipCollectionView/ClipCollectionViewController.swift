@@ -454,6 +454,32 @@ extension ClipCollectionViewController: ClipsCollectionLayoutDelegate {
     }
 }
 
+extension ClipCollectionViewController: ClipPreviewPresentingViewController {
+    // MARK: - ClipPreviewPresentingViewController
+
+    var previewingClip: Clip? {
+        store.stateValue.previewingClip
+    }
+
+    var previewingCell: ClipCollectionViewCell? {
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: clip) else { return nil }
+        return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
+    }
+
+    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: clip) else { return }
+
+        view.layoutIfNeeded()
+        collectionView.layoutIfNeeded()
+
+        if shouldAdjust {
+            collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+            view.layoutIfNeeded()
+            collectionView.layoutIfNeeded()
+        }
+    }
+}
+
 // MARK: - Empty Message View Configuration
 
 extension ClipCollectionState.Source {
