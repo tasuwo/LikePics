@@ -20,7 +20,7 @@ enum ClipCollectionReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(dependency))
+            return (state, prepareQueryEffects(state: state, dependency: dependency))
 
         // MARK: State Observation
 
@@ -139,7 +139,7 @@ enum ClipCollectionReducer: Reducer {
             return (state.updating(alert: .deletion(clipId: clipId, at: indexPath)), .none)
 
         case let .removeFromAlbumMenuTapped(clipId, _):
-            guard let albumId = state.context.albumId else { return (state, .none) }
+            guard case let .album(albumId) = state.source else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: [clipId]) {
             case .success:
                 return (state, .none)
@@ -201,6 +201,11 @@ enum ClipCollectionReducer: Reducer {
 
         case .alertDismissed:
             return (state.updating(alert: nil), .none)
+
+        // MARK: Transition
+
+        case .failedToLoad, .albumDeleted:
+            return (state.updating(isDismissed: true), .none)
         }
     }
 }
@@ -208,26 +213,75 @@ enum ClipCollectionReducer: Reducer {
 // MARK: - Preparation
 
 extension ClipCollectionReducer {
-    static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
-        let query: ClipListQuery
-        switch dependency.clipQueryService.queryAllClips() {
-        case let .success(result):
-            query = result
+    static func prepareQueryEffects(state: State, dependency: Dependency) -> [Effect<Action>] {
+        let queryEffect: Effect<Action>
 
-        case let .failure(error):
-            fatalError("Failed to load tags: \(error.localizedDescription)")
+        switch state.source {
+        case .all:
+            let query: ClipListQuery
+            switch dependency.clipQueryService.queryAllClips() {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+            let clipsStream = query.clips
+                .map { Action.clipsUpdated($0) as Action? }
+                .catch { _ in Just(Action.failedToLoad) }
+            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+
+        case let .album(albumId):
+            let query: AlbumQuery
+            switch dependency.clipQueryService.queryAlbum(having: albumId) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+            let albumStream = query.album
+                .flatMap { Just(Action.clipsUpdated($0.clips) as Action?) }
+                .catch { _ in Just(Action.failedToLoad) }
+            queryEffect = Effect(albumStream, underlying: query, completeWith: .albumDeleted)
+
+        case .search(.tag(.none)):
+            let query: ClipListQuery
+            switch dependency.clipQueryService.queryUncategorizedClips() {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+            let clipsStream = query.clips
+                .map { Action.clipsUpdated($0) as Action? }
+                .catch { _ in Just(Action.failedToLoad) }
+            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+
+        case let .search(.tag(.some(tag))):
+            let query: ClipListQuery
+            switch dependency.clipQueryService.queryClips(tagged: tag.id) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+            let clipsStream = query.clips
+                .map { Action.clipsUpdated($0) as Action? }
+                .catch { _ in Just(Action.failedToLoad) }
+            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
+
+        case .search(.keywords):
+            fatalError("Not implemented yet.")
         }
-
-        let clipsStream = query.clips
-            .catch { _ in Just([]) }
-            .map { Action.clipsUpdated($0) as Action? }
-        let tagsEffect = Effect(clipsStream, underlying: query)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [tagsEffect, settingsEffect]
+        return [queryEffect, settingsEffect]
     }
 }
 
@@ -422,7 +476,7 @@ extension ClipCollectionReducer {
             }
 
         case .removeFromAlbum:
-            guard let albumId = state.context.albumId else { return (state, .none) }
+            guard case let .album(albumId) = state.source else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.selections)) {
             case .success:
                 return (state, .none)
@@ -456,7 +510,8 @@ private extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)

@@ -13,11 +13,24 @@ struct ClipCollectionState: Equatable {
         case purge(clipId: Clip.Identity, at: IndexPath)
     }
 
-    struct Context: Equatable {
-        let albumId: Album.Identity?
+    enum Source: Equatable {
+        enum SearchQuery: Equatable {
+            case keywords([String])
+            case tag(Tag?)
+        }
+
+        case all
+        case album(Album.Identity)
+        case search(SearchQuery)
 
         var isAlbum: Bool {
-            return albumId != nil
+            switch self {
+            case .album:
+                return true
+
+            default:
+                return false
+            }
         }
     }
 
@@ -30,7 +43,9 @@ struct ClipCollectionState: Equatable {
 
     let alert: Alert?
 
-    let context: Context
+    let source: Source
+
+    let isDismissed: Bool
 
     let _clips: [Clip.Identity: Ordered<Clip>]
     let _filteredClipIds: Set<Clip.Identity>
@@ -85,7 +100,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -98,7 +114,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -111,7 +128,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -124,7 +142,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -137,7 +156,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -150,7 +170,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -165,7 +186,8 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)
@@ -178,7 +200,22 @@ extension ClipCollectionState {
                      isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
                      isCollectionViewDisplaying: isCollectionViewDisplaying,
                      alert: alert,
-                     context: context,
+                     source: source,
+                     isDismissed: isDismissed,
+                     _clips: _clips,
+                     _filteredClipIds: _filteredClipIds,
+                     _previewingClipId: _previewingClipId)
+    }
+
+    func updating(isDismissed: Bool) -> Self {
+        return .init(selections: selections,
+                     isSomeItemsHidden: isSomeItemsHidden,
+                     operation: operation,
+                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
+                     isCollectionViewDisplaying: isCollectionViewDisplaying,
+                     alert: alert,
+                     source: source,
+                     isDismissed: isDismissed,
                      _clips: _clips,
                      _filteredClipIds: _filteredClipIds,
                      _previewingClipId: _previewingClipId)

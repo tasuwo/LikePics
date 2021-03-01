@@ -139,6 +139,10 @@ extension ClipCollectionViewController {
             self.navigationBarController.store.execute(.stateChanged(clipCount: state.clips.count,
                                                                      selectionCount: state.selections.count,
                                                                      operation: state.operation))
+
+            if state.isDismissed {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         .store(in: &subscriptions)
     }
@@ -284,7 +288,7 @@ extension ClipCollectionViewController {
     }
 
     private func makeActionProvider(for clip: Clip, at indexPath: IndexPath) -> UIContextMenuActionProvider {
-        let context: ClipCollection.Context = .init(isAlbum: store.stateValue.context.isAlbum)
+        let context: ClipCollection.Context = .init(isAlbum: store.stateValue.source.isAlbum)
         let items = menuBuilder.build(for: clip, context: context).map {
             self.makeElement(from: $0, for: clip, at: indexPath)
         }

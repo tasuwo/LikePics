@@ -516,7 +516,8 @@ extension DependencyContainer: ViewControllerFactory {
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
                                         alert: nil,
-                                        context: .init(albumId: nil),
+                                        source: .all,
+                                        isDismissed: false,
                                         _clips: [:],
                                         _filteredClipIds: .init(),
                                         _previewingClipId: nil)

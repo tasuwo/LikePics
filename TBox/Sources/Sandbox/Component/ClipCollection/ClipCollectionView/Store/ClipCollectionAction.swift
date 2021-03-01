@@ -48,4 +48,9 @@ enum ClipCollectionAction: Action {
     case alertDeleteConfirmed
     case alertPurgeConfirmed
     case alertDismissed
+
+    // MARK: Transition
+
+    case failedToLoad
+    case albumDeleted
 }
