@@ -68,7 +68,7 @@ private extension ClipCollectionNavigationBarState {
         switch operation {
         case .none:
             rightItems = [
-                context.isAlbum ? .init(kind: .reorder, isEnabled: existsClip) : nil,
+                source.isAlbum ? .init(kind: .reorder, isEnabled: existsClip) : nil,
                 .init(kind: .select, isEnabled: isSelectable)
             ].compactMap { $0 }
             leftItems = []

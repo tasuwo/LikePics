@@ -13,65 +13,18 @@ struct ClipCollectionState: Equatable {
         case purge(clipId: Clip.Identity, at: IndexPath)
     }
 
-    enum Source: Equatable {
-        enum SearchQuery: Equatable {
-            case keywords([String])
-            case tag(Tag?)
-        }
-
-        case all
-        case album(Album.Identity)
-        case search(SearchQuery)
-
-        var isAlbum: Bool {
-            switch self {
-            case .album:
-                return true
-
-            default:
-                return false
-            }
-        }
-    }
-
-    enum Operation {
-        case none
-        case selecting
-        case reordering
-
-        var isAllowedMultipleSelection: Bool {
-            switch self {
-            case .selecting:
-                return true
-
-            default:
-                return false
-            }
-        }
-
-        var isEditing: Bool {
-            switch self {
-            case .none:
-                return false
-
-            case .selecting, .reordering:
-                return true
-            }
-        }
-    }
-
     let title: String?
 
     let selections: Set<Clip.Identity>
     let isSomeItemsHidden: Bool
 
-    let operation: Operation
+    let operation: ClipCollection.Operation
     let isEmptyMessageViewDisplaying: Bool
     let isCollectionViewDisplaying: Bool
 
     let alert: Alert?
 
-    let source: Source
+    let source: ClipCollection.Source
 
     let isDismissed: Bool
 
@@ -166,7 +119,7 @@ extension ClipCollectionState {
                      _previewingClipId: _previewingClipId)
     }
 
-    func updating(operation: ClipCollectionState.Operation) -> Self {
+    func updating(operation: ClipCollection.Operation) -> Self {
         return .init(title: title,
                      selections: selections,
                      isSomeItemsHidden: isSomeItemsHidden,

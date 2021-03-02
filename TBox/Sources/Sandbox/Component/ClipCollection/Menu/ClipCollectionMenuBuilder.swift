@@ -5,7 +5,7 @@
 import Domain
 
 protocol ClipCollectionMenuBuildable {
-    func build(for clip: Clip, source: ClipCollectionState.Source) -> [ClipCollection.MenuElement]
+    func build(for clip: Clip, source: ClipCollection.Source) -> [ClipCollection.MenuElement]
 }
 
 struct ClipCollectionMenuBuilder {
@@ -23,7 +23,7 @@ struct ClipCollectionMenuBuilder {
 extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
     // MARK: - ClipCollectionMenuBuildable
 
-    func build(for clip: Clip, source: ClipCollectionState.Source) -> [ClipCollection.MenuElement] {
+    func build(for clip: Clip, source: ClipCollection.Source) -> [ClipCollection.MenuElement] {
         return [
             source.isAlbum
                 ? .item(.addTag)

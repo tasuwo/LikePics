@@ -481,7 +481,7 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
 
 // MARK: - Empty Message View Configuration
 
-extension ClipCollectionState.Source {
+extension ClipCollection.Source {
     var emptyMessageViewTitle: String {
         switch self {
         case .all:

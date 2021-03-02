@@ -527,7 +527,7 @@ private extension ClipCollectionState {
     }
 }
 
-private extension ClipCollectionState.Source {
+private extension ClipCollection.Source {
     var title: String? {
         switch self {
         case .all:

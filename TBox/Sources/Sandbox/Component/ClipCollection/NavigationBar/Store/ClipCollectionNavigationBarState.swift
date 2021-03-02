@@ -19,20 +19,12 @@ struct ClipCollectionNavigationBarState: Equatable {
         let isEnabled: Bool
     }
 
-    struct Context: Equatable {
-        let albumId: Album.Identity?
-
-        var isAlbum: Bool {
-            return albumId != nil
-        }
-    }
-
-    var context: Context
+    var source: ClipCollection.Source
+    var operation: ClipCollection.Operation
 
     var rightItems: [Item]
     var leftItems: [Item]
 
     var clipCount: Int
     var selectionCount: Int
-    var operation: ClipCollectionState.Operation
 }

@@ -26,21 +26,13 @@ struct ClipCollectionToolBarState: Equatable {
         let isEnabled: Bool
     }
 
-    struct Context: Equatable {
-        var albumId: Album.Identity?
-
-        var isAlbum: Bool {
-            return albumId != nil
-        }
-    }
-
-    var context: Context
+    var source: ClipCollection.Source
+    var operation: ClipCollection.Operation
 
     var items: [Item]
     var isHidden: Bool
 
     var _targetCount: Int
-    var _operation: ClipCollectionState.Operation
 
     var alert: Alert?
 }

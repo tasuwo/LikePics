@@ -34,7 +34,7 @@ enum ClipCollectionToolBarReducer: Reducer {
 
         case let .stateChanged(selectionCount: selectionCount, operation: operation):
             nextState._targetCount = selectionCount
-            nextState._operation = operation
+            nextState.operation = operation
             nextState = nextState.updatingAppearance()
             return (nextState, [eventEffect])
 
@@ -53,7 +53,7 @@ enum ClipCollectionToolBarReducer: Reducer {
             return (state, [eventEffect])
 
         case .deleteButtonTapped:
-            nextState.alert = .deletion(includesRemoveFromAlbum: state.context.isAlbum)
+            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum)
             return (nextState, [eventEffect])
 
         case .mergeButtonTapped:
@@ -79,7 +79,7 @@ private extension ClipCollectionToolBarState {
         var nextState = self
         let isEnabled = _targetCount > 0
 
-        nextState.isHidden = _operation != .selecting
+        nextState.isHidden = operation != .selecting
         nextState.items = [
             Item(kind: .add, isEnabled: isEnabled),
             Item(kind: .changeVisibility, isEnabled: isEnabled),
