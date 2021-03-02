@@ -14,74 +14,15 @@ struct TagCollectionViewState: Equatable {
         case addition
     }
 
-    let items: [TagCollectionViewLayout.Item]
-    let searchQuery: String
-    let isSomeItemsHidden: Bool
+    var tags: Collection<Tag>
+    var searchQuery: String
 
-    let isCollectionViewDisplaying: Bool
-    let isEmptyMessageViewDisplaying: Bool
-    let isSearchBarEnabled: Bool
+    var isCollectionViewDisplaying: Bool
+    var isEmptyMessageViewDisplaying: Bool
+    var isSearchBarEnabled: Bool
 
-    let alert: Alert?
+    var alert: Alert?
 
-    let _tags: [Tag]
-    let _searchStorage: SearchableStorage<Tag>
-}
-
-extension TagCollectionViewState {
-    func updating(searchQuery: String) -> Self {
-        return .init(items: items,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _tags: _tags,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(alert: Alert?) -> Self {
-        return .init(items: items,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _tags: _tags,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(isCollectionViewDisplaying: Bool,
-                  isEmptyMessageViewDisplaying: Bool,
-                  isSearchBarEnabled: Bool) -> Self
-    {
-        return .init(items: items,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _tags: _tags,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(items: [TagCollectionViewLayout.Item],
-                  searchQuery: String,
-                  isSomeItemsHidden: Bool,
-                  _tags: [Tag],
-                  _searchStorage: SearchableStorage<Tag>) -> Self
-    {
-        return .init(items: items,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _tags: _tags,
-                     _searchStorage: _searchStorage)
-    }
+    var _isSomeItemsHidden: Bool
+    var _searchStorage: SearchableStorage<Tag>
 }

@@ -5,24 +5,36 @@
 import Domain
 
 enum TagCollectionViewAction {
+    // MARK: View Life-Cycle
+
     case viewDidLoad
+
+    // MARK: State Observation
 
     case tagsUpdated([Tag])
     case searchQueryChanged(String)
     case settingUpdated(isSomeItemsHidden: Bool)
 
+    // MARK: Selection
+
     case select(Tag)
     case hide(Tag)
+
+    // MARK: Button Action
 
     case emptyMessageViewActionButtonTapped
     case tagAdditionButtonTapped
     case uncategorizedTagButtonTapped
+
+    // MARK: Context Menu
 
     case copyMenuSelected(Tag)
     case hideMenuSelected(Tag)
     case revealMenuSelected(Tag)
     case deleteMenuSelected(Tag, IndexPath)
     case renameMenuSelected(Tag)
+
+    // MARK: Alert Completion
 
     case alertDeleteConfirmTapped
     case alertSaveButtonTapped(text: String)

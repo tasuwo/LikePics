@@ -21,29 +21,25 @@ enum TagCollectionViewReducer: Reducer {
     // MARK: - Methods
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
         switch action {
+        // MARK: View Life-Cycle
+
         case .viewDidLoad:
             return (state, prepareQueryEffects(dependency))
 
+        // MARK: State Observation
+
         case let .tagsUpdated(tags):
-            var nextState = performFilter(by: tags, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
-            nextState = nextState.updating(isCollectionViewDisplaying: !tags.isEmpty,
-                                           isEmptyMessageViewDisplaying: tags.isEmpty,
-                                           isSearchBarEnabled: !tags.isEmpty)
-            return (nextState, .none)
+            return (performFilter(by: tags, previousState: state), .none)
 
         case let .searchQueryChanged(query):
-            var nextState = performFilter(bySearchQuery: query, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
-            return (nextState, .none)
+            return (performFilter(bySearchQuery: query, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (performFilter(byItemsVisibility: isSomeItemsHidden, previousState: state), .none)
+
+        // MARK: Selection
 
         case let .select(tag):
             dependency.router.showClipCollectionView(for: tag)
@@ -51,26 +47,31 @@ enum TagCollectionViewReducer: Reducer {
 
         case let .hide(tag):
             switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: true) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                nextState.alert = .error(L10n.errorTagDefault)
             }
+            return (nextState, .none)
+
+        // MARK: Button Action
 
         case .emptyMessageViewActionButtonTapped, .tagAdditionButtonTapped:
-            return (state.updating(alert: .addition), .none)
+            nextState.alert = .addition
+            return (nextState, .none)
 
         case .uncategorizedTagButtonTapped:
             dependency.router.showUncategorizedClipCollectionView()
             return (state, .none)
+
+        // MARK: Context Menu
 
         case let .copyMenuSelected(tag):
             dependency.pasteboard.set(tag.name)
             return (state, .none)
 
         case let .hideMenuSelected(tag):
-            if state.isSomeItemsHidden {
+            if state._isSomeItemsHidden {
                 let stream = Deferred {
                     Future<Action?, Never> { promise in
                         // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
@@ -88,66 +89,73 @@ enum TagCollectionViewReducer: Reducer {
 
         case let .revealMenuSelected(tag):
             switch dependency.clipCommandService.updateTag(having: tag.id, byHiding: false) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                nextState.alert = .error(L10n.errorTagDefault)
             }
+            return (nextState, .none)
 
         case let .deleteMenuSelected(tag, indexPath):
-            return (state.updating(alert: .deletion(tagId: tag.id, tagName: tag.name, at: indexPath)), .none)
+            nextState.alert = .deletion(tagId: tag.id, tagName: tag.name, at: indexPath)
+            return (nextState, .none)
 
         case let .renameMenuSelected(tag):
-            return (state.updating(alert: .edit(tagId: tag.id, name: tag.name)), .none)
+            nextState.alert = .edit(tagId: tag.id, name: tag.name)
+            return (nextState, .none)
+
+        // MARK: Alert Completion
 
         case .alertDeleteConfirmTapped:
             switch state.alert {
             case let .deletion(tagId: tagId, tagName: _, at: _):
                 switch dependency.clipCommandService.deleteTags(having: [tagId]) {
                 case .success:
-                    return (state.updating(alert: nil), .none)
+                    nextState.alert = nil
 
                 case .failure:
-                    return (state.updating(alert: .error(L10n.errorTagDelete)), .none)
+                    nextState.alert = .error(L10n.errorTagDelete)
                 }
 
             default:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
             }
+            return (nextState, .none)
 
         case let .alertSaveButtonTapped(text: text):
             switch state.alert {
             case .addition:
                 switch dependency.clipCommandService.create(tagWithName: text) {
                 case .success:
-                    return (state.updating(alert: nil), .none)
+                    nextState.alert = nil
 
                 case .failure(.duplicated):
-                    return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
+                    nextState.alert = .error(L10n.errorTagRenameDuplicated)
 
                 case .failure:
-                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                    nextState.alert = .error(L10n.errorTagDefault)
                 }
 
             case let .edit(tagId: tagId, name: _):
                 switch dependency.clipCommandService.updateTag(having: tagId, nameTo: text) {
                 case .success:
-                    return (state.updating(alert: nil), .none)
+                    nextState.alert = nil
 
                 case .failure(.duplicated):
-                    return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
+                    nextState.alert = .error(L10n.errorTagRenameDuplicated)
 
                 case .failure:
-                    return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                    nextState.alert = .error(L10n.errorTagDefault)
                 }
 
             default:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
             }
+            return (nextState, .none)
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
         }
     }
 }
@@ -182,19 +190,19 @@ extension TagCollectionViewReducer {
     private static func performFilter(by tags: [Tag], previousState: State) -> State {
         return performFilter(tags: tags,
                              searchQuery: previousState.searchQuery,
-                             isSomeItemsHidden: previousState.isSomeItemsHidden,
+                             isSomeItemsHidden: previousState._isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(bySearchQuery searchQuery: String, previousState: State) -> State {
-        return performFilter(tags: previousState._tags,
+        return performFilter(tags: previousState.tags.orderedValues,
                              searchQuery: searchQuery,
-                             isSomeItemsHidden: previousState.isSomeItemsHidden,
+                             isSomeItemsHidden: previousState._isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(byItemsVisibility isSomeItemsHidden: Bool, previousState: State) -> State {
-        return performFilter(tags: previousState._tags,
+        return performFilter(tags: previousState.tags.orderedValues,
                              searchQuery: previousState.searchQuery,
                              isSomeItemsHidden: isSomeItemsHidden,
                              previousState: previousState)
@@ -205,23 +213,29 @@ extension TagCollectionViewReducer {
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
+        var nextState = previousState
         var searchStorage = previousState._searchStorage
 
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
-        let filteredTags = searchStorage.perform(query: searchQuery, to: filteringTags)
-        let items: [Layout.Item] = (
-            [searchQuery.isEmpty ? .uncategorized : nil]
-                + filteredTags.map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !isSomeItemsHidden)) }
-        ).compactMap { $0 }
+        let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
-        return previousState.updating(items: items,
-                                      searchQuery: searchQuery,
-                                      isSomeItemsHidden: isSomeItemsHidden,
-                                      _tags: tags,
-                                      _searchStorage: searchStorage)
+        let newTags = previousState.tags
+            .updated(_values: tags.indexed())
+            .updated(_displayableIds: Set(filteredTagIds))
+        nextState.tags = newTags
+
+        nextState.searchQuery = searchQuery
+        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState._searchStorage = searchStorage
+
+        if filteringTags.isEmpty, !searchQuery.isEmpty {
+            nextState.searchQuery = ""
+        }
+
+        nextState.isCollectionViewDisplaying = !filteringTags.isEmpty
+        nextState.isEmptyMessageViewDisplaying = filteringTags.isEmpty
+        nextState.isSearchBarEnabled = !filteringTags.isEmpty
+
+        return nextState
     }
-}
-
-private extension TagCollectionViewState {
-    var shouldClearQuery: Bool { _tags.isEmpty && !searchQuery.isEmpty }
 }

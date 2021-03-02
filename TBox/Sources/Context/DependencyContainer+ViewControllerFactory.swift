@@ -50,14 +50,15 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeTagCollectionViewController() -> UIViewController? {
-        let state = TagCollectionViewState(items: [],
+        let state = TagCollectionViewState(tags: .init(_values: [:],
+                                                       _selectedIds: .init(),
+                                                       _displayableIds: .init()),
                                            searchQuery: "",
-                                           isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,
                                            alert: nil,
-                                           _tags: [],
+                                           _isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
                                            _searchStorage: .init())
         let tagAdditionAlertState = TextEditAlertState(id: UUID(),
                                                        title: L10n.tagListViewAlertForAddTitle,

@@ -86,7 +86,7 @@ extension TagCollectionViewController {
             // 初回表示時にCollectionViewの表示位置がズレることがあるため、
             // バックグラウンドスレッドで余裕を持って更新させる
             DispatchQueue.global().async {
-                Layout.apply(items: state.items, to: self.dataSource, in: self.collectionView)
+                self.applySnapshot(for: state)
             }
 
             self.collectionView.isHidden = !state.isCollectionViewDisplaying
@@ -99,6 +99,16 @@ extension TagCollectionViewController {
             self.presentAlertIfNeeded(for: state.alert)
         }
         .store(in: &subscriptions)
+    }
+
+    private func applySnapshot(for state: TagCollectionViewState) {
+        var items: [Layout.Item?] = []
+
+        items += state.searchQuery.isEmpty ? [.uncategorized] : [nil]
+        items += state.tags.displayableValues
+            .map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !state._isSomeItemsHidden)) }
+
+        Layout.apply(items: items.compactMap({ $0 }), to: dataSource, in: collectionView)
     }
 
     private func presentAlertIfNeeded(for alert: TagCollectionViewState.Alert?) {
