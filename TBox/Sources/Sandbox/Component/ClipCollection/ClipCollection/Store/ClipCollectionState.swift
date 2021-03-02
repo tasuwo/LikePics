@@ -13,216 +13,27 @@ struct ClipCollectionState: Equatable {
         case purge(clipId: Clip.Identity, at: IndexPath)
     }
 
-    let title: String?
-
-    let selections: Set<Clip.Identity>
-    let isSomeItemsHidden: Bool
-
-    let operation: ClipCollection.Operation
-    let isEmptyMessageViewDisplaying: Bool
-    let isCollectionViewDisplaying: Bool
-
-    let alert: Alert?
-
     let source: ClipCollection.Source
 
-    let isDismissed: Bool
+    var title: String?
+    var operation: ClipCollection.Operation
 
-    let _clips: [Clip.Identity: Ordered<Clip>]
-    let _filteredClipIds: Set<Clip.Identity>
-    let _previewingClipId: Clip.Identity?
+    var clips: Collection<Clip>
+    var previewingClipId: Clip.Identity?
+
+    var isEmptyMessageViewDisplaying: Bool
+    var isCollectionViewDisplaying: Bool
+
+    var alert: Alert?
+
+    var isDismissed: Bool
+
+    var isSomeItemsHidden: Bool
 }
 
 extension ClipCollectionState {
-    var clips: [Clip] {
-        _filteredClipIds
-            .compactMap { id in _clips[id] }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-
-    var selectedClips: [Clip] {
-        selections
-            .compactMap { id in _clips[id] }
-            .sorted(by: { $0.index < $1.index })
-            .compactMap { $0.value }
-    }
-
     var previewingClip: Clip? {
-        guard let clipId = _previewingClipId else { return nil }
-        return _clips[clipId]?.value
-    }
-
-    var _orderedClips: [Clip] {
-        _clips
-            .map { $0.value }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
-    }
-}
-
-extension ClipCollectionState {
-    func newSelectedClips(from previous: Self) -> Set<Clip> {
-        let additions = selections.subtracting(previous.selections)
-        return Set(additions.compactMap { _clips[$0]?.value })
-    }
-
-    func newDeselectedClips(from previous: Self) -> Set<Clip> {
-        let deletions = previous.selections.subtracting(selections)
-        return Set(deletions.compactMap { _clips[$0]?.value })
-    }
-}
-
-extension ClipCollectionState {
-    func updating(title: String?) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(selections: Set<Clip.Identity>) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(_previewingClipId: Clip.Identity?) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(operation: ClipCollection.Operation) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(alert: Alert?) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(_clips: [Clip.Identity: Ordered<Clip>]) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(_filteredClipIds: Set<Clip.Identity>) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(isEmptyMessageViewDisplaying: Bool,
-                  isCollectionViewDisplaying: Bool) -> Self
-    {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
-    }
-
-    func updating(isDismissed: Bool) -> Self {
-        return .init(title: title,
-                     selections: selections,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: operation,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
+        guard let clipId = previewingClipId else { return nil }
+        return clips._values[clipId]?.value
     }
 }

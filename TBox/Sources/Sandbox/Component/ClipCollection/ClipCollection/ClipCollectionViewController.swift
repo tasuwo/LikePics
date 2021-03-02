@@ -119,7 +119,7 @@ extension ClipCollectionViewController {
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.clips)
+                snapshot.appendItems(state.clips.displayableValues)
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
                     self.updateHiddenIconAppearance()
                 }
@@ -143,10 +143,10 @@ extension ClipCollectionViewController {
 
             // Propagation
 
-            self.toolBarController.store.execute(.stateChanged(selectionCount: state.selections.count,
+            self.toolBarController.store.execute(.stateChanged(selectionCount: state.clips._selectedIds.count,
                                                                operation: state.operation))
-            self.navigationBarController.store.execute(.stateChanged(clipCount: state.clips.count,
-                                                                     selectionCount: state.selections.count,
+            self.navigationBarController.store.execute(.stateChanged(clipCount: state.clips._displayableIds.count,
+                                                                     selectionCount: state.clips._selectedIds.count,
                                                                      operation: state.operation))
 
             if state.isDismissed {
@@ -159,22 +159,11 @@ extension ClipCollectionViewController {
     private func applySelections(for state: ClipCollectionState) {
         defer { _previousState = state }
 
-        guard let previousState = _previousState else {
-            // `_previousState` がnil == 初回表示時はCollectionViewの選択状態が空であることが前提なので、deselectは行わずselectのみ反映する
-            state
-                .selectedClips
-                .compactMap { self.dataSource.indexPath(for: $0) }
-                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            return
-        }
-
-        // NOTE: パフォーマンスのために、選択状態は差分のみ更新する
-
-        state.newSelectedClips(from: previousState)
+        state.clips.selections(from: _previousState?.clips)
             .compactMap { self.dataSource.indexPath(for: $0) }
             .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
 
-        state.newDeselectedClips(from: previousState)
+        state.clips.deselections(from: _previousState?.clips)
             .compactMap { self.dataSource.indexPath(for: $0) }
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }

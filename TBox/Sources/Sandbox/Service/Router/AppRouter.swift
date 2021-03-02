@@ -27,18 +27,18 @@ extension DependencyContainer {
     }
 
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
-        let state = ClipCollectionState(title: nil,
-                                        selections: .init(),
-                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+        let state = ClipCollectionState(source: source,
+                                        title: nil,
                                         operation: .none,
+                                        clips: .init(_values: [:],
+                                                     _selectedIds: .init(),
+                                                     _displayableIds: .init()),
+                                        previewingClipId: nil,
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
                                         alert: nil,
-                                        source: source,
                                         isDismissed: false,
-                                        _clips: [:],
-                                        _filteredClipIds: .init(),
-                                        _previewingClipId: nil)
+                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: source,
                                                                   operation: .none,
                                                                   rightItems: [],

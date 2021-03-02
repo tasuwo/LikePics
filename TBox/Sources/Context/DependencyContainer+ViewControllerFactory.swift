@@ -14,18 +14,18 @@ extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipCollectionViewController() -> UIViewController? {
-        let state = ClipCollectionState(title: nil,
-                                        selections: .init(),
-                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
+        let state = ClipCollectionState(source: .all,
+                                        title: nil,
                                         operation: .none,
+                                        clips: .init(_values: [:],
+                                                     _selectedIds: .init(),
+                                                     _displayableIds: .init()),
+                                        previewingClipId: nil,
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
                                         alert: nil,
-                                        source: .all,
                                         isDismissed: false,
-                                        _clips: [:],
-                                        _filteredClipIds: .init(),
-                                        _previewingClipId: nil)
+                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: .all,
                                                                   operation: .none,
                                                                   rightItems: [],

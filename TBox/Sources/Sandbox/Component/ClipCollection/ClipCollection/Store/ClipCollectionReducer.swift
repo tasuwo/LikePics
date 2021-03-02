@@ -17,6 +17,7 @@ enum ClipCollectionReducer: Reducer {
 
     // swiftlint:disable:next function_body_length
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
@@ -24,7 +25,8 @@ enum ClipCollectionReducer: Reducer {
             return prepare(state: state, dependency: dependency)
 
         case .viewDidAppear:
-            return (state.updating(_previewingClipId: nil), .none)
+            nextState.previewingClipId = nil
+            return (nextState, .none)
 
         // MARK: State Observation
 
@@ -37,35 +39,37 @@ enum ClipCollectionReducer: Reducer {
         // MARK: Selection
 
         case let .selected(clipId):
-            var nextState: State
+            if state.operation == .reordering { return (state, .none) }
 
             let selections: Set<Clip.Identity> = {
                 if state.operation.isAllowedMultipleSelection {
-                    return state.selections.union(Set([clipId]))
+                    return state.clips._selectedIds.union(Set([clipId]))
                 } else {
                     return Set([clipId])
                 }
             }()
-            nextState = state.updating(selections: selections)
+            nextState.clips = state.clips.updated(_selectedIds: selections)
 
             if !state.operation.isAllowedMultipleSelection {
                 dependency.router.showClipPreviewView(for: clipId)
-                nextState = state.updating(_previewingClipId: clipId)
+                nextState.previewingClipId = clipId
             }
 
             return (nextState, .none)
 
         case let .deselected(clipId):
-            guard state.selections.contains(clipId) else { return (state, .none) }
-            return (state.updating(selections: state.selections.subtracting(Set([clipId]))), .none)
+            guard state.clips._selectedIds.contains(clipId) else { return (state, .none) }
+            let newSelections = state.clips._selectedIds.subtracting(Set([clipId]))
+            nextState.clips = nextState.clips.updated(_selectedIds: newSelections)
+            return (nextState, .none)
 
         // MARK: NavigationBar/ToolBar
 
         case let .navigationBarEventOccurred(event):
-            return handle(event, state: state, dependency: dependency)
+            return execute(action: event, state: state, dependency: dependency)
 
         case let .toolBarEventOccurred(event):
-            return handle(event, state: state, dependency: dependency)
+            return execute(action: event, state: state, dependency: dependency)
 
         // MARK: Actions for Single Clip
 
@@ -76,7 +80,8 @@ enum ClipCollectionReducer: Reducer {
                 return (state, [effect])
 
             case .failure:
-                return (state.updating(alert: .error(L10n.errorTagRead)), .none)
+                nextState.alert = .error(L10n.errorTagRead)
+                return (nextState, .none)
             }
 
         case let .albumAdditionMenuTapped(clipId):
@@ -102,21 +107,21 @@ enum ClipCollectionReducer: Reducer {
 
         case let .deferredHide(clipId):
             switch dependency.clipCommandService.updateClips(having: [clipId], byHiding: true) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtHideClip)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtHideClip)
             }
+            return (nextState, .none)
 
         case let .revealMenuTapped(clipId):
             switch dependency.clipCommandService.updateClips(having: [clipId], byHiding: false) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtHideClip)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtHideClip)
             }
+            return (nextState, .none)
 
         case let .editMenuTapped(clipId):
             let stream = Deferred {
@@ -136,20 +141,22 @@ enum ClipCollectionReducer: Reducer {
             return (state, [effect])
 
         case let .purgeMenuTapped(clipId, indexPath):
-            return (state.updating(alert: .purge(clipId: clipId, at: indexPath)), .none)
+            nextState.alert = .purge(clipId: clipId, at: indexPath)
+            return (nextState, .none)
 
         case let .deleteMenuTapped(clipId, indexPath):
-            return (state.updating(alert: .deletion(clipId: clipId, at: indexPath)), .none)
+            nextState.alert = .deletion(clipId: clipId, at: indexPath)
+            return (nextState, .none)
 
         case let .removeFromAlbumMenuTapped(clipId, _):
             guard case let .album(albumId) = state.source else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: [clipId]) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)
             }
+            return (nextState, .none)
 
         // MARK: Modal Completion
 
@@ -157,58 +164,68 @@ enum ClipCollectionReducer: Reducer {
             guard let tagIds = tagIds else { return (state, .none) }
             switch dependency.clipCommandService.updateClips(having: Array(clipIds), byReplacingTagsHaving: Array(tagIds)) {
             case .success:
-                return (state.endEditing(), .none)
+                nextState = nextState.editingEnded()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtUpdateTagsToClip)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
             }
+            return (nextState, .none)
 
         case let .albumsSelected(albumId, for: clipIds):
             guard let albumId = albumId else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(clipIds)) {
             case .success:
-                return (state.endEditing(), .none)
+                nextState = nextState.editingEnded()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtAddClipToAlbum)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
             }
+            return (nextState, .none)
 
         case let .modalCompleted(succeeded):
-            if succeeded {
-                return (state.endEditing(), .none)
-            } else {
-                return (state, .none)
-            }
+            if succeeded { nextState = nextState.editingEnded() }
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
         case .alertDeleteConfirmed:
-            guard case let .deletion(clipId: clipId, at: _) = state.alert else { return (state.updating(alert: nil), .none) }
+            guard case let .deletion(clipId: clipId, at: _) = state.alert else {
+                nextState.alert = nil
+                return (nextState, .none)
+            }
             switch dependency.clipCommandService.deleteClips(having: [clipId]) {
             case .success:
-                return (state.updating(alert: nil).endEditing(), .none)
+                nextState.alert = nil
+                nextState = nextState.editingEnded()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtDeleteClips)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClips)
             }
+            return (nextState, .none)
 
         case .alertPurgeConfirmed:
-            guard case let .purge(clipId: clipId, at: _) = state.alert else { return (state.updating(alert: nil), .none) }
+            guard case let .purge(clipId: clipId, at: _) = state.alert else {
+                nextState.alert = nil
+                return (nextState, .none)
+            }
             switch dependency.clipCommandService.purgeClipItems(forClipHaving: clipId) {
             case .success:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtPurge)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtPurge)
             }
+            return (nextState, .none)
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
 
         // MARK: Transition
 
         case .failedToLoad, .albumDeleted:
-            return (state.updating(isDismissed: true), .none)
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }
@@ -220,6 +237,7 @@ extension ClipCollectionReducer {
         let queryEffect: Effect<Action>
         let title: String?
 
+        var nextState = state
         switch state.source {
         case .all:
             let query: ClipListQuery
@@ -289,7 +307,9 @@ extension ClipCollectionReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return (state.updating(title: title), [queryEffect, settingsEffect])
+        nextState.title = title
+
+        return (nextState, [queryEffect, settingsEffect])
     }
 }
 
@@ -349,89 +369,90 @@ extension ClipCollectionReducer {
     private static func performFilter(clips: [Clip],
                                       previousState: State) -> State
     {
-        performFilter(clips: clips, isSomeItemsHidden: previousState.isSomeItemsHidden, previousState: previousState)
+        performFilter(clips: clips,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      previousState: previousState)
     }
 
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(clips: previousState._orderedClips, isSomeItemsHidden: isSomeItemsHidden, previousState: previousState)
+        performFilter(clips: previousState.clips.orderedValues,
+                      isSomeItemsHidden: isSomeItemsHidden,
+                      previousState: previousState)
     }
 
     private static func performFilter(clips: [Clip],
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        var newState = previousState
+        var nextState = previousState
 
-        let dict = clips.enumerated().reduce(into: [Clip.Identity: Ordered<Clip>]()) { dict, value in
-            dict[value.element.id] = .init(index: value.offset, value: value.element)
-        }
+        let filteredClips = clips.filter { isSomeItemsHidden ? $0.isHidden == false : true }
+        let filteredClipIds = filteredClips.map { $0.id }
 
-        let filteredClipIds = clips
-            .filter { clip in
-                if isSomeItemsHidden { return !clip.isHidden }
-                return true
-            }
-            .map { $0.id }
-
-        newState = newState
-            .updating(_clips: dict)
-            .updating(_filteredClipIds: Set(filteredClipIds))
-            .updating(isEmptyMessageViewDisplaying: filteredClipIds.isEmpty, isCollectionViewDisplaying: !filteredClipIds.isEmpty)
-            .updating(isSomeItemsHidden: isSomeItemsHidden)
+        nextState.clips = previousState.clips
+            .updated(_values: clips.indexed())
+            .updated(_displayableIds: Set(filteredClipIds))
 
         // 余分な選択を除外する
         let newClipIds = Set(clips.map { $0.id })
-        if !previousState.selections.isSubset(of: newClipIds) {
-            let newSelections = previousState.selections.subtracting(
-                previousState.selections.subtracting(newClipIds)
+        if !nextState.clips._selectedIds.isSubset(of: newClipIds) {
+            let newSelections = nextState.clips._selectedIds.subtracting(
+                nextState.clips._selectedIds.subtracting(newClipIds)
             )
-            newState = newState.updating(selections: newSelections)
+            nextState.clips = nextState.clips.updated(_selectedIds: newSelections)
         }
 
-        return newState
+        nextState.isEmptyMessageViewDisplaying = filteredClips.isEmpty
+        nextState.isCollectionViewDisplaying = !filteredClips.isEmpty
+        nextState.isSomeItemsHidden = isSomeItemsHidden
+
+        if previousState.isSomeItemsHidden != isSomeItemsHidden {
+            nextState = nextState.editingEnded()
+        }
+
+        return nextState
     }
 }
 
 // MARK: NavigationBar Event
 
 extension ClipCollectionReducer {
-    private static func handle(_ event: ClipCollectionNavigationBarEvent,
-                               state: State,
-                               dependency: Dependency) -> (State, [Effect<Action>]?)
+    private static func execute(action: ClipCollectionNavigationBarEvent,
+                                state: State,
+                                dependency: Dependency) -> (State, [Effect<Action>]?)
     {
-        switch event {
+        var nextState = state
+        switch action {
         case .cancel:
-            let newState = state
-                .updating(operation: .none)
-                .updating(selections: [])
-            return (newState, .none)
+            nextState.operation = .none
+            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
 
         case .selectAll:
             guard state.operation.isAllowedMultipleSelection else { return (state, .none) }
-            return (state.updating(selections: Set(state._clips.keys)), .none)
+            nextState.clips = nextState.clips.updated(_selectedIds: state.clips._displayableIds)
+            return (nextState, .none)
 
         case .deselectAll:
-            return (state.updating(selections: []), .none)
+            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
 
         case .select:
-            let newState = state
-                .updating(operation: .selecting)
-                .updating(selections: [])
-            return (newState, .none)
+            nextState.operation = .selecting
+            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
 
         case .reorder:
-            let newState = state
-                .updating(operation: .reordering)
-                .updating(selections: [])
-            return (newState, .none)
+            nextState.operation = .reordering
+            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
 
         case .done:
-            let newState = state
-                .updating(operation: .none)
-                .updating(selections: [])
-            return (newState, .none)
+            nextState.operation = .none
+            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
         }
     }
 }
@@ -439,62 +460,68 @@ extension ClipCollectionReducer {
 // MARK: ToolBar Event
 
 extension ClipCollectionReducer {
-    private static func handle(_ event: ClipCollectionToolBarEvent,
-                               state: State,
-                               dependency: Dependency) -> (State, [Effect<Action>]?)
+    private static func execute(action: ClipCollectionToolBarEvent,
+                                state: State,
+                                dependency: Dependency) -> (State, [Effect<Action>]?)
     {
-        switch event {
+        var nextState = state
+        switch action {
         case .addToAlbum:
-            let effect = showAlbumSelectionModal(for: state.selections, dependency: dependency)
-            return (state.updating(alert: nil), [effect])
+            let effect = showAlbumSelectionModal(for: state.clips._displayableIds, dependency: dependency)
+            nextState.alert = nil
+            return (nextState, [effect])
 
         case .addTags:
-            let effect = showTagSelectionModal(for: state.selections, selections: .init(), dependency: dependency)
-            return (state.updating(alert: nil), [effect])
+            let effect = showTagSelectionModal(for: state.clips._displayableIds, selections: .init(), dependency: dependency)
+            nextState.alert = nil
+            return (nextState, [effect])
 
         case .hide:
-            switch dependency.clipCommandService.updateClips(having: Array(state.selections), byHiding: true) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips._displayableIds), byHiding: true) {
             case .success:
-                return (state.endEditing(), .none)
+                nextState = nextState.editingEnded()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtHideClips)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtHideClips)
             }
+            return (nextState, .none)
 
         case .reveal:
-            switch dependency.clipCommandService.updateClips(having: Array(state.selections), byHiding: false) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips._displayableIds), byHiding: false) {
             case .success:
-                return (state.endEditing(), .none)
+                nextState = nextState.editingEnded()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtRevealClips)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtRevealClips)
             }
+            return (nextState, .none)
 
         case .share:
-            let effect = showShareModal(from: .toolBar, for: state.selections, dependency: dependency)
+            let effect = showShareModal(from: .toolBar, for: state.clips._displayableIds, dependency: dependency)
             return (state, [effect])
 
         case .delete:
-            switch dependency.clipCommandService.deleteClips(having: Array(state.selections)) {
+            switch dependency.clipCommandService.deleteClips(having: Array(state.clips._displayableIds)) {
             case .success:
-                return (state.updating(alert: nil).endEditing(), .none)
+                nextState.alert = nil
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtDeleteClips)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClips)
             }
+            return (nextState, .none)
 
         case .removeFromAlbum:
             guard case let .album(albumId) = state.source else { return (state, .none) }
-            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.selections)) {
-            case .success:
-                return (state, .none)
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips._displayableIds)) {
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)
             }
+            return (nextState, .none)
 
         case .merge:
-            let selections = state.selectedClips
+            let selections = state.clips.displayableValues
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     let isPresented = dependency.router.showClipMergeModal(for: selections) { succeeded in
@@ -511,19 +538,11 @@ extension ClipCollectionReducer {
 }
 
 private extension ClipCollectionState {
-    func endEditing() -> Self {
-        return .init(title: title,
-                     selections: .init(),
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     operation: .none,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     alert: alert,
-                     source: source,
-                     isDismissed: isDismissed,
-                     _clips: _clips,
-                     _filteredClipIds: _filteredClipIds,
-                     _previewingClipId: _previewingClipId)
+    func editingEnded() -> Self {
+        var nextState = self
+        nextState.clips = nextState.clips.updated(_selectedIds: .init())
+        nextState.operation = .none
+        return nextState
     }
 }
 
