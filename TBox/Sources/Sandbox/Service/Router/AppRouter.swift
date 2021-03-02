@@ -110,16 +110,16 @@ extension DependencyContainer: Router {
                                     clipQueryService: clipQueryService,
                                     tagSelectionCompleted: completion)
 
-        let state = TagSelectionModalState(isDismissed: false,
+        let state = TagSelectionModalState(searchQuery: "",
                                            tags: .init(_values: [:],
                                                        _selectedIds: selections,
                                                        _displayableIds: .init()),
-                                           searchQuery: "",
-                                           isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                            isCollectionViewDisplaying: false,
                                            isEmptyMessageViewDisplaying: false,
                                            isSearchBarEnabled: false,
                                            alert: nil,
+                                           isDismissed: false,
+                                           _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                            _searchStorage: .init())
         let tagAdditionAlertState = TextEditAlertState(id: UUID(),
                                                        title: L10n.tagListViewAlertForAddTitle,

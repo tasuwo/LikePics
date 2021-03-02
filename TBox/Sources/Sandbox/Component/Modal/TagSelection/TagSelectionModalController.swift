@@ -186,12 +186,12 @@ extension TagSelectionModalController {
         let addItem = UIBarButtonItem(systemItem: .add, primaryAction: .init(handler: { [weak self] _ in
             self?.store.execute(.addButtonTapped)
         }), menu: nil)
-        let doneItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.doneButtonTapped)
+        let saveItem = UIBarButtonItem(systemItem: .save, primaryAction: .init(handler: { [weak self] _ in
+            self?.store.execute(.saveButtonTapped)
         }), menu: nil)
 
         navigationItem.leftBarButtonItem = addItem
-        navigationItem.rightBarButtonItem = doneItem
+        navigationItem.rightBarButtonItem = saveItem
     }
 
     private func configureEmptyMessageView() {

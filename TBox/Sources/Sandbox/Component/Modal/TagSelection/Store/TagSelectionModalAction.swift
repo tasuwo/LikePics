@@ -24,7 +24,7 @@ enum TagSelectionModalAction: Action {
 
     case emptyMessageViewActionButtonTapped
     case addButtonTapped
-    case doneButtonTapped
+    case saveButtonTapped
 
     // MARK: Alert Completion
 

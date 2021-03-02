@@ -12,106 +12,17 @@ struct TagSelectionModalState: Equatable {
         case addition
     }
 
-    let isDismissed: Bool
+    var searchQuery: String
+    var tags: Collection<Tag>
 
-    let tags: Collection<Tag>
+    var isCollectionViewDisplaying: Bool
+    var isEmptyMessageViewDisplaying: Bool
+    var isSearchBarEnabled: Bool
 
-    let searchQuery: String
-    let isSomeItemsHidden: Bool
+    var alert: Alert?
 
-    let isCollectionViewDisplaying: Bool
-    let isEmptyMessageViewDisplaying: Bool
-    let isSearchBarEnabled: Bool
+    var isDismissed: Bool
 
-    let alert: Alert?
-
-    let _searchStorage: SearchableStorage<Tag>
-}
-
-extension TagSelectionModalState {
-    func updating(isDismissed: Bool) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updated(tags: Collection<Tag>) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(alert: Alert?) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(searchQuery: String) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(isCollectionViewDisplaying: Bool,
-                  isEmptyMessageViewDisplaying: Bool) -> Self
-    {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(_searchStorage: SearchableStorage<Tag>) -> Self {
-        return .init(isDismissed: isDismissed,
-                     tags: tags,
-                     searchQuery: searchQuery,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
+    var _isSomeItemsHidden: Bool
+    var _searchStorage: SearchableStorage<Tag>
 }

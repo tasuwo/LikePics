@@ -16,6 +16,8 @@ enum TagSelectionModalReducer: Reducer {
     typealias Action = TagSelectionModalAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
         switch action {
         // MARK: View Life-Cycle
 
@@ -25,42 +27,39 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: State Observation
 
         case let .tagsUpdated(tags):
-            var nextState = performFilter(tags: tags, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
+            nextState = performFilter(tags: tags, previousState: state)
             return (nextState, .none)
 
         case let .searchQueryChanged(query):
-            var nextState = performFilter(searchQuery: query, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
+            nextState = performFilter(searchQuery: query, previousState: state)
             return (nextState, .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            nextState = performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state)
+            return (nextState, .none)
 
         // MARK: Selection
 
         case let .selected(tagId):
             let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
-            let newState = state.updated(tags: newTags)
-            return (newState, .none)
+            nextState.tags = newTags
+            return (nextState, .none)
 
         case let .deselected(tagId):
             let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.subtracting(Set([tagId])))
-            let newState = state.updated(tags: newTags)
-            return (newState, .none)
+            nextState.tags = newTags
+            return (nextState, .none)
 
         // MARK: Button Action
 
         case .emptyMessageViewActionButtonTapped, .addButtonTapped:
-            return (state.updating(alert: .addition), .none)
+            nextState.alert = .addition
+            return (nextState, .none)
 
-        case .doneButtonTapped:
+        case .saveButtonTapped:
             dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
-            return (state.updating(isDismissed: true), .none)
+            nextState.isDismissed = true
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
@@ -68,24 +67,27 @@ enum TagSelectionModalReducer: Reducer {
             switch dependency.clipCommandService.create(tagWithName: name) {
             case let .success(tagId):
                 let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
-                let newState = state.updating(alert: nil).updated(tags: newTags)
-                return (newState, .none)
+                nextState.tags = newTags
+                nextState.alert = nil
 
             case .failure(.duplicated):
-                return (state.updating(alert: .error(L10n.errorTagRenameDuplicated)), .none)
+                nextState.alert = .error(L10n.errorTagRenameDuplicated)
 
             case .failure:
-                return (state.updating(alert: .error(L10n.errorTagDefault)), .none)
+                nextState.alert = .error(L10n.errorTagDefault)
             }
+            return (nextState, .none)
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
 
         // MARK: Transition
 
         case .didDismissedManually:
             dependency.tagSelectionCompleted(nil)
-            return (state.updating(isDismissed: true), .none)
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }
@@ -124,7 +126,7 @@ extension TagSelectionModalReducer {
     {
         performFilter(tags: tags,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -133,7 +135,7 @@ extension TagSelectionModalReducer {
     {
         performFilter(tags: previousState.tags.orderedValues,
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -151,29 +153,27 @@ extension TagSelectionModalReducer {
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
+        var nextState = previousState
         var searchStorage = previousState._searchStorage
-
-        let dict = tags.enumerated().reduce(into: [Tag.Identity: Ordered<Tag>]()) { dict, value in
-            dict[value.element.id] = .init(index: value.offset, value: value.element)
-        }
 
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
         let newTags = previousState.tags
-            .updated(_values: dict)
+            .updated(_values: tags.indexed())
             .updated(_displayableIds: Set(filteredTagIds))
+        nextState.tags = newTags
 
-        return previousState
-            .updating(searchQuery: searchQuery)
-            .updating(isSomeItemsHidden: isSomeItemsHidden)
-            .updating(isCollectionViewDisplaying: !filteringTags.isEmpty,
-                      isEmptyMessageViewDisplaying: filteringTags.isEmpty)
-            .updating(_searchStorage: searchStorage)
-            .updated(tags: newTags)
+        nextState.searchQuery = searchQuery
+        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.isCollectionViewDisplaying = !filteringTags.isEmpty
+        nextState.isEmptyMessageViewDisplaying = filteringTags.isEmpty
+        nextState._searchStorage = searchStorage
+
+        if filteringTags.isEmpty, !searchQuery.isEmpty {
+            nextState.searchQuery = ""
+        }
+
+        return nextState
     }
-}
-
-private extension TagSelectionModalState {
-    var shouldClearQuery: Bool { tags._values.isEmpty && !searchQuery.isEmpty }
 }
