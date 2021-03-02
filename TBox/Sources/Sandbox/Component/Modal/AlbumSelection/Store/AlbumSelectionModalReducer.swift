@@ -103,7 +103,7 @@ extension AlbumSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState._orderedAlbums,
+        performFilter(albums: previousState.albums.orderedValues,
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -112,7 +112,7 @@ extension AlbumSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState._orderedAlbums,
+        performFilter(albums: previousState.albums.orderedValues,
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -125,24 +125,22 @@ extension AlbumSelectionModalReducer {
     {
         var searchStorage = previousState._searchStorage
 
-        let dict = albums.enumerated().reduce(into: [Album.Identity: Ordered<Album>]()) { dict, value in
-            dict[value.element.id] = .init(index: value.offset, value: value.element)
-        }
-
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
+        let newAlbums = previousState.albums
+            .updated(_values: albums.indexed())
+            .updated(_displayableIds: Set(filteredAlbumIds))
 
         return previousState
             .updating(searchQuery: searchQuery)
             .updating(isSomeItemsHidden: isSomeItemsHidden)
             .updating(isCollectionViewDisplaying: !filteringAlbums.isEmpty)
             .updating(isEmptyMessageViewDisplaying: filteringAlbums.isEmpty)
-            .updating(_filteredAlbumIds: Set(filteredAlbumIds))
-            .updating(_albums: dict)
+            .updating(albums: newAlbums)
             .updating(_searchStorage: searchStorage)
     }
 }
 
 private extension AlbumSelectionModalState {
-    var shouldClearQuery: Bool { _albums.isEmpty && !searchQuery.isEmpty }
+    var shouldClearQuery: Bool { albums._values.isEmpty && !searchQuery.isEmpty }
 }

@@ -146,13 +146,14 @@ extension DependencyContainer: Router {
 
     func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool {
         let state = AlbumSelectionModalState(searchQuery: "",
+                                             albums: .init(_values: [:],
+                                                           _selectedIds: .init(),
+                                                           _displayableIds: .init()),
                                              isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              isCollectionViewDisplaying: false,
                                              isEmptyMessageViewDisplaying: false,
                                              isSearchBarEnabled: false,
                                              alert: nil,
-                                             _albums: [:],
-                                             _filteredAlbumIds: .init(),
                                              _searchStorage: .init())
         let albumAdditionAlertState = TextEditAlertState(id: UUID(),
                                                          title: L10n.albumListViewAlertForAddTitle,

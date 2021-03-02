@@ -82,7 +82,7 @@ extension AlbumSelectionModalController {
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.albums)
+                snapshot.appendItems(state.albums.displayableValues)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
             }
 
