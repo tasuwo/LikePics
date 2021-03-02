@@ -12,6 +12,8 @@ enum ClipCollectionNavigationBarReducer: Reducer {
     typealias Action = ClipCollectionNavigationBarAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
         let stream = Deferred {
             Future<Action?, Never> { promise in
                 if let event = action.mapToEvent() {
@@ -33,12 +35,11 @@ enum ClipCollectionNavigationBarReducer: Reducer {
         case let .stateChanged(clipCount: clipCount,
                                selectionCount: selectionCount,
                                operation: operation):
-            let newState = state
-                .updating(clipCount: clipCount)
-                .updating(selectionCount: selectionCount)
-                .updating(operation: operation)
-                .updatingAppearance()
-            return (newState, [eventEffect])
+            nextState.clipCount = clipCount
+            nextState.selectionCount = selectionCount
+            nextState.operation = operation
+            nextState = nextState.updatingAppearance()
+            return (nextState, [eventEffect])
 
         // MARK: - NavigationBar
 
@@ -55,6 +56,8 @@ enum ClipCollectionNavigationBarReducer: Reducer {
 
 private extension ClipCollectionNavigationBarState {
     func updatingAppearance() -> Self {
+        var nextState = self
+
         let isSelectedAll = clipCount <= selectionCount
         let isSelectable = clipCount > 0
         let existsClip = clipCount > 1
@@ -83,8 +86,10 @@ private extension ClipCollectionNavigationBarState {
             leftItems = []
         }
 
-        return self.updating(rightItems: rightItems,
-                             leftItems: leftItems)
+        nextState.rightItems = rightItems
+        nextState.leftItems = leftItems
+
+        return nextState
     }
 }
 
