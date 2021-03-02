@@ -200,26 +200,18 @@ extension DependencyContainer: Router {
         struct Dependency: ClipMergeViewDependency {
             let router: Router
             let clipCommandService: ClipCommandServiceProtocol
+            let clipQueryService: ClipQueryServiceProtocol
             let clipMergeCompleted: (Bool) -> Void
         }
         let dependency = Dependency(router: self,
                                     clipCommandService: clipCommandService,
+                                    clipQueryService: clipQueryService,
                                     clipMergeCompleted: completion)
-
-        let tags: [Tag]
-        switch clipQueryService.readClipAndTags(for: clips.map({ $0.id })) {
-        case let .success((_, fetchedTags)):
-            tags = fetchedTags
-
-        case .failure:
-            return false
-        }
-
         let state = ClipMergeViewState(items: clips.flatMap({ $0.items }),
-                                       tags: tags,
+                                       tags: [],
                                        alert: nil,
-                                       sourceClipIds: Set(clips.map({ $0.id })),
-                                       isDismissed: false)
+                                       isDismissed: false,
+                                       _sourceClipIds: Set(clips.map({ $0.id })))
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: dependency,
                                                      thumbnailLoader: temporaryThumbnailLoader)

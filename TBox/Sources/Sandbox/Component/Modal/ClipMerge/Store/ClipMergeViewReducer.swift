@@ -6,6 +6,7 @@ import Combine
 import Domain
 
 typealias ClipMergeViewDependency = HasRouter
+    & HasClipQueryService
     & HasClipCommandService
     & HasClipMergeModalSubscription
 
@@ -15,61 +16,96 @@ enum ClipMergeViewReducer: Reducer {
     typealias Action = ClipMergeViewAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
         switch action {
-        // MARK: - NavigationBar
+        // MARK: View Life-Cycle
+
+        case .viewDidLoad:
+            nextState = prepareState(initialState: state, dependency: dependency)
+            return (nextState, .none)
+
+        // MARK: NavigationBar
 
         case .saveButtonTapped:
             let itemIds = state.items.map({ $0.id })
             let tagIds = state.tags.map({ $0.id })
-            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
+            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state._sourceClipIds)) {
             case .success:
                 dependency.clipMergeCompleted(true)
-                return (state.updating(isDismissed: true), .none)
+                nextState.isDismissed = true
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipMergeViewErrorAtMerge)), .none)
+                nextState.alert = .error(L10n.clipMergeViewErrorAtMerge)
             }
+            return (nextState, .none)
 
         case .cancelButtonTapped:
             dependency.clipMergeCompleted(false)
-            return (state.updating(isDismissed: true), .none)
+            nextState.isDismissed = true
+            return (nextState, .none)
 
-        // MARK: - Button Action
+        // MARK: Button Action
 
         case .tagAdditionButtonTapped:
             let effect = showTagSelectionModal(selections: Set(state.tags.map({ $0.id })), dependency: dependency)
             return (state, [effect])
 
         case let .tagDeleteButtonTapped(tagId):
-            return (state.updating(tags: state.tags.filter({ $0.id != tagId })), .none)
+            nextState.tags = state.tags.filter({ $0.id != tagId })
+            return (nextState, .none)
 
         case let .siteUrlButtonTapped(url):
             dependency.router.open(url)
             return (state, .none)
 
-        // MARK: - CollectionView
+        // MARK: CollectionView
 
         case let .itemReordered(items):
-            return (state.updating(items: items), .none)
+            nextState.items = items
+            return (nextState, .none)
 
-        // MARK: - Modal Completion
+        // MARK: Modal Completion
 
         case let .tagsSelected(tags):
             guard let tags = tags else { return (state, .none) }
             let sortedTags = Array(tags).sorted(by: { $0.name < $1.name })
-            return (state.updating(tags: sortedTags), .none)
+            nextState.tags = sortedTags
+            return (nextState, .none)
 
-        // MARK: - Alert Completion
+        // MARK: Alert Completion
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
 
         // MARK: Transition
 
         case .didDismissedManually:
             dependency.clipMergeCompleted(false)
-            return (state.updating(isDismissed: true), .none)
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
+    }
+}
+
+// MARK: - Preparation
+
+extension ClipMergeViewReducer {
+    static func prepareState(initialState: State, dependency: Dependency) -> State {
+        let tags: [Tag]
+        switch dependency.clipQueryService.readClipAndTags(for: Array(initialState._sourceClipIds)) {
+        case let .success((_, fetchedTags)):
+            tags = fetchedTags
+
+        case let .failure(error):
+            fatalError("Failed to load tags: \(error.localizedDescription)")
+        }
+
+        var nextState = initialState
+        nextState.tags = tags
+
+        return nextState
     }
 }
 

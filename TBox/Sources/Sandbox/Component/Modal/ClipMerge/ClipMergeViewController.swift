@@ -60,6 +60,8 @@ class ClipMergeViewController: UIViewController {
         configureNavigationBar()
 
         bind(to: store)
+
+        store.execute(.viewDidLoad)
     }
 }
 
@@ -71,7 +73,8 @@ extension ClipMergeViewController {
             guard let self = self else { return }
 
             DispatchQueue.global().async {
-                self.dataSource.apply(Layout.createSnapshot(tags: state.tags, items: state.items))
+                let snapshot = self.createSnapshot(for: state)
+                self.dataSource.apply(snapshot)
             }
 
             self.presentAlertIfNeeded(for: state.alert)
@@ -81,6 +84,10 @@ extension ClipMergeViewController {
             }
         }
         .store(in: &subscriptions)
+    }
+
+    private func createSnapshot(for state: ClipMergeViewState) -> Layout.Snapshot {
+        return Layout.createSnapshot(tags: state.tags, items: state.items)
     }
 
     private func presentAlertIfNeeded(for alert: ClipMergeViewState.Alert?) {
@@ -124,34 +131,21 @@ extension ClipMergeViewController {
 
     private func configureReorder() {
         collectionView.dragInteractionEnabled = true
-        dataSource.reorderingHandlers.canReorderItem = {
-            switch $0 {
-            case .item:
-                return true
-
-            default:
-                return false
-            }
-        }
+        dataSource.reorderingHandlers.canReorderItem = { $0.isClipItem }
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             guard let self = self else { return }
-            let tags = self.store.stateValue.tags
-            let items = self.store.stateValue.items
-            let orderedResult = Layout.createItems(tags: tags, items: items).applying(transaction.difference)
-            let nullableOrderedItems = orderedResult?.compactMap { item -> ClipItem? in
-                switch item {
-                case let .item(clipItem):
-                    return clipItem
-
-                default:
-                    return nil
-                }
-            }
-            guard let orderedItems = nullableOrderedItems else { return }
-            self.store.execute(.itemReordered(orderedItems))
+            let result = self.createItems(for: self.store.stateValue)
+                .applying(transaction.difference)?
+                .compactMap { $0.clipItem }
+            guard let reorderedItems = result else { return }
+            self.store.execute(.itemReordered(reorderedItems))
         }
         collectionView.dragDelegate = self
         collectionView.dropDelegate = self
+    }
+
+    private func createItems(for state: ClipMergeViewState) -> [Layout.Item] {
+        return Layout.createItems(tags: state.tags, items: state.items)
     }
 
     private func configureNavigationBar() {
@@ -236,5 +230,27 @@ extension ClipMergeViewController: UIAdaptivePresentationControllerDelegate {
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         store.execute(.didDismissedManually)
+    }
+}
+
+extension ClipMergeViewLayout.Item {
+    var isClipItem: Bool {
+        switch self {
+        case .item:
+            return true
+
+        default:
+            return false
+        }
+    }
+
+    var clipItem: ClipItem? {
+        switch self {
+        case let .item(item):
+            return item
+
+        default:
+            return nil
+        }
     }
 }

@@ -5,26 +5,30 @@
 import Domain
 
 enum ClipMergeViewAction: Action {
-    // MARK: - NavigationBar
+    // MARK: View Life-Cycle
+
+    case viewDidLoad
+
+    // MARK: NavigationBar
 
     case saveButtonTapped
     case cancelButtonTapped
 
-    // MARK: - Button Action
+    // MARK: Button Action
 
     case tagAdditionButtonTapped
     case tagDeleteButtonTapped(Tag.Identity)
     case siteUrlButtonTapped(URL)
 
-    // MARK: - CollectionView
+    // MARK: CollectionView
 
     case itemReordered([ClipItem])
 
-    // MARK: - Modal Completion
+    // MARK: Modal Completion
 
     case tagsSelected(Set<Tag>?)
 
-    // MARK: - Alert Completion
+    // MARK: Alert Completion
 
     case alertDismissed
 
