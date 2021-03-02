@@ -16,6 +16,7 @@ enum AlbumListViewReducer: Reducer {
     typealias Action = AlbumListViewAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
@@ -25,28 +26,19 @@ enum AlbumListViewReducer: Reducer {
         // MARK: State Observation
 
         case let .albumsUpdated(albums):
-            var nextState = performFilter(albums: albums, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
-            return (nextState, .none)
+            return (performFilter(albums: albums, previousState: state), .none)
 
         case let .searchQueryChanged(query):
-            var nextState = performFilter(searchQuery: query, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
-            return (nextState, .none)
+            return (performFilter(searchQuery: query, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case let .editingChanged(isEditing: isEditing):
-            let newState = state
-                .updating(isEditing: isEditing)
-                .updating(isDragInteractionEnabled: isEditing)
-                .updating(isAddButtonEnabled: !isEditing)
-            return (newState, .none)
+            nextState.isEditing = isEditing
+            nextState.isDragInteractionEnabled = isEditing
+            nextState.isAddButtonEnabled = !isEditing
+            return (nextState, .none)
 
         // MARK: CollectionView
 
@@ -58,42 +50,47 @@ enum AlbumListViewReducer: Reducer {
         // MARK: NavigationBar
 
         case .addButtonTapped:
-            return (state.updating(alert: .addition), .none)
+            nextState.alert = .addition
+            return (nextState, .none)
 
         // MARK: Button Action
 
         case let .removerTapped(albumId, indexPath):
-            guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
-            return (state.updating(alert: .deletion(albumId: albumId, title: title, at: indexPath)), .none)
+            guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
+            nextState.alert = .deletion(albumId: albumId, title: title, at: indexPath)
+            return (nextState, .none)
 
         case let .editingTitleTapped(albumId):
-            guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
-            return (state.updating(alert: .renaming(albumId: albumId, title: title)), .none)
+            guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
+            nextState.alert = .renaming(albumId: albumId, title: title)
+            return (nextState, .none)
 
         case .emptyMessageViewActionButtonTapped:
-            return (state.updating(alert: .addition), .none)
+            nextState.alert = .addition
+            return (nextState, .none)
 
         // MARK: Reorder
 
         case let .reordered(albumIds):
-            let originals = state._orderedAlbums.map { $0.id }
+            let originals = state.albums.orderedValues.map { $0.id }
             let newOrder = performReorder(originals: originals, request: albumIds)
             switch dependency.clipCommandService.updateAlbums(byReordering: newOrder) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtReorder)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtReorder)
             }
+            return (nextState, .none)
 
         // MARK: Context Menu
 
         case let .renameMenuTapped(albumId):
-            guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
-            return (state.updating(alert: .renaming(albumId: albumId, title: title)), .none)
+            guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
+            nextState.alert = .renaming(albumId: albumId, title: title)
+            return (nextState, .none)
 
         case let .hideMenuTapped(albumId):
-            if state.isSomeItemsHidden {
+            if state._isSomeItemsHidden {
                 let stream = Deferred {
                     Future<Action?, Never> { promise in
                         // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
@@ -111,25 +108,26 @@ enum AlbumListViewReducer: Reducer {
 
         case let .revealMenuTapped(albumId):
             switch dependency.clipCommandService.updateAlbum(having: albumId, byHiding: false) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.albumListViewErrorAtRevealAlbum)), .none)
+                nextState.alert = .error(L10n.albumListViewErrorAtRevealAlbum)
             }
+            return (nextState, .none)
 
         case let .deleteMenuTapped(albumId, indexPath):
-            guard let title = state._albums[albumId]?.value.title else { return (state, .none) }
-            return (state.updating(alert: .deletion(albumId: albumId, title: title, at: indexPath)), .none)
+            guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
+            nextState.alert = .deletion(albumId: albumId, title: title, at: indexPath)
+            return (nextState, .none)
 
         case let .deferredHide(albumId):
             switch dependency.clipCommandService.updateAlbum(having: albumId, byHiding: true) {
-            case .success:
-                return (state, .none)
+            case .success: ()
 
             case .failure:
-                return (state.updating(alert: .error(L10n.albumListViewErrorAtHideAlbum)), .none)
+                nextState.alert = .error(L10n.albumListViewErrorAtHideAlbum)
             }
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
@@ -138,37 +136,43 @@ enum AlbumListViewReducer: Reducer {
             case .addition:
                 switch dependency.clipCommandService.create(albumWithTitle: text) {
                 case .success:
-                    return (state.updating(alert: nil), .none)
+                    nextState.alert = nil
 
                 case .failure:
-                    return (state.updating(alert: .error(L10n.albumListViewErrorAtAddAlbum)), .none)
+                    nextState.alert = .error(L10n.albumListViewErrorAtAddAlbum)
                 }
 
             case let .renaming(albumId: albumId, title: _):
                 switch dependency.clipCommandService.updateAlbum(having: albumId, titleTo: text) {
                 case .success:
-                    return (state.updating(alert: nil), .none)
+                    nextState.alert = nil
 
                 case .failure:
-                    return (state.updating(alert: .error(L10n.albumListViewErrorAtEditAlbum)), .none)
+                    nextState.alert = .error(L10n.albumListViewErrorAtEditAlbum)
                 }
 
             default:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
             }
+            return (nextState, .none)
 
         case .alertDeleteConfirmed:
-            guard case let .deletion(albumId: albumId, title: _, at: _) = state.alert else { return (state.updating(alert: nil), .none) }
+            guard case let .deletion(albumId: albumId, title: _, at: _) = state.alert else {
+                nextState.alert = nil
+                return (nextState, .none)
+            }
             switch dependency.clipCommandService.deleteAlbum(having: albumId) {
             case .success:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
 
             case .failure:
-                return (state.updating(alert: .error(L10n.clipCollectionErrorAtDeleteClips)), .none)
+                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClips)
             }
+            return (nextState, .none)
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
         }
     }
 }
@@ -187,10 +191,7 @@ extension AlbumListViewReducer {
         }
 
         let albumsStream = query.albums
-            .catch { _ in
-                // TODO: Error state
-                Just([])
-            }
+            .catch { _ in Just([]) }
             .map { Action.albumsUpdated($0) as Action? }
         let albumsEffect = Effect(albumsStream, underlying: query)
 
@@ -210,23 +211,23 @@ extension AlbumListViewReducer {
     {
         performFilter(albums: albums,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState._orderedAlbums,
+        performFilter(albums: previousState.albums.orderedValues,
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState._orderedAlbums,
+        performFilter(albums: previousState.albums.orderedValues,
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -237,23 +238,27 @@ extension AlbumListViewReducer {
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
+        var nextState = previousState
         var searchStorage = previousState._searchStorage
-
-        let dict = albums.enumerated().reduce(into: [Album.Identity: Ordered<Album>]()) { dict, value in
-            dict[value.element.id] = .init(index: value.offset, value: value.element)
-        }
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
+        let newAlbums = previousState.albums
+            .updated(_values: albums.indexed())
+            .updated(_displayableIds: Set(filteredAlbumIds))
+        nextState.albums = newAlbums
 
-        return previousState
-            .updating(searchQuery: searchQuery)
-            .updating(isSomeItemsHidden: isSomeItemsHidden)
-            .updating(isCollectionViewDisplaying: !filteringAlbums.isEmpty)
-            .updating(isEmptyMessageViewDisplaying: filteringAlbums.isEmpty)
-            .updating(_filteredAlbumIds: Set(filteredAlbumIds))
-            .updating(_albums: dict)
-            .updating(_searchStorage: searchStorage)
+        nextState.searchQuery = searchQuery
+        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.isCollectionViewDisplaying = !filteringAlbums.isEmpty
+        nextState.isEmptyMessageViewDisplaying = filteringAlbums.isEmpty
+        nextState._searchStorage = searchStorage
+
+        if filteringAlbums.isEmpty, !searchQuery.isEmpty {
+            nextState.searchQuery = ""
+        }
+
+        return nextState
     }
 }
 
@@ -269,8 +274,4 @@ extension AlbumListViewReducer {
                 return request[index - 1]
             }
     }
-}
-
-private extension AlbumListViewState {
-    var shouldClearQuery: Bool { _albums.isEmpty && !searchQuery.isEmpty }
 }
