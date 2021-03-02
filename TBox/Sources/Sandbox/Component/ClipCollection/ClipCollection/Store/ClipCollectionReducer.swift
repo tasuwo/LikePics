@@ -63,6 +63,28 @@ enum ClipCollectionReducer: Reducer {
             nextState.clips = nextState.clips.updated(_selectedIds: newSelections)
             return (nextState, .none)
 
+        case let .reordered(clipIds):
+            guard case let .album(albumId) = state.source else { return (state, .none) }
+
+            let originals = state.clips.orderedValues.map { $0.id }
+            guard Set(originals).count == originals.count, Set(clipIds).count == clipIds.count else {
+                nextState.alert = .error(L10n.albumListViewErrorAtReorderAlbum)
+                return (nextState, .none)
+            }
+
+            let ids = self.performReorder(originals: originals, request: clipIds)
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byReorderingClipsHaving: ids) {
+            case .success:
+                let newClips = ids
+                    .compactMap { state.clips._values[$0]?.value }
+                    .indexed()
+                nextState.clips = nextState.clips.updated(_values: newClips)
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtReorder)
+            }
+            return (nextState, .none)
+
         // MARK: NavigationBar/ToolBar
 
         case let .navigationBarEventOccurred(event):
@@ -424,6 +446,8 @@ extension ClipCollectionReducer {
                                 dependency: Dependency) -> (State, [Effect<Action>]?)
     {
         var nextState = state
+        nextState.isDragInteractionEnabled = false
+
         switch action {
         case .cancel:
             nextState.operation = .none
@@ -447,6 +471,7 @@ extension ClipCollectionReducer {
         case .reorder:
             nextState.operation = .reordering
             nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            nextState.isDragInteractionEnabled = true
             return (nextState, .none)
 
         case .done:
@@ -534,6 +559,18 @@ extension ClipCollectionReducer {
             }
             return (state, [Effect(stream)])
         }
+    }
+}
+
+extension ClipCollectionReducer {
+    private static func performReorder(originals: [Clip.Identity], request: [Clip.Identity]) -> [Clip.Identity] {
+        var index = 0
+        return originals
+            .map { original in
+                guard request.contains(original) else { return original }
+                index += 1
+                return request[index - 1]
+            }
     }
 }
 

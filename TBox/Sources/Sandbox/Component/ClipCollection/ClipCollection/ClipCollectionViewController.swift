@@ -80,6 +80,7 @@ class ClipCollectionViewController: UIViewController {
         configureNavigationBar()
         configureViewHierarchy()
         configureDataSource()
+        configureReorder()
         configureEmptyMessageView()
 
         navigationBarController.navigationItem = navigationItem
@@ -128,6 +129,7 @@ extension ClipCollectionViewController {
             self.title = state.title
 
             self.collectionView.isHidden = !state.isCollectionViewDisplaying
+            self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
 
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
 
@@ -244,6 +246,17 @@ extension ClipCollectionViewController {
         dataSource = Layout.configureDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
     }
 
+    private func configureReorder() {
+        collectionView.dragInteractionEnabled = false
+        dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in self?.isEditing ?? false }
+        dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            let clipIds = transaction.finalSnapshot.itemIdentifiers.map { $0.id }
+            self?.store.execute(.reordered(clipIds))
+        }
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
+    }
+
     private func configureEmptyMessageView() {
         emptyMessageView.title = store.stateValue.source.emptyMessageViewTitle
         emptyMessageView.message = store.stateValue.source.emptyMessageViewMessage
@@ -256,11 +269,13 @@ extension ClipCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard store.stateValue.operation != .reordering else { return false }
         guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
         return !cell.isLoading
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        guard store.stateValue.operation != .reordering else { return false }
         guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
         return !cell.isLoading
     }
@@ -465,6 +480,45 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
             view.layoutIfNeeded()
             collectionView.layoutIfNeeded()
         }
+    }
+}
+
+extension ClipCollectionViewController: UICollectionViewDragDelegate {
+    // MARK: - UICollectionViewDragDelegate
+
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
+        let provider = NSItemProvider(object: item.id.uuidString as NSString)
+        let dragItem = UIDragItem(itemProvider: provider)
+        return [dragItem]
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+}
+
+extension ClipCollectionViewController: UICollectionViewDropDelegate {
+    // MARK: - UICollectionViewDropDelegate
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return self.isEditing
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        // NOP
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
     }
 }
 

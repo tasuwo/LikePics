@@ -19,6 +19,7 @@ enum ClipCollectionAction: Action {
 
     case selected(Clip.Identity)
     case deselected(Clip.Identity)
+    case reordered([Clip.Identity])
 
     // MARK: NavigationBar/ToolBar
 

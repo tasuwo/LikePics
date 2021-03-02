@@ -23,6 +23,7 @@ struct ClipCollectionState: Equatable {
 
     var isEmptyMessageViewDisplaying: Bool
     var isCollectionViewDisplaying: Bool
+    var isDragInteractionEnabled: Bool
 
     var alert: Alert?
 
