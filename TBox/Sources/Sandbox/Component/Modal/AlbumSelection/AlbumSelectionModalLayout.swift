@@ -7,7 +7,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-enum AlbumSelectionViewLayout {
+enum AlbumSelectionModalLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
@@ -20,7 +20,7 @@ enum AlbumSelectionViewLayout {
 
 // MARK: - Layout
 
-extension AlbumSelectionViewLayout {
+extension AlbumSelectionModalLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
@@ -39,7 +39,7 @@ extension AlbumSelectionViewLayout {
 
 // MARK: - DataSource
 
-extension AlbumSelectionViewLayout {
+extension AlbumSelectionModalLayout {
     static func createDataSource(collectionView: UICollectionView,
                                  thumbnailLoader: ThumbnailLoaderProtocol) -> DataSource
     {

@@ -204,6 +204,7 @@
 		2C83ADC525E94CA3007122D5 /* Ordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C83ADC425E94CA3007122D5 /* Ordered.swift */; };
 		2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */; };
 		2C86CC5024E12E2D0091A89E /* ClipPreviewPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C86CC4F24E12E2D0091A89E /* ClipPreviewPageViewModel.swift */; };
+		2C88025C25EE83F700ED1FE0 /* HasAlbumSelectionModalSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88025B25EE83F700ED1FE0 /* HasAlbumSelectionModalSubscription.swift */; };
 		2C8AAFD825CC693600A1B3A4 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C8AAFF825CC694300A1B3A4 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C8AF8A524E3EE4F00CB0642 /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */; };
@@ -446,7 +447,7 @@
 		2CFCCC5025A4A0DE00EF31A4 /* ClipItemRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFCCC4F25A4A0DE00EF31A4 /* ClipItemRecipe.swift */; };
 		2CFDF212259AF3A800C97A6A /* ImageUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFDF211259AF3A800C97A6A /* ImageUtility.swift */; };
 		2CFEA95925C9975100434423 /* Searchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA95825C9975100434423 /* Searchable.swift */; };
-		2CFEA98325C9AC2400434423 /* AlbumSelectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA98225C9AC2400434423 /* AlbumSelectionViewLayout.swift */; };
+		2CFEA98325C9AC2400434423 /* AlbumSelectionModalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA98225C9AC2400434423 /* AlbumSelectionModalLayout.swift */; };
 		3D9A1A669D3972B87BDABEDA /* Pods_TBoxCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2889908DD1E5C0DBF725A2 /* Pods_TBoxCore.framework */; };
 		73DB1B16DEE7CDB7FFF0B669 /* Pods_Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5DD15CCF47AEAAC8E9A2824 /* Pods_Persistence.framework */; };
 		A23DF61484F1653DE1630077 /* Pods_TBoxTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5C95E9ADEEFC10F0D4D005 /* Pods_TBoxTests.framework */; };
@@ -981,6 +982,7 @@
 		2C83ADC425E94CA3007122D5 /* Ordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ordered.swift; sourceTree = "<group>"; };
 		2C86CC4C24E12DEA0091A89E /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
 		2C86CC4F24E12E2D0091A89E /* ClipPreviewPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewModel.swift; sourceTree = "<group>"; };
+		2C88025B25EE83F700ED1FE0 /* HasAlbumSelectionModalSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasAlbumSelectionModalSubscription.swift; sourceTree = "<group>"; };
 		2C8AF8A424E3EE4F00CB0642 /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
 		2C8B30532528348C00A0A151 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		2C8B305D252834D200A0A151 /* ClipInformationViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewDelegate.swift; sourceTree = "<group>"; };
@@ -1212,7 +1214,7 @@
 		2CFCCC4F25A4A0DE00EF31A4 /* ClipItemRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemRecipe.swift; sourceTree = "<group>"; };
 		2CFDF211259AF3A800C97A6A /* ImageUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtility.swift; sourceTree = "<group>"; };
 		2CFEA95825C9975100434423 /* Searchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Searchable.swift; sourceTree = "<group>"; };
-		2CFEA98225C9AC2400434423 /* AlbumSelectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionViewLayout.swift; sourceTree = "<group>"; };
+		2CFEA98225C9AC2400434423 /* AlbumSelectionModalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionModalLayout.swift; sourceTree = "<group>"; };
 		2D169F4CCD5D76EDB5CA64FA /* Pods_TBoxUIKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E73363DD8B39D3800264C9A /* Pods-TBox.debugdev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBox.debugdev.xcconfig"; path = "Target Support Files/Pods-TBox/Pods-TBox.debugdev.xcconfig"; sourceTree = "<group>"; };
 		3908911150AF3933643C7E43 /* Pods_TBoxUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TBoxUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1747,7 +1749,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE1E19925DBF816008CA68C /* AlbumSelectionModalController.swift */,
-				2CFEA98225C9AC2400434423 /* AlbumSelectionViewLayout.swift */,
+				2CFEA98225C9AC2400434423 /* AlbumSelectionModalLayout.swift */,
 				2CE1E16E25DBE71D008CA68C /* Store */,
 			);
 			path = AlbumSelection;
@@ -2536,6 +2538,14 @@
 			path = ClipPreview;
 			sourceTree = "<group>";
 		};
+		2C88025A25EE83E500ED1FE0 /* Dependency */ = {
+			isa = PBXGroup;
+			children = (
+				2C88025B25EE83F700ED1FE0 /* HasAlbumSelectionModalSubscription.swift */,
+			);
+			path = Dependency;
+			sourceTree = "<group>";
+		};
 		2C8AF8A324E3EE4200CB0642 /* ValueObject */ = {
 			isa = PBXGroup;
 			children = (
@@ -3047,6 +3057,7 @@
 		2CE1E16E25DBE71D008CA68C /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				2C88025A25EE83E500ED1FE0 /* Dependency */,
 				2CE1E16F25DBE728008CA68C /* AlbumSelectionModalState.swift */,
 				2CE1E18325DBE732008CA68C /* AlbumSelectionModalAction.swift */,
 				2CE1E18E25DBE856008CA68C /* AlbumSelectionModalReducer.swift */,
@@ -4771,6 +4782,7 @@
 				2CDF4F1925727DCF0030342B /* AppRootSetupPresenter.swift in Sources */,
 				2C1B1C7425D58FD900450AC9 /* Action.swift in Sources */,
 				2C1E4446257B5A6F00A067B1 /* ClipCollection_MenuItem.swift in Sources */,
+				2C88025C25EE83F700ED1FE0 /* HasAlbumSelectionModalSubscription.swift in Sources */,
 				2CE1E18425DBE732008CA68C /* AlbumSelectionModalAction.swift in Sources */,
 				2C532F6E25D1890E00432B83 /* Restorable.swift in Sources */,
 				2C3CCDC024F2E3BA00FAC660 /* AppRootSplitViewController+ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
@@ -4882,7 +4894,7 @@
 				2CFA2BD525D4DB45007F574B /* TextEditAlertAction.swift in Sources */,
 				2CDC79EB25E9EC5C00DCFAB7 /* HasTagSelectionModalSubscription.swift in Sources */,
 				2CCCEF9925DD7B29005BE170 /* ClipEditViewReducer.swift in Sources */,
-				2CFEA98325C9AC2400434423 /* AlbumSelectionViewLayout.swift in Sources */,
+				2CFEA98325C9AC2400434423 /* AlbumSelectionModalLayout.swift in Sources */,
 				2CEE66A725E9543F005A6323 /* Collection.swift in Sources */,
 				2C447A78250D438F00EAA448 /* ClipInformationViewModel.swift in Sources */,
 				2CB47AEE25D5143C008E38B8 /* HasRouter.swift in Sources */,

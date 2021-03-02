@@ -12,94 +12,17 @@ struct AlbumSelectionModalState: Equatable {
         case addition
     }
 
-    let searchQuery: String
-    let albums: Collection<Album>
-    let isSomeItemsHidden: Bool
+    var searchQuery: String
+    var albums: Collection<Album>
 
-    let isCollectionViewDisplaying: Bool
-    let isEmptyMessageViewDisplaying: Bool
-    let isSearchBarEnabled: Bool
+    var isCollectionViewDisplaying: Bool
+    var isEmptyMessageViewDisplaying: Bool
+    var isSearchBarEnabled: Bool
 
-    let alert: Alert?
+    var alert: Alert?
 
-    let _searchStorage: SearchableStorage<Album>
-}
+    var isDismissed: Bool
 
-extension AlbumSelectionModalState {
-    func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(isCollectionViewDisplaying: Bool) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(isEmptyMessageViewDisplaying: Bool) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(albums: Collection<Album>) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(_searchStorage: SearchableStorage<Album>) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(searchQuery: String) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
-
-    func updating(alert: Alert?) -> Self {
-        return .init(searchQuery: searchQuery,
-                     albums: albums,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isCollectionViewDisplaying: isCollectionViewDisplaying,
-                     isEmptyMessageViewDisplaying: isEmptyMessageViewDisplaying,
-                     isSearchBarEnabled: isSearchBarEnabled,
-                     alert: alert,
-                     _searchStorage: _searchStorage)
-    }
+    var _isSomeItemsHidden: Bool
+    var _searchStorage: SearchableStorage<Album>
 }

@@ -8,6 +8,7 @@ import Domain
 typealias AlbumSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
+    & HasAlbumSelectionModalSubscription
 
 enum AlbumSelectionModalReducer: Reducer {
     typealias Dependency = AlbumSelectionModalDependency
@@ -15,49 +16,58 @@ enum AlbumSelectionModalReducer: Reducer {
     typealias Action = AlbumSelectionModalAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(dependency))
+            return (nextState, prepareQueryEffects(dependency))
 
         // MARK: State Observation
 
         case let .albumsUpdated(albums):
-            var nextState = performFilter(albums: albums, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
+            nextState = performFilter(albums: albums, previousState: nextState)
             return (nextState, .none)
 
         case let .searchQueryChanged(query):
-            var nextState = performFilter(searchQuery: query, previousState: state)
-            if nextState.shouldClearQuery {
-                nextState = nextState.updating(searchQuery: "")
-            }
+            nextState = performFilter(searchQuery: query, previousState: nextState)
             return (nextState, .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: nextState), .none)
 
         // MARK: Button Action
 
+        case let .selected(albumId):
+            dependency.albumSelectionCompleted(albumId)
+            nextState.isDismissed = true
+            return (nextState, .none)
+
         case .emptyMessageViewActionButtonTapped, .addButtonTapped:
-            return (state.updating(alert: .addition), .none)
+            nextState.alert = .addition
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: text):
             switch dependency.clipCommandService.create(albumWithTitle: text) {
             case .success:
-                return (state.updating(alert: nil), .none)
+                nextState.alert = nil
 
             case .failure:
-                return (state.updating(alert: .error(L10n.albumListViewErrorAtAddAlbum)), .none)
+                nextState.alert = .error(L10n.albumListViewErrorAtAddAlbum)
             }
+            return (nextState, .none)
 
         case .alertDismissed:
-            return (state.updating(alert: nil), .none)
+            nextState.alert = nil
+            return (nextState, .none)
+
+        case .modalDismissedManually:
+            dependency.albumSelectionCompleted(nil)
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }
@@ -96,7 +106,7 @@ extension AlbumSelectionModalReducer {
     {
         performFilter(albums: albums,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -105,7 +115,7 @@ extension AlbumSelectionModalReducer {
     {
         performFilter(albums: previousState.albums.orderedValues,
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -123,6 +133,7 @@ extension AlbumSelectionModalReducer {
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
+        var nextState = previousState
         var searchStorage = previousState._searchStorage
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
@@ -130,17 +141,18 @@ extension AlbumSelectionModalReducer {
         let newAlbums = previousState.albums
             .updated(_values: albums.indexed())
             .updated(_displayableIds: Set(filteredAlbumIds))
+        nextState.albums = newAlbums
 
-        return previousState
-            .updating(searchQuery: searchQuery)
-            .updating(isSomeItemsHidden: isSomeItemsHidden)
-            .updating(isCollectionViewDisplaying: !filteringAlbums.isEmpty)
-            .updating(isEmptyMessageViewDisplaying: filteringAlbums.isEmpty)
-            .updating(albums: newAlbums)
-            .updating(_searchStorage: searchStorage)
+        nextState.searchQuery = searchQuery
+        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.isCollectionViewDisplaying = !filteringAlbums.isEmpty
+        nextState.isEmptyMessageViewDisplaying = filteringAlbums.isEmpty
+        nextState._searchStorage = searchStorage
+
+        if filteringAlbums.isEmpty, !searchQuery.isEmpty {
+            nextState.searchQuery = ""
+        }
+
+        return nextState
     }
-}
-
-private extension AlbumSelectionModalState {
-    var shouldClearQuery: Bool { albums._values.isEmpty && !searchQuery.isEmpty }
 }

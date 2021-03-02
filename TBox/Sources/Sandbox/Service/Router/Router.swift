@@ -24,7 +24,7 @@ protocol Router {
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool
 
     @discardableResult
-    func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool
+    func showAlbumSelectionModal(completion: @escaping (Album.Identity?) -> Void) -> Bool
 
     @discardableResult
     func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool

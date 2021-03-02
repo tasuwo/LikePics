@@ -17,6 +17,7 @@ enum AlbumSelectionModalAction: Action {
 
     // MARK: Button Action
 
+    case selected(Album.Identity)
     case emptyMessageViewActionButtonTapped
     case addButtonTapped
 
@@ -24,4 +25,8 @@ enum AlbumSelectionModalAction: Action {
 
     case alertSaveButtonTapped(text: String)
     case alertDismissed
+
+    // MARK: Transition
+
+    case modalDismissedManually
 }

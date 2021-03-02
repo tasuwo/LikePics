@@ -9,7 +9,7 @@ import TBoxUIKit
 import UIKit
 
 class AlbumSelectionModalController: UIViewController {
-    typealias Layout = AlbumSelectionViewLayout
+    typealias Layout = AlbumSelectionModalLayout
     typealias Store = LikePics.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
 
     // MARK: - Properties
@@ -29,7 +29,6 @@ class AlbumSelectionModalController: UIViewController {
 
     // MARK: Store
 
-    private let completion: ((Album.Identity?) -> Void)?
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -38,13 +37,11 @@ class AlbumSelectionModalController: UIViewController {
     init(state: AlbumSelectionModalState,
          albumAdditionAlertState: TextEditAlertState,
          dependency: AlbumSelectionModalDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol,
-         completion: ((Album.Identity?) -> Void)?)
+         thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer.self)
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.thumbnailLoader = thumbnailLoader
-        self.completion = completion
         super.init(nibName: nil, bundle: nil)
 
         albumAdditionAlert.textEditAlertDelegate = self
@@ -92,6 +89,10 @@ extension AlbumSelectionModalController {
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
 
             self.presentAlertIfNeeded(for: state.alert)
+
+            if state.isDismissed {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         .store(in: &subscriptions)
     }
@@ -191,8 +192,7 @@ extension AlbumSelectionModalController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        completion?(album.identity)
-        dismiss(animated: true, completion: nil)
+        store.execute(.selected(album.identity))
     }
 }
 
@@ -244,7 +244,7 @@ extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegat
     // MARK: - UIAdaptivePresentationControllerDelegate
 
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        completion?(nil)
+        store.execute(.modalDismissedManually)
     }
 }
 

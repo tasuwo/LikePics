@@ -144,16 +144,27 @@ extension DependencyContainer: Router {
         return true
     }
 
-    func showAlbumSelectionModal(completion: ((Album.Identity?) -> Void)?) -> Bool {
+    func showAlbumSelectionModal(completion: @escaping (Album.Identity?) -> Void) -> Bool {
+        struct Dependency: AlbumSelectionModalDependency {
+            let userSettingStorage: UserSettingsStorageProtocol
+            let clipCommandService: ClipCommandServiceProtocol
+            let clipQueryService: ClipQueryServiceProtocol
+            let albumSelectionCompleted: (Album.Identity?) -> Void
+        }
+        let dependency = Dependency(userSettingStorage: userSettingStorage,
+                                    clipCommandService: clipCommandService,
+                                    clipQueryService: clipQueryService,
+                                    albumSelectionCompleted: completion)
         let state = AlbumSelectionModalState(searchQuery: "",
                                              albums: .init(_values: [:],
                                                            _selectedIds: .init(),
                                                            _displayableIds: .init()),
-                                             isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              isCollectionViewDisplaying: false,
                                              isEmptyMessageViewDisplaying: false,
                                              isSearchBarEnabled: false,
                                              alert: nil,
+                                             isDismissed: false,
+                                             _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              _searchStorage: .init())
         let albumAdditionAlertState = TextEditAlertState(id: UUID(),
                                                          title: L10n.albumListViewAlertForAddTitle,
@@ -164,9 +175,8 @@ extension DependencyContainer: Router {
                                                          isPresenting: false)
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
-                                                           dependency: self,
-                                                           thumbnailLoader: albumThumbnailLoader,
-                                                           completion: completion)
+                                                           dependency: dependency,
+                                                           thumbnailLoader: albumThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
