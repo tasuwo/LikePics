@@ -16,90 +16,18 @@ struct ClipEditViewState: Equatable {
         let isHidden: Bool
     }
 
-    let clip: EditingClip
-    let tags: Collection<Tag>
-    let items: Collection<ClipItem>
-    let isSomeItemsHidden: Bool
+    var clip: EditingClip
+    var tags: Collection<Tag>
+    var items: Collection<ClipItem>
+    var isSomeItemsHidden: Bool
 
-    let isItemsEditing: Bool
+    var isItemsEditing: Bool
 
-    let alert: Alert?
+    var alert: Alert?
 
-    let isDismissed: Bool
+    var isDismissed: Bool
 }
 
 extension ClipEditViewState {
     var isItemDeletionEnabled: Bool { items.displayableValues.count > 1 }
-}
-
-extension ClipEditViewState {
-    func updating(clip: EditingClip) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(tags: Collection<Tag>) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(items: Collection<ClipItem>) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(isSomeItemsHidden: Bool) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(isItemsEditing: Bool) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(alert: Alert?) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
-
-    func updating(isDismissed: Bool) -> Self {
-        return .init(clip: clip,
-                     tags: tags,
-                     items: items,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     isItemsEditing: isItemsEditing,
-                     alert: alert,
-                     isDismissed: isDismissed)
-    }
 }
