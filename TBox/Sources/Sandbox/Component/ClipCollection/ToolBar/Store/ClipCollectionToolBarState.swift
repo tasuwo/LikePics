@@ -34,60 +34,13 @@ struct ClipCollectionToolBarState: Equatable {
         }
     }
 
-    let context: Context
+    var context: Context
 
-    let items: [Item]
-    let isHidden: Bool
+    var items: [Item]
+    var isHidden: Bool
 
-    let _targetCount: Int
-    let _operation: ClipCollectionState.Operation
+    var _targetCount: Int
+    var _operation: ClipCollectionState.Operation
 
-    let alert: Alert?
-}
-
-extension ClipCollectionToolBarState {
-    func updating(alert: Alert?) -> Self {
-        return .init(context: context,
-                     items: items,
-                     isHidden: isHidden,
-                     _targetCount: _targetCount,
-                     _operation: _operation,
-                     alert: alert)
-    }
-
-    func updating(targetCount: Int) -> Self {
-        return .init(context: context,
-                     items: items,
-                     isHidden: isHidden,
-                     _targetCount: targetCount,
-                     _operation: _operation,
-                     alert: alert)
-    }
-
-    func updating(operation: ClipCollectionState.Operation) -> Self {
-        return .init(context: context,
-                     items: items,
-                     isHidden: isHidden,
-                     _targetCount: _targetCount,
-                     _operation: operation,
-                     alert: alert)
-    }
-
-    func updating(isHidden: Bool) -> Self {
-        return .init(context: context,
-                     items: items,
-                     isHidden: isHidden,
-                     _targetCount: _targetCount,
-                     _operation: _operation,
-                     alert: alert)
-    }
-
-    func updating(items: [Item]) -> Self {
-        return .init(context: context,
-                     items: items,
-                     isHidden: isHidden,
-                     _targetCount: _targetCount,
-                     _operation: _operation,
-                     alert: alert)
-    }
+    var alert: Alert?
 }

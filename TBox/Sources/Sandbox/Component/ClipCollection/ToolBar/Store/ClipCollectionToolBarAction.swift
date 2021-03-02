@@ -5,16 +5,16 @@
 import Foundation
 
 enum ClipCollectionToolBarAction: Action {
-    // MARK: - View Life-Cycle
+    // MARK: View Life-Cycle
 
     case viewDidLoad
 
-    // MARK: - State Observation
+    // MARK: State Observation
 
     case stateChanged(selectionCount: Int,
                       operation: ClipCollectionState.Operation)
 
-    // MARK: - ToolBar
+    // MARK: ToolBar
 
     case addButtonTapped
     case changeVisibilityButtonTapped
@@ -22,7 +22,7 @@ enum ClipCollectionToolBarAction: Action {
     case deleteButtonTapped
     case mergeButtonTapped
 
-    // MARK: - Alert Completion
+    // MARK: Alert Completion
 
     case alertAddToAlbumConfirmed
     case alertAddTagsConfirmed

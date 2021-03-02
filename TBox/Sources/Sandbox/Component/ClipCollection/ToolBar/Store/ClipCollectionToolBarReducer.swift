@@ -12,6 +12,8 @@ enum ClipCollectionToolBarReducer: Reducer {
     typealias Action = ClipCollectionToolBarAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
         let stream = Deferred {
             Future<Action?, Never> { promise in
                 if let event = action.mapToEvent() {
@@ -23,38 +25,41 @@ enum ClipCollectionToolBarReducer: Reducer {
         let eventEffect = Effect(stream)
 
         switch action {
-        // MARK: - View Life-Cycle
+        // MARK: View Life-Cycle
 
         case .viewDidLoad:
             return (state.updatingAppearance(), [eventEffect])
 
-        // MARK: - State Observation
+        // MARK: State Observation
 
         case let .stateChanged(selectionCount: selectionCount, operation: operation):
-            let newState = state
-                .updating(targetCount: selectionCount)
-                .updating(operation: operation)
-                .updatingAppearance()
-            return (newState, [eventEffect])
+            nextState._targetCount = selectionCount
+            nextState._operation = operation
+            nextState = nextState.updatingAppearance()
+            return (nextState, [eventEffect])
 
-        // MARK: - ToolBar
+        // MARK: ToolBar
 
         case .addButtonTapped:
-            return (state.updating(alert: .addition), [eventEffect])
+            nextState.alert = .addition
+            return (nextState, [eventEffect])
 
         case .changeVisibilityButtonTapped:
-            return (state.updating(alert: .changeVisibility), [eventEffect])
+            nextState.alert = .changeVisibility
+            return (nextState, [eventEffect])
 
         case .shareButtonTapped:
+            // TODO:
             return (state, [eventEffect])
 
         case .deleteButtonTapped:
-            return (state.updating(alert: .deletion(includesRemoveFromAlbum: state.context.isAlbum)), [eventEffect])
+            nextState.alert = .deletion(includesRemoveFromAlbum: state.context.isAlbum)
+            return (nextState, [eventEffect])
 
         case .mergeButtonTapped:
             return (state, [eventEffect])
 
-        // MARK: - Alert Completion
+        // MARK: Alert Completion
 
         case .alertAddToAlbumConfirmed,
              .alertAddTagsConfirmed,
@@ -63,23 +68,27 @@ enum ClipCollectionToolBarReducer: Reducer {
              .alertRemoveFromAlbumConfirmed,
              .alertDeleteConfirmed,
              .alertDismissed:
-            return (state.updating(alert: nil), [eventEffect])
+            nextState.alert = nil
+            return (nextState, [eventEffect])
         }
     }
 }
 
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
+        var nextState = self
         let isEnabled = _targetCount > 0
-        return self
-            .updating(isHidden: _operation != .selecting)
-            .updating(items: [
-                Item(kind: .add, isEnabled: isEnabled),
-                Item(kind: .changeVisibility, isEnabled: isEnabled),
-                Item(kind: .share, isEnabled: isEnabled),
-                Item(kind: .delete, isEnabled: isEnabled),
-                Item(kind: .merge, isEnabled: isEnabled && _targetCount > 1)
-            ])
+
+        nextState.isHidden = _operation != .selecting
+        nextState.items = [
+            Item(kind: .add, isEnabled: isEnabled),
+            Item(kind: .changeVisibility, isEnabled: isEnabled),
+            Item(kind: .share, isEnabled: isEnabled),
+            Item(kind: .delete, isEnabled: isEnabled),
+            Item(kind: .merge, isEnabled: isEnabled && _targetCount > 1)
+        ]
+
+        return nextState
     }
 }
 
