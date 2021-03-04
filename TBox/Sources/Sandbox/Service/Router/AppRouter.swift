@@ -50,7 +50,7 @@ extension DependencyContainer {
                                                       operation: .none,
                                                       items: [],
                                                       isHidden: true,
-                                                      _targetCount: 0,
+                                                      _selections: .init(),
                                                       alert: nil)
 
         return ClipCollectionViewController(state: state,
@@ -189,12 +189,6 @@ extension DependencyContainer: Router {
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
-    }
-
-    func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool {
-        // TODO:
-        print(#function)
-        return false
     }
 
     func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool {

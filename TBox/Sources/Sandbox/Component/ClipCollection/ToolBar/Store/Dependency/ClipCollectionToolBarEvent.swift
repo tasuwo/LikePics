@@ -7,7 +7,7 @@ enum ClipCollectionToolBarEvent {
     case addTags
     case hide
     case reveal
-    case share
+    case share(Bool)
     case delete
     case removeFromAlbum
     case merge

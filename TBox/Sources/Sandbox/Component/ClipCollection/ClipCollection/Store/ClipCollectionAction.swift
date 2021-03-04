@@ -49,6 +49,7 @@ enum ClipCollectionAction: Action {
 
     case alertDeleteConfirmed
     case alertPurgeConfirmed
+    case alertShareDismissed(Bool)
     case alertDismissed
 
     // MARK: Transition

@@ -27,9 +27,6 @@ protocol Router {
     func showAlbumSelectionModal(completion: @escaping (Album.Identity?) -> Void) -> Bool
 
     @discardableResult
-    func showShareModal(from: ClipCollection.ShareSource, clips: Set<Clip.Identity>, completion: ((Bool) -> Void)?) -> Bool
-
-    @discardableResult
     func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool
 
     @discardableResult

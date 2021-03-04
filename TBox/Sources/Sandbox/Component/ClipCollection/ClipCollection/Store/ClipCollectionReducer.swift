@@ -9,6 +9,7 @@ typealias ClipCollectionDependency = HasRouter
     & HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
+    & HasImageQueryService
 
 enum ClipCollectionReducer: Reducer {
     typealias Dependency = ClipCollectionDependency
@@ -158,9 +159,13 @@ enum ClipCollectionReducer: Reducer {
             }
             return (state, [Effect(stream)])
 
-        case let .shareMenuTapped(clipId, _):
-            let effect = showShareModal(from: .menu(clipId), for: Set([clipId]), dependency: dependency)
-            return (state, [effect])
+        case let .shareMenuTapped(clipId, indexPath):
+            guard let imageIds = state.clips._values[clipId]?.value.items.map({ $0.imageId }) else { return (state, .none) }
+            let data = imageIds.compactMap { imageId in
+                try? dependency.imageQueryService.read(having: imageId)
+            }
+            nextState.alert = .share(data: data, at: indexPath)
+            return (nextState, .none)
 
         case let .purgeMenuTapped(clipId, indexPath):
             nextState.alert = .purge(clipId: clipId, at: indexPath)
@@ -237,6 +242,11 @@ enum ClipCollectionReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtPurge)
             }
+            return (nextState, .none)
+
+        case let .alertShareDismissed(succeeded):
+            if succeeded { nextState = nextState.editingEnded() }
+            nextState.alert = nil
             return (nextState, .none)
 
         case .alertDismissed:
@@ -361,20 +371,6 @@ extension ClipCollectionReducer {
             Future<Action?, Never> { promise in
                 let isPresented = dependency.router.showAlbumSelectionModal { albumId in
                     promise(.success(.albumsSelected(albumId, for: clipIds)))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
-    }
-
-    static func showShareModal(from source: ClipCollection.ShareSource, for clipIds: Set<Clip.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showShareModal(from: source, clips: clipIds) { succeeded in
-                    promise(.success(.modalCompleted(succeeded)))
                 }
                 if !isPresented {
                     promise(.success(.modalCompleted(false)))
@@ -521,9 +517,10 @@ extension ClipCollectionReducer {
             }
             return (nextState, .none)
 
-        case .share:
-            let effect = showShareModal(from: .toolBar, for: state.clips._displayableIds, dependency: dependency)
-            return (state, [effect])
+        case let .share(succeeded):
+            if succeeded { nextState = nextState.editingEnded() }
+            nextState.alert = nil
+            return (nextState, .none)
 
         case .delete:
             switch dependency.clipCommandService.deleteClips(having: Array(state.clips._displayableIds)) {

@@ -12,9 +12,10 @@ class ClipCollectionViewController: UIViewController {
     typealias Layout = ClipCollectionViewLayout
     typealias ClipCollectionViewStore = Store<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
 
-    struct BarDependencyContainer: HasClipCollectionToolBarDelegate, HasClipCollectionNavigationBarDelegate {
+    struct BarDependencyContainer: HasClipCollectionToolBarDelegate, HasClipCollectionNavigationBarDelegate, HasImageQueryService {
         weak var clipCollectionToolBarDelegate: ClipCollectionToolBarDelegate?
         weak var clipCollectionNavigationBarDelegate: ClipCollectionNavigationBarDelegate?
+        var imageQueryService: ImageQueryServiceProtocol
     }
 
     // MARK: - Properties
@@ -50,7 +51,7 @@ class ClipCollectionViewController: UIViewController {
     init(state: ClipCollectionState,
          navigationBarState: ClipCollectionNavigationBarState,
          toolBarState: ClipCollectionToolBarState,
-         dependency: ClipCollectionDependency,
+         dependency: ClipCollectionDependency & HasImageQueryService,
          thumbnailLoader: ThumbnailLoaderProtocol,
          menuBuilder: ClipCollectionMenuBuildable)
     {
@@ -62,7 +63,8 @@ class ClipCollectionViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         let barDependency = BarDependencyContainer(clipCollectionToolBarDelegate: self,
-                                                   clipCollectionNavigationBarDelegate: self)
+                                                   clipCollectionNavigationBarDelegate: self,
+                                                   imageQueryService: dependency.imageQueryService)
         navigationBarController = ClipCollectionNavigationBarController(state: navigationBarState, dependency: barDependency)
         toolBarController = ClipCollectionToolBarController(state: toolBarState, dependency: barDependency)
     }
@@ -145,7 +147,10 @@ extension ClipCollectionViewController {
 
             // Propagation
 
-            self.toolBarController.store.execute(.stateChanged(selectionCount: state.clips._selectedIds.count,
+            let selections = state.clips.selectedValues.reduce(into: [Clip.Identity: Set<ImageContainer.Identity>]()) { dict, clip in
+                dict[clip.identity] = Set(clip.items.compactMap({ $0.imageId }))
+            }
+            self.toolBarController.store.execute(.stateChanged(selections: selections,
                                                                operation: state.operation))
             self.navigationBarController.store.execute(.stateChanged(clipCount: state.clips._displayableIds.count,
                                                                      selectionCount: state.clips._selectedIds.count,
@@ -176,16 +181,13 @@ extension ClipCollectionViewController {
             presentErrorMessageAlertIfNeeded(message: message)
 
         case let .deletion(clipId: _, at: indexPath):
-            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            // presentDeleteAlert(at: cell, in: collectionView) { [weak self] in
-            //     self?.store.execute(.alertDeleteConfirmed)
-            // }
+            presentDeletionAlert(at: indexPath)
 
         case let .purge(clipId: _, at: indexPath):
-            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-            // presentPurgeAlert(at: cell, in: collectionView) { [weak self] in
-            //     self?.store.execute(.alertPurgeConfirmed)
-            // }
+            presentPurgeAlert(at: indexPath)
+
+        case let .share(data: data, at: indexPath):
+            presentShareAlert(data: data, at: indexPath)
 
         case .none:
             break
@@ -198,6 +200,77 @@ extension ClipCollectionViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentPurgeAlert(at indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForPurgeMessage,
+                                      preferredStyle: .actionSheet)
+
+        alert.addAction(.init(title: L10n.clipsListAlertForPurgeAction, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertPurgeConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentDeletionAlert(at indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForDeleteMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipsListAlertForDeleteAction(1)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertDeleteConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentShareAlert(data: [Data], at indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+        controller.popoverPresentationController?.sourceView = self.collectionView
+        controller.popoverPresentationController?.sourceRect = cell.frame
+        controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in
+            if success {
+                self?.store.execute(.alertShareDismissed(true))
+            } else {
+                if activity == nil {
+                    self?.store.execute(.alertShareDismissed(false))
+                } else {
+                    // NOP
+                }
+            }
+        }
+
+        self.present(controller, animated: true, completion: nil)
     }
 
     private func updateHiddenIconAppearance() {

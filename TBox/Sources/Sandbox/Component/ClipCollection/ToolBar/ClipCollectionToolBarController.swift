@@ -60,7 +60,7 @@ extension ClipCollectionToolBarController {
             self.toolBarHostingViewController?.setToolbarItems(items, animated: true)
 
             if let alert = state.alert {
-                self.presentAlertIfNeeded(for: alert, targetCount: state._targetCount)
+                self.presentAlertIfNeeded(for: alert, targetCount: state._selections.count)
             }
         }
         .store(in: &subscriptions)
@@ -83,6 +83,9 @@ extension ClipCollectionToolBarController {
 
         case .deletion(includesRemoveFromAlbum: true):
             presentAlertForDeleteIncludesRemoveFromAlbum()
+
+        case let .share(data: data):
+            presentAlertForShare(data: data)
         }
     }
 
@@ -154,6 +157,24 @@ extension ClipCollectionToolBarController {
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
         alertHostingViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentAlertForShare(data: [Data]) {
+        let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+        controller.popoverPresentationController?.barButtonItem = shareItem
+        controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in
+            if success {
+                self?.store.execute(.alertShareConfirmed(true))
+            } else {
+                if activity == nil {
+                    self?.store.execute(.alertShareConfirmed(false))
+                } else {
+                    // NOP
+                }
+            }
+        }
+
+        alertHostingViewController?.present(controller, animated: true, completion: nil)
     }
 }
 

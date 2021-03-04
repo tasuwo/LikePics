@@ -5,6 +5,7 @@
 import Combine
 
 typealias ClipCollectionToolBarDependency = HasClipCollectionToolBarDelegate
+    & HasImageQueryService
 
 enum ClipCollectionToolBarReducer: Reducer {
     typealias Dependency = ClipCollectionToolBarDependency
@@ -32,8 +33,8 @@ enum ClipCollectionToolBarReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .stateChanged(selectionCount: selectionCount, operation: operation):
-            nextState._targetCount = selectionCount
+        case let .stateChanged(selections: selections, operation: operation):
+            nextState._selections = selections
             nextState.operation = operation
             nextState = nextState.updatingAppearance()
             return (nextState, [eventEffect])
@@ -49,8 +50,11 @@ enum ClipCollectionToolBarReducer: Reducer {
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
-            // TODO:
-            return (state, [eventEffect])
+            let data = Set(state._selections.values.flatMap({ $0 })).compactMap { imageId in
+                try? dependency.imageQueryService.read(having: imageId)
+            }
+            nextState.alert = .share(data: data)
+            return (nextState, [eventEffect])
 
         case .deleteButtonTapped:
             nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum)
@@ -67,7 +71,8 @@ enum ClipCollectionToolBarReducer: Reducer {
              .alertRevealConfirmed,
              .alertRemoveFromAlbumConfirmed,
              .alertDeleteConfirmed,
-             .alertDismissed:
+             .alertDismissed,
+             .alertShareConfirmed:
             nextState.alert = nil
             return (nextState, [eventEffect])
         }
@@ -77,7 +82,7 @@ enum ClipCollectionToolBarReducer: Reducer {
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
         var nextState = self
-        let isEnabled = _targetCount > 0
+        let isEnabled = !_selections.isEmpty
 
         nextState.isHidden = operation != .selecting
         nextState.items = [
@@ -85,7 +90,7 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            Item(kind: .merge, isEnabled: isEnabled && _targetCount > 1)
+            Item(kind: .merge, isEnabled: isEnabled && _selections.count > 1)
         ]
 
         return nextState
@@ -107,8 +112,8 @@ private extension ClipCollectionToolBarAction {
         case .alertRevealConfirmed:
             return .reveal
 
-        case .shareButtonTapped:
-            return .share
+        case let .alertShareConfirmed(succeeded):
+            return .share(succeeded)
 
         case .alertRemoveFromAlbumConfirmed:
             return .removeFromAlbum

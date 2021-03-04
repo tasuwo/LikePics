@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import Foundation
+import Domain
 
 enum ClipCollectionToolBarAction: Action {
     // MARK: View Life-Cycle
@@ -11,7 +11,7 @@ enum ClipCollectionToolBarAction: Action {
 
     // MARK: State Observation
 
-    case stateChanged(selectionCount: Int,
+    case stateChanged(selections: [Clip.Identity: Set<ImageContainer.Identity>],
                       operation: ClipCollection.Operation)
 
     // MARK: ToolBar
@@ -32,6 +32,7 @@ enum ClipCollectionToolBarAction: Action {
 
     case alertRemoveFromAlbumConfirmed
     case alertDeleteConfirmed
+    case alertShareConfirmed(Bool)
 
     case alertDismissed
 }

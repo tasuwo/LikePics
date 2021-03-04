@@ -37,7 +37,7 @@ class DependencyContainer {
 
     let _clipCommandService: ClipCommandService
     let _clipQueryService: ClipQueryService
-    let imageQueryService: ImageQueryService
+    let _imageQueryService: ImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporariesPersistServiceProtocol
 
@@ -82,13 +82,13 @@ class DependencyContainer {
         self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
-        self.imageQueryService = ImageQueryService(context: self.imageQueryContext)
+        self._imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         Self.sweepLegacyThumbnailCachesIfExists()
 
         let defaultCostLimit = Int(MemoryCache.Configuration.defaultCostLimit())
 
-        var clipCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
+        var clipCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
@@ -97,7 +97,7 @@ class DependencyContainer {
         clipCacheConfig.memoryCache = clipMemoryCache
         self.clipThumbnailLoader = ThumbnailLoader(queue: .init(config: clipCacheConfig))
 
-        var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
+        var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
@@ -105,7 +105,7 @@ class DependencyContainer {
         albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
         self.albumThumbnailLoader = ThumbnailLoader(queue: .init(config: albumCacheConfig))
 
-        var temporaryCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self.imageQueryService)
+        var temporaryCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
         self.temporaryThumbnailLoader = ThumbnailLoader(queue: .init(config: temporaryCacheConfig))
@@ -113,7 +113,7 @@ class DependencyContainer {
         let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
         self.previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
                                            thumbnailDiskCache: self.clipDiskCache,
-                                           imageQueryService: self.imageQueryService,
+                                           imageQueryService: self._imageQueryService,
                                            memoryCache: previewMemoryCache)
 
         self._clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
@@ -209,7 +209,7 @@ extension DependencyContainer: CoreDataStackObserver {
         }
 
         self._clipQueryService.context = self.coreDataStack.viewContext
-        self.imageQueryService.context = newImageQueryContext
+        self._imageQueryService.context = newImageQueryContext
     }
 }
 
@@ -233,4 +233,8 @@ extension DependencyContainer: HasClipQueryService {
 
 extension DependencyContainer: HasUserSettingStorage {
     var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
+}
+
+extension DependencyContainer: HasImageQueryService {
+    var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
 }

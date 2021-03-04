@@ -5,7 +5,7 @@
 import Domain
 
 extension ClipCollection {
-    enum ShareSource {
+    enum ShareSource: Equatable {
         case menu(Clip.Identity)
         case toolBar
     }

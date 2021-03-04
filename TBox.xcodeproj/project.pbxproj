@@ -69,6 +69,7 @@
 		2C1B1C9C25D5922E00450AC9 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1B1C9B25D5922E00450AC9 /* Store.swift */; };
 		2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1C56B425B9B8E5008271DD /* URLButtonInteractionHandler.swift */; };
 		2C1CBAC42595B9510078FFB8 /* MultiLineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */; };
+		2C1CC42925F1392B00876946 /* HasImageQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1CC42825F1392B00876946 /* HasImageQueryService.swift */; };
 		2C1E440F257B241300A067B1 /* ICloudSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */; };
 		2C1E4419257B308B00A067B1 /* ClipCollectionMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */; };
 		2C1E4434257B5A5700A067B1 /* ClipCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E4433257B5A5700A067B1 /* ClipCollection.swift */; };
@@ -830,6 +831,7 @@
 		2C1CBA8D2595902D0078FFB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBA9F259590350078FFB8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C1CBAC32595B9510078FFB8 /* MultiLineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineButton.swift; sourceTree = "<group>"; };
+		2C1CC42825F1392B00876946 /* HasImageQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasImageQueryService.swift; sourceTree = "<group>"; };
 		2C1E440E257B241300A067B1 /* ICloudSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncMonitor.swift; sourceTree = "<group>"; };
 		2C1E4418257B308B00A067B1 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2C1E4433257B5A5700A067B1 /* ClipCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection.swift; sourceTree = "<group>"; };
@@ -3346,6 +3348,7 @@
 				2CFA2BAC25D4D3CD007F574B /* HasTextValidator.swift */,
 				2CD6C1FF25D6421D0000D5C3 /* HasClipQueryService.swift */,
 				2CD6C21325D64E290000D5C3 /* HasUserSettingStorage.swift */,
+				2C1CC42825F1392B00876946 /* HasImageQueryService.swift */,
 			);
 			path = Dependency;
 			sourceTree = "<group>";
@@ -4822,6 +4825,7 @@
 				2C86CC4D24E12DEA0091A89E /* ClipPreviewPageViewController.swift in Sources */,
 				2CDA49D32516EF400043DC14 /* ClipPreviewPageBarViewModel.swift in Sources */,
 				2CD3DE6225C30B3C00777416 /* PreLoadingClipInformationViewController.swift in Sources */,
+				2C1CC42925F1392B00876946 /* HasImageQueryService.swift in Sources */,
 				2CD3DE3C25C2FFCE00777416 /* PreLoadingClipInformationViewModel.swift in Sources */,
 				2CEEB3F325D91BF0006CF5AD /* ClipCollectionToolBarDelegate.swift in Sources */,
 				2CBCCB0A25D54E42004CD1ED /* UISearchController.swift in Sources */,

@@ -11,6 +11,7 @@ struct ClipCollectionToolBarState: Equatable {
         case addition
         case changeVisibility
         case deletion(includesRemoveFromAlbum: Bool)
+        case share(data: [Data])
     }
 
     struct Item: Equatable {
@@ -32,7 +33,7 @@ struct ClipCollectionToolBarState: Equatable {
     var items: [Item]
     var isHidden: Bool
 
-    var _targetCount: Int
+    var _selections: [Clip.Identity: Set<ImageContainer.Identity>]
 
     var alert: Alert?
 }

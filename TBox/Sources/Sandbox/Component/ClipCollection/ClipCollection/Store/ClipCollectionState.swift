@@ -11,6 +11,7 @@ struct ClipCollectionState: Equatable {
         case error(String?)
         case deletion(clipId: Clip.Identity, at: IndexPath)
         case purge(clipId: Clip.Identity, at: IndexPath)
+        case share(data: [Data], at: IndexPath)
     }
 
     let source: ClipCollection.Source

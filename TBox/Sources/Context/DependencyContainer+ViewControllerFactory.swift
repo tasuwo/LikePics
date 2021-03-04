@@ -37,7 +37,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                       operation: .none,
                                                       items: [],
                                                       isHidden: true,
-                                                      _targetCount: 0,
+                                                      _selections: .init(),
                                                       alert: nil)
 
         let viewController = ClipCollectionViewController(state: state,
