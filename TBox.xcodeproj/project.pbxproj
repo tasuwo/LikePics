@@ -1890,12 +1890,10 @@
 		2C2D227E25D43521001489F4 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
+				2CD4504625F14781008B905D /* App */,
 				2C0503B325EAA9EC002690EE /* Extensions */,
 				2C83ADC325E94C84007122D5 /* ValueObject */,
-				2C1E7E9F25D68ED2009A8D5C /* Component */,
 				2C1B1C7225D58F7800450AC9 /* Core */,
-				2CB47B7925D534D9008E38B8 /* Service */,
-				2CFA2BAB25D4D3C0007F574B /* Dependency */,
 			);
 			path = Sandbox;
 			sourceTree = "<group>";
@@ -2985,6 +2983,16 @@
 				2C0B5CAB254D515400FA43F8 /* SampleImageGray.png */,
 			);
 			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
+		2CD4504625F14781008B905D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E7E9F25D68ED2009A8D5C /* Component */,
+				2CFA2BAB25D4D3C0007F574B /* Dependency */,
+				2CB47B7925D534D9008E38B8 /* Service */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		2CD62F9B259D50680067D8AD /* Common */ = {
