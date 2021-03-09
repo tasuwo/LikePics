@@ -36,8 +36,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let targetImageView = to.animatingPage(self),
             let selectedCell = from.animatingCell(self, shouldAdjust: false),
             let selectedImageView = selectedCell.primaryImageView,
-            let selectedImage = selectedImageView.image,
-            let fromViewBaseView = from.baseView(self)
+            let selectedImage = selectedImageView.image
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -70,7 +69,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
          | |  | |   |    |   | |  | |
          +-+  +-+   |    |   +-+  +-+
           |    |    |    |    |    |
-          |    |    |    |    |    +--- FromViewBaseView
+          |    |    |    |    |    +--- ContainerView
           |    |    |    |    +-------- ToViewBackgroundView
           |    |    |    +------------- AnimatingImageView
           |    |    +------------------ NavigationBar
@@ -93,18 +92,18 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         targetImageView.isHidden = true
         selectedImageView.isHidden = true
 
-        containerView.insertSubview(to.view, aboveSubview: from.view)
-
         let toViewBackgroundView = UIView()
-        toViewBackgroundView.frame = fromViewBaseView.frame
+        toViewBackgroundView.frame = to.view.frame
         toViewBackgroundView.backgroundColor = to.view.backgroundColor
         to.view.backgroundColor = .clear
-        fromViewBaseView.addSubview(toViewBackgroundView)
+        containerView.addSubview(toViewBackgroundView)
 
         let animatingImageView = UIImageView(image: selectedImage)
         ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: nil)
-        fromViewBaseView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
+        containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
+
+        containerView.insertSubview(to.view, aboveSubview: animatingImageView)
 
         to.view.alpha = 0
         toViewBackgroundView.alpha = 0

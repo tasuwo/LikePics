@@ -36,11 +36,7 @@ extension AppRootSplitViewController: ClipPreviewPresentingAnimatorDataSource {
     }
 
     func baseView(_ animator: ClipPreviewAnimator) -> UIView? {
-        if let navigationController = self.currentDetailViewController as? UINavigationController {
-            return navigationController.viewControllers.last?.view
-        } else {
-            return self.currentDetailViewController?.view
-        }
+        return view
     }
 
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView] {
