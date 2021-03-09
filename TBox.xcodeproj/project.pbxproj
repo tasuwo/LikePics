@@ -1694,13 +1694,6 @@
 			path = Root;
 			sourceTree = "<group>";
 		};
-		2C1C56C025B9B99C008271DD /* Components */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
 		2C1E4432257B5A1900A067B1 /* ValueObject */ = {
 			isa = PBXGroup;
 			children = (
@@ -2469,7 +2462,6 @@
 			isa = PBXGroup;
 			children = (
 				2C532F5A25D1890200432B83 /* Resotrable */,
-				2C1C56C025B9B99C008271DD /* Components */,
 				2C86CC4B24E12DDB0091A89E /* ClipPreview */,
 				2C2C9EF5250BCE7B0020715B /* ClipInformation */,
 				2C1BA03324E08A0E00F96801 /* Root */,
