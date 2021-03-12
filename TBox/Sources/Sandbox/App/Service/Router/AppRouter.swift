@@ -93,9 +93,27 @@ extension DependencyContainer: Router {
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
-        guard let viewController = self.makeClipPreviewPageViewController(clipId: clipId) else { return false }
+        let state = ClipPreviewPageViewState(clipId: clipId,
+                                             interPageSpacing: 40,
+                                             isFullscreen: false,
+                                             currentIndex: nil,
+                                             items: [],
+                                             alert: nil,
+                                             isDismissed: false)
+        let barState = ClipPreviewPageBarState(parentState: state,
+                                               verticalSizeClass: .unspecified,
+                                               leftBarButtonItems: [],
+                                               rightBarButtonItems: [],
+                                               toolBarItems: [],
+                                               isToolBarHidden: true,
+                                               alert: nil)
+        let viewController = NewClipPreviewPageViewController(state: state,
+                                                              barState: barState,
+                                                              dependency: self,
+                                                              factory: self)
+        let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
         guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
-        detailViewController.present(viewController, animated: true, completion: nil)
+        detailViewController.present(navigationController, animated: true, completion: nil)
         return true
     }
 

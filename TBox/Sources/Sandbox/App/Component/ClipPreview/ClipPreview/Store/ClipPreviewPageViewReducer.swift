@@ -1,0 +1,217 @@
+//
+//  Copyright © 2021 Tasuku Tozawa. All rights reserved.
+//
+
+import Combine
+import Domain
+
+typealias ClipPreviewPageViewDependency = HasRouter
+    & HasClipCommandService
+    & HasClipQueryService
+
+enum ClipPreviewPageViewReducer: Reducer {
+    typealias Dependency = ClipPreviewPageViewDependency
+    typealias State = ClipPreviewPageViewState
+    typealias Action = ClipPreviewPageViewAction
+
+    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+
+        switch action {
+        // MARK: View Life-Cycle
+
+        case .viewDidLoad:
+            return prepare(state: nextState, dependency: dependency)
+
+        // MARK: State Observation
+
+        case let .pageChanged(index: index):
+            nextState.currentIndex = index
+            return (nextState, .none)
+
+        case let .clipUpdated(clip):
+            guard clip.items.count > 0 else {
+                nextState.isDismissed = true
+                return (nextState, .none)
+            }
+
+            nextState.items = clip.items.sorted(by: { $0.clipIndex < $1.clipIndex })
+
+            guard let currentItem = nextState.currentItem else {
+                nextState.currentIndex = 0
+                return (nextState, .none)
+            }
+
+            if let newIndex = nextState.items.firstIndex(where: { $0.id == currentItem.id }) {
+                nextState.currentIndex = newIndex
+                return (nextState, .none)
+            } else {
+                nextState.currentIndex = 0
+                return (nextState, .none)
+            }
+
+        case .failedToLoadClip:
+            nextState.isDismissed = true
+            return (nextState, .none)
+
+        // MARK: Bar
+
+        case let .barEventOccurred(event):
+            return execute(action: event, state: nextState, dependency: dependency)
+
+        // MARK: Modal Completion
+
+        case let .tagsSelected(tagIds):
+            guard let tagIds = tagIds else { return (state, .none) }
+            switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
+            }
+            return (nextState, .none)
+
+        case let .albumsSelected(albumId):
+            guard let albumId = albumId else { return (state, .none) }
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [state.clipId]) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
+            }
+            return (nextState, .none)
+
+        case .modalCompleted:
+            return (nextState, .none)
+
+        // MARK: Alert Completion
+
+        case .alertDismissed:
+            nextState.alert = nil
+            return (nextState, .none)
+        }
+    }
+}
+
+// MARK: - Preparation
+
+extension ClipPreviewPageViewReducer {
+    static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
+        let query: ClipQuery
+        switch dependency.clipQueryService.queryClip(having: state.clipId) {
+        case let .success(result):
+            query = result
+
+        case let .failure(error):
+            fatalError("Failed to load clips: \(error.localizedDescription)")
+        }
+        let clipStream = query.clip
+            .map { Action.clipUpdated($0) as Action? }
+            .catch { _ in Just(Action.failedToLoadClip) }
+        let queryEffect = Effect(clipStream, underlying: query, completeWith: .failedToLoadClip)
+
+        return (state, [queryEffect])
+    }
+}
+
+// MARK: - Router
+
+extension ClipPreviewPageViewReducer {
+    static func showTagSelectionModal(for clipId: Clip.Identity, selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
+        let stream = Deferred {
+            Future<Action?, Never> { promise in
+                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
+                    let tagIds: Set<Tag.Identity>? = {
+                        guard let tags = tags else { return nil }
+                        return Set(tags.map({ $0.id }))
+                    }()
+                    promise(.success(.tagsSelected(tagIds)))
+                }
+                if !isPresented {
+                    promise(.success(.modalCompleted(false)))
+                }
+            }
+        }
+        return Effect(stream)
+    }
+
+    static func showAlbumSelectionModal(for clipId: Clip.Identity, dependency: HasRouter) -> Effect<Action> {
+        let stream = Deferred {
+            Future<Action?, Never> { promise in
+                let isPresented = dependency.router.showAlbumSelectionModal { albumId in
+                    promise(.success(.albumsSelected(albumId)))
+                }
+                if !isPresented {
+                    promise(.success(.modalCompleted(false)))
+                }
+            }
+        }
+        return Effect(stream)
+    }
+}
+
+// MARK: - Bar Event
+
+extension ClipPreviewPageViewReducer {
+    private static func execute(action: ClipPreviewPageBarEvent,
+                                state: State,
+                                dependency: Dependency) -> (State, [Effect<Action>]?)
+    {
+        var nextState = state
+
+        switch action {
+        case .backed:
+            nextState.isDismissed = true
+            return (nextState, .none)
+
+        case .infoRequested:
+            // TODO:
+            return (nextState, .none)
+
+        case .browsed:
+            if let url = state.currentItem?.url {
+                dependency.router.open(url)
+            }
+            return (nextState, .none)
+
+        case .addToAlbum:
+            let effect = showAlbumSelectionModal(for: state.clipId, dependency: dependency)
+            return (nextState, [effect])
+
+        case .addTags:
+            var effects: [Effect<Action>]?
+            switch dependency.clipQueryService.readClipAndTags(for: [state.clipId]) {
+            case let .success((_, tags)):
+                effects = [
+                    showTagSelectionModal(for: state.clipId, selections: Set(tags.map({ $0.id })), dependency: dependency)
+                ]
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
+            }
+            return (nextState, effects)
+
+        case .shared(_):
+            return (state, .none)
+
+        case .deleteClip:
+            switch dependency.clipCommandService.deleteClips(having: [state.clipId]) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
+            }
+            return (nextState, .none)
+
+        case .removeFromClip:
+            guard let item = state.currentItem else { return (nextState, .none) }
+            switch dependency.clipCommandService.deleteClipItem(item) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
+            }
+            return (nextState, .none)
+        }
+    }
+}

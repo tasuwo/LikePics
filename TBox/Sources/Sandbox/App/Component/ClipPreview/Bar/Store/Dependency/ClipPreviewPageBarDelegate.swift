@@ -3,5 +3,5 @@
 //
 
 protocol ClipPreviewPageBarDelegate: AnyObject {
-    func didTriggered(_ event: ClipPreviewPAgeBarEvent)
+    func didTriggered(_ event: ClipPreviewPageBarEvent)
 }
