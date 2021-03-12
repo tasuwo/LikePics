@@ -4,6 +4,7 @@
 
 import Common
 import Domain
+import TBoxUIKit
 import UIKit
 
 extension DependencyContainer {
@@ -93,6 +94,15 @@ extension DependencyContainer: Router {
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
+        let previewTransitioningController = ClipPreviewTransitioningController(logger: logger)
+        let informationTransitionController = ClipInformationTransitioningController(logger: logger)
+        let builder = { (factory: ClipPreviewPageTransitionController.Factory, viewController: UIViewController) in
+            ClipPreviewPageTransitionController(factory: factory,
+                                                baseViewController: viewController,
+                                                previewTransitioningController: previewTransitioningController,
+                                                informationTransitionController: informationTransitionController)
+        }
+
         let state = ClipPreviewPageViewState(clipId: clipId,
                                              interPageSpacing: 40,
                                              isFullscreen: false,
@@ -105,15 +115,21 @@ extension DependencyContainer: Router {
                                                leftBarButtonItems: [],
                                                rightBarButtonItems: [],
                                                toolBarItems: [],
-                                               isToolBarHidden: true,
+                                               isToolBarHidden: false,
                                                alert: nil)
         let viewController = NewClipPreviewPageViewController(state: state,
                                                               barState: barState,
                                                               dependency: self,
-                                                              factory: self)
+                                                              factory: self,
+                                                              transitionControllerBuilder: builder)
+
         let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
+        navigationController.transitioningDelegate = previewTransitioningController
+        navigationController.modalPresentationStyle = .fullScreen
+
         guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
         detailViewController.present(navigationController, animated: true, completion: nil)
+
         return true
     }
 

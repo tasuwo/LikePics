@@ -5,7 +5,7 @@
 import Combine
 import UIKit
 
-class ClipPreviewPageBarController: UIViewController {
+class ClipPreviewPageBarController {
     typealias Store = LikePics.Store<ClipPreviewPageBarState, ClipPreviewPageBarAction, ClipPreviewPageBarDependency>
 
     // MARK: - Properties
@@ -36,23 +36,18 @@ class ClipPreviewPageBarController: UIViewController {
          dependency: ClipPreviewPageBarDependency)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageBarReducer.self)
-
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - View Life-Cycle Methods
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    func traitCollectionDidChange(to traitCollection: UITraitCollection) {
+        store.execute(.sizeClassChanged(traitCollection.verticalSizeClass))
+    }
 
-        coordinator.animate(alongsideTransition: nil) { _ in
-            self.store.execute(.sizeClassChanged(self.traitCollection.verticalSizeClass))
-        }
+    func viewDidLoad() {
+        configureBarButtons()
+
+        bind(to: store)
     }
 }
 
@@ -63,7 +58,13 @@ extension ClipPreviewPageBarController {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
 
-            self.barHostingViewController?.navigationController?.setToolbarHidden(state.isToolBarHidden, animated: false)
+            // HACK: navigationController は ViewController が Hierarchy に乗らないと nil となってしまう
+            //       これを一瞬まつ
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.01) {
+                DispatchQueue.main.async {
+                    self.barHostingViewController?.navigationController?.setToolbarHidden(state.isToolBarHidden, animated: true)
+                }
+            }
 
             let toolBarItems = self.resolveBarButtonItems(for: state.toolBarItems)
             self.barHostingViewController?.setToolbarItems(toolBarItems, animated: true)
@@ -106,7 +107,7 @@ extension ClipPreviewPageBarController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
-        self.present(alert, animated: true, completion: nil)
+        alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func presentDeleteAlert(includesRemoveFromClip: Bool) {
@@ -122,11 +123,13 @@ extension ClipPreviewPageBarController {
         alert.addAction(.init(title: L10n.clipPreviewViewAlertForDeleteClipAction, style: .destructive) { [weak self] _ in
             self?.store.execute(.alertDeleteClipConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
-        present(alert, animated: true, completion: nil)
+        alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func presentAddAlert() {
@@ -138,10 +141,12 @@ extension ClipPreviewPageBarController {
         alert.addAction(.init(title: L10n.clipPreviewViewAlertForAddTag, style: .default) { [weak self] _ in
             self?.store.execute(.alertTagAdditionConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
         alert.popoverPresentationController?.barButtonItem = addItem
 
-        present(alert, animated: true, completion: nil)
+        alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func presentShareTargetSelectionAlert(targetCount: Int) {
@@ -154,11 +159,13 @@ extension ClipPreviewPageBarController {
         alert.addAction(.init(title: L10n.clipsListAlertForShareItemAction, style: .destructive) { [weak self] _ in
             self?.store.execute(.alertShareItemConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
 
         alert.popoverPresentationController?.barButtonItem = shareItem
 
-        present(alert, animated: true, completion: nil)
+        alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func presentShareAlert(data: [Data]) {
@@ -176,7 +183,7 @@ extension ClipPreviewPageBarController {
             }
         }
 
-        present(controller, animated: true, completion: nil)
+        alertHostingViewController?.present(controller, animated: true, completion: nil)
     }
 }
 
@@ -192,7 +199,7 @@ extension ClipPreviewPageBarController {
         browseItem = UIBarButtonItem(
             image: UIImage(systemName: "globe"),
             primaryAction: .init(handler: { [weak self] _ in
-                self?.store.execute(.addButtonTapped)
+                self?.store.execute(.browseButtonTapped)
             }),
             menu: nil
         )

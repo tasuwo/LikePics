@@ -72,7 +72,7 @@ enum ClipPreviewPageBarReducer: Reducer {
              .alertDeleteClipItemConfirmed,
              .alertTagAdditionConfirmed,
              .alertAlbumAdditionConfirmed,
-             .alertShareClipConfirmed,
+             .alertShareDismissed,
              .alertDismissed:
             nextState.alert = nil
             return (nextState, [eventEffect])
@@ -88,7 +88,7 @@ enum ClipPreviewPageBarReducer: Reducer {
             nextState.alert = .share(data: [data])
             return (nextState, [eventEffect])
 
-        case .alertShareDismissed:
+        case .alertShareClipConfirmed:
             let data = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
                 try? dependency.imageQueryService.read(having: imageId)
             }

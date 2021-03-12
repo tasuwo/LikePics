@@ -9,6 +9,7 @@ import UIKit
 
 class NewClipPreviewPageViewController: UIPageViewController {
     typealias Store = LikePics.Store<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
+    typealias TransitionControllerBuilder = (ClipInformationViewControllerFactory, UIViewController) -> ClipPreviewPageTransitionController
 
     struct BarDependency: ClipPreviewPageBarDependency {
         weak var clipPreviewPageBarDelegate: ClipPreviewPageBarDelegate?
@@ -65,7 +66,8 @@ class NewClipPreviewPageViewController: UIPageViewController {
     init(state: ClipPreviewPageViewState,
          barState: ClipPreviewPageBarState,
          dependency: ClipPreviewPageViewDependency & HasImageQueryService,
-         factory: ViewControllerFactory)
+         factory: ViewControllerFactory,
+         transitionControllerBuilder: @escaping TransitionControllerBuilder)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer.self)
         self.factory = factory
@@ -77,8 +79,10 @@ class NewClipPreviewPageViewController: UIPageViewController {
         let barDependency = BarDependency(clipPreviewPageBarDelegate: self,
                                           imageQueryService: dependency.imageQueryService)
         barController = ClipPreviewPageBarController(state: barState, dependency: barDependency)
+        barController.alertHostingViewController = self
+        barController.barHostingViewController = self
 
-        addChild(barController)
+        transitionController = transitionControllerBuilder(self, self)
     }
 
     @available(*, unavailable)
@@ -87,6 +91,14 @@ class NewClipPreviewPageViewController: UIPageViewController {
     }
 
     // MARK: - View Life-Cycle Methods
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: nil) { _ in
+            self.barController.traitCollectionDidChange(to: self.view.traitCollection)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,12 +109,11 @@ class NewClipPreviewPageViewController: UIPageViewController {
         delegate = self
         dataSource = self
 
-        barController.alertHostingViewController = self
-        barController.barHostingViewController = self
-
         bind(to: store)
+        barController.viewDidLoad()
 
         store.execute(.viewDidLoad)
+        barController.traitCollectionDidChange(to: view.traitCollection)
     }
 
     // MARK: - IBActions
@@ -119,6 +130,8 @@ extension NewClipPreviewPageViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
+
+            self.barController.store.execute(.stateChanged(state))
 
             self.isFullscreen = state.isFullscreen
 
@@ -139,7 +152,11 @@ extension NewClipPreviewPageViewController {
         else {
             return
         }
-        setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+        let direction: NavigationDirection = {
+            guard let nextIndex = state.currentIndex, let currentIndex = self.currentIndex else { return .forward }
+            return nextIndex < currentIndex ? .reverse : .forward
+        }()
+        setViewControllers([viewController], direction: direction, animated: true, completion: nil)
     }
 
     private func presentAlertIfNeeded(for alert: ClipPreviewPageViewState.Alert?) {
@@ -214,5 +231,13 @@ extension NewClipPreviewPageViewController: UIPageViewControllerDataSource {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(itemId: item.id, usesImageForPresentingAnimation: false)
+    }
+}
+
+extension NewClipPreviewPageViewController: ClipInformationViewControllerFactory {
+    // MARK: - ClipInformationViewControllerFactory
+
+    func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
+        fatalError("TODO")
     }
 }
