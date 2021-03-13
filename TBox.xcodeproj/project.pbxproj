@@ -1474,6 +1474,7 @@
 				2CBCCB0925D54E42004CD1ED /* UISearchController.swift */,
 				2CECD5C425D673E500EB6DDE /* UITargetdPreview.swift */,
 				2C05039F25EA6AE5002690EE /* Array+Indexed.swift */,
+				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1640,14 +1641,6 @@
 				2C5FCAA525A75B4000C9B949 /* ClipCollection_SubMenu.swift */,
 			);
 			path = ValueObject;
-			sourceTree = "<group>";
-		};
-		2C1524302532EAFA00C51847 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				2C1524312532EB0A00C51847 /* Array+identifiable.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		2C170BA9253199F3001B1542 /* Delegate */ = {
@@ -1879,17 +1872,6 @@
 				2CFC054D24E6D0A100076BBE /* ShareNavigationRootPresenter.swift */,
 			);
 			path = Presenter;
-			sourceTree = "<group>";
-		};
-		2C2D227E25D43521001489F4 /* Sandbox */ = {
-			isa = PBXGroup;
-			children = (
-				2CD4504625F14781008B905D /* App */,
-				2C0503B325EAA9EC002690EE /* Extensions */,
-				2C83ADC325E94C84007122D5 /* ValueObject */,
-				2C1B1C7225D58F7800450AC9 /* Core */,
-			);
-			path = Sandbox;
 			sourceTree = "<group>";
 		};
 		2C2D228025D43556001489F4 /* TextEditAlertController */ = {
@@ -2481,6 +2463,15 @@
 			path = Preview;
 			sourceTree = "<group>";
 		};
+		2C76FEE025FCF08E00EB7426 /* Legacy */ = {
+			isa = PBXGroup;
+			children = (
+				2C570B5C24E04FA400A1DC9F /* ViewModel */,
+				2C810D0024E04A6600BC0FDF /* View */,
+			);
+			path = Legacy;
+			sourceTree = "<group>";
+		};
 		2C79484E254DD11700A4E15D /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -2542,14 +2533,15 @@
 		2C810D0224E04A8100BC0FDF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				2C2D227E25D43521001489F4 /* Sandbox */,
 				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
 				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
-				2CFC5CF5250DEFF7001A02E4 /* Generated */,
-				2C1524302532EAFA00C51847 /* Extensions */,
 				2C570B5924E04F7900A1DC9F /* Context */,
-				2C570B5C24E04FA400A1DC9F /* ViewModel */,
-				2C810D0024E04A6600BC0FDF /* View */,
+				2CD4504625F14781008B905D /* App */,
+				2C1B1C7225D58F7800450AC9 /* Core */,
+				2C0503B325EAA9EC002690EE /* Extensions */,
+				2CFC5CF5250DEFF7001A02E4 /* Generated */,
+				2C76FEE025FCF08E00EB7426 /* Legacy */,
+				2C83ADC325E94C84007122D5 /* ValueObject */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
