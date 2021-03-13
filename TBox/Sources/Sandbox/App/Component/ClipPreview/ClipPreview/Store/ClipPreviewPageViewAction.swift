@@ -15,6 +15,10 @@ enum ClipPreviewPageViewAction: Action {
     case clipUpdated(Clip)
     case failedToLoadClip
 
+    // MARK: Transition
+
+    case clipInformationViewPresented
+
     // MARK: Bar
 
     case barEventOccurred(ClipPreviewPageBarEvent)

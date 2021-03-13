@@ -56,6 +56,20 @@ enum ClipPreviewPageViewReducer: Reducer {
             nextState.isDismissed = true
             return (nextState, .none)
 
+        // MARK: Transition
+
+        case .clipInformationViewPresented:
+            if let currentItemId = state.currentItem?.id,
+               let dataSource = dependency.clipInformationViewDataSource,
+               let transitioningController = dependency.clipInformationTransitioningController
+            {
+                dependency.router.showClipInformationView(clipId: state.clipId,
+                                                          itemId: currentItemId,
+                                                          informationViewDataSource: dataSource,
+                                                          transitioningController: transitioningController)
+            }
+            return (nextState, .none)
+
         // MARK: Bar
 
         case let .barEventOccurred(event):

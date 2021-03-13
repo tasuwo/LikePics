@@ -148,7 +148,7 @@ extension DependencyContainer: Router {
                                                            transitionController: transitionController)
 
         dependency.clipInformationViewDataSource = viewController
-        transitionController.setup(factory: viewController, baseViewController: viewController)
+        transitionController.setup(baseViewController: viewController)
 
         let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
         navigationController.transitioningDelegate = previewTransitioningController

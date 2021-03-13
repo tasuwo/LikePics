@@ -147,6 +147,12 @@ extension ClipPreviewPageViewController {
             }
         }
         .store(in: &subscriptions)
+
+        transitionController.outputs.presentInformation
+            .sink { [weak self] in
+                self?.store.execute(.clipInformationViewPresented)
+            }
+            .store(in: &subscriptions)
     }
 
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
@@ -265,14 +271,6 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(itemId: item.id, usesImageForPresentingAnimation: false)
-    }
-}
-
-extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
-    // MARK: - ClipInformationViewControllerFactory
-
-    func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
-        fatalError("TODO")
     }
 }
 

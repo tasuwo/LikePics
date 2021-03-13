@@ -22,6 +22,9 @@ enum ClipInformationViewAction: Action {
     case tagsUpdated([Tag])
     case failedToLoadTags
 
+    case settingUpdated(isSomeItemsHidden: Bool)
+    case failedToLoadSetting
+
     // MARK: Control
 
     case tagAdditionButtonTapped

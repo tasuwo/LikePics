@@ -8,6 +8,7 @@ import Domain
 typealias ClipInformationViewDependency = HasRouter
     & HasClipQueryService
     & HasClipCommandService
+    & HasUserSettingStorage
     & HasPasteboard
 
 enum ClipInformationViewReducer: Reducer {
@@ -42,9 +43,13 @@ enum ClipInformationViewReducer: Reducer {
         case let .tagsUpdated(tags):
             return (performFilter(tags: tags, previousState: state), .none)
 
+        case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
+            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+
         case .failedToLoadClip,
              .failedToLoadClipItem,
-             .failedToLoadTags:
+             .failedToLoadTags,
+             .failedToLoadSetting:
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -119,6 +124,8 @@ enum ClipInformationViewReducer: Reducer {
 
 extension ClipInformationViewReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
+        // Prepare effects
+
         let clipQuery: ClipQuery
         switch dependency.clipQueryService.queryClip(having: state.clipId) {
         case let .success(result):
@@ -158,7 +165,20 @@ extension ClipInformationViewReducer {
             .catch { _ in Just(Action.failedToLoadTags) }
         let tagsQueryEffect = Effect(tagsStream, underlying: tagsQuery, completeWith: .failedToLoadTags)
 
-        return (state, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect])
+        let settingStream = dependency.userSettingStorage.showHiddenItems
+            .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
+            .catch { _ in Just(Action.failedToLoadSetting) }
+        let settingEffect = Effect(settingStream, completeWith: .failedToLoadSetting)
+
+        // Prepare states
+
+        let nextState = performFilter(clip: clipQuery.clip.value,
+                                      item: clipItemQuery.clipItem.value,
+                                      tags: tagsQuery.tags.value,
+                                      isSomeItemsHidden: state.isSomeItemsHidden,
+                                      previousState: state)
+
+        return (nextState, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect, settingEffect])
     }
 }
 

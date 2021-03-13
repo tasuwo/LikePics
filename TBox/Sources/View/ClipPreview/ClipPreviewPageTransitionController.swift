@@ -6,10 +6,6 @@ import Combine
 import TBoxUIKit
 import UIKit
 
-protocol ClipInformationViewControllerFactory: AnyObject {
-    func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController?
-}
-
 protocol ClipPreviewPageTransitionControllerType {
     var inputs: ClipPreviewPageTransitionControllerInputs { get }
     var outputs: ClipPreviewPageTransitionControllerOutputs { get }
@@ -26,6 +22,7 @@ protocol ClipPreviewPageTransitionControllerInputs {
 
 protocol ClipPreviewPageTransitionControllerOutputs {
     var isPreviewScrollEnabled: CurrentValueSubject<Bool, Never> { get }
+    var presentInformation: PassthroughSubject<Void, Never> { get }
 }
 
 class ClipPreviewPageTransitionController: NSObject,
@@ -33,8 +30,6 @@ class ClipPreviewPageTransitionController: NSObject,
     ClipPreviewPageTransitionControllerInputs,
     ClipPreviewPageTransitionControllerOutputs
 {
-    typealias Factory = ClipInformationViewControllerFactory
-
     enum TransitionDestination {
         case back
         case information
@@ -59,10 +54,10 @@ class ClipPreviewPageTransitionController: NSObject,
     // MARK: ClipPreviewPageTransitionControllerOutputs
 
     let isPreviewScrollEnabled: CurrentValueSubject<Bool, Never> = .init(true)
+    let presentInformation: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
 
-    private weak var factory: Factory?
     private weak var baseViewController: UIViewController?
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
@@ -86,8 +81,7 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: - Methods
 
-    func setup(factory: Factory, baseViewController: UIViewController) {
-        self.factory = factory
+    func setup(baseViewController: UIViewController) {
         self.baseViewController = baseViewController
 
         self.setupGestureRecognizer()
@@ -113,9 +107,8 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginPresentInformation
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                guard let viewController = self.factory?.make(transitioningController: self.informationTransitioningController) else { return }
                 self.informationTransitioningController.beginTransition(.custom(interactive: false))
-                self.baseViewController?.present(viewController, animated: true, completion: nil)
+                self.presentInformation.send(())
             }
             .store(in: &self.subscriptions)
     }
@@ -141,9 +134,8 @@ class ClipPreviewPageTransitionController: NSObject,
             }
 
         case (.began, .information):
-            guard let viewController = self.factory?.make(transitioningController: self.informationTransitioningController) else { return }
             self.informationTransitioningController.beginTransition(.custom(interactive: true))
-            self.baseViewController?.present(viewController, animated: true, completion: nil)
+            self.presentInformation.send(())
 
         case (.ended, .information):
             if self.informationTransitioningController.isInteractive {
