@@ -47,11 +47,11 @@ public enum ClipInformationLayout {
     // MARK: DataSource
 
     public struct Information: Equatable {
-        public let clip: Clip
+        public let clip: Clip?
         public let tags: [Tag]
-        public let item: ClipItem
+        public let item: ClipItem?
 
-        public init(clip: Clip, tags: [Tag], item: ClipItem) {
+        public init(clip: Clip?, tags: [Tag], item: ClipItem?) {
             self.clip = clip
             self.tags = tags
             self.item = item
@@ -110,25 +110,33 @@ extension ClipInformationLayout {
         return snapshot
     }
 
-    private static func createCells(for clipItem: ClipItem, clip: Clip) -> [Item] {
+    private static func createCells(for clipItem: ClipItem?, clip: Clip?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
-                                url: clipItem.imageUrl,
-                                isEditable: false)))
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipUrl,
-                                url: clipItem.url,
-                                isEditable: true)))
+        if let clipItem = clipItem {
+            items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
+                                    url: clipItem.imageUrl,
+                                    isEditable: false)))
+            items.append(.url(.init(title: L10n.clipInformationViewLabelClipUrl,
+                                    url: clipItem.url,
+                                    isEditable: true)))
 
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemSize,
-                                 accessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
-                                                                                    countStyle: .binary)))))
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
-                                 accessory: .switch(isOn: clip.isHidden))))
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
-                                 accessory: .label(title: self.format(clipItem.registeredDate)))))
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
-                                 accessory: .label(title: self.format(clipItem.updatedDate)))))
+            items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemSize,
+                                     accessory: .label(title: ByteCountFormatter.string(fromByteCount: Int64(clipItem.imageDataSize),
+                                                                                        countStyle: .binary)))))
+        }
+
+        if let clip = clip {
+            items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
+                                     accessory: .switch(isOn: clip.isHidden))))
+        }
+
+        if let clipItem = clipItem {
+            items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+                                     accessory: .label(title: self.format(clipItem.registeredDate)))))
+            items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+                                     accessory: .label(title: self.format(clipItem.updatedDate)))))
+        }
 
         return items
     }

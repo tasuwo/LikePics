@@ -94,14 +94,38 @@ extension DependencyContainer: Router {
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
+        class Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
+            let router: Router
+            let clipCommandService: ClipCommandServiceProtocol
+            let clipQueryService: ClipQueryServiceProtocol
+            weak var clipInformationTransitioningController: ClipInformationTransitioningController?
+            let imageQueryService: ImageQueryServiceProtocol
+            weak var clipInformationViewDataSource: ClipInformationViewDataSource?
+
+            init(router: Router,
+                 clipCommandService: ClipCommandServiceProtocol,
+                 clipQueryService: ClipQueryServiceProtocol,
+                 clipInformationTransitioningController: ClipInformationTransitioningController?,
+                 imageQueryService: ImageQueryServiceProtocol)
+            {
+                self.router = router
+                self.clipCommandService = clipCommandService
+                self.clipQueryService = clipQueryService
+                self.clipInformationTransitioningController = clipInformationTransitioningController
+                self.imageQueryService = imageQueryService
+            }
+        }
+
         let previewTransitioningController = ClipPreviewTransitioningController(logger: logger)
         let informationTransitionController = ClipInformationTransitioningController(logger: logger)
-        let builder = { (factory: ClipPreviewPageTransitionController.Factory, viewController: UIViewController) in
-            ClipPreviewPageTransitionController(factory: factory,
-                                                baseViewController: viewController,
-                                                previewTransitioningController: previewTransitioningController,
-                                                informationTransitionController: informationTransitionController)
-        }
+        let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
+                                                                       informationTransitionController: informationTransitionController)
+
+        let dependency = Dependency(router: self,
+                                    clipCommandService: clipCommandService,
+                                    clipQueryService: clipQueryService,
+                                    clipInformationTransitioningController: informationTransitionController,
+                                    imageQueryService: imageQueryService)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
                                              interPageSpacing: 40,
@@ -119,9 +143,12 @@ extension DependencyContainer: Router {
                                                alert: nil)
         let viewController = NewClipPreviewPageViewController(state: state,
                                                               barState: barState,
-                                                              dependency: self,
+                                                              dependency: dependency,
                                                               factory: self,
-                                                              transitionControllerBuilder: builder)
+                                                              transitionController: transitionController)
+
+        dependency.clipInformationViewDataSource = viewController
+        transitionController.setup(factory: viewController, baseViewController: viewController)
 
         let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
         navigationController.transitioningDelegate = previewTransitioningController
@@ -131,6 +158,41 @@ extension DependencyContainer: Router {
         detailViewController.present(navigationController, animated: true, completion: nil)
 
         return true
+    }
+
+    func showClipInformationView(clipId: Clip.Identity,
+                                 itemId: ClipItem.Identity,
+                                 informationViewDataSource: ClipInformationViewDataSource,
+                                 transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
+    {
+        let state = ClipInformationViewState(clipId: clipId,
+                                             itemId: itemId,
+                                             clip: nil,
+                                             tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
+                                             item: nil,
+                                             isSomeItemsHidden: userSettingStorage.readShowHiddenItems(),
+                                             isHiddenStatusBar: false,
+                                             alert: nil,
+                                             isDismissed: false)
+        let siteUrlEditAlertState = TextEditAlertState(id: UUID(),
+                                                       title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
+                                                       message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
+                                                       placeholder: L10n.placeholderUrl,
+                                                       text: "",
+                                                       shouldReturn: false,
+                                                       isPresenting: false)
+        let viewController = NewClipInformationViewController(state: state,
+                                                              siteUrlEditAlertState: siteUrlEditAlertState,
+                                                              dependency: self,
+                                                              informationViewDataSource: informationViewDataSource,
+                                                              transitioningController: transitioningController)
+        viewController.transitioningDelegate = transitioningController
+        viewController.modalPresentationStyle = .fullScreen
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(viewController, animated: true, completion: nil)
+
+        return false
     }
 
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool {

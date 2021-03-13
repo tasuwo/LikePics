@@ -8,6 +8,8 @@ import Domain
 typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
+    & HasClipInformationTransitioningController
+    & HasClipInformationViewDataSource
 
 enum ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -30,7 +32,7 @@ enum ClipPreviewPageViewReducer: Reducer {
             return (nextState, .none)
 
         case let .clipUpdated(clip):
-            guard clip.items.count > 0 else {
+            guard !clip.items.isEmpty else {
                 nextState.isDismissed = true
                 return (nextState, .none)
             }
@@ -165,7 +167,15 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .infoRequested:
-            // TODO:
+            if let currentItemId = state.currentItem?.id,
+               let dataSource = dependency.clipInformationViewDataSource,
+               let transitioningController = dependency.clipInformationTransitioningController
+            {
+                dependency.router.showClipInformationView(clipId: state.clipId,
+                                                          itemId: currentItemId,
+                                                          informationViewDataSource: dataSource,
+                                                          transitioningController: transitioningController)
+            }
             return (nextState, .none)
 
         case .browsed:
@@ -191,7 +201,7 @@ extension ClipPreviewPageViewReducer {
             }
             return (nextState, effects)
 
-        case .shared(_):
+        case .shared:
             return (state, .none)
 
         case .deleteClip:

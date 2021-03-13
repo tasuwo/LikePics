@@ -3,6 +3,7 @@
 //
 
 import Domain
+import TBoxUIKit
 
 protocol Router {
     @discardableResult
@@ -19,6 +20,12 @@ protocol Router {
 
     @discardableResult
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool
+
+    @discardableResult
+    func showClipInformationView(clipId: Clip.Identity,
+                                 itemId: ClipItem.Identity,
+                                 informationViewDataSource: ClipInformationViewDataSource,
+                                 transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool

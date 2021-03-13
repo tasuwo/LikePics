@@ -184,11 +184,11 @@ extension DependencyContainer: ViewControllerFactory {
 
         let previewTransitioningController = ClipPreviewTransitioningController(logger: self.logger)
         let informationTransitionController = ClipInformationTransitioningController(logger: self.logger)
-        let builder = { (factory: ClipPreviewPageTransitionController.Factory, viewController: UIViewController) in
-            ClipPreviewPageTransitionController(factory: factory,
-                                                baseViewController: viewController,
-                                                previewTransitioningController: previewTransitioningController,
-                                                informationTransitionController: informationTransitionController)
+        let builder = { (factory: ClipPreviewPageTransitionController.Factory, viewController: UIViewController) -> ClipPreviewPageTransitionController in
+            let controller = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
+                                                                 informationTransitionController: informationTransitionController)
+            controller.setup(factory: factory, baseViewController: viewController)
+            return controller
         }
 
         let pageViewController = ClipPreviewPageViewController(

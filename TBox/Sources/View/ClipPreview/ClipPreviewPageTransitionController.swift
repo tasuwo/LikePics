@@ -75,23 +75,24 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: - Lifecycle
 
-    init(factory: Factory,
-         baseViewController: UIViewController,
-         previewTransitioningController: ClipPreviewTransitionControllerProtocol,
+    init(previewTransitioningController: ClipPreviewTransitionControllerProtocol,
          informationTransitionController: ClipInformationTransitioningControllerProtocol)
     {
-        self.factory = factory
-        self.baseViewController = baseViewController
         self.previewTransitioningController = previewTransitioningController
         self.informationTransitioningController = informationTransitionController
 
         super.init()
+    }
+
+    // MARK: - Methods
+
+    func setup(factory: Factory, baseViewController: UIViewController) {
+        self.factory = factory
+        self.baseViewController = baseViewController
 
         self.setupGestureRecognizer()
         self.bind()
     }
-
-    // MARK: - Methods
 
     private func setupGestureRecognizer() {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))

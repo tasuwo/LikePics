@@ -121,7 +121,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     }
 
     func replaceTagsOfClip(_ tagIds: Set<Tag.Identity>) {
-        let clipId = _info.value.clip.id
+        let clipId = _info.value.clip!.id
         if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byReplacingTagsHaving: Array(tagIds)) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to replace tags. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtReplaceTags)
@@ -129,7 +129,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     }
 
     func removeTagFromClip(_ tag: Tag) {
-        let clipId = _info.value.clip.id
+        let clipId = _info.value.clip!.id
         if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byDeletingTagsHaving: [tag.identity]) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to add tags. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtRemoveTags)
@@ -137,7 +137,7 @@ class ClipInformationViewModel: ClipInformationViewModelType,
     }
 
     func update(isHidden: Bool) {
-        let clipId = _info.value.clip.id
+        let clipId = _info.value.clip!.id
         if case let .failure(error) = self.clipCommandService.updateClips(having: [clipId], byHiding: isHidden) {
             self.logger.write(ConsoleLog(level: .error, message: "Failed to update. (code: \(error.rawValue))"))
             self.errorMessage.send(L10n.clipInformationErrorAtUpdateHidden)

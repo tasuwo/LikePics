@@ -9,7 +9,6 @@ import UIKit
 
 class NewClipPreviewPageViewController: UIPageViewController {
     typealias Store = LikePics.Store<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
-    typealias TransitionControllerBuilder = (ClipInformationViewControllerFactory, UIViewController) -> ClipPreviewPageTransitionController
 
     struct BarDependency: ClipPreviewPageBarDependency {
         weak var clipPreviewPageBarDelegate: ClipPreviewPageBarDelegate?
@@ -19,7 +18,6 @@ class NewClipPreviewPageViewController: UIPageViewController {
     struct Context {
         let barState: ClipPreviewPageBarState
         let dependency: ClipPreviewPageViewDependency & HasImageQueryService
-        let transitionControllerBuilder: TransitionControllerBuilder
     }
 
     // MARK: - Properties
@@ -47,7 +45,7 @@ class NewClipPreviewPageViewController: UIPageViewController {
         }
     }
 
-    private var transitionController: ClipPreviewPageTransitionControllerType!
+    private let transitionController: ClipPreviewPageTransitionControllerType
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
     override var prefersStatusBarHidden: Bool { isFullscreen }
@@ -76,11 +74,12 @@ class NewClipPreviewPageViewController: UIPageViewController {
          barState: ClipPreviewPageBarState,
          dependency: ClipPreviewPageViewDependency & HasImageQueryService,
          factory: ViewControllerFactory,
-         transitionControllerBuilder: @escaping TransitionControllerBuilder)
+         transitionController: ClipPreviewPageTransitionControllerType)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer.self)
+        self.transitionController = transitionController
         self.factory = factory
-        self.contextForViewDidLoad = .init(barState: barState, dependency: dependency, transitionControllerBuilder: transitionControllerBuilder)
+        self.contextForViewDidLoad = .init(barState: barState, dependency: dependency)
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             .interPageSpacing: state.interPageSpacing
@@ -110,7 +109,6 @@ class NewClipPreviewPageViewController: UIPageViewController {
         configureAppearance()
         configureGestureRecognizer()
         configureBarController()
-        configureTransitionController()
 
         delegate = self
         dataSource = self
@@ -226,11 +224,6 @@ extension NewClipPreviewPageViewController {
         barController.alertHostingViewController = self
         barController.barHostingViewController = self
     }
-
-    private func configureTransitionController() {
-        guard let context = contextForViewDidLoad else { return }
-        transitionController = context.transitionControllerBuilder(self, self)
-    }
 }
 
 extension NewClipPreviewPageViewController: ClipPreviewPageBarDelegate {
@@ -327,5 +320,17 @@ extension NewClipPreviewPageViewController: ClipInformationPresentingAnimatorDat
 
     func set(_ animator: ClipInformationAnimator, isUserInteractionEnabled: Bool) {
         view.isUserInteractionEnabled = isUserInteractionEnabled
+    }
+}
+
+extension NewClipPreviewPageViewController: ClipInformationViewDataSource {
+    // MARK: - ClipInformationViewDataSource
+
+    func previewImage(_ view: ClipInformationView) -> UIImage? {
+        return self.currentViewController?.previewView.image
+    }
+
+    func previewPageBounds(_ view: ClipInformationView) -> CGRect {
+        return self.currentViewController?.previewView?.bounds ?? .zero
     }
 }
