@@ -38,7 +38,7 @@ extension ClipPreviewPageViewState {
     }
 
     func item(before itemId: ClipItem.Identity) -> ClipItem? {
-        guard let index = index(of: itemId), index - 1 > 0 else { return nil }
+        guard let index = index(of: itemId), index - 1 >= 0 else { return nil }
         return items[index - 1]
     }
 }
