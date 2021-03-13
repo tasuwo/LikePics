@@ -16,6 +16,12 @@ class NewClipPreviewPageViewController: UIPageViewController {
         var imageQueryService: ImageQueryServiceProtocol
     }
 
+    struct Context {
+        let barState: ClipPreviewPageBarState
+        let dependency: ClipPreviewPageViewDependency & HasImageQueryService
+        let transitionControllerBuilder: TransitionControllerBuilder
+    }
+
     // MARK: - Properties
 
     // MARK: View
@@ -54,8 +60,15 @@ class NewClipPreviewPageViewController: UIPageViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private var previewVieSubscriptions: Set<AnyCancellable> = .init()
 
     private let factory: ViewControllerFactory
+
+    // MARK: Temporary
+
+    // super.init が呼ばれた時点で、initializer 内の 全処理が完了数前に viewDidLoad が呼び出されてしまうケースがある
+    // 本来 initializer 内で行いたかった初期化処理を viewDidLoad 側に委譲するために一時的に保持するコンテキスト
+    private var contextForViewDidLoad: Context?
 
     // MARK: - Initializers
 
@@ -67,18 +80,11 @@ class NewClipPreviewPageViewController: UIPageViewController {
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer.self)
         self.factory = factory
+        self.contextForViewDidLoad = .init(barState: barState, dependency: dependency, transitionControllerBuilder: transitionControllerBuilder)
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
             .interPageSpacing: state.interPageSpacing
         ])
-
-        let barDependency = BarDependency(clipPreviewPageBarDelegate: self,
-                                          imageQueryService: dependency.imageQueryService)
-        barController = ClipPreviewPageBarController(state: barState, dependency: barDependency)
-        barController.alertHostingViewController = self
-        barController.barHostingViewController = self
-
-        transitionController = transitionControllerBuilder(self, self)
     }
 
     @available(*, unavailable)
@@ -99,8 +105,12 @@ class NewClipPreviewPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        defer { self.contextForViewDidLoad = nil }
+
         configureAppearance()
         configureGestureRecognizer()
+        configureBarController()
+        configureTransitionController()
 
         delegate = self
         dataSource = self
@@ -152,7 +162,9 @@ extension NewClipPreviewPageViewController {
             guard let nextIndex = state.currentIndex, let currentIndex = self.currentIndex else { return .forward }
             return nextIndex < currentIndex ? .reverse : .forward
         }()
-        setViewControllers([viewController], direction: direction, animated: true, completion: nil)
+        setViewControllers([viewController], direction: direction, animated: true, completion: { _ in
+            self.didChangePage(to: viewController)
+        })
     }
 
     private func presentAlertIfNeeded(for alert: ClipPreviewPageViewState.Alert?) {
@@ -172,6 +184,24 @@ extension NewClipPreviewPageViewController {
         })
         self.present(alert, animated: true, completion: nil)
     }
+
+    private func didChangePage(to viewController: ClipPreviewViewController) {
+        tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        viewController.previewView.delegate = self
+
+        previewVieSubscriptions.forEach { $0.cancel() }
+        viewController.previewView.isMinimumZoomScale
+            .sink { [weak self] isMinimumZoomScale in
+                self?.transitionController.inputs.isMinimumPreviewZoomScale.send(isMinimumZoomScale)
+            }
+            .store(in: &previewVieSubscriptions)
+        viewController.previewView.contentOffset
+            .sink { [weak self] offset in
+                self?.transitionController.inputs.previewContentOffset.send(offset)
+            }
+            .store(in: &previewVieSubscriptions)
+        transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
+    }
 }
 
 // MARK: - Configuration
@@ -186,6 +216,20 @@ extension NewClipPreviewPageViewController {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(_:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    private func configureBarController() {
+        guard let context = contextForViewDidLoad else { return }
+        let barDependency = BarDependency(clipPreviewPageBarDelegate: self,
+                                          imageQueryService: context.dependency.imageQueryService)
+        barController = ClipPreviewPageBarController(state: context.barState, dependency: barDependency)
+        barController.alertHostingViewController = self
+        barController.barHostingViewController = self
+    }
+
+    private func configureTransitionController() {
+        guard let context = contextForViewDidLoad else { return }
+        transitionController = context.transitionControllerBuilder(self, self)
     }
 }
 
@@ -209,7 +253,8 @@ extension NewClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        guard let index = currentIndex else { return }
+        guard let viewController = currentViewController, let index = currentIndex else { return }
+        didChangePage(to: viewController)
         store.execute(.pageChanged(index: index))
     }
 }
