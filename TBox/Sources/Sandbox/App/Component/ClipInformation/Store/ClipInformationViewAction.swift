@@ -8,6 +8,7 @@ enum ClipInformationViewAction: Action {
     // MARK: View Life-Cycle
 
     case viewWillAppear
+    case viewDidAppear
     case viewWillDisappear
     case viewDidLoad
 

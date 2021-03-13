@@ -60,6 +60,11 @@ class ClipInformationViewController: UIViewController {
         store.execute(.viewWillAppear)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        store.execute(.viewDidAppear)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         store.execute(.viewWillDisappear)
@@ -117,11 +122,11 @@ extension ClipInformationViewController {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
 
-            DispatchQueue.global().async {
+            if !state.isCollectionViewUpdateSuspended {
                 let info = ClipInformationLayout.Information(clip: state.clip,
                                                              tags: state.tags.orderedValues,
                                                              item: state.item)
-                self.informationView.setInfo(info, animated: true)
+                self.informationView.setInfo(info, animated: state.shouldCollectionViewUpdateWithAnimation)
             }
 
             self.presentAlertIfNeeded(for: state.alert)
@@ -162,6 +167,7 @@ extension ClipInformationViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
+        informationView.setInfo(nil, animated: false)
         informationView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(informationView)
         NSLayoutConstraint.activate(informationView.constraints(fittingIn: view))

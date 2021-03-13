@@ -76,7 +76,7 @@ public class ClipInformationView: UIView {
     // MARK: - Methods
 
     /// - attention: 同一スレッドからのみセットする必要がある
-    public func setInfo(_ info: Factory.Information, animated: Bool) {
+    public func setInfo(_ info: Factory.Information?, animated: Bool) {
         let snapshot = Factory.makeSnapshot(for: info)
         self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
     }

@@ -17,6 +17,8 @@ struct ClipInformationViewState: Equatable {
     var tags: Collection<Tag>
     var item: ClipItem?
 
+    var isCollectionViewUpdateSuspended: Bool
+    var shouldCollectionViewUpdateWithAnimation: Bool
     var isSomeItemsHidden: Bool
     var isHiddenStatusBar: Bool
 
