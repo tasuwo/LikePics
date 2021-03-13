@@ -488,17 +488,17 @@ extension ClipCollectionReducer {
         var nextState = state
         switch action {
         case .addToAlbum:
-            let effect = showAlbumSelectionModal(for: state.clips._displayableIds, dependency: dependency)
+            let effect = showAlbumSelectionModal(for: state.clips._selectedIds, dependency: dependency)
             nextState.alert = nil
             return (nextState, [effect])
 
         case .addTags:
-            let effect = showTagSelectionModal(for: state.clips._displayableIds, selections: .init(), dependency: dependency)
+            let effect = showTagSelectionModal(for: state.clips._selectedIds, selections: .init(), dependency: dependency)
             nextState.alert = nil
             return (nextState, [effect])
 
         case .hide:
-            switch dependency.clipCommandService.updateClips(having: Array(state.clips._displayableIds), byHiding: true) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips._selectedIds), byHiding: true) {
             case .success:
                 nextState = nextState.editingEnded()
 
@@ -508,7 +508,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .reveal:
-            switch dependency.clipCommandService.updateClips(having: Array(state.clips._displayableIds), byHiding: false) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips._selectedIds), byHiding: false) {
             case .success:
                 nextState = nextState.editingEnded()
 
@@ -523,7 +523,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .delete:
-            switch dependency.clipCommandService.deleteClips(having: Array(state.clips._displayableIds)) {
+            switch dependency.clipCommandService.deleteClips(having: Array(state.clips._selectedIds)) {
             case .success:
                 nextState.alert = nil
 
@@ -534,7 +534,7 @@ extension ClipCollectionReducer {
 
         case .removeFromAlbum:
             guard case let .album(albumId) = state.source else { return (state, .none) }
-            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips._displayableIds)) {
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips._selectedIds)) {
             case .success: ()
 
             case .failure:
@@ -543,7 +543,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .merge:
-            let selections = state.clips.displayableValues
+            let selections = state.clips.selectedValues
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     let isPresented = dependency.router.showClipMergeModal(for: selections) { succeeded in
