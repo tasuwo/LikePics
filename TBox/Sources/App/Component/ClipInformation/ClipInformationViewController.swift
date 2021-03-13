@@ -9,6 +9,7 @@ import UIKit
 
 class ClipInformationViewController: UIViewController {
     typealias Store = LikePics.Store<ClipInformationViewState, ClipInformationViewAction, ClipInformationViewDependency>
+    typealias Layout = ClipInformationLayout
 
     // MARK: - Properties
 
@@ -28,6 +29,10 @@ class ClipInformationViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+
+    // MARK: - Temporary
+
+    private var previousState: ClipInformationViewState?
 
     // MARK: - Initializers
 
@@ -121,16 +126,23 @@ extension ClipInformationViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
+            defer { self.previousState = state }
 
-            if !state.isCollectionViewUpdateSuspended {
-                let info = ClipInformationLayout.Information(clip: state.clip,
-                                                             tags: state.tags.orderedValues,
-                                                             item: state.item)
-                self.informationView.setInfo(info, animated: state.shouldCollectionViewUpdateWithAnimation)
+            if !state.isCollectionViewUpdateSuspended,
+               state.hasDifferentValue(at: \.clip, from: self.previousState)
+               || state.hasDifferentValue(at: \.tags, from: self.previousState)
+               || state.hasDifferentValue(at: \.item, from: self.previousState)
+            {
+                self.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
             }
 
-            self.presentAlertIfNeeded(for: state.alert)
-            self.setNeedsStatusBarAppearanceUpdate()
+            if state.hasDifferentValue(at: \.isHiddenStatusBar, from: self.previousState) {
+                self.setNeedsStatusBarAppearanceUpdate()
+            }
+
+            if state.hasDifferentValue(at: \.alert, from: self.previousState) {
+                self.presentAlertIfNeeded(for: state.alert)
+            }
 
             if state.isDismissed {
                 self.dismiss(animated: true, completion: nil)
@@ -257,5 +269,11 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
         // HACK: Update safeAreaInsets immediately.
         containerView.layoutIfNeeded()
         return informationView.convert(informationView.calcInitialFrame(), to: containerView)
+    }
+}
+
+extension ClipInformationLayout.Information {
+    init(_ state: ClipInformationViewState) {
+        self.init(clip: state.clip, tags: state.tags.orderedValues, item: state.item)
     }
 }
