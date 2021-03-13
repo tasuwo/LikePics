@@ -325,8 +325,11 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     }
 
     func didTapRemover(_ cell: AlbumListCollectionViewCell) {
-        // TODO: indexPath(for:) がうまく動かないケースがあるので修正する
-        guard let albumId = cell.albumId, let indexPath = collectionView.indexPath(for: cell) else { return }
+        // HACK: collectionView.indexPath(for: cell) だと末尾のセルのindexPathが解決できないケースがあったため、
+        //       itemIdentifierベースでindexPathを解決する
+        guard let albumId = cell.albumId,
+              let album = store.stateValue.albums._values[albumId]?.value,
+              let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: true)) else { return }
         store.execute(.removerTapped(albumId, indexPath))
     }
 }
