@@ -1897,14 +1897,14 @@
 			path = TextEditAlertController;
 			sourceTree = "<group>";
 		};
-		2C2DF6AC25F916BB009A0BCB /* ClipPreview */ = {
+		2C2DF6AC25F916BB009A0BCB /* Page */ = {
 			isa = PBXGroup;
 			children = (
 				2C814FE525F7D2860035C0FE /* ClipPreviewPageViewController.swift */,
 				2C9541BB25FC714E00F6A540 /* Dependency */,
 				2C814FF025F7D2E40035C0FE /* Store */,
 			);
-			path = ClipPreview;
+			path = Page;
 			sourceTree = "<group>";
 		};
 		2C2DF6B625F916D2009A0BCB /* Bar */ = {
@@ -2529,7 +2529,7 @@
 			children = (
 				2CABB22625FBC512005DFEAD /* Root */,
 				2C2DF6B625F916D2009A0BCB /* Bar */,
-				2C2DF6AC25F916BB009A0BCB /* ClipPreview */,
+				2C2DF6AC25F916BB009A0BCB /* Page */,
 			);
 			path = ClipPreview;
 			sourceTree = "<group>";
