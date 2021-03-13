@@ -21,7 +21,7 @@ class DependencyContainer {
     let clipThumbnailLoader: ThumbnailLoader
     let albumThumbnailLoader: ThumbnailLoader
     let temporaryThumbnailLoader: ThumbnailLoader
-    let previewLoader: PreviewLoader
+    let _previewLoader: PreviewLoader
 
     // MARK: Storage
 
@@ -111,10 +111,10 @@ class DependencyContainer {
         self.temporaryThumbnailLoader = ThumbnailLoader(queue: .init(config: temporaryCacheConfig))
 
         let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
-        self.previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
-                                           thumbnailDiskCache: self.clipDiskCache,
-                                           imageQueryService: self._imageQueryService,
-                                           memoryCache: previewMemoryCache)
+        self._previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
+                                            thumbnailDiskCache: self.clipDiskCache,
+                                            imageQueryService: self._imageQueryService,
+                                            memoryCache: previewMemoryCache)
 
         self._clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
                                                       referenceClipStorage: referenceClipStorage,
@@ -237,4 +237,8 @@ extension DependencyContainer: HasUserSettingStorage {
 
 extension DependencyContainer: HasImageQueryService {
     var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
+}
+
+extension DependencyContainer: HasPreviewLoader {
+    var previewLoader: PreviewLoader { _previewLoader }
 }

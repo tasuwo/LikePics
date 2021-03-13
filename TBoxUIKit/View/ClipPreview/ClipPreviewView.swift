@@ -11,8 +11,8 @@ public protocol ClipPreviewPageViewDelegate: AnyObject {
 }
 
 public class ClipPreviewView: UIView {
-    public enum Source {
-        public struct Image {
+    public enum Source: Equatable {
+        public struct Image: Equatable {
             let uiImage: UIImage
 
             public init(uiImage: UIImage) {
@@ -20,7 +20,7 @@ public class ClipPreviewView: UIView {
             }
         }
 
-        public struct Thumbnail {
+        public struct Thumbnail: Equatable {
             let uiImage: UIImage
             let originalSize: CGSize
 

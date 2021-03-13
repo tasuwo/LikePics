@@ -138,25 +138,15 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewViewController(itemId: ClipItem.Identity, usesImageForPresentingAnimation: Bool) -> ClipPreviewViewController? {
-        let query: ClipItemQuery
-        switch self._clipQueryService.queryClipItem(having: itemId) {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to open ClipItemPreviewView for clip. \(error.localizedDescription)
-            """))
-            return nil
-        }
-
-        let viewModel = ClipPreviewViewModel(query: query,
-                                             previewLoader: self.previewLoader,
-                                             usesImageForPresentingAnimation: usesImageForPresentingAnimation,
-                                             logger: self.logger)
-        let viewController = ClipPreviewViewController(factory: self, viewModel: viewModel)
-
+    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> NewClipPreviewViewController? {
+        let store = ClipPreviewViewState(shouldLoadImageSynchronously: loadImageSynchronously,
+                                         itemId: item.id,
+                                         imageId: item.imageId,
+                                         imageSize: item.imageSize.cgSize,
+                                         source: nil,
+                                         isLoading: false,
+                                         isDismissed: false)
+        let viewController = NewClipPreviewViewController(state: store, dependency: self)
         return viewController
     }
 }

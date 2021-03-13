@@ -24,8 +24,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: View
 
-    private var currentViewController: ClipPreviewViewController? {
-        return self.viewControllers?.first as? ClipPreviewViewController
+    private var currentViewController: NewClipPreviewViewController? {
+        return self.viewControllers?.first as? NewClipPreviewViewController
     }
 
     private var currentIndex: Int? {
@@ -158,7 +158,7 @@ extension ClipPreviewPageViewController {
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
         guard let currentItem = state.currentItem,
               currentIndex != state.currentIndex,
-              let viewController = factory.makeClipPreviewViewController(itemId: currentItem.id, usesImageForPresentingAnimation: false)
+              let viewController = factory.makeClipPreviewViewController(for: currentItem, loadImageSynchronously: true)
         else {
             return
         }
@@ -189,7 +189,7 @@ extension ClipPreviewPageViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func didChangePage(to viewController: ClipPreviewViewController) {
+    private func didChangePage(to viewController: NewClipPreviewViewController) {
         tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
 
@@ -262,15 +262,15 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? ClipPreviewViewController else { return nil }
+        guard let viewController = viewController as? NewClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(before: viewController.itemId) else { return nil }
-        return factory.makeClipPreviewViewController(itemId: item.id, usesImageForPresentingAnimation: false)
+        return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? ClipPreviewViewController else { return nil }
+        guard let viewController = viewController as? NewClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
-        return factory.makeClipPreviewViewController(itemId: item.id, usesImageForPresentingAnimation: false)
+        return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
     }
 }
 
@@ -329,6 +329,6 @@ extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     }
 
     func previewPageBounds(_ view: ClipInformationView) -> CGRect {
-        return self.currentViewController?.previewView?.bounds ?? .zero
+        return self.currentViewController?.previewView.bounds ?? .zero
     }
 }
