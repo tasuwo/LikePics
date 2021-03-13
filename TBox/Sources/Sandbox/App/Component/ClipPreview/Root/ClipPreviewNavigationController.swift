@@ -13,13 +13,13 @@ class ClipPreviewNavigationController: UINavigationController {
         return self.pageViewController?.prefersStatusBarHidden ?? true
     }
 
-    private var pageViewController: NewClipPreviewPageViewController? {
-        viewControllers.first as? NewClipPreviewPageViewController
+    private var pageViewController: ClipPreviewPageViewController? {
+        viewControllers.first as? ClipPreviewPageViewController
     }
 
     // MARK: - Initializers
 
-    init(pageViewController: NewClipPreviewPageViewController) {
+    init(pageViewController: ClipPreviewPageViewController) {
         super.init(rootViewController: pageViewController)
     }
 

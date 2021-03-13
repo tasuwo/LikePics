@@ -7,7 +7,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class NewClipInformationViewController: UIViewController {
+class ClipInformationViewController: UIViewController {
     typealias Store = LikePics.Store<ClipInformationViewState, ClipInformationViewAction, ClipInformationViewDependency>
 
     // MARK: - Properties
@@ -112,7 +112,7 @@ class NewClipInformationViewController: UIViewController {
 
 // MARK: - Bind
 
-extension NewClipInformationViewController {
+extension ClipInformationViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -158,7 +158,7 @@ extension NewClipInformationViewController {
 
 // MARK: - Configuration
 
-extension NewClipInformationViewController {
+extension ClipInformationViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
@@ -177,7 +177,7 @@ extension NewClipInformationViewController {
     }
 }
 
-extension NewClipInformationViewController: ClipInformationViewDelegate {
+extension ClipInformationViewController: ClipInformationViewDelegate {
     // MARK: - ClipInformationViewDelegate
 
     func didTapAddTagButton(_ view: ClipInformationView) {
@@ -209,7 +209,7 @@ extension NewClipInformationViewController: ClipInformationViewDelegate {
     }
 }
 
-extension NewClipInformationViewController: TextEditAlertDelegate {
+extension ClipInformationViewController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
     func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
@@ -221,7 +221,7 @@ extension NewClipInformationViewController: TextEditAlertDelegate {
     }
 }
 
-extension NewClipInformationViewController: UIGestureRecognizerDelegate {
+extension ClipInformationViewController: UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -240,7 +240,7 @@ extension NewClipInformationViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension NewClipInformationViewController: ClipInformationPresentedAnimatorDataSource {
+extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSource {
     // MARK: - ClipInformationPresentedAnimatorDataSource
 
     func animatingInformationView(_ animator: ClipInformationAnimator) -> ClipInformationView? {

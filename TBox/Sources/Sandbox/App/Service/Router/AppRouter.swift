@@ -141,11 +141,11 @@ extension DependencyContainer: Router {
                                                toolBarItems: [],
                                                isToolBarHidden: false,
                                                alert: nil)
-        let viewController = NewClipPreviewPageViewController(state: state,
-                                                              barState: barState,
-                                                              dependency: dependency,
-                                                              factory: self,
-                                                              transitionController: transitionController)
+        let viewController = ClipPreviewPageViewController(state: state,
+                                                           barState: barState,
+                                                           dependency: dependency,
+                                                           factory: self,
+                                                           transitionController: transitionController)
 
         dependency.clipInformationViewDataSource = viewController
         transitionController.setup(factory: viewController, baseViewController: viewController)
@@ -181,11 +181,11 @@ extension DependencyContainer: Router {
                                                        text: "",
                                                        shouldReturn: false,
                                                        isPresenting: false)
-        let viewController = NewClipInformationViewController(state: state,
-                                                              siteUrlEditAlertState: siteUrlEditAlertState,
-                                                              dependency: self,
-                                                              informationViewDataSource: informationViewDataSource,
-                                                              transitioningController: transitioningController)
+        let viewController = ClipInformationViewController(state: state,
+                                                           siteUrlEditAlertState: siteUrlEditAlertState,
+                                                           dependency: self,
+                                                           informationViewDataSource: informationViewDataSource,
+                                                           transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 

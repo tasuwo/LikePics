@@ -7,7 +7,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class NewClipPreviewPageViewController: UIPageViewController {
+class ClipPreviewPageViewController: UIPageViewController {
     typealias Store = LikePics.Store<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
 
     struct BarDependency: ClipPreviewPageBarDependency {
@@ -130,7 +130,7 @@ class NewClipPreviewPageViewController: UIPageViewController {
 
 // MARK: - Bind
 
-extension NewClipPreviewPageViewController {
+extension ClipPreviewPageViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -204,7 +204,7 @@ extension NewClipPreviewPageViewController {
 
 // MARK: - Configuration
 
-extension NewClipPreviewPageViewController {
+extension ClipPreviewPageViewController {
     private func configureAppearance() {
         navigationItem.title = ""
         modalTransitionStyle = .crossDissolve
@@ -226,7 +226,7 @@ extension NewClipPreviewPageViewController {
     }
 }
 
-extension NewClipPreviewPageViewController: ClipPreviewPageBarDelegate {
+extension ClipPreviewPageViewController: ClipPreviewPageBarDelegate {
     // MARK: - ClipPreviewPageBarDelegate
 
     func didTriggered(_ event: ClipPreviewPageBarEvent) {
@@ -234,7 +234,7 @@ extension NewClipPreviewPageViewController: ClipPreviewPageBarDelegate {
     }
 }
 
-extension NewClipPreviewPageViewController: ClipPreviewPageViewDelegate {
+extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     // MARK: - ClipPreviewPageViewDelegate
 
     func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView) {
@@ -242,7 +242,7 @@ extension NewClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     }
 }
 
-extension NewClipPreviewPageViewController: UIPageViewControllerDelegate {
+extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
@@ -252,7 +252,7 @@ extension NewClipPreviewPageViewController: UIPageViewControllerDelegate {
     }
 }
 
-extension NewClipPreviewPageViewController: UIPageViewControllerDataSource {
+extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -268,7 +268,7 @@ extension NewClipPreviewPageViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension NewClipPreviewPageViewController: ClipInformationViewControllerFactory {
+extension ClipPreviewPageViewController: ClipInformationViewControllerFactory {
     // MARK: - ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
@@ -276,7 +276,7 @@ extension NewClipPreviewPageViewController: ClipInformationViewControllerFactory
     }
 }
 
-extension NewClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
+extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
     func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -296,7 +296,7 @@ extension NewClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSour
     }
 }
 
-extension NewClipPreviewPageViewController: ClipInformationPresentingAnimatorDataSource {
+extension ClipPreviewPageViewController: ClipInformationPresentingAnimatorDataSource {
     // MARK: - ClipInformationPresentingAnimatorDataSource
 
     func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
@@ -323,7 +323,7 @@ extension NewClipPreviewPageViewController: ClipInformationPresentingAnimatorDat
     }
 }
 
-extension NewClipPreviewPageViewController: ClipInformationViewDataSource {
+extension ClipPreviewPageViewController: ClipInformationViewDataSource {
     // MARK: - ClipInformationViewDataSource
 
     func previewImage(_ view: ClipInformationView) -> UIImage? {
