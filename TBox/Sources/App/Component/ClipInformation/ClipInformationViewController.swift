@@ -157,7 +157,7 @@ extension ClipInformationViewController {
             presentErrorMessageAlertIfNeeded(message: message)
 
         case let .siteUrlEdit(title: title):
-            siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title }, on: self)
+            siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title && $0?.isUrlConvertible == true }, on: self)
 
         case .none:
             break
@@ -274,6 +274,6 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
 
 extension ClipInformationLayout.Information {
     init(_ state: ClipInformationViewState) {
-        self.init(clip: state.clip, tags: state.tags.orderedValues, item: state.item)
+        self.init(clip: state.clip, tags: state.tags.displayableValues, item: state.item)
     }
 }

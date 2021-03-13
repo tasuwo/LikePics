@@ -182,7 +182,7 @@ extension ClipInformationViewReducer {
         let nextState = performFilter(clip: clipQuery.clip.value,
                                       item: clipItemQuery.clipItem.value,
                                       tags: tagsQuery.tags.value,
-                                      isSomeItemsHidden: state.isSomeItemsHidden,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
                                       previousState: state)
 
         return (nextState, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect, settingEffect])
@@ -238,10 +238,10 @@ extension ClipInformationViewReducer {
 
         nextState.clip = clip
         nextState.item = item
-
         nextState.tags = nextState.tags
             .updated(_values: tags.indexed())
             .updated(_displayableIds: Set(filteredTagIds))
+        nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
     }

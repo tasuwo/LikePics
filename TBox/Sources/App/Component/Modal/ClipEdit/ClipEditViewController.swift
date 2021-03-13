@@ -147,7 +147,7 @@ extension ClipEditViewController {
             presentErrorMessageAlertIfNeeded(message: message)
 
         case let .siteUrlEdit(itemIds: _, title: title):
-            siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title }, on: self)
+            siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title && $0?.isUrlConvertible == true }, on: self)
 
         case .none:
             break
