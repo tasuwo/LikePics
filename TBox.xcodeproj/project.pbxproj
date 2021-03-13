@@ -197,7 +197,7 @@
 		2C6E09E524E8158500B541D9 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6E09C524E8150400B541D9 /* Common.framework */; };
 		2C6E09EA24E82BC300B541D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E09E924E82BC300B541D9 /* Assets.xcassets */; };
 		2C6F89EB254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */; };
-		2C76FE7225FCDEC400EB7426 /* NewClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76FE7125FCDEC400EB7426 /* NewClipPreviewViewController.swift */; };
+		2C76FE7225FCDEC400EB7426 /* ClipPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76FE7125FCDEC400EB7426 /* ClipPreviewViewController.swift */; };
 		2C76FE9025FCE53700EB7426 /* HasPreviewLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76FE8F25FCE53700EB7426 /* HasPreviewLoader.swift */; };
 		2C76FE9B25FCE57000EB7426 /* ClipPreviewViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76FE9A25FCE57000EB7426 /* ClipPreviewViewReducer.swift */; };
 		2C76FEA625FCE58800EB7426 /* ClipPreviewViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76FEA525FCE58800EB7426 /* ClipPreviewViewAction.swift */; };
@@ -986,7 +986,7 @@
 		2C6E09D624E8150500B541D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6E09E924E82BC300B541D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6F89EA254D08EA000BEFE9 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
-		2C76FE7125FCDEC400EB7426 /* NewClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClipPreviewViewController.swift; sourceTree = "<group>"; };
+		2C76FE7125FCDEC400EB7426 /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		2C76FE8F25FCE53700EB7426 /* HasPreviewLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasPreviewLoader.swift; sourceTree = "<group>"; };
 		2C76FE9A25FCE57000EB7426 /* ClipPreviewViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewReducer.swift; sourceTree = "<group>"; };
 		2C76FEA525FCE58800EB7426 /* ClipPreviewViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewAction.swift; sourceTree = "<group>"; };
@@ -2457,7 +2457,7 @@
 		2C76FE6725FCDEAD00EB7426 /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				2C76FE7125FCDEC400EB7426 /* NewClipPreviewViewController.swift */,
+				2C76FE7125FCDEC400EB7426 /* ClipPreviewViewController.swift */,
 				2C76FE8525FCDF2C00EB7426 /* Store */,
 			);
 			path = Preview;
@@ -4928,7 +4928,7 @@
 				2CEE6BED25A36B6F005DA31C /* TagCollectionMenuBuilder.swift in Sources */,
 				2C570B5B24E04F8800A1DC9F /* DependencyContainer.swift in Sources */,
 				2C1C56B525B9B8E5008271DD /* URLButtonInteractionHandler.swift in Sources */,
-				2C76FE7225FCDEC400EB7426 /* NewClipPreviewViewController.swift in Sources */,
+				2C76FE7225FCDEC400EB7426 /* ClipPreviewViewController.swift in Sources */,
 				2C25841E254FDCC300373A31 /* AppDataLoader.swift in Sources */,
 				2CD8939F256919F500EACB80 /* ViewControllerFactory.swift in Sources */,
 				2CB30F2E25D2D618005BD40D /* AppRoot_TabBarItem.swift in Sources */,

@@ -138,7 +138,7 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> NewClipPreviewViewController? {
+    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> ClipPreviewViewController? {
         let store = ClipPreviewViewState(shouldLoadImageSynchronously: loadImageSynchronously,
                                          itemId: item.id,
                                          imageId: item.imageId,
@@ -146,7 +146,7 @@ extension DependencyContainer: ViewControllerFactory {
                                          source: nil,
                                          isLoading: false,
                                          isDismissed: false)
-        let viewController = NewClipPreviewViewController(state: store, dependency: self)
+        let viewController = ClipPreviewViewController(state: store, dependency: self)
         return viewController
     }
 }

@@ -7,7 +7,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class NewClipPreviewViewController: UIViewController {
+class ClipPreviewViewController: UIViewController {
     typealias Store = LikePics.Store<ClipPreviewViewState, ClipPreviewViewAction, ClipPreviewViewDependency>
 
     // MARK: - Properties
@@ -58,7 +58,7 @@ class NewClipPreviewViewController: UIViewController {
 
 // MARK: - Bind
 
-extension NewClipPreviewViewController {
+extension ClipPreviewViewController {
     private func bind(to store: Store) {
         store.state.sink { [weak self] state in
             guard let self = self else { return }
@@ -76,7 +76,7 @@ extension NewClipPreviewViewController {
 
 // MARK: - Configuration
 
-extension NewClipPreviewViewController {
+extension ClipPreviewViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = .clear
 

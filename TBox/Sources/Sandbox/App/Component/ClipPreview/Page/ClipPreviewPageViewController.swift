@@ -24,8 +24,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: View
 
-    private var currentViewController: NewClipPreviewViewController? {
-        return self.viewControllers?.first as? NewClipPreviewViewController
+    private var currentViewController: ClipPreviewViewController? {
+        return self.viewControllers?.first as? ClipPreviewViewController
     }
 
     private var currentIndex: Int? {
@@ -189,7 +189,7 @@ extension ClipPreviewPageViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func didChangePage(to viewController: NewClipPreviewViewController) {
+    private func didChangePage(to viewController: ClipPreviewViewController) {
         tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
 
@@ -262,13 +262,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? NewClipPreviewViewController else { return nil }
+        guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(before: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let viewController = viewController as? NewClipPreviewViewController else { return nil }
+        guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
     }

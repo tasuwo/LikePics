@@ -12,5 +12,5 @@ protocol ViewControllerFactory {
     func makeTagCollectionViewController() -> UIViewController?
     func makeAlbumListViewController() -> UIViewController?
     func makeSettingsViewController() -> UIViewController
-    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> NewClipPreviewViewController?
+    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> ClipPreviewViewController?
 }
