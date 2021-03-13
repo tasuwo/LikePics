@@ -40,7 +40,7 @@ enum ClipEditViewAction: Action {
     case itemSelected(ClipItem.Identity)
     case itemDeselected(ClipItem.Identity)
 
-    case clipDeletionButtonTapped
+    case clipDeletionButtonTapped(IndexPath)
 
     // MARK: Context Menu
 
@@ -55,6 +55,7 @@ enum ClipEditViewAction: Action {
     // MARK: Alert Completion
 
     case siteUrlEditConfirmed(text: String)
+    case clipDeleteConfirmed
     case alertDismissed
 
     // MARK: Transition

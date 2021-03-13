@@ -159,13 +159,8 @@ enum ClipEditViewReducer: Reducer {
             nextState.items = state.items.updated(_selectedIds: newSelections)
             return (nextState, .none)
 
-        case .clipDeletionButtonTapped:
-            switch dependency.clipCommandService.deleteClips(having: [state.clip.id]) {
-            case .success: ()
-
-            case .failure:
-                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
-            }
+        case let .clipDeletionButtonTapped(indexPath):
+            nextState.alert = .deleteConfirmation(indexPath)
             return (nextState, .none)
 
         // MARK: Context Menu
@@ -196,6 +191,16 @@ enum ClipEditViewReducer: Reducer {
             return (state, .none)
 
         // MARK: Alert Completion
+
+        case .clipDeleteConfirmed:
+            switch dependency.clipCommandService.deleteClips(having: [state.clip.id]) {
+            case .success:
+                nextState.alert = nil
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
+            }
+            return (nextState, .none)
 
         case let .siteUrlEditConfirmed(text: text):
             guard case let .siteUrlEdit(itemIds: itemIds, title: _) = state.alert else {

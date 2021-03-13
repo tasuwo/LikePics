@@ -8,6 +8,7 @@ struct ClipEditViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case siteUrlEdit(itemIds: Set<ClipItem.Identity>, title: String?)
+        case deleteConfirmation(IndexPath)
     }
 
     struct EditingClip: Equatable {

@@ -149,6 +149,9 @@ extension ClipEditViewController {
         case let .siteUrlEdit(itemIds: _, title: title):
             siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title && $0?.isUrlConvertible == true }, on: self)
 
+        case let .deleteConfirmation(indexPath):
+            presentDeleteConfirmationAlert(at: indexPath)
+
         case .none:
             break
         }
@@ -159,6 +162,30 @@ extension ClipEditViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentDeleteConfirmationAlert(at indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let alert = UIAlertController(title: L10n.clipEditViewAlertForDeleteClipTitle,
+                                      message: L10n.clipEditViewAlertForDeleteClipMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipEditViewDeleteClipItemTitle
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.clipDeleteConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -241,7 +268,7 @@ extension ClipEditViewController: UICollectionViewDelegate {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         switch item {
         case .deleteClip:
-            store.execute(.clipDeletionButtonTapped)
+            store.execute(.clipDeletionButtonTapped(indexPath))
 
         case let .clipItem(item):
             store.execute(.itemSelected(item.itemId))
