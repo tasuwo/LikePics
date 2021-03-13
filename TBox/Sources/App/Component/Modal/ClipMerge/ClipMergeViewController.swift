@@ -32,6 +32,10 @@ class ClipMergeViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    // MARK: Temporary
+
+    private var previousSnapshotState: ClipMergeViewState?
+
     // MARK: - Initializers
 
     init(state: ClipMergeViewState,
@@ -73,8 +77,13 @@ extension ClipMergeViewController {
             guard let self = self else { return }
 
             DispatchQueue.global().async {
-                let snapshot = self.createSnapshot(for: state)
-                self.dataSource.apply(snapshot)
+                defer { self.previousSnapshotState = state }
+                if state.hasDifferentValue(at: \.tags, from: self.previousSnapshotState)
+                    || state.hasDifferentValue(at: \.items, from: self.previousSnapshotState)
+                {
+                    let snapshot = self.createSnapshot(for: state)
+                    self.dataSource.apply(snapshot)
+                }
             }
 
             self.presentAlertIfNeeded(for: state.alert)

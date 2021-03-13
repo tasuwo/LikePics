@@ -6,7 +6,7 @@
 
 import Domain
 
-struct ClipMergeViewState: Equatable {
+struct ClipMergeViewState: Equatable, KeyPathComparable {
     enum Alert: Equatable {
         case error(String?)
     }
