@@ -20,17 +20,13 @@ class NewClipPreviewPageViewController: UIPageViewController {
 
     // MARK: View
 
-    var currentViewController: ClipPreviewViewController? {
+    private var currentViewController: ClipPreviewViewController? {
         return self.viewControllers?.first as? ClipPreviewViewController
     }
 
-    var currentIndex: Int? {
+    private var currentIndex: Int? {
         guard let viewController = currentViewController else { return nil }
         return store.stateValue.index(of: viewController.itemId)
-    }
-
-    var currentItemId: ClipItem.Identity? {
-        return store.stateValue.currentItem?.id
     }
 
     private var isFullscreen = false {
@@ -239,5 +235,52 @@ extension NewClipPreviewPageViewController: ClipInformationViewControllerFactory
 
     func make(transitioningController: ClipInformationTransitioningControllerProtocol) -> UIViewController? {
         fatalError("TODO")
+    }
+}
+
+extension NewClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
+    // MARK: - ClipPreviewPresentedAnimatorDataSource
+
+    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
+        view.layoutIfNeeded()
+        return currentViewController?.previewView
+    }
+
+    func currentItemId(_ animator: ClipPreviewAnimator) -> ClipItem.Identity? {
+        view.layoutIfNeeded()
+        return store.stateValue.currentItem?.id
+    }
+
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
+        view.layoutIfNeeded()
+        guard let pageView = currentViewController?.previewView else { return .zero }
+        return pageView.convert(pageView.initialImageFrame, to: containerView)
+    }
+}
+
+extension NewClipPreviewPageViewController: ClipInformationPresentingAnimatorDataSource {
+    // MARK: - ClipInformationPresentingAnimatorDataSource
+
+    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
+        view.layoutIfNeeded()
+        return currentViewController?.previewView
+    }
+
+    func baseView(_ animator: ClipInformationAnimator) -> UIView? {
+        return view
+    }
+
+    func componentsOverBaseView(_ animator: ClipInformationAnimator) -> [UIView] {
+        return ([navigationController?.navigationBar, navigationController?.toolbar] as [UIView?]).compactMap { $0 }
+    }
+
+    func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        view.layoutIfNeeded()
+        guard let pageView = currentViewController?.previewView else { return .zero }
+        return pageView.convert(pageView.initialImageFrame, to: containerView)
+    }
+
+    func set(_ animator: ClipInformationAnimator, isUserInteractionEnabled: Bool) {
+        view.isUserInteractionEnabled = isUserInteractionEnabled
     }
 }
