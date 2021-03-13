@@ -2479,6 +2479,14 @@
 			path = Store;
 			sourceTree = "<group>";
 		};
+		2C76FEBB25FCEE2100EB7426 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				2C51A0BE25AC1FA000A79350 /* PreviewLoader.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
 		2C79484E254DD11700A4E15D /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -2597,7 +2605,6 @@
 			isa = PBXGroup;
 			children = (
 				2C0B119424E2AC270054016C /* ClipPreviewViewModel.swift */,
-				2C51A0BE25AC1FA000A79350 /* PreviewLoader.swift */,
 			);
 			path = ClipPreview;
 			sourceTree = "<group>";
@@ -2974,6 +2981,7 @@
 		2CB47B7925D534D9008E38B8 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				2C76FEBB25FCEE2100EB7426 /* Preview */,
 				2CB47B7B25D534F5008E38B8 /* Router */,
 				2CB47B7A25D534EB008E38B8 /* Pasteboard */,
 			);
