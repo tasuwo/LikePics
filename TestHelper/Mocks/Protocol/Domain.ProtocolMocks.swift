@@ -10,8 +10,8 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     public init() { }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip, containers, forced)
@@ -20,8 +20,8 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     }
 
     public private(set) var createTagWithNameCallCount = 0
-    public var createTagWithNameHandler: ((String) -> (Result<Void, ClipStorageError>))?
-    public func create(tagWithName name: String) -> Result<Void, ClipStorageError> {
+    public var createTagWithNameHandler: ((String) -> (Result<Tag.Identity, ClipStorageError>))?
+    public func create(tagWithName name: String) -> Result<Tag.Identity, ClipStorageError> {
         createTagWithNameCallCount += 1
         if let createTagWithNameHandler = createTagWithNameHandler {
             return createTagWithNameHandler(name)
@@ -30,8 +30,8 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     }
 
     public private(set) var createAlbumWithTitleCallCount = 0
-    public var createAlbumWithTitleHandler: ((String) -> (Result<Void, ClipStorageError>))?
-    public func create(albumWithTitle: String) -> Result<Void, ClipStorageError> {
+    public var createAlbumWithTitleHandler: ((String) -> (Result<Album.Identity, ClipStorageError>))?
+    public func create(albumWithTitle: String) -> Result<Album.Identity, ClipStorageError> {
         createAlbumWithTitleCallCount += 1
         if let createAlbumWithTitleHandler = createAlbumWithTitleHandler {
             return createAlbumWithTitleHandler(albumWithTitle)
@@ -331,6 +331,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
             return queryClipsTaggedHandler(tag)
         }
         fatalError("queryClipsTaggedHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipsTaggedTagIdentityCallCount = 0
+    public var queryClipsTaggedTagIdentityHandler: ((Tag.Identity) -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryClips(tagged tagId: Tag.Identity) -> Result<ClipListQuery, ClipStorageError> {
+        queryClipsTaggedTagIdentityCallCount += 1
+        if let queryClipsTaggedTagIdentityHandler = queryClipsTaggedTagIdentityHandler {
+            return queryClipsTaggedTagIdentityHandler(tagId)
+        }
+        fatalError("queryClipsTaggedTagIdentityHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var queryAlbumCallCount = 0
@@ -880,8 +890,8 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
     public init() { }
 
     public private(set) var createCallCount = 0
-    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Void, ClipStorageError>))?
-    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Void, ClipStorageError> {
+    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
         createCallCount += 1
         if let createHandler = createHandler {
             return createHandler(clip, containers, forced)

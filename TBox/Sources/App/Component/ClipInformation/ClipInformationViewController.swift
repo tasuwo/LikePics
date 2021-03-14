@@ -135,8 +135,8 @@ extension ClipInformationViewController {
                 defer { self.snapshotPreviousState = state }
                 // iPadにてセルが過剰にアニメーションされてしまうケースがあったため、差分がある場合のみ更新をかける
                 guard state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
-                      || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
-                      || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState) else { return }
+                    || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
+                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState) else { return }
                 self.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
             }
 
