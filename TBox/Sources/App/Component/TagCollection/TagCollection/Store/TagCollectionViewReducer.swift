@@ -96,8 +96,8 @@ enum TagCollectionViewReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .deleteMenuSelected(tag, indexPath):
-            nextState.alert = .deletion(tagId: tag.id, tagName: tag.name, at: indexPath)
+        case let .deleteMenuSelected(tag):
+            nextState.alert = .deletion(tagId: tag.id, tagName: tag.name)
             return (nextState, .none)
 
         case let .renameMenuSelected(tag):
@@ -108,7 +108,7 @@ enum TagCollectionViewReducer: Reducer {
 
         case .alertDeleteConfirmTapped:
             switch state.alert {
-            case let .deletion(tagId: tagId, tagName: _, at: _):
+            case let .deletion(tagId: tagId, tagName: _):
                 switch dependency.clipCommandService.deleteTags(having: [tagId]) {
                 case .success:
                     nextState.alert = nil

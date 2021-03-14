@@ -96,7 +96,7 @@ extension TagCollectionViewController {
             self.searchController.set(isEnabled: state.isSearchBarEnabled)
             self.searchController.set(text: state.searchQuery)
 
-            self.presentAlertIfNeeded(for: state.alert)
+            self.presentAlertIfNeeded(for: state)
         }
         .store(in: &subscriptions)
     }
@@ -111,8 +111,8 @@ extension TagCollectionViewController {
         Layout.apply(items: items.compactMap({ $0 }), to: dataSource, in: collectionView)
     }
 
-    private func presentAlertIfNeeded(for alert: TagCollectionViewState.Alert?) {
-        switch alert {
+    private func presentAlertIfNeeded(for state: TagCollectionViewState) {
+        switch state.alert {
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
 
@@ -122,8 +122,8 @@ extension TagCollectionViewController {
         case let .edit(tagId: _, name: name):
             tagEditAlert.present(with: name, validator: { $0?.isEmpty == false && $0 != name }, on: self)
 
-        case let .deletion(tagId: _, tagName: name, at: indexPath):
-            presentDeleteConfirmationAlert(tagName: name, indexPath: indexPath)
+        case let .deletion(tagId: tagId, tagName: name):
+            presentDeleteConfirmationAlert(for: tagId, tagName: name, state: state)
 
         case .none:
             break
@@ -138,8 +138,14 @@ extension TagCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentDeleteConfirmationAlert(tagName: String, indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+    private func presentDeleteConfirmationAlert(for tagId: Tag.Identity, tagName: String, state: TagCollectionViewState) {
+        guard let tag = state.tags.value(having: tagId),
+              let indexPath = dataSource.indexPath(for: .tag(.init(tag: tag, displayCount: !state._isSomeItemsHidden))),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
+            store.execute(.alertDismissed)
+            return
+        }
 
         let alert = UIAlertController(title: nil,
                                       message: L10n.tagListViewAlertForDeleteMessage(tagName),
@@ -286,7 +292,7 @@ extension TagCollectionViewController {
             return UIAction(title: L10n.tagListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.deleteMenuSelected(tag, indexPath))
+                self?.store.execute(.deleteMenuSelected(tag))
             }
 
         case .rename:

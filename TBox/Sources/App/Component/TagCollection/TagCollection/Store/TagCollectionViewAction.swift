@@ -31,7 +31,7 @@ enum TagCollectionViewAction {
     case copyMenuSelected(Tag)
     case hideMenuSelected(Tag)
     case revealMenuSelected(Tag)
-    case deleteMenuSelected(Tag, IndexPath)
+    case deleteMenuSelected(Tag)
     case renameMenuSelected(Tag)
 
     // MARK: Alert Completion

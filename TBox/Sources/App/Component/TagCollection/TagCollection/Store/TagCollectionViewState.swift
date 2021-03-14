@@ -10,7 +10,7 @@ struct TagCollectionViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case edit(tagId: Tag.Identity, name: String)
-        case deletion(tagId: Tag.Identity, tagName: String, at: IndexPath)
+        case deletion(tagId: Tag.Identity, tagName: String)
         case addition
     }
 
