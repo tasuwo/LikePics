@@ -34,10 +34,10 @@ enum ClipCollectionAction: Action {
     case deferredHide(Clip.Identity)
     case revealMenuTapped(Clip.Identity)
     case editMenuTapped(Clip.Identity)
-    case shareMenuTapped(Clip.Identity, IndexPath)
-    case purgeMenuTapped(Clip.Identity, IndexPath)
-    case deleteMenuTapped(Clip.Identity, IndexPath)
-    case removeFromAlbumMenuTapped(Clip.Identity, IndexPath)
+    case shareMenuTapped(Clip.Identity)
+    case purgeMenuTapped(Clip.Identity)
+    case deleteMenuTapped(Clip.Identity)
+    case removeFromAlbumMenuTapped(Clip.Identity)
 
     // MARK: Modal Completion
 

@@ -159,23 +159,23 @@ enum ClipCollectionReducer: Reducer {
             }
             return (state, [Effect(stream)])
 
-        case let .shareMenuTapped(clipId, indexPath):
+        case let .shareMenuTapped(clipId):
             guard let imageIds = state.clips._values[clipId]?.value.items.map({ $0.imageId }) else { return (state, .none) }
             let data = imageIds.compactMap { imageId in
                 try? dependency.imageQueryService.read(having: imageId)
             }
-            nextState.alert = .share(data: data, at: indexPath)
+            nextState.alert = .share(clipId: clipId, data: data)
             return (nextState, .none)
 
-        case let .purgeMenuTapped(clipId, indexPath):
-            nextState.alert = .purge(clipId: clipId, at: indexPath)
+        case let .purgeMenuTapped(clipId):
+            nextState.alert = .purge(clipId: clipId)
             return (nextState, .none)
 
-        case let .deleteMenuTapped(clipId, indexPath):
-            nextState.alert = .deletion(clipId: clipId, at: indexPath)
+        case let .deleteMenuTapped(clipId):
+            nextState.alert = .deletion(clipId: clipId)
             return (nextState, .none)
 
-        case let .removeFromAlbumMenuTapped(clipId, _):
+        case let .removeFromAlbumMenuTapped(clipId):
             guard case let .album(albumId) = state.source else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: [clipId]) {
             case .success: ()
@@ -216,7 +216,7 @@ enum ClipCollectionReducer: Reducer {
         // MARK: Alert Completion
 
         case .alertDeleteConfirmed:
-            guard case let .deletion(clipId: clipId, at: _) = state.alert else {
+            guard case let .deletion(clipId: clipId) = state.alert else {
                 nextState.alert = nil
                 return (nextState, .none)
             }
@@ -231,7 +231,7 @@ enum ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case .alertPurgeConfirmed:
-            guard case let .purge(clipId: clipId, at: _) = state.alert else {
+            guard case let .purge(clipId: clipId) = state.alert else {
                 nextState.alert = nil
                 return (nextState, .none)
             }

@@ -143,7 +143,7 @@ extension ClipCollectionViewController {
                 .forEach { $0.visibleSelectedMark = state.operation.isEditing }
 
             self.applySelections(for: state)
-            self.presentAlertIfNeeded(for: state.alert)
+            self.presentAlertIfNeeded(for: state)
 
             // Propagation
 
@@ -175,19 +175,19 @@ extension ClipCollectionViewController {
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }
 
-    private func presentAlertIfNeeded(for alert: ClipCollectionState.Alert?) {
-        switch alert {
+    private func presentAlertIfNeeded(for state: ClipCollectionState) {
+        switch state.alert {
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
 
-        case let .deletion(clipId: _, at: indexPath):
-            presentDeletionAlert(at: indexPath)
+        case let .deletion(clipId: clipId):
+            presentDeletionAlert(for: clipId, state: state)
 
-        case let .purge(clipId: _, at: indexPath):
-            presentPurgeAlert(at: indexPath)
+        case let .purge(clipId: clipId):
+            presentPurgeAlert(for: clipId, state: state)
 
-        case let .share(data: data, at: indexPath):
-            presentShareAlert(data: data, at: indexPath)
+        case let .share(clipId: clipId, data: data):
+            presentShareAlert(for: clipId, data: data, state: state)
 
         case .none:
             break
@@ -202,8 +202,11 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentPurgeAlert(at indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
+    private func presentPurgeAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
+        guard let clip = state.clips.value(having: clipId),
+              let indexPath = dataSource.indexPath(for: clip),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
             store.execute(.alertDismissed)
             return
         }
@@ -225,8 +228,11 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentDeletionAlert(at indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
+    private func presentDeletionAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
+        guard let clip = state.clips.value(having: clipId),
+              let indexPath = dataSource.indexPath(for: clip),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
             store.execute(.alertDismissed)
             return
         }
@@ -249,8 +255,11 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(data: [Data], at indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
+    private func presentShareAlert(for clipId: Clip.Identity, data: [Data], state: ClipCollectionState) {
+        guard let clip = state.clips.value(having: clipId),
+              let indexPath = dataSource.indexPath(for: clip),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
             store.execute(.alertDismissed)
             return
         }
@@ -454,27 +463,27 @@ extension ClipCollectionViewController {
             return UIAction(title: L10n.clipsListContextMenuRemoveFromAlbum,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.removeFromAlbumMenuTapped(clip.id, indexPath))
+                self?.store.execute(.removeFromAlbumMenuTapped(clip.id))
             }
 
         case .delete:
             return UIAction(title: L10n.clipsListContextMenuDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.deleteMenuTapped(clip.id, indexPath))
+                self?.store.execute(.deleteMenuTapped(clip.id))
             }
 
         case .share:
             return UIAction(title: L10n.clipsListContextMenuShare,
                             image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
-                self?.store.execute(.shareMenuTapped(clip.id, indexPath))
+                self?.store.execute(.shareMenuTapped(clip.id))
             }
 
         case .purge:
             return UIAction(title: L10n.clipsListContextMenuPurge,
                             image: UIImage(systemName: "scissors"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.purgeMenuTapped(clip.id, indexPath))
+                self?.store.execute(.purgeMenuTapped(clip.id))
             }
 
         case .edit:
