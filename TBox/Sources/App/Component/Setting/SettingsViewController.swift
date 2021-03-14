@@ -21,6 +21,8 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = L10n.settingViewTitle
+
         self.presenter.view = self
 
         self.presenter.shouldHideHiddenItems

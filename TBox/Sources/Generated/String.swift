@@ -325,6 +325,8 @@ internal enum L10n {
     internal static let searchResultForUncategorizedEmptyTitle = L10n.tr("Localizable", "search_result_for_uncategorized_empty_title")
     /// 未分類
     internal static let searchResultTitleUncategorized = L10n.tr("Localizable", "search_result_title_uncategorized")
+    /// 設定
+    internal static let settingViewTitle = L10n.tr("Localizable", "setting_view_title")
     /// この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます
     internal static let settingsConfirmIcloudSyncOffMessage = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_message")
     /// iCloud同期をオフにしますか？
