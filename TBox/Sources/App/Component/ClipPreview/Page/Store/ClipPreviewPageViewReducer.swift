@@ -228,9 +228,28 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .removeFromClip:
-            guard let item = state.currentItem else { return (nextState, .none) }
+            guard let index = state.currentIndex,
+                  let item = state.currentItem
+            else {
+                return (nextState, .none)
+            }
             switch dependency.clipCommandService.deleteClipItem(item) {
-            case .success: ()
+            case .success:
+                nextState.items = nextState.items.filter({ $0.id != item.id })
+
+                guard !nextState.items.isEmpty else {
+                    nextState.currentIndex = nil
+                    nextState.isDismissed = true
+                    return (nextState, .none)
+                }
+
+                if index < nextState.items.count {
+                    nextState.currentIndex = index
+                } else if index - 1 >= 0 {
+                    nextState.currentIndex = index - 1
+                } else {
+                    nextState.currentIndex = 0
+                }
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
