@@ -94,8 +94,10 @@ extension AlbumListViewController {
                 Layout.apply(items: items, to: self.dataSource, in: self.collectionView)
             }
 
-            self.collectionView.alpha = state.isCollectionViewDisplaying ? 1 : 0
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
+            self.collectionView.alpha = state.isCollectionViewDisplaying ? 1 : 0
+            self.searchController.set(isEnabled: state.isSearchBarEnabled)
+            self.searchController.set(text: state.searchQuery)
             self.navigationItem.leftBarButtonItem?.isEnabled = state.isAddButtonEnabled
             self.editButtonItem.isEnabled = state.isEditButtonEnabled
             self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled

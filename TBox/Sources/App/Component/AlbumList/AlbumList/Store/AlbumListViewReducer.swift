@@ -252,6 +252,7 @@ extension AlbumListViewReducer {
         nextState._isSomeItemsHidden = isSomeItemsHidden
         nextState.isCollectionViewDisplaying = !filteringAlbums.isEmpty
         nextState.isEmptyMessageViewDisplaying = filteringAlbums.isEmpty
+        nextState.isSearchBarEnabled = !filteringAlbums.isEmpty
         nextState._searchStorage = searchStorage
 
         if filteringAlbums.isEmpty, !searchQuery.isEmpty {
