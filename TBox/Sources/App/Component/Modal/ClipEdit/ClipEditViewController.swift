@@ -217,7 +217,7 @@ extension ClipEditViewController {
     private func configureReorder() {
         collectionView.dragInteractionEnabled = true
         dataSource.reorderingHandlers.canReorderItem = { [weak self] item in
-            item.canReorder && self?.collectionView.isEditing == false
+            item.canReorder && self?.store.stateValue.canReorderItem == true
         }
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             let orderedItemIds: [ClipItem.Identity] = transaction.finalSnapshot.itemIdentifiers
