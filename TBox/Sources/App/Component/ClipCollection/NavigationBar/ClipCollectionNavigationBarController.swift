@@ -127,8 +127,8 @@ extension ClipCollectionNavigationBarController {
                 return self.doneButton
             }
         }()
-        let item = UIBarButtonItem(customView: customView)
-        item.isEnabled = item.isEnabled
-        return item
+        let barButtonItem = UIBarButtonItem(customView: customView)
+        barButtonItem.isEnabled = item.isEnabled
+        return barButtonItem
     }
 }
