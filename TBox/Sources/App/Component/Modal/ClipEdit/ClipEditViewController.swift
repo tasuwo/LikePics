@@ -317,8 +317,7 @@ extension ClipEditViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         guard let sectionValue = destinationIndexPath?.section,
-              let section = ClipEditViewLayout.Section(rawValue: sectionValue),
-              section == .clipItem
+              ClipEditViewLayout.Section(rawValue: sectionValue) == .clipItem
         else {
             return UICollectionViewDropProposal(operation: .forbidden)
         }
