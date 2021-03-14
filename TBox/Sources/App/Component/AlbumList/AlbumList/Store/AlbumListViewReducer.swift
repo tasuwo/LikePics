@@ -96,7 +96,7 @@ enum AlbumListViewReducer: Reducer {
                         // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
                         //       アイテム削除を遅延させて自然なアニメーションにする
                         //       https://stackoverflow.com/a/57997005
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                             promise(.success(.deferredHide(albumId)))
                         }
                     }
