@@ -4,7 +4,12 @@
 
 import UIKit
 
-extension AppRootSplitViewController {
+protocol LoadingViewPresentable: AnyObject {
+    var loadingView: UIView? { get set }
+    var loadingLabel: UILabel? { get set }
+}
+
+extension LoadingViewPresentable where Self: UIViewController {
     func didStartLoad(at index: Int?, in count: Int?) {
         guard let index = index, let count = count else {
             self.loadingLabel?.text = L10n.appRootLoadingMessage

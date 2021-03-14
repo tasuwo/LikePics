@@ -7,7 +7,7 @@ import Common
 import Domain
 import UIKit
 
-class AppRootSplitViewController: UISplitViewController {
+class AppRootSplitViewController: UISplitViewController, LoadingViewPresentable {
     typealias Factory = ViewControllerFactory
 
     // MARK: - Properties
@@ -235,4 +235,10 @@ extension AppRootSplitViewController {
             }
         }
     }
+}
+
+extension AppRootSplitViewController: AppRootViewController {
+    // MARK: - AppRootViewController
+
+    var currentTopViewController: UIViewController? { currentDetailViewController }
 }
