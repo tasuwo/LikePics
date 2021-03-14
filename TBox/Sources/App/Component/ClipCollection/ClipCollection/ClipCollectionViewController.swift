@@ -629,21 +629,21 @@ extension ClipCollection.Source {
 
     var isEmptyMessageViewMessageHidden: Bool {
         switch self {
-        case .album:
-            return false
-
-        case .all, .search:
+        case .album, .search:
             return true
+
+        case .all:
+            return false
         }
     }
 
     var isEmptyMessageViewActionButtonHidden: Bool {
         switch self {
-        case .all:
-            return false
-
-        case .album, .search:
+        case .all, .search:
             return true
+
+        case .album:
+            return false
         }
     }
 }
