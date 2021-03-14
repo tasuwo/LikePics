@@ -39,12 +39,12 @@ enum ClipPreviewPageViewReducer: Reducer {
 
             nextState.items = clip.items.sorted(by: { $0.clipIndex < $1.clipIndex })
 
-            guard let currentItem = nextState.currentItem else {
+            guard let previousItemId = state.currentItem?.id else {
                 nextState.currentIndex = 0
                 return (nextState, .none)
             }
 
-            if let newIndex = nextState.items.firstIndex(where: { $0.id == currentItem.id }) {
+            if let newIndex = nextState.items.firstIndex(where: { $0.id == previousItemId }) {
                 nextState.currentIndex = newIndex
                 return (nextState, .none)
             } else {
