@@ -119,6 +119,13 @@ internal enum L10n {
     internal static let clipCollectionErrorAtUpdateTagsToClip = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clip")
     /// タグの更新に失敗しました
     internal static let clipCollectionErrorAtUpdateTagsToClips = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clips")
+    /// クリップを選択
+    internal static let clipCollectionViewTitleSelect = L10n.tr("Localizable", "clip_collection_view_title_select")
+    /// %d件選択中
+    internal static func clipCollectionViewTitleSelecting(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clip_collection_view_title_selecting", p1)
+    }
+
     /// 画像を選択
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// クリップに含まれる全ての画像も同時に削除されます

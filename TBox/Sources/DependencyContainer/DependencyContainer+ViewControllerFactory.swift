@@ -15,7 +15,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeTopClipCollectionViewController() -> UIViewController? {
         let state = ClipCollectionState(source: .all,
-                                        title: nil,
+                                        sourceDescription: nil,
                                         operation: .none,
                                         clips: .init(_values: [:],
                                                      _selectedIds: .init(),

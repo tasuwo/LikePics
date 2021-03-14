@@ -48,6 +48,9 @@
 "clips_list_context_menu_edit" = "編集";
 "clips_list_context_menu_others" = "その他";
 
+"clip_collection_view_title_select" = "クリップを選択";
+"clip_collection_view_title_selecting" = "%d件選択中";
+
 "top_clip_view_empty_title" = "クリップがありません";
 "top_clip_view_empty_message" = "他のアプリの「共有」から、追加したい画像を含むサイトの URL をシェアしましょう";
 

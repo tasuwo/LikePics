@@ -267,7 +267,7 @@ enum ClipCollectionReducer: Reducer {
 extension ClipCollectionReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         let queryEffect: Effect<Action>
-        let title: String?
+        let description: String?
 
         var nextState = state
         switch state.source {
@@ -284,7 +284,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            title = state.source.title
+            description = state.source.title
 
         case let .album(albumId):
             let query: AlbumQuery
@@ -299,7 +299,7 @@ extension ClipCollectionReducer {
                 .flatMap { Just(Action.clipsUpdated($0.clips) as Action?) }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(albumStream, underlying: query, completeWith: .albumDeleted)
-            title = query.album.value.title
+            description = query.album.value.title
 
         case .search(.tag(.none)):
             let query: ClipListQuery
@@ -314,7 +314,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            title = state.source.title
+            description = state.source.title
 
         case let .search(.tag(.some(tag))):
             let query: ClipListQuery
@@ -329,7 +329,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            title = state.source.title
+            description = state.source.title
 
         case .search(.keywords):
             fatalError("Not implemented yet.")
@@ -339,7 +339,7 @@ extension ClipCollectionReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        nextState.title = title
+        nextState.sourceDescription = description
 
         return (nextState, [queryEffect, settingsEffect])
     }

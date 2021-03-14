@@ -29,7 +29,7 @@ extension DependencyContainer {
 
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
         let state = ClipCollectionState(source: source,
-                                        title: nil,
+                                        sourceDescription: nil,
                                         operation: .none,
                                         clips: .init(_values: [:],
                                                      _selectedIds: .init(),

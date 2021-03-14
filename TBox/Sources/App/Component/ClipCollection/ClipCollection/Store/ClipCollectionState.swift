@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import Domain
 
 struct ClipCollectionState: Equatable {
@@ -15,8 +13,8 @@ struct ClipCollectionState: Equatable {
     }
 
     let source: ClipCollection.Source
+    var sourceDescription: String?
 
-    var title: String?
     var operation: ClipCollection.Operation
 
     var clips: Collection<Clip>
@@ -37,5 +35,12 @@ extension ClipCollectionState {
     var previewingClip: Clip? {
         guard let clipId = previewingClipId else { return nil }
         return clips._values[clipId]?.value
+    }
+
+    var title: String? {
+        guard operation == .selecting else { return sourceDescription }
+        return clips._selectedIds.isEmpty
+            ? L10n.clipCollectionViewTitleSelect
+            : L10n.clipCollectionViewTitleSelecting(clips._selectedIds.count)
     }
 }
