@@ -284,7 +284,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = state.source.title
+            description = nil
 
         case let .album(albumId):
             let query: AlbumQuery
@@ -314,7 +314,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = state.source.title
+            description = state.source.searchQuery?.title
 
         case let .search(.tag(.some(tag))):
             let query: ClipListQuery
@@ -329,7 +329,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = state.source.title
+            description = state.source.searchQuery?.title
 
         case .search(.keywords):
             fatalError("Not implemented yet.")
@@ -580,22 +580,16 @@ private extension ClipCollectionState {
     }
 }
 
-private extension ClipCollection.Source {
+private extension ClipCollection.Source.SearchQuery {
     var title: String? {
         switch self {
-        case .all:
-            return nil
-
-        case .album:
-            return nil
-
-        case let .search(.keywords(value)):
+        case let .keywords(value):
             return value.joined(separator: ", ")
 
-        case let .search(.tag(.some(tag))):
+        case let .tag(.some(tag)):
             return tag.name
 
-        case .search(.tag(.none)):
+        case .tag(.none):
             return L10n.searchResultTitleUncategorized
         }
     }

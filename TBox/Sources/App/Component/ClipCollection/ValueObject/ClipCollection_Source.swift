@@ -24,5 +24,15 @@ extension ClipCollection {
                 return false
             }
         }
+
+        var searchQuery: SearchQuery? {
+            switch self {
+            case let .search(query):
+                return query
+
+            default:
+                return nil
+            }
+        }
     }
 }
