@@ -319,7 +319,7 @@
 		2CBA8432254C744000DA5045 /* ReferenceClipStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */; };
 		2CBA8451254C815000DA5045 /* ReferenceClipStorageMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA8450254C815000DA5045 /* ReferenceClipStorageMigrationService.swift */; };
 		2CBA84C2254C918900DA5045 /* ClipStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA84C1254C918900DA5045 /* ClipStorable.swift */; };
-		2CBCCAFE25D53BD8004CD1ED /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBCCAFD25D53BD8004CD1ED /* AppRouter.swift */; };
+		2CBCCAFE25D53BD8004CD1ED /* DependencyContainer+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBCCAFD25D53BD8004CD1ED /* DependencyContainer+Router.swift */; };
 		2CBCCB0A25D54E42004CD1ED /* UISearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBCCB0925D54E42004CD1ED /* UISearchController.swift */; };
 		2CBF62D025D92D3B002AEFE8 /* ClipCollectionNavigationBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF62CF25D92D3B002AEFE8 /* ClipCollectionNavigationBarDelegate.swift */; };
 		2CBF62E425D92D4A002AEFE8 /* ClipCollectionNavigationBarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF62E325D92D4A002AEFE8 /* ClipCollectionNavigationBarEvent.swift */; };
@@ -1105,7 +1105,7 @@
 		2CBA8431254C744000DA5045 /* ReferenceClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageProtocol.swift; sourceTree = "<group>"; };
 		2CBA8450254C815000DA5045 /* ReferenceClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		2CBA84C1254C918900DA5045 /* ClipStorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorable.swift; sourceTree = "<group>"; };
-		2CBCCAFD25D53BD8004CD1ED /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		2CBCCAFD25D53BD8004CD1ED /* DependencyContainer+Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DependencyContainer+Router.swift"; sourceTree = "<group>"; };
 		2CBCCB0925D54E42004CD1ED /* UISearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISearchController.swift; sourceTree = "<group>"; };
 		2CBF62CF25D92D3B002AEFE8 /* ClipCollectionNavigationBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarDelegate.swift; sourceTree = "<group>"; };
 		2CBF62E325D92D4A002AEFE8 /* ClipCollectionNavigationBarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarEvent.swift; sourceTree = "<group>"; };
@@ -1570,6 +1570,14 @@
 				2CBA8412254C71C600DA5045 /* ReferenceTagObject.swift */,
 			);
 			path = Reference;
+			sourceTree = "<group>";
+		};
+		2C0BC68425FE12DB00CBE3CD /* ViewControllerFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
+			);
+			path = ViewControllerFactory;
 			sourceTree = "<group>";
 		};
 		2C0F8C8325DD3F76006A37C1 /* Store */ = {
@@ -2193,15 +2201,15 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
-		2C570B5924E04F7900A1DC9F /* Context */ = {
+		2C570B5924E04F7900A1DC9F /* DependencyContainer */ = {
 			isa = PBXGroup;
 			children = (
 				2C570B5A24E04F8800A1DC9F /* DependencyContainer.swift */,
-				2CD8939E256919F500EACB80 /* ViewControllerFactory.swift */,
-				2CDF4F4E2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift */,
 				2CDF4F2A257280610030342B /* DependencyContainerConfiguration.swift */,
+				2CDF4F4E2572A4700030342B /* DependencyContainer+ViewControllerFactory.swift */,
+				2CBCCAFD25D53BD8004CD1ED /* DependencyContainer+Router.swift */,
 			);
-			path = Context;
+			path = DependencyContainer;
 			sourceTree = "<group>";
 		};
 		2C5EF12325640C0300610D96 /* CoreData */ = {
@@ -2517,7 +2525,7 @@
 				2CA0229724DD9F5F00329251 /* LaunchScreen.storyboard */,
 				2CA0228C24DD9F5E00329251 /* AppDelegate.swift */,
 				2CA0228E24DD9F5E00329251 /* SceneDelegate.swift */,
-				2C570B5924E04F7900A1DC9F /* Context */,
+				2C570B5924E04F7900A1DC9F /* DependencyContainer */,
 				2CD4504625F14781008B905D /* App */,
 				2C1B1C7225D58F7800450AC9 /* Core */,
 				2C0503B325EAA9EC002690EE /* Extensions */,
@@ -2956,6 +2964,7 @@
 				2C76FEBB25FCEE2100EB7426 /* Preview */,
 				2CB47B7B25D534F5008E38B8 /* Router */,
 				2CB47B7A25D534EB008E38B8 /* Pasteboard */,
+				2C0BC68425FE12DB00CBE3CD /* ViewControllerFactory */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -2973,7 +2982,6 @@
 			isa = PBXGroup;
 			children = (
 				2CB47AF825D51DC8008E38B8 /* Router.swift */,
-				2CBCCAFD25D53BD8004CD1ED /* AppRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -4893,7 +4901,7 @@
 				2CEEB3F325D91BF0006CF5AD /* ClipCollectionToolBarDelegate.swift in Sources */,
 				2CBCCB0A25D54E42004CD1ED /* UISearchController.swift in Sources */,
 				2CCCEF7A25DD7162005BE170 /* ClipEditViewState.swift in Sources */,
-				2CBCCAFE25D53BD8004CD1ED /* AppRouter.swift in Sources */,
+				2CBCCAFE25D53BD8004CD1ED /* DependencyContainer+Router.swift in Sources */,
 				2CFA2BAD25D4D3CD007F574B /* HasTextValidator.swift in Sources */,
 				2CE1E1B125DC0262008CA68C /* AlbumListViewState.swift in Sources */,
 				2C2DF6E125F9241A009A0BCB /* ClipPreviewPageBarAction.swift in Sources */,
