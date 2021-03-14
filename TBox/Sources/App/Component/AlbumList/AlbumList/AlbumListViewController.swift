@@ -97,6 +97,7 @@ extension AlbumListViewController {
             self.collectionView.alpha = state.isCollectionViewDisplaying ? 1 : 0
             self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
             self.navigationItem.leftBarButtonItem?.isEnabled = state.isAddButtonEnabled
+            self.editButtonItem.isEnabled = state.isEditButtonEnabled
             self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
 
             self.presentAlertIfNeeded(for: state.alert)
@@ -219,7 +220,8 @@ extension AlbumListViewController {
         emptyMessageView.title = L10n.albumListViewEmptyTitle
         emptyMessageView.message = L10n.albumListViewEmptyMessage
         emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
-        emptyMessageView.isActionButtonHidden = true
+        emptyMessageView.isActionButtonHidden = false
+        emptyMessageView.delegate = self
     }
 }
 

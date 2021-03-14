@@ -29,3 +29,7 @@ struct AlbumListViewState: Equatable {
     var _isSomeItemsHidden: Bool
     var _searchStorage: SearchableStorage<Album>
 }
+
+extension AlbumListViewState {
+    var isEditButtonEnabled: Bool { !albums.displayableValues.isEmpty }
+}
