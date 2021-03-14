@@ -40,7 +40,7 @@ enum ClipEditViewAction: Action {
     case itemSelected(ClipItem.Identity)
     case itemDeselected(ClipItem.Identity)
 
-    case clipDeletionButtonTapped(IndexPath)
+    case clipDeletionButtonTapped
 
     // MARK: Context Menu
 

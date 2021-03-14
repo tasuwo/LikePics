@@ -159,8 +159,8 @@ enum ClipEditViewReducer: Reducer {
             nextState.items = state.items.updated(_selectedIds: newSelections)
             return (nextState, .none)
 
-        case let .clipDeletionButtonTapped(indexPath):
-            nextState.alert = .deleteConfirmation(indexPath)
+        case .clipDeletionButtonTapped:
+            nextState.alert = .deleteConfirmation
             return (nextState, .none)
 
         // MARK: Context Menu

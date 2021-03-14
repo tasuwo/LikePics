@@ -13,6 +13,12 @@ struct Collection<Value: Identifiable & Equatable & Hashable>: Equatable {
 }
 
 extension Collection {
+    func value(having id: Value.Identity) -> Value? {
+        return _values[id]?.value
+    }
+}
+
+extension Collection {
     func updated(_values: [Value.Identity: Ordered<Value>]) -> Self {
         return .init(_values: _values,
                      _selectedIds: _selectedIds,

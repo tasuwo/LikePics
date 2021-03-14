@@ -149,8 +149,8 @@ extension ClipEditViewController {
         case let .siteUrlEdit(itemIds: _, title: title):
             siteUrlEditAlert.present(with: title ?? "", validator: { $0?.isEmpty == false && $0 != title && $0?.isUrlConvertible == true }, on: self)
 
-        case let .deleteConfirmation(indexPath):
-            presentDeleteConfirmationAlert(at: indexPath)
+        case .deleteConfirmation:
+            presentDeleteConfirmationAlert()
 
         case .none:
             break
@@ -165,8 +165,10 @@ extension ClipEditViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentDeleteConfirmationAlert(at indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
+    private func presentDeleteConfirmationAlert() {
+        guard let index = dataSource.indexPath(for: .deleteClip),
+              let cell = collectionView.cellForItem(at: index)
+        else {
             store.execute(.alertDismissed)
             return
         }
@@ -268,7 +270,7 @@ extension ClipEditViewController: UICollectionViewDelegate {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         switch item {
         case .deleteClip:
-            store.execute(.clipDeletionButtonTapped(indexPath))
+            store.execute(.clipDeletionButtonTapped)
 
         case let .clipItem(item):
             store.execute(.itemSelected(item.itemId))
