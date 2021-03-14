@@ -8,10 +8,10 @@ import TBoxUIKit
 import UIKit
 
 extension DependencyContainer {
-    private var rootViewController: AppRootSplitViewController? {
+    private var rootViewController: AppRootViewController? {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let sceneDelegate = windowScene.delegate as? SceneDelegate,
-              let rootViewController = sceneDelegate.window?.rootViewController as? AppRootSplitViewController
+              let rootViewController = sceneDelegate.window?.rootViewController as? AppRootViewController
         else {
             return nil
         }
@@ -19,7 +19,7 @@ extension DependencyContainer {
     }
 
     private var topViewController: UIViewController? {
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return nil }
+        guard let detailViewController = rootViewController?.currentViewController else { return nil }
         var topViewController = detailViewController
         while let presentedViewController = topViewController.presentedViewController {
             topViewController = presentedViewController
@@ -74,21 +74,21 @@ extension DependencyContainer: Router {
 
     func showUncategorizedClipCollectionView() -> Bool {
         let viewController = makeClipCollectionView(from: .search(.tag(nil)))
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for tag: Tag) -> Bool {
         let viewController = makeClipCollectionView(from: .search(.tag(tag)))
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for albumId: Album.Identity) -> Bool {
         let viewController = makeClipCollectionView(from: .album(albumId))
-        guard let detailViewController = rootViewController?.currentDetailViewController as? UINavigationController else { return false }
+        guard let detailViewController = rootViewController?.currentViewController as? UINavigationController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
@@ -154,7 +154,7 @@ extension DependencyContainer: Router {
         navigationController.transitioningDelegate = previewTransitioningController
         navigationController.modalPresentationStyle = .fullScreen
 
-        guard let detailViewController = rootViewController?.currentDetailViewController else { return false }
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.present(navigationController, animated: true, completion: nil)
 
         return true

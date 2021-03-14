@@ -7,7 +7,7 @@ import Common
 import Domain
 import UIKit
 
-class AppRootSplitViewController: UISplitViewController, LoadingViewPresentable {
+class AppRootSplitViewController: UISplitViewController {
     typealias Factory = ViewControllerFactory
 
     // MARK: - Properties
@@ -49,15 +49,15 @@ class AppRootSplitViewController: UISplitViewController, LoadingViewPresentable 
         }
     }
 
-    var loadingView: UIView?
-    var loadingLabel: UILabel?
+    private var _loadingView: UIView?
+    private var _loadingLabel: UILabel?
 
     // MARK: Privates
 
-    let logger: TBoxLoggable
+    private let logger: TBoxLoggable
     private var subscriptions = Set<AnyCancellable>()
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
     init(factory: Factory,
          integrityViewModel: ClipIntegrityResolvingViewModelType,
@@ -92,6 +92,8 @@ class AppRootSplitViewController: UISplitViewController, LoadingViewPresentable 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -237,8 +239,22 @@ extension AppRootSplitViewController {
     }
 }
 
+extension AppRootSplitViewController: LoadingViewPresentable {
+    // MARK: - LoadingViewPresentable
+
+    var loadingView: UIView? {
+        get { _loadingView }
+        set { _loadingView = newValue }
+    }
+
+    var loadingLabel: UILabel? {
+        get { _loadingLabel }
+        set { _loadingLabel = newValue }
+    }
+}
+
 extension AppRootSplitViewController: AppRootViewController {
     // MARK: - AppRootViewController
 
-    var currentTopViewController: UIViewController? { currentDetailViewController }
+    var currentViewController: UIViewController? { currentDetailViewController }
 }
