@@ -54,6 +54,11 @@ class AlbumSelectionModalController: UIViewController {
 
     // MARK: View Life-Cycle Methods
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.execute(.viewDidDisappear)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -237,14 +242,6 @@ extension AlbumSelectionModalController: EmptyMessageViewDelegate {
 
     func didTapActionButton(_ view: EmptyMessageView) {
         store.execute(.emptyMessageViewActionButtonTapped)
-    }
-}
-
-extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegate {
-    // MARK: - UIAdaptivePresentationControllerDelegate
-
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        store.execute(.modalDismissedManually)
     }
 }
 

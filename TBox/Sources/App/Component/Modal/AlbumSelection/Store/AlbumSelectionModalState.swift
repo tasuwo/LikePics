@@ -14,6 +14,7 @@ struct AlbumSelectionModalState: Equatable {
 
     var searchQuery: String
     var albums: Collection<Album>
+    var selectedAlbumId: Album.Identity?
 
     var isCollectionViewDisplaying: Bool
     var isEmptyMessageViewDisplaying: Bool

@@ -53,6 +53,11 @@ class TagSelectionModalController: UIViewController {
 
     // MARK: View Life-Cycle Methods
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        store.execute(.viewDidDisappear)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -266,14 +271,6 @@ extension TagSelectionModalController: EmptyMessageViewDelegate {
 
     func didTapActionButton(_ view: EmptyMessageView) {
         store.execute(.emptyMessageViewActionButtonTapped)
-    }
-}
-
-extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate {
-    // MARK: - UIAdaptivePresentationControllerDelegate
-
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        store.execute(.didDismissedManually)
     }
 }
 

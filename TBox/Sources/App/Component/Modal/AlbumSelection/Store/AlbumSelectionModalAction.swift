@@ -8,6 +8,7 @@ enum AlbumSelectionModalAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad
+    case viewDidDisappear
 
     // MARK: State Observation
 
@@ -25,8 +26,4 @@ enum AlbumSelectionModalAction: Action {
 
     case alertSaveButtonTapped(text: String)
     case alertDismissed
-
-    // MARK: Transition
-
-    case modalDismissedManually
 }

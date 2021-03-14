@@ -24,6 +24,10 @@ enum TagSelectionModalReducer: Reducer {
         case .viewDidLoad:
             return (state, prepareQueryEffects(dependency))
 
+        case .viewDidDisappear:
+            dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
+            return (nextState, .none)
+
         // MARK: State Observation
 
         case let .tagsUpdated(tags):
@@ -57,7 +61,6 @@ enum TagSelectionModalReducer: Reducer {
             return (nextState, .none)
 
         case .saveButtonTapped:
-            dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -80,13 +83,6 @@ enum TagSelectionModalReducer: Reducer {
 
         case .alertDismissed:
             nextState.alert = nil
-            return (nextState, .none)
-
-        // MARK: Transition
-
-        case .didDismissedManually:
-            dependency.tagSelectionCompleted(nil)
-            nextState.isDismissed = true
             return (nextState, .none)
         }
     }

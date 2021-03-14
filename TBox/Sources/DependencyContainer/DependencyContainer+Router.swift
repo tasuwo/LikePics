@@ -234,7 +234,6 @@ extension DependencyContainer: Router {
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
-        navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
         topViewController.present(navigationViewController, animated: true, completion: nil)
@@ -280,7 +279,6 @@ extension DependencyContainer: Router {
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
-        navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
         topViewController.present(navigationViewController, animated: true, completion: nil)

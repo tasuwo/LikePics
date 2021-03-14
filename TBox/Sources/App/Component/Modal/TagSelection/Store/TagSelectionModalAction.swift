@@ -8,6 +8,7 @@ enum TagSelectionModalAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad
+    case viewDidDisappear
 
     // MARK: State Observation
 
@@ -30,8 +31,4 @@ enum TagSelectionModalAction: Action {
 
     case alertSaveButtonTapped(text: String)
     case alertDismissed
-
-    // MARK: Transition
-
-    case didDismissedManually
 }

@@ -24,6 +24,10 @@ enum AlbumSelectionModalReducer: Reducer {
         case .viewDidLoad:
             return (nextState, prepareQueryEffects(dependency))
 
+        case .viewDidDisappear:
+            dependency.albumSelectionCompleted(nextState.selectedAlbumId)
+            return (nextState, .none)
+
         // MARK: State Observation
 
         case let .albumsUpdated(albums):
@@ -40,7 +44,7 @@ enum AlbumSelectionModalReducer: Reducer {
         // MARK: Button Action
 
         case let .selected(albumId):
-            dependency.albumSelectionCompleted(albumId)
+            nextState.selectedAlbumId = albumId
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -62,11 +66,6 @@ enum AlbumSelectionModalReducer: Reducer {
 
         case .alertDismissed:
             nextState.alert = nil
-            return (nextState, .none)
-
-        case .modalDismissedManually:
-            dependency.albumSelectionCompleted(nil)
-            nextState.isDismissed = true
             return (nextState, .none)
         }
     }
