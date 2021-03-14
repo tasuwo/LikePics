@@ -81,9 +81,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.factory = factory
         self.contextForViewDidLoad = .init(barState: barState, dependency: dependency)
 
-        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [
-            .interPageSpacing: state.interPageSpacing
-        ])
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
 
     @available(*, unavailable)

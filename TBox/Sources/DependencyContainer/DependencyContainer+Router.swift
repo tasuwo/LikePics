@@ -128,7 +128,6 @@ extension DependencyContainer: Router {
                                     imageQueryService: imageQueryService)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
-                                             interPageSpacing: 40,
                                              isFullscreen: false,
                                              currentIndex: nil,
                                              items: [],

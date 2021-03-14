@@ -10,7 +10,6 @@ struct ClipPreviewPageViewState: Equatable {
     }
 
     let clipId: Clip.Identity
-    let interPageSpacing: Int
 
     var isFullscreen: Bool
 
