@@ -170,7 +170,6 @@ extension DependencyContainer: Router {
                                              clip: nil,
                                              tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
                                              item: nil,
-                                             isCollectionViewUpdateSuspended: false,
                                              shouldCollectionViewUpdateWithAnimation: false,
                                              isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              isHiddenStatusBar: false,

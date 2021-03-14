@@ -33,6 +33,8 @@ class ClipInformationViewController: UIViewController {
     // MARK: - Temporary
 
     private var previousState: ClipInformationViewState?
+    private var snapshotPreviousState: ClipInformationViewState?
+    private let snapshotQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipInformationView.Snapshot")
 
     // MARK: - Initializers
 
@@ -128,11 +130,13 @@ extension ClipInformationViewController {
             guard let self = self else { return }
             defer { self.previousState = state }
 
-            if !state.isCollectionViewUpdateSuspended,
-               state.hasDifferentValue(at: \.clip, from: self.previousState)
-               || state.hasDifferentValue(at: \.tags, from: self.previousState)
-               || state.hasDifferentValue(at: \.item, from: self.previousState)
-            {
+            // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
+            self.snapshotQueue.async {
+                defer { self.snapshotPreviousState = state }
+                // iPadにてセルが過剰にアニメーションされてしまうケースがあったため、差分がある場合のみ更新をかける
+                guard state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
+                      || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
+                      || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState) else { return }
                 self.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
             }
 

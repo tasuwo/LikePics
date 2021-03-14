@@ -22,12 +22,10 @@ enum ClipInformationViewReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewWillAppear:
-            nextState.isCollectionViewUpdateSuspended = true
             nextState.isHiddenStatusBar = true
             return (nextState, .none)
 
         case .viewDidAppear:
-            nextState.isCollectionViewUpdateSuspended = false
             nextState.shouldCollectionViewUpdateWithAnimation = true
             return (nextState, .none)
 
