@@ -290,6 +290,8 @@ extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
         view.layoutIfNeeded()
         guard let pageView = currentViewController?.previewView else { return .zero }
+        // HACK: SplitMode 時にサイズが合わない問題を修正
+        pageView.frame = containerView.frame
         return pageView.convert(pageView.initialImageFrame, to: containerView)
     }
 }
