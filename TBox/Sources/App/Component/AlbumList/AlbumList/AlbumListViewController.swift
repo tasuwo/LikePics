@@ -102,13 +102,13 @@ extension AlbumListViewController {
             self.editButtonItem.isEnabled = state.isEditButtonEnabled
             self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
 
-            self.presentAlertIfNeeded(for: state.alert)
+            self.presentAlertIfNeeded(for: state)
         }
         .store(in: &subscriptions)
     }
 
-    private func presentAlertIfNeeded(for alert: AlbumListViewState.Alert?) {
-        switch alert {
+    private func presentAlertIfNeeded(for state: AlbumListViewState) {
+        switch state.alert {
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
 
@@ -118,8 +118,8 @@ extension AlbumListViewController {
         case let .renaming(albumId: _, title: title):
             albumEditAlert.present(with: title, validator: { $0?.isEmpty == false && $0 != title }, on: self)
 
-        case let .deletion(albumId: _, title: title, at: indexPath):
-            presentDeleteConfirmationAlert(title: title, indexPath: indexPath)
+        case let .deletion(albumId: albumId, title: title):
+            presentDeleteConfirmationAlert(for: albumId, title: title, state: state)
 
         case .none:
             break
@@ -134,8 +134,14 @@ extension AlbumListViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentDeleteConfirmationAlert(title: String, indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+    private func presentDeleteConfirmationAlert(for albumId: Album.Identity, title: String, state: AlbumListViewState) {
+        guard let album = state.albums.value(having: albumId),
+              let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: state.isEditing)),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
+            store.execute(.alertDismissed)
+            return
+        }
 
         let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(title),
                                       message: L10n.albumListViewAlertForDeleteMessage(title),
@@ -306,7 +312,7 @@ extension AlbumListViewController {
             return UIAction(title: L10n.albumListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
                             attributes: .destructive) { [weak self] _ in
-                self?.store.execute(.deleteMenuTapped(album.id, indexPath))
+                self?.store.execute(.deleteMenuTapped(album.id))
             }
         }
     }
@@ -329,12 +335,8 @@ extension AlbumListViewController: AlbumListCollectionViewCellDelegate {
     }
 
     func didTapRemover(_ cell: AlbumListCollectionViewCell) {
-        // HACK: collectionView.indexPath(for: cell) だと末尾のセルのindexPathが解決できないケースがあったため、
-        //       itemIdentifierベースでindexPathを解決する
-        guard let albumId = cell.albumId,
-              let album = store.stateValue.albums._values[albumId]?.value,
-              let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: true)) else { return }
-        store.execute(.removerTapped(albumId, indexPath))
+        guard let albumId = cell.albumId else { return }
+        store.execute(.removerTapped(albumId))
     }
 }
 

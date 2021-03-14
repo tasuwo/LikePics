@@ -26,7 +26,7 @@ enum AlbumListViewAction: Action {
 
     // MARK: Button Action
 
-    case removerTapped(Album.Identity, IndexPath)
+    case removerTapped(Album.Identity)
     case editingTitleTapped(Album.Identity)
     case emptyMessageViewActionButtonTapped
 
@@ -39,7 +39,7 @@ enum AlbumListViewAction: Action {
     case renameMenuTapped(Album.Identity)
     case hideMenuTapped(Album.Identity)
     case revealMenuTapped(Album.Identity)
-    case deleteMenuTapped(Album.Identity, IndexPath)
+    case deleteMenuTapped(Album.Identity)
 
     case deferredHide(Album.Identity)
 

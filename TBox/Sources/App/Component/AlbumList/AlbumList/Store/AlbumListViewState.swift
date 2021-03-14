@@ -11,7 +11,7 @@ struct AlbumListViewState: Equatable {
         case error(String?)
         case addition
         case renaming(albumId: Album.Identity, title: String)
-        case deletion(albumId: Album.Identity, title: String, at: IndexPath)
+        case deletion(albumId: Album.Identity, title: String)
     }
 
     var searchQuery: String

@@ -55,9 +55,9 @@ enum AlbumListViewReducer: Reducer {
 
         // MARK: Button Action
 
-        case let .removerTapped(albumId, indexPath):
+        case let .removerTapped(albumId):
             guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
-            nextState.alert = .deletion(albumId: albumId, title: title, at: indexPath)
+            nextState.alert = .deletion(albumId: albumId, title: title)
             return (nextState, .none)
 
         case let .editingTitleTapped(albumId):
@@ -115,9 +115,9 @@ enum AlbumListViewReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .deleteMenuTapped(albumId, indexPath):
+        case let .deleteMenuTapped(albumId):
             guard let title = state.albums._values[albumId]?.value.title else { return (state, .none) }
-            nextState.alert = .deletion(albumId: albumId, title: title, at: indexPath)
+            nextState.alert = .deletion(albumId: albumId, title: title)
             return (nextState, .none)
 
         case let .deferredHide(albumId):
@@ -157,7 +157,7 @@ enum AlbumListViewReducer: Reducer {
             return (nextState, .none)
 
         case .alertDeleteConfirmed:
-            guard case let .deletion(albumId: albumId, title: _, at: _) = state.alert else {
+            guard case let .deletion(albumId: albumId, title: _) = state.alert else {
                 nextState.alert = nil
                 return (nextState, .none)
             }
