@@ -21,7 +21,7 @@ enum AlbumListViewReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(dependency))
+            return prepareQueryEffects(state, dependency)
 
         // MARK: State Observation
 
@@ -180,7 +180,7 @@ enum AlbumListViewReducer: Reducer {
 // MARK: - Preparation
 
 extension AlbumListViewReducer {
-    static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
+    static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         let query: AlbumListQuery
         switch dependency.clipQueryService.queryAllAlbums() {
         case let .success(result):
@@ -199,7 +199,12 @@ extension AlbumListViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [albumsEffect, settingsEffect]
+        let nextState = performFilter(albums: query.albums.value,
+                                      searchQuery: state.searchQuery,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+                                      previousState: state)
+
+        return (nextState, [albumsEffect, settingsEffect])
     }
 }
 

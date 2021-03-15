@@ -22,7 +22,7 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(dependency))
+            return prepareQueryEffects(state, dependency)
 
         case .viewDidDisappear:
             dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
@@ -91,7 +91,7 @@ enum TagSelectionModalReducer: Reducer {
 // MARK: - Preparation
 
 extension TagSelectionModalReducer {
-    static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
+    static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         let query: TagListQuery
         switch dependency.clipQueryService.queryAllTags() {
         case let .success(result):
@@ -110,7 +110,12 @@ extension TagSelectionModalReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [tagsEffect, settingsEffect]
+        let nextState = performFilter(tags: query.tags.value,
+                                      searchQuery: state.searchQuery,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+                                      previousState: state)
+
+        return (nextState, [tagsEffect, settingsEffect])
     }
 }
 

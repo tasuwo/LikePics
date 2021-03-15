@@ -269,7 +269,7 @@ extension ClipCollectionReducer {
         let queryEffect: Effect<Action>
         let description: String?
 
-        var nextState = state
+        let initialClips: [Clip]
         switch state.source {
         case .all:
             let query: ClipListQuery
@@ -285,6 +285,7 @@ extension ClipCollectionReducer {
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
             description = nil
+            initialClips = query.clips.value
 
         case let .album(albumId):
             let query: AlbumQuery
@@ -300,6 +301,7 @@ extension ClipCollectionReducer {
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(albumStream, underlying: query, completeWith: .albumDeleted)
             description = query.album.value.title
+            initialClips = query.album.value.clips
 
         case .search(.tag(.none)):
             let query: ClipListQuery
@@ -315,6 +317,7 @@ extension ClipCollectionReducer {
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
             description = state.source.searchQuery?.title
+            initialClips = query.clips.value
 
         case let .search(.tag(.some(tag))):
             let query: ClipListQuery
@@ -330,6 +333,7 @@ extension ClipCollectionReducer {
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
             description = state.source.searchQuery?.title
+            initialClips = query.clips.value
 
         case .search(.keywords):
             fatalError("Not implemented yet.")
@@ -339,6 +343,9 @@ extension ClipCollectionReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
+        var nextState = performFilter(clips: initialClips,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+                                      previousState: state)
         nextState.sourceDescription = description
 
         return (nextState, [queryEffect, settingsEffect])

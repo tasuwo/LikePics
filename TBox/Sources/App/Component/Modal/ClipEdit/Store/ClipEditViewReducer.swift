@@ -24,8 +24,7 @@ enum ClipEditViewReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            let effects = prepareQueryEffects(for: state.clip.id, with: dependency)
-            return (nextState, effects)
+            return prepareQueryEffects(for: state.clip.id, state: state, dependency: dependency)
 
         // MARK: State Observation
 
@@ -234,7 +233,7 @@ enum ClipEditViewReducer: Reducer {
 // MARK: - Preparation
 
 extension ClipEditViewReducer {
-    static func prepareQueryEffects(for id: Clip.Identity, with dependency: Dependency) -> [Effect<Action>] {
+    static func prepareQueryEffects(for id: Clip.Identity, state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         let clipQuery: ClipQuery
         switch dependency.clipQueryService.queryClip(having: id) {
         case let .success(result):
@@ -281,7 +280,11 @@ extension ClipEditViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [clipEffect, itemListEffect, tagListEffect, settingsEffect]
+        let nextState = performFilter(tags: tagListQuery.tags.value,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+                                      previousState: state)
+
+        return (nextState, [clipEffect, itemListEffect, tagListEffect, settingsEffect])
     }
 }
 
