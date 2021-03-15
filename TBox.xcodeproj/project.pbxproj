@@ -2088,6 +2088,15 @@
 			path = AlbumCollection;
 			sourceTree = "<group>";
 		};
+		2C48036A25FFB27E00730E72 /* ClipInformation */ = {
+			isa = PBXGroup;
+			children = (
+				2C95418525FC55DD00F6A540 /* ClipInformationViewController.swift */,
+				2C95419025FC5E4C00F6A540 /* Store */,
+			);
+			path = ClipInformation;
+			sourceTree = "<group>";
+		};
 		2C4D6C3D25811C8B006FB988 /* Alert */ = {
 			isa = PBXGroup;
 			children = (
@@ -2701,8 +2710,7 @@
 		2C95418425FC55CA00F6A540 /* ClipInformation */ = {
 			isa = PBXGroup;
 			children = (
-				2C95418525FC55DD00F6A540 /* ClipInformationViewController.swift */,
-				2C95419025FC5E4C00F6A540 /* Store */,
+				2C48036A25FFB27E00730E72 /* ClipInformation */,
 			);
 			path = ClipInformation;
 			sourceTree = "<group>";
