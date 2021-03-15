@@ -26,7 +26,7 @@ enum TagCollectionViewReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state, prepareQueryEffects(dependency))
+            return prepareQueryEffects(state, dependency)
 
         // MARK: State Observation
 
@@ -161,7 +161,7 @@ enum TagCollectionViewReducer: Reducer {
 }
 
 extension TagCollectionViewReducer {
-    private static func prepareQueryEffects(_ dependency: Dependency) -> [Effect<Action>] {
+    private static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         let query: TagListQuery
         switch dependency.clipQueryService.queryAllTags() {
         case let .success(result):
@@ -180,7 +180,12 @@ extension TagCollectionViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return [tagsEffect, settingsEffect]
+        let nextState = performFilter(tags: query.tags.value,
+                                      searchQuery: state.searchQuery,
+                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+                                      previousState: state)
+
+        return (nextState, [tagsEffect, settingsEffect])
     }
 }
 
