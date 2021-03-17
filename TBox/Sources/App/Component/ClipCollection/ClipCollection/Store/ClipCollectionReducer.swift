@@ -284,7 +284,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = nil
+            description = L10n.clipCollectionViewTitleAll
             initialClips = query.clips.value
 
         case let .album(albumId):

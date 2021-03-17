@@ -119,6 +119,8 @@ internal enum L10n {
     internal static let clipCollectionErrorAtUpdateTagsToClip = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clip")
     /// タグの更新に失敗しました
     internal static let clipCollectionErrorAtUpdateTagsToClips = L10n.tr("Localizable", "clip_collection_error_at_update_tags_to_clips")
+    /// 全てのクリップ
+    internal static let clipCollectionViewTitleAll = L10n.tr("Localizable", "clip_collection_view_title_all")
     /// クリップを選択
     internal static let clipCollectionViewTitleSelect = L10n.tr("Localizable", "clip_collection_view_title_select")
     /// %d件選択中

@@ -128,7 +128,7 @@ extension ClipCollectionViewController {
                 }
             }
 
-            self.title = state.title
+            self.navigationItem.title = state.title
 
             self.collectionView.isHidden = !state.isCollectionViewDisplaying
             self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
@@ -298,7 +298,7 @@ extension ClipCollectionViewController {
     private func configureNavigationBar() {
         // TODO: State を反映させるべき
         if store.stateValue.source == .all {
-            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            // self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
             self.navigationController?.navigationBar.shadowImage = UIImage()
         }
     }
