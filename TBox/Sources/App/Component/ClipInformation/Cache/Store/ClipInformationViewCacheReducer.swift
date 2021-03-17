@@ -5,39 +5,21 @@
 import Combine
 import Domain
 
-typealias ClipInformationViewDependency = HasRouter
-    & HasClipQueryService
-    & HasClipCommandService
+typealias ClipInformationViewCacheDependency = HasClipQueryService
     & HasUserSettingStorage
-    & HasPasteboard
 
-enum ClipInformationViewReducer: Reducer {
-    typealias Dependency = ClipInformationViewDependency
-    typealias State = ClipInformationViewState
-    typealias Action = ClipInformationViewAction
+enum ClipInformationViewCacheReducer: Reducer {
+    typealias Dependency = ClipInformationViewCacheDependency
+    typealias State = ClipInformationViewCacheState
+    typealias Action = ClipInformationViewCacheAction
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
-        // MARK: View Life-Cycle
+        // MARK: Life-Cycle
 
-        case .viewWillAppear:
-            nextState.isHiddenStatusBar = true
-            return (nextState, .none)
-
-        case .viewDidAppear:
-            nextState.shouldCollectionViewUpdateWithAnimation = false
-            nextState.isSuspendedCollectionViewUpdate = false
-            return (nextState, .none)
-
-        case .viewWillDisappear:
-            nextState.isHiddenStatusBar = false
-            return (nextState, .none)
-
-        case .viewDidLoad:
-            nextState.shouldCollectionViewUpdateWithAnimation = false
-            nextState.isSuspendedCollectionViewUpdate = true
-            return prepare(state: nextState, dependency: dependency)
+        case let .loaded(clipId, itemId):
+            return prepare(clipId: clipId, itemId: itemId, state: nextState, dependency: dependency)
 
         // MARK: State Observation
 
@@ -57,71 +39,7 @@ enum ClipInformationViewReducer: Reducer {
              .failedToLoadClipItem,
              .failedToLoadTags,
              .failedToLoadSetting:
-            nextState.isDismissed = true
-            return (nextState, .none)
-
-        // MARK: Control
-
-        case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags._displayableIds), dependency: dependency)
-            return (nextState, [effect])
-
-        case let .tagRemoveButtonTapped(tagId):
-            if case .failure = dependency.clipCommandService.updateClips(having: [state.clipId], byDeletingTagsHaving: [tagId]) {
-                nextState.alert = .error(L10n.clipInformationErrorAtRemoveTags)
-            }
-            return (nextState, .none)
-
-        case .siteUrlEditButtonTapped:
-            nextState.alert = .siteUrlEdit(title: state.item?.url?.absoluteString)
-            return (nextState, .none)
-
-        case .hidedClip:
-            if case .failure = dependency.clipCommandService.updateClips(having: [state.clipId], byHiding: true) {
-                nextState.alert = .error(L10n.clipInformationErrorAtUpdateHidden)
-            }
-            return (nextState, .none)
-
-        case .revealedClip:
-            if case .failure = dependency.clipCommandService.updateClips(having: [state.clipId], byHiding: false) {
-                nextState.alert = .error(L10n.clipInformationErrorAtUpdateHidden)
-            }
-            return (nextState, .none)
-
-        case let .urlOpenMenuSelected(url):
-            if let url = url { dependency.router.open(url) }
-            return (nextState, .none)
-
-        case let .urlCopyMenuSelected(url):
-            if let url = url { dependency.pasteboard.set(url.absoluteString) }
-            return (nextState, .none)
-
-        // MARK: Modal Completion
-
-        case let .tagsSelected(tagIds):
-            guard let tagIds = tagIds else { return (state, .none) }
-            switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
-            case .success: ()
-
-            case .failure:
-                nextState.alert = .error(L10n.failedToUpdateClip)
-            }
-            return (nextState, .none)
-
-        case .modalCompleted:
-            return (state, .none)
-
-        // MARK: Alert Completion
-
-        case let .siteUrlEditConfirmed(text):
-            if case .failure = dependency.clipCommandService.updateClipItems(having: [state.itemId], byUpdatingSiteUrl: URL(string: text)) {
-                nextState.alert = .error(L10n.clipInformationErrorAtUpdateSiteUrl)
-            }
-            nextState.alert = nil
-            return (nextState, .none)
-
-        case .alertDismissed:
-            nextState.alert = nil
+            nextState.isInvalidated = true
             return (nextState, .none)
         }
     }
@@ -129,12 +47,16 @@ enum ClipInformationViewReducer: Reducer {
 
 // MARK: - Preparation
 
-extension ClipInformationViewReducer {
-    static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
+extension ClipInformationViewCacheReducer {
+    static func prepare(clipId: Clip.Identity,
+                        itemId: ClipItem.Identity,
+                        state: State,
+                        dependency: Dependency) -> (State, [Effect<Action>])
+    {
         // Prepare effects
 
         let clipQuery: ClipQuery
-        switch dependency.clipQueryService.queryClip(having: state.clipId) {
+        switch dependency.clipQueryService.queryClip(having: clipId) {
         case let .success(result):
             clipQuery = result
 
@@ -147,7 +69,7 @@ extension ClipInformationViewReducer {
         let clipQueryEffect = Effect(clipStream, underlying: clipQuery, completeWith: .failedToLoadClip)
 
         let clipItemQuery: ClipItemQuery
-        switch dependency.clipQueryService.queryClipItem(having: state.itemId) {
+        switch dependency.clipQueryService.queryClipItem(having: itemId) {
         case let .success(result):
             clipItemQuery = result
 
@@ -160,7 +82,7 @@ extension ClipInformationViewReducer {
         let clipItemQueryEffect = Effect(clipItemStream, underlying: clipItemQuery, completeWith: .failedToLoadClipItem)
 
         let tagsQuery: TagListQuery
-        switch dependency.clipQueryService.queryTags(forClipHaving: state.clipId) {
+        switch dependency.clipQueryService.queryTags(forClipHaving: clipId) {
         case let .success(result):
             tagsQuery = result
 
@@ -191,7 +113,7 @@ extension ClipInformationViewReducer {
 
 // MARK: - Filter
 
-extension ClipInformationViewReducer {
+extension ClipInformationViewCacheReducer {
     private static func performFilter(clip: Clip, previousState: State) -> State {
         performFilter(clip: clip,
                       item: previousState.item,
@@ -244,27 +166,5 @@ extension ClipInformationViewReducer {
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
-    }
-}
-
-// MARK: - Router
-
-extension ClipInformationViewReducer {
-    static func showTagSelectionModal(selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
-                    guard let tagIds = tags?.map({ $0.id }) else {
-                        promise(.success(.modalCompleted(false)))
-                        return
-                    }
-                    promise(.success(.tagsSelected(Set(tagIds))))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
     }
 }

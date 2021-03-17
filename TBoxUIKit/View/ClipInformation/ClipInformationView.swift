@@ -30,13 +30,7 @@ public class ClipInformationView: UIView {
     }
 
     public weak var delegate: ClipInformationViewDelegate?
-
-    public weak var dataSource: ClipInformationViewDataSource? {
-        didSet {
-            self.imageView.image = self.dataSource?.previewImage(self)
-            self.updateImageViewFrame()
-        }
-    }
+    public weak var dataSource: ClipInformationViewDataSource?
 
     var imageView: UIImageView!
     private var collectionViewDataSource: Factory.DataSource!
@@ -109,6 +103,11 @@ public class ClipInformationView: UIView {
     }
 
     // MARK: Image View
+
+    public func loadImageView() {
+        self.imageView.image = self.dataSource?.previewImage(self)
+        self.updateImageViewFrame()
+    }
 
     public func updateImageViewFrame(for size: CGSize) {
         self.imageView.frame = self.calcInitialFrame(for: size)

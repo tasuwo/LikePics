@@ -9,7 +9,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
     & HasClipInformationTransitioningController
-    & HasClipInformationViewDataSource
+    & HasClipInformationViewCaching
 
 enum ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -60,12 +60,12 @@ enum ClipPreviewPageViewReducer: Reducer {
 
         case .clipInformationViewPresented:
             if let currentItemId = state.currentItem?.id,
-               let dataSource = dependency.clipInformationViewDataSource,
+               let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: state.clipId,
                                                           itemId: currentItemId,
-                                                          informationViewDataSource: dataSource,
+                                                          clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
             }
             return (nextState, .none)
@@ -182,12 +182,12 @@ extension ClipPreviewPageViewReducer {
 
         case .infoRequested:
             if let currentItemId = state.currentItem?.id,
-               let dataSource = dependency.clipInformationViewDataSource,
+               let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: state.clipId,
                                                           itemId: currentItemId,
-                                                          informationViewDataSource: dataSource,
+                                                          clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
             }
             return (nextState, .none)

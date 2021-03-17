@@ -17,7 +17,7 @@ class ClipInformationViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool { store.stateValue.isHiddenStatusBar }
 
-    private let informationView = ClipInformationView()
+    private let informationView: ClipInformationView
     private let transitioningController: ClipInformationTransitioningControllerProtocol
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
@@ -41,18 +41,17 @@ class ClipInformationViewController: UIViewController {
     init(state: ClipInformationViewState,
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipInformationViewDependency,
-         informationViewDataSource: ClipInformationViewDataSource,
+         clipInformationViewCache: ClipInformationViewCaching,
          transitioningController: ClipInformationTransitioningControllerProtocol)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipInformationViewReducer.self)
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
+        self.informationView = clipInformationViewCache.readCachingView()
 
         super.init(nibName: nil, bundle: nil)
 
         siteUrlEditAlert.textEditAlertDelegate = self
-
-        informationView.dataSource = informationViewDataSource
     }
 
     @available(*, unavailable)
@@ -133,10 +132,18 @@ extension ClipInformationViewController {
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
             self.snapshotQueue.async {
                 defer { self.snapshotPreviousState = state }
+
+                // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
+                guard state.isSuspendedCollectionViewUpdate == false else { return }
+
                 // iPadにてセルが過剰にアニメーションされてしまうケースがあったため、差分がある場合のみ更新をかける
-                guard state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
+                guard (state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
                     || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
-                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState) else { return }
+                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState))
+                    || state.hasDifferentValue(at: \.isSuspendedCollectionViewUpdate, from: self.snapshotPreviousState)
+                else {
+                    return
+                }
                 self.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
             }
 
@@ -183,7 +190,6 @@ extension ClipInformationViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
-        informationView.setInfo(nil, animated: false)
         informationView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(informationView)
         NSLayoutConstraint.activate(informationView.constraints(fittingIn: view))

@@ -18,6 +18,7 @@ struct ClipInformationViewState: Equatable, KeyPathComparable {
     var item: ClipItem?
 
     var shouldCollectionViewUpdateWithAnimation: Bool
+    var isSuspendedCollectionViewUpdate: Bool
     var isSomeItemsHidden: Bool
     var isHiddenStatusBar: Bool
 

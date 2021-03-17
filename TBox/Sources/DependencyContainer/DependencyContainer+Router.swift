@@ -94,27 +94,24 @@ extension DependencyContainer: Router {
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
-        class Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
+        struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
             let router: Router
             let clipCommandService: ClipCommandServiceProtocol
             let clipQueryService: ClipQueryServiceProtocol
-            weak var clipInformationTransitioningController: ClipInformationTransitioningController?
+            let clipInformationTransitioningController: ClipInformationTransitioningController?
             let imageQueryService: ImageQueryServiceProtocol
-            weak var clipInformationViewDataSource: ClipInformationViewDataSource?
-
-            init(router: Router,
-                 clipCommandService: ClipCommandServiceProtocol,
-                 clipQueryService: ClipQueryServiceProtocol,
-                 clipInformationTransitioningController: ClipInformationTransitioningController?,
-                 imageQueryService: ImageQueryServiceProtocol)
-            {
-                self.router = router
-                self.clipCommandService = clipCommandService
-                self.clipQueryService = clipQueryService
-                self.clipInformationTransitioningController = clipInformationTransitioningController
-                self.imageQueryService = imageQueryService
-            }
+            let informationViewCache: ClipInformationViewCaching?
         }
+
+        let informationViewCacheState = ClipInformationViewCacheState(clip: nil,
+                                                                      tags: .init(_values: [:],
+                                                                                  _selectedIds: .init(),
+                                                                                  _displayableIds: .init()),
+                                                                      item: nil,
+                                                                      isSomeItemsHidden: true,
+                                                                      isInvalidated: false)
+        let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
+                                                                                dependency: self)
 
         let previewTransitioningController = ClipPreviewTransitioningController(logger: logger)
         let informationTransitionController = ClipInformationTransitioningController(logger: logger)
@@ -125,7 +122,8 @@ extension DependencyContainer: Router {
                                     clipCommandService: clipCommandService,
                                     clipQueryService: clipQueryService,
                                     clipInformationTransitioningController: informationTransitionController,
-                                    imageQueryService: imageQueryService)
+                                    imageQueryService: imageQueryService,
+                                    informationViewCache: informationViewCacheController)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
                                              isFullscreen: false,
@@ -140,13 +138,15 @@ extension DependencyContainer: Router {
                                                toolBarItems: [],
                                                isToolBarHidden: false,
                                                alert: nil)
+        let cacheState = ClipPreviewPageViewCacheState(clipId: clipId, itemId: nil)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            barState: barState,
+                                                           cacheState: cacheState,
+                                                           cacheController: informationViewCacheController,
                                                            dependency: dependency,
                                                            factory: self,
                                                            transitionController: transitionController)
 
-        dependency.clipInformationViewDataSource = viewController
         transitionController.setup(baseViewController: viewController)
 
         let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
@@ -161,7 +161,7 @@ extension DependencyContainer: Router {
 
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
-                                 informationViewDataSource: ClipInformationViewDataSource,
+                                 clipInformationViewCache: ClipInformationViewCaching,
                                  transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
     {
         let state = ClipInformationViewState(clipId: clipId,
@@ -170,6 +170,7 @@ extension DependencyContainer: Router {
                                              tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
                                              item: nil,
                                              shouldCollectionViewUpdateWithAnimation: false,
+                                             isSuspendedCollectionViewUpdate: true,
                                              isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              isHiddenStatusBar: false,
                                              alert: nil,
@@ -184,7 +185,7 @@ extension DependencyContainer: Router {
         let viewController = ClipInformationViewController(state: state,
                                                            siteUrlEditAlertState: siteUrlEditAlertState,
                                                            dependency: self,
-                                                           informationViewDataSource: informationViewDataSource,
+                                                           clipInformationViewCache: clipInformationViewCache,
                                                            transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen

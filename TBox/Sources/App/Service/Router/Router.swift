@@ -24,7 +24,7 @@ protocol Router {
     @discardableResult
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
-                                 informationViewDataSource: ClipInformationViewDataSource,
+                                 clipInformationViewCache: ClipInformationViewCaching,
                                  transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult

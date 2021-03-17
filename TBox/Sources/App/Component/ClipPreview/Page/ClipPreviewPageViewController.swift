@@ -9,6 +9,7 @@ import UIKit
 
 class ClipPreviewPageViewController: UIPageViewController {
     typealias Store = LikePics.Store<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
+    typealias CacheStore = LikePics.Store<ClipPreviewPageViewCacheState, ClipPreviewPageViewCacheAction, ClipPreviewPageViewCacheDependency>
 
     struct BarDependency: ClipPreviewPageBarDependency {
         weak var clipPreviewPageBarDelegate: ClipPreviewPageBarDelegate?
@@ -53,11 +54,16 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: Component
 
     private var barController: ClipPreviewPageBarController!
+    private let cacheController: ClipInformationViewCacheController
 
     // MARK: Store
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+
+    private var cacheStore: CacheStore
+    private var cacheSubscriptions: Set<AnyCancellable> = .init()
+
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
 
     private let factory: ViewControllerFactory
@@ -72,11 +78,21 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     init(state: ClipPreviewPageViewState,
          barState: ClipPreviewPageBarState,
+         cacheState: ClipPreviewPageViewCacheState,
+         cacheController: ClipInformationViewCacheController,
          dependency: ClipPreviewPageViewDependency & HasImageQueryService,
          factory: ViewControllerFactory,
          transitionController: ClipPreviewPageTransitionControllerType)
     {
+        struct CacheDependency: ClipPreviewPageViewCacheDependency {
+            weak var informationViewCache: ClipInformationViewCaching?
+        }
+
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer.self)
+        self.cacheStore = CacheStore(initialState: cacheState,
+                                     dependency: CacheDependency(informationViewCache: cacheController),
+                                     reducer: ClipPreviewPageViewCacheReducer.self)
+        self.cacheController = cacheController
         self.transitionController = transitionController
         self.factory = factory
         self.contextForViewDidLoad = .init(barState: barState, dependency: dependency)
@@ -99,17 +115,29 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cacheStore.execute(.viewWillDisappear)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        cacheStore.execute(.viewDidAppear)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         defer { self.contextForViewDidLoad = nil }
 
-        configureAppearance()
+        configureViewHierarchy()
         configureGestureRecognizer()
         configureBarController()
 
         delegate = self
         dataSource = self
+
+        cacheController.informationView.dataSource = self
 
         bind(to: store)
         barController.viewDidLoad()
@@ -199,15 +227,20 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &previewVieSubscriptions)
         transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
+
+        cacheStore.execute(.pageChanged(store.stateValue.clipId, viewController.itemId))
     }
 }
 
 // MARK: - Configuration
 
 extension ClipPreviewPageViewController {
-    private func configureAppearance() {
+    private func configureViewHierarchy() {
         navigationItem.title = ""
         modalTransitionStyle = .crossDissolve
+
+        view.insertSubview(cacheController.baseView, at: 0)
+        NSLayoutConstraint.activate(cacheController.baseView.constraints(fittingIn: view))
     }
 
     private func configureGestureRecognizer() {
