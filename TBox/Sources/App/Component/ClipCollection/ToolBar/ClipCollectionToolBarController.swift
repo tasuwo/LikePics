@@ -100,7 +100,9 @@ extension ClipCollectionToolBarController {
             self?.store.execute(.alertAddTagsConfirmed)
         })
 
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
 
         alert.popoverPresentationController?.barButtonItem = addItem
 
@@ -118,7 +120,9 @@ extension ClipCollectionToolBarController {
         alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityRevealAction(targetCount), style: .destructive) { [weak self] _ in
             self?.store.execute(.alertRevealConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
 
         alert.popoverPresentationController?.barButtonItem = changeVisibilityItem
 
@@ -134,7 +138,9 @@ extension ClipCollectionToolBarController {
         alert.addAction(.init(title: title, style: .destructive) { [weak self] _ in
             self?.store.execute(.alertDeleteConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
@@ -152,7 +158,9 @@ extension ClipCollectionToolBarController {
         alert.addAction(.init(title: L10n.clipsListAlertForDeleteInAlbumActionDelete, style: .destructive) { [weak self] _ in
             self?.store.execute(.alertDeleteConfirmed)
         })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: nil))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
