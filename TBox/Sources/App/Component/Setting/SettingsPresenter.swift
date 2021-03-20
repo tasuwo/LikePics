@@ -46,7 +46,6 @@ class SettingsPresenter {
             .combineLatest(self.availabilityStore.state)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] settingEnabled, availability in
-                // TODO: availability == nil の時にSwitchをローディング状態にする
                 let isOn = settingEnabled && availability?.isAvailable == true
                 self?.shouldSyncICloudEnabled.send(isOn)
             })

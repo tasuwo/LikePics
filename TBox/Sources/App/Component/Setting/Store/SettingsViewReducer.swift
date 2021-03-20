@@ -106,7 +106,6 @@ extension SettingsViewReducer {
         let stream2 = dependency.userSettingStorage.enabledICloudSync
             .combineLatest(dependency.cloudAvailabilityStore.state)
             .map { settingEnabled, availability in
-                // TODO: availability == nil の時にSwitchをローディング状態にする
                 return settingEnabled && availability?.isAvailable == true
             }
             .map { Action.iCloudSyncAvailabilityUpdated(isEnabled: $0) as Action? }

@@ -58,8 +58,6 @@ extension ClipCollectionViewLayout {
 
             let scale = cell.traitCollection.displayScale
 
-            // TODO: `onReuse` がおかしいので直す
-
             if let item = clip.primaryItem {
                 let request = self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
                 thumbnailLoader.load(request, observer: cell)
