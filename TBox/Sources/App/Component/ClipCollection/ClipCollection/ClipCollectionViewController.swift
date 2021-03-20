@@ -79,7 +79,6 @@ class ClipCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureNavigationBar()
         configureViewHierarchy()
         configureDataSource()
         configureReorder()
@@ -295,14 +294,6 @@ extension ClipCollectionViewController {
 // MARK: - Configuration
 
 extension ClipCollectionViewController {
-    private func configureNavigationBar() {
-        // TODO: State を反映させるべき
-        if store.stateValue.source == .all {
-            // self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            self.navigationController?.navigationBar.shadowImage = UIImage()
-        }
-    }
-
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
