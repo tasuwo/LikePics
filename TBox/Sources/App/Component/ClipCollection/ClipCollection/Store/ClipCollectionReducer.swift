@@ -161,10 +161,10 @@ enum ClipCollectionReducer: Reducer {
 
         case let .shareMenuTapped(clipId):
             guard let imageIds = state.clips._values[clipId]?.value.items.map({ $0.imageId }) else { return (state, .none) }
-            let data = imageIds.compactMap { imageId in
-                try? dependency.imageQueryService.read(having: imageId)
+            let items = imageIds.compactMap { imageId in
+                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
             }
-            nextState.alert = .share(clipId: clipId, data: data)
+            nextState.alert = .share(clipId: clipId, items: items)
             return (nextState, .none)
 
         case let .purgeMenuTapped(clipId):

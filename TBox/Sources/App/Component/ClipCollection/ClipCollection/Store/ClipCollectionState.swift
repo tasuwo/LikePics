@@ -9,7 +9,7 @@ struct ClipCollectionState: Equatable {
         case error(String?)
         case deletion(clipId: Clip.Identity)
         case purge(clipId: Clip.Identity)
-        case share(clipId: Clip.Identity, data: [Data])
+        case share(clipId: Clip.Identity, items: [ClipItemImageShareItem])
     }
 
     let source: ClipCollection.Source

@@ -88,8 +88,8 @@ extension ClipPreviewPageBarController {
         case let .deletion(includesRemoveFromClip: includesRemoveFromClip):
             presentDeleteAlert(includesRemoveFromClip: includesRemoveFromClip)
 
-        case let .share(data: data):
-            presentShareAlert(data: data)
+        case let .share(items: items):
+            presentShareAlert(items: items)
 
         case .shareTargetSelection:
             presentShareTargetSelectionAlert(targetCount: state.parentState.items.count)
@@ -168,8 +168,8 @@ extension ClipPreviewPageBarController {
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(data: [Data]) {
-        let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+    private func presentShareAlert(items: [ClipItemImageShareItem]) {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         controller.popoverPresentationController?.barButtonItem = shareItem
         controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in
             if success {

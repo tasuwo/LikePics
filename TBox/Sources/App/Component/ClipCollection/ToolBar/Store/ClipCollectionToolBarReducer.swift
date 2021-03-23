@@ -50,10 +50,10 @@ enum ClipCollectionToolBarReducer: Reducer {
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
-            let data = Set(state._selections.values.flatMap({ $0 })).compactMap { imageId in
-                try? dependency.imageQueryService.read(having: imageId)
+            let items = Set(state._selections.values.flatMap({ $0 })).map { imageId in
+                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
             }
-            nextState.alert = .share(data: data)
+            nextState.alert = .share(items: items)
             return (nextState, [eventEffect])
 
         case .deleteButtonTapped:

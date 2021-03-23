@@ -11,7 +11,7 @@ struct ClipCollectionToolBarState: Equatable {
         case addition
         case changeVisibility
         case deletion(includesRemoveFromAlbum: Bool)
-        case share(data: [Data])
+        case share(items: [ClipItemImageShareItem])
     }
 
     struct Item: Equatable {

@@ -55,10 +55,10 @@ enum ClipPreviewPageBarReducer: Reducer {
                 nextState.alert = .shareTargetSelection
                 return (nextState, [eventEffect])
             } else {
-                let data = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
-                    try? dependency.imageQueryService.read(having: imageId)
+                let items = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
+                    ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
                 }
-                nextState.alert = .share(data: data)
+                nextState.alert = .share(items: items)
                 return (nextState, [eventEffect])
             }
 
@@ -82,17 +82,15 @@ enum ClipPreviewPageBarReducer: Reducer {
                 return (nextState, [eventEffect])
             }
             let currentItem = state.parentState.items[index]
-            guard let data = try? dependency.imageQueryService.read(having: currentItem.imageId) else {
-                return (nextState, [eventEffect])
-            }
-            nextState.alert = .share(data: [data])
+            let item = ClipItemImageShareItem(imageId: currentItem.imageId, imageQueryService: dependency.imageQueryService)
+            nextState.alert = .share(items: [item])
             return (nextState, [eventEffect])
 
         case .alertShareClipConfirmed:
-            let data = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
-                try? dependency.imageQueryService.read(having: imageId)
+            let items = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
+                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
             }
-            nextState.alert = .share(data: data)
+            nextState.alert = .share(items: items)
             return (nextState, [eventEffect])
         }
     }

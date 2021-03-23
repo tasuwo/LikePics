@@ -185,8 +185,8 @@ extension ClipCollectionViewController {
         case let .purge(clipId: clipId):
             presentPurgeAlert(for: clipId, state: state)
 
-        case let .share(clipId: clipId, data: data):
-            presentShareAlert(for: clipId, data: data, state: state)
+        case let .share(clipId: clipId, items: items):
+            presentShareAlert(for: clipId, items: items, state: state)
 
         case .none:
             break
@@ -254,7 +254,7 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(for clipId: Clip.Identity, data: [Data], state: ClipCollectionState) {
+    private func presentShareAlert(for clipId: Clip.Identity, items: [ClipItemImageShareItem], state: ClipCollectionState) {
         guard let clip = state.clips.value(having: clipId),
               let indexPath = dataSource.indexPath(for: clip),
               let cell = collectionView.cellForItem(at: indexPath)
@@ -263,7 +263,7 @@ extension ClipCollectionViewController {
             return
         }
 
-        let controller = UIActivityViewController(activityItems: data, applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         controller.popoverPresentationController?.sourceView = self.collectionView
         controller.popoverPresentationController?.sourceRect = cell.frame
         controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in

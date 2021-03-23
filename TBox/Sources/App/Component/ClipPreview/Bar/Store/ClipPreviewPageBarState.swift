@@ -8,7 +8,7 @@ struct ClipPreviewPageBarState: Equatable {
     enum Alert: Equatable {
         case addition
         case deletion(includesRemoveFromClip: Bool)
-        case share(data: [Data])
+        case share(items: [ClipItemImageShareItem])
         case shareTargetSelection
         case error(String)
     }
