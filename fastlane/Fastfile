@@ -8,7 +8,7 @@ platform :ios do
     app_store_connect_api_key
     build_for_appstore
     github_release
-    pilot(ipa: lane_context[SharedValues::IPA_OUTPUT_PATH])
+    pilot
     clean_build_artifacts
   end
 
