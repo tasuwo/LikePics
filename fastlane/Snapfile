@@ -7,7 +7,7 @@ devices([
 
 languages([
   "en-US",
-  "ja-JP",
+  "ja",
 ])
 
 ENV["FASTLANE_SNAPSHOT"] = "YES"
