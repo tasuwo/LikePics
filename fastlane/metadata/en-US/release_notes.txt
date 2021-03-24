@@ -1,3 +1,1 @@
-- Edit site url at sharing images
-- Filtering album by title
 - Fix bugs, UI
