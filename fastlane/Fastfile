@@ -9,6 +9,7 @@ platform :ios do
     build_for_appstore
     github_release
     pilot
+    deliver
     clean_build_artifacts
   end
 

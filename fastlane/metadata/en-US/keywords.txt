@@ -1,0 +1,1 @@
+image,photo,download,album,tag,manage,cloud,sync

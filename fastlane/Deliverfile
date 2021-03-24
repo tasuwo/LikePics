@@ -1,0 +1,17 @@
+# vim: syntax=ruby
+
+submit_for_review(false)
+
+skip_screenshots(false)
+overwrite_screenshots(true)
+
+skip_metadata(false)
+
+skip_binary_upload(true)
+
+automatic_release(false)
+
+# AppStoreConnectAPI非対応項目を設定
+# https://zenn.dev/moga/articles/752b5f5a8fc001060d1a
+precheck_include_in_app_purchases(false)
+

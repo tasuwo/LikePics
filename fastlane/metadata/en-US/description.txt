@@ -1,0 +1,5 @@
+- Download/Import image and manage it with meta data (Web Site url, ...etc)
+- Collect multiple images in a clip and manage it
+- Manage images by tag, album
+- Hides clips, tags, albums from everywhere
+- Support iCloud Sync
