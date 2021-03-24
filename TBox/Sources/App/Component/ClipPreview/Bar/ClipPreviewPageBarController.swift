@@ -196,6 +196,7 @@ extension ClipPreviewPageBarController {
             target: nil,
             action: nil
         )
+        flexibleItem.accessibilityIdentifier = "\(String(describing: Self.self)).flexibleItem"
         browseItem = UIBarButtonItem(
             image: UIImage(systemName: "globe"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -203,6 +204,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        browseItem.accessibilityIdentifier = "\(String(describing: Self.self)).browseItem"
         addItem = UIBarButtonItem(
             systemItem: .add,
             primaryAction: .init(handler: { [weak self] _ in
@@ -210,6 +212,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        addItem.accessibilityIdentifier = "\(String(describing: Self.self)).addItem"
         shareItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -217,6 +220,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        shareItem.accessibilityIdentifier = "\(String(describing: Self.self)).shareItem"
         deleteItem = UIBarButtonItem(
             systemItem: .trash,
             primaryAction: .init(handler: { [weak self] _ in
@@ -224,6 +228,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        deleteItem.accessibilityIdentifier = "\(String(describing: Self.self)).deleteItem"
         infoItem = UIBarButtonItem(
             image: UIImage(systemName: "info.circle"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -231,6 +236,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        infoItem.accessibilityIdentifier = "\(String(describing: Self.self)).infoItem"
         backItem = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left",
                            withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
@@ -239,6 +245,7 @@ extension ClipPreviewPageBarController {
             }),
             menu: nil
         )
+        backItem.accessibilityIdentifier = "\(String(describing: Self.self)).backItem"
     }
 }
 

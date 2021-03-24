@@ -48,7 +48,7 @@ class TBoxUITests: XCTestCase {
         snapshot("Preview")
 
         app.navigationBars["LikePics.ClipPreviewPageView"]
-            .buttons["ClipPreviewPageBarViewController.infoItem"]
+            .buttons["ClipPreviewPageBarController.infoItem"]
             .tap()
         snapshot("Info")
     }
