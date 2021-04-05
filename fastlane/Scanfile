@@ -1,0 +1,13 @@
+# vim: syntax=ruby
+
+scheme("TBox")
+workspace("./TBox.xcworkspace")
+
+force_quit_simulator(true)
+clean(true)
+deployment_target_version("14.0")
+skip_slack(true)
+
+output_directory("./build")
+derived_data_path("./build/derived-data")
+buildlog_path("./build/logs")

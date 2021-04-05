@@ -1,9 +1,14 @@
 fastlane_require "dotenv"
+
 Dotenv.load(".env.secret")
 
 default_platform(:ios)
 
 platform :ios do
+  lane :test do
+    scan
+  end
+
   lane :release do
     app_store_connect_api_key
     build_for_appstore
