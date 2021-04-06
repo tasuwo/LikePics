@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+
+env:
+  DEVELIPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby and `bundle install`
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+      - name: Cache CocoaPods files
+        uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+      - run: bundle exec fastlane test
+
