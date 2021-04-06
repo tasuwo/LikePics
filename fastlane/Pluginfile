@@ -1,0 +1,1 @@
+gem "fastlane-plugin-influxdb2", git: "https://github.com/tasuwo/fastlane-plugin-influxdb2"
