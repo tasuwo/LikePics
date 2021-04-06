@@ -5,6 +5,7 @@ on:
 
 env:
   DEVELIPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+  BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_GITHUB__COM }}
 
 jobs:
   test:
