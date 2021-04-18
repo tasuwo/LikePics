@@ -2,6 +2,7 @@ LikePics
 ========
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://mit-license.org)
+[![Test](https://github.com/tasuwo/LikePics/workflows/Test/badge.svg)](https://github.com/tasuwo/LikePics/actions?query=workflow%3ATest)
 
 [<img width=200 src="images/icon.png" style="border-radius: 30px;">](#logo)
 
