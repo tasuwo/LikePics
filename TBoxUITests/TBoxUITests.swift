@@ -25,17 +25,17 @@ class TBoxUITests: XCTestCase {
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.top"]
             .tap()
-        snapshot("Home")
+        snapshot("01_Home")
 
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.tag"]
             .tap()
-        snapshot("Tag")
+        snapshot("02_Tag")
 
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.album"]
             .tap()
-        snapshot("Album")
+        snapshot("03_Album")
 
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.top"]
@@ -45,11 +45,11 @@ class TBoxUITests: XCTestCase {
             .children(matching: .any)
             .element(boundBy: 0)
             .tap()
-        snapshot("Preview")
+        snapshot("04_Preview")
 
         app.navigationBars["LikePics.ClipPreviewPageView"]
             .buttons["ClipPreviewPageBarController.infoItem"]
             .tap()
-        snapshot("Info")
+        snapshot("05_Info")
     }
 }
