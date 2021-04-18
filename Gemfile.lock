@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/tasuwo/fastlane-plugin-influxdb2
-  revision: 7c2fd0a520086e6a2665a85ad024eed8992f3fc6
+  revision: b8b6dfd8f9d8a707a16a1130721ddde0ddea5c5b
   specs:
     fastlane-plugin-influxdb2 (0.1.0)
       influxdb-client
@@ -271,7 +271,6 @@ DEPENDENCIES
   cocoapods (~> 1.10)
   fastlane
   fastlane-plugin-influxdb2!
-  influxdb-client (~> 1.13.0)
 
 BUNDLED WITH
    2.1.4
