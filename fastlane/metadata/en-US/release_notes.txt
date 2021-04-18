@@ -1,1 +1,1 @@
-- Fix bugs, UI
+- Fix failure of reading images at some web sites
