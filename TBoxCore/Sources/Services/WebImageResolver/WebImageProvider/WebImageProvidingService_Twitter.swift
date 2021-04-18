@@ -121,7 +121,7 @@ public extension WebImageProvidingService {
 
                         let existsImages = !document.querySelectorAll("img").isEmpty
 
-                        let sensitiveContentAlerts = document.querySelectorAll("a[href=\"/settings/safety\"]")
+                        let sensitiveContentAlerts = document.querySelectorAll("a[href=\"/settings/content_you_see\"]")
                         let sensitiveContentRevealButton = document.querySelectorAll("span")
                             .first(where: {
                                 guard let innerHtml = $0.innerHTML else { return false }

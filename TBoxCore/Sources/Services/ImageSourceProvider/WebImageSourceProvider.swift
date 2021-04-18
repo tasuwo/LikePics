@@ -33,6 +33,7 @@ public class WebImageSourceProvider {
                 guard let self = self else { return }
                 // HACK: Add WebView to view hierarchy for loading page.
                 view.addSubview(self.finder.webView)
+                self.finder.webView.frame = view.frame
                 self.finder.webView.isHidden = true
             }
             .store(in: &self.subscriptions)

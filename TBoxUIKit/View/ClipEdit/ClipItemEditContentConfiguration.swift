@@ -51,4 +51,3 @@ extension ClipItemEditContentConfiguration: UIContentConfiguration {
         return newConfiguration
     }
 }
-
