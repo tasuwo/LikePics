@@ -638,12 +638,6 @@ extension ClipCollection.Source {
     }
 
     var isEmptyMessageViewActionButtonHidden: Bool {
-        switch self {
-        case .all, .search:
-            return true
-
-        case .album:
-            return false
-        }
+        return true
     }
 }
