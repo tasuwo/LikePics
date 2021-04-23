@@ -58,41 +58,32 @@ extension ClipCollectionViewLayout {
 
             let scale = cell.traitCollection.displayScale
 
+            var requests: [ThumbnailRequest] = []
+
             if let item = clip.primaryItem {
-                let request = self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary)
-                thumbnailLoader.load(request, observer: cell)
-                cell.onReuse = { identifier in
-                    guard identifier == requestId else { return }
-                    thumbnailLoader.cancel(request)
-                }
+                requests.append(self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary))
             } else {
                 cell.primaryImage = .noImage
-                cell.onReuse = nil
             }
 
             if let item = clip.secondaryItem {
-                let request = self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary)
-                thumbnailLoader.load(request, observer: cell)
-                cell.onReuse = { identifier in
-                    guard identifier == requestId else { return }
-                    thumbnailLoader.cancel(request)
-                }
+                requests.append(self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary))
             } else {
                 cell.secondaryImage = .noImage
-                cell.onReuse = nil
             }
 
             if let item = clip.tertiaryItem {
-                let request = self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary)
-                thumbnailLoader.load(request, observer: cell)
-                cell.onReuse = { identifier in
-                    guard identifier == requestId else { return }
-                    thumbnailLoader.cancel(request)
-                }
+                requests.append(self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary))
             } else {
                 cell.tertiaryImage = .noImage
-                cell.onReuse = nil
             }
+
+            cell.onReuse = { [weak thumbnailLoader] identifier in
+                guard identifier == requestId else { return }
+                requests.forEach { thumbnailLoader?.cancel($0) }
+            }
+
+            requests.forEach { thumbnailLoader.load($0, observer: cell) }
         }
     }
 

@@ -186,7 +186,12 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     override public func prepareForReuse() {
         super.prepareForReuse()
+
         self.onReuse?(self.identifier)
+
+        self.primaryImage = .loading
+        self.secondaryImage = .loading
+        self.tertiaryImage = .loading
     }
 
     // MARK: - Methods
