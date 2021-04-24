@@ -2,16 +2,16 @@ use_frameworks!
 inhibit_all_warnings!
 platform :ios, '14.0'
 
+pod 'LicensePlist', '~> 3.0.4'
+pod 'SwiftGen', '~> 6.4.0'
+pod 'Sourcery', '~> 1.0.3'
+
 def test_shared_pods
     pod 'Quick',         '~> 3.0.0'
     pod 'Nimble',        '~> 9.0.0'
 end
 
 target 'TBox' do
-  pod 'LicensePlist', '~> 3.0.4'
-  pod 'SwiftGen', '~> 6.4.0'
-  pod 'Sourcery', '~> 1.0.3'
-
   target 'TBoxTests' do
     inherit! :search_paths
     test_shared_pods
