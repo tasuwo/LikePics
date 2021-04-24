@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1250"
-   wasCreatedForAppExtension = "YES"
-   version = "2.0">
+   LastUpgradeVersion = "1200"
+   version = "1.3"
+   wasCreatedForAppExtension = "YES">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -15,23 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C99279124DDD65E00672CA7"
+               BlueprintIdentifier = "5A6DBBF3AA9A8FE00D7C5E1F"
                BuildableName = "ShareExtension.appex"
                BlueprintName = "ShareExtension"
-               ReferencedContainer = "container:TBox.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-               BuildableName = "LikePics.app"
-               BlueprintName = "TBox"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -41,60 +27,75 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      onlyGenerateCoverageForSpecifiedTargets = "NO"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C21415A254858D50013F486"
+               BlueprintIdentifier = "2C150D13BABCC8F6A9B8B00E"
                BuildableName = "TBoxUITests.xctest"
                BlueprintName = "TBoxUITests"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5A6DBBF3AA9A8FE00D7C5E1F"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
+            ReferencedContainer = "container:TBox.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
-      askForAppToLaunch = "Yes"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
+      askForAppToLaunch = "NO"
       launchAutomaticallySubstyle = "2">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-            BuildableName = "LikePics.app"
-            BlueprintName = "TBox"
+            BlueprintIdentifier = "5A6DBBF3AA9A8FE00D7C5E1F"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES"
-      launchAutomaticallySubstyle = "2">
+      debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2CA0228824DD9F5E00329251"
-            BuildableName = "LikePics.app"
-            BlueprintName = "TBox"
+            BlueprintIdentifier = "5A6DBBF3AA9A8FE00D7C5E1F"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
