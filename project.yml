@@ -1,0 +1,558 @@
+name: TBox
+options:
+  defaultConfig: Release
+  transitivelyLinkDependencies: false
+  groupOrdering:
+    - order:
+      - TBox
+      - TBoxTests
+      - TBoxUIKit
+      - TBoxUIKitTests
+      - TBoxUITests
+      - Domain
+      - DomainTests
+      - Persistence
+      - PersistenceTests
+      - Common
+      - CommonTests
+      - TBoxCore
+      - ShareExtension
+      - TestHelper
+      - Smoothie
+attributes:
+  LastUpgradeVersion: '1250'
+  ORGANIZATIONNAME: Tasuku Tozawa
+configs:
+  Debug: debug
+  DebugDev: debug
+  Release: release
+  ReleaseDev: release
+schemes:
+  ShareExtension:
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+    build:
+      targets:
+        ShareExtension:
+          - running
+          - testing
+          - profiling
+          - analyzing
+          - archiving
+    profile:
+      config: Release
+    run:
+      askForAppToLaunch: false
+      config: Debug
+      debugEnabled: false
+      launchAutomaticallySubstyle: 2
+    test:
+      config: Debug
+      targets:
+        - TBoxUITests
+  SnapshotHelper:
+    analyze:
+      config: DebugDev
+    archive:
+      config: ReleaseDev
+    build:
+      targets:
+        TBoxUITests:
+          - running
+          - testing
+          - profiling
+          - analyzing
+          - archiving
+    profile:
+      config: ReleaseDev
+    run:
+      config: DebugDev
+    test:
+      config: DebugDev
+      targets:
+        - TBoxUITests
+  TBox:
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+    build:
+      targets:
+        TBox:
+          - running
+          - testing
+          - profiling
+          - analyzing
+          - archiving
+    profile:
+      config: Release
+    run:
+      commandLineArguments:
+        -com.apple.CoreData.CloudKitDebug 0: true
+        -com.apple.CoreData.Logging.stderr 0: true
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - TBoxTests
+        - PersistenceTests
+        - DomainTests
+        - TBoxUIKitTests
+        - CommonTests
+  TBoxDev:
+    analyze:
+      config: DebugDev
+    archive:
+      config: ReleaseDev
+    build:
+      targets:
+        TBox:
+          - running
+          - testing
+          - profiling
+          - analyzing
+          - archiving
+    profile:
+      config: ReleaseDev
+    run:
+      commandLineArguments:
+        -com.apple.CoreData.CloudKitDebug 0: true
+        -com.apple.CoreData.Logging.stderr 0: true
+      config: DebugDev
+    test:
+      config: DebugDev
+      targets:
+        - TBoxTests
+        - PersistenceTests
+        - DomainTests
+        - TBoxUIKitTests
+        - CommonTests
+settings:
+  base:
+    APP_VERSION: 2.1.0
+    BUILD_NUMBER: 1
+    ALWAYS_SEARCH_USER_PATHS: NO
+    APP_VERSION: 2.1.0;
+    BUILD_NUMBER: 1
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    CLANG_ANALYZER_NONNULL: YES
+    CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION: YES_AGGRESSIVE
+    CLANG_CXX_LANGUAGE_STANDARD: gnu++14
+    CLANG_CXX_LIBRARY: libc++
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    CLANG_ENABLE_OBJC_WEAK: YES
+    CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING: YES
+    CLANG_WARN_BOOL_CONVERSION: YES
+    CLANG_WARN_COMMA: YES
+    CLANG_WARN_CONSTANT_CONVERSION: YES
+    CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS: YES
+    CLANG_WARN_DIRECT_OBJC_ISA_USAGE: YES_ERROR
+    CLANG_WARN_DOCUMENTATION_COMMENTS: YES
+    CLANG_WARN_EMPTY_BODY: YES
+    CLANG_WARN_ENUM_CONVERSION: YES
+    CLANG_WARN_INFINITE_RECURSION: YES
+    CLANG_WARN_INT_CONVERSION: YES
+    CLANG_WARN_NON_LITERAL_NULL_CONVERSION: YES
+    CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF: YES
+    CLANG_WARN_OBJC_LITERAL_CONVERSION: YES
+    CLANG_WARN_OBJC_ROOT_CLASS: YES_ERROR
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: YES
+    CLANG_WARN_RANGE_LOOP_ANALYSIS: YES
+    CLANG_WARN_STRICT_PROTOTYPES: YES
+    CLANG_WARN_SUSPICIOUS_MOVE: YES
+    CLANG_WARN_UNGUARDED_AVAILABILITY: YES_AGGRESSIVE
+    CLANG_WARN_UNREACHABLE_CODE: YES
+    CLANG_WARN__DUPLICATE_METHOD_MATCH: YES
+    CODE_SIGN_STYLE: Manual
+    COPY_PHASE_STRIP: NO
+    ENABLE_STRICT_OBJC_MSGSEND: YES
+    ENABLE_TESTABILITY: NO
+    GCC_C_LANGUAGE_STANDARD: gnu11
+    GCC_DYNAMIC_NO_PIC: NO
+    GCC_NO_COMMON_BLOCKS: YES
+    GCC_OPTIMIZATION_LEVEL: 0
+    GCC_WARN_64_TO_32_BIT_CONVERSION: YES
+    GCC_WARN_ABOUT_RETURN_TYPE: YES_ERROR
+    GCC_WARN_UNDECLARED_SELECTOR: YES
+    GCC_WARN_UNINITIALIZED_AUTOS: YES_AGGRESSIVE
+    GCC_WARN_UNUSED_FUNCTION: YES
+    GCC_WARN_UNUSED_VARIABLE: YES
+    MTL_FAST_MATH: YES
+    ONLY_ACTIVE_ARCH: NO
+    IPHONEOS_DEPLOYMENT_TARGET: 14.0
+    SDKROOT: iphoneos
+    SWIFT_VERSION: 5.0
+    TARGETED_DEVICE_FAMILY: "1,2"
+  configs:
+    Debug:
+      APP_GROUP: group.net.tasuwo.TBox
+      APP_NAME: LikePics
+      DEBUG_INFORMATION_FORMAT: dwarf
+      ENABLE_TESTABILITY: YES
+      GCC_PREPROCESSOR_DEFINITIONS:
+        - "DEBUG=1"
+        - "$(inherited)"
+      I_CLOUD_CONTAINER: iCloud.net.tasuwo.TBox
+      MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+      ONLY_ACTIVE_ARCH: YES
+      OTHER_SWIFT_FLAGS: -D DEBUG
+      PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+      SWIFT_COMPILATION_MODE: singlefile
+      SWIFT_OPTIMIZATION_LEVEL: -Onone
+    DebugDev:
+      APP_GROUP: group.net.tasuwo.TBox.dev
+      APP_NAME: LikePicsDev
+      DEBUG_INFORMATION_FORMAT: dwarf
+      ENABLE_TESTABILITY: YES
+      GCC_PREPROCESSOR_DEFINITIONS:
+        - "DEBUG=1"
+        - "$(inherited)"
+      I_CLOUD_CONTAINER: iCloud.net.tasuwo.TBox.dev
+      MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+      ONLY_ACTIVE_ARCH: YES
+      OTHER_SWIFT_FLAGS: -D DEBUG
+      PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+      SWIFT_COMPILATION_MODE: singlefile
+      SWIFT_OPTIMIZATION_LEVEL: -Onone
+    Release:
+      APP_GROUP: group.net.tasuwo.TBox
+      APP_NAME: LikePics
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      ENABLE_NS_ASSERTIONS: NO
+      I_CLOUD_CONTAINER: iCloud.net.tasuwo.TBox
+      MTL_ENABLE_DEBUG_INFO: NO
+      PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox
+      SWIFT_COMPILATION_MODE: wholemodule
+      SWIFT_OPTIMIZATION_LEVEL: -O
+    ReleaseDev:
+      APP_GROUP: group.net.tasuwo.TBox.dev
+      APP_NAME: LikePicsDev
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      ENABLE_NS_ASSERTIONS: NO
+      I_CLOUD_CONTAINER: iCloud.net.tasuwo.TBox.dev
+      MTL_ENABLE_DEBUG_INFO: NO
+      PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
+      SWIFT_COMPILATION_MODE: wholemodule
+      SWIFT_OPTIMIZATION_LEVEL: -O
+      VALIDATE_PRODUCT: YES
+targets:
+  Common:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Common
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: Common/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Common
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+  CommonTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: CommonTests
+    dependencies:
+      - target: Common
+      - target: TBox
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: CommonTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.CommonTests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
+  Domain:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Domain
+    dependencies:
+      - target: Common
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: Domain/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Domain
+        PROVISIONING_PROFILE_SPECIFIER:
+        SUPPORTS_MACCATALYST: NO
+  DomainTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: DomainTests
+    dependencies:
+      - target: Domain
+      - target: TBox
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: DomainTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.DomainTests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
+  Persistence:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Persistence
+    dependencies:
+      - target: Domain
+      - target: Common
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: Persistence/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Persistence
+        PROVISIONING_PROFILE_SPECIFIER:
+        SUPPORTS_MACCATALYST: NO
+  PersistenceTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PersistenceTests
+    dependencies:
+      - target: Persistence
+      - target: TBox
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: PersistenceTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.PersistenceTests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
+  ShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension
+    dependencies:
+      - target: Domain
+      - target: Persistence
+      - target: TBoxCore
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: ShareExtension/Info.plist
+        LD_RUNPATH_SEARCH_PATHS:
+          - $(inherited)
+          - "@executable_path/Frameworks"
+          - "@executable_path/../../Frameworks"
+        SKIP_INSTALL: YES
+      configs:
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.ShareExtension
+          PROVISIONING_PROFILE_SPECIFIER: match Development net.tasuwo.TBox.ShareExtension
+        DebugDev:
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev.ShareExtension
+          PROVISIONING_PROFILE_SPECIFIER: match Development net.tasuwo.TBox.dev.ShareExtension
+        Release:
+          CODE_SIGN_IDENTITY: iPhone Distribution
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.ShareExtension
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.ShareExtension
+        ReleaseDev:
+          CODE_SIGN_IDENTITY: iPhone Distribution
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev.ShareExtension
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev.ShareExtension
+  Smoothie:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Smoothie
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: Smoothie/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Smoothie
+        PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]:
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        SUPPORTS_MACCATALYST: NO
+  TBox:
+    type: application
+    platform: iOS
+    sources:
+      - path: TBox
+    dependencies:
+      - target: Persistence
+      - target: Domain
+      - target: ShareExtension
+      - target: TBoxUIKit
+      - target: TBoxCore
+      - target: Common
+      - target: Smoothie
+    postbuildScripts:
+      - name: Copy App Data
+        runOnlyWhenInstalling: false
+        script:
+          "if [[ ${CONFIGURATION} == \"DebugDev\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT}
+          ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n
+          \   cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n"
+        shell: /bin/sh
+    prebuildScripts:
+      - name: SwiftLint
+        runOnlyWhenInstalling: false
+        script: "cd BuildTools
+
+          SDKROOT=macosx
+
+
+          # Uncomment this line temporarily to update the version used to the latest
+          matching your BuildTools/Package.swift file
+
+          # swift package update
+
+
+          cp $SRCROOT/.swiftlint.yml ./
+
+          swift run -c release swiftlint
+
+          rm .swiftlint.yml
+
+          "
+        shell: /bin/sh
+      - name: License plist
+        runOnlyWhenInstalling: false
+        script:
+          "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\"
+          --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --config-path
+          $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed.
+          Run 'pod install --repo-update' to install it.\"\nfi\n\n\n"
+        shell: /bin/sh
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+        CODE_SIGN_ENTITLEMENTS: TBox/TBox.entitlements
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: TBox/Resources/Info.plist
+        PRODUCT_NAME: LikePics
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: Apple Development
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox
+          PROVISIONING_PROFILE_SPECIFIER: match Development net.tasuwo.TBox
+        DebugDev:
+          ASSETCATALOG_COMPILER_APPICON_NAME: AppIconDev
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
+          PROVISIONING_PROFILE_SPECIFIER: match Development net.tasuwo.TBox.dev
+        Release:
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox
+        ReleaseDev:
+          ASSETCATALOG_COMPILER_APPICON_NAME: AppIconDev
+          CODE_SIGN_IDENTITY: iPhone Distribution
+          PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev
+  TBoxCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: TBoxCore
+    dependencies:
+      - target: Domain
+      - target: TBoxUIKit
+      - target: Common
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: TBoxCore/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxCore
+        PROVISIONING_PROFILE_SPECIFIER:
+        SUPPORTS_MACCATALYST: NO
+  TBoxTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: TBoxTests
+    dependencies:
+      - target: TBox
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+        BUNDLE_LOADER: $(TEST_HOST)
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: TBoxTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxTests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
+  TBoxUIKit:
+    type: framework
+    platform: iOS
+    sources:
+      - path: TBoxUIKit
+    dependencies:
+      - target: Domain
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: TBoxUIKit/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUIKit
+        PROVISIONING_PROFILE_SPECIFIER:
+        SUPPORTS_MACCATALYST: NO
+  TBoxUIKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: TBoxUIKitTests
+    dependencies:
+      - target: TBoxUIKit
+      - target: TBox
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: TBoxUIKitTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUIKitTests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
+  TBoxUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: TBoxUITests
+    dependencies:
+      - target: TBox
+    settings:
+      base:
+        DEVELOPMENT_TEAM:
+        INFOPLIST_FILE: TBoxUITests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUITests
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        TEST_TARGET_NAME: TBox
+  TestHelper:
+    type: framework
+    platform: iOS
+    sources:
+      - path: TestHelper
+    dependencies:
+      - target: Persistence
+    settings:
+      base:
+        DEVELOPMENT_TEAM:
+        INFOPLIST_FILE: TestHelper/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TestHelper
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
