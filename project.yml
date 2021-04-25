@@ -418,40 +418,16 @@ targets:
     postbuildScripts:
       - name: Copy App Data
         runOnlyWhenInstalling: false
-        script:
-          "if [[ ${CONFIGURATION} == \"DebugDev\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT}
-          ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n
-          \   cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n"
+        path: scripts/copy_app_data.sh
         shell: /bin/sh
     prebuildScripts:
       - name: SwiftLint
         runOnlyWhenInstalling: false
-        script: "cd BuildTools
-
-          SDKROOT=macosx
-
-
-          # Uncomment this line temporarily to update the version used to the latest
-          matching your BuildTools/Package.swift file
-
-          # swift package update
-
-
-          cp $SRCROOT/.swiftlint.yml ./
-
-          swift run -c release swiftlint
-
-          rm .swiftlint.yml
-
-          "
+        path: scripts/run_swiftlint.sh
         shell: /bin/sh
       - name: License plist
         runOnlyWhenInstalling: false
-        script:
-          "if [[ -f \"${PODS_ROOT}/LicensePlist/license-plist\" ]]; then\n  \"${PODS_ROOT}/LicensePlist/license-plist\"
-          --output-path $PRODUCT_NAME/Resources/Settings.bundle \\\n                                            --config-path
-          $SRCROOT/license_plist.yml\nelse \n  echo \"warning: LicensePlist is not installed.
-          Run 'pod install --repo-update' to install it.\"\nfi\n\n\n"
+        path: scripts/run_license_plist.sh
         shell: /bin/sh
     settings:
       base:

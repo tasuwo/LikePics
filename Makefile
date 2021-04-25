@@ -2,10 +2,6 @@
 install: ## ライブラリ群をインストールする
 	bundle exec pod install && carthage update --use-xcframeworks --cache-builds --no-use-binaries --platform iOS
 
-.PHONY: update_buildtools
-update_buildtools: ## ビルド用ツール群を更新する
-	cd BuildTools; swift package update
-
 .PHONY: generate
 generate: license_generate swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
 
@@ -68,14 +64,14 @@ lint: swiftlint_lint ## 各種Linterを実行する
 
 .PHONY: swiftlint_lint
 swiftlint_lint: ## SwiftLintによるリントを実行する
-	cd BuildTools; cp ../.swiftlint.yml ./; swift run -c release swiftlint; rm .swiftlint.yml
+	Pods/SwiftLint/swiftlint
 
 .PHONY: format
 format: swiftformat_format ## 各種フォーマッターを実行する
 
 .PHONY: swiftformat_format
 swiftformat_format: ## SwiftFormatによるフォーマットを実行する
-	cd BuildTools; swift run -c release swiftformat --config ../.swiftformat ../
+	Pods/SwiftFormat/CommandLineTool/swiftformat --config ./.swiftformat ./
 
 .PHONY: extract_app_data_as_ja
 extract_app_data_as_ja: ## 起動中のSimulatorからAppDataをDLする
