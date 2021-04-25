@@ -110,6 +110,11 @@ extension AppRootTabBarController {
             return
         }
 
+        guard let searchEntryViewController = self.factory.makeSearchViewController() else {
+            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize SearchEntryViewController."))
+            return
+        }
+
         let settingsViewController = self.factory.makeSettingsViewController()
 
         self.tabBar.accessibilityIdentifier = "AppRootTabBarController.tabBar"
@@ -118,21 +123,30 @@ extension AppRootTabBarController {
                                                              image: UIImage(systemName: "house"),
                                                              tag: 0)
         topClipsListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.top"
-        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
-                                                          image: UIImage(systemName: "square.stack"),
-                                                          tag: 1)
-        albumListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.album"
+
+        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
+                                                            image: UIImage(systemName: "magnifyingglass"),
+                                                            tag: 2)
+        searchEntryViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.search"
+
         tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
                                                         image: UIImage(systemName: "tag"),
-                                                        tag: 2)
+                                                        tag: 3)
         tagListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.tag"
+
+        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
+                                                          image: UIImage(systemName: "square.stack"),
+                                                          tag: 4)
+        albumListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.album"
+
         settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
                                                          image: UIImage(systemName: "gear"),
-                                                         tag: 3)
+                                                         tag: 5)
         settingsViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
             topClipsListViewController,
+            searchEntryViewController,
             tagListViewController,
             albumListViewController,
             settingsViewController

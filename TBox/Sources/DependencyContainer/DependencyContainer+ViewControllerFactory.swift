@@ -124,6 +124,11 @@ extension DependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
+    func makeSearchViewController() -> UIViewController? {
+        // TODO:
+        return UINavigationController(rootViewController: SearchEntryViewController())
+    }
+
     func makeSettingsViewController() -> UIViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 

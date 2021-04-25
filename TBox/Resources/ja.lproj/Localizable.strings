@@ -71,6 +71,8 @@
 "clip_edit_view_multiselect_cancel" = "キャンセル";
 "clip_edit_view_multiselect_edit_url" = "サイトURLを編集";
 
+"search_entry_view_title" = "検索";
+
 "album_list_view_title" = "アルバム";
 
 "album_list_view_alert_for_add_title" = "新規アルバム";
@@ -167,6 +169,7 @@
 
 "placeholder_search_tag" = "タグを探す";
 "placeholder_search_album" = "アルバムを探す";
+"placeholder_search_universal" = "URL、タグ名、アルバム名...";
 
 "placeholder_tag_name" = "タグ名";
 "placeholder_album_name" = "アルバム名";

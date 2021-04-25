@@ -312,6 +312,8 @@ internal enum L10n {
     internal static let placeholderSearchAlbum = L10n.tr("Localizable", "placeholder_search_album")
     /// タグを探す
     internal static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
+    /// URL、タグ名、アルバム名...
+    internal static let placeholderSearchUniversal = L10n.tr("Localizable", "placeholder_search_universal")
     /// タグ名
     internal static let placeholderTagName = L10n.tr("Localizable", "placeholder_tag_name")
     /// https://www...

@@ -71,6 +71,8 @@
 "clip_edit_view_multiselect_cancel" = "Cancel";
 "clip_edit_view_multiselect_edit_url" = "Edit Site Urls";
 
+"search_entry_view_title" = "Search";
+
 "album_list_view_title" = "Albums";
 
 "album_list_view_alert_for_add_title" = "New Album";
@@ -167,6 +169,7 @@
 
 "placeholder_search_tag" = "Search Tags";
 "placeholder_search_album" = "Search Albums";
+"placeholder_search_universal" = "URL, Tag, Album...";
 
 "placeholder_tag_name" = "Name";
 "placeholder_album_name" = "Title";
