@@ -9,12 +9,13 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: View
 
-    private var resultsController: SearchResultViewController!
+    private let resultsController: SearchResultViewController
     private var searchController: UISearchController!
 
     // MARK: - Initializers
 
-    init() {
+    init(searchResultViewController: SearchResultViewController) {
+        resultsController = searchResultViewController
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -41,7 +42,6 @@ extension SearchEntryViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
-        resultsController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: resultsController)
     }
 

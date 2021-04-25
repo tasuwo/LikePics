@@ -334,6 +334,8 @@ internal enum L10n {
 
     /// 未分類のクリップはありません
     internal static let searchResultForUncategorizedEmptyTitle = L10n.tr("Localizable", "search_result_for_uncategorized_empty_title")
+    /// すべて見る
+    internal static let searchResultSeeAllButton = L10n.tr("Localizable", "search_result_see_all_button")
     /// 未分類
     internal static let searchResultTitleUncategorized = L10n.tr("Localizable", "search_result_title_uncategorized")
     /// 設定

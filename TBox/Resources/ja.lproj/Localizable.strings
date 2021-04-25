@@ -73,6 +73,8 @@
 
 "search_entry_view_title" = "検索";
 
+"search_result_see_all_button" = "すべて見る";
+
 "album_list_view_title" = "アルバム";
 
 "album_list_view_alert_for_add_title" = "新規アルバム";

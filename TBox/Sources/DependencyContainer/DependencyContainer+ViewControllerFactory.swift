@@ -125,8 +125,10 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchViewController() -> UIViewController? {
-        // TODO:
-        return UINavigationController(rootViewController: SearchEntryViewController())
+        let resultsController = SearchResultViewController(queryService: _clipQueryService,
+                                                           thumbnailLoader: temporaryThumbnailLoader)
+        let viewController = SearchEntryViewController(searchResultViewController: resultsController)
+        return UINavigationController(rootViewController: viewController)
     }
 
     func makeSettingsViewController() -> UIViewController {
