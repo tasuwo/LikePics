@@ -1,108 +1,8 @@
-name: Erik, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.0.0
-
-name: Erik, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.0.0
-
-name: Kanna, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.2.3
-
-name: Kanna, nameSpecified: 
-body: The MIT License (MIT…
-version: 5.2.3
-
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
 version: 3.0.4
-
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.0.4
-
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.0.4
-
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.0.4
-
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.0.4
-
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.0.4
-
-name: Realm, nameSpecified: 
-body: TABLE OF CONTENTS
-
-1…
-version: 10.5.1
-
-name: Realm, nameSpecified: 
-body: TABLE OF CONTENTS
-
-1…
-version: 10.5.1
-
-name: RealmSwift, nameSpecified: 
-body: TABLE OF CONTENTS
-
-1…
-version: 10.5.1
-
-name: RealmSwift, nameSpecified: 
-body: TABLE OF CONTENTS
-
-1…
-version: 10.5.1
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.0.3
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.0.3
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.0.3
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.0.3
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.0.3
 
 name: Sourcery, nameSpecified: 
 body: MIT License
@@ -116,35 +16,13 @@ body: MIT Licence
 Copyrig…
 version: 6.4.0
 
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
+name: BrightFutures, nameSpecified: , owner: Thomvis, version: 8.0.1
 
-Copyrig…
-version: 6.4.0
+name: Erik, nameSpecified: , owner: phimage, version: 5.1.0
 
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
+name: Kanna, nameSpecified: , owner: tid-kijyun, version: 5.2.4
 
-Copyrig…
-version: 6.4.0
-
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
-
-Copyrig…
-version: 6.4.0
-
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
-
-Copyrig…
-version: 6.4.0
-
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
-
-Copyrig…
-version: 6.4.0
+name: realm-cocoa, nameSpecified: , owner: realm, version: cf49bb9
 
 add-version-numbers: false
 
