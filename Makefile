@@ -1,3 +1,7 @@
+.PHONY: install
+install: ## ライブラリ群をインストールする
+	bundle exec pod install && carthage update --use-xcframeworks --cache-builds --no-use-binaries --platform iOS
+
 .PHONY: update_buildtools
 update_buildtools: ## ビルド用ツール群を更新する
 	cd BuildTools; swift package update

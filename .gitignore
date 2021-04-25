@@ -25,6 +25,10 @@ profile
 ## CocoaPod
 Pods/*
 
+## Carthage
+Carthage/Checkouts
+Carthage/Build/
+
 ## maxOS
 .DS_Store
 

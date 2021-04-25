@@ -1,7 +1,6 @@
 # vim: syntax=ruby
 
 scheme("TBox")
-workspace("./TBox.xcworkspace")
 
 force_quit_simulator(true)
 clean(true)

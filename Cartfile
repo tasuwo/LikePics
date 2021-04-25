@@ -1,0 +1,7 @@
+# SeeAlso: https://github.com/realm/realm-cocoa/issues/7151
+github "realm/realm-cocoa" "py/carthage_arm64"
+
+github "phimage/Erik" ~> 5.1.0
+
+github "Quick/Nimble" ~> 9.0.1
+github "Quick/Quick" ~> 3.1.2

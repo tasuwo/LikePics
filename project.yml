@@ -262,6 +262,9 @@ targets:
     dependencies:
       - target: Common
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
@@ -278,6 +281,7 @@ targets:
       - path: Domain
     dependencies:
       - target: Common
+      - target: Smoothie
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -294,6 +298,9 @@ targets:
     dependencies:
       - target: Domain
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -311,6 +318,8 @@ targets:
     dependencies:
       - target: Domain
       - target: Common
+      - framework: Carthage/Build/Realm.xcframework
+      - framework: Carthage/Build/RealmSwift.xcframework
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -327,6 +336,9 @@ targets:
     dependencies:
       - target: Persistence
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -398,6 +410,11 @@ targets:
       - target: TBoxCore
       - target: Common
       - target: Smoothie
+      - framework: Carthage/Build/Realm.xcframework
+      - framework: Carthage/Build/RealmSwift.xcframework
+      - framework: Carthage/Build/Erik.xcframework
+      - framework: Carthage/Build/Kanna.xcframework
+      - framework: Carthage/Build/BrightFutures.xcframework
     postbuildScripts:
       - name: Copy App Data
         runOnlyWhenInstalling: false
@@ -470,6 +487,9 @@ targets:
       - target: Domain
       - target: TBoxUIKit
       - target: Common
+      - framework: Carthage/Build/Erik.xcframework
+      - framework: Carthage/Build/Kanna.xcframework
+      - framework: Carthage/Build/BrightFutures.xcframework
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -485,6 +505,9 @@ targets:
       - path: TBoxTests
     dependencies:
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -518,6 +541,9 @@ targets:
     dependencies:
       - target: TBoxUIKit
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -534,6 +560,9 @@ targets:
       - path: TBoxUITests
     dependencies:
       - target: TBox
+      - target: TestHelper
+      - framework: Carthage/Build/Nimble.xcframework
+      - framework: Carthage/Build/Quick.xcframework
     settings:
       base:
         DEVELOPMENT_TEAM:

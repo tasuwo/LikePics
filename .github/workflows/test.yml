@@ -17,6 +17,13 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
+      - name: Cache Carthage files
+        uses: actions/cache@v1
+        with:
+          path: Carthage
+          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
       - name: Cache CocoaPods files
         uses: actions/cache@v2
         with:
