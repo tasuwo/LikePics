@@ -49,7 +49,11 @@ extension SearchResultClipCell: ThumbnailLoadObserver {
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            self.imageView.image = image
+            UIView.transition(with: self.imageView,
+                              duration: 0.5,
+                              options: .transitionCrossDissolve,
+                              animations: { [weak self] in self?.imageView.image = image },
+                              completion: nil)
         }
     }
 
