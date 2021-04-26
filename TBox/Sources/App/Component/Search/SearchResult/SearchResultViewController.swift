@@ -24,19 +24,20 @@ class SearchResultViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    // MARK: Observations
+
+    private var visibilitySubscription: NSKeyValueObservation?
+
     // MARK: Dependencies
 
-    private let queryService: ClipQueryService
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: - Initializers
 
     init(state: SearchResultViewState,
          dependency: SearchResultViewDependency,
-         queryService: ClipQueryService,
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
-        self.queryService = queryService
         self.thumbnailLoader = thumbnailLoader
         self.store = Store(initialState: state, dependency: dependency, reducer: SearchResultViewReducer.self)
 
@@ -77,6 +78,7 @@ extension SearchResultViewController {
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
             let nextTokens = state.searchQuery.tokens
             if currentTokens != nextTokens {
+                self.searchController.searchBar.searchTextField.text = ""
                 self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
             }
         }
@@ -89,9 +91,8 @@ extension SearchResultViewController {
         snapshot.appendSections([.tokenCandidates])
         snapshot.appendItems(state.tokenCandidates.map { Layout.Item.tokenCandidate($0) })
 
-        guard case let .success(query) = queryService.queryAllClips() else { return }
         snapshot.appendSections([.results])
-        snapshot.appendItems(query.clips.value.prefix(12).map({ Layout.Item.result($0) }))
+        snapshot.appendItems(state.searchResults.map({ Layout.Item.result($0) }))
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -126,6 +127,13 @@ extension SearchResultViewController {
         searchController.searchBar.searchTextField.allowsCopyingTokens = true
         searchController.searchBar.searchTextField.allowsDeletingTokens = true
         searchController.searchResultsUpdater = self
+
+        visibilitySubscription = self.view.observe(\.isHidden, options: .new) { [weak searchController] view, change in
+            // HACK: 文字列が空の時でも、TextFieldがフォーカスされていればResultsControllerは表示させる
+            if change.newValue == true, searchController?.searchBar.searchTextField.isEditing == true {
+                view.isHidden = false
+            }
+        }
     }
 }
 

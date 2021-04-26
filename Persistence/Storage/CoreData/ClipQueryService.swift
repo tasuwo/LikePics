@@ -21,6 +21,38 @@ public class ClipQueryService {
 }
 
 extension ClipQueryService: ClipQueryServiceProtocol {
+    public func searchClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<[Domain.Clip], ClipStorageError> {
+        let searchTexts = text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ")
+
+        guard !searchTexts.isEmpty || !albumIds.isEmpty || !tagIds.isEmpty else {
+            return .success([])
+        }
+
+        do {
+            let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
+
+            var predicates: [NSPredicate] = []
+            predicates += searchTexts.map {
+                NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl.absoluteString CONTAINS[cd] %@).@count > 0", $0 as CVarArg)
+            }
+            predicates += albumIds.map {
+                NSPredicate(format: "SUBQUERY(albumItem, $albumItem, $albumItem.album.id == %@).@count > 0", $0 as CVarArg)
+            }
+            predicates += tagIds.map {
+                NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", $0 as CVarArg)
+            }
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            request.fetchLimit = 12 // TODO:
+
+            let clips = try self.context.fetch(request)
+            return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func searchAlbums(containingTitle title: String, limit: Int) -> Result<[Domain.Album], ClipStorageError> {
         do {
             let request: NSFetchRequest<Album> = Album.fetchRequest()

@@ -129,7 +129,6 @@ extension DependencyContainer: ViewControllerFactory {
                                                                         tokenCandidates: [],
                                                                         searchResults: []),
                                                            dependency: self,
-                                                           queryService: _clipQueryService,
                                                            thumbnailLoader: temporaryThumbnailLoader)
         let viewController = SearchEntryViewController(searchResultViewController: resultsController)
         return UINavigationController(rootViewController: viewController)

@@ -44,8 +44,21 @@ extension SearchEntryViewController {
     }
 
     private func configureSearchController() {
+        searchController.delegate = self
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
+    }
+}
+
+extension SearchEntryViewController: UISearchControllerDelegate {
+    func willPresentSearchController(_ searchController: UISearchController) {
+        DispatchQueue.main.async {
+            self.resultsController.view.isHidden = false
+        }
+    }
+
+    func didPresentSearchController(_ searchController: UISearchController) {
+        resultsController.view.isHidden = false
     }
 }

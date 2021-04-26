@@ -18,6 +18,7 @@ enum SearchResultViewReducer: Reducer {
         case let .searchQueryChanged(query):
             nextState.searchQuery = query
             nextState.tokenCandidates = searchCandidates(for: query, dependency: dependency)
+            nextState.searchResults = search(by: query, dependency: dependency)
 
         case let .selectedTokenCandidate(token):
             nextState.searchQuery = state.searchQuery.appending(token: token)
@@ -31,6 +32,27 @@ enum SearchResultViewReducer: Reducer {
             break
         }
         return (nextState, nil)
+    }
+}
+
+// MARK: - Search
+
+extension SearchResultViewReducer {
+    private static func search(by query: SearchQuery, dependency: Dependency) -> [Clip] {
+        let albumIds = query.tokens
+            .filter { $0.kind == .album }
+            .map { $0.id }
+        let tagIds = query.tokens
+            .filter { $0.kind == .tag }
+            .map { $0.id }
+        switch dependency.clipQueryService.searchClips(text: query.text, albumIds: albumIds, tagIds: tagIds) {
+        case let .success(clips):
+            return clips
+
+        case .failure:
+            // TODO: Error Handling
+            return []
+        }
     }
 }
 
