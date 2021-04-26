@@ -21,6 +21,30 @@ public class ClipQueryService {
 }
 
 extension ClipQueryService: ClipQueryServiceProtocol {
+    public func searchAlbums(containingTitle title: String, limit: Int) -> Result<[Domain.Album], ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", title as CVarArg)
+            request.fetchLimit = limit
+            let albums = try self.context.fetch(request)
+            return .success(albums.compactMap { $0.map(to: Domain.Album.self) })
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
+    public func searchTags(containingName name: String, limit: Int) -> Result<[Domain.Tag], ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+            request.predicate = NSPredicate(format: "name CONTAINS[cd] %@", name as CVarArg)
+            request.fetchLimit = limit
+            let tags = try self.context.fetch(request)
+            return .success(tags.compactMap { $0.map(to: Domain.Tag.self) })
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func readClipAndTags(for clipIds: [Domain.Clip.Identity]) -> Result<([Domain.Clip], [Domain.Tag]), ClipStorageError> {
         do {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()

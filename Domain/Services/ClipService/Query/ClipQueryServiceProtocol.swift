@@ -4,6 +4,9 @@
 
 /// @mockable
 public protocol ClipQueryServiceProtocol {
+    func searchAlbums(containingTitle title: String, limit: Int) -> Result<[Album], ClipStorageError>
+    func searchTags(containingName name: String, limit: Int) -> Result<[Tag], ClipStorageError>
+
     func readClipAndTags(for clipIds: [Clip.Identity]) -> Result<([Clip], [Tag]), ClipStorageError>
 
     func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError>

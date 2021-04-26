@@ -85,18 +85,15 @@ extension SearchResultViewController {
 
     private func applySnapshot(for state: SearchResultViewState) {
         var snapshot = Layout.Snapshot()
+
         snapshot.appendSections([.tokenCandidates])
-        snapshot.appendItems([
-            .tokenCandidate(.init(kind: .tag, title: "hoge")),
-            .tokenCandidate(.init(kind: .tag, title: "fuga")),
-            .tokenCandidate(.init(kind: .album, title: "piyo"))
-        ])
+        snapshot.appendItems(state.tokenCandidates.map { Layout.Item.tokenCandidate($0) })
 
         guard case let .success(query) = queryService.queryAllClips() else { return }
         snapshot.appendSections([.results])
         snapshot.appendItems(query.clips.value.prefix(12).map({ Layout.Item.result($0) }))
 
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
