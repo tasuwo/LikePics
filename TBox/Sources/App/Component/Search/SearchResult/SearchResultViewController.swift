@@ -13,6 +13,7 @@ class SearchResultViewController: UIViewController {
 
     // MARK: View
 
+    lazy var searchController = UISearchController(searchResultsController: self)
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
 
@@ -96,6 +97,14 @@ extension SearchResultViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected at \(indexPath)")
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        switch item {
+        case let .tokenCandidate(token):
+            // TODO:
+            searchController.searchBar.searchTextField.insertToken(token.uiSearchToken, at: 0)
+
+        default:
+            break
+        }
     }
 }

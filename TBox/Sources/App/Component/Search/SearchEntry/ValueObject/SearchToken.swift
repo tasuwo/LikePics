@@ -14,6 +14,14 @@ struct SearchToken: Equatable, Hashable {
     let title: String
 }
 
+extension SearchToken {
+    var uiSearchToken: UISearchToken {
+        let token = UISearchToken(icon: kind.icon, text: title)
+        token.representedObject = self
+        return token
+    }
+}
+
 extension SearchToken.Kind {
     var icon: UIImage {
         switch self {
@@ -46,5 +54,11 @@ extension SearchToken {
                             range: NSRange(location: 0, length: iconAttachmentString.length))
 
         return string
+    }
+}
+
+extension UISearchToken {
+    var underlyingToken: SearchToken? {
+        return self.representedObject as? SearchToken
     }
 }

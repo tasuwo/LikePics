@@ -10,7 +10,7 @@ class SearchEntryViewController: UIViewController {
     // MARK: View
 
     private let resultsController: SearchResultViewController
-    private var searchController: UISearchController!
+    private var searchController: UISearchController { resultsController.searchController }
 
     // MARK: - Initializers
 
@@ -41,14 +41,14 @@ class SearchEntryViewController: UIViewController {
 extension SearchEntryViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
-
-        searchController = UISearchController(searchResultsController: resultsController)
     }
 
     private func configureSearchController() {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = L10n.placeholderSearchUniversal
+        searchController.searchBar.searchTextField.allowsCopyingTokens = true
+        searchController.searchBar.searchTextField.allowsDeletingTokens = true
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
