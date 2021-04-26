@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -106,6 +106,10 @@
 		2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */; };
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
+		2CDC77492636D2BD0039C5DF /* SearchResultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */; };
+		2CDC774B2636DB120039C5DF /* SearchResultViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */; };
+		2CDC774D2636DB2C0039C5DF /* SearchResultViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */; };
+		2CDC774F2636DBCA0039C5DF /* SearchQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774E2636DBCA0039C5DF /* SearchQuery.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
@@ -980,12 +984,16 @@
 		25E7628E0F0A9774BFBEDF06 /* Domain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Domain.h; sourceTree = "<group>"; };
 		272C32D585E8121EFF79DAD5 /* HasClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		27B82A976AFED982222939E4 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
-		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = TBox.app; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AAC5BC9C185604B92D45004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C0378221C7F286374C5C512 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C21EF6A00BBA0A7A0E60795 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
+		2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewState.swift; sourceTree = "<group>"; };
+		2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewAction.swift; sourceTree = "<group>"; };
+		2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewReducer.swift; sourceTree = "<group>"; };
+		2CDC774E2636DBCA0039C5DF /* SearchQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchQuery.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
 		2F5899B6C73E47EA67218566 /* ClipMergeViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewReducer.swift; sourceTree = "<group>"; };
@@ -1898,6 +1906,7 @@
 			children = (
 				7F2D70E03508085B0F08A663 /* SearchResultViewController.swift */,
 				E1553D4C57A77CE3EF370929 /* SearchResultViewLayout.swift */,
+				2CF7D9D32635DBC0004679C8 /* Store */,
 			);
 			path = SearchResult;
 			sourceTree = "<group>";
@@ -1989,6 +1998,16 @@
 				03C1C478F77D40A203EAF7E2 /* TagSelectionViewModel.swift */,
 			);
 			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2CF7D9D32635DBC0004679C8 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */,
+				2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */,
+				2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 		321E4BD03961ABBC3B0D85CF /* Store */ = {
@@ -2953,6 +2972,7 @@
 			children = (
 				3C7A161F46545D49AD8AAB80 /* SearchSort.swift */,
 				9D85EBAEF66E1EF7C5929C2F /* SearchToken.swift */,
+				2CDC774E2636DBCA0039C5DF /* SearchQuery.swift */,
 			);
 			path = ValueObject;
 			sourceTree = "<group>";
@@ -4758,6 +4778,7 @@
 				9F827CF4AC6D86CD68397968 /* AppRoot_TabBarItem.swift in Sources */,
 				1E2BA1E2D4774CF5718C8A54 /* Array+Indexed.swift in Sources */,
 				74D28DA6BB3EF6A9DC9DE7A8 /* Array+identifiable.swift in Sources */,
+				2CDC774D2636DB2C0039C5DF /* SearchResultViewReducer.swift in Sources */,
 				ECF40583D0D16FD97CC1D77C /* AssetCatalog.swift in Sources */,
 				2EBAA2A3808F7C19BCDE74AE /* ClipCollection.swift in Sources */,
 				440452CE7846A55F79D0F516 /* ClipCollectionAction.swift in Sources */,
@@ -4788,6 +4809,7 @@
 				82E506ACDE27ED5EF29551E3 /* ClipEditViewController.swift in Sources */,
 				52B4769ED5C78D47E2A962B0 /* ClipEditViewLayout.swift in Sources */,
 				25CA37E740A81BEA5C11334D /* ClipEditViewReducer.swift in Sources */,
+				2CDC774F2636DBCA0039C5DF /* SearchQuery.swift in Sources */,
 				7EC46DC4CDE7443C276C44CF /* ClipEditViewState.swift in Sources */,
 				403F5AED4570CF240FBBD374 /* ClipInformationViewAction.swift in Sources */,
 				9C85519FD9221AB3B7DC4B52 /* ClipInformationViewCacheAction.swift in Sources */,
@@ -4804,6 +4826,7 @@
 				CB4CF6D244CF5283278F2DC5 /* ClipMergeViewLayout.swift in Sources */,
 				CCC851718659580C05910B7B /* ClipMergeViewReducer.swift in Sources */,
 				D482ADE0F3B17F94F6874669 /* ClipMergeViewState.swift in Sources */,
+				2CDC77492636D2BD0039C5DF /* SearchResultViewState.swift in Sources */,
 				9E45A9B2CF7E97FA6A080F30 /* ClipPreviewNavigationController.swift in Sources */,
 				F757AAB0773F431D228B6B04 /* ClipPreviewPageBarAction.swift in Sources */,
 				8B8276602290AF782D40741B /* ClipPreviewPageBarController.swift in Sources */,
@@ -4881,6 +4904,7 @@
 				147F9C540E7F5CD0D050CBBD /* TagSelectionModalLayout.swift in Sources */,
 				0682C82C1EAFB4EA60DEE7E8 /* TagSelectionModalReducer.swift in Sources */,
 				26EA3BBA65834F152894E7B1 /* TagSelectionModalState.swift in Sources */,
+				2CDC774B2636DB120039C5DF /* SearchResultViewAction.swift in Sources */,
 				C5D95E11734B727AC8AB3C4D /* TextEditAlertAction.swift in Sources */,
 				7A6520523EA2A19B237E144C /* TextEditAlertController.swift in Sources */,
 				565CCD93DB1CE509CC1D848F /* TextEditAlertDelegate.swift in Sources */,
