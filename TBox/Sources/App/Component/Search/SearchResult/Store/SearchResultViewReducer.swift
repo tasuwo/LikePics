@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import Foundation
 
 typealias SearchResultViewDependency = HasClipQueryService
@@ -39,26 +40,26 @@ extension SearchResultViewReducer {
     private static func searchCandidates(for query: SearchQuery, dependency: Dependency) -> [SearchToken] {
         // TODO: パフォーマンス向上
         let albumTokens = self.searchAlbumCandidates(for: query, dependency: dependency)
-            .map { SearchToken(kind: .album, title: $0) }
+            .map { SearchToken(kind: .album, id: $0.id, title: $0.title) }
         let tagTokens = self.searchTagCandidates(for: query, dependency: dependency)
-            .map { SearchToken(kind: .tag, title: $0) }
+            .map { SearchToken(kind: .tag, id: $0.id, title: $0.name) }
         return tagTokens + albumTokens
     }
 
-    private static func searchAlbumCandidates(for query: SearchQuery, dependency: Dependency) -> [String] {
+    private static func searchAlbumCandidates(for query: SearchQuery, dependency: Dependency) -> [Album] {
         switch dependency.clipQueryService.searchAlbums(containingTitle: query.text, limit: 6) {
         case let .success(albums):
-            return albums.map { $0.title }
+            return albums
 
         case .failure:
             return []
         }
     }
 
-    private static func searchTagCandidates(for query: SearchQuery, dependency: Dependency) -> [String] {
+    private static func searchTagCandidates(for query: SearchQuery, dependency: Dependency) -> [Tag] {
         switch dependency.clipQueryService.searchTags(containingName: query.text, limit: 6) {
         case let .success(tags):
-            return tags.map { $0.name }
+            return tags
 
         case .failure:
             return []

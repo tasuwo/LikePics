@@ -11,6 +11,7 @@ struct SearchToken: Equatable, Hashable {
     }
 
     let kind: Kind
+    let id: UUID
     let title: String
 }
 
