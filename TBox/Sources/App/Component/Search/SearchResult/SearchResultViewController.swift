@@ -202,8 +202,7 @@ extension SearchResultViewController: UISearchResultsUpdating {
 
 private extension SearchQuery {
     static func make(from searchBar: UISearchBar) -> Self {
-        return .init(sort: .init(kind: .createdDate, order: .ascend), // TODO:
-                     tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken },
+        return .init(tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken },
                      text: searchBar.text ?? "")
     }
 }

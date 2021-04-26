@@ -125,7 +125,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchViewController() -> UIViewController? {
-        let resultsController = SearchResultViewController(state: .init(searchQuery: .init(sort: .init(kind: .createdDate, order: .ascend), tokens: [], text: ""),
+        let resultsController = SearchResultViewController(state: .init(searchQuery: .init(tokens: [], text: ""),
                                                                         tokenCandidates: [],
                                                                         searchResults: []),
                                                            dependency: self,

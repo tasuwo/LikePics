@@ -3,11 +3,10 @@
 //
 
 struct SearchQuery: Equatable {
-    let sort: SearchSort
     let tokens: [SearchToken]
     let text: String
 
     func appending(token: SearchToken) -> Self {
-        return .init(sort: sort, tokens: tokens + [token], text: text)
+        return .init(tokens: tokens + [token], text: text)
     }
 }
