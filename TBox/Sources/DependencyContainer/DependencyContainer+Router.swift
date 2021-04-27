@@ -73,14 +73,14 @@ extension DependencyContainer: Router {
     }
 
     func showUncategorizedClipCollectionView() -> Bool {
-        let viewController = makeClipCollectionView(from: .search(.tag(nil)))
+        let viewController = makeClipCollectionView(from: .uncategorized)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for tag: Tag) -> Bool {
-        let viewController = makeClipCollectionView(from: .search(.tag(tag)))
+        let viewController = makeClipCollectionView(from: .tag(tag))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true

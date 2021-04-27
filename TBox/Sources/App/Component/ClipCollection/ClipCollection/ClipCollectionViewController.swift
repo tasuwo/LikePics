@@ -606,13 +606,10 @@ extension ClipCollection.Source {
         case .album:
             return L10n.albumViewEmptyTitle
 
-        case let .search(.keywords(keywords)):
-            return L10n.searchResultForKeywordsEmptyTitle(keywords.joined(separator: " "))
-
-        case let .search(.tag(.some(tag))):
+        case let .tag(tag):
             return L10n.searchResultForTagEmptyTitle(tag.name)
 
-        case .search(.tag(.none)):
+        case .uncategorized:
             return L10n.searchResultForUncategorizedEmptyTitle
         }
     }
@@ -622,18 +619,18 @@ extension ClipCollection.Source {
         case .all:
             return L10n.topClipViewEmptyMessage
 
-        case .album, .search:
+        default:
             return nil
         }
     }
 
     var isEmptyMessageViewMessageHidden: Bool {
         switch self {
-        case .album, .search:
-            return true
-
         case .all:
             return false
+
+        default:
+            return true
         }
     }
 

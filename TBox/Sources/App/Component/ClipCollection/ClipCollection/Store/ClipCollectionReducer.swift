@@ -303,7 +303,7 @@ extension ClipCollectionReducer {
             description = query.album.value.title
             initialClips = query.album.value.clips
 
-        case .search(.tag(.none)):
+        case .uncategorized:
             let query: ClipListQuery
             switch dependency.clipQueryService.queryUncategorizedClips() {
             case let .success(result):
@@ -316,10 +316,10 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = state.source.searchQuery?.title
+            description = L10n.searchResultTitleUncategorized
             initialClips = query.clips.value
 
-        case let .search(.tag(.some(tag))):
+        case let .tag(tag):
             let query: ClipListQuery
             switch dependency.clipQueryService.queryClips(tagged: tag.id) {
             case let .success(result):
@@ -332,11 +332,8 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = state.source.searchQuery?.title
+            description = tag.name
             initialClips = query.clips.value
-
-        case .search(.keywords):
-            fatalError("Not implemented yet.")
         }
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
@@ -584,20 +581,5 @@ private extension ClipCollectionState {
         nextState.clips = nextState.clips.updated(_selectedIds: .init())
         nextState.operation = .none
         return nextState
-    }
-}
-
-private extension ClipCollection.Source.SearchQuery {
-    var title: String? {
-        switch self {
-        case let .keywords(value):
-            return value.joined(separator: ", ")
-
-        case let .tag(.some(tag)):
-            return tag.name
-
-        case .tag(.none):
-            return L10n.searchResultTitleUncategorized
-        }
     }
 }
