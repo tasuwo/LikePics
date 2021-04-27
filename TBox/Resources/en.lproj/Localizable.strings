@@ -74,6 +74,8 @@
 "search_entry_view_title" = "Search";
 
 "search_result_see_all_button" = "See All";
+"search_result_not_found_title" = "No Results";
+"search_result_not_found_message" = "There were no results for \"%@\". Try a new search.";
 
 "album_list_view_title" = "Albums";
 

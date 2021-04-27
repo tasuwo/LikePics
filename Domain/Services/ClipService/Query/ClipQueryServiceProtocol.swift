@@ -16,7 +16,7 @@ public protocol ClipQueryServiceProtocol {
     func queryAllClips() -> Result<ClipListQuery, ClipStorageError>
     func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError>
     func queryTags(forClipHaving clipId: Clip.Identity) -> Result<TagListQuery, ClipStorageError>
-    func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError>
+    func queryClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<ClipListQuery, ClipStorageError>
     func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError>
     func queryClips(tagged tagId: Tag.Identity) -> Result<ClipListQuery, ClipStorageError>
     func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError>

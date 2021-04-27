@@ -611,6 +611,9 @@ extension ClipCollection.Source {
 
         case .uncategorized:
             return L10n.searchResultForUncategorizedEmptyTitle
+
+        case .search:
+            return L10n.searchResultNotFoundTitle
         }
     }
 
@@ -618,6 +621,9 @@ extension ClipCollection.Source {
         switch self {
         case .all:
             return L10n.topClipViewEmptyMessage
+
+        case let .search(query):
+            return L10n.searchResultNotFoundMessage(ListFormatter.localizedString(byJoining: query.queryNames))
 
         default:
             return nil

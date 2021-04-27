@@ -5,6 +5,7 @@
 import Combine
 import Persistence
 import Smoothie
+import TBoxUIKit
 import UIKit
 
 class SearchResultViewController: UIViewController {
@@ -17,6 +18,7 @@ class SearchResultViewController: UIViewController {
 
     lazy var searchController = UISearchController(searchResultsController: self)
     private var collectionView: UICollectionView!
+    private let notFoundMessageView = NotFoundMessageView()
     private var dataSource: Layout.DataSource!
 
     // MARK: Store
@@ -54,11 +56,10 @@ class SearchResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .red
-
         configureViewHierarchy()
         configureDataSource()
         configureSearchController()
+        configureNotFoundMessageView()
 
         bind(to: store)
     }
@@ -74,6 +75,9 @@ extension SearchResultViewController {
             DispatchQueue.global().async {
                 self.applySnapshot(for: state)
             }
+
+            self.notFoundMessageView.message = state.notFoundMessage
+            self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
 
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
             let nextTokens = state.searchQuery.tokens
@@ -144,6 +148,11 @@ extension SearchResultViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
+
+        notFoundMessageView.alpha = 0
+        view.addSubview(notFoundMessageView)
+        notFoundMessageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(notFoundMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
     }
 
     private func configureDataSource() {
@@ -156,11 +165,7 @@ extension SearchResultViewController {
     }
 
     private func configureSearchController() {
-        searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = L10n.placeholderSearchUniversal
-        searchController.searchBar.searchTextField.allowsCopyingTokens = true
-        searchController.searchBar.searchTextField.allowsDeletingTokens = true
         searchController.searchResultsUpdater = self
 
         visibilitySubscription = self.view.observe(\.isHidden, options: .new) { [weak searchController] view, change in
@@ -169,6 +174,11 @@ extension SearchResultViewController {
                 view.isHidden = false
             }
         }
+    }
+
+    private func configureNotFoundMessageView() {
+        notFoundMessageView.title = L10n.searchResultNotFoundTitle
+        notFoundMessageView.message = ""
     }
 }
 

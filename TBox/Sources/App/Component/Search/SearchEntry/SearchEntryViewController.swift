@@ -45,6 +45,10 @@ extension SearchEntryViewController {
 
     private func configureSearchController() {
         searchController.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = L10n.placeholderSearchUniversal
+        searchController.searchBar.searchTextField.allowsCopyingTokens = true
+        searchController.searchBar.searchTextField.allowsDeletingTokens = true
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true

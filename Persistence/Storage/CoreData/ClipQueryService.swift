@@ -217,15 +217,31 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
-    public func queryClips(matchingKeywords keywords: [String]) -> Result<ClipListQuery, ClipStorageError> {
+    public func queryClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<ClipListQuery, ClipStorageError> {
+        let searchTexts = text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ")
+
+        guard !searchTexts.isEmpty || !albumIds.isEmpty || !tagIds.isEmpty else {
+            return .failure(.invalidParameter)
+        }
+
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
-                let predicates = keywords.map { keyword in
-                    NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl CONTAINS[cd] %@).@count > 0", keyword as CVarArg)
+
+                var predicates: [NSPredicate] = []
+                predicates += searchTexts.map {
+                    NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl.absoluteString CONTAINS[cd] %@).@count > 0", $0 as CVarArg)
+                }
+                predicates += albumIds.map {
+                    NSPredicate(format: "SUBQUERY(albumItem, $albumItem, $albumItem.album.id == %@).@count > 0", $0 as CVarArg)
+                }
+                predicates += tagIds.map {
+                    NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", $0 as CVarArg)
                 }
                 request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
                 return request
             }
             let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)

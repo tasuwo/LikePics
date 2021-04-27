@@ -25,6 +25,10 @@ enum SearchResultViewReducer: Reducer {
                 .debounce(id: state.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
             let searchEffect = search(by: query, dependency: dependency)
                 .debounce(id: state.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
+
+            nextState.isSearchingTokenCandidates = true
+            nextState.isSearchingClips = true
+
             return (nextState, [searchCandidateEffect, searchEffect])
 
         // MARK: - Selection
@@ -38,17 +42,19 @@ enum SearchResultViewReducer: Reducer {
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:
-            // TODO:
+            dependency.router.showClipCollectionView(for: state.searchQuery)
             return (nextState, nil)
 
         // MARK: - Search Execution
 
         case let .foundResults(clips):
             nextState.searchResults = clips
+            nextState.isSearchingClips = false
             return (nextState, nil)
 
         case let .foundCandidates(tokens):
             nextState.tokenCandidates = tokens
+            nextState.isSearchingTokenCandidates = false
             return (nextState, nil)
         }
     }

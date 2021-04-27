@@ -10,3 +10,17 @@ struct SearchQuery: Equatable {
         return .init(tokens: tokens + [token], text: text)
     }
 }
+
+extension SearchQuery {
+    var queryNames: [String] {
+        var queries = self.tokens.map { $0.title }
+
+        if !text.isEmpty {
+            queries.append(text)
+        }
+
+        return queries
+    }
+
+    var isEmpty: Bool { text.isEmpty && tokens.isEmpty }
+}

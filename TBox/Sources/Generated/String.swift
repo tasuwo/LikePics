@@ -334,6 +334,13 @@ internal enum L10n {
 
     /// 未分類のクリップはありません
     internal static let searchResultForUncategorizedEmptyTitle = L10n.tr("Localizable", "search_result_for_uncategorized_empty_title")
+    /// "%@"の検索結果はありませんでした。新しい検索を試してください。
+    internal static func searchResultNotFoundMessage(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "search_result_not_found_message", String(describing: p1))
+    }
+
+    /// 結果なし
+    internal static let searchResultNotFoundTitle = L10n.tr("Localizable", "search_result_not_found_title")
     /// すべて見る
     internal static let searchResultSeeAllButton = L10n.tr("Localizable", "search_result_see_all_button")
     /// 未分類

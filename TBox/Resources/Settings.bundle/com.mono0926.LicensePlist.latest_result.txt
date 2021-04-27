@@ -14,7 +14,7 @@ name: SwiftFormat, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 0.46.3
+version: 0.47.13
 
 name: SwiftGen, nameSpecified: 
 body: MIT Licence
@@ -24,7 +24,7 @@ version: 6.4.0
 
 name: SwiftLint, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.40.3
+version: 0.42.0
 
 name: BrightFutures, nameSpecified: , owner: Thomvis, version: 8.0.1
 

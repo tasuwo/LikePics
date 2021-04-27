@@ -74,6 +74,8 @@
 "search_entry_view_title" = "検索";
 
 "search_result_see_all_button" = "すべて見る";
+"search_result_not_found_title" = "結果なし";
+"search_result_not_found_message" = "\"%@\"の検索結果はありませんでした。新しい検索を試してください。";
 
 "album_list_view_title" = "アルバム";
 
