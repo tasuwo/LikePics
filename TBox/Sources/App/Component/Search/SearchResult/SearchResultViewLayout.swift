@@ -169,16 +169,16 @@ extension SearchResultViewLayout {
 
     private static func configureResultCell(thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip> {
         return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailLoader] cell, _, clip in
-            let requestId = UUID().uuidString
-
-            cell.identifier = requestId
-
             guard let thumbnailLoader = thumbnailLoader,
                   let item = clip.primaryItem
             else {
                 cell.imageView.image = nil
                 return
             }
+
+            let requestId = UUID().uuidString
+
+            cell.identifier = requestId
 
             let scale = cell.traitCollection.displayScale
             let request = self.makeRequest(for: item, id: requestId, size: cell.imageView.bounds.size, scale: scale * 2)

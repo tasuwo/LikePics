@@ -27,6 +27,8 @@ public class SearchResultClipCell: UICollectionViewCell {
 
         self.onReuse?(self.identifier)
 
+        self.identifier = nil
+        self.onReuse = nil
         self.imageView.image = nil
     }
 
