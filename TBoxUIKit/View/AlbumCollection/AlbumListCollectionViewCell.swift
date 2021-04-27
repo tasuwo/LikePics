@@ -29,10 +29,6 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var thumbnailSize: CGSize {
-        self.thumbnailImageView.bounds.size
-    }
-
     public var title: String? {
         get {
             return self.titleButton.title(for: .normal)
