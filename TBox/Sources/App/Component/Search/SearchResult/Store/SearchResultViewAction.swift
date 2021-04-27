@@ -17,6 +17,6 @@ enum SearchResultViewAction: Action {
 
     // MARK: - Search Execution
 
-    case foundResults([Clip])
-    case foundCandidates([SearchToken])
+    case foundResults([Clip], byQuery: SearchQuery)
+    case foundCandidates([SearchToken], byText: String)
 }

@@ -5,16 +5,31 @@
 import Domain
 
 struct SearchResultViewState: Equatable {
+    struct SearchedTokenCandidates: Equatable {
+        let searchText: String
+        let tokenCandidates: [SearchToken]
+    }
+
+    struct SearchedClips: Equatable {
+        let searchQuery: SearchQuery
+        let results: [Clip]
+    }
+
     let searchEffectId = UUID()
     let searchCandidatesEffectId = UUID()
 
     var searchQuery: SearchQuery
 
-    var tokenCandidates: [SearchToken]
-    var searchResults: [Clip]
+    var searchedTokenCandidates: SearchedTokenCandidates? = nil
+    var searchedClips: SearchedClips? = nil
 
     var isSearchingTokenCandidates: Bool = false
     var isSearchingClips: Bool = false
+}
+
+extension SearchResultViewState {
+    var tokenCandidates: [SearchToken] { searchedTokenCandidates?.tokenCandidates ?? [] }
+    var searchResults: [Clip] { searchedClips?.results ?? [] }
 }
 
 extension SearchResultViewState {

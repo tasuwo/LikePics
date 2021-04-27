@@ -21,15 +21,24 @@ enum SearchResultViewReducer: Reducer {
 
         case let .searchQueryChanged(query):
             nextState.searchQuery = query
-            let searchCandidateEffect = searchCandidates(for: query, dependency: dependency)
-                .debounce(id: state.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
-            let searchEffect = search(by: query, dependency: dependency)
-                .debounce(id: state.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
 
-            nextState.isSearchingTokenCandidates = true
-            nextState.isSearchingClips = true
+            var effects: [Effect<Action>] = []
 
-            return (nextState, [searchCandidateEffect, searchEffect])
+            if query.text != state.searchedTokenCandidates?.searchText {
+                let effect = searchCandidates(for: query.text, dependency: dependency)
+                    .debounce(id: state.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
+                nextState.isSearchingTokenCandidates = true
+                effects.append(effect)
+            }
+
+            if query != state.searchedClips?.searchQuery {
+                let effect = search(by: query, dependency: dependency)
+                    .debounce(id: state.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
+                nextState.isSearchingClips = true
+                effects.append(effect)
+            }
+
+            return (nextState, effects)
 
         // MARK: - Selection
 
@@ -47,13 +56,13 @@ enum SearchResultViewReducer: Reducer {
 
         // MARK: - Search Execution
 
-        case let .foundResults(clips):
-            nextState.searchResults = clips
+        case let .foundResults(clips, byQuery: query):
+            nextState.searchedClips = .init(searchQuery: query, results: clips)
             nextState.isSearchingClips = false
             return (nextState, nil)
 
-        case let .foundCandidates(tokens):
-            nextState.tokenCandidates = tokens
+        case let .foundCandidates(tokens, byText: text):
+            nextState.searchedTokenCandidates = .init(searchText: text, tokenCandidates: tokens)
             nextState.isSearchingTokenCandidates = false
             return (nextState, nil)
         }
@@ -74,7 +83,7 @@ extension SearchResultViewReducer {
                     .map { $0.id }
                 switch dependency.clipQueryService.searchClips(text: query.text, albumIds: albumIds, tagIds: tagIds) {
                 case let .success(clips):
-                    promise(.success(.foundResults(clips)))
+                    promise(.success(.foundResults(clips, byQuery: query)))
 
                 case .failure:
                     promise(.success(nil))
@@ -88,21 +97,21 @@ extension SearchResultViewReducer {
 // MARK: - Candidates
 
 extension SearchResultViewReducer {
-    private static func searchCandidates(for query: SearchQuery, dependency: Dependency) -> Effect<Action> {
+    private static func searchCandidates(for text: String, dependency: Dependency) -> Effect<Action> {
         let stream = Deferred {
             Future<Action?, Never> { promise in
-                let albumTokens = self.searchAlbumCandidates(for: query, dependency: dependency)
+                let albumTokens = self.searchAlbumCandidates(for: text, dependency: dependency)
                     .map { SearchToken(kind: .album, id: $0.id, title: $0.title) }
-                let tagTokens = self.searchTagCandidates(for: query, dependency: dependency)
+                let tagTokens = self.searchTagCandidates(for: text, dependency: dependency)
                     .map { SearchToken(kind: .tag, id: $0.id, title: $0.name) }
-                promise(.success(.foundCandidates(tagTokens + albumTokens)))
+                promise(.success(.foundCandidates(tagTokens + albumTokens, byText: text)))
             }
         }
         return Effect(stream)
     }
 
-    private static func searchAlbumCandidates(for query: SearchQuery, dependency: Dependency) -> [Album] {
-        switch dependency.clipQueryService.searchAlbums(containingTitle: query.text, limit: 6) {
+    private static func searchAlbumCandidates(for text: String, dependency: Dependency) -> [Album] {
+        switch dependency.clipQueryService.searchAlbums(containingTitle: text, limit: 6) {
         case let .success(albums):
             return albums
 
@@ -111,8 +120,8 @@ extension SearchResultViewReducer {
         }
     }
 
-    private static func searchTagCandidates(for query: SearchQuery, dependency: Dependency) -> [Tag] {
-        switch dependency.clipQueryService.searchTags(containingName: query.text, limit: 6) {
+    private static func searchTagCandidates(for text: String, dependency: Dependency) -> [Tag] {
+        switch dependency.clipQueryService.searchTags(containingName: text, limit: 6) {
         case let .success(tags):
             return tags
 
