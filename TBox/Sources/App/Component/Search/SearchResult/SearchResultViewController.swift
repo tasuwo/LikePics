@@ -89,21 +89,46 @@ extension SearchResultViewController {
         let nextTokenCandidates = state.tokenCandidates.map { Layout.Item.tokenCandidate($0) }
         let nextResults = state.searchResults.map { Layout.Item.result($0) }
 
-        if dataSource.snapshot().numberOfSections > 0 {
-            let currentTokenCandidates = dataSource.snapshot().itemIdentifiers(inSection: .tokenCandidates)
-            let currentResults = dataSource.snapshot().itemIdentifiers(inSection: .results)
-            guard currentTokenCandidates != nextTokenCandidates || currentResults != nextResults else { return }
-        }
+        guard dataSource.snapshot().isDifferent(from: state) else { return }
 
         var snapshot = Layout.Snapshot()
 
-        snapshot.appendSections([.tokenCandidates])
-        snapshot.appendItems(nextTokenCandidates)
+        if !nextTokenCandidates.isEmpty {
+            snapshot.appendSections([.tokenCandidates])
+            snapshot.appendItems(nextTokenCandidates, toSection: .tokenCandidates)
+        }
 
-        snapshot.appendSections([.results])
-        snapshot.appendItems(nextResults)
+        if !nextResults.isEmpty {
+            snapshot.appendSections([.results])
+            snapshot.appendItems(nextResults, toSection: .results)
+        }
 
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+private extension SearchResultViewController.Layout.Snapshot {
+    func isDifferent(from state: SearchResultViewState) -> Bool {
+        let newTokenCandidates = state.tokenCandidates.map { SearchResultViewController.Layout.Item.tokenCandidate($0) }
+        let newResults = state.searchResults.map { SearchResultViewController.Layout.Item.result($0) }
+
+        let isDifferentTokenCandidatesFromNew: Bool = {
+            if self.sectionIdentifiers.contains(.tokenCandidates) {
+                return self.itemIdentifiers(inSection: .tokenCandidates) != newTokenCandidates
+            } else {
+                return !newTokenCandidates.isEmpty
+            }
+        }()
+
+        let isDifferentResultsFromNew: Bool = {
+            if self.sectionIdentifiers.contains(.results) {
+                return self.itemIdentifiers(inSection: .results) != newResults
+            } else {
+                return !newResults.isEmpty
+            }
+        }()
+
+        return isDifferentTokenCandidatesFromNew || isDifferentResultsFromNew
     }
 }
 
@@ -113,7 +138,8 @@ extension SearchResultViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
+        let provider: () -> Layout.DataSource? = { [weak self] in return self?.dataSource }
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout(provider))
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)

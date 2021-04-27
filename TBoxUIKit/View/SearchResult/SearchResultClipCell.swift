@@ -52,7 +52,7 @@ extension SearchResultClipCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             UIView.transition(with: self.imageView,
-                              duration: 0.5,
+                              duration: 0.25,
                               options: .transitionCrossDissolve,
                               animations: { [weak self] in self?.imageView.image = image },
                               completion: nil)

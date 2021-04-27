@@ -26,17 +26,19 @@ enum SearchResultViewLayout {
 // MARK: - Layout
 
 extension SearchResultViewLayout {
-    static func createLayout() -> UICollectionViewLayout {
+    static func createLayout(_ dataSourceProvider: @escaping () -> DataSource?) -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
-            switch Section(rawValue: sectionIndex) {
+            guard let dataSource = dataSourceProvider() else { return nil }
+
+            let identifiers = dataSource.snapshot().sectionIdentifiers
+            guard identifiers.count > sectionIndex else { return nil }
+
+            switch identifiers[sectionIndex] {
             case .tokenCandidates:
                 return self.createCandidatesSection(environment: environment)
 
             case .results:
                 return self.createSearchResultsSection(environment: environment)
-
-            case .none:
-                return nil
             }
         }
 
