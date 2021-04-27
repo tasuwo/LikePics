@@ -107,6 +107,8 @@
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CB5AB432637A4E000395521 /* Effect_Debounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB5AB422637A4E000395521 /* Effect_Debounce.swift */; };
+		2CD2CF252638563900027949 /* NoFoundMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD2CF242638563900027949 /* NoFoundMessageView.swift */; };
+		2CD2CF272638564C00027949 /* NotFoundMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2CF262638564C00027949 /* NotFoundMessageView.xib */; };
 		2CDC77492636D2BD0039C5DF /* SearchResultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */; };
 		2CDC774B2636DB120039C5DF /* SearchResultViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */; };
 		2CDC774D2636DB2C0039C5DF /* SearchResultViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */; };
@@ -991,6 +993,8 @@
 		2C21EF6A00BBA0A7A0E60795 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CB5AB422637A4E000395521 /* Effect_Debounce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effect_Debounce.swift; sourceTree = "<group>"; };
+		2CD2CF242638563900027949 /* NoFoundMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoFoundMessageView.swift; sourceTree = "<group>"; };
+		2CD2CF262638564C00027949 /* NotFoundMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotFoundMessageView.xib; sourceTree = "<group>"; };
 		2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewState.swift; sourceTree = "<group>"; };
 		2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewAction.swift; sourceTree = "<group>"; };
 		2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewReducer.swift; sourceTree = "<group>"; };
@@ -2741,6 +2745,8 @@
 				2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */,
 				00585C01CA97EF52D6439A93 /* HiddenIconView.swift */,
 				744A72BE7BB542F169A7F6AA /* MultiLineButton.swift */,
+				2CD2CF242638563900027949 /* NoFoundMessageView.swift */,
+				2CD2CF262638564C00027949 /* NotFoundMessageView.xib */,
 				910EF0AA3798D56E54F1B86A /* PaddingTextField.swift */,
 				B417CA1A4783C4E45BA4F356 /* RoundedButton.swift */,
 				916C9F11F1460F9356DAAEBF /* List */,
@@ -4360,6 +4366,7 @@
 				2A491D5998011BADDD0B9662 /* Localizable.strings in Resources */,
 				9D0034F4A005A6812E03CFC7 /* SearchResultClipCell.xib in Resources */,
 				16837E67D95886E75F09F4A4 /* TagCollectionEmptyCell.xib in Resources */,
+				2CD2CF272638564C00027949 /* NotFoundMessageView.xib in Resources */,
 				5FC0C21FD1264BDC4D25A28D /* TagCollectionViewCell.xib in Resources */,
 				E48757E6595AA0DA852B0F80 /* UncategorizedCell.xib in Resources */,
 			);
@@ -4511,6 +4518,7 @@
 				7DDD389D72A76C9B7893A47F /* ClipCollectionViewCell.swift in Sources */,
 				E0176BB8CD013EABCC5376B8 /* ClipInformationAnimator.swift in Sources */,
 				2FF13F76564CAD940B197FB7 /* ClipInformationAnimatorDelegate.swift in Sources */,
+				2CD2CF252638563900027949 /* NoFoundMessageView.swift in Sources */,
 				F8C1509F1D66FA34777EE46A /* ClipInformationDismissalAnimator.swift in Sources */,
 				401F3C36313D37947CF36884 /* ClipInformationInteractiveDismissalAnimator.swift in Sources */,
 				2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */,
