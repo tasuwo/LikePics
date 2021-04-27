@@ -5,6 +5,9 @@
 import Domain
 
 struct SearchResultViewState: Equatable {
+    let searchEffectId = UUID()
+    let searchCandidatesEffectId = UUID()
+
     var searchQuery: SearchQuery
 
     var tokenCandidates: [SearchToken]

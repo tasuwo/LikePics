@@ -86,13 +86,22 @@ extension SearchResultViewController {
     }
 
     private func applySnapshot(for state: SearchResultViewState) {
+        let nextTokenCandidates = state.tokenCandidates.map { Layout.Item.tokenCandidate($0) }
+        let nextResults = state.searchResults.map { Layout.Item.result($0) }
+
+        if dataSource.snapshot().numberOfSections > 0 {
+            let currentTokenCandidates = dataSource.snapshot().itemIdentifiers(inSection: .tokenCandidates)
+            let currentResults = dataSource.snapshot().itemIdentifiers(inSection: .results)
+            guard currentTokenCandidates != nextTokenCandidates || currentResults != nextResults else { return }
+        }
+
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.tokenCandidates])
-        snapshot.appendItems(state.tokenCandidates.map { Layout.Item.tokenCandidate($0) })
+        snapshot.appendItems(nextTokenCandidates)
 
         snapshot.appendSections([.results])
-        snapshot.appendItems(state.searchResults.map({ Layout.Item.result($0) }))
+        snapshot.appendItems(nextResults)
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }

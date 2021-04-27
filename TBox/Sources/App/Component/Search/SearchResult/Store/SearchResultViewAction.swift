@@ -14,4 +14,9 @@ enum SearchResultViewAction: Action {
     case selectedTokenCandidate(SearchToken)
     case selectedResult(Clip)
     case selectedSeeAllResultsButton
+
+    // MARK: - Search Execution
+
+    case foundResults([Clip])
+    case foundCandidates([SearchToken])
 }
