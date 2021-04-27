@@ -13,7 +13,8 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
     private let reducer: AnyReducer<Action, State, Dependency>
     private let _state: CurrentValueSubject<State, Never>
 
-    private var effects: [UUID: Effect<Action>] = [:]
+    private let effectsLock = NSRecursiveLock()
+    private var effects: [UUID: (Effect<Action>, Cancellable)] = [:]
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
@@ -45,18 +46,33 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
     }
 
     private func schedule(_ effect: Effect<Action>) {
-        let id = UUID()
+        effectsLock.lock()
+        defer { effectsLock.unlock() }
 
-        effects[id] = effect
+        let id = effect.id
 
-        effect.upstream
-            .sink { [weak self, weak effect] _ in
-                if let action = effect?.actionAtCompleted { self?.execute(action) }
-                self?.effects.removeValue(forKey: id)
+        if let (_, cancellable) = effects[id] {
+            cancellable.cancel()
+            effects.removeValue(forKey: id)
+        }
+
+        let cancellable = effect.upstream
+            .sink { [weak self, weak effect] completion in
+                guard let self = self else { return }
+
+                self.effectsLock.lock()
+                defer { self.effectsLock.unlock() }
+
+                if let action = effect?.actionAtCompleted {
+                    self.execute(action)
+                }
+
+                self.effects.removeValue(forKey: id)
             } receiveValue: { [weak self] action in
                 guard let action = action else { return }
                 self?.execute(action)
             }
-            .store(in: &subscriptions)
+
+        effects[id] = (effect, cancellable)
     }
 }

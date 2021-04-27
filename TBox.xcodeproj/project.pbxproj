@@ -106,6 +106,7 @@
 		2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */; };
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
+		2CB5AB432637A4E000395521 /* Effect_Debounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB5AB422637A4E000395521 /* Effect_Debounce.swift */; };
 		2CDC77492636D2BD0039C5DF /* SearchResultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */; };
 		2CDC774B2636DB120039C5DF /* SearchResultViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */; };
 		2CDC774D2636DB2C0039C5DF /* SearchResultViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */; };
@@ -989,6 +990,7 @@
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C21EF6A00BBA0A7A0E60795 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
+		2CB5AB422637A4E000395521 /* Effect_Debounce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effect_Debounce.swift; sourceTree = "<group>"; };
 		2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewState.swift; sourceTree = "<group>"; };
 		2CDC774A2636DB120039C5DF /* SearchResultViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewAction.swift; sourceTree = "<group>"; };
 		2CDC774C2636DB2C0039C5DF /* SearchResultViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewReducer.swift; sourceTree = "<group>"; };
@@ -1996,6 +1998,15 @@
 				03C1C478F77D40A203EAF7E2 /* TagSelectionViewModel.swift */,
 			);
 			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2CB5AB412637A4D200395521 /* Effect */ = {
+			isa = PBXGroup;
+			children = (
+				764817C981E16AEBFF0E1CC8 /* Effect.swift */,
+				2CB5AB422637A4E000395521 /* Effect_Debounce.swift */,
+			);
+			path = Effect;
 			sourceTree = "<group>";
 		};
 		2CF7D9D32635DBC0004679C8 /* Store */ = {
@@ -3616,7 +3627,7 @@
 			isa = PBXGroup;
 			children = (
 				724C19BEAE55FEE67820AB88 /* Action.swift */,
-				764817C981E16AEBFF0E1CC8 /* Effect.swift */,
+				2CB5AB412637A4D200395521 /* Effect */,
 				59D17749D740A3E3A74A18BA /* KeyPathComparable.swift */,
 				FABA9005071426AB5EFA902D /* Store.swift */,
 				11928FF76C3A8F2E0AA4C296 /* Reducer */,
@@ -4814,6 +4825,7 @@
 				A1BD8BFAB733B0D6B7B2631D /* ClipInformationViewCacheReducer.swift in Sources */,
 				B76F8A19E69B1A8CC339DEAA /* ClipInformationViewCacheState.swift in Sources */,
 				4184455DD64E789DCBA635EB /* ClipInformationViewController.swift in Sources */,
+				2CB5AB432637A4E000395521 /* Effect_Debounce.swift in Sources */,
 				490DE101AA8A2941C5434FEC /* ClipInformationViewReducer.swift in Sources */,
 				9344FA199BBFF86E41C53BED /* ClipInformationViewState.swift in Sources */,
 				2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */,
