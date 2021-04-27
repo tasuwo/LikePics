@@ -7,6 +7,7 @@ import Domain
 import Foundation
 
 typealias SearchResultViewDependency = HasClipQueryService
+    & HasRouter
 
 enum SearchResultViewReducer: Reducer {
     typealias Dependency = SearchResultViewDependency
@@ -32,8 +33,8 @@ enum SearchResultViewReducer: Reducer {
             nextState.searchQuery = state.searchQuery.appending(token: token)
             return (nextState, nil)
 
-        case .selectedResult(_):
-            // TODO:
+        case let .selectedResult(clip):
+            dependency.router.showClipPreviewView(for: clip.id)
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:
