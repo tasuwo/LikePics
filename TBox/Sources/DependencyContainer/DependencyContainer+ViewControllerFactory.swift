@@ -125,7 +125,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchViewController() -> UIViewController? {
-        let resultsController = SearchResultViewController(state: .init(),
+        let resultsController = SearchResultViewController(state: .init(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems()),
                                                            dependency: self,
                                                            thumbnailLoader: temporaryThumbnailLoader)
         let viewController = SearchEntryViewController(searchResultViewController: resultsController)

@@ -25,7 +25,8 @@ public struct ClipSearchQuery: Equatable {
                 albumIds: [UUID],
                 tagIds: [UUID],
                 sort: ClipSearchSort,
-                isHidden: Bool?) {
+                isHidden: Bool?)
+    {
         self.text = text
         self.albumIds = albumIds
         self.tagIds = tagIds

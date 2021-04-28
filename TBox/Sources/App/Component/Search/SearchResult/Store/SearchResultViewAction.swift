@@ -5,6 +5,10 @@
 import Domain
 
 enum SearchResultViewAction: Action {
+    // MARK: View Life-Cycle
+
+    case viewDidLoad
+
     // MARK: State Observation
 
     case searchBarChanged(text: String, tokens: [SearchToken])
@@ -19,5 +23,5 @@ enum SearchResultViewAction: Action {
     // MARK: - Search Execution
 
     case foundResults([Clip], byQuery: ClipSearchQuery)
-    case foundCandidates([SearchToken], byQuery: ClipSearchQuery)
+    case foundCandidates([SearchToken], byText: String, includesHiddenItems: Bool)
 }

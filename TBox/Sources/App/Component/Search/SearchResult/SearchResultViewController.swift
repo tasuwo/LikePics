@@ -62,6 +62,8 @@ class SearchResultViewController: UIViewController {
         configureNotFoundMessageView()
 
         bind(to: store)
+
+        store.execute(.viewDidLoad)
     }
 }
 

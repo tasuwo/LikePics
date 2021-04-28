@@ -6,7 +6,8 @@ import Domain
 
 struct SearchResultViewState: Equatable {
     struct SearchedTokenCandidates: Equatable {
-        let searchQuery: ClipSearchQuery
+        let searchText: String
+        let includesHiddenItems: Bool
         let tokenCandidates: [SearchToken]
     }
 
@@ -29,12 +30,14 @@ struct SearchResultViewState: Equatable {
     var isSearchingTokenCandidates: Bool = false
     var isSearchingClips: Bool = false
 
-    var isSomeItemsHidden: Bool = false
+    var isSomeItemsHidden: Bool
 }
 
 extension SearchResultViewState {
     var tokenCandidates: [SearchToken] { searchedTokenCandidates?.tokenCandidates ?? [] }
     var searchResults: [Clip] { searchedClips?.results ?? [] }
+    var isSearching: Bool { isSearchingTokenCandidates || isSearchingClips }
+    var isResultsEmpty: Bool { searchResults.isEmpty && tokenCandidates.isEmpty }
 
     var searchQuery: ClipSearchQuery {
         let albumIds = inputtedTokens
@@ -61,11 +64,7 @@ extension SearchResultViewState {
 
 extension SearchResultViewState {
     var isNotFoundMessageDisplaying: Bool {
-        !searchQuery.isEmpty
-            && !isSearchingTokenCandidates
-            && !isSearchingClips
-            && searchResults.isEmpty
-            && tokenCandidates.isEmpty
+        !searchQuery.isEmpty && !isSearching && isResultsEmpty
     }
 
     var notFoundMessage: String {

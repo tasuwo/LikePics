@@ -35,24 +35,31 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
-    public func searchAlbums(containingTitle title: String, limit: Int) -> Result<[Domain.Album], ClipStorageError> {
+    public func searchAlbums(containingTitle title: String, includesHiddenItems: Bool, limit: Int) -> Result<[Domain.Album], ClipStorageError> {
         let searchText = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchText.isEmpty else { return .success([]) }
         do {
             let request: NSFetchRequest<Album> = Album.fetchRequest()
 
-            let predicates: [NSPredicate]
+            var predicate: NSPredicate
             // HACK: ひらがな,カタカナを区別しない
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
-                predicates = [
+                predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "title CONTAINS[cd] %@", transformed as CVarArg),
                     NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg),
-                ]
+                ])
             } else {
-                predicates = [NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)]
+                predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)
             }
 
-            request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+            if !includesHiddenItems {
+                predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    predicate,
+                    NSPredicate(format: "isHidden == false")
+                ])
+            }
+
+            request.predicate = predicate
             request.fetchLimit = limit
             let albums = try self.context.fetch(request)
             return .success(albums.compactMap { $0.map(to: Domain.Album.self) })
@@ -61,24 +68,31 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
-    public func searchTags(containingName name: String, limit: Int) -> Result<[Domain.Tag], ClipStorageError> {
+    public func searchTags(containingName name: String, includesHiddenItems: Bool, limit: Int) -> Result<[Domain.Tag], ClipStorageError> {
         let searchText = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchText.isEmpty else { return .success([]) }
         do {
             let request: NSFetchRequest<Tag> = Tag.fetchRequest()
 
-            let predicates: [NSPredicate]
+            var predicate: NSPredicate
             // HACK: ひらがな,カタカナを区別しない
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
-                predicates = [
+                predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "name CONTAINS[cd] %@", transformed as CVarArg),
                     NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg),
-                ]
+                ])
             } else {
-                predicates = [NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)]
+                predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)
             }
 
-            request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+            if !includesHiddenItems {
+                predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    predicate,
+                    NSPredicate(format: "isHidden == false")
+                ])
+            }
+
+            request.predicate = predicate
             request.fetchLimit = limit
             let tags = try self.context.fetch(request)
             return .success(tags.compactMap { $0.map(to: Domain.Tag.self) })
