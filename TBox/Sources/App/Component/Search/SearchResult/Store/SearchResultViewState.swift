@@ -19,6 +19,7 @@ struct SearchResultViewState: Equatable {
     let searchEffectId = UUID()
     let searchCandidatesEffectId = UUID()
 
+    var searchOnlyHiddenItems: Bool? = nil
     var selectedSort: ClipSearchSort = .createdDate(.ascend)
 
     var inputtedText: String = ""
@@ -46,19 +47,22 @@ extension SearchResultViewState {
         let tagIds = inputtedTokens
             .filter { $0.kind == .tag }
             .map { $0.id }
-        let includesHiddenItems = !isSomeItemsHidden
-
         return .init(text: inputtedText,
                      albumIds: albumIds,
                      tagIds: tagIds,
-                     sort: selectedSort,
-                     isHidden: includesHiddenItems ? nil : false)
+                     sort: filterSetting.sort,
+                     isHidden: isSomeItemsHidden ? false : searchOnlyHiddenItems)
     }
 
     var searchQueryTitle: String {
         var queries = inputtedTokens.map { $0.title }
         if !inputtedText.isEmpty { queries.append(inputtedText) }
         return ListFormatter.localizedString(byJoining: queries)
+    }
+
+    var filterSetting: SearchFilterSetting {
+        return .init(isHidden: searchOnlyHiddenItems,
+                     sort: selectedSort)
     }
 }
 

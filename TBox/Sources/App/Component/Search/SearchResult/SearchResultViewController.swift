@@ -21,6 +21,8 @@ class SearchResultViewController: UIViewController {
     private let notFoundMessageView = NotFoundMessageView()
     private var dataSource: Layout.DataSource!
 
+    weak var filterButtonItem: UIBarButtonItem?
+
     // MARK: Store
 
     private var store: Store
@@ -32,6 +34,7 @@ class SearchResultViewController: UIViewController {
 
     // MARK: Dependencies
 
+    private let filterMenuBuilder = SearchFilterMenuBuilder()
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: - Initializers
@@ -80,6 +83,15 @@ extension SearchResultViewController {
 
             self.notFoundMessageView.message = state.notFoundMessage
             self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
+
+            self.filterButtonItem?.menu = self.filterMenuBuilder.build(
+                state.filterSetting,
+                isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden
+            ) { [weak self] action in
+                self?.store.execute(.displaySettingMenuChanged(action))
+            } sortChangeHandler: { [weak self] action in
+                self?.store.execute(.sortMenuChanged(action))
+            }
 
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
             let nextTokens = state.inputtedTokens

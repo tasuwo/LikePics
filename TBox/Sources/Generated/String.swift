@@ -318,6 +318,18 @@ internal enum L10n {
     internal static let placeholderTagName = L10n.tr("Localizable", "placeholder_tag_name")
     /// https://www...
     internal static let placeholderUrl = L10n.tr("Localizable", "placeholder_url")
+    /// 非表示中
+    internal static let searchEntryMenuDisplaySettingHidden = L10n.tr("Localizable", "search_entry_menu_display_setting_hidden")
+    /// 表示中
+    internal static let searchEntryMenuDisplaySettingRevealed = L10n.tr("Localizable", "search_entry_menu_display_setting_revealed")
+    /// すべて
+    internal static let searchEntryMenuDisplaySettingUnspecified = L10n.tr("Localizable", "search_entry_menu_display_setting_unspecified")
+    /// 作成日
+    internal static let searchEntryMenuSortCreatedDate = L10n.tr("Localizable", "search_entry_menu_sort_created_date")
+    /// サイズ
+    internal static let searchEntryMenuSortDataSize = L10n.tr("Localizable", "search_entry_menu_sort_data_size")
+    /// 更新日
+    internal static let searchEntryMenuSortUpdatedDate = L10n.tr("Localizable", "search_entry_menu_sort_updated_date")
     /// 検索に失敗しました
     internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
     /// 検索

@@ -14,6 +14,11 @@ enum SearchResultViewAction: Action {
     case searchBarChanged(text: String, tokens: [SearchToken])
     case settingUpdated(isSomeItemsHidden: Bool)
 
+    // MARK: - Menu
+
+    case displaySettingMenuChanged(DisplaySettingFilterMenuAction)
+    case sortMenuChanged(SortFilterMenuAction)
+
     // MARK: - Selection
 
     case selectedTokenCandidate(SearchToken)

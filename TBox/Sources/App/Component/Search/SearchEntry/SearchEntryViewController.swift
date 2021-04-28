@@ -46,12 +46,18 @@ extension SearchEntryViewController {
     private func configureSearchController() {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = L10n.placeholderSearchUniversal
         searchController.searchBar.searchTextField.allowsCopyingTokens = true
         searchController.searchBar.searchTextField.allowsDeletingTokens = true
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.hidesSearchBarWhenScrolling = true
         definesPresentationContext = true
+
+        // TODO: 初回にメニュー内容が更新されない問題をどうにかする
+        let filterButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"), style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = filterButtonItem
+        resultsController.filterButtonItem = filterButtonItem
     }
 }
 

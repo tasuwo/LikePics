@@ -17,18 +17,8 @@ enum SearchResultViewReducer: Reducer {
 
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
-        switch action {
-        // MARK: View Life-Cycle
 
-        case .viewDidLoad:
-            return prepare(state, dependency)
-
-        // MARK: - State Observation
-
-        case let .searchBarChanged(text: text, tokens: tokens):
-            nextState.inputtedText = text
-            nextState.inputtedTokens = tokens
-
+        let resolveSearchEffects: () -> [Effect<Action>] = {
             var effects: [Effect<Action>] = []
 
             if nextState.inputtedText != state.searchedTokenCandidates?.searchText
@@ -47,32 +37,62 @@ enum SearchResultViewReducer: Reducer {
                 effects.append(effect)
             }
 
-            return (nextState, effects)
+            return effects
+        }
+
+        switch action {
+        // MARK: View Life-Cycle
+
+        case .viewDidLoad:
+            return prepare(state, dependency)
+
+        // MARK: - State Observation
+
+        case let .searchBarChanged(text: text, tokens: tokens):
+            nextState.inputtedText = text
+            nextState.inputtedTokens = tokens
+            return (nextState, resolveSearchEffects())
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             nextState.isSomeItemsHidden = isSomeItemsHidden
+            return (nextState, resolveSearchEffects())
 
-            var effects: [Effect<Action>] = []
+        // MARK: - Menu
 
-            if nextState.inputtedText != state.searchedTokenCandidates?.searchText
-                || !isSomeItemsHidden != state.searchedTokenCandidates?.includesHiddenItems
-            {
-                let effect = searchCandidates(for: nextState.inputtedText, includesHiddenItems: !isSomeItemsHidden, dependency: dependency)
-                    .debounce(id: state.searchCandidatesEffectId, for: 0.5, scheduler: DispatchQueue.main)
-                nextState.isSearchingTokenCandidates = true
-                effects.append(effect)
-            }
+        case let .displaySettingMenuChanged(action):
+            nextState.searchOnlyHiddenItems = {
+                switch action.kind {
+                case .unspecified:
+                    return nil
+                case .hidden:
+                    return true
+                case .revealed:
+                    return false
+                }
+            }()
+            return (nextState, resolveSearchEffects())
 
-            if nextState.searchQuery != state.searchedClips?.searchQuery
-                || !isSomeItemsHidden != state.searchedTokenCandidates?.includesHiddenItems
-            {
-                let effect = search(query: nextState.searchQuery, dependency: dependency)
-                    .debounce(id: state.searchEffectId, for: 0.5, scheduler: DispatchQueue.main)
-                nextState.isSearchingClips = true
-                effects.append(effect)
-            }
-
-            return (nextState, effects)
+        case let .sortMenuChanged(action):
+            nextState.selectedSort = {
+                let order: ClipSearchSort.Order = {
+                    guard let currentOrder = action.order?.searchOrder else { return .ascend }
+                    switch currentOrder {
+                    case .ascend:
+                        return .descent
+                    case .descent:
+                        return .ascend
+                    }
+                }()
+                switch action.kind {
+                case .createdDate:
+                    return .createdDate(order)
+                case .updatedDate:
+                    return .updatedDate(order)
+                case .dataSize:
+                    return .size(order)
+                }
+            }()
+            return (nextState, resolveSearchEffects())
 
         // MARK: - Selection
 
@@ -166,6 +186,19 @@ extension SearchResultViewReducer {
 
         case .failure:
             return []
+        }
+    }
+}
+
+// MARK: - Extensions
+
+private extension SortFilterMenuAction.Order {
+    var searchOrder: ClipSearchSort.Order {
+        switch self {
+        case .ascend:
+            return .ascend
+        case .descend:
+            return .descent
         }
     }
 }

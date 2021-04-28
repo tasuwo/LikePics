@@ -73,6 +73,14 @@
 
 "search_entry_view_title" = "検索";
 
+"search_entry_menu_display_setting_unspecified" = "すべて";
+"search_entry_menu_display_setting_hidden" = "非表示中";
+"search_entry_menu_display_setting_revealed" = "表示中";
+
+"search_entry_menu_sort_created_date" = "作成日";
+"search_entry_menu_sort_updated_date" = "更新日";
+"search_entry_menu_sort_data_size" = "サイズ";
+
 "search_result_see_all_button" = "すべて見る";
 "search_result_not_found_title" = "結果なし";
 "search_result_not_found_message" = "\"%@\"の検索結果はありませんでした。新しい検索を試してください。";

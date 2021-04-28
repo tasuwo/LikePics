@@ -244,31 +244,31 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
 
     public private(set) var searchClipsCallCount = 0
-    public var searchClipsHandler: ((String, [UUID], [UUID]) -> (Result<[Clip], ClipStorageError>))?
-    public func searchClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<[Clip], ClipStorageError> {
+    public var searchClipsHandler: ((ClipSearchQuery) -> (Result<[Clip], ClipStorageError>))?
+    public func searchClips(query: ClipSearchQuery) -> Result<[Clip], ClipStorageError> {
         searchClipsCallCount += 1
         if let searchClipsHandler = searchClipsHandler {
-            return searchClipsHandler(text, albumIds, tagIds)
+            return searchClipsHandler(query)
         }
         fatalError("searchClipsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var searchAlbumsCallCount = 0
-    public var searchAlbumsHandler: ((String, Int) -> (Result<[Album], ClipStorageError>))?
-    public func searchAlbums(containingTitle title: String, limit: Int) -> Result<[Album], ClipStorageError> {
+    public var searchAlbumsHandler: ((String, Bool, Int) -> (Result<[Album], ClipStorageError>))?
+    public func searchAlbums(containingTitle title: String, includesHiddenItems: Bool, limit: Int) -> Result<[Album], ClipStorageError> {
         searchAlbumsCallCount += 1
         if let searchAlbumsHandler = searchAlbumsHandler {
-            return searchAlbumsHandler(title, limit)
+            return searchAlbumsHandler(title, includesHiddenItems, limit)
         }
         fatalError("searchAlbumsHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var searchTagsCallCount = 0
-    public var searchTagsHandler: ((String, Int) -> (Result<[Tag], ClipStorageError>))?
-    public func searchTags(containingName name: String, limit: Int) -> Result<[Tag], ClipStorageError> {
+    public var searchTagsHandler: ((String, Bool, Int) -> (Result<[Tag], ClipStorageError>))?
+    public func searchTags(containingName name: String, includesHiddenItems: Bool, limit: Int) -> Result<[Tag], ClipStorageError> {
         searchTagsCallCount += 1
         if let searchTagsHandler = searchTagsHandler {
-            return searchTagsHandler(name, limit)
+            return searchTagsHandler(name, includesHiddenItems, limit)
         }
         fatalError("searchTagsHandler returns can't have a default value thus its handler must be set")
     }
@@ -344,11 +344,11 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     }
 
     public private(set) var queryClipsCallCount = 0
-    public var queryClipsHandler: ((String, [UUID], [UUID]) -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<ClipListQuery, ClipStorageError> {
+    public var queryClipsHandler: ((ClipSearchQuery) -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryClips(query: ClipSearchQuery) -> Result<ClipListQuery, ClipStorageError> {
         queryClipsCallCount += 1
         if let queryClipsHandler = queryClipsHandler {
-            return queryClipsHandler(text, albumIds, tagIds)
+            return queryClipsHandler(query)
         }
         fatalError("queryClipsHandler returns can't have a default value thus its handler must be set")
     }
