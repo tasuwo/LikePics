@@ -21,31 +21,13 @@ public class ClipQueryService {
 }
 
 extension ClipQueryService: ClipQueryServiceProtocol {
-    public func searchClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<[Domain.Clip], ClipStorageError> {
-        let searchTexts = text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ")
-
-        guard !searchTexts.isEmpty || !albumIds.isEmpty || !tagIds.isEmpty else {
-            return .success([])
-        }
-
+    public func searchClips(query: ClipSearchQuery) -> Result<[Domain.Clip], ClipStorageError> {
+        guard !query.isEmpty else { return .success([]) }
         do {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
-
-            var predicates: [NSPredicate] = []
-            predicates += searchTexts.map {
-                NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl.absoluteString CONTAINS[cd] %@).@count > 0", $0 as CVarArg)
-            }
-            predicates += albumIds.map {
-                NSPredicate(format: "SUBQUERY(albumItem, $albumItem, $albumItem.album.id == %@).@count > 0", $0 as CVarArg)
-            }
-            predicates += tagIds.map {
-                NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", $0 as CVarArg)
-            }
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            request.sortDescriptors = [query.sort.sortDescriptor]
+            request.predicate = query.predicate
             request.fetchLimit = 12 // TODO:
-
             let clips = try self.context.fetch(request)
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
@@ -217,31 +199,13 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
-    public func queryClips(text: String, albumIds: [UUID], tagIds: [UUID]) -> Result<ClipListQuery, ClipStorageError> {
-        let searchTexts = text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ")
-
-        guard !searchTexts.isEmpty || !albumIds.isEmpty || !tagIds.isEmpty else {
-            return .failure(.invalidParameter)
-        }
-
+    public func queryClips(query: ClipSearchQuery) -> Result<ClipListQuery, ClipStorageError> {
+        guard !query.isEmpty else { return .failure(.invalidParameter) }
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
-
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: true)]
-
-                var predicates: [NSPredicate] = []
-                predicates += searchTexts.map {
-                    NSPredicate(format: "SUBQUERY(clipItems, $item, $item.siteUrl.absoluteString CONTAINS[cd] %@).@count > 0", $0 as CVarArg)
-                }
-                predicates += albumIds.map {
-                    NSPredicate(format: "SUBQUERY(albumItem, $albumItem, $albumItem.album.id == %@).@count > 0", $0 as CVarArg)
-                }
-                predicates += tagIds.map {
-                    NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", $0 as CVarArg)
-                }
-                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-
+                request.sortDescriptors = [query.sort.sortDescriptor]
+                request.predicate = query.predicate
                 return request
             }
             let query = try CoreDataClipListQuery(requestFactory: factory, context: self.context)

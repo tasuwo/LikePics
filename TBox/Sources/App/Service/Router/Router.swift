@@ -13,7 +13,7 @@ protocol Router {
     func showUncategorizedClipCollectionView() -> Bool
 
     @discardableResult
-    func showClipCollectionView(for query: SearchQuery) -> Bool
+    func showClipCollectionView(for query: ClipSearchQuery, with title: String) -> Bool
 
     @discardableResult
     func showClipCollectionView(for tag: Tag) -> Bool

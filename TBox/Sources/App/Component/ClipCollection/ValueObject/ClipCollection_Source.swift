@@ -10,7 +10,7 @@ extension ClipCollection {
         case album(Album.Identity)
         case tag(Tag)
         case uncategorized
-        case search(SearchQuery)
+        case search(title: String, ClipSearchQuery)
 
         var isAlbum: Bool {
             switch self {

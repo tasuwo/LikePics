@@ -622,8 +622,8 @@ extension ClipCollection.Source {
         case .all:
             return L10n.topClipViewEmptyMessage
 
-        case let .search(query):
-            return L10n.searchResultNotFoundMessage(ListFormatter.localizedString(byJoining: query.queryNames))
+        case let .search(title: title, _):
+            return  L10n.searchResultNotFoundMessage(title)
 
         default:
             return nil

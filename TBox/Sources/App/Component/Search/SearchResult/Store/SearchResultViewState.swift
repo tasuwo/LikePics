@@ -6,30 +6,57 @@ import Domain
 
 struct SearchResultViewState: Equatable {
     struct SearchedTokenCandidates: Equatable {
-        let searchText: String
+        let searchQuery: ClipSearchQuery
         let tokenCandidates: [SearchToken]
     }
 
     struct SearchedClips: Equatable {
-        let searchQuery: SearchQuery
+        let searchQuery: ClipSearchQuery
         let results: [Clip]
     }
 
     let searchEffectId = UUID()
     let searchCandidatesEffectId = UUID()
 
-    var searchQuery: SearchQuery
+    var selectedSort: ClipSearchSort = .createdDate(.ascend)
+
+    var inputtedText: String = ""
+    var inputtedTokens: [SearchToken] = []
 
     var searchedTokenCandidates: SearchedTokenCandidates? = nil
     var searchedClips: SearchedClips? = nil
 
     var isSearchingTokenCandidates: Bool = false
     var isSearchingClips: Bool = false
+
+    var isSomeItemsHidden: Bool = false
 }
 
 extension SearchResultViewState {
     var tokenCandidates: [SearchToken] { searchedTokenCandidates?.tokenCandidates ?? [] }
     var searchResults: [Clip] { searchedClips?.results ?? [] }
+
+    var searchQuery: ClipSearchQuery {
+        let albumIds = inputtedTokens
+            .filter { $0.kind == .album }
+            .map { $0.id }
+        let tagIds = inputtedTokens
+            .filter { $0.kind == .tag }
+            .map { $0.id }
+        let includesHiddenItems = !isSomeItemsHidden
+
+        return .init(text: inputtedText,
+                     albumIds: albumIds,
+                     tagIds: tagIds,
+                     sort: selectedSort,
+                     isHidden: includesHiddenItems ? nil : false)
+    }
+
+    var searchQueryTitle: String {
+        var queries = inputtedTokens.map { $0.title }
+        if !inputtedText.isEmpty { queries.append(inputtedText) }
+        return ListFormatter.localizedString(byJoining: queries)
+    }
 }
 
 extension SearchResultViewState {
@@ -42,6 +69,6 @@ extension SearchResultViewState {
     }
 
     var notFoundMessage: String {
-        return L10n.searchResultNotFoundMessage(ListFormatter.localizedString(byJoining: searchQuery.queryNames))
+        return L10n.searchResultNotFoundMessage(searchQueryTitle)
     }
 }

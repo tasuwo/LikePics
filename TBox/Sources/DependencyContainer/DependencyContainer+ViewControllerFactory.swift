@@ -125,7 +125,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchViewController() -> UIViewController? {
-        let resultsController = SearchResultViewController(state: .init(searchQuery: .init(tokens: [], text: "")),
+        let resultsController = SearchResultViewController(state: .init(),
                                                            dependency: self,
                                                            thumbnailLoader: temporaryThumbnailLoader)
         let viewController = SearchEntryViewController(searchResultViewController: resultsController)

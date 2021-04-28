@@ -80,7 +80,7 @@ extension SearchResultViewController {
             self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
 
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
-            let nextTokens = state.searchQuery.tokens
+            let nextTokens = state.inputtedTokens
             if currentTokens != nextTokens {
                 self.searchController.searchBar.searchTextField.text = ""
                 self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
@@ -173,7 +173,7 @@ extension SearchResultViewController {
             let isEditing = searchController?.searchBar.searchTextField.isEditing == true
             let isNotEmpty = searchController?.searchBar.searchTextField.tokens.isEmpty == false
                 || searchController?.searchBar.searchTextField.text?.isEmpty == false
-            if change.newValue == true && (isEditing || isNotEmpty) {
+            if change.newValue == true, isEditing || isNotEmpty {
                 view.isHidden = false
             }
         }
@@ -209,7 +209,7 @@ extension SearchResultViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform {
-            self.store.execute(.searchQueryChanged(.make(from: searchBar)))
+            self.executeSearchBarChangeEvent(searchBar)
         }
     }
 
@@ -217,7 +217,7 @@ extension SearchResultViewController: UISearchBarDelegate {
         // HACK: marked text 入力を待つために遅延を設ける
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
             RunLoop.main.perform {
-                self.store.execute(.searchQueryChanged(.make(from: searchBar)))
+                self.executeSearchBarChangeEvent(searchBar)
             }
         }
         return true
@@ -244,13 +244,13 @@ extension SearchResultViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating
 
     func updateSearchResults(for searchController: UISearchController) {
-        store.execute(.searchQueryChanged(.make(from: searchController.searchBar)))
+        executeSearchBarChangeEvent(searchController.searchBar)
     }
 }
 
-private extension SearchQuery {
-    static func make(from searchBar: UISearchBar) -> Self {
-        return .init(tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken },
-                     text: searchBar.text ?? "")
+extension SearchResultViewController {
+    func executeSearchBarChangeEvent(_ searchBar: UISearchBar) {
+        store.execute(.searchBarChanged(text: searchBar.text ?? "",
+                                        tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }))
     }
 }

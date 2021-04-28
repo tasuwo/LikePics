@@ -7,7 +7,8 @@ import Domain
 enum SearchResultViewAction: Action {
     // MARK: State Observation
 
-    case searchQueryChanged(SearchQuery)
+    case searchBarChanged(text: String, tokens: [SearchToken])
+    case settingUpdated(isSomeItemsHidden: Bool)
 
     // MARK: - Selection
 
@@ -17,6 +18,6 @@ enum SearchResultViewAction: Action {
 
     // MARK: - Search Execution
 
-    case foundResults([Clip], byQuery: SearchQuery)
-    case foundCandidates([SearchToken], byText: String)
+    case foundResults([Clip], byQuery: ClipSearchQuery)
+    case foundCandidates([SearchToken], byQuery: ClipSearchQuery)
 }

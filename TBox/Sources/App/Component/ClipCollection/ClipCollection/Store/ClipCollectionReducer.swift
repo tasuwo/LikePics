@@ -335,16 +335,10 @@ extension ClipCollectionReducer {
             description = tag.name
             initialClips = query.clips.value
 
-        case let .search(searchQuery):
+        case let .search(title: title, searchQuery):
             let query: ClipListQuery
 
-            let albumIds = searchQuery.tokens
-                .filter { $0.kind == .album }
-                .map { $0.id }
-            let tagIds = searchQuery.tokens
-                .filter { $0.kind == .tag }
-                .map { $0.id }
-            switch dependency.clipQueryService.queryClips(text: searchQuery.text, albumIds: albumIds, tagIds: tagIds) {
+            switch dependency.clipQueryService.queryClips(query: searchQuery) {
             case let .success(result):
                 query = result
 
@@ -355,7 +349,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = ListFormatter.localizedString(byJoining: searchQuery.queryNames)
+            description = title
             initialClips = query.clips.value
         }
 
