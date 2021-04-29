@@ -18,28 +18,6 @@ enum SearchResultViewReducer: Reducer {
     static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
-        let resolveSearchEffects: () -> [Effect<Action>] = {
-            var effects: [Effect<Action>] = []
-
-            if nextState.inputtedText != state.searchedTokenCandidates?.searchText
-                || !nextState.isSomeItemsHidden != state.searchedTokenCandidates?.includesHiddenItems
-            {
-                let effect = searchCandidates(for: nextState.inputtedText, includesHiddenItems: !state.isSomeItemsHidden, dependency: dependency)
-                    .debounce(id: state.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
-                nextState.isSearchingTokenCandidates = true
-                effects.append(effect)
-            }
-
-            if nextState.searchQuery != state.searchedClips?.searchQuery {
-                let effect = search(query: nextState.searchQuery, dependency: dependency)
-                    .debounce(id: state.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
-                nextState.isSearchingClips = true
-                effects.append(effect)
-            }
-
-            return effects
-        }
-
         switch action {
         // MARK: View Life-Cycle
 
@@ -51,21 +29,25 @@ enum SearchResultViewReducer: Reducer {
         case let .searchBarChanged(text: text, tokens: tokens):
             nextState.inputtedText = text
             nextState.inputtedTokens = tokens
-            return (nextState, resolveSearchEffects())
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            return (nextState, effects)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             nextState.isSomeItemsHidden = isSomeItemsHidden
-            return (nextState, resolveSearchEffects())
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            return (nextState, effects)
 
         // MARK: - Menu
 
         case let .displaySettingMenuChanged(searchOnlyHiddenItems):
             nextState.searchOnlyHiddenItems = searchOnlyHiddenItems
-            return (nextState, resolveSearchEffects())
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            return (nextState, effects)
 
         case let .sortMenuChanged(sort):
             nextState.selectedSort = sort
-            return (nextState, resolveSearchEffects())
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            return (nextState, effects)
 
         // MARK: - Selection
 
@@ -109,6 +91,34 @@ extension SearchResultViewReducer {
 
 // MARK: - Search
 
+// MARK: Resolve Effects
+
+extension SearchResultViewReducer {
+    private static func resolveSearchEffects(nextState: inout State, prevState: State, dependency: Dependency) -> [Effect<Action>] {
+        var effects: [Effect<Action>] = []
+
+        if nextState.inputtedText != prevState.searchedTokenCandidates?.searchText
+            || !nextState.isSomeItemsHidden != prevState.searchedTokenCandidates?.includesHiddenItems
+        {
+            let effect = searchCandidates(for: nextState.inputtedText, includesHiddenItems: !prevState.isSomeItemsHidden, dependency: dependency)
+                .debounce(id: prevState.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
+            nextState.isSearchingTokenCandidates = true
+            effects.append(effect)
+        }
+
+        if nextState.searchQuery != prevState.searchedClips?.searchQuery {
+            let effect = search(query: nextState.searchQuery, dependency: dependency)
+                .debounce(id: prevState.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
+            nextState.isSearchingClips = true
+            effects.append(effect)
+        }
+
+        return effects
+    }
+}
+
+// MARK: Clips
+
 extension SearchResultViewReducer {
     private static func search(query: ClipSearchQuery, dependency: Dependency) -> Effect<Action> {
         let stream = Deferred {
@@ -126,7 +136,7 @@ extension SearchResultViewReducer {
     }
 }
 
-// MARK: - Candidates
+// MARK: Candidates
 
 extension SearchResultViewReducer {
     private static func searchCandidates(for text: String, includesHiddenItems: Bool, dependency: Dependency) -> Effect<Action> {
