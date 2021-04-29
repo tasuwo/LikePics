@@ -16,8 +16,8 @@ enum SearchResultViewAction: Action {
 
     // MARK: - Menu
 
-    case displaySettingMenuChanged(DisplaySettingFilterMenuAction)
-    case sortMenuChanged(SortFilterMenuAction)
+    case displaySettingMenuChanged(Bool?)
+    case sortMenuChanged(ClipSearchSort)
 
     // MARK: - Selection
 

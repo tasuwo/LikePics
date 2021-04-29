@@ -87,10 +87,10 @@ extension SearchResultViewController {
             self.filterButtonItem?.menu = self.filterMenuBuilder.build(
                 state.filterSetting,
                 isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden
-            ) { [weak self] action in
-                self?.store.execute(.displaySettingMenuChanged(action))
-            } sortChangeHandler: { [weak self] action in
-                self?.store.execute(.sortMenuChanged(action))
+            ) { [weak self] change in
+                self?.store.execute(.displaySettingMenuChanged(change))
+            } sortChangeHandler: { [weak self] change in
+                self?.store.execute(.sortMenuChanged(change))
             }
 
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }

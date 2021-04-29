@@ -59,39 +59,12 @@ enum SearchResultViewReducer: Reducer {
 
         // MARK: - Menu
 
-        case let .displaySettingMenuChanged(action):
-            nextState.searchOnlyHiddenItems = {
-                switch action.kind {
-                case .unspecified:
-                    return nil
-                case .hidden:
-                    return true
-                case .revealed:
-                    return false
-                }
-            }()
+        case let .displaySettingMenuChanged(searchOnlyHiddenItems):
+            nextState.searchOnlyHiddenItems = searchOnlyHiddenItems
             return (nextState, resolveSearchEffects())
 
-        case let .sortMenuChanged(action):
-            nextState.selectedSort = {
-                let order: ClipSearchSort.Order = {
-                    guard let currentOrder = action.order?.searchOrder else { return .ascend }
-                    switch currentOrder {
-                    case .ascend:
-                        return .descent
-                    case .descent:
-                        return .ascend
-                    }
-                }()
-                switch action.kind {
-                case .createdDate:
-                    return .createdDate(order)
-                case .updatedDate:
-                    return .updatedDate(order)
-                case .dataSize:
-                    return .size(order)
-                }
-            }()
+        case let .sortMenuChanged(sort):
+            nextState.selectedSort = sort
             return (nextState, resolveSearchEffects())
 
         // MARK: - Selection
@@ -186,19 +159,6 @@ extension SearchResultViewReducer {
 
         case .failure:
             return []
-        }
-    }
-}
-
-// MARK: - Extensions
-
-private extension SortFilterMenuAction.Order {
-    var searchOrder: ClipSearchSort.Order {
-        switch self {
-        case .ascend:
-            return .ascend
-        case .descend:
-            return .descent
         }
     }
 }
