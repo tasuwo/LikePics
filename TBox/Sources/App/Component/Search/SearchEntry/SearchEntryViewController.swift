@@ -26,6 +26,11 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: View Life-Cycle Methods
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        resultsController.entryViewDidAppear(animated)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

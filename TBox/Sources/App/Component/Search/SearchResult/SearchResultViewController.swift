@@ -64,6 +64,10 @@ class SearchResultViewController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    func entryViewDidAppear(_ animated: Bool) {
+        store.execute(.entryViewDidAppear)
+    }
 }
 
 // MARK: - Bind

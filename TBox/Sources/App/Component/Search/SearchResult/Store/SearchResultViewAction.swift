@@ -8,6 +8,7 @@ enum SearchResultViewAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad
+    case entryViewDidAppear
 
     // MARK: State Observation
 

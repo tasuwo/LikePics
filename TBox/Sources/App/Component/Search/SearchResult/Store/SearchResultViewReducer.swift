@@ -24,6 +24,11 @@ enum SearchResultViewReducer: Reducer {
         case .viewDidLoad:
             return prepare(state, dependency)
 
+        case .entryViewDidAppear:
+            // 別画面で状態が更新されている可能性があるため、再建策をかける
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency, forced: true)
+            return (nextState, effects)
+
         // MARK: - State Observation
 
         case let .searchBarChanged(text: text, tokens: tokens):
@@ -94,11 +99,12 @@ extension SearchResultViewReducer {
 // MARK: Resolve Effects
 
 extension SearchResultViewReducer {
-    private static func resolveSearchEffects(nextState: inout State, prevState: State, dependency: Dependency) -> [Effect<Action>] {
+    private static func resolveSearchEffects(nextState: inout State, prevState: State, dependency: Dependency, forced: Bool = false) -> [Effect<Action>] {
         var effects: [Effect<Action>] = []
 
-        if nextState.inputtedText != prevState.searchedTokenCandidates?.searchText
-            || !nextState.isSomeItemsHidden != prevState.searchedTokenCandidates?.includesHiddenItems
+        if forced ||
+            (nextState.inputtedText != prevState.searchedTokenCandidates?.searchText
+                || !nextState.isSomeItemsHidden != prevState.searchedTokenCandidates?.includesHiddenItems)
         {
             let effect = searchCandidates(for: nextState.inputtedText, includesHiddenItems: !prevState.isSomeItemsHidden, dependency: dependency)
                 .debounce(id: prevState.searchCandidatesEffectId, for: 0.01, scheduler: DispatchQueue.main)
@@ -106,7 +112,7 @@ extension SearchResultViewReducer {
             effects.append(effect)
         }
 
-        if nextState.searchQuery != prevState.searchedClips?.searchQuery {
+        if forced || nextState.searchQuery != prevState.searchedClips?.searchQuery {
             let effect = search(query: nextState.searchQuery, dependency: dependency)
                 .debounce(id: prevState.searchEffectId, for: 0.15, scheduler: DispatchQueue.main)
             nextState.isSearchingClips = true
