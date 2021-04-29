@@ -8,7 +8,7 @@ import UIKit
 struct SearchFilterMenuBuilder: Equatable {
     typealias Action = SearchFilterMenuAction
 
-    func build(_ setting: SearchFilterSetting,
+    func build(_ setting: ClipSearchFilterSetting,
                isSomeItemsHiddenByUserSetting: Bool,
                displaySettingChangeHandler: @escaping (Bool?) -> Void,
                sortChangeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
@@ -24,7 +24,7 @@ struct SearchFilterMenuBuilder: Equatable {
         return UIMenu(title: "", children: menus)
     }
 
-    private static func buildHiddenMenu(_ setting: SearchFilterSetting,
+    private static func buildHiddenMenu(_ setting: ClipSearchFilterSetting,
                                         changeHandler: @escaping (Bool?) -> Void) -> UIMenu
     {
         let actions: [DisplaySettingFilterMenuAction] = [
@@ -53,7 +53,7 @@ struct SearchFilterMenuBuilder: Equatable {
         return UIMenu(title: "", options: .displayInline, children: uiActions)
     }
 
-    private static func buildSortMenu(_ setting: SearchFilterSetting,
+    private static func buildSortMenu(_ setting: ClipSearchFilterSetting,
                                       changeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
     {
         let actions: [SortFilterMenuAction] = [

@@ -60,7 +60,7 @@ extension SearchResultViewState {
         return ListFormatter.localizedString(byJoining: queries)
     }
 
-    var filterSetting: SearchFilterSetting {
+    var filterSetting: ClipSearchFilterSetting {
         return .init(isHidden: searchOnlyHiddenItems,
                      sort: selectedSort)
     }

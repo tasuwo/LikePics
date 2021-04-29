@@ -106,7 +106,6 @@
 		2C0A98C226398AEA002007B2 /* ClipSearchSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98C126398AEA002007B2 /* ClipSearchSort.swift */; };
 		2C0A98C526398B44002007B2 /* ClipSearchQuery+NSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98C426398B44002007B2 /* ClipSearchQuery+NSPredicate.swift */; };
 		2C0A98C726398B67002007B2 /* ClipSearchSort+NSSortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98C626398B67002007B2 /* ClipSearchSort+NSSortDescriptor.swift */; };
-		2C0A98CA2639BCDE002007B2 /* SearchFilterSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98C92639BCDE002007B2 /* SearchFilterSetting.swift */; };
 		2C0A98CC2639BCF3002007B2 /* SearchFilterMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98CB2639BCF3002007B2 /* SearchFilterMenuBuilder.swift */; };
 		2C0A98CE2639BD17002007B2 /* SearchFilterMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98CD2639BD17002007B2 /* SearchFilterMenuAction.swift */; };
 		2C0A98D02639BD40002007B2 /* DisplaySettingFilterMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0A98CF2639BD40002007B2 /* DisplaySettingFilterMenuAction.swift */; };
@@ -118,6 +117,7 @@
 		2CB5AB432637A4E000395521 /* Effect_Debounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB5AB422637A4E000395521 /* Effect_Debounce.swift */; };
 		2CC8E430263A9DED00754511 /* SingleIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8E42F263A9DED00754511 /* SingleIconButton.swift */; };
 		2CC8E43A263AABAC00754511 /* ClipSearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8E439263AABAC00754511 /* ClipSearchToken.swift */; };
+		2CC8E43D263AB4D800754511 /* ClipSearchFilterSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8E43C263AB4D800754511 /* ClipSearchFilterSetting.swift */; };
 		2CD2CF252638563900027949 /* NoFoundMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD2CF242638563900027949 /* NoFoundMessageView.swift */; };
 		2CD2CF272638564C00027949 /* NotFoundMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2CF262638564C00027949 /* NotFoundMessageView.xib */; };
 		2CDC77492636D2BD0039C5DF /* SearchResultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */; };
@@ -1003,7 +1003,6 @@
 		2C0A98C126398AEA002007B2 /* ClipSearchSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchSort.swift; sourceTree = "<group>"; };
 		2C0A98C426398B44002007B2 /* ClipSearchQuery+NSPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipSearchQuery+NSPredicate.swift"; sourceTree = "<group>"; };
 		2C0A98C626398B67002007B2 /* ClipSearchSort+NSSortDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipSearchSort+NSSortDescriptor.swift"; sourceTree = "<group>"; };
-		2C0A98C92639BCDE002007B2 /* SearchFilterSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterSetting.swift; sourceTree = "<group>"; };
 		2C0A98CB2639BCF3002007B2 /* SearchFilterMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenuBuilder.swift; sourceTree = "<group>"; };
 		2C0A98CD2639BD17002007B2 /* SearchFilterMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenuAction.swift; sourceTree = "<group>"; };
 		2C0A98CF2639BD40002007B2 /* DisplaySettingFilterMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingFilterMenuAction.swift; sourceTree = "<group>"; };
@@ -1014,6 +1013,7 @@
 		2CB5AB422637A4E000395521 /* Effect_Debounce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effect_Debounce.swift; sourceTree = "<group>"; };
 		2CC8E42F263A9DED00754511 /* SingleIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleIconButton.swift; sourceTree = "<group>"; };
 		2CC8E439263AABAC00754511 /* ClipSearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchToken.swift; sourceTree = "<group>"; };
+		2CC8E43C263AB4D800754511 /* ClipSearchFilterSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchFilterSetting.swift; sourceTree = "<group>"; };
 		2CD2CF242638563900027949 /* NoFoundMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoFoundMessageView.swift; sourceTree = "<group>"; };
 		2CD2CF262638564C00027949 /* NotFoundMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotFoundMessageView.xib; sourceTree = "<group>"; };
 		2CDC77482636D2BD0039C5DF /* SearchResultViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewState.swift; sourceTree = "<group>"; };
@@ -2028,7 +2028,6 @@
 		2C0A98C82639BCCD002007B2 /* SearchFilterMenu */ = {
 			isa = PBXGroup;
 			children = (
-				2C0A98C92639BCDE002007B2 /* SearchFilterSetting.swift */,
 				2C0A98CB2639BCF3002007B2 /* SearchFilterMenuBuilder.swift */,
 				2C0A98D12639BD51002007B2 /* MenuAction */,
 			);
@@ -2068,6 +2067,7 @@
 				2C0A98BE263980E2002007B2 /* ClipSearchQuery.swift */,
 				2C0A98C126398AEA002007B2 /* ClipSearchSort.swift */,
 				2CC8E439263AABAC00754511 /* ClipSearchToken.swift */,
+				2CC8E43C263AB4D800754511 /* ClipSearchFilterSetting.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -4652,6 +4652,7 @@
 			files = (
 				CD84CB8B022C397F0650564B /* Album.swift in Sources */,
 				6F39084512B732459EA5EBE3 /* AlbumListQuery.swift in Sources */,
+				2CC8E43D263AB4D800754511 /* ClipSearchFilterSetting.swift in Sources */,
 				3924E8638FBFBA4FFCDD37BC /* AlbumQuery.swift in Sources */,
 				E653CE18DE1C8E3E21A50DD2 /* Clip.swift in Sources */,
 				0FDA291B99C5F3D899B71011 /* ClipCommandService.swift in Sources */,
@@ -4932,7 +4933,6 @@
 				A64F66A24E5963ABD631ACBB /* ClipPreviewPageViewCacheAction.swift in Sources */,
 				EBD623C6AAB053C5B61D36BA /* ClipPreviewPageViewCacheReducer.swift in Sources */,
 				39825AF3BBCA3477A672D0DB /* ClipPreviewPageViewCacheState.swift in Sources */,
-				2C0A98CA2639BCDE002007B2 /* SearchFilterSetting.swift in Sources */,
 				B2CC0AB6486497B985F982FF /* ClipPreviewPageViewController.swift in Sources */,
 				41D3FBC18A0BA7AF4DF796B9 /* ClipPreviewPageViewReducer.swift in Sources */,
 				6474049A88F576E2D98EAE4E /* ClipPreviewPageViewState.swift in Sources */,
