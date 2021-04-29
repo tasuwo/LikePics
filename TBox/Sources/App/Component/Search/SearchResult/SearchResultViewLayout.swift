@@ -63,7 +63,7 @@ extension SearchResultViewLayout {
             }
         }()
         var configuration = UICollectionLayoutListConfiguration(appearance: appearance)
-        configuration.backgroundColor = Asset.Color.backgroundClient.color
+        configuration.backgroundColor = .clear
         return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
     }
 

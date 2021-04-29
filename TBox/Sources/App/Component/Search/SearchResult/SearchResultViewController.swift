@@ -28,10 +28,6 @@ class SearchResultViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    // MARK: Observations
-
-    private var visibilitySubscription: NSKeyValueObservation?
-
     // MARK: Dependencies
 
     private let filterMenuBuilder = SearchFilterMenuBuilder()
@@ -154,8 +150,6 @@ private extension SearchResultViewController.Layout.Snapshot {
 
 extension SearchResultViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
-
         let provider: () -> Layout.DataSource? = { [weak self] in return self?.dataSource }
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout(provider))
         collectionView.backgroundColor = .clear
@@ -181,16 +175,6 @@ extension SearchResultViewController {
     private func configureSearchController() {
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
-
-        visibilitySubscription = self.view.observe(\.isHidden, options: .new) { [weak searchController] view, change in
-            // HACK: 文字列が空の時でも、TextFieldがフォーカスされているかトークンが空でなければResultsControllerは表示させる
-            let isEditing = searchController?.searchBar.searchTextField.isEditing == true
-            let isNotEmpty = searchController?.searchBar.searchTextField.tokens.isEmpty == false
-                || searchController?.searchBar.searchTextField.text?.isEmpty == false
-            if change.newValue == true, isEditing || isNotEmpty {
-                view.isHidden = false
-            }
-        }
     }
 
     private func configureNotFoundMessageView() {
