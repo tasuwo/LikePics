@@ -30,7 +30,7 @@ class SearchResultViewController: UIViewController {
 
     // MARK: Dependencies
 
-    private let filterMenuBuilder = SearchFilterMenuBuilder()
+    private let filterMenuBuilder = SearchMenuBuilder()
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: - Initializers
@@ -85,7 +85,7 @@ extension SearchResultViewController {
             self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
 
             self.filterButtonItem?.menu = self.filterMenuBuilder.build(
-                state.filterSetting,
+                state.menuState,
                 isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden
             ) { [weak self] change in
                 self?.store.execute(.displaySettingMenuChanged(change))

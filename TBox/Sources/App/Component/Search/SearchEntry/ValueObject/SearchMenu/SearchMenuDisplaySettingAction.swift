@@ -4,7 +4,7 @@
 
 import UIKit
 
-struct DisplaySettingFilterMenuAction: Equatable {
+struct SearchMenuDisplaySettingAction: Equatable {
     enum Kind: Equatable {
         case unspecified
         case hidden
@@ -38,4 +38,4 @@ struct DisplaySettingFilterMenuAction: Equatable {
     }
 }
 
-extension DisplaySettingFilterMenuAction: SearchFilterMenuAction {}
+extension SearchMenuDisplaySettingAction: SearchMenuAction {}

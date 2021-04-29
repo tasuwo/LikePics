@@ -41,17 +41,10 @@ extension SearchResultViewState {
     var isResultsEmpty: Bool { searchResults.isEmpty && tokenCandidates.isEmpty }
 
     var searchQuery: ClipSearchQuery {
-        let albumIds = inputtedTokens
-            .filter { $0.kind == .album }
-            .map { $0.id }
-        let tagIds = inputtedTokens
-            .filter { $0.kind == .tag }
-            .map { $0.id }
         return .init(text: inputtedText,
-                     albumIds: albumIds,
-                     tagIds: tagIds,
-                     sort: filterSetting.sort,
-                     isHidden: isSomeItemsHidden ? false : searchOnlyHiddenItems)
+                     tokens: inputtedTokens,
+                     isHidden: isSomeItemsHidden ? false : searchOnlyHiddenItems,
+                     sort: selectedSort)
     }
 
     var searchQueryTitle: String {
@@ -60,8 +53,8 @@ extension SearchResultViewState {
         return ListFormatter.localizedString(byJoining: queries)
     }
 
-    var filterSetting: ClipSearchFilterSetting {
-        return .init(isHidden: searchOnlyHiddenItems,
+    var menuState: SearchMenuState {
+        return .init(shouldSearchOnlyHiddenClip: searchOnlyHiddenItems,
                      sort: selectedSort)
     }
 }

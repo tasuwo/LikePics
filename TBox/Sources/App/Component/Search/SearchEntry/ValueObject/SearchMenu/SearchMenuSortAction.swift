@@ -5,7 +5,7 @@
 import Domain
 import UIKit
 
-struct SortFilterMenuAction: Equatable {
+struct SearchMenuSortAction: Equatable {
     enum Order: Equatable {
         case ascend
         case descend
@@ -45,4 +45,4 @@ struct SortFilterMenuAction: Equatable {
     }
 }
 
-extension SortFilterMenuAction: SearchFilterMenuAction {}
+extension SearchMenuSortAction: SearchMenuAction {}

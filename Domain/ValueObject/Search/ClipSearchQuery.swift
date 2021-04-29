@@ -6,10 +6,21 @@ import Foundation
 
 public struct ClipSearchQuery: Equatable {
     public let text: String
-    public let albumIds: [UUID]
-    public let tagIds: [UUID]
-    public let sort: ClipSearchSort
+    public let tokens: [ClipSearchToken]
     public let isHidden: Bool?
+    public let sort: ClipSearchSort
+
+    public var albumIds: [UUID] {
+        tokens
+            .filter { $0.kind == .album }
+            .map { $0.id }
+    }
+
+    public var tagIds: [UUID] {
+        tokens
+            .filter { $0.kind == .tag }
+            .map { $0.id }
+    }
 
     public var isEmpty: Bool {
         texts.isEmpty && albumIds.isEmpty && tagIds.isEmpty
@@ -21,16 +32,10 @@ public struct ClipSearchQuery: Equatable {
 
     // MARK: - Initializers
 
-    public init(text: String,
-                albumIds: [UUID],
-                tagIds: [UUID],
-                sort: ClipSearchSort,
-                isHidden: Bool?)
-    {
+    public init(text: String, tokens: [ClipSearchToken], isHidden: Bool?, sort: ClipSearchSort) {
         self.text = text
-        self.albumIds = albumIds
-        self.tagIds = tagIds
-        self.sort = sort
+        self.tokens = tokens
         self.isHidden = isHidden
+        self.sort = sort
     }
 }

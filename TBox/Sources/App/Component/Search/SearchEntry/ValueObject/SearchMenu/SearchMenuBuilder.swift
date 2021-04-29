@@ -5,10 +5,10 @@
 import Domain
 import UIKit
 
-struct SearchFilterMenuBuilder: Equatable {
-    typealias Action = SearchFilterMenuAction
+struct SearchMenuBuilder: Equatable {
+    typealias Action = SearchMenuAction
 
-    func build(_ setting: ClipSearchFilterSetting,
+    func build(_ state: SearchMenuState,
                isSomeItemsHiddenByUserSetting: Bool,
                displaySettingChangeHandler: @escaping (Bool?) -> Void,
                sortChangeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
@@ -16,21 +16,21 @@ struct SearchFilterMenuBuilder: Equatable {
         var menus: [UIMenu] = []
 
         if !isSomeItemsHiddenByUserSetting {
-            menus.append(Self.buildHiddenMenu(setting, changeHandler: displaySettingChangeHandler))
+            menus.append(Self.buildHiddenMenu(state, changeHandler: displaySettingChangeHandler))
         }
 
-        menus.append(Self.buildSortMenu(setting, changeHandler: sortChangeHandler))
+        menus.append(Self.buildSortMenu(state, changeHandler: sortChangeHandler))
 
         return UIMenu(title: "", children: menus)
     }
 
-    private static func buildHiddenMenu(_ setting: ClipSearchFilterSetting,
+    private static func buildHiddenMenu(_ state: SearchMenuState,
                                         changeHandler: @escaping (Bool?) -> Void) -> UIMenu
     {
-        let actions: [DisplaySettingFilterMenuAction] = [
-            .init(kind: .unspecified, isSelected: setting.isHidden == nil),
-            .init(kind: .hidden, isSelected: setting.isHidden == true),
-            .init(kind: .revealed, isSelected: setting.isHidden == false),
+        let actions: [SearchMenuDisplaySettingAction] = [
+            .init(kind: .unspecified, isSelected: state.shouldSearchOnlyHiddenClip == nil),
+            .init(kind: .hidden, isSelected: state.shouldSearchOnlyHiddenClip == true),
+            .init(kind: .revealed, isSelected: state.shouldSearchOnlyHiddenClip == false),
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -53,13 +53,13 @@ struct SearchFilterMenuBuilder: Equatable {
         return UIMenu(title: "", options: .displayInline, children: uiActions)
     }
 
-    private static func buildSortMenu(_ setting: ClipSearchFilterSetting,
+    private static func buildSortMenu(_ state: SearchMenuState,
                                       changeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
     {
-        let actions: [SortFilterMenuAction] = [
-            .init(kind: .createdDate, order: setting.sort.createdDateSort?.actionOrder),
-            .init(kind: .updatedDate, order: setting.sort.updateDateOrder?.actionOrder),
-            .init(kind: .dataSize, order: setting.sort.sizeOrder?.actionOrder),
+        let actions: [SearchMenuSortAction] = [
+            .init(kind: .createdDate, order: state.sort.createdDateSort?.actionOrder),
+            .init(kind: .updatedDate, order: state.sort.updateDateOrder?.actionOrder),
+            .init(kind: .dataSize, order: state.sort.sizeOrder?.actionOrder),
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -93,7 +93,7 @@ struct SearchFilterMenuBuilder: Equatable {
     }
 }
 
-private extension SortFilterMenuAction.Order {
+private extension SearchMenuSortAction.Order {
     var searchOrder: ClipSearchSort.Order {
         switch self {
         case .ascend:
@@ -105,7 +105,7 @@ private extension SortFilterMenuAction.Order {
 }
 
 private extension ClipSearchSort.Order {
-    var actionOrder: SortFilterMenuAction.Order {
+    var actionOrder: SearchMenuSortAction.Order {
         switch self {
         case .ascend:
             return .ascend
