@@ -361,6 +361,7 @@ extension ClipStorage: ClipStorageProtocol {
             }
 
             clips.forEach { $0.isHidden = isHidden }
+            clips.forEach { $0.updatedDate = Date() }
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
@@ -478,6 +479,8 @@ extension ClipStorage: ClipStorageProtocol {
                 item.index = currentIndex
                 currentIndex += 1
             }
+
+            clip.updatedDate = Date()
 
             return .success(())
         } catch {
@@ -753,6 +756,8 @@ extension ClipStorage: ClipStorageProtocol {
                 index += 1
             }
             item.clip?.imagesSize = count
+
+            item.clip?.updatedDate = Date()
 
             return .success(removeTarget)
         } catch {
