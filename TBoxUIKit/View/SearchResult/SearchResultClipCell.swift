@@ -6,6 +6,8 @@ import Smoothie
 import UIKit
 
 public class SearchResultClipCell: UICollectionViewCell {
+    public static let imageCornerRadius: CGFloat = 6
+
     public static var nib: UINib {
         return UINib(nibName: "SearchResultClipCell", bundle: Bundle(for: Self.self))
     }
@@ -37,7 +39,7 @@ public class SearchResultClipCell: UICollectionViewCell {
     private func setupAppearance() {
         self.clipsToBounds = true
         self.layer.masksToBounds = true
-        self.layer.cornerRadius = 6
+        self.layer.cornerRadius = Self.imageCornerRadius
     }
 }
 
@@ -65,4 +67,10 @@ extension SearchResultClipCell: ThumbnailLoadObserver {
             self.imageView.image = nil
         }
     }
+}
+
+extension SearchResultClipCell: ClipPreviewPresentingCell {
+    // MARK: - ClipPreviewPresentingCell
+
+    public func animatingImageView(at index: Int) -> UIImageView? { imageView }
 }

@@ -54,7 +54,9 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         fromViewBackgroundView.backgroundColor = from.view.backgroundColor
 
         let animatingImageView = UIImageView(image: fromImage)
-        ClipCollectionViewCell.setupAppearance(shadowView: animatingImageView)
+        animatingImageView.layer.cornerRadius = to.animatingCellCornerRadius(self)
+        animatingImageView.contentMode = .scaleAspectFill
+        animatingImageView.clipsToBounds = true
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.layer.masksToBounds = true
@@ -90,8 +92,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = 0
-        cornerAnimation.toValue = ClipCollectionViewCell.cornerRadius
-        animatingImageView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
+        cornerAnimation.toValue = to.animatingCellCornerRadius(self)
+        animatingImageView.layer.cornerRadius = to.animatingCellCornerRadius(self)
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(

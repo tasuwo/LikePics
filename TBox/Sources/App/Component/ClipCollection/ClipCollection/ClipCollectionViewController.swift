@@ -535,9 +535,13 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
         store.stateValue.previewingClip
     }
 
-    var previewingCell: ClipCollectionViewCell? {
+    var previewingCell: ClipPreviewPresentingCell? {
         guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: clip) else { return nil }
         return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
+    }
+
+    var previewingCellCornerRadius: CGFloat {
+        return ClipCollectionViewCell.cornerRadius
     }
 
     func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {

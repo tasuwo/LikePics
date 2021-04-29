@@ -9,7 +9,7 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: View
 
-    private let resultsController: SearchResultViewController
+    let resultsController: SearchResultViewController
     private var searchController: UISearchController { resultsController.searchController }
 
     // MARK: - Initializers

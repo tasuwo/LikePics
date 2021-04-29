@@ -3,7 +3,7 @@
 //
 
 import Combine
-import Persistence
+import Domain
 import Smoothie
 import TBoxUIKit
 import UIKit
@@ -254,5 +254,35 @@ extension SearchResultViewController {
     func executeSearchBarChangeEvent(_ searchBar: UISearchBar) {
         store.execute(.searchBarChanged(text: searchBar.text ?? "",
                                         tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }))
+    }
+}
+
+extension SearchResultViewController: ClipPreviewPresentingViewController {
+    // MARK: - ClipPreviewPresentingViewController
+
+    var previewingClip: Clip? {
+        store.stateValue.previewingClip
+    }
+
+    var previewingCell: ClipPreviewPresentingCell? {
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
+        return collectionView.cellForItem(at: indexPath) as? SearchResultClipCell
+    }
+
+    var previewingCellCornerRadius: CGFloat {
+        return SearchResultClipCell.imageCornerRadius
+    }
+
+    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
+
+        view.layoutIfNeeded()
+        collectionView.layoutIfNeeded()
+
+        if shouldAdjust {
+            collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+            view.layoutIfNeeded()
+            collectionView.layoutIfNeeded()
+        }
     }
 }

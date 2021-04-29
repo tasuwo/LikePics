@@ -50,7 +50,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
 
-    static let cornerRadius: CGFloat = 10
+    public static let cornerRadius: CGFloat = 10
 
     public var identifier: String?
 
@@ -332,5 +332,16 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
 extension ClipCollectionViewCell: ClipPreviewPresentingCell {
     // MARK: - ClipPreviewPresentingCell
 
-    public var animatingImageView: UIImageView? { primaryImageView }
+    public func animatingImageView(at index: Int) -> UIImageView? {
+        switch index {
+        case 1:
+            return primaryImageView
+        case 2:
+            return secondaryImageView
+        case 3:
+            return tertiaryImageView
+        default:
+            return nil
+        }
+    }
 }

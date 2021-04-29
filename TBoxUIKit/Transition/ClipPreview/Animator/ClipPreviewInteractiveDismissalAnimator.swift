@@ -17,6 +17,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     struct FinishAnimationParameters {
         let finalImageFrame: CGRect
         let currentCornerRadius: CGFloat
+        let finalCornerRadius: CGFloat
         let from: ClipPreviewPresentedAnimatorDataSource & UIViewController
         let to: ClipPreviewPresentingAnimatorDataSource & UIViewController
         let innerContext: InnerContext
@@ -133,6 +134,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         if sender.state == .ended {
             let params = FinishAnimationParameters(finalImageFrame: finalImageFrame,
                                                    currentCornerRadius: cornerRadius,
+                                                   finalCornerRadius: to.animatingCellCornerRadius(self),
                                                    from: from,
                                                    to: to,
                                                    innerContext: innerContext)
@@ -197,8 +199,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerAnimation.fromValue = params.currentCornerRadius
-        cornerAnimation.toValue = ClipCollectionViewCell.cornerRadius
-        params.innerContext.animatingImageView.layer.cornerRadius = ClipCollectionViewCell.cornerRadius
+        cornerAnimation.toValue = params.finalCornerRadius
+        params.innerContext.animatingImageView.layer.cornerRadius = params.finalCornerRadius
         params.innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
         UIView.animate(
@@ -283,7 +285,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         let initialImageFrame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         let animatingImageView = UIImageView(image: fromImage)
-        ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        animatingImageView.contentMode = .scaleAspectFill
+        animatingImageView.clipsToBounds = true
         animatingImageView.frame = initialImageFrame
         animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.layer.masksToBounds = true
@@ -319,6 +322,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
             let params = FinishAnimationParameters(finalImageFrame: finalImageFrame,
                                                    currentCornerRadius: 0,
+                                                   finalCornerRadius: to.animatingCellCornerRadius(self),
                                                    from: from,
                                                    to: to,
                                                    innerContext: innerContext)

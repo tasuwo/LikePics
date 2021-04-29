@@ -6,7 +6,7 @@ import Domain
 import UIKit
 
 public protocol ClipPreviewPresentingCell: UICollectionViewCell {
-    var animatingImageView: UIImageView? { get }
+    func animatingImageView(at index: Int) -> UIImageView?
 }
 
 public protocol ClipPreviewPresentingAnimatorDataSource {
@@ -14,4 +14,5 @@ public protocol ClipPreviewPresentingAnimatorDataSource {
     func baseView(_ animator: ClipPreviewAnimator) -> UIView?
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView]
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forItemId itemId: ClipItem.Identity?) -> CGRect
+    func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat
 }

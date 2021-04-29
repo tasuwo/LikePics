@@ -35,7 +35,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let targetImageView = to.animatingPage(self),
             let selectedCell = from.animatingCell(self, shouldAdjust: false),
-            let selectedImageView = selectedCell.animatingImageView,
+            let selectedImageView = selectedCell.animatingImageView(at: 1),
             let selectedImage = selectedImageView.image
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -99,7 +99,9 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         containerView.addSubview(toViewBackgroundView)
 
         let animatingImageView = UIImageView(image: selectedImage)
-        ClipCollectionViewCell.setupAppearance(imageView: animatingImageView)
+        animatingImageView.layer.cornerRadius = from.animatingCellCornerRadius(self)
+        animatingImageView.contentMode = .scaleAspectFill
+        animatingImageView.clipsToBounds = true
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: nil)
         containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
@@ -122,7 +124,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
-        cornerAnimation.fromValue = 10
+        cornerAnimation.fromValue = from.animatingCellCornerRadius(self)
         cornerAnimation.toValue = 0
         animatingImageView.layer.cornerRadius = 0
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
