@@ -68,32 +68,32 @@ extension ClipCollectionNavigationBarController {
 
 extension ClipCollectionNavigationBarController {
     private func configureBarButtons() {
-        cancelButton.setTitle(L10n.confirmAlertCancel, for: .normal)
+        cancelButton.title = L10n.confirmAlertCancel
         cancelButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapCancel)
         }), for: .touchUpInside)
 
-        selectAllButton.setTitle(L10n.clipsListRightBarItemForSelectAllTitle, for: .normal)
+        selectAllButton.title = L10n.clipsListRightBarItemForSelectAllTitle
         selectAllButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapSelectAll)
         }), for: .touchUpInside)
 
-        deselectAllButton.setTitle(L10n.clipsListRightBarItemForDeselectAllTitle, for: .normal)
+        deselectAllButton.title = L10n.clipsListRightBarItemForDeselectAllTitle
         deselectAllButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapDeselectAll)
         }), for: .touchUpInside)
 
-        selectButton.setTitle(L10n.clipsListRightBarItemForSelectTitle, for: .normal)
+        selectButton.title = L10n.clipsListRightBarItemForSelectTitle
         selectButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapSelect)
         }), for: .touchUpInside)
 
-        reorderButton.setTitle(L10n.clipsListRightBarItemForReorder, for: .normal)
+        reorderButton.title = L10n.clipsListRightBarItemForReorder
         reorderButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapReorder)
         }), for: .touchUpInside)
 
-        doneButton.setTitle(L10n.clipsListRightBarItemForDone, for: .normal)
+        doneButton.title = L10n.clipsListRightBarItemForDone
         doneButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapDone)
         }), for: .touchUpInside)
