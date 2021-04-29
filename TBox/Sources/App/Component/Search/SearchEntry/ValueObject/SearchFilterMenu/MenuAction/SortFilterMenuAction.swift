@@ -36,9 +36,9 @@ struct SortFilterMenuAction: Equatable {
     var image: UIImage? {
         switch order {
         case .ascend:
-            return UIImage(systemName: "chevron.down")
-        case .descend:
             return UIImage(systemName: "chevron.up")
+        case .descend:
+            return UIImage(systemName: "chevron.down")
         case .none:
             return nil
         }

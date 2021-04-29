@@ -20,7 +20,7 @@ struct SearchResultViewState: Equatable {
     let searchCandidatesEffectId = UUID()
 
     var searchOnlyHiddenItems: Bool? = nil
-    var selectedSort: ClipSearchSort = .createdDate(.ascend)
+    var selectedSort: ClipSearchSort = .createdDate(.descent)
 
     var inputtedText: String = ""
     var inputtedTokens: [SearchToken] = []
