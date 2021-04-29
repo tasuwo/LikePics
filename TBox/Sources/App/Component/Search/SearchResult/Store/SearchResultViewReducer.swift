@@ -143,9 +143,9 @@ extension SearchResultViewReducer {
         let stream = Deferred {
             Future<Action?, Never> { promise in
                 let albumTokens = self.searchAlbumCandidates(for: text, includesHiddenItems: includesHiddenItems, dependency: dependency)
-                    .map { SearchToken(kind: .album, id: $0.id, title: $0.title) }
+                    .map { ClipSearchToken(kind: .album, id: $0.id, title: $0.title) }
                 let tagTokens = self.searchTagCandidates(for: text, includesHiddenItems: includesHiddenItems, dependency: dependency)
-                    .map { SearchToken(kind: .tag, id: $0.id, title: $0.name) }
+                    .map { ClipSearchToken(kind: .tag, id: $0.id, title: $0.name) }
                 promise(.success(.foundCandidates(tagTokens + albumTokens, byText: text, includesHiddenItems: includesHiddenItems)))
             }
         }

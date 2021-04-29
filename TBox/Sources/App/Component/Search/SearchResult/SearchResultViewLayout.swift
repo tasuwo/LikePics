@@ -18,7 +18,7 @@ enum SearchResultViewLayout {
     }
 
     enum Item: Equatable, Hashable {
-        case tokenCandidate(SearchToken)
+        case tokenCandidate(ClipSearchToken)
         case result(Clip)
     }
 }
@@ -136,7 +136,7 @@ extension SearchResultViewLayout {
         return dataSource
     }
 
-    private static func configureCandidateCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, SearchToken> {
+    private static func configureCandidateCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ClipSearchToken> {
         return .init { cell, _, token in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.attributedText = token.attributedTitle

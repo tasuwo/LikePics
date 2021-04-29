@@ -2,20 +2,10 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
-struct SearchToken: Equatable, Hashable {
-    enum Kind {
-        case tag
-        case album
-    }
-
-    let kind: Kind
-    let id: UUID
-    let title: String
-}
-
-extension SearchToken {
+extension ClipSearchToken {
     var uiSearchToken: UISearchToken {
         let token = UISearchToken(icon: kind.icon, text: title)
         token.representedObject = self
@@ -23,7 +13,7 @@ extension SearchToken {
     }
 }
 
-extension SearchToken.Kind {
+extension ClipSearchToken.Kind {
     var icon: UIImage {
         switch self {
         case .tag:
@@ -37,7 +27,7 @@ extension SearchToken.Kind {
     }
 }
 
-extension SearchToken {
+extension ClipSearchToken {
     var attributedTitle: NSAttributedString {
         let string = NSMutableAttributedString(string: title)
 
@@ -59,7 +49,7 @@ extension SearchToken {
 }
 
 extension UISearchToken {
-    var underlyingToken: SearchToken? {
-        return self.representedObject as? SearchToken
+    var underlyingToken: ClipSearchToken? {
+        return self.representedObject as? ClipSearchToken
     }
 }

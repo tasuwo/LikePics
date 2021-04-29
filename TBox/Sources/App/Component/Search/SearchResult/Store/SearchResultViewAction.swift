@@ -11,7 +11,7 @@ enum SearchResultViewAction: Action {
 
     // MARK: State Observation
 
-    case searchBarChanged(text: String, tokens: [SearchToken])
+    case searchBarChanged(text: String, tokens: [ClipSearchToken])
     case settingUpdated(isSomeItemsHidden: Bool)
 
     // MARK: - Menu
@@ -21,12 +21,12 @@ enum SearchResultViewAction: Action {
 
     // MARK: - Selection
 
-    case selectedTokenCandidate(SearchToken)
+    case selectedTokenCandidate(ClipSearchToken)
     case selectedResult(Clip)
     case selectedSeeAllResultsButton
 
     // MARK: - Search Execution
 
     case foundResults([Clip], byQuery: ClipSearchQuery)
-    case foundCandidates([SearchToken], byText: String, includesHiddenItems: Bool)
+    case foundCandidates([ClipSearchToken], byText: String, includesHiddenItems: Bool)
 }

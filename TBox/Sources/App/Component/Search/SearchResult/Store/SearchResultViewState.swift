@@ -8,7 +8,7 @@ struct SearchResultViewState: Equatable {
     struct SearchedTokenCandidates: Equatable {
         let searchText: String
         let includesHiddenItems: Bool
-        let tokenCandidates: [SearchToken]
+        let tokenCandidates: [ClipSearchToken]
     }
 
     struct SearchedClips: Equatable {
@@ -23,7 +23,7 @@ struct SearchResultViewState: Equatable {
     var selectedSort: ClipSearchSort = .createdDate(.descent)
 
     var inputtedText: String = ""
-    var inputtedTokens: [SearchToken] = []
+    var inputtedTokens: [ClipSearchToken] = []
 
     var searchedTokenCandidates: SearchedTokenCandidates? = nil
     var searchedClips: SearchedClips? = nil
@@ -35,7 +35,7 @@ struct SearchResultViewState: Equatable {
 }
 
 extension SearchResultViewState {
-    var tokenCandidates: [SearchToken] { searchedTokenCandidates?.tokenCandidates ?? [] }
+    var tokenCandidates: [ClipSearchToken] { searchedTokenCandidates?.tokenCandidates ?? [] }
     var searchResults: [Clip] { searchedClips?.results ?? [] }
     var isSearching: Bool { isSearchingTokenCandidates || isSearchingClips }
     var isResultsEmpty: Bool { searchResults.isEmpty && tokenCandidates.isEmpty }
