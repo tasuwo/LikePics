@@ -65,7 +65,7 @@ struct SearchFilterMenuBuilder: Equatable {
         let uiActions = actions.map { action -> UIAction in
             let selectedSort: ClipSearchSort = {
                 let order: ClipSearchSort.Order = {
-                    guard let currentOrder = action.order?.searchOrder else { return .ascend }
+                    guard let currentOrder = action.order?.searchOrder else { return .descent }
                     switch currentOrder {
                     case .ascend:
                         return .descent
