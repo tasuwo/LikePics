@@ -7,6 +7,4 @@ enum ClipCollectionNavigationBarEvent {
     case selectAll
     case deselectAll
     case select
-    case reorder
-    case done
 }

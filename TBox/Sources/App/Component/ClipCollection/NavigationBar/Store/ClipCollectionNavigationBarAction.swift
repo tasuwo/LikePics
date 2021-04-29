@@ -19,6 +19,4 @@ enum ClipCollectionNavigationBarAction: Action {
     case didTapSelectAll
     case didTapDeselectAll
     case didTapSelect
-    case didTapReorder
-    case didTapDone
 }

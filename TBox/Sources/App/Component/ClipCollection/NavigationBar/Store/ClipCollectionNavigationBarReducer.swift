@@ -46,9 +46,7 @@ enum ClipCollectionNavigationBarReducer: Reducer {
         case .didTapCancel,
              .didTapSelectAll,
              .didTapDeselectAll,
-             .didTapSelect,
-             .didTapReorder,
-             .didTapDone:
+             .didTapSelect:
             return (state, [eventEffect])
         }
     }
@@ -60,17 +58,13 @@ private extension ClipCollectionNavigationBarState {
 
         let isSelectedAll = clipCount <= selectionCount
         let isSelectable = clipCount > 0
-        let existsClip = clipCount > 1
 
         let rightItems: [Item]
         let leftItems: [Item]
 
         switch operation {
         case .none:
-            rightItems = [
-                source.isAlbum ? .init(kind: .reorder, isEnabled: existsClip) : nil,
-                .init(kind: .select, isEnabled: isSelectable)
-            ].compactMap { $0 }
+            rightItems = [.init(kind: .select, isEnabled: isSelectable)]
             leftItems = []
 
         case .selecting:
@@ -80,10 +74,6 @@ private extension ClipCollectionNavigationBarState {
                     ? .init(kind: .deselectAll, isEnabled: true)
                     : .init(kind: .selectAll, isEnabled: true)
             ]
-
-        case .reordering:
-            rightItems = [.init(kind: .done, isEnabled: true)]
-            leftItems = []
         }
 
         nextState.rightItems = rightItems
@@ -107,12 +97,6 @@ private extension ClipCollectionNavigationBarAction {
 
         case .didTapSelect:
             return .select
-
-        case .didTapReorder:
-            return .reorder
-
-        case .didTapDone:
-            return .done
 
         default:
             return nil

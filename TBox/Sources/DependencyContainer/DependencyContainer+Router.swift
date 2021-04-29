@@ -37,7 +37,6 @@ extension DependencyContainer {
                                         previewingClipId: nil,
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
-                                        isDragInteractionEnabled: false,
                                         alert: nil,
                                         isDismissed: false,
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())

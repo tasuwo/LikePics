@@ -40,8 +40,6 @@ enum ClipCollectionReducer: Reducer {
         // MARK: Selection
 
         case let .selected(clipId):
-            if state.operation == .reordering { return (state, .none) }
-
             let selections: Set<Clip.Identity> = {
                 if state.operation.isAllowedMultipleSelection {
                     return state.clips._selectedIds.union(Set([clipId]))
@@ -463,7 +461,6 @@ extension ClipCollectionReducer {
                                 dependency: Dependency) -> (State, [Effect<Action>]?)
     {
         var nextState = state
-        nextState.isDragInteractionEnabled = false
 
         switch action {
         case .cancel:
@@ -482,17 +479,6 @@ extension ClipCollectionReducer {
 
         case .select:
             nextState.operation = .selecting
-            nextState.clips = nextState.clips.updated(_selectedIds: .init())
-            return (nextState, .none)
-
-        case .reorder:
-            nextState.operation = .reordering
-            nextState.clips = nextState.clips.updated(_selectedIds: .init())
-            nextState.isDragInteractionEnabled = true
-            return (nextState, .none)
-
-        case .done:
-            nextState.operation = .none
             nextState.clips = nextState.clips.updated(_selectedIds: .init())
             return (nextState, .none)
         }

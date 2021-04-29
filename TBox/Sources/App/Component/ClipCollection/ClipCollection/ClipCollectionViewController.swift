@@ -321,7 +321,7 @@ extension ClipCollectionViewController {
 
     private func configureReorder() {
         collectionView.dragInteractionEnabled = false
-        dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in self?.isEditing ?? false }
+        dataSource.reorderingHandlers.canReorderItem = { [weak self] _ in self?.isEditing == false }
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             let clipIds = transaction.finalSnapshot.itemIdentifiers.map { $0.id }
             self?.store.execute(.reordered(clipIds))
@@ -342,13 +342,11 @@ extension ClipCollectionViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard store.stateValue.operation != .reordering else { return false }
         guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
         return !cell.isLoading
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        guard store.stateValue.operation != .reordering else { return false }
         guard let cell = collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell else { return false }
         return !cell.isLoading
     }
@@ -577,7 +575,7 @@ extension ClipCollectionViewController: UICollectionViewDropDelegate {
     // MARK: - UICollectionViewDropDelegate
 
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-        return self.isEditing
+        return self.isEditing == false
     }
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {

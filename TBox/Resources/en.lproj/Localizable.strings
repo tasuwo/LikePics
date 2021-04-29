@@ -18,8 +18,6 @@
 "clips_list_right_bar_item_for_select_title" = "Select";
 "clips_list_right_bar_item_for_select_all_title" = "Select All";
 "clips_list_right_bar_item_for_deselect_all_title" = "Deselect All";
-"clips_list_right_bar_item_for_reorder" = "Reorder";
-"clips_list_right_bar_item_for_done" = "Done";
 
 "clips_list_alert_for_add_to_album" = "Add to Album";
 "clips_list_alert_for_add_tag" = "Add Tags";

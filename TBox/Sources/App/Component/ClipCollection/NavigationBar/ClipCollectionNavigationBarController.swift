@@ -21,8 +21,6 @@ class ClipCollectionNavigationBarController {
     private let selectAllButton = RoundedButton()
     private let deselectAllButton = RoundedButton()
     private let selectButton = RoundedButton()
-    private let reorderButton = RoundedButton()
-    private let doneButton = RoundedButton()
 
     // MARK: Store
 
@@ -87,16 +85,6 @@ extension ClipCollectionNavigationBarController {
         selectButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapSelect)
         }), for: .touchUpInside)
-
-        reorderButton.title = L10n.clipsListRightBarItemForReorder
-        reorderButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapReorder)
-        }), for: .touchUpInside)
-
-        doneButton.title = L10n.clipsListRightBarItemForDone
-        doneButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapDone)
-        }), for: .touchUpInside)
     }
 }
 
@@ -119,12 +107,6 @@ extension ClipCollectionNavigationBarController {
 
             case .select:
                 return self.selectButton
-
-            case .reorder:
-                return self.reorderButton
-
-            case .done:
-                return self.doneButton
             }
         }()
         let barButtonItem = UIBarButtonItem(customView: customView)

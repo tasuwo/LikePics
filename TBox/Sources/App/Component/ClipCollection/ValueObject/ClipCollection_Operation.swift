@@ -8,7 +8,6 @@ extension ClipCollection {
     enum Operation: Equatable {
         case none
         case selecting
-        case reordering
 
         var isAllowedMultipleSelection: Bool {
             switch self {
@@ -25,7 +24,7 @@ extension ClipCollection {
             case .none:
                 return false
 
-            case .selecting, .reordering:
+            case .selecting:
                 return true
             }
         }

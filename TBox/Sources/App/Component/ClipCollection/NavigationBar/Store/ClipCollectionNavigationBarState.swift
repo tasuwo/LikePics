@@ -11,8 +11,6 @@ struct ClipCollectionNavigationBarState: Equatable {
             case selectAll
             case deselectAll
             case select
-            case reorder
-            case done
         }
 
         let kind: Kind

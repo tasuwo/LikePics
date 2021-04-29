@@ -22,7 +22,6 @@ struct ClipCollectionState: Equatable {
 
     var isEmptyMessageViewDisplaying: Bool
     var isCollectionViewDisplaying: Bool
-    var isDragInteractionEnabled: Bool
 
     var alert: Alert?
 
@@ -32,6 +31,10 @@ struct ClipCollectionState: Equatable {
 }
 
 extension ClipCollectionState {
+    var isDragInteractionEnabled: Bool {
+        source.isAlbum && !operation.isEditing
+    }
+
     var previewingClip: Clip? {
         guard let clipId = previewingClipId else { return nil }
         return clips._values[clipId]?.value
