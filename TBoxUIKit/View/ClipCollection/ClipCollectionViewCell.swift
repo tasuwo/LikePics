@@ -328,3 +328,9 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         }
     }
 }
+
+extension ClipCollectionViewCell: ClipPreviewPresentingCell {
+    // MARK: - ClipPreviewPresentingCell
+
+    public var animatingImageView: UIImageView? { primaryImageView }
+}

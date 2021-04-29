@@ -34,7 +34,7 @@ private extension AppRootViewController {
 // MARK: - ClipPreviewPresentingAnimatorDataSource
 
 extension AppRootViewController where Self: UIViewController {
-    func animatingCell(_ animator: ClipPreviewAnimator, shouldAdjust: Bool) -> ClipCollectionViewCell? {
+    func animatingCell(_ animator: ClipPreviewAnimator, shouldAdjust: Bool) -> ClipPreviewPresentingCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
         viewController.displayOnScreenPreviewingCellIfNeeded(shouldAdjust: shouldAdjust)
         return viewController.previewingCell
