@@ -37,6 +37,8 @@ class DependencyContainer {
 
     let _clipCommandService: ClipCommandService
     let _clipQueryService: ClipQueryService
+    let _clipSearchHistoryService: Persistence.ClipSearchHistoryService
+    let _clipSearchSettingService: Persistence.ClipSearchSettingService
     let _imageQueryService: ImageQueryService
     let integrityValidationService: ClipReferencesIntegrityValidationService
     let persistService: TemporariesPersistServiceProtocol
@@ -83,6 +85,9 @@ class DependencyContainer {
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
         self._imageQueryService = ImageQueryService(context: self.imageQueryContext)
+
+        self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
+        self._clipSearchSettingService = Persistence.ClipSearchSettingService()
 
         Self.sweepLegacyThumbnailCachesIfExists()
 
@@ -229,6 +234,14 @@ extension DependencyContainer: HasClipCommandService {
 
 extension DependencyContainer: HasClipQueryService {
     var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
+}
+
+extension DependencyContainer: HasClipSearchSettingService {
+    var clipSearchSettingService: Domain.ClipSearchSettingService { _clipSearchSettingService }
+}
+
+extension DependencyContainer: HasClipSearchHistoryService {
+    var clipSearchHistoryService: Domain.ClipSearchHistoryService { _clipSearchHistoryService }
 }
 
 extension DependencyContainer: HasUserSettingStorage {
