@@ -1,11 +1,12 @@
 included:
-  - ../TBox
-  - ../Common
-  - ../Domain
-  - ../Persistence
-  - ../TBoxCore
-  - ../TBoxUIKit
-  - ../ShareExtension
+  - TBox
+  - Common
+  - Domain
+  - Persistence
+  - TBoxCore
+  - TBoxUIKit
+  - ShareExtension
+  - Smoothie
 excluded:
   - Pods
 opt_in_rules:

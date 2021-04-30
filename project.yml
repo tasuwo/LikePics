@@ -425,10 +425,6 @@ targets:
         runOnlyWhenInstalling: false
         path: scripts/run_swiftlint.sh
         shell: /bin/sh
-      - name: License plist
-        runOnlyWhenInstalling: false
-        path: scripts/run_license_plist.sh
-        shell: /bin/sh
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
