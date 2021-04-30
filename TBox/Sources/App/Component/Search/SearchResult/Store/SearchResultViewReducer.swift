@@ -9,6 +9,7 @@ import Foundation
 typealias SearchResultViewDependency = HasClipQueryService
     & HasRouter
     & HasUserSettingStorage
+    & HasClipSearchSettingService
 
 enum SearchResultViewReducer: Reducer {
     typealias Dependency = SearchResultViewDependency
@@ -47,11 +48,13 @@ enum SearchResultViewReducer: Reducer {
 
         case let .displaySettingMenuChanged(searchOnlyHiddenItems):
             nextState.searchOnlyHiddenItems = searchOnlyHiddenItems
+            dependency.clipSearchSettingService.save(.init(isHidden: searchOnlyHiddenItems, sort: state.selectedSort))
             let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         case let .sortMenuChanged(sort):
             nextState.selectedSort = sort
+            dependency.clipSearchSettingService.save(.init(isHidden: state.searchOnlyHiddenItems, sort: sort))
             let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
@@ -89,10 +92,17 @@ enum SearchResultViewReducer: Reducer {
 
 extension SearchResultViewReducer {
     private static func prepare(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
+        var nextState = state
+
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
-        return (state, [settingsEffect])
+
+        let savedSetting = dependency.clipSearchSettingService.read() ?? .default
+        nextState.searchOnlyHiddenItems = savedSetting.isHidden
+        nextState.selectedSort = savedSetting.sort
+
+        return (nextState, [settingsEffect])
     }
 }
 

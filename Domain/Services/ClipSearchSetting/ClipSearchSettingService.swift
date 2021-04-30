@@ -6,5 +6,6 @@ import Combine
 
 public protocol ClipSearchSettingService {
     func save(_ setting: ClipSearchSetting)
+    func read() -> ClipSearchSetting?
     func query() -> AnyPublisher<ClipSearchSetting?, Never>
 }

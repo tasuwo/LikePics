@@ -44,6 +44,10 @@ extension ClipSearchSettingService: Domain.ClipSearchSettingService {
         queue.async { self.setSettingNonAtomically(setting) }
     }
 
+    public func read() -> ClipSearchSetting? {
+        return queue.sync { fetchSettingNonAtomically() }
+    }
+
     public func query() -> AnyPublisher<ClipSearchSetting?, Never> {
         userDefaults
             .publisher(for: \.clipSearchSetting)

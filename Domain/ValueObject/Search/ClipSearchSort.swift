@@ -3,6 +3,8 @@
 //
 
 public struct ClipSearchSort: Equatable, Hashable, Codable {
+    public static let `default`: Self = .init(kind: .createdDate, order: .descent)
+
     public enum Order: String, Codable {
         case ascend
         case descent
