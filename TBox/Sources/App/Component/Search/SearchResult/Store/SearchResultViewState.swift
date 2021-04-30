@@ -19,16 +19,16 @@ struct SearchResultViewState: Equatable {
     let searchEffectId = UUID()
     let searchCandidatesEffectId = UUID()
 
-    var searchOnlyHiddenItems: Bool? = nil
+    var searchOnlyHiddenItems: Bool?
     var selectedSort: ClipSearchSort = .init(kind: .createdDate, order: .descent)
 
     var inputtedText: String = ""
     var inputtedTokens: [ClipSearchToken] = []
 
-    var searchedTokenCandidates: SearchedTokenCandidates? = nil
-    var searchedClips: SearchedClips? = nil
+    var searchedTokenCandidates: SearchedTokenCandidates?
+    var searchedClips: SearchedClips?
 
-    var previewingClipId: Clip.Identity? = nil
+    var previewingClipId: Clip.Identity?
 
     var isSearchingTokenCandidates: Bool = false
     var isSearchingClips: Bool = false

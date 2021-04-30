@@ -270,7 +270,7 @@ extension ThumbnailLoadQueue {
         let options = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceCreateThumbnailWithTransform: true
         ] as CFDictionary
         guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else {
             return nil

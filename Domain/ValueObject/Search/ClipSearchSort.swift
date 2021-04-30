@@ -15,9 +15,9 @@ public struct ClipSearchSort: Equatable, Hashable, Codable {
     }
 
     public enum Kind: String, Codable {
-        case createdDate
-        case updatedDate
-        case size
+        case createdDate = "created_date"
+        case updatedDate = "updated_date"
+        case size = "size"
     }
 
     public let kind: Kind

@@ -94,9 +94,11 @@ public class RoundedButton: UIControl {
         case .disabled:
             titleLabel.textColor = .white
             backgroundColor = .systemGray
+
         case .enabled:
             titleLabel.textColor = .white
             backgroundColor = Asset.Color.likePicsRed.color
+
         case .enabledHighlighted:
             titleLabel.textColor = .white.withAlphaComponent(0.8)
             backgroundColor = Asset.Color.likePicsRed.color.withAlphaComponent(0.8)

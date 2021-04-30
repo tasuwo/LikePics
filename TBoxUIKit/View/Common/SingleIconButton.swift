@@ -11,6 +11,7 @@ public class SingleIconButton: UIControl {
         var image: UIImage {
             switch self {
             case .ellipsis:
+                // swiftlint:disable:next force_unwrapping
                 return UIImage(systemName: "ellipsis")!.withRenderingMode(.alwaysTemplate)
             }
         }
@@ -105,9 +106,11 @@ public class SingleIconButton: UIControl {
         case .disabled:
             iconView.tintColor = .white
             backgroundColor = .systemGray
+
         case .enabled:
             iconView.tintColor = .white
             backgroundColor = Asset.Color.likePicsRed.color
+
         case .enabledHighlighted:
             iconView.tintColor = .white.withAlphaComponent(0.8)
             backgroundColor = Asset.Color.likePicsRed.color.withAlphaComponent(0.8)

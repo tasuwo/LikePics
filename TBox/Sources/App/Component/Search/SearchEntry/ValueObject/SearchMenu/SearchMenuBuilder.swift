@@ -30,7 +30,7 @@ struct SearchMenuBuilder: Equatable {
         let actions: [SearchMenuDisplaySettingAction] = [
             .init(kind: .unspecified, isSelected: state.shouldSearchOnlyHiddenClip == nil),
             .init(kind: .hidden, isSelected: state.shouldSearchOnlyHiddenClip == true),
-            .init(kind: .revealed, isSelected: state.shouldSearchOnlyHiddenClip == false),
+            .init(kind: .revealed, isSelected: state.shouldSearchOnlyHiddenClip == false)
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -38,8 +38,10 @@ struct SearchMenuBuilder: Equatable {
                 switch action.kind {
                 case .unspecified:
                     return nil
+
                 case .hidden:
                     return true
+
                 case .revealed:
                     return false
                 }
@@ -59,7 +61,7 @@ struct SearchMenuBuilder: Equatable {
         let actions: [SearchMenuSortAction] = [
             .init(kind: .createdDate, order: state.sort.createdDateSort?.actionOrder),
             .init(kind: .updatedDate, order: state.sort.updateDateOrder?.actionOrder),
-            .init(kind: .dataSize, order: state.sort.sizeOrder?.actionOrder),
+            .init(kind: .dataSize, order: state.sort.sizeOrder?.actionOrder)
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -69,6 +71,7 @@ struct SearchMenuBuilder: Equatable {
                     switch currentOrder {
                     case .ascend:
                         return .descent
+
                     case .descent:
                         return .ascend
                     }
@@ -77,8 +80,10 @@ struct SearchMenuBuilder: Equatable {
                 switch action.kind {
                 case .createdDate:
                     return .init(kind: .createdDate, order: order)
+
                 case .updatedDate:
                     return .init(kind: .updatedDate, order: order)
+
                 case .dataSize:
                     return .init(kind: .size, order: order)
                 }
@@ -98,6 +103,7 @@ private extension SearchMenuSortAction.Order {
         switch self {
         case .ascend:
             return .ascend
+
         case .descend:
             return .descent
         }
@@ -109,6 +115,7 @@ private extension ClipSearchSort.Order {
         switch self {
         case .ascend:
             return .ascend
+
         case .descent:
             return .descend
         }
@@ -117,17 +124,17 @@ private extension ClipSearchSort.Order {
 
 private extension ClipSearchSort {
     var createdDateSort: Order? {
-        guard case let .createdDate = kind else { return nil }
+        guard case .createdDate = kind else { return nil }
         return order
     }
 
     var updateDateOrder: Order? {
-        guard case let .updatedDate = kind else { return nil }
+        guard case .updatedDate = kind else { return nil }
         return order
     }
 
     var sizeOrder: Order? {
-        guard case let .size = kind else { return nil }
+        guard case .size = kind else { return nil }
         return order
     }
 }

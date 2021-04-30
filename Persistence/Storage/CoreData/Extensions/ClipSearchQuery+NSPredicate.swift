@@ -21,8 +21,10 @@ extension ClipSearchQuery {
         switch isHidden {
         case .some(true):
             predicates.append(NSPredicate(format: "isHidden == true"))
+
         case .some(false):
             predicates.append(NSPredicate(format: "isHidden == false"))
+
         case .none:
             break
         }

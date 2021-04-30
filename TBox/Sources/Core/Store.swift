@@ -57,7 +57,7 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
         }
 
         let cancellable = effect.upstream
-            .sink { [weak self, weak effect] completion in
+            .sink { [weak self, weak effect] _ in
                 guard let self = self else { return }
 
                 self.effectsLock.lock()

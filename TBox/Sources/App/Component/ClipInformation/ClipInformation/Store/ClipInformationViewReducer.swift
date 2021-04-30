@@ -174,7 +174,6 @@ extension ClipInformationViewReducer {
 
         let settingStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
-            .catch { _ in Just(Action.failedToLoadSetting) }
         let settingEffect = Effect(settingStream, completeWith: .failedToLoadSetting)
 
         // Prepare states

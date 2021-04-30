@@ -46,7 +46,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "title CONTAINS[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg),
+                    NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)
                 ])
             } else {
                 predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)
@@ -79,7 +79,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "name CONTAINS[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg),
+                    NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)
                 ])
             } else {
                 predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)

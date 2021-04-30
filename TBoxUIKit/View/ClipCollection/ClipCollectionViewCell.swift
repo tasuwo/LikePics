@@ -336,10 +336,13 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
         switch index {
         case 1:
             return primaryImageView
+
         case 2:
             return secondaryImageView
+
         case 3:
             return tertiaryImageView
+
         default:
             return nil
         }

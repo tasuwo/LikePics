@@ -17,8 +17,10 @@ struct SearchMenuDisplaySettingAction: Equatable {
         switch kind {
         case .unspecified:
             return L10n.searchEntryMenuDisplaySettingUnspecified
+
         case .hidden:
             return L10n.searchEntryMenuDisplaySettingHidden
+
         case .revealed:
             return L10n.searchEntryMenuDisplaySettingRevealed
         }
@@ -30,8 +32,10 @@ struct SearchMenuDisplaySettingAction: Equatable {
         switch kind {
         case .unspecified:
             return nil
+
         case .hidden:
             return UIImage(systemName: "eye.slash")
+
         case .revealed:
             return UIImage(systemName: "eye")
         }

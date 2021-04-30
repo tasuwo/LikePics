@@ -98,10 +98,8 @@ extension SearchResultViewController {
             self.notFoundMessageView.message = state.notFoundMessage
             self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
 
-            self.filterButtonItem?.menu = self.filterMenuBuilder.build(
-                state.menuState,
-                isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden
-            ) { [weak self] change in
+            self.filterButtonItem?.menu = self.filterMenuBuilder.build(state.menuState,
+                                                                       isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden) { [weak self] change in
                 self?.store.execute(.displaySettingMenuChanged(change))
             } sortChangeHandler: { [weak self] change in
                 self?.store.execute(.sortMenuChanged(change))

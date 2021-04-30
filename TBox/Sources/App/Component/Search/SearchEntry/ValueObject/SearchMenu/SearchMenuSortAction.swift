@@ -24,8 +24,10 @@ struct SearchMenuSortAction: Equatable {
         switch kind {
         case .createdDate:
             return L10n.searchEntryMenuSortCreatedDate
+
         case .updatedDate:
             return L10n.searchEntryMenuSortUpdatedDate
+
         case .dataSize:
             return L10n.searchEntryMenuSortDataSize
         }
@@ -37,8 +39,10 @@ struct SearchMenuSortAction: Equatable {
         switch order {
         case .ascend:
             return UIImage(systemName: "chevron.up")
+
         case .descend:
             return UIImage(systemName: "chevron.down")
+
         case .none:
             return nil
         }
