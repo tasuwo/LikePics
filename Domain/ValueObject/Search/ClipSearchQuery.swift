@@ -4,11 +4,14 @@
 
 import Foundation
 
-public struct ClipSearchQuery: Equatable {
+public struct ClipSearchQuery: Equatable, Hashable {
     public let text: String
     public let tokens: [ClipSearchToken]
-    public let isHidden: Bool?
-    public let sort: ClipSearchSort
+    public let setting: ClipSearchSetting
+
+    public var isHidden: Bool? { setting.isHidden }
+
+    public var sort: ClipSearchSort { setting.sort }
 
     public var albumIds: [UUID] {
         tokens
@@ -35,7 +38,6 @@ public struct ClipSearchQuery: Equatable {
     public init(text: String, tokens: [ClipSearchToken], isHidden: Bool?, sort: ClipSearchSort) {
         self.text = text
         self.tokens = tokens
-        self.isHidden = isHidden
-        self.sort = sort
+        self.setting = .init(isHidden: isHidden, sort: sort)
     }
 }

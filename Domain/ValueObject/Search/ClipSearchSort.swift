@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public enum ClipSearchSort: Equatable {
-    public enum Order: Equatable {
+public enum ClipSearchSort: Equatable, Hashable {
+    public enum Order: Equatable, Hashable {
         case ascend
         case descent
 
