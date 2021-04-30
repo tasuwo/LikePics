@@ -30,6 +30,9 @@
 
 "uncategorized_cell_title" = "Uncategorized clips";
 
+"search_history_section_title" = "Recents";
+"search_entry_header_remove_all" = "Delete All";
+
 "adding_alert_action_save" = "Save";
 "adding_alert_action_cancel" = "Cancel";
 

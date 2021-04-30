@@ -24,11 +24,11 @@ enum SearchEntryViewLayout {
 
     enum Item: Hashable {
         case empty
+        case historyHeader(enabledRemoveAllButton: Bool)
         case history(SearchHistoryWrapper)
     }
 
     enum ElementKind: String {
-        case historyHeader
         case historyFooter
     }
 }
@@ -50,12 +50,12 @@ extension SearchEntryViewLayout {
         var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         configuration.backgroundColor = .clear
         configuration.trailingSwipeActionsConfigurationProvider = historyDeletionHandler
+        configuration.showsSeparators = false
         let layout = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
         let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(44))
         layout.boundarySupplementaryItems = [
-            .init(layoutSize: titleSize, elementKind: ElementKind.historyHeader.rawValue, alignment: .top),
             .init(layoutSize: titleSize, elementKind: ElementKind.historyFooter.rawValue, alignment: .bottom)
         ]
 
@@ -66,25 +66,28 @@ extension SearchEntryViewLayout {
 // MARK: - DataSource
 
 extension SearchEntryViewLayout {
-    static func createDataSource(collectionView: UICollectionView) -> DataSource {
+    static func createDataSource(collectionView: UICollectionView,
+                                 removeAllHistoriesHandler: @escaping () -> Void) -> DataSource
+    {
         let emptyCellRegistration = configureEmptyCell()
+        let historyHeaderRegistration = self.configureHistoryHeader(removeAllHistoriesHandler: removeAllHistoriesHandler)
         let historyCellRegistration = configureHistoryCell()
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
             case .empty:
                 return collectionView.dequeueConfiguredReusableCell(using: emptyCellRegistration, for: indexPath, item: ())
+
+            case let .historyHeader(enabledRemoveAllButton: isEnabled):
+                return collectionView.dequeueConfiguredReusableCell(using: historyHeaderRegistration, for: indexPath, item: isEnabled)
+
             case let .history(history):
                 return collectionView.dequeueConfiguredReusableCell(using: historyCellRegistration, for: indexPath, item: history)
             }
         }
 
-        let historyHeaderRegistration = self.configureHistoryHeader()
         let historyFooterRegistration = self.configureHistoryFooter()
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch ElementKind(rawValue: elementKind) {
-            case .historyHeader:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: historyHeaderRegistration, for: indexPath)
-
             case .historyFooter:
                 return collectionView.dequeueConfiguredReusableSupplementary(using: historyFooterRegistration, for: indexPath)
 
@@ -94,13 +97,6 @@ extension SearchEntryViewLayout {
         }
 
         return dataSource
-    }
-
-    private static func configureHistoryHeader() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionHeaderView> {
-        return .init(elementKind: ElementKind.historyHeader.rawValue) { headerView, _, _ in
-            // TODO: 全て削除ボタンを配置する
-            headerView.title = L10n.searchHistorySectionTitle
-        }
     }
 
     private static func configureHistoryFooter() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionFooterView> {
@@ -117,6 +113,20 @@ extension SearchEntryViewLayout {
             contentConfiguration.textProperties.alignment = .center
             contentConfiguration.textProperties.color = .secondaryLabel
             cell.contentConfiguration = contentConfiguration
+        }
+    }
+
+    private static func configureHistoryHeader(removeAllHistoriesHandler: @escaping () -> Void) -> UICollectionView.CellRegistration<ClipSearchHistoryHeaderCell, Bool>
+    {
+        return .init { cell, _, isEnabled in
+            var contentConfiguration = ClipSearchHistoryHeaderConfiguration()
+            contentConfiguration.isRemoveAllButtonEnabled = isEnabled
+            contentConfiguration.removeAllHistoriesHandler = removeAllHistoriesHandler
+            cell.contentConfiguration = contentConfiguration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfiguration.backgroundColor = .clear
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 

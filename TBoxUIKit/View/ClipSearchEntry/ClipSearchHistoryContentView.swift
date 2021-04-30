@@ -17,6 +17,7 @@ class ClipSearchHistoryContentView: UIView, UIContentView {
     }
 
     @IBOutlet var baseView: UIView!
+    @IBOutlet var separatorView: UIView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var secondaryTitleLabel: UILabel!
 

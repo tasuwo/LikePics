@@ -53,6 +53,10 @@ enum SearchEntryViewReducer: Reducer {
             nextState.searchHistories = []
             nextState.alert = nil
             return (nextState, nil)
+
+        case .alertDismissed:
+            nextState.alert = nil
+            return (nextState, nil)
         }
     }
 }

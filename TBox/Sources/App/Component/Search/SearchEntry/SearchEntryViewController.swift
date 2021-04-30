@@ -72,6 +72,8 @@ extension SearchEntryViewController {
             DispatchQueue.global().async {
                 self.applySnapshot(for: state)
             }
+
+            self.presentAlertIfNeeded(for: state)
         }
         .store(in: &subscriptions)
     }
@@ -80,6 +82,8 @@ extension SearchEntryViewController {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.main])
+
+        snapshot.appendItems([.historyHeader(enabledRemoveAllButton: !state.searchHistories.isEmpty)])
 
         if state.searchHistories.isEmpty {
             snapshot.appendItems([.empty], toSection: .main)
@@ -90,6 +94,27 @@ extension SearchEntryViewController {
         }
 
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    private func presentAlertIfNeeded(for state: SearchEntryViewState) {
+        switch state.alert {
+        case .removeAll:
+            presentRemoveAllConfirmationAlert()
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentRemoveAllConfirmationAlert() {
+        let alert = UIAlertController(title: "", message: L10n.searchHistoryRemoveAllConfirmationMessage, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.searchHistoryRemoveAllConfirmationAction, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertDeleteConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -117,7 +142,10 @@ extension SearchEntryViewController {
 
     private func configureDataSource() {
         // swiftlint:disable identifier_name
-        let _dataSource = Layout.createDataSource(collectionView: collectionView)
+        let _dataSource = Layout.createDataSource(collectionView: collectionView,
+                                                  removeAllHistoriesHandler: { [weak self] in
+                                                      self?.store.execute(.removeAllHistories)
+                                                  })
         dataSource = _dataSource
         collectionView.delegate = self
     }

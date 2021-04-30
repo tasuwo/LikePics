@@ -338,10 +338,12 @@ internal enum L10n {
     internal static let searchHistoryDeleteAction = L10n.tr("Localizable", "search_history_delete_action")
     /// 履歴は最大100件まで保持されます。100件より多い場合、古い履歴から順に削除されます
     internal static let searchHistoryFooterMessage = L10n.tr("Localizable", "search_history_footer_message")
+    /// 削除
+    internal static let searchHistoryRemoveAllConfirmationAction = L10n.tr("Localizable", "search_history_remove_all_confirmation_action")
+    /// すべての検索履歴を削除します
+    internal static let searchHistoryRemoveAllConfirmationMessage = L10n.tr("Localizable", "search_history_remove_all_confirmation_message")
     /// 最近の検索はありません
     internal static let searchHistoryRowEmptyMessage = L10n.tr("Localizable", "search_history_row_empty_message")
-    /// 最近の検索
-    internal static let searchHistorySectionTitle = L10n.tr("Localizable", "search_history_section_title")
     /// キーワード「%@」に一致するクリップは見つかりませんでした
     internal static func searchResultForKeywordsEmptyTitle(_ p1: Any) -> String {
         return L10n.tr("Localizable", "search_result_for_keywords_empty_title", String(describing: p1))

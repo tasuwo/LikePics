@@ -121,8 +121,10 @@
 		2C37BE71263BEB18005E25AE /* ClipSearchHistoryContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE70263BEB18005E25AE /* ClipSearchHistoryContentView.swift */; };
 		2C37BE73263BEBF2005E25AE /* ClipSearchHistoryContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C37BE72263BEBF2005E25AE /* ClipSearchHistoryContentView.xib */; };
 		2C37BE75263BEF97005E25AE /* ClipSearchHistoryContentConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE74263BEF97005E25AE /* ClipSearchHistoryContentConfiguration.swift */; };
-		2C37BE78263BFEFE005E25AE /* SearchEntrySectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE6B263BDF2E005E25AE /* SearchEntrySectionHeaderView.swift */; };
+		2C37BE78263BFEFE005E25AE /* ClipSearchHistoryHeaderContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE6B263BDF2E005E25AE /* ClipSearchHistoryHeaderContentView.swift */; };
 		2C37BE79263BFF04005E25AE /* SearchEntrySectionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE76263BFE01005E25AE /* SearchEntrySectionFooterView.swift */; };
+		2C37BE7B263C0B6C005E25AE /* ClipSearchHistoryHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE7A263C0B6C005E25AE /* ClipSearchHistoryHeaderCell.swift */; };
+		2C37BE7D263C0C78005E25AE /* ClipSearchHistoryHeaderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C37BE7C263C0C78005E25AE /* ClipSearchHistoryHeaderConfiguration.swift */; };
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */; };
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
@@ -1031,12 +1033,14 @@
 		2C37BE65263BC38D005E25AE /* SearchEntryViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewReducer.swift; sourceTree = "<group>"; };
 		2C37BE67263BC805005E25AE /* SearchEntryViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewLayout.swift; sourceTree = "<group>"; };
 		2C37BE69263BDA10005E25AE /* ClipSearchQuery+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipSearchQuery+Display.swift"; sourceTree = "<group>"; };
-		2C37BE6B263BDF2E005E25AE /* SearchEntrySectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntrySectionHeaderView.swift; sourceTree = "<group>"; };
+		2C37BE6B263BDF2E005E25AE /* ClipSearchHistoryHeaderContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryHeaderContentView.swift; sourceTree = "<group>"; };
 		2C37BE6E263BEA95005E25AE /* ClipSearchHistoryListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryListCell.swift; sourceTree = "<group>"; };
 		2C37BE70263BEB18005E25AE /* ClipSearchHistoryContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryContentView.swift; sourceTree = "<group>"; };
 		2C37BE72263BEBF2005E25AE /* ClipSearchHistoryContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipSearchHistoryContentView.xib; sourceTree = "<group>"; };
 		2C37BE74263BEF97005E25AE /* ClipSearchHistoryContentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryContentConfiguration.swift; sourceTree = "<group>"; };
 		2C37BE76263BFE01005E25AE /* SearchEntrySectionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntrySectionFooterView.swift; sourceTree = "<group>"; };
+		2C37BE7A263C0B6C005E25AE /* ClipSearchHistoryHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryHeaderCell.swift; sourceTree = "<group>"; };
+		2C37BE7C263C0C78005E25AE /* ClipSearchHistoryHeaderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryHeaderConfiguration.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CEC38EF263B9DC3005E005A /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2CEC38F1263B9F84005E005A /* ClipSearchHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistory.swift; sourceTree = "<group>"; };
@@ -2101,12 +2105,14 @@
 		2C37BE6D263BEA64005E25AE /* ClipSearchEntry */ = {
 			isa = PBXGroup;
 			children = (
-				2C37BE6B263BDF2E005E25AE /* SearchEntrySectionHeaderView.swift */,
 				2C37BE76263BFE01005E25AE /* SearchEntrySectionFooterView.swift */,
 				2C37BE6E263BEA95005E25AE /* ClipSearchHistoryListCell.swift */,
 				2C37BE70263BEB18005E25AE /* ClipSearchHistoryContentView.swift */,
 				2C37BE72263BEBF2005E25AE /* ClipSearchHistoryContentView.xib */,
 				2C37BE74263BEF97005E25AE /* ClipSearchHistoryContentConfiguration.swift */,
+				2C37BE7A263C0B6C005E25AE /* ClipSearchHistoryHeaderCell.swift */,
+				2C37BE6B263BDF2E005E25AE /* ClipSearchHistoryHeaderContentView.swift */,
+				2C37BE7C263C0C78005E25AE /* ClipSearchHistoryHeaderConfiguration.swift */,
 			);
 			path = ClipSearchEntry;
 			sourceTree = "<group>";
@@ -4662,9 +4668,10 @@
 				E1D58875CAC9613923295216 /* AlbumListCollectionView.swift in Sources */,
 				EC1036B9962D97899CD3F083 /* AlbumListCollectionViewCell.swift in Sources */,
 				C2F9CD6719A2262D86F305F9 /* AlbumSelectionCell.swift in Sources */,
+				2C37BE7B263C0B6C005E25AE /* ClipSearchHistoryHeaderCell.swift in Sources */,
 				2C37BE71263BEB18005E25AE /* ClipSearchHistoryContentView.swift in Sources */,
 				8BD77C3988316E4C9731A1C0 /* AlbumSelectionTableView.swift in Sources */,
-				2C37BE78263BFEFE005E25AE /* SearchEntrySectionHeaderView.swift in Sources */,
+				2C37BE78263BFEFE005E25AE /* ClipSearchHistoryHeaderContentView.swift in Sources */,
 				492134C769A12030E01C7393 /* AssetCatalog.swift in Sources */,
 				39250701FA4547A22064CA40 /* ButtonCell.swift in Sources */,
 				0EEFD40D426644E49F1D24F7 /* ClipCollectionLayout.swift in Sources */,
@@ -4701,6 +4708,7 @@
 				A6597809BBB761C75C73AD54 /* ClipPreviewTransitionControllerProtocol.swift in Sources */,
 				AF0D3DD6541A9666D9966409 /* ClipPreviewTransitionViewControllerResolvable.swift in Sources */,
 				6F8C38190E1A2DAF21D51DD4 /* ClipPreviewTransitioningController.swift in Sources */,
+				2C37BE7D263C0C78005E25AE /* ClipSearchHistoryHeaderConfiguration.swift in Sources */,
 				18C9FE1CEAF08A6B2A78542A /* ClipPreviewView.swift in Sources */,
 				C3A98E0FA780F4485965F974 /* ClipSelectionCollectionView.swift in Sources */,
 				C67CD8F6BAD11CFDA2F6A7A8 /* ClipSelectionCollectionViewCell.swift in Sources */,

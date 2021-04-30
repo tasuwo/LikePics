@@ -63,6 +63,10 @@ internal enum L10n {
     internal static let clipItemEditContentViewSiteUrlEmpty = L10n.tr("Localizable", "clip_item_edit_content_view_site_url_empty")
     /// サイズ
     internal static let clipItemEditContentViewSizeTitle = L10n.tr("Localizable", "clip_item_edit_content_view_size_title")
+    /// すべて削除
+    internal static let searchEntryHeaderRemoveAll = L10n.tr("Localizable", "search_entry_header_remove_all")
+    /// 最近の検索
+    internal static let searchHistorySectionTitle = L10n.tr("Localizable", "search_history_section_title")
     /// 未分類のクリップを閲覧する
     internal static let uncategorizedCellTitle = L10n.tr("Localizable", "uncategorized_cell_title")
 }

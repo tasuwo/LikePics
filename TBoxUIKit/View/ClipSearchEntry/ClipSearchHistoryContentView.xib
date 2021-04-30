@@ -12,6 +12,7 @@
             <connections>
                 <outlet property="baseView" destination="OQB-eX-U64" id="66N-1b-ag5"/>
                 <outlet property="secondaryTitleLabel" destination="nLQ-HX-IDZ" id="mHQ-IL-iNe"/>
+                <outlet property="separatorView" destination="RAg-ib-FYV" id="B1z-Wc-Ghy"/>
                 <outlet property="titleLabel" destination="1Es-zd-SvX" id="wzb-wK-ma8"/>
             </connections>
         </placeholder>
@@ -20,6 +21,13 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="68"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RAg-ib-FYV" userLabel="Separator">
+                    <rect key="frame" x="16" y="67" width="398" height="1"/>
+                    <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="73y-IM-Psu"/>
+                    </constraints>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aEu-cR-dvw">
                     <rect key="frame" x="8" y="8" width="398" height="52"/>
                     <subviews>
@@ -64,8 +72,11 @@
             <viewLayoutGuide key="safeArea" id="hJ6-6J-9DQ"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="RAg-ib-FYV" secondAttribute="bottom" id="H6t-Kt-eGZ"/>
                 <constraint firstItem="aEu-cR-dvw" firstAttribute="top" secondItem="OQB-eX-U64" secondAttribute="top" constant="8" id="U98-YK-x07"/>
+                <constraint firstItem="RAg-ib-FYV" firstAttribute="leading" secondItem="hJ6-6J-9DQ" secondAttribute="leading" constant="16" id="dPk-S0-ce7"/>
                 <constraint firstAttribute="bottom" secondItem="aEu-cR-dvw" secondAttribute="bottom" constant="8" id="nZC-vo-gz8"/>
+                <constraint firstItem="hJ6-6J-9DQ" firstAttribute="trailing" secondItem="RAg-ib-FYV" secondAttribute="trailing" id="r4c-W0-RmR"/>
                 <constraint firstItem="aEu-cR-dvw" firstAttribute="leading" secondItem="hJ6-6J-9DQ" secondAttribute="leading" constant="8" id="rOb-w8-a3h"/>
                 <constraint firstItem="hJ6-6J-9DQ" firstAttribute="trailing" secondItem="aEu-cR-dvw" secondAttribute="trailing" constant="8" id="sMu-F1-wwa"/>
             </constraints>
@@ -77,6 +88,9 @@
     </objects>
     <resources>
         <image name="clock.arrow.circlepath" catalog="system" width="128" height="110"/>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

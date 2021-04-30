@@ -30,6 +30,9 @@
 
 "uncategorized_cell_title" = "未分類のクリップを閲覧する";
 
+"search_history_section_title" = "最近の検索";
+"search_entry_header_remove_all" = "すべて削除";
+
 "adding_alert_action_save" = "保存";
 "adding_alert_action_cancel" = "キャンセル";
 

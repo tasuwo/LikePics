@@ -22,4 +22,5 @@ enum SearchEntryViewAction: Action {
     // MARK: Alert Completion
 
     case alertDeleteConfirmed
+    case alertDismissed
 }

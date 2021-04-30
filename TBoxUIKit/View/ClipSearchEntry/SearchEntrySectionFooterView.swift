@@ -40,7 +40,7 @@ extension SearchEntrySectionFooterView {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            label.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
 
