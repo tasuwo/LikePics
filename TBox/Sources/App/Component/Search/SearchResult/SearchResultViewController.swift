@@ -108,7 +108,7 @@ extension SearchResultViewController {
             let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
             let nextTokens = state.inputtedTokens
             if currentTokens != nextTokens {
-                self.searchController.searchBar.searchTextField.text = ""
+                self.searchController.searchBar.searchTextField.text = state.inputtedText
                 self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
             }
         }
