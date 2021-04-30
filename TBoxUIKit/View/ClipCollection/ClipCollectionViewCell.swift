@@ -189,6 +189,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         self.onReuse?(self.identifier)
 
+        self.primaryImageView.image = nil
+        self.secondaryImageView.image = nil
+        self.tertiaryImageView.image = nil
         self.primaryImage = .loading
         self.secondaryImage = .loading
         self.tertiaryImage = .loading
