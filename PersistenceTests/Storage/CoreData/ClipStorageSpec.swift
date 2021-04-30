@@ -475,36 +475,90 @@ class ClipStorageSpec: QuickSpec {
         describe("updateAlbum(having:byAddingClipsHaving:)") {
             var result: Result<Void, ClipStorageError>!
             context("追加対象のクリップが追加済み") {
-                beforeEach {
-                    let clip1 = Persistence.Clip(context: managedContext)
-                    clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    let clip2 = Persistence.Clip(context: managedContext)
-                    clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+                context("全て追加済み") {
+                    beforeEach {
+                        let clip1 = Persistence.Clip(context: managedContext)
+                        clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        let clip2 = Persistence.Clip(context: managedContext)
+                        clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
 
-                    let item1 = AlbumItem(context: managedContext)
-                    item1.clip = clip1
-                    item1.index = 1
-                    let item2 = AlbumItem(context: managedContext)
-                    item2.clip = clip2
-                    item2.index = 2
+                        let item1 = AlbumItem(context: managedContext)
+                        item1.clip = clip1
+                        item1.index = 1
+                        let item2 = AlbumItem(context: managedContext)
+                        item2.clip = clip2
+                        item2.index = 2
 
-                    let album = Album(context: managedContext)
-                    album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
-                    album.items = NSSet(array: [item1, item2])
+                        let album = Album(context: managedContext)
+                        album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        album.items = NSSet(array: [item1, item2])
 
-                    try! managedContext.save()
+                        try! managedContext.save()
 
-                    result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                                 byAddingClipsHaving: [
-                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                                 ])
-                    try! managedContext.save()
+                        result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                     byAddingClipsHaving: [
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
+                                                     ])
+                        try! managedContext.save()
+                    }
+                    it("エラーとなる") {
+                        guard case .failure(.duplicated) = result else {
+                            fail()
+                            return
+                        }
+                    }
                 }
-                it("エラーとなる") {
-                    guard case .failure(.duplicated) = result else {
-                        fail()
-                        return
+                context("一部追加済み") {
+                    beforeEach {
+                        let clip1 = Persistence.Clip(context: managedContext)
+                        clip1.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        let clip2 = Persistence.Clip(context: managedContext)
+                        clip2.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")
+
+                        let item1 = AlbumItem(context: managedContext)
+                        item1.clip = clip1
+                        item1.index = 1
+
+                        let album = Album(context: managedContext)
+                        album.id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+                        album.items = NSSet(array: [item1])
+
+                        try! managedContext.save()
+
+                        result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                     byAddingClipsHaving: [
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                                                         UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
+                                                     ])
+                        try! managedContext.save()
+                    }
+                    it("追加済みでないクリップのみ追加できる") {
+                        let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
+                        request.predicate = NSPredicate(format: "id == %@",
+                                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+                        let album = try! managedContext.fetch(request).first!
+                        expect(album.items?.allObjects).to(haveCount(2))
+
+                        guard let item1 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item1.index).to(equal(1))
+
+                        guard let item2 = album.items?
+                            .allObjects
+                            .compactMap({ $0 as? AlbumItem })
+                            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+                        else {
+                            fail()
+                            return
+                        }
+                        expect(item2.index).to(equal(2))
                     }
                 }
             }

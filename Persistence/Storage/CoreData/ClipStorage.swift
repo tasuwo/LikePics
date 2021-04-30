@@ -516,16 +516,21 @@ extension ClipStorage: ClipStorageProtocol {
 
             let albumItems = album.mutableSetValue(forKey: "items")
 
-            guard albumItems.compactMap({ $0 as? AlbumItem }).allSatisfy({
-                guard let clip = $0.clip else { return true }
-                return clips.contains(clip) == false
-            }) else { return .failure(.duplicated) }
+            let targetClips = clips
+                .filter { clip in
+                    let alreadyAdded = albumItems
+                        .compactMap { $0 as? AlbumItem }
+                        .map { $0.clip }
+                        .contains(clip)
+                    return !alreadyAdded
+                }
+            guard !targetClips.isEmpty else { return .failure(.duplicated) }
 
             let maxIndex = albumItems
                 .compactMap { $0 as? AlbumItem }
                 .max(by: { $0.index < $1.index })?
                 .index ?? 0
-            for (index, clip) in clips.enumerated() {
+            for (index, clip) in targetClips.enumerated() {
                 let albumItem = AlbumItem(context: self.context)
                 albumItem.id = UUID()
                 albumItem.index = maxIndex + Int64(index + 1)
