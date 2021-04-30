@@ -171,7 +171,6 @@ extension SearchResultViewReducer {
     private static func searchCandidates(for text: String, includesHiddenItems: Bool, dependency: Dependency) -> Effect<Action> {
         let stream = Deferred {
             Future<Action?, Never> { promise in
-                print(text.tokenCandidatesSource)
                 let albumTokens = self.searchAlbumCandidates(for: text.tokenCandidatesSource, includesHiddenItems: includesHiddenItems, dependency: dependency)
                     .map { ClipSearchToken(kind: .album, id: $0.id, title: $0.title) }
                 let tagTokens = self.searchTagCandidates(for: text.tokenCandidatesSource, includesHiddenItems: includesHiddenItems, dependency: dependency)
