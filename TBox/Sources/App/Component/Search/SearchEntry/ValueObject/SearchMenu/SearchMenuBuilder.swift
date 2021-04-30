@@ -76,11 +76,11 @@ struct SearchMenuBuilder: Equatable {
 
                 switch action.kind {
                 case .createdDate:
-                    return .createdDate(order)
+                    return .init(kind: .createdDate, order: order)
                 case .updatedDate:
-                    return .updatedDate(order)
+                    return .init(kind: .updatedDate, order: order)
                 case .dataSize:
-                    return .size(order)
+                    return .init(kind: .size, order: order)
                 }
             }()
 
@@ -117,17 +117,17 @@ private extension ClipSearchSort.Order {
 
 private extension ClipSearchSort {
     var createdDateSort: Order? {
-        guard case let .createdDate(order) = self else { return nil }
+        guard case let .createdDate = kind else { return nil }
         return order
     }
 
     var updateDateOrder: Order? {
-        guard case let .updatedDate(order) = self else { return nil }
+        guard case let .updatedDate = kind else { return nil }
         return order
     }
 
     var sizeOrder: Order? {
-        guard case let .size(order) = self else { return nil }
+        guard case let .size = kind else { return nil }
         return order
     }
 }

@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ClipSearchToken: Equatable, Hashable {
-    public enum Kind {
+public struct ClipSearchToken: Equatable, Hashable, Codable {
+    public enum Kind: String, Codable {
         case tag
         case album
     }

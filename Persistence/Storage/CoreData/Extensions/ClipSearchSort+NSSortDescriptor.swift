@@ -6,12 +6,12 @@ import Domain
 
 extension ClipSearchSort {
     var sortDescriptor: NSSortDescriptor {
-        switch self {
-        case let .createdDate(order):
+        switch kind {
+        case .createdDate:
             return NSSortDescriptor(keyPath: \Clip.createdDate, ascending: order.isAscending)
-        case let .updatedDate(order):
+        case .updatedDate:
             return NSSortDescriptor(keyPath: \Clip.updatedDate, ascending: order.isAscending)
-        case let .size(order):
+        case .size:
             return NSSortDescriptor(keyPath: \Clip.imagesSize, ascending: order.isAscending)
         }
     }
