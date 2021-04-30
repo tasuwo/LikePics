@@ -137,10 +137,9 @@ extension ClipInformationViewController {
                 guard state.isSuspendedCollectionViewUpdate == false else { return }
 
                 // iPadにてセルが過剰にアニメーションされてしまうケースがあったため、差分がある場合のみ更新をかける
-                guard (state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
+                guard state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
                     || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
-                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState))
-                    || state.hasDifferentValue(at: \.isSuspendedCollectionViewUpdate, from: self.snapshotPreviousState)
+                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState)
                 else {
                     return
                 }

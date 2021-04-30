@@ -26,7 +26,7 @@ enum ClipInformationViewReducer: Reducer {
             return (nextState, .none)
 
         case .viewDidAppear:
-            nextState.shouldCollectionViewUpdateWithAnimation = false
+            nextState.shouldCollectionViewUpdateWithAnimation = true
             nextState.isSuspendedCollectionViewUpdate = false
             return (nextState, .none)
 
