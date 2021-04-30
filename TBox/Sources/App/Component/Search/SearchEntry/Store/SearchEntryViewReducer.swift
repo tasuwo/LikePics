@@ -28,10 +28,6 @@ enum SearchEntryViewReducer: Reducer {
 
         // MARK: Search History
 
-        case .selectedHistory:
-            // TODO:
-            return (nextState, nil)
-
         case let .removedHistory(history, completion: completion):
             guard let index = nextState.searchHistories.firstIndex(where: { $0.id == history.id }) else {
                 completion(false)

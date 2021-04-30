@@ -155,6 +155,6 @@ extension SearchEntryViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard case let .history(history) = dataSource.itemIdentifier(for: indexPath) else { return }
-        store.execute(.selectedHistory(history))
+        resultsController.entrySelected(history)
     }
 }

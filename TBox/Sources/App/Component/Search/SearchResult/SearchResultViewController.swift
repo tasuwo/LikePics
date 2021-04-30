@@ -64,9 +64,18 @@ class SearchResultViewController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+}
 
+// MARK: - Event from Entry View
+
+extension SearchResultViewController {
     func entryViewDidAppear(_ animated: Bool) {
         store.execute(.entryViewDidAppear)
+    }
+
+    func entrySelected(_ history: ClipSearchHistory) {
+        searchController.searchBar.becomeFirstResponder()
+        store.execute(.selectedHistory(history))
     }
 }
 
@@ -98,6 +107,10 @@ extension SearchResultViewController {
             if currentTokens != nextTokens {
                 self.searchController.searchBar.searchTextField.text = ""
                 self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
+            }
+
+            if self.searchController.searchBar.text != state.inputtedText {
+                self.searchController.searchBar.text = state.inputtedText
             }
         }
         .store(in: &subscriptions)

@@ -15,7 +15,6 @@ enum SearchEntryViewAction: Action {
 
     // MARK: Search History
 
-    case selectedHistory(ClipSearchHistory)
     case removedHistory(ClipSearchHistory, completion: (Bool) -> Void)
     case removeAllHistories
 

@@ -22,6 +22,7 @@ enum SearchResultViewAction: Action {
 
     // MARK: - Selection
 
+    case selectedHistory(ClipSearchHistory)
     case selectedTokenCandidate(ClipSearchToken)
     case selectedResult(Clip)
     case selectedSeeAllResultsButton

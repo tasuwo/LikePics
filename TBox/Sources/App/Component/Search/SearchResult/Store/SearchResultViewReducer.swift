@@ -61,6 +61,14 @@ enum SearchResultViewReducer: Reducer {
 
         // MARK: - Selection
 
+        case let .selectedHistory(history):
+            nextState.inputtedText = history.query.text
+            nextState.inputtedTokens = history.query.tokens
+            nextState.selectedSort = history.query.sort
+            nextState.searchOnlyHiddenItems = history.query.isHidden
+            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            return (nextState, effects)
+
         case let .selectedTokenCandidate(token):
             nextState.inputtedTokens = state.inputtedTokens + [token]
             return (nextState, nil)
