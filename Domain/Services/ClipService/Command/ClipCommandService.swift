@@ -11,7 +11,6 @@ public class ClipCommandService {
     let imageStorage: ImageStorageProtocol
     let diskCache: DiskCaching
     let logger: TBoxLoggable
-    let queue: DispatchQueue
 
     private(set) var isTransporting: Bool = false
 
@@ -21,15 +20,13 @@ public class ClipCommandService {
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
                 diskCache: DiskCaching,
-                logger: TBoxLoggable,
-                queue: DispatchQueue)
+                logger: TBoxLoggable)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
         self.diskCache = diskCache
         self.logger = logger
-        self.queue = queue
     }
 }
 
@@ -39,7 +36,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     // MARK: Create
 
     public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Clip.Identity, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 let containsFilesFor = { (item: ClipItemRecipe) in
                     return containers.contains(where: { $0.id == item.imageId })
@@ -50,7 +53,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     - expected: \(clip.items.map { $0.id.uuidString }.joined(separator: ","))
                     - got: \(containers.map { $0.id.uuidString }.joined(separator: ","))
                     """))
-                    return .failure(.invalidParameter)
+                    result = .failure(.invalidParameter)
+                    return
                 }
 
                 try self.clipStorage.beginTransaction()
@@ -67,7 +71,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     クリップの保存に失敗: \(error.localizedDescription)
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 containers.forEach { container in
@@ -77,20 +82,28 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
-                return .success(clipId)
+                result = .success(clipId)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 クリップの保存に失敗: \(error.localizedDescription)
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func create(tagWithName name: String) -> Result<Tag.Identity, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Tag.Identity, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
@@ -106,7 +119,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to create tag. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name, isHidden: tag.isHidden)) {
@@ -119,62 +133,84 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to create tag. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
                 }
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
-                return .success(tag.id)
+                result = .success(tag.id)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to create tag. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func create(albumWithTitle title: String) -> Result<Album.Identity, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Album.Identity, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.create(albumWithTitle: title).map { $0.id }
+                result = self.clipStorage.create(albumWithTitle: title).map { $0.id }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to create album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     // MARK: Update
 
     public func updateClips(having ids: [Clip.Identity], byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClips(having: ids, byHiding: isHidden).map { _ in () }
+                result = self.clipStorage.updateClips(having: ids, byHiding: isHidden).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to \(isHidden ? "hide" : "show") clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byAddingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
 
@@ -187,24 +223,33 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byDeletingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
 
@@ -217,24 +262,33 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
 
@@ -247,160 +301,225 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update clips. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL?) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClipItems(having: ids, byUpdatingSiteUrl: siteUrl)
+                result = self.clipStorage.updateClipItems(having: ids, byUpdatingSiteUrl: siteUrl)
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateClip(having id: Clip.Identity, byReorderingItemsHaving itemIds: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClip(having: id, byReorderingItemsHaving: itemIds)
+                result = self.clipStorage.updateClip(having: id, byReorderingItemsHaving: itemIds)
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: clipIds).map { _ in () }
+                result = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: clipIds).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byDeletingClipsHaving: clipIds).map { _ in () }
+                result = self.clipStorage.updateAlbum(having: albumId, byDeletingClipsHaving: clipIds).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byReorderingClipsHaving: clipIds).map { _ in () }
+                result = self.clipStorage.updateAlbum(having: albumId, byReorderingClipsHaving: clipIds).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, titleTo: title).map { _ in () }
+                result = self.clipStorage.updateAlbum(having: albumId, titleTo: title).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbum(having albumId: Album.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byHiding: isHidden).map { _ in () }
+                result = self.clipStorage.updateAlbum(having: albumId, byHiding: isHidden).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateAlbums(byReordering albumIds: [Album.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 let result = self.clipStorage.updateAlbums(byReordering: albumIds).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
@@ -415,7 +534,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update tag. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 switch self.referenceClipStorage.updateTag(having: id, nameTo: name) {
@@ -428,44 +548,60 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to update tag. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update tag. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func updateTag(having id: Tag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateTag(having: id, byHiding: isHidden).map { _ in () }
+                result = self.clipStorage.updateTag(having: id, byHiding: isHidden).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to update tag. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func purgeClipItems(forClipHaving id: Domain.Clip.Identity) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
 
@@ -479,7 +615,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to purge clip. (error=\(error.localizedDescription))
                     """))
-                    return .failure(.internalError)
+                    result = .failure(.internalError)
+                    return
                 }
 
                 let originalTags: [Domain.Tag]
@@ -492,7 +629,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to purge clip. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 let originalClip: Domain.Clip
@@ -506,14 +644,16 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to purge clip. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
 
                 default:
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to purge clip.
                     """))
-                    return .failure(.internalError)
+                    result = .failure(.internalError)
+                    return
                 }
 
                 let newClips: [ClipRecipe] = originalClip.items.map { item in
@@ -551,7 +691,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                         self.logger.write(ConsoleLog(level: .error, message: """
                         Failed to purge clip. (error=\(error.localizedDescription))
                         """))
-                        return .failure(error)
+                        result = .failure(error)
+                        return
                     }
                 }
 
@@ -565,25 +706,34 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                         self.logger.write(ConsoleLog(level: .error, message: """
                         Failed to purge clip. (error=\(error.localizedDescription))
                         """))
-                        return .failure(error)
+                        result = .failure(error)
+                        return
                     }
                 }
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to purge clip. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
 
@@ -597,7 +747,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     アルバムの読み取りに失敗. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 let items: [ClipItem]
@@ -610,7 +761,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     ClipItemの読み取りに失敗. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 switch self.clipStorage.deleteClips(having: clipIds) {
@@ -622,7 +774,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     クリップの削除に失敗 (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 let clipId = UUID()
@@ -660,7 +813,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     新規クリップの作成に失敗. (error=\(error.localizedDescription))
                     """))
-                    return .failure(.internalError)
+                    result = .failure(.internalError)
+                    return
                 }
 
                 for albumId in albumIds {
@@ -673,27 +827,36 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                         self.logger.write(ConsoleLog(level: .error, message: """
                         アルバムへの追加に失敗. (error=\(error.localizedDescription))
                         """))
-                        return .failure(error)
+                        result = .failure(error)
+                        return
                     }
                 }
 
                 try self.clipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to merge clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     // MARK: Delete
 
     public func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
@@ -709,7 +872,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete clips. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 let existsFiles = try clips
@@ -728,20 +892,28 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to delete clips. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func deleteClipItem(_ item: ClipItem) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
@@ -756,7 +928,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete clip item. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 guard try self.imageStorage.exists(having: item.imageId) else {
@@ -765,7 +938,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete clip item. Image not found.
                     """))
-                    return .failure(.internalError)
+                    result = .failure(.internalError)
+                    return
                 }
 
                 try? self.imageStorage.delete(having: item.imageId)
@@ -774,37 +948,52 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to delete clip item. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func deleteAlbum(having id: Album.Identity) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.deleteAlbum(having: id).map { _ in () }
+                result = self.clipStorage.deleteAlbum(having: id).map { _ in () }
                 try self.clipStorage.commitTransaction()
-                return result
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to delete album. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 
     public func deleteTags(having ids: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        return self.queue.sync {
+        var result: Result<Void, ClipStorageError>!
+
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else {
+                result = .failure(.internalError)
+                return
+            }
             do {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
@@ -819,7 +1008,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete tags. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 switch self.referenceClipStorage.deleteTags(having: ids) {
@@ -832,21 +1022,24 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     self.logger.write(ConsoleLog(level: .error, message: """
                     Failed to delete tags. (error=\(error.localizedDescription))
                     """))
-                    return .failure(error)
+                    result = .failure(error)
+                    return
                 }
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
-                return .success(())
+                result = .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
                 Failed to delete tags. (error=\(error.localizedDescription))
                 """))
-                return .failure(.internalError)
+                result = .failure(.internalError)
             }
         }
+
+        return result
     }
 }

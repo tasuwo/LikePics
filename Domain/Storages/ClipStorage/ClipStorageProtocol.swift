@@ -10,6 +10,7 @@ public protocol ClipStorageProtocol {
     func beginTransaction() throws
     func commitTransaction() throws
     func cancelTransactionIfNeeded() throws
+    func performAndWait(_ block: @escaping () -> Void)
 
     // MARK: Read
 

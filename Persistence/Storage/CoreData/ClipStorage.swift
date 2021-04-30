@@ -137,8 +137,7 @@ extension ClipStorage: ClipStorageProtocol {
     }
 
     public func beginTransaction() throws {
-        // FIXME: タイミングによって `unrecognized selector sent to instance` でクラッシュすることがあるため、コメントアウト
-        // self.context.reset()
+        self.context.reset()
     }
 
     public func commitTransaction() throws {
@@ -147,6 +146,10 @@ extension ClipStorage: ClipStorageProtocol {
 
     public func cancelTransactionIfNeeded() throws {
         self.context.rollback()
+    }
+
+    public func performAndWait(_ block: @escaping () -> Void) {
+        context.performAndWait(block)
     }
 
     public func readAllClips() -> Result<[Domain.Clip], ClipStorageError> {

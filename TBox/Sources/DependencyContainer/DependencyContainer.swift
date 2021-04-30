@@ -125,8 +125,7 @@ class DependencyContainer {
                                                       referenceClipStorage: referenceClipStorage,
                                                       imageStorage: self.imageStorage,
                                                       diskCache: self.clipDiskCache,
-                                                      logger: self.logger,
-                                                      queue: self.clipCommandQueue)
+                                                      logger: self.logger)
         self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
                                                                                    referenceClipStorage: self.referenceClipStorage,
                                                                                    logger: self.logger,
