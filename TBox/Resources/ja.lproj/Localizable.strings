@@ -85,6 +85,7 @@
 "search_history_section_title" = "最近の検索";
 "search_history_row_empty_message" = "最近の検索はありません";
 "search_history_delete_action" = "削除";
+"search_history_footer_message" = "履歴は最大100件まで保持されます。100件より多い場合、古い履歴から順に削除されます";
 
 "search_result_see_all_button" = "すべて見る";
 "search_result_not_found_title" = "結果なし";

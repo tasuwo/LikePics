@@ -336,6 +336,8 @@ internal enum L10n {
     internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
     /// 削除
     internal static let searchHistoryDeleteAction = L10n.tr("Localizable", "search_history_delete_action")
+    /// 履歴は最大100件まで保持されます。100件より多い場合、古い履歴から順に削除されます
+    internal static let searchHistoryFooterMessage = L10n.tr("Localizable", "search_history_footer_message")
     /// 最近の検索はありません
     internal static let searchHistoryRowEmptyMessage = L10n.tr("Localizable", "search_history_row_empty_message")
     /// 最近の検索

@@ -28,7 +28,8 @@ enum SearchEntryViewLayout {
     }
 
     enum ElementKind: String {
-        case title
+        case historyHeader
+        case historyFooter
     }
 }
 
@@ -54,7 +55,8 @@ extension SearchEntryViewLayout {
         let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(44))
         layout.boundarySupplementaryItems = [
-            .init(layoutSize: titleSize, elementKind: ElementKind.title.rawValue, alignment: .top)
+            .init(layoutSize: titleSize, elementKind: ElementKind.historyHeader.rawValue, alignment: .top),
+            .init(layoutSize: titleSize, elementKind: ElementKind.historyFooter.rawValue, alignment: .bottom)
         ]
 
         return layout
@@ -76,11 +78,15 @@ extension SearchEntryViewLayout {
             }
         }
 
-        let headerRegistration = self.configureHistoryHeader()
+        let historyHeaderRegistration = self.configureHistoryHeader()
+        let historyFooterRegistration = self.configureHistoryFooter()
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch ElementKind(rawValue: elementKind) {
-            case .title:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            case .historyHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: historyHeaderRegistration, for: indexPath)
+
+            case .historyFooter:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: historyFooterRegistration, for: indexPath)
 
             default:
                 return nil
@@ -91,9 +97,15 @@ extension SearchEntryViewLayout {
     }
 
     private static func configureHistoryHeader() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionHeaderView> {
-        return .init(elementKind: ElementKind.title.rawValue) { headerView, _, _ in
+        return .init(elementKind: ElementKind.historyHeader.rawValue) { headerView, _, _ in
             // TODO: 全て削除ボタンを配置する
             headerView.label.text = L10n.searchHistorySectionTitle
+        }
+    }
+
+    private static func configureHistoryFooter() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionFooterView> {
+        return .init(elementKind: ElementKind.historyFooter.rawValue) { footerView, _, _ in
+            footerView.label.text = L10n.searchHistoryFooterMessage
         }
     }
 

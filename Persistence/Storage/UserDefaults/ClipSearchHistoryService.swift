@@ -6,6 +6,8 @@ import Combine
 import Domain
 
 public class ClipSearchHistoryService {
+    public static let maxCount = 100
+
     enum Key: String {
         case histories = "clipSearchHistories"
     }
@@ -47,7 +49,18 @@ extension ClipSearchHistoryService: Domain.ClipSearchHistoryService {
     public func append(_ history: ClipSearchHistory) {
         queue.async {
             var histories = self.fetchHistoriesNonAtomically()
-            histories.append(history)
+
+            if let index = histories.firstIndex(where: { $0.query == history.query }) {
+                histories.remove(at: index)
+                histories.insert(history, at: 0)
+            } else {
+                histories.insert(history, at: 0)
+            }
+
+            if histories.count > Self.maxCount {
+                histories.removeLast()
+            }
+
             self.setHistoriesNonAtomically(histories)
         }
     }

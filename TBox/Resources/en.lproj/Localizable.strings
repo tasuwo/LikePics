@@ -85,6 +85,7 @@
 "search_history_section_title" = "Recents";
 "search_history_row_empty_message" = "No search histories";
 "search_history_delete_action" = "Delete";
+"search_history_footer_message" = "Up to 100 histories saved; if there are more than 100 histories, old history will be deleted.";
 
 "search_result_see_all_button" = "See All";
 "search_result_not_found_title" = "No Results";
