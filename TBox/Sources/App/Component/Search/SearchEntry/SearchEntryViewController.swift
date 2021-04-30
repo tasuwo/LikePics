@@ -84,7 +84,9 @@ extension SearchEntryViewController {
         if state.searchHistories.isEmpty {
             snapshot.appendItems([.empty], toSection: .main)
         } else {
-            snapshot.appendItems(state.searchHistories.map { Layout.Item.history($0) }, toSection: .main)
+            let histories = state.searchHistories
+                .map { Layout.Item.history(.init(isSomeItemsHidden: state.isSomeItemsHidden, original: $0)) }
+            snapshot.appendItems(histories, toSection: .main)
         }
 
         dataSource.apply(snapshot, animatingDifferences: true)
@@ -101,7 +103,7 @@ extension SearchEntryViewController {
             guard let self = self else { return nil }
             guard case let .history(history) = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
             let deleteAction = UIContextualAction(style: .destructive, title: L10n.searchHistoryDeleteAction) { _, _, completion in
-                self.store.execute(.removedHistory(history, completion: completion))
+                self.store.execute(.removedHistory(history.original, completion: completion))
             }
             return UISwipeActionsConfiguration(actions: [deleteAction])
         })
@@ -155,6 +157,6 @@ extension SearchEntryViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard case let .history(history) = dataSource.itemIdentifier(for: indexPath) else { return }
-        resultsController.entrySelected(history)
+        resultsController.entrySelected(history.original)
     }
 }

@@ -12,6 +12,7 @@ enum SearchEntryViewAction: Action {
     // MARK: State Observation
 
     case searchHistoriesChanged([ClipSearchHistory])
+    case settingUpdated(isSomeItemsHidden: Bool)
 
     // MARK: Search History
 

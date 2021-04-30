@@ -5,6 +5,7 @@
 import Foundation
 
 typealias SearchEntryViewDependency = HasClipSearchHistoryService
+    & HasUserSettingStorage
 
 enum SearchEntryViewReducer: Reducer {
     typealias Dependency = SearchEntryViewDependency
@@ -24,6 +25,10 @@ enum SearchEntryViewReducer: Reducer {
 
         case let .searchHistoriesChanged(histories):
             nextState.searchHistories = histories
+            return (nextState, nil)
+
+        case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
+            nextState.isSomeItemsHidden = isSomeItemsHidden
             return (nextState, nil)
 
         // MARK: Search History
@@ -60,9 +65,14 @@ extension SearchEntryViewReducer {
 
         nextState.searchHistories = dependency.clipSearchHistoryService.read()
 
-        let stream = dependency.clipSearchHistoryService.query()
+        let historyStream = dependency.clipSearchHistoryService.query()
             .map { Action.searchHistoriesChanged($0) as Action? }
+        let historyEffect = Effect(historyStream)
 
-        return (nextState, [Effect(stream)])
+        let settingsStream = dependency.userSettingStorage.showHiddenItems
+            .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
+        let settingsEffect = Effect(settingsStream)
+
+        return (nextState, [historyEffect, settingsEffect])
     }
 }

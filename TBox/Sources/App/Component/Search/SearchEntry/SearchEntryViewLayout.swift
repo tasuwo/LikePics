@@ -15,9 +15,16 @@ enum SearchEntryViewLayout {
         case main
     }
 
+    struct SearchHistoryWrapper: Hashable {
+        let isSomeItemsHidden: Bool
+        let original: ClipSearchHistory
+
+        var query: ClipSearchQuery { original.query }
+    }
+
     enum Item: Hashable {
         case empty
-        case history(ClipSearchHistory)
+        case history(SearchHistoryWrapper)
     }
 
     enum ElementKind: String {
@@ -101,13 +108,13 @@ extension SearchEntryViewLayout {
         }
     }
 
-    private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryListCell, ClipSearchHistory> {
+    private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryListCell, SearchHistoryWrapper> {
         return .init { cell, _, history in
             var contentConfiguration = ClipSearchHistoryContentConfiguration()
             contentConfiguration.queryConfiguration = .init(title: history.query.displayTitle,
                                                             sortName: history.query.sort.displayTitle,
                                                             displaySettingName: history.query.displaySettingDisplayTitle,
-                                                            isDisplaySettingHidden: false) // TODO:
+                                                            isDisplaySettingHidden: history.isSomeItemsHidden)
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()

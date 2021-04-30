@@ -10,6 +10,7 @@ struct SearchEntryViewState: Equatable {
     }
 
     var searchHistories: [ClipSearchHistory]
+    var isSomeItemsHidden: Bool
 
     var alert: Alert?
 }
