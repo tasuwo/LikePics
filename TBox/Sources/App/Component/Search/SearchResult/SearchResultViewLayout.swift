@@ -152,6 +152,7 @@ extension SearchResultViewLayout {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, _, _ in
             let seeAllButton = UIButton()
             seeAllButton.titleLabel?.font = .preferredFont(forTextStyle: .callout)
+            seeAllButton.titleLabel?.adjustsFontForContentSizeCategory = true
             seeAllButton.setTitle(L10n.searchResultSeeAllButton, for: .normal)
             seeAllButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
             seeAllButton.addAction(.init(handler: { _ in seeAllButtonHandler() }), for: .touchUpInside)
