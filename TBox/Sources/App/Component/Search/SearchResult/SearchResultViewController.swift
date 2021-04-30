@@ -76,6 +76,11 @@ extension SearchResultViewController {
     func entrySelected(_ history: ClipSearchHistory) {
         searchController.searchBar.becomeFirstResponder()
         store.execute(.selectedHistory(history))
+
+        // HACK: searchBarへのテキストの反映を`bind(to:)`内で行うと、更新タイミングによっては
+        //       変換中のテキストが意図せず確定されてしまう
+        //       searchBarのテキストは基本的にはreadOnlyとし、検索履歴の再現時のみ例外的にこのタイミングで設定を行う
+        searchController.searchBar.text = history.query.text
     }
 }
 
@@ -107,10 +112,6 @@ extension SearchResultViewController {
             if currentTokens != nextTokens {
                 self.searchController.searchBar.searchTextField.text = ""
                 self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
-            }
-
-            if self.searchController.searchBar.text != state.inputtedText {
-                self.searchController.searchBar.text = state.inputtedText
             }
         }
         .store(in: &subscriptions)
