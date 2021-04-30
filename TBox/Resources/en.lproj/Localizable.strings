@@ -213,6 +213,7 @@
 "clip_collection_error_at_update_tags_to_clips" = "Failed to update tags to clips.";
 "clip_collection_error_at_add_clip_to_album" = "Failed to add a clip to album.";
 "clip_collection_error_at_add_clips_to_album" = "Failed to add clips to album.";
+"clip_collection_error_at_add_clips_to_album_duplicated" = "Already exists in album.";
 "clip_collection_error_at_remove_clips_from_album" = "Filed to remove clips from album.";
 "clip_collection_error_at_remove_item_from_clip" = "Failed to remove image from clip.";
 "clip_collection_error_at_share" = "Failed to share.";
@@ -221,7 +222,7 @@
 
 // MARK: Clip Preview
 
-"clip_preview_error_at_load_image" = "画像の読み込みに失敗しました";
+"clip_preview_error_at_load_image" = "Failed to load image";
 
 // MARK: Clip Information
 

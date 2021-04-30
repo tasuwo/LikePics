@@ -202,6 +202,9 @@ enum ClipCollectionReducer: Reducer {
             case .success:
                 nextState = nextState.editingEnded()
 
+            case .failure(.duplicated):
+                nextState.alert = .error(L10n.clipCollectionErrorAtAddClipsToAlbumDuplicated)
+
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
             }

@@ -93,6 +93,8 @@ internal enum L10n {
     internal static let clipCollectionErrorAtAddClipToAlbum = L10n.tr("Localizable", "clip_collection_error_at_add_clip_to_album")
     /// アルバムへの追加に失敗しました
     internal static let clipCollectionErrorAtAddClipsToAlbum = L10n.tr("Localizable", "clip_collection_error_at_add_clips_to_album")
+    /// すでにアルバムに追加済みです
+    internal static let clipCollectionErrorAtAddClipsToAlbumDuplicated = L10n.tr("Localizable", "clip_collection_error_at_add_clips_to_album_duplicated")
     /// クリップの削除に失敗しました
     internal static let clipCollectionErrorAtDeleteClip = L10n.tr("Localizable", "clip_collection_error_at_delete_clip")
     /// クリップの削除に失敗しました
