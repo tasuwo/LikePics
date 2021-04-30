@@ -49,12 +49,6 @@ extension SearchResultViewState {
                      sort: selectedSort)
     }
 
-    var searchQueryTitle: String {
-        var queries = inputtedTokens.map { $0.title }
-        if !inputtedText.isEmpty { queries.append(inputtedText) }
-        return ListFormatter.localizedString(byJoining: queries)
-    }
-
     var menuState: SearchMenuState {
         return .init(shouldSearchOnlyHiddenClip: searchOnlyHiddenItems,
                      sort: selectedSort)
@@ -72,6 +66,6 @@ extension SearchResultViewState {
     }
 
     var notFoundMessage: String {
-        return L10n.searchResultNotFoundMessage(searchQueryTitle)
+        return L10n.searchResultNotFoundMessage(searchQuery.displayTitle)
     }
 }

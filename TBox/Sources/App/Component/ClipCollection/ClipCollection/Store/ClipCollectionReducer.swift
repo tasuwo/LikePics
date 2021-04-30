@@ -333,7 +333,7 @@ extension ClipCollectionReducer {
             description = tag.name
             initialClips = query.clips.value
 
-        case let .search(title: title, searchQuery):
+        case let .search(searchQuery):
             let query: ClipListQuery
 
             switch dependency.clipQueryService.queryClips(query: searchQuery) {
@@ -347,7 +347,7 @@ extension ClipCollectionReducer {
                 .map { Action.clipsUpdated($0) as Action? }
                 .catch { _ in Just(Action.failedToLoad) }
             queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = title
+            description = searchQuery.displayTitle
             initialClips = query.clips.value
         }
 

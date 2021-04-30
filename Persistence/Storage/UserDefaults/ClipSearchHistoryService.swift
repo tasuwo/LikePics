@@ -67,6 +67,14 @@ extension ClipSearchHistoryService: Domain.ClipSearchHistoryService {
         }
     }
 
+    public func read() -> [ClipSearchHistory] {
+        return queue.sync {
+            userDefaults
+                .clipSearchHistories
+                .compactMap { try? JSONDecoder().decode(ClipSearchHistory.self, from: $0) }
+        }
+    }
+
     public func query() -> AnyPublisher<[ClipSearchHistory], Never> {
         userDefaults
             .publisher(for: \.clipSearchHistories)

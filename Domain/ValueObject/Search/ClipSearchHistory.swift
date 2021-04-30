@@ -6,4 +6,12 @@ public struct ClipSearchHistory: Equatable, Hashable, Codable {
     public let id: UUID
     public let query: ClipSearchQuery
     public let date: Date
+
+    // MARK: - Initializers
+
+    public init(id: UUID, query: ClipSearchQuery, date: Date) {
+        self.id = id
+        self.query = query
+        self.date = date
+    }
 }

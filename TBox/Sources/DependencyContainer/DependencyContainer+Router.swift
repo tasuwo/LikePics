@@ -78,8 +78,8 @@ extension DependencyContainer: Router {
         return true
     }
 
-    func showClipCollectionView(for query: ClipSearchQuery, with title: String) -> Bool {
-        let viewController = makeClipCollectionView(from: .search(title: title, query))
+    func showClipCollectionView(for query: ClipSearchQuery) -> Bool {
+        let viewController = makeClipCollectionView(from: .search(query))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true

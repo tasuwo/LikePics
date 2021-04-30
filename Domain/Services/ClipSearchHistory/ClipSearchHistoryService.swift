@@ -8,5 +8,6 @@ public protocol ClipSearchHistoryService {
     func append(_ history: ClipSearchHistory)
     func remove(historyHaving id: UUID)
     func removeAll()
+    func read() -> [ClipSearchHistory]
     func query() -> AnyPublisher<[ClipSearchHistory], Never>
 }

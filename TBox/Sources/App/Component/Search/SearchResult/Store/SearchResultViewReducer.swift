@@ -10,6 +10,7 @@ typealias SearchResultViewDependency = HasClipQueryService
     & HasRouter
     & HasUserSettingStorage
     & HasClipSearchSettingService
+    & HasClipSearchHistoryService
 
 enum SearchResultViewReducer: Reducer {
     typealias Dependency = SearchResultViewDependency
@@ -70,7 +71,8 @@ enum SearchResultViewReducer: Reducer {
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:
-            dependency.router.showClipCollectionView(for: state.searchQuery, with: state.searchQueryTitle)
+            dependency.clipSearchHistoryService.append(.init(id: UUID(), query: state.searchQuery, date: Date()))
+            dependency.router.showClipCollectionView(for: state.searchQuery)
             return (nextState, nil)
 
         // MARK: - Search Execution

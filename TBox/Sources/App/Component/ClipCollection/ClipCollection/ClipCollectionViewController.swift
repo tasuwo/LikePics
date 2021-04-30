@@ -624,8 +624,8 @@ extension ClipCollection.Source {
         case .all:
             return L10n.topClipViewEmptyMessage
 
-        case let .search(title: title, _):
-            return L10n.searchResultNotFoundMessage(title)
+        case let .search(query):
+            return L10n.searchResultNotFoundMessage(query.displayTitle)
 
         default:
             return nil
