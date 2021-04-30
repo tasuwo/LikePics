@@ -82,6 +82,10 @@
 "search_entry_menu_sort_asc" = "昇順";
 "search_entry_menu_sort_desc" = "降順";
 
+"search_history_section_title" = "最近の検索";
+"search_history_row_empty_message" = "最近の検索はありません";
+"search_history_delete_action" = "削除";
+
 "search_result_see_all_button" = "すべて見る";
 "search_result_not_found_title" = "結果なし";
 "search_result_not_found_message" = "\"%@\"の検索結果はありませんでした。新しい検索を試してください。";

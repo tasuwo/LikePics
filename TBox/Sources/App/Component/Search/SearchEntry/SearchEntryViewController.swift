@@ -100,7 +100,7 @@ extension SearchEntryViewController {
         let layout = Layout.createLayout(historyDeletionHandler: { [weak self] indexPath -> UISwipeActionsConfiguration? in
             guard let self = self else { return nil }
             guard case let .history(history) = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
-            let deleteAction = UIContextualAction(style: .destructive, title: "削除" /* TODO: */ ) { _, _, completion in
+            let deleteAction = UIContextualAction(style: .destructive, title: L10n.searchHistoryDeleteAction) { _, _, completion in
                 self.store.execute(.removedHistory(history, completion: completion))
             }
             return UISwipeActionsConfiguration(actions: [deleteAction])

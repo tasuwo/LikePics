@@ -334,6 +334,12 @@ internal enum L10n {
     internal static let searchEntryViewErrorAtSearch = L10n.tr("Localizable", "search_entry_view_error_at_search")
     /// 検索
     internal static let searchEntryViewTitle = L10n.tr("Localizable", "search_entry_view_title")
+    /// 削除
+    internal static let searchHistoryDeleteAction = L10n.tr("Localizable", "search_history_delete_action")
+    /// 最近の検索はありません
+    internal static let searchHistoryRowEmptyMessage = L10n.tr("Localizable", "search_history_row_empty_message")
+    /// 最近の検索
+    internal static let searchHistorySectionTitle = L10n.tr("Localizable", "search_history_section_title")
     /// キーワード「%@」に一致するクリップは見つかりませんでした
     internal static func searchResultForKeywordsEmptyTitle(_ p1: Any) -> String {
         return L10n.tr("Localizable", "search_result_for_keywords_empty_title", String(describing: p1))

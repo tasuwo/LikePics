@@ -86,14 +86,14 @@ extension SearchEntryViewLayout {
     private static func configureHistoryHeader() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionHeaderView> {
         return .init(elementKind: ElementKind.title.rawValue) { headerView, _, _ in
             // TODO: 全て削除ボタンを配置する
-            headerView.label.text = "最近の検索" // TODO:
+            headerView.label.text = L10n.searchHistorySectionTitle
         }
     }
 
     private static func configureEmptyCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, Void> {
         return .init { cell, _, _ in
             var contentConfiguration = UIListContentConfiguration.valueCell()
-            contentConfiguration.text = "最近の検索はありません" // TODO:
+            contentConfiguration.text = L10n.searchHistoryRowEmptyMessage
             contentConfiguration.textProperties.font = .preferredFont(forTextStyle: .callout)
             contentConfiguration.textProperties.alignment = .center
             contentConfiguration.textProperties.color = .secondaryLabel
