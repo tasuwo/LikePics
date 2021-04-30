@@ -99,13 +99,13 @@ extension SearchEntryViewLayout {
     private static func configureHistoryHeader() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionHeaderView> {
         return .init(elementKind: ElementKind.historyHeader.rawValue) { headerView, _, _ in
             // TODO: 全て削除ボタンを配置する
-            headerView.label.text = L10n.searchHistorySectionTitle
+            headerView.title = L10n.searchHistorySectionTitle
         }
     }
 
     private static func configureHistoryFooter() -> UICollectionView.SupplementaryRegistration<SearchEntrySectionFooterView> {
         return .init(elementKind: ElementKind.historyFooter.rawValue) { footerView, _, _ in
-            footerView.label.text = L10n.searchHistoryFooterMessage
+            footerView.title = L10n.searchHistoryFooterMessage
         }
     }
 

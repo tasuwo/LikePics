@@ -4,11 +4,23 @@
 
 import UIKit
 
-class SearchEntrySectionHeaderView: UICollectionReusableView {
-    let label = UILabel()
-    static let reuseIdentifier = "search-entry-section-header-reuse-identifier"
+public class SearchEntrySectionHeaderView: UICollectionReusableView {
+    public static let reuseIdentifier = "search-entry-section-header-reuse-identifier"
 
-    override init(frame: CGRect) {
+    let label = UILabel()
+
+    public var title: String {
+        get {
+            label.text ?? ""
+        }
+        set {
+            label.text = newValue
+        }
+    }
+
+    // MARK: - Initializers
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         configureViewHierarchy()
     }
@@ -20,7 +32,7 @@ class SearchEntrySectionHeaderView: UICollectionReusableView {
 }
 
 extension SearchEntrySectionHeaderView {
-    func configureViewHierarchy() {
+    private func configureViewHierarchy() {
         addSubview(label)
 
         label.translatesAutoresizingMaskIntoConstraints = false
