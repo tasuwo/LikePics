@@ -320,10 +320,14 @@ internal enum L10n {
     internal static let searchEntryMenuDisplaySettingRevealed = L10n.tr("Localizable", "search_entry_menu_display_setting_revealed")
     /// すべて
     internal static let searchEntryMenuDisplaySettingUnspecified = L10n.tr("Localizable", "search_entry_menu_display_setting_unspecified")
+    /// 昇順
+    internal static let searchEntryMenuSortAsc = L10n.tr("Localizable", "search_entry_menu_sort_asc")
     /// 作成日
     internal static let searchEntryMenuSortCreatedDate = L10n.tr("Localizable", "search_entry_menu_sort_created_date")
     /// サイズ
     internal static let searchEntryMenuSortDataSize = L10n.tr("Localizable", "search_entry_menu_sort_data_size")
+    /// 降順
+    internal static let searchEntryMenuSortDesc = L10n.tr("Localizable", "search_entry_menu_sort_desc")
     /// 更新日
     internal static let searchEntryMenuSortUpdatedDate = L10n.tr("Localizable", "search_entry_menu_sort_updated_date")
     /// 検索に失敗しました

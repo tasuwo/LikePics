@@ -3,6 +3,7 @@
 //
 
 import Domain
+import TBoxUIKit
 import UIKit
 
 enum SearchEntryViewLayout {
@@ -100,12 +101,13 @@ extension SearchEntryViewLayout {
         }
     }
 
-    private static func configureHistoryCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ClipSearchHistory> {
-        return .init { cell, _, item in
-            var contentConfiguration = UIListContentConfiguration.valueCell()
-            contentConfiguration.image = UIImage(systemName: "clock")
-            // TODO: ソート, 表示設定も反映する
-            contentConfiguration.text = item.query.displayTitle
+    private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryListCell, ClipSearchHistory> {
+        return .init { cell, _, history in
+            var contentConfiguration = ClipSearchHistoryContentConfiguration()
+            contentConfiguration.queryConfiguration = .init(title: history.query.displayTitle,
+                                                            sortName: history.query.sort.displayTitle,
+                                                            displaySettingName: history.query.displaySettingDisplayTitle,
+                                                            isDisplaySettingHidden: false) // TODO:
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()

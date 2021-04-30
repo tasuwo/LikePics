@@ -79,6 +79,9 @@
 "search_entry_menu_sort_updated_date" = "Updated Date";
 "search_entry_menu_sort_data_size" = "Size";
 
+"search_entry_menu_sort_asc" = "Ascending";
+"search_entry_menu_sort_desc" = "Descending";
+
 "search_result_see_all_button" = "See All";
 "search_result_not_found_title" = "No Results";
 "search_result_not_found_message" = "There were no results for \"%@\". Try a new search.";
