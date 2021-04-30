@@ -9,6 +9,7 @@ public struct Clip {
     /// - attention: Sorted by clipIndex.
     public let items: [ClipItem]
     public let isHidden: Bool
+    // TODO: 同期による統合を考慮できていないので、修正する
     public let dataSize: Int
     public let registeredDate: Date
     public let updatedDate: Date

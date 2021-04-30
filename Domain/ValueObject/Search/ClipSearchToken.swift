@@ -10,6 +10,7 @@ public struct ClipSearchToken: Equatable, Hashable, Codable {
 
     public let kind: Kind
     public let id: UUID
+    // TODO: どこかのタイミングでタイトルをCoreData側に合わせて更新するか、titleは保存しないように修正する
     public let title: String
 
     // MARK: - Initializers
