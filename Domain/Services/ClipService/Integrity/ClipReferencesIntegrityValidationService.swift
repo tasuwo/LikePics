@@ -40,19 +40,24 @@ public class ClipReferencesIntegrityValidationService {
             return
         }
 
-        let tags: [Tag.Identity: Tag]
-        switch self.clipStorage.readAllTags() {
-        case let .success(result):
-            tags = result.reduce(into: [Tag.Identity: Tag]()) { result, tag in
-                result[tag.identity] = tag
-            }
+        // swiftlint:disable:next identifier_name
+        var _tags: [Tag.Identity: Tag]?
+        clipStorage.performAndWait { [weak self] in
+            guard let self = self else { return }
+            switch self.clipStorage.readAllTags() {
+            case let .success(result):
+                _tags = result.reduce(into: [Tag.Identity: Tag]()) { result, tag in
+                    result[tag.identity] = tag
+                }
 
-        case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read tags: \(error.localizedDescription)
-            """))
-            return
+            case let .failure(error):
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to read tags: \(error.localizedDescription)
+                """))
+                _tags = nil
+            }
         }
+        guard let tags = _tags else { return }
 
         try self.referenceClipStorage.beginTransaction()
 
@@ -107,7 +112,7 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
     // MARK: - ClipReferencesIntegrityValidationServiceProtocol
 
     public func validateAndFixIntegrityIfNeeded() {
-        self.queue.sync {
+        queue.sync {
             do {
                 try self.validateAndFixTagsIntegrityIfNeeded()
             } catch {
@@ -125,20 +130,23 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
 
     public func didRemoteChangedTags(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID]) {
         queue.async {
-            do {
-                let insertOrUpdatedIDs = inserted + updated
-                if !insertOrUpdatedIDs.isEmpty {
-                    try self.clipStorage.beginTransaction()
-                    insertOrUpdatedIDs.forEach { objectId in
-                        _ = self.clipStorage.deduplicateTag(for: objectId)
+            self.clipStorage.performAndWait { [weak self] in
+                guard let self = self else { return }
+                do {
+                    let insertOrUpdatedIDs = inserted + updated
+                    if !insertOrUpdatedIDs.isEmpty {
+                        try self.clipStorage.beginTransaction()
+                        insertOrUpdatedIDs.forEach { objectId in
+                            _ = self.clipStorage.deduplicateTag(for: objectId)
+                        }
+                        try self.clipStorage.commitTransaction()
                     }
-                    try self.clipStorage.commitTransaction()
+                } catch {
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    self.logger.write(ConsoleLog(level: .error, message: """
+                    Failed to deduplicate: \(error.localizedDescription)
+                    """))
                 }
-            } catch {
-                try? self.clipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to deduplicate: \(error.localizedDescription)
-                """))
             }
 
             do {

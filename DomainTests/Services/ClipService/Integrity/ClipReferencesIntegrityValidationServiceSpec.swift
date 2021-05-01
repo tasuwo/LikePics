@@ -24,6 +24,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                                                                logger: RootLogger.shared,
                                                                queue: DispatchQueue(label: "net.tasuwo.TBox.ClipReferencesIntegrityValidationServiceSpec"))
 
+            clipStorage.performAndWaitHandler = { $0() }
             clipStorage.readAllClipsHandler = { .success([]) }
             clipStorage.readAllTagsHandler = { .success([]) }
             referenceClipStorage.readAllTagsHandler = { .success([]) }

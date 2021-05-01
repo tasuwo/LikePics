@@ -453,6 +453,15 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         }
     }
 
+    public private(set) var performAndWaitCallCount = 0
+    public var performAndWaitHandler: ((@escaping () -> Void) -> Void)?
+    public func performAndWait(_ block: @escaping () -> Void) {
+        performAndWaitCallCount += 1
+        if let performAndWaitHandler = performAndWaitHandler {
+            performAndWaitHandler(block)
+        }
+    }
+
     public private(set) var readAllClipsCallCount = 0
     public var readAllClipsHandler: (() -> (Result<[Clip], ClipStorageError>))?
     public func readAllClips() -> Result<[Clip], ClipStorageError> {
