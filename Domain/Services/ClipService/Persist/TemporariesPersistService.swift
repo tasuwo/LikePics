@@ -174,7 +174,7 @@ extension TemporariesPersistService {
     /**
      * - Note: テスト用にアクセスレベルを緩めてある
      */
-    func persistDirtyTags() -> Bool {
+    func persistTemporaryDirtyTags() -> Bool {
         do {
             guard let dirtyTags = referenceClipStorage.readAllDirtyTags().successValue else {
                 errorLog("一時保存領域のDirtyなタグ群の取得に失敗")
@@ -253,7 +253,7 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
                 self.isRunning = true
                 defer { self.isRunning = false }
 
-                guard self.persistDirtyTags() else {
+                guard self.persistTemporaryDirtyTags() else {
                     result = false
                     return
                 }

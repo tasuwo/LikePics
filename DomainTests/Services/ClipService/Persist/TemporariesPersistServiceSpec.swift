@@ -38,7 +38,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                             queue: .global())
         }
 
-        describe("persistDirtyTags") {
+        describe("persistTemporaryDirtyTags") {
             var result: Bool!
 
             beforeEach {
@@ -114,7 +114,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                                 return .success(())
                             }
 
-                            result = service.persistDirtyTags()
+                            result = service.persistTemporaryDirtyTags()
                         }
 
                         it("trueが返る") {
@@ -151,7 +151,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                         beforeEach {
                             referenceClipStorage.updateTagsHandler = { _, _ in return .failure(.internalError) }
 
-                            result = service.persistDirtyTags()
+                            result = service.persistTemporaryDirtyTags()
                         }
                         it("falseが返る") {
                             expect(result).to(beFalse())
@@ -225,7 +225,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                                 return .success(())
                             }
 
-                            result = service.persistDirtyTags()
+                            result = service.persistTemporaryDirtyTags()
                         }
 
                         it("trueが返る") {
@@ -265,7 +265,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                         beforeEach {
                             referenceClipStorage.deleteTagsHandler = { _ in .failure(.internalError) }
 
-                            result = service.persistDirtyTags()
+                            result = service.persistTemporaryDirtyTags()
                         }
                         it("falseが返る") {
                             expect(result).to(beFalse())
@@ -293,7 +293,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                     beforeEach {
                         clipStorage.createTagHandler = { _ in .failure(.internalError) }
 
-                        result = service.persistDirtyTags()
+                        result = service.persistTemporaryDirtyTags()
                     }
                     it("falseが返る") {
                         expect(result).to(beFalse())
@@ -321,7 +321,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                 beforeEach {
                     referenceClipStorage.readAllDirtyTagsHandler = { .failure(.internalError) }
 
-                    result = service.persistDirtyTags()
+                    result = service.persistTemporaryDirtyTags()
                 }
                 it("falseが返る") {
                     expect(result).to(beFalse())
