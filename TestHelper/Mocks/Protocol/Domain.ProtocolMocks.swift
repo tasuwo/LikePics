@@ -453,15 +453,6 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         }
     }
 
-    public private(set) var performAndWaitCallCount = 0
-    public var performAndWaitHandler: ((@escaping () -> Void) -> Void)?
-    public func performAndWait(_ block: @escaping () -> Void) {
-        performAndWaitCallCount += 1
-        if let performAndWaitHandler = performAndWaitHandler {
-            performAndWaitHandler(block)
-        }
-    }
-
     public private(set) var readAllClipsCallCount = 0
     public var readAllClipsHandler: (() -> (Result<[Clip], ClipStorageError>))?
     public func readAllClips() -> Result<[Clip], ClipStorageError> {
@@ -922,6 +913,39 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
             return deleteTagsHandler(ids)
         }
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class StorageCommandQueueMock: StorageCommandQueue {
+    public init() { }
+
+    public private(set) var syncCallCount = 0
+    public var syncHandler: ((@escaping () -> Any) -> (Any))?
+    public func sync<T>(_ block: @escaping () -> T) -> T {
+        syncCallCount += 1
+        if let syncHandler = syncHandler {
+            return syncHandler(block) as! T
+        }
+        fatalError("syncHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var syncBlockCallCount = 0
+    public var syncBlockHandler: ((@escaping () throws -> Any) throws -> (Any))?
+    public func sync<T>(_ block: @escaping () throws -> T) throws -> T {
+        syncBlockCallCount += 1
+        if let syncBlockHandler = syncBlockHandler {
+            return try syncBlockHandler(block) as! T
+        }
+        fatalError("syncBlockHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var asyncCallCount = 0
+    public var asyncHandler: ((@escaping () -> Void) -> Void)?
+    public func async(_ block: @escaping () -> Void) {
+        asyncCallCount += 1
+        if let asyncHandler = asyncHandler {
+            asyncHandler(block)
+        }
     }
 }
 

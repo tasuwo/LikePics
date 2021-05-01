@@ -47,15 +47,18 @@ class DependencyContainer {
 
     let coreDataStack: CoreDataStack
     let cloudAvailabilityObserver: CloudAvailabilityObserver
-    var imageQueryContext: NSManagedObjectContext
-    var commandContext: NSManagedObjectContext
+    private var imageQueryContext: NSManagedObjectContext
+    private var commandContext: NSManagedObjectContext
 
     let monitor: ICloudSyncMonitor
 
     // MARK: Queue
 
-    let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
-    let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
+    private let commandLock = NSRecursiveLock()
+    /// - Attention: 排他制御には`commandLock`を利用する
+    private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
+    /// - Attention: 排他制御には`commandLock`を利用する
+    private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
 
     // MARK: Logger
 
@@ -81,6 +84,8 @@ class DependencyContainer {
 
         self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
+        // Note: clipStorage, imageStorage は、同一トランザクションとして書き込みを行うことが多いため、
+        //       同一Contextとする
         self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
@@ -121,22 +126,29 @@ class DependencyContainer {
                                             imageQueryService: self._imageQueryService,
                                             memoryCache: previewMemoryCache)
 
-        self._clipCommandService = ClipCommandService(clipStorage: self.clipStorage,
+        self._clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                       referenceClipStorage: referenceClipStorage,
-                                                      imageStorage: self.imageStorage,
-                                                      diskCache: self.clipDiskCache,
-                                                      logger: self.logger)
-        self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: self.clipStorage,
-                                                                                   referenceClipStorage: self.referenceClipStorage,
-                                                                                   logger: self.logger,
-                                                                                   queue: self.clipCommandQueue)
-        self.persistService = TemporariesPersistService(temporaryClipStorage: self.tmpClipStorage,
-                                                        temporaryImageStorage: self.tmpImageStorage,
-                                                        clipStorage: self.clipStorage,
-                                                        referenceClipStorage: self.referenceClipStorage,
-                                                        imageStorage: self.imageStorage,
-                                                        logger: self.logger,
-                                                        queue: self.clipCommandQueue)
+                                                      imageStorage: imageStorage,
+                                                      diskCache: clipDiskCache,
+                                                      // Note: ImageStorage, ClipStorage は同一 Context である前提
+                                                      commandQueue: clipStorage,
+                                                      lock: commandLock,
+                                                      logger: logger)
+        self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
+                                                                                   referenceClipStorage: referenceClipStorage,
+                                                                                   // Note: ImageStorage, ClipStorage は同一 Context である前提
+                                                                                   commandQueue: clipStorage,
+                                                                                   lock: commandLock,
+                                                                                   logger: logger)
+        self.persistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
+                                                        temporaryImageStorage: tmpImageStorage,
+                                                        clipStorage: clipStorage,
+                                                        referenceClipStorage: referenceClipStorage,
+                                                        imageStorage: imageStorage,
+                                                        // Note: ImageStorage, ClipStorage は同一 Context である前提
+                                                        commandQueue: clipStorage,
+                                                        lock: commandLock,
+                                                        logger: logger)
 
         self.coreDataStack.coreDataStackObserver = self
         self.coreDataStack.cloudStackObserver = integrityValidationService

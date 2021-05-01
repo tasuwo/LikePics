@@ -148,10 +148,6 @@ extension ClipStorage: ClipStorageProtocol {
         self.context.rollback()
     }
 
-    public func performAndWait(_ block: @escaping () -> Void) {
-        context.performAndWait(block)
-    }
-
     public func readAllClips() -> Result<[Domain.Clip], ClipStorageError> {
         do {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -876,5 +872,21 @@ extension ClipStorage: ClipStorageProtocol {
                 mutableTags.add(winner)
             }
         }
+    }
+}
+
+extension ClipStorage: StorageCommandQueue {
+    // MARK: - StorageCommandQueue
+
+    public func sync<T>(_ block: @escaping () -> T) -> T {
+        return context.sync(execute: block)
+    }
+
+    public func sync<T>(_ block: @escaping () throws -> T) throws -> T {
+        return try context.sync(execute: block)
+    }
+
+    public func async(_ block: @escaping () -> Void) {
+        context.perform { block() }
     }
 }

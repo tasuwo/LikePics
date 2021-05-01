@@ -19,6 +19,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
         var referenceClipStorage: ReferenceClipStorageProtocolMock!
         var imageStorage: ImageStorageProtocolMock!
         var observer: TemporariesPersistServiceObserverMock!
+        var queue: StorageCommandQueueMock!
 
         beforeEach {
             temporaryClipStorage = TemporaryClipStorageProtocolMock()
@@ -27,19 +28,22 @@ class TemporariesPersistServiceSpec: QuickSpec {
             referenceClipStorage = ReferenceClipStorageProtocolMock()
             imageStorage = ImageStorageProtocolMock()
             observer = TemporariesPersistServiceObserverMock()
+            queue = StorageCommandQueueMock()
 
-            clipStorage.performAndWaitHandler = { $0() }
             temporaryClipStorage.readAllClipsHandler = { .success([]) }
             temporaryClipStorage.deleteAllHandler = { .success(()) }
             referenceClipStorage.readAllDirtyTagsHandler = { .success([]) }
+            queue.syncHandler = { $0() }
+            queue.syncBlockHandler = { try $0() }
 
             service = .init(temporaryClipStorage: temporaryClipStorage,
                             temporaryImageStorage: temporaryImageStorage,
                             clipStorage: clipStorage,
                             referenceClipStorage: referenceClipStorage,
                             imageStorage: imageStorage,
-                            logger: RootLogger.shared,
-                            queue: .global())
+                            commandQueue: queue,
+                            lock: .init(),
+                            logger: RootLogger.shared)
             service.set(observer: observer)
         }
 

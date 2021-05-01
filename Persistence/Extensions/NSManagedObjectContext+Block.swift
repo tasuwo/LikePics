@@ -11,19 +11,27 @@ extension NSManagedObjectContext {
         var result: T?
         var error: Error?
 
-        let semaphore = DispatchSemaphore(value: 0)
-        self.perform {
+        self.performAndWait {
             do {
                 result = try work()
             } catch let err {
                 error = err
             }
-            semaphore.signal()
         }
-        semaphore.wait()
 
         if let error = error {
             throw error
+        }
+
+        // swiftlint:disable:next force_unwrapping
+        return result!
+    }
+
+    func sync<T>(execute work: @escaping () -> T) -> T {
+        var result: T?
+
+        self.performAndWait {
+            result = work()
         }
 
         // swiftlint:disable:next force_unwrapping

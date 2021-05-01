@@ -10,8 +10,9 @@ public class TemporariesPersistService {
     let clipStorage: ClipStorageProtocol
     let referenceClipStorage: ReferenceClipStorageProtocol
     let imageStorage: ImageStorageProtocol
+    let commandQueue: StorageCommandQueue
+    let lock: NSRecursiveLock
     let logger: TBoxLoggable
-    let queue: DispatchQueue
 
     private(set) var isRunning: Bool = false
 
@@ -24,16 +25,18 @@ public class TemporariesPersistService {
                 clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 imageStorage: ImageStorageProtocol,
-                logger: TBoxLoggable,
-                queue: DispatchQueue)
+                commandQueue: StorageCommandQueue,
+                lock: NSRecursiveLock,
+                logger: TBoxLoggable)
     {
         self.temporaryClipStorage = temporaryClipStorage
         self.temporaryImageStorage = temporaryImageStorage
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
+        self.commandQueue = commandQueue
+        self.lock = lock
         self.logger = logger
-        self.queue = queue
     }
 
     // MARK: - Methods
@@ -47,37 +50,37 @@ public class TemporariesPersistService {
     }
 
     private func beginTransaction() throws {
-        try self.clipStorage.beginTransaction()
-        try self.temporaryClipStorage.beginTransaction()
-        try self.referenceClipStorage.beginTransaction()
-        try self.imageStorage.beginTransaction()
+        try commandQueue.sync { [weak self] in try self?.clipStorage.beginTransaction() }
+        try temporaryClipStorage.beginTransaction()
+        try referenceClipStorage.beginTransaction()
+        try commandQueue.sync { [weak self] in try self?.imageStorage.beginTransaction() }
     }
 
     private func cancelTransaction() throws {
-        try self.clipStorage.cancelTransactionIfNeeded()
-        try self.temporaryClipStorage.cancelTransactionIfNeeded()
-        try self.referenceClipStorage.cancelTransactionIfNeeded()
-        try self.imageStorage.cancelTransactionIfNeeded()
+        try commandQueue.sync { [weak self] in try self?.clipStorage.cancelTransactionIfNeeded() }
+        try temporaryClipStorage.cancelTransactionIfNeeded()
+        try referenceClipStorage.cancelTransactionIfNeeded()
+        try commandQueue.sync { [weak self] in try self?.imageStorage.cancelTransactionIfNeeded() }
     }
 
     private func commitTransaction() throws {
-        try self.clipStorage.commitTransaction()
-        try self.temporaryClipStorage.commitTransaction()
-        try self.referenceClipStorage.commitTransaction()
-        try self.imageStorage.commitTransaction()
+        try commandQueue.sync { [weak self] in try self?.clipStorage.commitTransaction() }
+        try temporaryClipStorage.commitTransaction()
+        try referenceClipStorage.commitTransaction()
+        try commandQueue.sync { [weak self] in try self?.imageStorage.commitTransaction() }
     }
 
     private func cleanTemporaryArea() {
         do {
-            try self.temporaryClipStorage.beginTransaction()
-            _ = self.temporaryClipStorage.deleteAll()
-            try self.temporaryClipStorage.commitTransaction()
+            try temporaryClipStorage.beginTransaction()
+            _ = temporaryClipStorage.deleteAll()
+            try temporaryClipStorage.commitTransaction()
         } catch {
             errorLog("一時保存領域のメタ情報の削除に失敗: \(error.localizedDescription)")
         }
 
         do {
-            try self.temporaryImageStorage.deleteAll()
+            try temporaryImageStorage.deleteAll()
         } catch {
             errorLog("一時保存領域の画像群の削除に失敗: \(error.localizedDescription)")
         }
@@ -102,7 +105,7 @@ extension TemporariesPersistService {
             var succeeds: [ReferenceTag] = []
             var duplicates: [ReferenceTag] = []
             for dirtyTag in dirtyTags {
-                switch clipStorage.create(dirtyTag.map(to: Tag.self)) {
+                switch commandQueue.sync({ [weak self] in self?.clipStorage.create(dirtyTag.map(to: Tag.self)) }) {
                 case .success:
                     succeeds.append(dirtyTag)
 
@@ -112,6 +115,11 @@ extension TemporariesPersistService {
                 case let .failure(error):
                     try cancelTransaction()
                     errorLog("一時保存領域のDirtyなタグ群の永続化に失敗: \(error.localizedDescription)")
+                    return false
+
+                case .none:
+                    try cancelTransaction()
+                    errorLog("一時保存領域のDirtyなタグ群の永続化に失敗")
                     return false
                 }
             }
@@ -178,7 +186,7 @@ extension TemporariesPersistService {
         do {
             try beginTransaction()
 
-            if let error = clipStorage.create(clip: clip).failureValue {
+            if let error = commandQueue.sync({ [weak self] in self?.clipStorage.create(clip: clip) })?.failureValue {
                 try? cancelTransaction()
                 errorLog("一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)")
                 return false
@@ -200,7 +208,7 @@ extension TemporariesPersistService {
 
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
                     // 画像の移動に失敗した場合でも異常終了とはしない
-                    try? imageStorage.create(data, id: item.imageId)
+                    try? commandQueue.sync { [weak self] in try self?.imageStorage.create(data, id: item.imageId) }
                     try? temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
                 }
             }
@@ -226,40 +234,27 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
     }
 
     public func persistIfNeeded() -> Bool {
-        self.queue.sync {
-            var result: Bool = false
+        lock.lock()
+        defer { lock.unlock() }
 
-            self.clipStorage.performAndWait { [weak self] in
-                guard let self = self else {
-                    result = false
-                    return
-                }
-
-                guard self.isRunning == false else {
-                    self.infoLog("Failed to take execution lock for persistence.")
-                    result = true
-                    return
-                }
-
-                self.isRunning = true
-                defer { self.isRunning = false }
-
-                guard self.persistTemporaryDirtyTags() else {
-                    result = false
-                    return
-                }
-
-                guard self.persistTemporaryClips() else {
-                    result = false
-                    return
-                }
-
-                self.cleanTemporaryArea()
-
-                result = true
-            }
-
-            return result
+        guard self.isRunning == false else {
+            infoLog("Failed to take execution lock for persistence.")
+            return true
         }
+
+        isRunning = true
+        defer { isRunning = false }
+
+        guard persistTemporaryDirtyTags() else {
+            return false
+        }
+
+        guard persistTemporaryClips() else {
+            return false
+        }
+
+        cleanTemporaryArea()
+
+        return true
     }
 }

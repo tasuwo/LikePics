@@ -7,20 +7,23 @@ import Common
 public class ClipReferencesIntegrityValidationService {
     private let clipStorage: ClipStorageProtocol
     private let referenceClipStorage: ReferenceClipStorageProtocol
+    private let commandQueue: StorageCommandQueue
+    private let lock: NSRecursiveLock
     private let logger: TBoxLoggable
-    private let queue: DispatchQueue
 
     // MARK: - Lifecycle
 
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
-                logger: TBoxLoggable,
-                queue: DispatchQueue)
+                commandQueue: StorageCommandQueue,
+                lock: NSRecursiveLock,
+                logger: TBoxLoggable)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
+        self.commandQueue = commandQueue
+        self.lock = lock
         self.logger = logger
-        self.queue = queue
     }
 
     // MARK: - Methods
@@ -40,24 +43,25 @@ public class ClipReferencesIntegrityValidationService {
             return
         }
 
-        // swiftlint:disable:next identifier_name
-        var _tags: [Tag.Identity: Tag]?
-        clipStorage.performAndWait { [weak self] in
-            guard let self = self else { return }
-            switch self.clipStorage.readAllTags() {
-            case let .success(result):
-                _tags = result.reduce(into: [Tag.Identity: Tag]()) { result, tag in
-                    result[tag.identity] = tag
-                }
-
-            case let .failure(error):
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to read tags: \(error.localizedDescription)
-                """))
-                _tags = nil
+        let tags: [Tag.Identity: Tag]
+        switch commandQueue.sync({ [weak self] in self?.clipStorage.readAllTags() }) {
+        case let .success(result):
+            tags = result.reduce(into: [Tag.Identity: Tag]()) { result, tag in
+                result[tag.identity] = tag
             }
+
+        case let .failure(error):
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read tags: \(error.localizedDescription)
+            """))
+            return
+
+        case .none:
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to read tags
+            """))
+            return
         }
-        guard let tags = _tags else { return }
 
         try self.referenceClipStorage.beginTransaction()
 
@@ -112,15 +116,16 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
     // MARK: - ClipReferencesIntegrityValidationServiceProtocol
 
     public func validateAndFixIntegrityIfNeeded() {
-        queue.sync {
-            do {
-                try self.validateAndFixTagsIntegrityIfNeeded()
-            } catch {
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to fix integrity: \(error.localizedDescription)
-                """))
-            }
+        lock.lock()
+        defer { lock.unlock() }
+
+        do {
+            try self.validateAndFixTagsIntegrityIfNeeded()
+        } catch {
+            try? self.referenceClipStorage.cancelTransactionIfNeeded()
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to fix integrity: \(error.localizedDescription)
+            """))
         }
     }
 }
@@ -129,37 +134,38 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
     // MARK: - CloudStackObserver
 
     public func didRemoteChangedTags(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID]) {
-        queue.async {
-            self.clipStorage.performAndWait { [weak self] in
-                guard let self = self else { return }
-                do {
-                    let insertOrUpdatedIDs = inserted + updated
-                    if !insertOrUpdatedIDs.isEmpty {
-                        try self.clipStorage.beginTransaction()
-                        insertOrUpdatedIDs.forEach { objectId in
-                            _ = self.clipStorage.deduplicateTag(for: objectId)
-                        }
-                        try self.clipStorage.commitTransaction()
-                    }
-                } catch {
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to deduplicate: \(error.localizedDescription)
-                    """))
-                }
-            }
+        lock.lock()
+        defer { lock.unlock() }
 
+        commandQueue.sync { [weak self] in
+            guard let self = self else { return }
             do {
-                if !inserted.isEmpty || !updated.isEmpty || !deleted.isEmpty {
-                    // TODO: パフォーマンス向上を検討する
-                    try self.validateAndFixTagsIntegrityIfNeeded()
+                let insertOrUpdatedIDs = inserted + updated
+                if !insertOrUpdatedIDs.isEmpty {
+                    try self.clipStorage.beginTransaction()
+                    insertOrUpdatedIDs.forEach { objectId in
+                        _ = self.clipStorage.deduplicateTag(for: objectId)
+                    }
+                    try self.clipStorage.commitTransaction()
                 }
             } catch {
-                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to fix integrity: \(error.localizedDescription)
+                Failed to deduplicate: \(error.localizedDescription)
                 """))
             }
+        }
+
+        do {
+            if !inserted.isEmpty || !updated.isEmpty || !deleted.isEmpty {
+                // TODO: パフォーマンス向上を検討する
+                try self.validateAndFixTagsIntegrityIfNeeded()
+            }
+        } catch {
+            try? self.referenceClipStorage.cancelTransactionIfNeeded()
+            self.logger.write(ConsoleLog(level: .error, message: """
+            Failed to fix integrity: \(error.localizedDescription)
+            """))
         }
     }
 }

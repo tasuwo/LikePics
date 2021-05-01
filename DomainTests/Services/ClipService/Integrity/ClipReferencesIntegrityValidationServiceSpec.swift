@@ -15,16 +15,20 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
         var service: ClipReferencesIntegrityValidationService!
         var clipStorage: ClipStorageProtocolMock!
         var referenceClipStorage: ReferenceClipStorageProtocolMock!
+        var queue: StorageCommandQueueMock!
 
         beforeEach {
             clipStorage = ClipStorageProtocolMock()
             referenceClipStorage = ReferenceClipStorageProtocolMock()
+            queue = StorageCommandQueueMock()
             service = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                                referenceClipStorage: referenceClipStorage,
-                                                               logger: RootLogger.shared,
-                                                               queue: DispatchQueue(label: "net.tasuwo.TBox.ClipReferencesIntegrityValidationServiceSpec"))
+                                                               commandQueue: queue,
+                                                               lock: NSRecursiveLock(),
+                                                               logger: RootLogger.shared)
 
-            clipStorage.performAndWaitHandler = { $0() }
+            queue.syncHandler = { $0() }
+            queue.syncBlockHandler = { try $0() }
             clipStorage.readAllClipsHandler = { .success([]) }
             clipStorage.readAllTagsHandler = { .success([]) }
             referenceClipStorage.readAllTagsHandler = { .success([]) }
