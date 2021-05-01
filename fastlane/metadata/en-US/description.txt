@@ -1,5 +1,7 @@
-- Download/Import image and manage it with meta data (Web Site url, ...etc)
-- Collect multiple images in a clip and manage it
-- Manage images by tag, album
-- Hides clips, tags, albums from everywhere
-- Support iCloud Sync
+- Download/Import image from other apps (Browser, SNS, Photo App, e.g. Safari, Twitter, Photo) and manage it with meta data (Web Site url, data size...etc).
+- Collect multiple images in a clip and manage it.
+- You can add clips to albums.
+- You can add tags and classify clips by it.
+- You can search your clips by url, tags, and albums.
+- You can hides clips, tags, albums from everywhere by display setting.
+- Support iCloud Sync.

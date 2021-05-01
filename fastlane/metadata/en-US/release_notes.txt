@@ -1,1 +1,8 @@
-- Fix failure of reading images at some web sites
+- You can search clips by url, tags, and albums.
+- Filter search results by display settings.
+- Sort search results by created date, updated date, and clip data size.
+
+- Fixed a bug where invalid number of clips displayed in albums list after switching display setting.
+- Fixed a crash that sometimes occurred when you update clips.
+- Fixed an issue that caused an error when trying to add an already added clips to an album.
+- Fixed minor bugs and app designs.
