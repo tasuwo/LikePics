@@ -925,6 +925,19 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     }
 }
 
+public class TemporariesPersistServiceObserverMock: TemporariesPersistServiceObserver {
+    public init() { }
+
+    public private(set) var temporariesPersistServiceCallCount = 0
+    public var temporariesPersistServiceHandler: ((TemporariesPersistService, Int, Int) -> Void)?
+    public func temporariesPersistService(_ service: TemporariesPersistService, didStartPersistAt index: Int, in count: Int) {
+        temporariesPersistServiceCallCount += 1
+        if let temporariesPersistServiceHandler = temporariesPersistServiceHandler {
+            temporariesPersistServiceHandler(service, index, count)
+        }
+    }
+}
+
 public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
     public init() { }
 
