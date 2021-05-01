@@ -90,7 +90,7 @@ extension AlbumListViewController {
             guard let self = self else { return }
 
             DispatchQueue.global().async {
-                let items = state.albums.displayableValues.map { Layout.Item(album: $0, isEditing: state.isEditing) }
+                let items = state.displayableAlbums.map { Layout.Item(album: $0, isEditing: state.isEditing) }
                 Layout.apply(items: items, to: self.dataSource, in: self.collectionView)
             }
 

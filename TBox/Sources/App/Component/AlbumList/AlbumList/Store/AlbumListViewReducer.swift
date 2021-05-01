@@ -249,7 +249,7 @@ extension AlbumListViewReducer {
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
         let newAlbums = previousState.albums
-            .updated(_values: albums.map({ isSomeItemsHidden ? $0.removingHiddenClips() : $0 }).indexed())
+            .updated(_values: albums.indexed())
             .updated(_displayableIds: Set(filteredAlbumIds))
         nextState.albums = newAlbums
 
