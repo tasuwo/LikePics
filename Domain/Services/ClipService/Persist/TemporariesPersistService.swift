@@ -38,6 +38,14 @@ public class TemporariesPersistService {
 
     // MARK: - Methods
 
+    private func errorLog(_ message: String) {
+        logger.write(ConsoleLog(level: .error, message: message))
+    }
+
+    private func infoLog(_ message: String) {
+        logger.write(ConsoleLog(level: .info, message: message))
+    }
+
     private func beginTransaction() throws {
         try self.clipStorage.beginTransaction()
         try self.temporaryClipStorage.beginTransaction()
@@ -68,9 +76,7 @@ public class TemporariesPersistService {
             }
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            一時クリップ群の読み取りに失敗: \(error.localizedDescription)
-            """))
+            errorLog("一時クリップ群の読み取りに失敗: \(error.localizedDescription)")
             return false
         }
 
@@ -84,9 +90,7 @@ public class TemporariesPersistService {
         }
 
         if persistentSkippedClipIds.isEmpty == false {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
-            """))
+            errorLog("一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))")
             return false
         }
 
@@ -96,9 +100,7 @@ public class TemporariesPersistService {
     private func persist(clipId: Clip.Identity, in temporaryClips: [Clip.Identity: ClipRecipe]) -> Bool {
         do {
             guard let clip = temporaryClips[clipId] else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Dirtyな参照クリップが一時クリップの中に見つからない
-                """))
+                errorLog("Dirtyな参照クリップが一時クリップの中に見つからない")
                 return false
             }
 
@@ -110,9 +112,7 @@ public class TemporariesPersistService {
 
             case let .failure(error):
                 try? self.cancelTransaction()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)
-                """))
+                errorLog("一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)")
                 return false
             }
 
@@ -122,9 +122,7 @@ public class TemporariesPersistService {
 
             case let .failure(error):
                 try? self.cancelTransaction()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                一時保存クリップの削除に失敗: \(error.localizedDescription)
-                """))
+                errorLog("一時保存クリップの削除に失敗: \(error.localizedDescription)")
                 return false
             }
 
@@ -132,9 +130,7 @@ public class TemporariesPersistService {
                 for item in clip.items {
                     guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
                         // 画像が見つからなかった場合、どうしようもないためスキップに留める
-                        self.logger.write(ConsoleLog(level: .info, message: """
-                        移行対象の画像が見つかりませんでした。スキップします
-                        """))
+                        infoLog("移行対象の画像が見つかりませんでした。スキップします")
                         continue
                     }
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
@@ -150,9 +146,7 @@ public class TemporariesPersistService {
             return true
         } catch {
             try? self.cancelTransaction()
-            self.logger.write(ConsoleLog(level: .info, message: """
-            一時画像の永続化中に例外が発生: \(error.localizedDescription)
-            """))
+            errorLog("一時画像の永続化中に例外が発生: \(error.localizedDescription)")
             return false
         }
     }
@@ -165,9 +159,7 @@ public class TemporariesPersistService {
                 dirtyTags = tags
 
             case let .failure(error):
-                self.logger.write(ConsoleLog(level: .error, message: """
-                DirtyTagの取得に失敗: \(error.localizedDescription)
-                """))
+                errorLog("DirtyTagの取得に失敗: \(error.localizedDescription)")
                 return false
             }
 
@@ -185,9 +177,7 @@ public class TemporariesPersistService {
 
                 case let .failure(error):
                     try self.cancelTransaction()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Dirtyタグの取得に失敗: \(error.localizedDescription)
-                    """))
+                    errorLog("Dirtyタグの取得に失敗: \(error.localizedDescription)")
                     return false
                 }
             }
@@ -199,9 +189,7 @@ public class TemporariesPersistService {
 
                 case let .failure(error):
                     try self.cancelTransaction()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Dirtyフラグの更新に失敗: \(error.localizedDescription)
-                    """))
+                    errorLog("Dirtyフラグの更新に失敗: \(error.localizedDescription)")
                     return false
                 }
             }
@@ -213,9 +201,7 @@ public class TemporariesPersistService {
 
                 case let .failure(error):
                     try self.cancelTransaction()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    重複したDirtyタグの削除に失敗: \(error.localizedDescription)
-                    """))
+                    errorLog("重複したDirtyタグの削除に失敗: \(error.localizedDescription)")
                     return false
                 }
             }
@@ -225,9 +211,7 @@ public class TemporariesPersistService {
             return true
         } catch {
             try? self.cancelTransaction()
-            self.logger.write(ConsoleLog(level: .info, message: """
-            DirtyTagの永続化中に例外が発生: \(error.localizedDescription)
-            """))
+            errorLog("DirtyTagの永続化中に例外が発生: \(error.localizedDescription)")
             return false
         }
     }
@@ -238,17 +222,13 @@ public class TemporariesPersistService {
             _ = self.temporaryClipStorage.deleteAll()
             try self.temporaryClipStorage.commitTransaction()
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            一時保存領域のメタ情報の削除に失敗: \(error.localizedDescription)
-            """))
+            errorLog("一時保存領域のメタ情報の削除に失敗: \(error.localizedDescription)")
         }
 
         do {
             try self.temporaryImageStorage.deleteAll()
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            一時保存領域の画像群の削除に失敗: \(error.localizedDescription)
-            """))
+            errorLog("一時保存領域の画像群の削除に失敗: \(error.localizedDescription)")
         }
     }
 }
@@ -271,9 +251,7 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
                 }
 
                 guard self.isRunning == false else {
-                    self.logger.write(ConsoleLog(level: .info, message: """
-                    Failed to take execution lock for persistence.
-                    """))
+                    self.infoLog("Failed to take execution lock for persistence.")
                     result = true
                     return
                 }
