@@ -56,7 +56,7 @@ public class TemporariesPersistService {
         try self.clipStorage.commitTransaction()
         try self.temporaryClipStorage.commitTransaction()
         try self.referenceClipStorage.commitTransaction()
-        try self.imageStorage.cancelTransactionIfNeeded()
+        try self.imageStorage.commitTransaction()
     }
 
     private func persistTemporaryClips() -> Bool {
@@ -71,7 +71,7 @@ public class TemporariesPersistService {
             self.logger.write(ConsoleLog(level: .error, message: """
             一時クリップ群の読み取りに失敗: \(error.localizedDescription)
             """))
-            return true
+            return false
         }
 
         var persistentSkippedClipIds: [Clip.Identity] = []
@@ -83,7 +83,6 @@ public class TemporariesPersistService {
             }
         }
 
-        // TODO: 移行に失敗したクリップをエラーログに格納し、復旧できるようにする
         if persistentSkippedClipIds.isEmpty == false {
             self.logger.write(ConsoleLog(level: .error, message: """
             一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))
@@ -286,6 +285,7 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
                     result = false
                     return
                 }
+
                 guard self.persistTemporaryClips() else {
                     result = false
                     return
