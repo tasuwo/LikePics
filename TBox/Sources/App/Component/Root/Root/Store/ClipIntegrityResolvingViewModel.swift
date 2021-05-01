@@ -107,7 +107,7 @@ extension ClipIntegrityResolvingViewModel {
 extension ClipIntegrityResolvingViewModel: TemporariesPersistServiceObserver {
     // MARK: - TemporariesPersistServiceObserver
 
-    func temporariesPersistService(_ service: TemporariesPersistService, didStartPersistAt index: Int, in count: Int) {
+    func temporariesPersistService(_ service: TemporariesPersistService, didStartThe index: Int, outOf count: Int) {
         self.outputs.allLoadingTargetCount.send(count)
         self.outputs.loadingTargetIndex.send(index)
     }

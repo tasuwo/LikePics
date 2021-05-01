@@ -150,27 +150,24 @@ extension TemporariesPersistService {
      * - Note: テストのためにアクセスレベルを緩めてある
      */
     func persistTemporaryClips() -> Bool {
-        let temporaryClips: [ClipRecipe]
-        switch self.temporaryClipStorage.readAllClips() {
-        case let .success(clips):
-            temporaryClips = clips
-
-        case let .failure(error):
-            errorLog("一時クリップ群の読み取りに失敗: \(error.localizedDescription)")
+        guard let temporaryClips = temporaryClipStorage.readAllClips().successValue else {
+            errorLog("一時クリップ群の読み取りに失敗した")
             return false
         }
 
-        var persistentSkippedClipIds: [Clip.Identity] = []
+        var failures: [Clip.Identity] = []
         for (index, clip) in temporaryClips.enumerated() {
-            self.observer?.temporariesPersistService(self, didStartPersistAt: index + 1, in: temporaryClips.count)
-            guard self.persist(clip) else {
-                persistentSkippedClipIds.append(clip.id)
-                continue
+            observer?.temporariesPersistService(self, didStartThe: index + 1, outOf: temporaryClips.count)
+
+            let isSucceeded = persist(clip)
+
+            if isSucceeded == false {
+                failures.append(clip.id)
             }
         }
 
-        if persistentSkippedClipIds.isEmpty == false {
-            errorLog("一部クリップの永続化に失敗した: \(persistentSkippedClipIds.map({ $0.uuidString }).joined(separator: ","))")
+        if failures.isEmpty == false {
+            errorLog("一部クリップの永続化に失敗した: \(failures.map({ $0.uuidString }).joined(separator: ","))")
             return false
         }
 
@@ -179,48 +176,42 @@ extension TemporariesPersistService {
 
     private func persist(_ clip: ClipRecipe) -> Bool {
         do {
-            try self.beginTransaction()
+            try beginTransaction()
 
-            switch self.clipStorage.create(clip: clip) {
-            case .success:
-                break
-
-            case let .failure(error):
-                try? self.cancelTransaction()
+            if let error = clipStorage.create(clip: clip).failureValue {
+                try? cancelTransaction()
                 errorLog("一時保存クリップのメタ情報の移行に失敗: \(error.localizedDescription)")
                 return false
             }
 
-            switch self.temporaryClipStorage.deleteClips(having: [clip.id]) {
-            case .success:
-                break
-
-            case let .failure(error):
-                try? self.cancelTransaction()
+            if let error = temporaryClipStorage.deleteClips(having: [clip.id]).failureValue {
+                try? cancelTransaction()
                 errorLog("一時保存クリップの削除に失敗: \(error.localizedDescription)")
                 return false
             }
 
-            try autoreleasepool {
+            autoreleasepool {
                 for item in clip.items {
-                    guard let data = try self.temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
+                    guard let data = try? temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
                         // 画像が見つからなかった場合、どうしようもないためスキップに留める
                         infoLog("移行対象の画像が見つかりませんでした。スキップします")
                         continue
                     }
+
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
                     // 画像の移動に失敗した場合でも異常終了とはしない
-                    try? self.imageStorage.create(data, id: item.imageId)
-                    try? self.temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
+                    try? imageStorage.create(data, id: item.imageId)
+                    try? temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
                 }
             }
-            try? self.temporaryImageStorage.deleteAll(inClipHaving: clip.id)
 
-            try self.commitTransaction()
+            try? temporaryImageStorage.deleteAll(inClipHaving: clip.id)
+
+            try commitTransaction()
 
             return true
         } catch {
-            try? self.cancelTransaction()
+            try? cancelTransaction()
             errorLog("一時画像の永続化中に例外が発生: \(error.localizedDescription)")
             return false
         }

@@ -4,7 +4,7 @@
 
 /// @mockable
 public protocol TemporariesPersistServiceObserver: AnyObject {
-    func temporariesPersistService(_ service: TemporariesPersistService, didStartPersistAt index: Int, in count: Int)
+    func temporariesPersistService(_ service: TemporariesPersistService, didStartThe index: Int, outOf count: Int)
 }
 
 /// @mockable
