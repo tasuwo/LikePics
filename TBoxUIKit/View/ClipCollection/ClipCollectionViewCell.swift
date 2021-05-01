@@ -188,13 +188,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.onReuse?(self.identifier)
-
-        self.primaryImageView.image = nil
-        self.secondaryImageView.image = nil
-        self.tertiaryImageView.image = nil
-        self.primaryImage = .loading
-        self.secondaryImage = .loading
-        self.tertiaryImage = .loading
     }
 
     // MARK: - Methods
@@ -224,6 +217,15 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public func setClipHiding(_ isHiding: Bool, animated: Bool) {
         self.isHiddenClip = isHiding
         self.updateHiddenIconAppearance(animated: animated)
+    }
+
+    public func resetContent() {
+        self.primaryImageView.image = nil
+        self.secondaryImageView.image = nil
+        self.tertiaryImageView.image = nil
+        self.primaryImage = .loading
+        self.secondaryImage = .loading
+        self.tertiaryImage = .loading
     }
 
     private func setupAppearance() {

@@ -53,6 +53,7 @@ extension ClipCollectionViewLayout {
             cell.setClipHiding(clip.isHidden, animated: false)
 
             cell.visibleSelectedMark = collectionView?.isEditing ?? false
+            cell.resetContent()
 
             guard let thumbnailLoader = thumbnailLoader else { return }
 
