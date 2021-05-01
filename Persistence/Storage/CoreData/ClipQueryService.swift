@@ -22,6 +22,8 @@ public class ClipQueryService {
 
 extension ClipQueryService: ClipQueryServiceProtocol {
     public func searchClips(query: ClipSearchQuery) -> Result<[Domain.Clip], ClipStorageError> {
+        assert(Thread.isMainThread)
+
         guard !query.isEmpty else { return .success([]) }
         do {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -36,6 +38,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func searchAlbums(containingTitle title: String, includesHiddenItems: Bool, limit: Int) -> Result<[Domain.Album], ClipStorageError> {
+        assert(Thread.isMainThread)
+
         let searchText = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchText.isEmpty else { return .success([]) }
         do {
@@ -69,6 +73,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func searchTags(containingName name: String, includesHiddenItems: Bool, limit: Int) -> Result<[Domain.Tag], ClipStorageError> {
+        assert(Thread.isMainThread)
+
         let searchText = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchText.isEmpty else { return .success([]) }
         do {
@@ -102,6 +108,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func readClipAndTags(for clipIds: [Domain.Clip.Identity]) -> Result<([Domain.Clip], [Domain.Tag]), ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             request.predicate = NSPredicate(format: "id IN %@", clipIds as CVarArg)
@@ -127,6 +135,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClip(having id: Domain.Clip.Identity) -> Result<Domain.ClipQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             guard let query = try CoreDataClipQuery(id: id, context: self.context) else {
                 return .failure(.notFound)
@@ -139,6 +149,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClipItems(inClipHaving id: Domain.Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataClipItemListQuery.RequestFactory = {
                 let request: NSFetchRequest<Item> = Item.fetchRequest()
@@ -155,6 +167,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClipItem(having id: Domain.ClipItem.Identity) -> Result<Domain.ClipItemQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             guard let query = try CoreDataClipItemQuery(id: id, context: self.context) else {
                 return .failure(.notFound)
@@ -167,6 +181,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -182,6 +198,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -198,6 +216,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryTags(forClipHaving clipId: Domain.Clip.Identity) -> Result<TagListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataTagListQuery.RequestFactory = {
                 let request: NSFetchRequest<Tag> = Tag.fetchRequest()
@@ -214,6 +234,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClips(query: ClipSearchQuery) -> Result<ClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         guard !query.isEmpty else { return .failure(.invalidParameter) }
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
@@ -231,6 +253,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClips(tagged tag: Domain.Tag) -> Result<ClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -247,6 +271,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryClips(tagged tagId: Domain.Tag.Identity) -> Result<ClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataClipListQuery.RequestFactory = {
                 let request: NSFetchRequest<Clip> = Clip.fetchRequest()
@@ -263,6 +289,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryAlbum(having id: Domain.Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             guard let query = try CoreDataAlbumQuery(id: id, context: self.context) else {
                 return .failure(.notFound)
@@ -275,6 +303,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataAlbumListQuery.RequestFactory = {
                 let request: NSFetchRequest<Album> = Album.fetchRequest()
@@ -290,6 +320,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
     }
 
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
         do {
             let factory: CoreDataTagListQuery.RequestFactory = {
                 let request: NSFetchRequest<Tag> = Tag.fetchRequest()
