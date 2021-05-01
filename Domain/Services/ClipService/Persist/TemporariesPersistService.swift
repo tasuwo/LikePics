@@ -151,7 +151,30 @@ public class TemporariesPersistService {
         }
     }
 
-    private func persistDirtyTags() -> Bool {
+    private func cleanTemporaryArea() {
+        do {
+            try self.temporaryClipStorage.beginTransaction()
+            _ = self.temporaryClipStorage.deleteAll()
+            try self.temporaryClipStorage.commitTransaction()
+        } catch {
+            errorLog("一時保存領域のメタ情報の削除に失敗: \(error.localizedDescription)")
+        }
+
+        do {
+            try self.temporaryImageStorage.deleteAll()
+        } catch {
+            errorLog("一時保存領域の画像群の削除に失敗: \(error.localizedDescription)")
+        }
+    }
+}
+
+// MARK: Persist Tags
+
+extension TemporariesPersistService {
+    /**
+     * - Note: テスト用にアクセスレベルを緩めてある
+     */
+    func persistDirtyTags() -> Bool {
         do {
             let dirtyTags: [ReferenceTag]
             switch self.referenceClipStorage.readAllDirtyTags() {
@@ -213,22 +236,6 @@ public class TemporariesPersistService {
             try? self.cancelTransaction()
             errorLog("DirtyTagの永続化中に例外が発生: \(error.localizedDescription)")
             return false
-        }
-    }
-
-    private func cleanTemporaryArea() {
-        do {
-            try self.temporaryClipStorage.beginTransaction()
-            _ = self.temporaryClipStorage.deleteAll()
-            try self.temporaryClipStorage.commitTransaction()
-        } catch {
-            errorLog("一時保存領域のメタ情報の削除に失敗: \(error.localizedDescription)")
-        }
-
-        do {
-            try self.temporaryImageStorage.deleteAll()
-        } catch {
-            errorLog("一時保存領域の画像群の削除に失敗: \(error.localizedDescription)")
         }
     }
 }
