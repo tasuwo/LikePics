@@ -176,65 +176,52 @@ extension TemporariesPersistService {
      */
     func persistDirtyTags() -> Bool {
         do {
-            let dirtyTags: [ReferenceTag]
-            switch self.referenceClipStorage.readAllDirtyTags() {
-            case let .success(tags):
-                dirtyTags = tags
-
-            case let .failure(error):
-                errorLog("DirtyTagの取得に失敗: \(error.localizedDescription)")
+            guard let dirtyTags = referenceClipStorage.readAllDirtyTags().successValue else {
+                errorLog("一時保存領域のDirtyなタグ群の取得に失敗")
                 return false
             }
 
-            try self.beginTransaction()
+            try beginTransaction()
 
-            var persistedTags: [ReferenceTag] = []
-            var duplicatedTags: [ReferenceTag] = []
+            var succeeds: [ReferenceTag] = []
+            var duplicates: [ReferenceTag] = []
             for dirtyTag in dirtyTags {
-                switch self.clipStorage.create(dirtyTag.map(to: Tag.self)) {
+                switch clipStorage.create(dirtyTag.map(to: Tag.self)) {
                 case .success:
-                    persistedTags.append(dirtyTag)
+                    succeeds.append(dirtyTag)
 
                 case .failure(.duplicated):
-                    duplicatedTags.append(dirtyTag)
+                    duplicates.append(dirtyTag)
 
                 case let .failure(error):
-                    try self.cancelTransaction()
-                    errorLog("Dirtyタグの取得に失敗: \(error.localizedDescription)")
+                    try cancelTransaction()
+                    errorLog("一時保存領域のDirtyなタグ群の永続化に失敗: \(error.localizedDescription)")
                     return false
                 }
             }
 
-            if !persistedTags.isEmpty {
-                switch self.referenceClipStorage.updateTags(having: persistedTags.map { $0.id }, toDirty: false) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try self.cancelTransaction()
-                    errorLog("Dirtyフラグの更新に失敗: \(error.localizedDescription)")
+            if succeeds.isEmpty == false {
+                if let error = referenceClipStorage.updateTags(having: succeeds.map({ $0.id }), toDirty: false).failureValue {
+                    try cancelTransaction()
+                    errorLog("一時保存領域の永続化成功済のタグのDirtyフラグを折るのに失敗: \(error.localizedDescription)")
                     return false
                 }
             }
 
-            if !duplicatedTags.isEmpty {
-                switch self.referenceClipStorage.deleteTags(having: duplicatedTags.map { $0.id }) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try self.cancelTransaction()
-                    errorLog("重複したDirtyタグの削除に失敗: \(error.localizedDescription)")
+            if duplicates.isEmpty == false {
+                if let error = referenceClipStorage.deleteTags(having: duplicates.map { $0.id }).failureValue {
+                    try cancelTransaction()
+                    errorLog("一時保存領域内の重複した名前を持つタグの削除に失敗: \(error.localizedDescription)")
                     return false
                 }
             }
 
-            try self.commitTransaction()
+            try commitTransaction()
 
             return true
         } catch {
-            try? self.cancelTransaction()
-            errorLog("DirtyTagの永続化中に例外が発生: \(error.localizedDescription)")
+            try? cancelTransaction()
+            errorLog("一時保存領域のDirtyなタグの永続化中に例外が発生: \(error.localizedDescription)")
             return false
         }
     }
