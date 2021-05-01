@@ -16,7 +16,29 @@ enum ClipCollectionViewLayout {
         case main
     }
 
-    typealias Item = Clip
+    struct Item: Equatable, Hashable {
+        var clip: Clip
+
+        var id: UUID { clip.id }
+        var isHidden: Bool { clip.isHidden }
+
+        var primaryItem: ClipItem? { clip.primaryItem }
+        var secondaryItem: ClipItem? { clip.secondaryItem }
+        var tertiaryItem: ClipItem? { clip.tertiaryItem }
+
+        init(_ clip: Clip) {
+            self.clip = clip
+        }
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            // isHidden, updatedDate は差分更新に含めないよう、比較から外す
+            return lhs.clip.id == rhs.clip.id
+                && lhs.clip.description == rhs.clip.description
+                && lhs.clip.items == rhs.clip.items
+                && lhs.clip.dataSize == rhs.clip.dataSize
+                && lhs.clip.registeredDate == rhs.clip.registeredDate
+        }
+    }
 }
 
 // MARK: - Layout

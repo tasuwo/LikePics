@@ -121,7 +121,7 @@ extension ClipCollectionViewController {
             DispatchQueue.global().async {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.clips.displayableValues)
+                snapshot.appendItems(state.clips.displayableValues.map({ .init($0) }))
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
                     self.updateHiddenIconAppearance()
                 }
@@ -166,11 +166,11 @@ extension ClipCollectionViewController {
         defer { _previousState = state }
 
         state.clips.selections(from: _previousState?.clips)
-            .compactMap { self.dataSource.indexPath(for: $0) }
+            .compactMap { self.dataSource.indexPath(for: .init($0)) }
             .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
 
         state.clips.deselections(from: _previousState?.clips)
-            .compactMap { self.dataSource.indexPath(for: $0) }
+            .compactMap { self.dataSource.indexPath(for: .init($0)) }
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }
 
@@ -203,7 +203,7 @@ extension ClipCollectionViewController {
 
     private func presentPurgeAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
         guard let clip = state.clips.value(having: clipId),
-              let indexPath = dataSource.indexPath(for: clip),
+              let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -229,7 +229,7 @@ extension ClipCollectionViewController {
 
     private func presentDeletionAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
         guard let clip = state.clips.value(having: clipId),
-              let indexPath = dataSource.indexPath(for: clip),
+              let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -256,7 +256,7 @@ extension ClipCollectionViewController {
 
     private func presentShareAlert(for clipId: Clip.Identity, items: [ClipItemImageShareItem], state: ClipCollectionState) {
         guard let clip = state.clips.value(having: clipId),
-              let indexPath = dataSource.indexPath(for: clip),
+              let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -366,10 +366,10 @@ extension ClipCollectionViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let clip = dataSource.itemIdentifier(for: indexPath), !isEditing else { return nil }
+        guard let item = dataSource.itemIdentifier(for: indexPath), !isEditing else { return nil }
         return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
                                           previewProvider: nil,
-                                          actionProvider: self.makeActionProvider(for: clip, at: indexPath))
+                                          actionProvider: self.makeActionProvider(for: item.clip, at: indexPath))
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -536,7 +536,7 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
     }
 
     var previewingCell: ClipPreviewPresentingCell? {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: clip) else { return nil }
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return nil }
         return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
     }
 
@@ -545,7 +545,7 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
     }
 
     func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: clip) else { return }
+        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
 
         view.layoutIfNeeded()
         collectionView.layoutIfNeeded()

@@ -68,19 +68,6 @@ public struct Clip {
     }
 }
 
-extension Clip: Equatable {
-    // MARK: - Equatable
-
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.id == rhs.id
-            && lhs.description == rhs.description
-            && lhs.items == rhs.items
-            && lhs.dataSize == rhs.dataSize
-            && lhs.registeredDate == rhs.registeredDate
-            && lhs.updatedDate == rhs.updatedDate
-    }
-}
-
 extension Clip: Identifiable {
     public typealias Identity = UUID
 
@@ -89,4 +76,4 @@ extension Clip: Identifiable {
     }
 }
 
-extension Clip: Hashable {}
+extension Clip: Equatable, Hashable {}
