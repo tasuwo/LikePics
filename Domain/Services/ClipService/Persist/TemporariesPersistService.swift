@@ -263,21 +263,40 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
 
     public func persistIfNeeded() -> Bool {
         self.queue.sync {
-            guard self.isRunning == false else {
-                self.logger.write(ConsoleLog(level: .info, message: """
-                Failed to take execution lock for persistence.
-                """))
-                return true
+            var result: Bool = false
+
+            self.clipStorage.performAndWait { [weak self] in
+                guard let self = self else {
+                    result = false
+                    return
+                }
+
+                guard self.isRunning == false else {
+                    self.logger.write(ConsoleLog(level: .info, message: """
+                    Failed to take execution lock for persistence.
+                    """))
+                    result = true
+                    return
+                }
+
+                self.isRunning = true
+                defer { self.isRunning = false }
+
+                guard self.persistDirtyTags() else {
+                    result = false
+                    return
+                }
+                guard self.persistTemporaryClips() else {
+                    result = false
+                    return
+                }
+
+                self.cleanTemporaryArea()
+
+                result = true
             }
-            self.isRunning = true
-            defer { self.isRunning = false }
 
-            guard self.persistDirtyTags() else { return false }
-            guard self.persistTemporaryClips() else { return false }
-
-            self.cleanTemporaryArea()
-
-            return true
+            return result
         }
     }
 }
