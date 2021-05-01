@@ -535,6 +535,7 @@ extension ClipCollectionReducer {
         case .delete:
             switch dependency.clipCommandService.deleteClips(having: Array(state.clips._selectedIds)) {
             case .success:
+                nextState = nextState.editingEnded()
                 nextState.alert = nil
 
             case .failure:
@@ -545,7 +546,8 @@ extension ClipCollectionReducer {
         case .removeFromAlbum:
             guard case let .album(albumId) = state.source else { return (state, .none) }
             switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips._selectedIds)) {
-            case .success: ()
+            case .success:
+                nextState = nextState.editingEnded()
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)
