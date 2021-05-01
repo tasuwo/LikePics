@@ -34,6 +34,23 @@ enum TagCollectionViewLayout {
                 return false
             }
         }
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.uncategorized, .uncategorized):
+                return true
+
+            case let (.tag(ltag), .tag(rtag)):
+                // isHidden は差分更新に含めないよう、比較から外す
+                return ltag.tag.id == rtag.tag.id
+                    && ltag.tag.name == rtag.tag.name
+                    && ltag.tag.clipCount == rtag.tag.clipCount
+                    && ltag.displayCount == rtag.displayCount
+
+            default:
+                return false
+            }
+        }
     }
 }
 
@@ -102,6 +119,9 @@ extension TagCollectionViewLayout {
                 if tag.displayCount != cell.visibleCountIfPossible {
                     cell.visibleCountIfPossible = tag.displayCount
                     shouldInvalidateLayout = true
+                }
+                if tag.tag.isHidden != cell.isHiddenTag {
+                    cell.isHiddenTag = tag.tag.isHidden
                 }
             }
             if shouldInvalidateLayout {
