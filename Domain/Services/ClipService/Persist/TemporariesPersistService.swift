@@ -198,12 +198,12 @@ extension TemporariesPersistService {
                 return false
             }
 
-            autoreleasepool {
-                for item in clip.items {
+            for item in clip.items {
+                autoreleasepool {
                     guard let data = try? temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
                         // 画像が見つからなかった場合、どうしようもないためスキップに留める
                         infoLog("移行対象の画像が見つかりませんでした。スキップします")
-                        continue
+                        return
                     }
 
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
