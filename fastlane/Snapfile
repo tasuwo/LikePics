@@ -1,17 +1,13 @@
 devices([
-  "iPhone 11 Pro Max",
+  "iPhone 12 Pro Max",
   "iPhone 8 Plus",
-  "iPad Pro (12.9-inch) (4th generation)",
+  "iPad Pro (12.9-inch) (2nd generation)",
+  "iPad Pro (12.9-inch) (3rd generation)",
 ])
 
 languages([
   "en-US",
   "ja",
-])
-
-ENV["FASTLANE_SNAPSHOT"] = "YES"
-launch_arguments([
-  "-FASTLANE_SNAPSHOT YES"
 ])
 
 scheme("SnapshotHelper")

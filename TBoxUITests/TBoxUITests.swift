@@ -28,25 +28,27 @@ class TBoxUITests: XCTestCase {
         snapshot("01_Home")
 
         tabBar
+            .buttons["AppRootTabBarController.tabBarItem.search"]
+            .tap()
+        snapshot("02_Search")
+
+        tabBar
             .buttons["AppRootTabBarController.tabBarItem.tag"]
             .tap()
-        snapshot("02_Tag")
+        snapshot("03_Tag")
 
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.album"]
             .tap()
-        snapshot("03_Album")
+        snapshot("04_Album")
 
         tabBar
             .buttons["AppRootTabBarController.tabBarItem.top"]
             .tap()
-
         app.collectionViews
             .children(matching: .any)
             .element(boundBy: 0)
             .tap()
-        snapshot("04_Preview")
-
         app.navigationBars["LikePics.ClipPreviewPageView"]
             .buttons["ClipPreviewPageBarController.infoItem"]
             .tap()
