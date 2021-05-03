@@ -4,16 +4,16 @@
 
 import UIKit
 
-public protocol ClipsCollectionLayoutDelegate: AnyObject {
+protocol ClipsCollectionLayoutDelegate: AnyObject {
     func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
-public class ClipCollectionLayout: UICollectionViewLayout {
+class ClipCollectionLayout: UICollectionViewLayout {
     private static let contentPadding: CGFloat = 8
     private static let cellPadding: CGFloat = 8
     private static let defaultContentHeight: CGFloat = 180
 
-    public weak var delegate: ClipsCollectionLayoutDelegate?
+    weak var delegate: ClipsCollectionLayoutDelegate?
 
     private var numberOfColumns: Int {
         guard let collectionView = self.collectionView else {
@@ -48,19 +48,19 @@ public class ClipCollectionLayout: UICollectionViewLayout {
 
     // MARK: - UICollectionViewLayout
 
-    override public var collectionViewContentSize: CGSize {
+    override var collectionViewContentSize: CGSize {
         return CGSize(width: self.contentWidth, height: self.contentHeight)
     }
 
-    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         return self.cache.filter { $0.frame.intersects(rect) }
     }
 
-    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return self.cache[indexPath.item]
     }
 
-    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         if let collectionView = self.collectionView {
             return collectionView.frame.size != newBounds.size
         }
@@ -69,7 +69,7 @@ public class ClipCollectionLayout: UICollectionViewLayout {
 
     // MARK: - UICollectionViewLayout
 
-    override public func prepare() {
+    override func prepare() {
         self.resetAttributes()
         self.setupAttributes()
     }
