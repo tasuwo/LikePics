@@ -49,6 +49,44 @@ extension ClipCollectionViewLayout {
         layout.delegate = delegate
         return layout
     }
+
+    static func createGridLayout() -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
+            return self.createSection(environment: environment)
+        }
+    }
+
+    private static func createSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let count: Int = {
+            switch environment.traitCollection.horizontalSizeClass {
+            case .compact:
+                return 2
+
+            case .regular:
+                return 4
+
+            case .unspecified:
+                return 2
+
+            @unknown default:
+                return 2
+            }
+        }()
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
+        group.interItemSpacing = .fixed(16)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = CGFloat(16)
+        section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+        return section
+    }
 }
 
 // MARK: - DataSource

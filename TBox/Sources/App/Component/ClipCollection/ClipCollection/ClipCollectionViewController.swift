@@ -144,10 +144,18 @@ extension ClipCollectionViewController {
 
         store.state
             .onChange(\.isEditing) { [weak self] isEditing in
-                self?.isEditing = isEditing
-                self?.collectionView.isEditing = isEditing
+                guard let self = self else { return }
+
+                self.isEditing = isEditing
+                self.collectionView.isEditing = isEditing
+
+                let nextLayout = isEditing
+                    ? Layout.createGridLayout()
+                    : Layout.createLayout(with: self)
+                self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
+
                 // TODO: 各Cell側で設定させる
-                self?.collectionView.visibleCells
+                self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .forEach { $0.visibleSelectedMark = isEditing }
             }
