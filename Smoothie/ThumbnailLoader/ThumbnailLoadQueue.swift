@@ -34,13 +34,6 @@ public class ThumbnailLoadQueue {
         }
     }
 
-    private struct Context {
-        let request: ThumbnailRequest
-        let pool: ThumbnailRequestPool
-        let didLoad: (UIImage?) -> Void
-        let didFinish: () -> Bool
-    }
-
     public let config: Configuration
 
     private let logger = Logger()
@@ -94,27 +87,21 @@ extension ThumbnailLoadQueue {
                 return
             }
 
-            let pool = ThumbnailRequestPool(thumbnailId: request.thumbnailInfo.id)
+            let pool = ThumbnailRequestPool(request, with: observer)
             pool.delegate = self
-            pool.append(request, with: observer)
             self.requestPools[request.thumbnailInfo.id] = pool
 
-            let context = Context(request: request, pool: pool) {
-                pool.didLoad(thumbnail: $0)
-            } didFinish: {
-                if pool.release(requestHaving: request.requestId) {
-                    self.requestPools.removeValue(forKey: request.thumbnailInfo.id)
-                    return true
-                }
-                return false
+            guard let data = self.config.memoryCache[request.thumbnailInfo.id] else {
+                self.enqueueCheckCacheOperation(pool)
+                return
             }
 
-            if let data = self.config.memoryCache[request.thumbnailInfo.id] {
-                if request.isPrefetch { if context.didFinish() { return } }
-                self.enqueueDecompressingOperation(context: context, data: data)
-            } else {
-                self.enqueueCheckCacheOperation(context: context)
+            if request.isPrefetch {
+                pool.releasePrefetches()
+                if pool.isEmpty { return }
             }
+
+            self.enqueueDecompressingOperation(pool, data: data)
         }
     }
 
@@ -129,74 +116,77 @@ extension ThumbnailLoadQueue {
 // MARK: Operations
 
 extension ThumbnailLoadQueue {
-    private func enqueueCheckCacheOperation(context: Context) {
-        let operation = BlockOperation { [weak self, context] in
+    private func enqueueCheckCacheOperation(_ pool: ThumbnailRequestPool) {
+        let operation = BlockOperation { [weak self, pool] in
             guard let self = self else { return }
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Read Disk Cache")
-            let data = self.config.diskCache?[context.request.thumbnailInfo.id]
+            let data = self.config.diskCache?[pool.thumbnailId]
             log.log(.end, name: "Read Disk Cache")
 
             self.queue.async {
-                if let data = data {
-                    if context.request.isPrefetch { if context.didFinish() { return } }
-                    self.enqueueDecompressingOperation(context: context, data: data)
-                } else {
-                    self.enqueueDataLoadingOperation(context: context)
+                guard let data = data else {
+                    self.enqueueDataLoadingOperation(pool)
+                    return
                 }
+
+                pool.releasePrefetches()
+                if pool.isEmpty { return }
+
+                self.enqueueDecompressingOperation(pool, data: data)
             }
         }
-        context.pool.ongoingOperation = operation
+        pool.ongoingOperation = operation
         config.dataCachingQueue.addOperation(operation)
     }
 
-    private func enqueueDataLoadingOperation(context: Context) {
-        let operation = BlockOperation { [weak self, context] in
+    private func enqueueDataLoadingOperation(_ pool: ThumbnailRequestPool) {
+        let operation = BlockOperation { [weak self, pool] in
             guard let self = self else { return }
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Load Original Data")
-            let data = self.config.originalImageLoader.loadData(with: context.request.imageRequest)
+            let data = self.config.originalImageLoader.loadData(with: pool.imageRequest)
             log.log(.end, name: "Load Original Data")
 
             self.queue.async {
                 if let data = data {
-                    self.enqueueDownsamplingOperation(context: context, data: data)
+                    self.enqueueDownsamplingOperation(pool, data: data)
                 } else {
-                    context.didLoad(nil)
+                    pool.didLoad(thumbnail: nil)
                 }
             }
         }
-        context.pool.ongoingOperation = operation
+        pool.ongoingOperation = operation
         config.dataLoadingQueue.addOperation(operation)
     }
 
-    private func enqueueDownsamplingOperation(context: Context, data: Data) {
-        let operation = BlockOperation { [weak self, context] in
+    private func enqueueDownsamplingOperation(_ pool: ThumbnailRequestPool, data: Data) {
+        let operation = BlockOperation { [weak self, pool] in
             guard let self = self else { return }
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
             let thumbnail = self.thumbnail(data: data,
-                                           size: context.request.thumbnailInfo.size,
-                                           scale: context.request.thumbnailInfo.scale)
+                                           size: pool.thumbnailInfo.size,
+                                           scale: pool.thumbnailInfo.scale)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
                 if let thumbnail = thumbnail {
-                    self.enqueueEncodingOperation(context: context, thumbnail: thumbnail)
+                    self.enqueueEncodingOperation(pool, thumbnail: thumbnail)
                 } else {
-                    context.didLoad(nil)
+                    pool.didLoad(thumbnail: nil)
                 }
             }
         }
-        context.pool.ongoingOperation = operation
+        pool.ongoingOperation = operation
         config.downsamplingQueue.addOperation(operation)
     }
 
-    private func enqueueEncodingOperation(context: Context, thumbnail: CGImage) {
-        let operation = BlockOperation { [weak self, context] in
+    private func enqueueEncodingOperation(_ pool: ThumbnailRequestPool, thumbnail: CGImage) {
+        let operation = BlockOperation { [weak self, pool] in
             guard let self = self else { return }
 
             let log = Log(logger: self.logger)
@@ -205,35 +195,39 @@ extension ThumbnailLoadQueue {
             log.log(.end, name: "Encode CGImage")
 
             self.queue.async {
-                if let encodedImage = encodedImage {
-                    if !context.request.isPrefetch {
-                        self.config.memoryCache.insert(encodedImage, forKey: context.request.thumbnailInfo.id)
-                    }
-                    self.enqueueCachingOperation(for: context.request, data: encodedImage)
-                    if context.request.isPrefetch { if context.didFinish() { return } }
-                    self.enqueueDecompressingOperation(context: context, data: encodedImage)
-                } else {
-                    context.didLoad(nil)
+                guard let encodedImage = encodedImage else {
+                    pool.didLoad(thumbnail: nil)
+                    return
                 }
+
+                // TODO: Prefetchのみの場合はメモリキャッシュに積まない
+                self.config.memoryCache.insert(encodedImage, forKey: pool.thumbnailId)
+
+                self.enqueueCachingOperation(for: pool.thumbnailId, data: encodedImage)
+
+                pool.releasePrefetches()
+                if pool.isEmpty { return }
+
+                self.enqueueDecompressingOperation(pool, data: encodedImage)
             }
         }
-        context.pool.ongoingOperation = operation
+        pool.ongoingOperation = operation
         config.imageEncodingQueue.addOperation(operation)
     }
 
-    private func enqueueCachingOperation(for request: ThumbnailRequest, data: Data) {
+    private func enqueueCachingOperation(for thumbnailId: String, data: Data) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Store Cache")
-            self.config.diskCache?.store(data, forKey: request.thumbnailInfo.id)
+            self.config.diskCache?.store(data, forKey: thumbnailId)
             log.log(.end, name: "Store Cache")
         }
         config.dataCachingQueue.addOperation(operation)
     }
 
-    private func enqueueDecompressingOperation(context: Context, data: Data) {
+    private func enqueueDecompressingOperation(_ pool: ThumbnailRequestPool, data: Data) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
 
@@ -243,7 +237,7 @@ extension ThumbnailLoadQueue {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
-                context.didLoad(image)
+                pool.didLoad(thumbnail: image)
             }
         }
         config.imageDecompressingQueue.addOperation(operation)

@@ -12,18 +12,28 @@ private struct ThumbnailRequestContext {
 class ThumbnailRequestPool {
     typealias RequestId = String
 
-    let thumbnailId: String
-
-    private var pool: [RequestId: ThumbnailRequestContext] = [:]
+    // TODO: サイズが異なるリクエストは別のPoolで扱う
+    private let baseRequest: ThumbnailRequest
     private let lock = NSLock()
+    private var pool: [RequestId: ThumbnailRequestContext]
+
+    var thumbnailId: String { baseRequest.thumbnailInfo.id }
+    var thumbnailInfo: ThumbnailRequest.ThumbnailInfo { baseRequest.thumbnailInfo }
+    var imageRequest: OriginalImageRequest { baseRequest.imageRequest }
+
+    var isEmpty: Bool {
+        lock.lock(); defer { lock.unlock() }
+        return pool.isEmpty
+    }
 
     weak var delegate: ThumbnailRequestPoolObserver?
     weak var ongoingOperation: Operation?
 
     // MARK: - Lifecycle
 
-    init(thumbnailId: String) {
-        self.thumbnailId = thumbnailId
+    init(_ baseRequest: ThumbnailRequest, with observer: ThumbnailLoadObserver?) {
+        self.baseRequest = baseRequest
+        self.pool = [baseRequest.requestId: ThumbnailRequestContext(request: baseRequest, observer: observer)]
     }
 
     // MARK: - Methods
@@ -50,16 +60,18 @@ class ThumbnailRequestPool {
         delegate?.didComplete(self)
     }
 
-    func release(requestHaving requestId: RequestId) -> Bool {
+    func releasePrefetches() {
         lock.lock(); defer { lock.unlock() }
 
-        guard pool.keys.contains(requestId) else {
-            return pool.isEmpty
+        pool
+            .filter { $0.value.request.isPrefetch }
+            .map { $0.key }
+            .forEach { pool.removeValue(forKey: $0) }
+
+        if pool.isEmpty {
+            ongoingOperation?.cancel()
+            delegate?.didComplete(self)
         }
-
-        pool.removeValue(forKey: requestId)
-
-        return pool.isEmpty
     }
 
     func cancel(requestHaving requestId: RequestId) {
