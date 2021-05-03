@@ -64,19 +64,22 @@ class PreviewLoader {
         return downsampledImage
     }
 
-    private func insertToCache(imageId: UUID, image: CGImage) {
-        let type: ImageType = {
-            return image.alphaInfo.hasAlphaChannel ? .png : .jpeg
-        }()
-
-        let mutableData = NSMutableData()
-        guard let destination = CGImageDestinationCreateWithData(mutableData as CFMutableData, type.uniformTypeIdentifier as CFString, 1, nil) else {
-            return
+    private func decompress(_ data: Data) -> UIImage? {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+            return nil
         }
-        CGImageDestinationAddImage(destination, image, nil)
-        CGImageDestinationFinalize(destination)
 
-        memoryCache.insert(mutableData as Data, forKey: "preview-\(imageId.uuidString)")
+        let options = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true
+        ] as CFDictionary
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else {
+            return nil
+        }
+
+        return UIImage(cgImage: cgImage)
     }
 }
 
@@ -85,41 +88,44 @@ extension PreviewLoader: PreviewLoaderProtocol {
 
     func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage? {
         // - SeeAlso: ClipCollectionProvider
-        if let data = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
-            return UIImage(data: data)
+        if let image = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
+            return image
         }
 
-        if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"] {
-            return UIImage(data: data)
+        if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"],
+           let image = decompress(data)
+        {
+            return image
         }
 
         return nil
     }
 
     func readCache(forImageId imageId: UUID) -> UIImage? {
-        guard let data = memoryCache["preview-\(imageId.uuidString)"] else { return nil }
-        return UIImage(data: data)
+        guard let image = memoryCache["preview-\(imageId.uuidString)"] else { return nil }
+        return image
     }
 
     func loadPreview(forImageId imageId: UUID, completion: @escaping (UIImage?) -> Void) {
         loadingQueue.async {
-            if let data = self.memoryCache["preview-\(imageId.uuidString)"] {
-                completion(UIImage(data: data))
+            if let image = self.memoryCache["preview-\(imageId.uuidString)"] {
+                completion(image)
                 return
             }
 
-            guard let image = self.downsampledImage(for: imageId) else {
+            guard let downsampledImage = self.downsampledImage(for: imageId) else {
                 completion(nil)
                 return
             }
+            let image = UIImage(cgImage: downsampledImage)
 
             let operation = BlockOperation { [weak self] in
                 guard self?.memoryCache["preview-\(imageId.uuidString)"] == nil else { return }
-                self?.insertToCache(imageId: imageId, image: image)
+                self?.memoryCache.insert(image, forKey: "preview-\(imageId.uuidString)")
             }
             self.downsamplingQueue.addOperation(operation)
 
-            completion(UIImage(cgImage: image))
+            completion(image)
         }
     }
 
@@ -134,7 +140,7 @@ extension PreviewLoader: PreviewLoaderProtocol {
                 guard let self = self else { return }
 
                 guard let image = self.downsampledImage(for: imageId) else { return }
-                self.insertToCache(imageId: imageId, image: image)
+                self.memoryCache.insert(UIImage(cgImage: image), forKey: "preview-\(imageId.uuidString)")
 
                 self.preloadLockQueue.async {
                     self.loadingItemIds.remove(itemId)

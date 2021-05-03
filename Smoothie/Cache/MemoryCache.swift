@@ -2,11 +2,13 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import UIKit
+
 public protocol MemoryCaching: AnyObject {
-    func insert(_ data: Data?, forKey key: String)
+    func insert(_ data: UIImage?, forKey key: String)
     func remove(forKey key: String)
     func removeAll()
-    subscript(_ key: String) -> Data? { get set }
+    subscript(_ key: String) -> UIImage? { get set }
 }
 
 public final class MemoryCache {
@@ -30,10 +32,11 @@ public final class MemoryCache {
         }
     }
 
-    private lazy var cache: NSCache<NSString, AnyObject> = {
-        let cache = NSCache<NSString, AnyObject>()
+    private lazy var cache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
         cache.totalCostLimit = config.costLimit
         cache.countLimit = config.countLimit
+        cache.evictsObjectsWithDiscardedContent = false
         return cache
     }()
 
@@ -50,25 +53,22 @@ public final class MemoryCache {
 extension MemoryCache: MemoryCaching {
     // MARK: - MemoryCaching
 
-    public func insert(_ data: Data?, forKey key: String) {
-        guard let data = data else { return remove(forKey: key) }
-        lock.lock(); defer { lock.unlock() }
-        cache.setObject(data as AnyObject, forKey: key as NSString)
+    public func insert(_ image: UIImage?, forKey key: String) {
+        guard let image = image else { return remove(forKey: key) }
+        cache.setObject(image, forKey: key as NSString)
     }
 
     public func remove(forKey key: String) {
-        lock.lock(); defer { lock.unlock() }
         cache.removeObject(forKey: key as NSString)
     }
 
     public func removeAll() {
-        lock.lock(); defer { lock.unlock() }
         cache.removeAllObjects()
     }
 
-    public subscript(key: String) -> Data? {
+    public subscript(key: String) -> UIImage? {
         get {
-            return cache.object(forKey: key as NSString) as? Data
+            return cache.object(forKey: key as NSString)
         }
         set {
             return insert(newValue, forKey: key)

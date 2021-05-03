@@ -58,9 +58,7 @@ extension ThumbnailLoadQueue {
                 return
             }
 
-            if let data = self.config.memoryCache[request.thumbnailInfo.id],
-               let image = self.decompress(data)
-            {
+            if let image = self.config.memoryCache[request.thumbnailInfo.id] {
                 completion(image)
                 return
             }
@@ -68,7 +66,7 @@ extension ThumbnailLoadQueue {
             if let data = self.config.diskCache?[request.thumbnailInfo.id],
                let image = self.decompress(data)
             {
-                self.config.memoryCache[request.thumbnailInfo.id] = data
+                self.config.memoryCache[request.thumbnailInfo.id] = image
                 completion(image)
                 return
             }
@@ -91,7 +89,7 @@ extension ThumbnailLoadQueue {
             pool.delegate = self
             self.requestPools[request.thumbnailInfo.id] = pool
 
-            guard let data = self.config.memoryCache[request.thumbnailInfo.id] else {
+            guard let image = self.config.memoryCache[request.thumbnailInfo.id] else {
                 self.enqueueCheckCacheOperation(pool)
                 return
             }
@@ -101,7 +99,7 @@ extension ThumbnailLoadQueue {
                 if pool.isEmpty { return }
             }
 
-            self.enqueueDecompressingOperation(pool, data: data)
+            pool.didLoad(thumbnail: image)
         }
     }
 
@@ -199,15 +197,7 @@ extension ThumbnailLoadQueue {
                     pool.didLoad(thumbnail: nil)
                     return
                 }
-
-                // TODO: Prefetchのみの場合はメモリキャッシュに積まない
-                self.config.memoryCache.insert(encodedImage, forKey: pool.thumbnailId)
-
-                self.enqueueCachingOperation(for: pool.thumbnailId, data: encodedImage)
-
-                pool.releasePrefetches()
-                if pool.isEmpty { return }
-
+                self.enqueueDiskCachingOperation(for: pool.thumbnailId, data: encodedImage)
                 self.enqueueDecompressingOperation(pool, data: encodedImage)
             }
         }
@@ -215,7 +205,7 @@ extension ThumbnailLoadQueue {
         config.imageEncodingQueue.addOperation(operation)
     }
 
-    private func enqueueCachingOperation(for thumbnailId: String, data: Data) {
+    private func enqueueDiskCachingOperation(for thumbnailId: String, data: Data) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
 
@@ -237,6 +227,11 @@ extension ThumbnailLoadQueue {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
+                self.config.memoryCache.insert(image, forKey: pool.thumbnailId)
+
+                pool.releasePrefetches()
+                if pool.isEmpty { return }
+
                 pool.didLoad(thumbnail: image)
             }
         }
