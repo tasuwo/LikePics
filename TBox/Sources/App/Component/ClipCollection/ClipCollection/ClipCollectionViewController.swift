@@ -115,51 +115,81 @@ class ClipCollectionViewController: UIViewController {
 
 extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
+        store.state
+            .receive(on: DispatchQueue.global())
+            .onChange(\.clips.displayableValues) { clips in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.clips.displayableValues.map({ .init($0) }))
+                snapshot.appendItems(clips.map({ .init($0) }))
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
                     self.updateHiddenIconAppearance()
                 }
             }
+            .store(in: &subscriptions)
 
-            self.navigationItem.title = state.title
+        store.state
+            .bind(\.title, to: \.title, on: navigationItem)
+            .store(in: &subscriptions)
 
-            self.collectionView.isHidden = !state.isCollectionViewDisplaying
-            self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
+        store.state
+            .bind(\.isCollectionViewHidden, to: \.isHidden, on: collectionView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.isDragInteractionEnabled, to: \.dragInteractionEnabled, on: collectionView)
+            .store(in: &subscriptions)
 
-            self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
+        store.state
+            .bind(\.emptyMessageViewAlpha, to: \.alpha, on: emptyMessageView)
+            .store(in: &subscriptions)
 
-            self.isEditing = state.operation.isEditing
-            self.collectionView.isEditing = state.operation.isEditing
-            // TODO: 各Cell側で設定させる
-            self.collectionView.visibleCells
-                .compactMap { $0 as? ClipCollectionViewCell }
-                .forEach { $0.visibleSelectedMark = state.operation.isEditing }
-
-            self.applySelections(for: state)
-            self.presentAlertIfNeeded(for: state)
-
-            // Propagation
-
-            let selections = state.clips.selectedValues.reduce(into: [Clip.Identity: Set<ImageContainer.Identity>]()) { dict, clip in
-                dict[clip.identity] = Set(clip.items.compactMap({ $0.imageId }))
+        store.state
+            .onChange(\.isEditing) { [weak self] isEditing in
+                self?.isEditing = isEditing
+                self?.collectionView.isEditing = isEditing
+                // TODO: 各Cell側で設定させる
+                self?.collectionView.visibleCells
+                    .compactMap { $0 as? ClipCollectionViewCell }
+                    .forEach { $0.visibleSelectedMark = isEditing }
             }
-            self.toolBarController.store.execute(.stateChanged(selections: selections,
-                                                               operation: state.operation))
-            self.navigationBarController.store.execute(.stateChanged(clipCount: state.clips._displayableIds.count,
-                                                                     selectionCount: state.clips._selectedIds.count,
-                                                                     operation: state.operation))
+            .store(in: &subscriptions)
 
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .removeDuplicates(by: \.clips.selectedValues)
+            .sink { [weak self] state in self?.applySelections(for: state) }
+            .store(in: &subscriptions)
+        store.state
+            .removeDuplicates(by: \.alert)
+            .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
+            .store(in: &subscriptions)
+
+        store.state
+            .map { state -> ClipCollectionToolBarAction in
+                // TODO: 計算はToolBarController側に行わせる
+                let selections = state.clips.selectedValues.reduce(into: [Clip.Identity: Set<ImageContainer.Identity>]()) { dict, clip in
+                    dict[clip.identity] = Set(clip.items.compactMap({ $0.imageId }))
+                }
+                return .stateChanged(selections: selections, operation: state.operation)
             }
-        }
-        .store(in: &subscriptions)
+            .removeDuplicates()
+            .sink { [weak self] action in self?.toolBarController.store.execute(action) }
+            .store(in: &subscriptions)
+
+        store.state
+            .map { state -> ClipCollectionNavigationBarAction in
+                .stateChanged(clipCount: state.clips._displayableIds.count,
+                              selectionCount: state.clips._selectedIds.count,
+                              operation: state.operation)
+            }
+            .removeDuplicates()
+            .sink { [weak self] action in self?.navigationBarController.store.execute(action) }
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
     }
 
     private func applySelections(for state: ClipCollectionState) {

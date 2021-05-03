@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-enum ClipCollectionNavigationBarAction: Action {
+enum ClipCollectionNavigationBarAction: Action, Equatable {
     // MARK: - View Life-Cycle
 
     case viewDidLoad

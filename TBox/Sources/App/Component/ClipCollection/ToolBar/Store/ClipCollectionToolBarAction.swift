@@ -4,7 +4,7 @@
 
 import Domain
 
-enum ClipCollectionToolBarAction: Action {
+enum ClipCollectionToolBarAction: Action, Equatable {
     // MARK: View Life-Cycle
 
     case viewDidLoad

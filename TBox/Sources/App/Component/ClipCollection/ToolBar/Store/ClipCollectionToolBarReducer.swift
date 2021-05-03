@@ -42,22 +42,22 @@ enum ClipCollectionToolBarReducer: Reducer {
         // MARK: ToolBar
 
         case .addButtonTapped:
-            nextState.alert = .addition
+            nextState.alert = .addition(targetCount: nextState._selections.count)
             return (nextState, [eventEffect])
 
         case .changeVisibilityButtonTapped:
-            nextState.alert = .changeVisibility
+            nextState.alert = .changeVisibility(targetCount: nextState._selections.count)
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
             let items = Set(state._selections.values.flatMap({ $0 })).map { imageId in
                 ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
             }
-            nextState.alert = .share(items: items)
+            nextState.alert = .share(items: items, targetCount: nextState._selections.count)
             return (nextState, [eventEffect])
 
         case .deleteButtonTapped:
-            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum)
+            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState._selections.count)
             return (nextState, [eventEffect])
 
         case .mergeButtonTapped:

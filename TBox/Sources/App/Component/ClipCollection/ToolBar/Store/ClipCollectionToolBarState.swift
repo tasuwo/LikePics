@@ -8,10 +8,10 @@ import Domain
 
 struct ClipCollectionToolBarState: Equatable {
     enum Alert: Equatable {
-        case addition
-        case changeVisibility
-        case deletion(includesRemoveFromAlbum: Bool)
-        case share(items: [ClipItemImageShareItem])
+        case addition(targetCount: Int)
+        case changeVisibility(targetCount: Int)
+        case deletion(includesRemoveFromAlbum: Bool, targetCount: Int)
+        case share(items: [ClipItemImageShareItem], targetCount: Int)
     }
 
     struct Item: Equatable {

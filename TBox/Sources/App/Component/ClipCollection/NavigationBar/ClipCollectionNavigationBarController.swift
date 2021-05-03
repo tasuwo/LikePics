@@ -49,16 +49,19 @@ class ClipCollectionNavigationBarController {
 
 extension ClipCollectionNavigationBarController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
+        store.state
+            .onChange(\.leftItems) { [weak self] items in
+                guard let leftItems = self?.resolveBarButtonItems(for: items) else { return }
+                self?.navigationItem?.setLeftBarButtonItems(leftItems, animated: true)
+            }
+            .store(in: &subscriptions)
 
-            let leftItems = self.resolveBarButtonItems(for: state.leftItems)
-            self.navigationItem?.leftBarButtonItems = leftItems
-
-            let rightItems = self.resolveBarButtonItems(for: state.rightItems)
-            self.navigationItem?.rightBarButtonItems = rightItems
-        }
-        .store(in: &subscriptions)
+        store.state
+            .onChange(\.rightItems) { [weak self] items in
+                guard let rightItems = self?.resolveBarButtonItems(for: items) else { return }
+                self?.navigationItem?.setRightBarButtonItems(rightItems, animated: true)
+            }
+            .store(in: &subscriptions)
     }
 }
 

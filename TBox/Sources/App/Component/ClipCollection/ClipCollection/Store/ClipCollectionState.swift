@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import CoreGraphics
 import Domain
 
 struct ClipCollectionState: Equatable {
@@ -31,8 +32,20 @@ struct ClipCollectionState: Equatable {
 }
 
 extension ClipCollectionState {
+    var isEditing: Bool {
+        operation.isEditing
+    }
+
     var isDragInteractionEnabled: Bool {
         source.isAlbum && !operation.isEditing
+    }
+
+    var isCollectionViewHidden: Bool {
+        !isCollectionViewDisplaying
+    }
+
+    var emptyMessageViewAlpha: CGFloat {
+        isEmptyMessageViewDisplaying ? 1 : 0
     }
 
     var previewingClip: Clip? {

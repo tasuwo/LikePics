@@ -51,40 +51,46 @@ class ClipCollectionToolBarController {
 
 extension ClipCollectionToolBarController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            self.toolBarHostingViewController?.navigationController?.setToolbarHidden(state.isHidden, animated: true)
-
-            let items = self.resolveBarButtonItems(for: state.items)
-            self.toolBarHostingViewController?.setToolbarItems(items, animated: true)
-
-            if let alert = state.alert {
-                self.presentAlertIfNeeded(for: alert, targetCount: state._selections.count)
+        store.state
+            .onChange(\.isHidden) { [weak self] isHidden in
+                self?.toolBarHostingViewController?.navigationController?.setToolbarHidden(isHidden, animated: true)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.items) { [weak self] items in
+                guard let items = self?.resolveBarButtonItems(for: items) else { return }
+                self?.toolBarHostingViewController?.setToolbarItems(items, animated: true)
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                guard let alert = alert else { return }
+                self?.presentAlertIfNeeded(for: alert)
+            }
+            .store(in: &subscriptions)
     }
 }
 
 // MARK: - Alert Presentation
 
 extension ClipCollectionToolBarController {
-    private func presentAlertIfNeeded(for alert: ClipCollectionToolBarState.Alert, targetCount: Int) {
+    private func presentAlertIfNeeded(for alert: ClipCollectionToolBarState.Alert) {
         switch alert {
         case .addition:
             presentAlertForAddition()
 
-        case .changeVisibility:
+        case let .changeVisibility(targetCount: targetCount):
             presentAlertForChangeVisibility(targetCount: targetCount)
 
-        case .deletion(includesRemoveFromAlbum: false):
+        case .deletion(includesRemoveFromAlbum: false, targetCount: let targetCount):
             presentAlertForDelete(targetCount: targetCount)
 
-        case .deletion(includesRemoveFromAlbum: true):
+        case .deletion(includesRemoveFromAlbum: true, targetCount: _):
             presentAlertForDeleteIncludesRemoveFromAlbum()
 
-        case let .share(items: items):
+        case let .share(items: items, targetCount: _):
             presentAlertForShare(items: items)
         }
     }
