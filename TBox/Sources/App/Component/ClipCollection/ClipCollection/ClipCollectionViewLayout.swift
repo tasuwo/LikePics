@@ -67,7 +67,7 @@ extension ClipCollectionViewLayout {
     private static func configureCell(collectionView: UICollectionView,
                                       thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, _, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, indexPath, clip in
             let requestId = UUID().uuidString
             cell.identifier = requestId
 
@@ -77,26 +77,30 @@ extension ClipCollectionViewLayout {
             cell.visibleSelectedMark = collectionView?.isEditing ?? false
             cell.resetContent()
 
-            guard let thumbnailLoader = thumbnailLoader else { return }
+            guard let collectionView = collectionView,
+                  let thumbnailLoader = thumbnailLoader else { return }
 
             let scale = cell.traitCollection.displayScale
 
             var requests: [ThumbnailRequest] = []
 
             if let item = clip.primaryItem {
-                requests.append(self.makeRequest(for: item, id: requestId, size: cell.primaryImageView.bounds.size, scale: scale, context: .primary))
+                let size = Self.calcThumbnailSize(for: item, at: indexPath, collectionView)
+                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .primary))
             } else {
                 cell.primaryImage = .noImage
             }
 
             if let item = clip.secondaryItem {
-                requests.append(self.makeRequest(for: item, id: requestId, size: cell.secondaryImageView.bounds.size, scale: scale, context: .secondary))
+                let size = Self.calcThumbnailSize(for: item, at: indexPath, collectionView)
+                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .secondary))
             } else {
                 cell.secondaryImage = .noImage
             }
 
             if let item = clip.tertiaryItem {
-                requests.append(self.makeRequest(for: item, id: requestId, size: cell.tertiaryImageView.bounds.size, scale: scale, context: .tertiary))
+                let size = Self.calcThumbnailSize(for: item, at: indexPath, collectionView)
+                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .tertiary))
             } else {
                 cell.tertiaryImage = .noImage
             }
@@ -127,5 +131,12 @@ extension ClipCollectionViewLayout {
                                 config: info,
                                 isPrefetch: isPrefetch,
                                 userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
+    }
+
+    private static func calcThumbnailSize(for item: ClipItem, at indexPath: IndexPath, _ collectionView: UICollectionView) -> CGSize {
+        guard let layout = collectionView.collectionViewLayout as? ClipCollectionLayout else { return item.imageSize.cgSize }
+        let thumbnailWidth = layout.thumbnailWidth(at: indexPath)
+        return .init(width: thumbnailWidth,
+                     height: thumbnailWidth * (item.imageSize.cgSize.height / item.imageSize.cgSize.width))
     }
 }

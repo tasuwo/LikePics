@@ -74,6 +74,17 @@ class ClipCollectionLayout: UICollectionViewLayout {
         self.setupAttributes()
     }
 
+    // MARK: - Methods
+
+    func thumbnailWidth(at indexPath: IndexPath) -> CGFloat {
+        if cache.indices.contains(indexPath.item) {
+            return cache[indexPath.item].frame.width
+        } else {
+            let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
+            return columnWidth - Self.cellPadding * 2
+        }
+    }
+
     // MARK: - Privates
 
     private func resetAttributes() {
@@ -88,19 +99,12 @@ class ClipCollectionLayout: UICollectionViewLayout {
         else {
             return
         }
-
-        let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
-        let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
-
-        setupCellAttributes(collectionView: collectionView,
-                            columnWidth: columnWidth,
-                            xOffset: xOffset)
+        setupCellAttributes(collectionView: collectionView)
     }
 
-    private func setupCellAttributes(collectionView: UICollectionView,
-                                     columnWidth: CGFloat,
-                                     xOffset: [CGFloat])
-    {
+    private func setupCellAttributes(collectionView: UICollectionView) {
+        let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
+        let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
         var yOffset = [CGFloat].init(repeating: Self.contentPadding, count: self.numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {
