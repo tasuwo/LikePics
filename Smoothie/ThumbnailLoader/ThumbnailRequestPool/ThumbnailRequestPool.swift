@@ -17,8 +17,7 @@ class ThumbnailRequestPool {
     private let lock = NSLock()
     private var pool: [RequestId: ThumbnailRequestContext]
 
-    var thumbnailId: String { baseRequest.thumbnailInfo.id }
-    var thumbnailInfo: ThumbnailRequest.ThumbnailInfo { baseRequest.thumbnailInfo }
+    var config: ThumbnailConfig { baseRequest.config }
     var imageRequest: OriginalImageRequest { baseRequest.imageRequest }
 
     var isEmpty: Bool {
@@ -39,7 +38,7 @@ class ThumbnailRequestPool {
     // MARK: - Methods
 
     func append(_ request: ThumbnailRequest, with observer: ThumbnailLoadObserver?) {
-        assert(request.thumbnailInfo.id == thumbnailId)
+        assert(request.config.cacheKey == config.cacheKey)
 
         lock.lock(); defer { lock.unlock() }
 

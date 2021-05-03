@@ -111,14 +111,14 @@ extension AlbumListViewLayout {
             cell.identifier = requestId
 
             if let thumbnailTarget = item.album.clips.first?.primaryItem {
-                let info = ThumbnailRequest.ThumbnailInfo(id: "album-list-\(thumbnailTarget.identity.uuidString)",
-                                                          // 大体セルと同じサイズにリサイズする
-                                                          size: cell.bounds.size,
-                                                          scale: cell.traitCollection.displayScale)
+                let info = ThumbnailConfig(cacheKey: "album-list-\(thumbnailTarget.identity.uuidString)",
+                                           // 大体セルと同じサイズにリサイズする
+                                           size: cell.bounds.size,
+                                           scale: cell.traitCollection.displayScale)
                 let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
-                                               thumbnailInfo: info)
+                                               config: info)
                 thumbnailLoader?.load(request, observer: cell)
                 cell.onReuse = { identifier in
                     guard identifier == requestId else { return }

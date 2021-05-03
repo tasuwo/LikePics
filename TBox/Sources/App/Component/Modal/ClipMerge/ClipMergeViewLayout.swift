@@ -167,13 +167,13 @@ extension ClipMergeViewLayout {
 
             let requestId = UUID().uuidString
             cell.identifier = requestId
-            let info = ThumbnailRequest.ThumbnailInfo(id: "clip-merge-\(item.identity.uuidString)",
-                                                      size: contentConfiguration.calcThumbnailDisplaySize(),
-                                                      scale: cell.traitCollection.displayScale)
+            let info = ThumbnailConfig(cacheKey: "clip-merge-\(item.identity.uuidString)",
+                                       size: contentConfiguration.calcThumbnailDisplaySize(),
+                                       scale: cell.traitCollection.displayScale)
             let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
             let request = ThumbnailRequest(requestId: requestId,
                                            originalImageRequest: imageRequest,
-                                           thumbnailInfo: info,
+                                           config: info,
                                            isPrefetch: false,
                                            userInfo: nil)
             cell.onReuse = { identifier in

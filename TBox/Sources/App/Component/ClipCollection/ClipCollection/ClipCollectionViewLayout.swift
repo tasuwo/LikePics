@@ -118,13 +118,13 @@ extension ClipCollectionViewLayout {
                                     isPrefetch: Bool = false) -> ThumbnailRequest
     {
         // - SeeAlso: PreviewLoader
-        let info = ThumbnailRequest.ThumbnailInfo(id: "clip-collection-\(item.identity.uuidString)",
-                                                  size: size,
-                                                  scale: scale)
+        let info = ThumbnailConfig(cacheKey: "clip-collection-\(item.identity.uuidString)",
+                                   size: size,
+                                   scale: scale)
         let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
-                                thumbnailInfo: info,
+                                config: info,
                                 isPrefetch: isPrefetch,
                                 userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
     }

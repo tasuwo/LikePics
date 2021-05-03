@@ -60,13 +60,13 @@ extension AlbumSelectionModalLayout {
             if let thumbnailTarget = album.clips.first?.items.first {
                 let requestId = UUID().uuidString
                 cell.identifier = requestId
-                let info = ThumbnailRequest.ThumbnailInfo(id: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
-                                                          size: cell.thumbnailDisplaySize,
-                                                          scale: cell.traitCollection.displayScale)
+                let info = ThumbnailConfig(cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
+                                           size: cell.thumbnailDisplaySize,
+                                           scale: cell.traitCollection.displayScale)
                 let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
-                                               thumbnailInfo: info)
+                                               config: info)
                 thumbnailLoader?.load(request, observer: cell)
                 cell.onReuse = { identifier in
                     guard identifier == requestId else { return }

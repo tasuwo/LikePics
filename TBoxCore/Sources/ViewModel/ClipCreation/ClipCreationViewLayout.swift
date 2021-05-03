@@ -235,12 +235,12 @@ extension ClipCreationViewLayout {
             cell.identifier = requestId
             cell.image = nil
 
-            let info = ThumbnailRequest.ThumbnailInfo(id: "clip-creation-\(source.identifier.uuidString)",
-                                                      size: cell.imageDisplaySize,
-                                                      scale: cell.traitCollection.displayScale)
+            let info = ThumbnailConfig(cacheKey: "clip-creation-\(source.identifier.uuidString)",
+                                       size: cell.imageDisplaySize,
+                                       scale: cell.traitCollection.displayScale)
             let request = ThumbnailRequest(requestId: requestId,
                                            originalImageRequest: source,
-                                           thumbnailInfo: info)
+                                           config: info)
             thumbnailLoader?.load(request, observer: cell)
 
             // モデルにIndexを含めることも検討したが、選択状態更新毎にDataSourceを更新させると見た目がイマイチだったため、

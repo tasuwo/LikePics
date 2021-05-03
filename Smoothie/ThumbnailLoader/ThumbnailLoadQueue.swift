@@ -7,7 +7,7 @@ import os
 import UIKit
 
 public class ThumbnailLoadQueue {
-    typealias ThumbnailId = String
+    typealias CacheKey = String
 
     public struct Configuration {
         public var memoryCache: MemoryCaching = MemoryCache()
@@ -37,7 +37,7 @@ public class ThumbnailLoadQueue {
     private let logger = Logger()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadQueue", target: .global(qos: .userInitiated))
 
-    private var requestPools: [ThumbnailId: ThumbnailRequestPool] = [:]
+    private var requestPools: [CacheKey: ThumbnailRequestPool] = [:]
 
     // MARK: - Lifecycle
 
@@ -53,16 +53,16 @@ extension ThumbnailLoadQueue {
         queue.async { [weak self, weak observer] in
             guard let self = self else { return }
 
-            if let pool = self.requestPools[request.thumbnailInfo.id] {
+            if let pool = self.requestPools[request.config.cacheKey] {
                 pool.append(request, with: observer)
                 return
             }
 
             let pool = ThumbnailRequestPool(request, with: observer)
             pool.delegate = self
-            self.requestPools[request.thumbnailInfo.id] = pool
+            self.requestPools[request.config.cacheKey] = pool
 
-            guard let image = self.config.memoryCache[request.thumbnailInfo.id] else {
+            guard let image = self.config.memoryCache[request.config.cacheKey] else {
                 self.enqueueCheckCacheOperation(pool)
                 return
             }
@@ -78,7 +78,7 @@ extension ThumbnailLoadQueue {
 
     func cancel(_ request: ThumbnailRequest) {
         queue.async { [weak self] in
-            guard let self = self, let pool = self.requestPools[request.thumbnailInfo.id] else { return }
+            guard let self = self, let pool = self.requestPools[request.config.cacheKey] else { return }
             pool.cancel(requestHaving: request.requestId)
         }
     }
@@ -93,7 +93,7 @@ extension ThumbnailLoadQueue {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Read Disk Cache")
-            let data = self.config.diskCache?[pool.thumbnailId]
+            let data = self.config.diskCache?[pool.config.cacheKey]
             log.log(.end, name: "Read Disk Cache")
 
             self.queue.async {
@@ -140,8 +140,8 @@ extension ThumbnailLoadQueue {
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
             let thumbnail = self.thumbnail(data: data,
-                                           size: pool.thumbnailInfo.size,
-                                           scale: pool.thumbnailInfo.scale)
+                                           size: pool.config.size,
+                                           scale: pool.config.scale)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -170,7 +170,7 @@ extension ThumbnailLoadQueue {
                     pool.didLoad(thumbnail: nil)
                     return
                 }
-                self.enqueueDiskCachingOperation(for: pool.thumbnailId, data: encodedImage)
+                self.enqueueDiskCachingOperation(for: pool.config.cacheKey, data: encodedImage)
                 self.enqueueDecompressingOperation(pool, data: encodedImage)
             }
         }
@@ -200,7 +200,7 @@ extension ThumbnailLoadQueue {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
-                self.config.memoryCache.insert(image, forKey: pool.thumbnailId)
+                self.config.memoryCache.insert(image, forKey: pool.config.cacheKey)
 
                 pool.releasePrefetches()
                 if pool.isEmpty { return }
@@ -216,7 +216,7 @@ extension ThumbnailLoadQueue {
 
 extension ThumbnailLoadQueue: ThumbnailRequestPoolObserver {
     func didComplete(_ pool: ThumbnailRequestPool) {
-        self.requestPools.removeValue(forKey: pool.thumbnailId)
+        self.requestPools.removeValue(forKey: pool.config.cacheKey)
     }
 }
 

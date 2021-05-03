@@ -195,13 +195,13 @@ extension SearchResultViewLayout {
     }
 
     private static func makeRequest(for item: ClipItem, id: String, size: CGSize, scale: CGFloat) -> ThumbnailRequest {
-        let info = ThumbnailRequest.ThumbnailInfo(id: "search-result-\(item.identity.uuidString)",
-                                                  size: size,
-                                                  scale: scale)
+        let info = ThumbnailConfig(cacheKey: "search-result-\(item.identity.uuidString)",
+                                   size: size,
+                                   scale: scale)
         let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
-                                thumbnailInfo: info,
+                                config: info,
                                 isPrefetch: false,
                                 userInfo: nil)
     }
