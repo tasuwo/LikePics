@@ -25,7 +25,7 @@ public class ThumbnailLoadQueue {
         public init(originalImageLoader: OriginalImageLoader) {
             self.originalImageLoader = originalImageLoader
 
-            self.cacheReadingQueue.maxConcurrentOperationCount = 1
+            self.cacheReadingQueue.maxConcurrentOperationCount = 3
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
             self.dataCachingQueue.maxConcurrentOperationCount = 1
             self.downsamplingQueue.maxConcurrentOperationCount = 2
