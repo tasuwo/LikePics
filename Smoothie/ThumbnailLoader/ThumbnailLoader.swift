@@ -26,18 +26,8 @@ public class ThumbnailLoader {
 
 extension ThumbnailLoader: ThumbnailLoaderProtocol {
     public func load(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
-        queue.readCacheIfExists(for: request) { [weak self] image in
-            guard let self = self else {
-                observer?.didFailedToLoad(request)
-                return
-            }
-            if let image = image {
-                observer?.didSuccessToLoad(request, image: image)
-            } else {
-                observer?.didStartLoading(request)
-                self.queue.load(request, observer: observer)
-            }
-        }
+        observer?.didStartLoading(request)
+        queue.load(request, observer: observer)
     }
 
     public func cancel(_ request: ThumbnailRequest) {

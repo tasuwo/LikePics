@@ -15,7 +15,6 @@ public class ThumbnailLoadQueue {
         public var compressionRatio: Float = 0.8
         public var originalImageLoader: OriginalImageLoader
 
-        public let cacheReadingQueue = OperationQueue()
         public let dataLoadingQueue = OperationQueue()
         public let dataCachingQueue = OperationQueue()
         public let downsamplingQueue = OperationQueue()
@@ -25,12 +24,11 @@ public class ThumbnailLoadQueue {
         public init(originalImageLoader: OriginalImageLoader) {
             self.originalImageLoader = originalImageLoader
 
-            self.cacheReadingQueue.maxConcurrentOperationCount = 3
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
-            self.dataCachingQueue.maxConcurrentOperationCount = 1
+            self.dataCachingQueue.maxConcurrentOperationCount = 3
             self.downsamplingQueue.maxConcurrentOperationCount = 2
             self.imageEncodingQueue.maxConcurrentOperationCount = 1
-            self.imageDecompressingQueue.maxConcurrentOperationCount = 1
+            self.imageDecompressingQueue.maxConcurrentOperationCount = 2
         }
     }
 
@@ -51,31 +49,6 @@ public class ThumbnailLoadQueue {
 // MARK: - Load/Cancel
 
 extension ThumbnailLoadQueue {
-    func readCacheIfExists(for request: ThumbnailRequest, completion: @escaping (UIImage?) -> Void) {
-        let operation = BlockOperation { [weak self] in
-            guard let self = self else {
-                completion(nil)
-                return
-            }
-
-            if let image = self.config.memoryCache[request.thumbnailInfo.id] {
-                completion(image)
-                return
-            }
-
-            if let data = self.config.diskCache?[request.thumbnailInfo.id],
-               let image = self.decompress(data)
-            {
-                self.config.memoryCache[request.thumbnailInfo.id] = image
-                completion(image)
-                return
-            }
-
-            completion(nil)
-        }
-        self.config.cacheReadingQueue.addOperation(operation)
-    }
-
     func load(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?) {
         queue.async { [weak self, weak observer] in
             guard let self = self else { return }
