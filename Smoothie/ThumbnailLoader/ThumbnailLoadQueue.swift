@@ -36,7 +36,7 @@ public class ThumbnailLoadQueue {
 
     private struct Context {
         let request: ThumbnailRequest
-        let task: ThumbnailLoadTask
+        let pool: ThumbnailRequestPool
         let didLoad: (UIImage?) -> Void
         let didFinish: () -> Bool
     }
@@ -46,7 +46,7 @@ public class ThumbnailLoadQueue {
     private let logger = Logger()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.ThumbnailLoadQueue", target: .global(qos: .userInitiated))
 
-    private var loadTaskPool: [ThumbnailId: ThumbnailLoadTask] = [:]
+    private var requestPools: [ThumbnailId: ThumbnailRequestPool] = [:]
 
     // MARK: - Lifecycle
 
@@ -89,21 +89,21 @@ extension ThumbnailLoadQueue {
         queue.async { [weak self, weak observer] in
             guard let self = self else { return }
 
-            if let task = self.loadTaskPool[request.thumbnailInfo.id] {
-                task.append(request, observer: observer)
+            if let pool = self.requestPools[request.thumbnailInfo.id] {
+                pool.append(request, with: observer)
                 return
             }
 
-            let task = ThumbnailLoadTask(thumbnailId: request.thumbnailInfo.id)
-            task.delegate = self
-            task.append(request, observer: observer)
-            self.loadTaskPool[request.thumbnailInfo.id] = task
+            let pool = ThumbnailRequestPool(thumbnailId: request.thumbnailInfo.id)
+            pool.delegate = self
+            pool.append(request, with: observer)
+            self.requestPools[request.thumbnailInfo.id] = pool
 
-            let context = Context(request: request, task: task) {
-                task.didLoad(thumbnail: $0)
+            let context = Context(request: request, pool: pool) {
+                pool.didLoad(thumbnail: $0)
             } didFinish: {
-                if task.didFinish(requestHaving: request.requestId) {
-                    self.loadTaskPool.removeValue(forKey: request.thumbnailInfo.id)
+                if pool.release(requestHaving: request.requestId) {
+                    self.requestPools.removeValue(forKey: request.thumbnailInfo.id)
                     return true
                 }
                 return false
@@ -120,8 +120,8 @@ extension ThumbnailLoadQueue {
 
     func cancel(_ request: ThumbnailRequest) {
         queue.async { [weak self] in
-            guard let self = self, let task = self.loadTaskPool[request.thumbnailInfo.id] else { return }
-            task.didCancel(requestHaving: request.requestId)
+            guard let self = self, let pool = self.requestPools[request.thumbnailInfo.id] else { return }
+            pool.cancel(requestHaving: request.requestId)
         }
     }
 }
@@ -147,7 +147,7 @@ extension ThumbnailLoadQueue {
                 }
             }
         }
-        context.task.dependentOperation = operation
+        context.pool.ongoingOperation = operation
         config.dataCachingQueue.addOperation(operation)
     }
 
@@ -168,7 +168,7 @@ extension ThumbnailLoadQueue {
                 }
             }
         }
-        context.task.dependentOperation = operation
+        context.pool.ongoingOperation = operation
         config.dataLoadingQueue.addOperation(operation)
     }
 
@@ -191,7 +191,7 @@ extension ThumbnailLoadQueue {
                 }
             }
         }
-        context.task.dependentOperation = operation
+        context.pool.ongoingOperation = operation
         config.downsamplingQueue.addOperation(operation)
     }
 
@@ -217,7 +217,7 @@ extension ThumbnailLoadQueue {
                 }
             }
         }
-        context.task.dependentOperation = operation
+        context.pool.ongoingOperation = operation
         config.imageEncodingQueue.addOperation(operation)
     }
 
@@ -250,11 +250,11 @@ extension ThumbnailLoadQueue {
     }
 }
 
-// MARK: - ThumbnailLoadTaskDelegate
+// MARK: - ThumbnailRequestPoolObserver
 
-extension ThumbnailLoadQueue: ThumbnailLoadTaskDelegate {
-    func didComplete(_ task: ThumbnailLoadTask) {
-        self.loadTaskPool.removeValue(forKey: task.thumbnailId)
+extension ThumbnailLoadQueue: ThumbnailRequestPoolObserver {
+    func didComplete(_ pool: ThumbnailRequestPool) {
+        self.requestPools.removeValue(forKey: pool.thumbnailId)
     }
 }
 
