@@ -35,15 +35,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     }
 
     private var isFullscreen = false {
-        didSet {
-            setNeedsStatusBarAppearanceUpdate()
-
-            UIView.animate(withDuration: 0.2) {
-                self.navigationController?.toolbar.isHidden = self.isFullscreen
-                self.navigationController?.navigationBar.isHidden = self.isFullscreen
-                self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.Color.backgroundClient.color
-            }
-        }
+        didSet { updateFullscreenAppearance() }
     }
 
     private let transitionController: ClipPreviewPageTransitionControllerType
@@ -123,6 +115,9 @@ class ClipPreviewPageViewController: UIPageViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         cacheStore.execute(.viewDidAppear)
+
+        // HACK: 画面遷移時に背景色が消失してしまうケースがあるので、再度適用を行う
+        updateFullscreenAppearance()
     }
 
     override func viewDidLoad() {
@@ -144,6 +139,18 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         store.execute(.viewDidLoad)
         barController.traitCollectionDidChange(to: view.traitCollection)
+    }
+
+    // MARK: - Methods
+
+    private func updateFullscreenAppearance() {
+        setNeedsStatusBarAppearanceUpdate()
+
+        UIView.animate(withDuration: 0.2) {
+            self.navigationController?.toolbar.isHidden = self.isFullscreen
+            self.navigationController?.navigationBar.isHidden = self.isFullscreen
+            self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.Color.backgroundClient.color
+        }
     }
 
     // MARK: - IBActions
