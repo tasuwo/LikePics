@@ -93,7 +93,7 @@ extension ClipCollectionViewLayout {
 
 extension ClipCollectionViewLayout {
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoaderProtocol) -> DataSource
+                                    thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> DataSource
     {
         let cellRegistration = configureCell(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
 
@@ -103,11 +103,13 @@ extension ClipCollectionViewLayout {
     }
 
     private static func configureCell(collectionView: UICollectionView,
-                                      thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
+                                      thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
         return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, _, clip in
             let requestId = UUID().uuidString
             cell.identifier = requestId
+
+            cell.invalidator = thumbnailLoader
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
@@ -165,6 +167,9 @@ extension ClipCollectionViewLayout {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 config: info,
-                                userInfo: [.clipThumbnailOrder: context.rawValue])
+                                userInfo: [
+                                    .clipThumbnailOrder: context.rawValue,
+                                    .originalImageSize: item.imageSize.cgSize
+                                ])
     }
 }

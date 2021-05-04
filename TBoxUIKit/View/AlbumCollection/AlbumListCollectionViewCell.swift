@@ -17,8 +17,8 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     }
 
     public var identifier: String?
-
     public var albumId: Album.Identity?
+    public weak var invalidator: ThumbnailInvalidatable?
 
     public var thumbnail: UIImage? {
         get {
@@ -230,6 +230,12 @@ extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             self.thumbnail = image
+
+            let displayScale = self.traitCollection.displayScale
+            let originalSize = request.userInfo?[.originalImageSize] as? CGSize
+            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
+                self.invalidator?.invalidateCache(having: request.config.cacheKey)
+            }
         }
     }
 

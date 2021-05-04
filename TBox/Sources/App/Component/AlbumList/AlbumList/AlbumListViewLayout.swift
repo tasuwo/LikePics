@@ -93,7 +93,7 @@ extension AlbumListViewLayout {
         }
     }
 
-    static func configureAlbumCell(thumbnailLoader: ThumbnailLoaderProtocol,
+    static func configureAlbumCell(thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
         return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak delegate] cell, _, item in
@@ -101,6 +101,8 @@ extension AlbumListViewLayout {
             cell.title = item.album.title
             cell.clipCount = item.album.clips.count
             cell.delegate = delegate
+
+            cell.invalidator = thumbnailLoader
 
             cell.setEditing(item.isEditing, animated: false)
 
@@ -118,7 +120,8 @@ extension AlbumListViewLayout {
                 let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
                 let request = ThumbnailRequest(requestId: requestId,
                                                originalImageRequest: imageRequest,
-                                               config: info)
+                                               config: info,
+                                               userInfo: [.originalImageSize: thumbnailTarget.imageSize.cgSize])
                 thumbnailLoader?.load(request, observer: cell)
                 cell.onReuse = { identifier in
                     guard identifier == requestId else { return }
@@ -132,7 +135,7 @@ extension AlbumListViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoaderProtocol,
+                                    thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
                                     delegate: AlbumListCollectionViewCellDelegate) -> DataSource
     {
         let albumCellRegistration = self.configureAlbumCell(thumbnailLoader: thumbnailLoader, delegate: delegate)

@@ -28,6 +28,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public var identifier: String?
     public var onReuse: ((String?) -> Void)?
+    public weak var invalidator: ThumbnailInvalidatable?
     public private(set) var visibleHiddenIcon: Bool = false
     public private(set) var isHiddenClip: Bool = false
 
@@ -287,6 +288,12 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
             guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
             self.setImage(.loaded(image), at: order)
+
+            let displayScale = self.traitCollection.displayScale
+            let originalSize = request.userInfo?[.originalImageSize] as? CGSize
+            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
+                self.invalidator?.invalidateCache(having: request.config.cacheKey)
+            }
         }
     }
 

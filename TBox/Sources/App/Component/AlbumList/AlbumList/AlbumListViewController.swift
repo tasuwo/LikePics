@@ -21,7 +21,7 @@ class AlbumListViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol
+    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
     private let menuBuilder: AlbumListMenuBuildable.Type
 
     // MARK: Component
@@ -40,7 +40,7 @@ class AlbumListViewController: UIViewController {
          albumAdditionAlertState: TextEditAlertState,
          albumEditAlertState: TextEditAlertState,
          dependency: AlbumListViewDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol,
+         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: AlbumListMenuBuildable.Type)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer.self)

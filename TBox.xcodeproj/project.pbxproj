@@ -121,6 +121,9 @@
 		2CDD8123264170D700DAEE93 /* ThumbnailRequestUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD8122264170D700DAEE93 /* ThumbnailRequestUserInfo.swift */; };
 		2CDD81252641723800DAEE93 /* ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD81242641723800DAEE93 /* ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift */; };
 		2CDD81272641726300DAEE93 /* ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD81262641726300DAEE93 /* ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift */; };
+		2CDD81292641739800DAEE93 /* ThumbnailRequestUserInfo_Key+OriginalImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD81282641739800DAEE93 /* ThumbnailRequestUserInfo_Key+OriginalImageSize.swift */; };
+		2CDD812C2641768400DAEE93 /* ThumbnailInvalidatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD812B2641768400DAEE93 /* ThumbnailInvalidatable.swift */; };
+		2CDD812E26417AF700DAEE93 /* ThumbnailLoader+ThumbnailInvalidatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD812D26417AF700DAEE93 /* ThumbnailLoader+ThumbnailInvalidatable.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
@@ -1045,6 +1048,9 @@
 		2CDD8122264170D700DAEE93 /* ThumbnailRequestUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRequestUserInfo.swift; sourceTree = "<group>"; };
 		2CDD81242641723800DAEE93 /* ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift"; sourceTree = "<group>"; };
 		2CDD81262641726300DAEE93 /* ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift"; sourceTree = "<group>"; };
+		2CDD81282641739800DAEE93 /* ThumbnailRequestUserInfo_Key+OriginalImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailRequestUserInfo_Key+OriginalImageSize.swift"; sourceTree = "<group>"; };
+		2CDD812B2641768400DAEE93 /* ThumbnailInvalidatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailInvalidatable.swift; sourceTree = "<group>"; };
+		2CDD812D26417AF700DAEE93 /* ThumbnailLoader+ThumbnailInvalidatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailLoader+ThumbnailInvalidatable.swift"; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -2172,6 +2178,15 @@
 			path = Loader;
 			sourceTree = "<group>";
 		};
+		2CDD812A2641766B00DAEE93 /* Thumbnail */ = {
+			isa = PBXGroup;
+			children = (
+				2CDD81122640EBE700DAEE93 /* ThumbnailPresentable.swift */,
+				2CDD812B2641768400DAEE93 /* ThumbnailInvalidatable.swift */,
+			);
+			path = Thumbnail;
+			sourceTree = "<group>";
+		};
 		321E4BD03961ABBC3B0D85CF /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -2916,6 +2931,7 @@
 				02BB76E853E11AAE374B893C /* UITargetdPreview.swift */,
 				043BCDE60E156B4C0394DBB8 /* URLButtonInteractionHandler.swift */,
 				2CDD81262641726300DAEE93 /* ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift */,
+				2CDD812D26417AF700DAEE93 /* ThumbnailLoader+ThumbnailInvalidatable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2945,7 +2961,6 @@
 				910EF0AA3798D56E54F1B86A /* PaddingTextField.swift */,
 				B417CA1A4783C4E45BA4F356 /* RoundedButton.swift */,
 				A1B73013569AD29F36326E0A /* SingleIconButton.swift */,
-				2CDD81122640EBE700DAEE93 /* ThumbnailPresentable.swift */,
 				916C9F11F1460F9356DAAEBF /* List */,
 			);
 			path = Common;
@@ -3482,6 +3497,7 @@
 				FD9D519AD010565870EDC20F /* Generated */,
 				5188F1A03D96EDD9924B3E4C /* Layout */,
 				D750CDC515366670A0C738E2 /* Resources */,
+				2CDD812A2641766B00DAEE93 /* Thumbnail */,
 				5FECB7ACFB473BF0356E9CA0 /* Transition */,
 				5AA7CE487825B8EA5C785020 /* View */,
 			);
@@ -3937,6 +3953,7 @@
 				44BA8E9BB6B01F3486975FFC /* UISwitch+setOnSmoothly.swift */,
 				73250ADD960378BE7B95F8CC /* UIView+ConstraintFittingIn.swift */,
 				2CDD81242641723800DAEE93 /* ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift */,
+				2CDD81282641739800DAEE93 /* ThumbnailRequestUserInfo_Key+OriginalImageSize.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -4766,6 +4783,7 @@
 				C507B6A43F1B3FA86AF7C9E3 /* ClipPreviewDismissalAnimator.swift in Sources */,
 				C2386EDCA7DBB5CDC880767A /* ClipPreviewInteractiveDismissalAnimator.swift in Sources */,
 				B0FB27FBE252600EC5887C5E /* ClipPreviewPresentationAnimator.swift in Sources */,
+				2CDD81292641739800DAEE93 /* ThumbnailRequestUserInfo_Key+OriginalImageSize.swift in Sources */,
 				5452AF459725932A33DD64A6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */,
 				D8A46806A63309E9F1E65C58 /* ClipPreviewPresentingAnimatorDataSource.swift in Sources */,
 				A6597809BBB761C75C73AD54 /* ClipPreviewTransitionControllerProtocol.swift in Sources */,
@@ -4806,6 +4824,7 @@
 				8DED993F9A8F575E4820465C /* UIView+ConstraintFittingIn.swift in Sources */,
 				6625F3FA14E96DD856E280D2 /* UncategorizedCell.swift in Sources */,
 				2CDD81252641723800DAEE93 /* ThumbnailRequestUserInfo_Key+clipThumbnailOrder.swift in Sources */,
+				2CDD812C2641768400DAEE93 /* ThumbnailInvalidatable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5058,6 +5077,7 @@
 				CCD0F04535C20BBD4F2F30DD /* ClipCollectionNavigationBarState.swift in Sources */,
 				771394D9DB1110BB75E17CE2 /* ClipCollectionReducer.swift in Sources */,
 				E237C67D91E415E72455DDC6 /* ClipCollectionState.swift in Sources */,
+				2CDD812E26417AF700DAEE93 /* ThumbnailLoader+ThumbnailInvalidatable.swift in Sources */,
 				828769B6208E4B5AF5B83188 /* ClipCollectionToolBarAction.swift in Sources */,
 				06F59C750A32B1BD8D5FA08E /* ClipCollectionToolBarController.swift in Sources */,
 				2416AC29676DC9D024F75E40 /* ClipCollectionToolBarDelegate.swift in Sources */,

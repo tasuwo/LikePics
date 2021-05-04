@@ -27,7 +27,7 @@ class ClipCollectionViewController: UIViewController {
     private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol
+    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
 
     // MARK: Component
 
@@ -53,7 +53,7 @@ class ClipCollectionViewController: UIViewController {
          navigationBarState: ClipCollectionNavigationBarState,
          toolBarState: ClipCollectionToolBarState,
          dependency: ClipCollectionDependency & HasImageQueryService,
-         thumbnailLoader: ThumbnailLoaderProtocol,
+         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: ClipCollectionMenuBuildable)
     {
         self.store = ClipCollectionViewStore(initialState: state, dependency: dependency, reducer: ClipCollectionReducer.self)
