@@ -203,7 +203,6 @@ extension SearchResultViewLayout {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 config: info,
-                                isPrefetch: false,
                                 userInfo: nil)
     }
 }

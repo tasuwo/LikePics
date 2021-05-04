@@ -54,7 +54,7 @@ extension ThumbnailLoadQueue {
             guard let self = self else { return }
 
             if let pool = self.requestPools[request.config.cacheKey] {
-                pool.append(request, with: observer)
+                pool.appendLoadRequest(request, with: observer)
                 return
             }
 
@@ -67,10 +67,33 @@ extension ThumbnailLoadQueue {
                 return
             }
 
-            if request.isPrefetch {
-                pool.releasePrefetches()
-                if pool.isEmpty { return }
+            pool.releasePrefetches()
+            if pool.isEmpty { return }
+
+            pool.didLoad(thumbnail: image)
+        }
+    }
+
+    func prefetch(_ request: ThumbnailRequest, observer: ThumbnailPrefetchObserver?) {
+        queue.async { [weak self, weak observer] in
+            guard let self = self else { return }
+
+            if let pool = self.requestPools[request.config.cacheKey] {
+                pool.appendPrefetchRequest(request, with: observer)
+                return
             }
+
+            let pool = ThumbnailRequestPool(request, with: observer)
+            pool.delegate = self
+            self.requestPools[request.config.cacheKey] = pool
+
+            guard let image = self.config.memoryCache[request.config.cacheKey] else {
+                self.enqueueCheckCacheOperation(pool)
+                return
+            }
+
+            pool.releasePrefetches()
+            if pool.isEmpty { return }
 
             pool.didLoad(thumbnail: image)
         }
@@ -101,9 +124,6 @@ extension ThumbnailLoadQueue {
                     self.enqueueDataLoadingOperation(pool)
                     return
                 }
-
-                pool.releasePrefetches()
-                if pool.isEmpty { return }
 
                 self.enqueueDecompressingOperation(pool, data: data)
             }

@@ -290,7 +290,6 @@ extension ClipEditViewLayout {
             let request = ThumbnailRequest(requestId: requestId,
                                            originalImageRequest: imageRequest,
                                            config: info,
-                                           isPrefetch: false,
                                            userInfo: nil)
             cell.onReuse = { identifier in
                 guard identifier == requestId else { return }

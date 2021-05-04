@@ -6,8 +6,8 @@ import UIKit
 
 public protocol ThumbnailLoaderProtocol: AnyObject {
     func load(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?)
+    func prefetch(_ request: ThumbnailRequest, observer: ThumbnailPrefetchObserver?)
     func cancel(_ request: ThumbnailRequest)
-    func prefetch(_ request: ThumbnailRequest)
 }
 
 public class ThumbnailLoader {
@@ -30,11 +30,11 @@ extension ThumbnailLoader: ThumbnailLoaderProtocol {
         queue.load(request, observer: observer)
     }
 
-    public func cancel(_ request: ThumbnailRequest) {
-        queue.cancel(request)
+    public func prefetch(_ request: ThumbnailRequest, observer: ThumbnailPrefetchObserver?) {
+        queue.prefetch(request, observer: observer)
     }
 
-    public func prefetch(_ request: ThumbnailRequest) {
-        queue.load(request, observer: nil)
+    public func cancel(_ request: ThumbnailRequest) {
+        queue.cancel(request)
     }
 }

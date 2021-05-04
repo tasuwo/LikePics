@@ -155,8 +155,7 @@ extension ClipCollectionViewLayout {
                                     id: String,
                                     size: CGSize,
                                     scale: CGFloat,
-                                    context: ClipCollectionViewCell.ThumbnailOrder,
-                                    isPrefetch: Bool = false) -> ThumbnailRequest
+                                    context: ClipCollectionViewCell.ThumbnailOrder) -> ThumbnailRequest
     {
         // - SeeAlso: PreviewLoader
         let info = ThumbnailConfig(cacheKey: "clip-collection-\(item.identity.uuidString)",
@@ -166,7 +165,6 @@ extension ClipCollectionViewLayout {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 config: info,
-                                isPrefetch: isPrefetch,
                                 userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
     }
 }
