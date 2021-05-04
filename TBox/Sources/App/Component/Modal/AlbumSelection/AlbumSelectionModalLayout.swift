@@ -60,7 +60,7 @@ extension AlbumSelectionModalLayout {
             if let thumbnailTarget = album.clips.first?.items.first {
                 let requestId = UUID().uuidString
                 cell.identifier = requestId
-                let size = cell.calcThumbnailImageSize(originalSize: thumbnailTarget.imageSize.cgSize)
+                let size = cell.calcThumbnailPointSize(originalPixelSize: thumbnailTarget.imageSize.cgSize)
                 let info = ThumbnailConfig(cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
                                            size: size,
                                            scale: cell.traitCollection.displayScale)

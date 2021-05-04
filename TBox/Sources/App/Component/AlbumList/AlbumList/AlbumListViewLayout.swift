@@ -113,7 +113,7 @@ extension AlbumListViewLayout {
             cell.identifier = requestId
 
             if let thumbnailTarget = item.album.clips.first?.primaryItem {
-                let size = cell.calcThumbnailImageSize(originalSize: thumbnailTarget.imageSize.cgSize)
+                let size = cell.calcThumbnailPointSize(originalPixelSize: thumbnailTarget.imageSize.cgSize)
                 let info = ThumbnailConfig(cacheKey: "album-list-\(thumbnailTarget.identity.uuidString)",
                                            size: size,
                                            scale: cell.traitCollection.displayScale)

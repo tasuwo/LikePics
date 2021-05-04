@@ -101,8 +101,8 @@ extension AlbumSelectionCell: ThumbnailLoadObserver {
 extension AlbumSelectionCell: ThumbnailPresentable {
     // MARK: - ThumbnailPresentable
 
-    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
-        if let originalSize = originalSize {
+    public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
+        if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
                 return .init(width: thumbnailWidthConstraint.constant,
                              height: thumbnailWidthConstraint.constant * (originalSize.height / originalSize.width))

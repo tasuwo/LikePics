@@ -6,7 +6,7 @@ import CoreGraphics
 import UIKit
 
 public protocol ThumbnailPresentable {
-    func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize
+    func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize
 }
 
 extension ThumbnailPresentable {
@@ -19,7 +19,7 @@ extension ThumbnailPresentable {
         let actualPixelSize = CGSize(width: thumbnail.size.width * thumbnail.scale,
                                      height: thumbnail.size.height * thumbnail.scale)
 
-        let pointSize = calcThumbnailImageSize(originalSize: originalImageSize)
+        let pointSize = calcThumbnailPointSize(originalPixelSize: originalImageSize)
         let expectedPixelSize = CGSize(width: pointSize.width * displayScale,
                                        height: pointSize.height * displayScale)
 

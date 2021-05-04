@@ -250,9 +250,9 @@ extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
 extension AlbumListCollectionViewCell: ThumbnailPresentable {
     // MARK: - ThumbnailPresentable
 
-    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
+    public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
         // Note: frame.height は不定なので、計算に利用しない
-        if let originalSize = originalSize {
+        if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
                 return .init(width: frame.width,
                              height: frame.width * (originalSize.height / originalSize.width))

@@ -124,21 +124,21 @@ extension ClipCollectionViewLayout {
             var requests: [ThumbnailRequest] = []
 
             if let item = clip.primaryItem {
-                let size = cell.calcThumbnailImageSize(originalSize: item.imageSize.cgSize)
+                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .primary))
             } else {
                 cell.primaryImage = .noImage
             }
 
             if let item = clip.secondaryItem {
-                let size = cell.calcThumbnailImageSize(originalSize: item.imageSize.cgSize)
+                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .secondary))
             } else {
                 cell.secondaryImage = .noImage
             }
 
             if let item = clip.tertiaryItem {
-                let size = cell.calcThumbnailImageSize(originalSize: item.imageSize.cgSize)
+                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .tertiary))
             } else {
                 cell.tertiaryImage = .noImage

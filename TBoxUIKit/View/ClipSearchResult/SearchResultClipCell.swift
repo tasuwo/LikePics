@@ -78,8 +78,8 @@ extension SearchResultClipCell: ClipPreviewPresentingCell {
 extension SearchResultClipCell: ThumbnailPresentable {
     // MARK: - ThumbnailPresentable
 
-    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
-        if let originalSize = originalSize {
+    public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
+        if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
                 return .init(width: frame.width,
                              height: frame.width * (originalSize.height / originalSize.width))

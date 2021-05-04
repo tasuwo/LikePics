@@ -282,7 +282,7 @@ extension ClipEditViewLayout {
 
             let requestId = UUID().uuidString
             cell.identifier = requestId
-            let size = cell.calcThumbnailImageSize(originalSize: item.imageSize)
+            let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize)
             let info = ThumbnailConfig(cacheKey: "clip-edit-list-\(item.itemId.uuidString)",
                                        size: size,
                                        scale: cell.traitCollection.displayScale)
