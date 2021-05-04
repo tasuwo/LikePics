@@ -112,7 +112,7 @@ extension ClipCollectionViewLayout {
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
 
-            cell.visibleSelectedMark = collectionView?.isEditing ?? false
+            cell.isEditing = collectionView?.isEditing ?? false
             cell.resetContent()
 
             guard let collectionView = collectionView,

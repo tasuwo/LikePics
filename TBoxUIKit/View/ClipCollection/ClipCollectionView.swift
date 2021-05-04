@@ -7,14 +7,6 @@ import UIKit
 public class ClipCollectionView: UICollectionView {
     public static let cellIdentifier = "Cell"
 
-    override public var allowsMultipleSelection: Bool {
-        didSet {
-            self.visibleCells
-                .compactMap { $0 as? ClipCollectionViewCell }
-                .forEach { $0.visibleSelectedMark = self.allowsMultipleSelection }
-        }
-    }
-
     // MARK: - Lifecycle
 
     override public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {

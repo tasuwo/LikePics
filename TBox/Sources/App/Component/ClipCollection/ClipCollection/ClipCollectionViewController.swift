@@ -157,7 +157,7 @@ extension ClipCollectionViewController {
                 // TODO: 各Cell側で設定させる
                 self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
-                    .forEach { $0.visibleSelectedMark = isEditing }
+                    .forEach { $0.isEditing = isEditing }
             }
             .store(in: &subscriptions)
 

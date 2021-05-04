@@ -45,10 +45,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         didSet { updateImageViewAppearance(tertiaryImage, .tertiary) }
     }
 
-    public var visibleSelectedMark: Bool = false {
-        didSet { updateOverallOverlayView() }
-    }
-
     public var isLoading: Bool {
         guard let primaryImage = primaryImage,
               let secondaryImage = secondaryImage,
@@ -65,6 +61,10 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             // NOTE: secondary, tertiary が未ロードのケースは、未ロードなのか？本当に存在しないのか？
             //       判定できないため、考慮しない
             || !primaryImage.isLoaded
+    }
+
+    public var isEditing: Bool = false {
+        didSet { updateOverallOverlayView() }
     }
 
     override public var isSelected: Bool {
@@ -168,8 +168,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     // MARK: Update Appearance
 
     private func updateOverallOverlayView() {
-        overallOverlayView.isHidden = !((isSelected && visibleSelectedMark) || isLoading)
-        selectionMark.isHidden = !(visibleSelectedMark && !isLoading)
+        overallOverlayView.isHidden = !((isSelected && isEditing) || isLoading)
+        selectionMark.isHidden = !(isEditing && !isLoading)
 
         if isLoading {
             indicator.startAnimating()
