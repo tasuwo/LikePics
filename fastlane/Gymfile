@@ -1,6 +1,5 @@
 # vim: syntax=ruby
 
-workspace("./TBox.xcworkspace")
 scheme("TBox")
 sdk("iphoneos")
 output_directory("./build")
