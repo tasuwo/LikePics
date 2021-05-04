@@ -10,8 +10,6 @@ import UIKit
 class ClipCollectionPreLoader: NSObject {
     typealias Layout = ClipCollectionViewLayout
 
-    static let ThumbnailPrefetchingUserInfoKey = "net.tasuwo.TBox.ClipCollectionPreLoader.ThumbnailPrefetchingUserInfoKey"
-
     let dataSource: Layout.DataSource
     let thumbnailLoader: ThumbnailLoaderProtocol
 
@@ -41,7 +39,7 @@ class ClipCollectionPreLoader: NSObject {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 config: info,
-                                userInfo: [ThumbnailPrefetchingUserInfoKey: context])
+                                userInfo: [.prefetchingIndexPath: context])
     }
 }
 
@@ -98,7 +96,7 @@ extension ClipCollectionPreLoader: ThumbnailPrefetchObserver {
 
     func didComplete(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
-            guard let indexPath = request.userInfo?[Self.ThumbnailPrefetchingUserInfoKey] as? IndexPath else { return }
+            guard let indexPath = request.userInfo?[.prefetchingIndexPath] as? IndexPath else { return }
             self.requestsByIndexPath.removeValue(forKey: indexPath)
         }
     }

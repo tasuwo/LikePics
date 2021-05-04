@@ -7,8 +7,6 @@ import Smoothie
 import UIKit
 
 public class ClipCollectionViewCell: UICollectionViewCell {
-    public static let ThumbnailLoadingUserInfoKey = "TBoxUIKit.ClipCollectionViewCell.ThumbnailLoadingUserInfoKey"
-
     public enum ThumbnailOrder: String {
         case primary
         case secondary
@@ -277,7 +275,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     public func didStartLoading(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
             self.setImage(.loading, at: order)
         }
@@ -286,7 +284,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
             self.setImage(.loaded(image), at: order)
         }
@@ -295,7 +293,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     public func didFailedToLoad(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
+            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
             self.setImage(.failedToLoad, at: order)
         }

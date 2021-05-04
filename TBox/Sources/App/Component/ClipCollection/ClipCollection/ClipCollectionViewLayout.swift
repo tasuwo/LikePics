@@ -165,6 +165,6 @@ extension ClipCollectionViewLayout {
         return ThumbnailRequest(requestId: id,
                                 originalImageRequest: imageRequest,
                                 config: info,
-                                userInfo: [ClipCollectionViewCell.ThumbnailLoadingUserInfoKey: context.rawValue])
+                                userInfo: [.clipThumbnailOrder: context.rawValue])
     }
 }
