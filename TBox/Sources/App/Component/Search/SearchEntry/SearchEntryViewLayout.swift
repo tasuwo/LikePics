@@ -17,7 +17,7 @@ enum SearchEntryViewLayout {
 
     struct SearchHistoryWrapper: Hashable {
         let isSomeItemsHidden: Bool
-        let original: ClipSearchHistory
+        let original: Domain.ClipSearchHistory
 
         var query: ClipSearchQuery { original.query }
     }
@@ -119,10 +119,8 @@ extension SearchEntryViewLayout {
     private static func configureHistoryHeader(removeAllHistoriesHandler: @escaping () -> Void) -> UICollectionView.CellRegistration<ClipSearchHistoryHeaderCell, Bool>
     {
         return .init { cell, _, isEnabled in
-            var contentConfiguration = ClipSearchHistoryHeaderConfiguration()
-            contentConfiguration.isRemoveAllButtonEnabled = isEnabled
-            contentConfiguration.removeAllHistoriesHandler = removeAllHistoriesHandler
-            cell.contentConfiguration = contentConfiguration
+            cell.removeAllHistoriesHandler = removeAllHistoriesHandler
+            cell.isRemoveAllButtonEnabled = isEnabled
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainHeaderFooter()
             backgroundConfiguration.backgroundColor = .clear
@@ -130,14 +128,12 @@ extension SearchEntryViewLayout {
         }
     }
 
-    private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryListCell, SearchHistoryWrapper> {
+    private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryContentCell, SearchHistoryWrapper> {
         return .init { cell, _, history in
-            var contentConfiguration = ClipSearchHistoryContentConfiguration()
-            contentConfiguration.queryConfiguration = .init(title: history.query.displayTitle,
-                                                            sortName: history.query.sort.displayTitle,
-                                                            displaySettingName: history.query.displaySettingDisplayTitle,
-                                                            isDisplaySettingHidden: history.isSomeItemsHidden)
-            cell.contentConfiguration = contentConfiguration
+            cell.searchHistory = .init(title: history.query.displayTitle,
+                                       sortName: history.query.sort.displayTitle,
+                                       displaySettingName: history.query.displaySettingDisplayTitle,
+                                       isDisplaySettingHidden: history.isSomeItemsHidden)
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()
             backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color

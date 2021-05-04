@@ -6,11 +6,13 @@ import Domain
 import UIKit
 
 public class ClipSearchHistoryHeaderCell: UICollectionViewListCell {
-    private var _contentConfiguration: ClipSearchHistoryHeaderConfiguration {
-        return (contentConfiguration as? ClipSearchHistoryHeaderConfiguration) ?? ClipSearchHistoryHeaderConfiguration()
-    }
+    public var isRemoveAllButtonEnabled: Bool = false
+    public var removeAllHistoriesHandler: (() -> Void)?
 
     override public func updateConfiguration(using state: UICellConfigurationState) {
-        contentConfiguration = _contentConfiguration.updated(for: state)
+        var newConfiguration = ClipSearchHistoryHeaderConfiguration().updated(for: state)
+        newConfiguration.isRemoveAllButtonEnabled = isRemoveAllButtonEnabled
+        newConfiguration.removeAllHistoriesHandler = removeAllHistoriesHandler
+        contentConfiguration = newConfiguration
     }
 }

@@ -5,7 +5,6 @@
 import UIKit
 
 public struct ClipSearchHistoryHeaderConfiguration {
-    public var title: String = ""
     public var isRemoveAllButtonEnabled = false
     public var removeAllHistoriesHandler: (() -> Void)?
 

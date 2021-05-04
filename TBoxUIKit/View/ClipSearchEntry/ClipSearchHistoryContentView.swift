@@ -50,16 +50,16 @@ extension ClipSearchHistoryContentView {
     private func apply(_ configuration: ClipSearchHistoryContentConfiguration) {
         _configuration = configuration
 
-        guard let configuration = configuration.queryConfiguration else {
+        guard let history = configuration.clipSearchHistory else {
             titleLabel.text = nil
             secondaryTitleLabel.text = nil
             return
         }
 
-        titleLabel.text = configuration.title
+        titleLabel.text = history.title
         secondaryTitleLabel.text = [
-            configuration.isDisplaySettingHidden ? nil : configuration.displaySettingName,
-            configuration.sortName
+            history.isDisplaySettingHidden ? nil : history.displaySettingName,
+            history.sortName
         ].compactMap { $0 }.joined(separator: " / ")
     }
 }

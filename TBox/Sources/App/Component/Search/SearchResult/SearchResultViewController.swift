@@ -73,7 +73,7 @@ extension SearchResultViewController {
         store.execute(.entryViewDidAppear)
     }
 
-    func entrySelected(_ history: ClipSearchHistory) {
+    func entrySelected(_ history: Domain.ClipSearchHistory) {
         searchController.searchBar.becomeFirstResponder()
         store.execute(.selectedHistory(history))
 
