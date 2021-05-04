@@ -64,13 +64,17 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 
     public var isEditing: Bool = false {
-        didSet { updateOverallOverlayView() }
+        didSet {
+            updateOverallOverlayView()
+            setOverallImageViewHidden(!isEditing)
+        }
     }
 
     override public var isSelected: Bool {
         didSet { updateOverallOverlayView() }
     }
 
+    @IBOutlet var overallImageView: UIImageView!
 
     @IBOutlet public var primaryImageView: UIImageView!
     @IBOutlet public var secondaryImageView: UIImageView!
@@ -119,6 +123,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             Self.setupAppearance(imageView: $0)
         }
 
+        overallImageView.contentMode = .scaleAspectFill
+        overallImageView.isHidden = true
+
         ([
             overallOverlayView,
             secondaryImageOverlayView,
@@ -144,6 +151,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public func resetContent() {
         ([
+            overallImageView,
             primaryImageView,
             secondaryImageView,
             tertiaryImageView
@@ -163,6 +171,15 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public func setClipHiding(_ isHiding: Bool, animated: Bool) {
         isHiddenClip = isHiding
         updateHiddenIconAppearance(animated: animated)
+    }
+
+    private func setOverallImageViewHidden(_ isHidden: Bool) {
+        overallImageView.isHidden = isHidden
+        primaryImageView.isHidden = !isHidden
+        secondaryImageView.isHidden = !isHidden
+        tertiaryImageView.isHidden = !isHidden
+        secondaryImageOverlayView.isHidden = !isHidden
+        tertiaryImageOverlayView.isHidden = !isHidden
     }
 
     // MARK: Update Appearance
@@ -202,11 +219,13 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         imageView.removeAspectRatioConstraint()
         guard case let .loaded(image) = image else {
             imageView.image = nil
+            if order.isPrimary { overallImageView.image = nil }
             return
         }
 
         imageView.addAspectRatioConstraint(image: image)
         imageView.image = image
+        if order.isPrimary { overallImageView.image = image }
     }
 
     // MARK: Resolve UI Element
@@ -299,6 +318,12 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
         default:
             return nil
         }
+    }
+}
+
+private extension ClipCollectionViewCell.ThumbnailOrder {
+    var isPrimary: Bool {
+        return self == .primary
     }
 }
 
