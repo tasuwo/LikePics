@@ -156,7 +156,7 @@ extension ClipCollectionViewLayout {
                                     id: String,
                                     size: CGSize,
                                     scale: CGFloat,
-                                    context: ClipCollectionViewCell.ThumbnailLoadingUserInfoValue,
+                                    context: ClipCollectionViewCell.ThumbnailOrder,
                                     isPrefetch: Bool = false) -> ThumbnailRequest
     {
         // - SeeAlso: PreviewLoader

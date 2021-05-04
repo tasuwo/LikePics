@@ -9,7 +9,7 @@ import UIKit
 public class ClipCollectionViewCell: UICollectionViewCell {
     public static let ThumbnailLoadingUserInfoKey = "TBoxUIKit.ClipCollectionViewCell.ThumbnailLoadingUserInfoKey"
 
-    public enum ThumbnailLoadingUserInfoValue: String {
+    public enum ThumbnailOrder: String {
         case primary
         case secondary
         case tertiary
@@ -20,115 +20,39 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         case loading
         case failedToLoad
         case noImage
-
-        var isLoaded: Bool {
-            switch self {
-            case .loaded:
-                return true
-
-            default:
-                return false
-            }
-        }
-
-        var isLoading: Bool {
-            switch self {
-            // NOTE: failedToLoad は、iCloud同期前でデータが読めていない可能性を考慮し、ロード中とする
-            case .loading, .failedToLoad:
-                return true
-
-            default:
-                return false
-            }
-        }
     }
 
-    public static var nib: UINib {
-        return UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self))
-    }
+    public static var nib: UINib { UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self)) }
 
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
-
     public static let cornerRadius: CGFloat = 10
 
     public var identifier: String?
-
-    public var primaryImage: Image? {
-        didSet {
-            defer { self.updateOverallOverlayView() }
-
-            // nil が代入されることはない想定
-            guard let primaryImage = self.primaryImage else { return }
-
-            self.primaryImageView.isHidden = !primaryImage.isLoaded
-
-            self.primaryImageView.removeAspectRatioConstraint()
-            guard case let .loaded(image) = primaryImage else {
-                self.primaryImageView.image = nil
-                return
-            }
-
-            self.primaryImageView.addAspectRatioConstraint(image: image)
-            self.primaryImageView.image = image
-        }
-    }
-
-    public var secondaryImage: Image? {
-        didSet {
-            defer { self.updateOverallOverlayView() }
-
-            // nil が代入されることはない想定
-            guard let secondaryImage = self.secondaryImage else { return }
-
-            self.secondaryImageView.isHidden = !secondaryImage.isLoaded
-            self.secondaryImageOverlayView.isHidden = !secondaryImage.isLoaded
-
-            self.secondaryImageView.removeAspectRatioConstraint()
-            guard case let .loaded(image) = secondaryImage else {
-                self.secondaryImageView.image = nil
-                return
-            }
-
-            self.secondaryImageView.addAspectRatioConstraint(image: image)
-            self.secondaryImageView.image = image
-        }
-    }
-
-    public var tertiaryImage: Image? {
-        didSet {
-            defer { self.updateOverallOverlayView() }
-
-            // nil が代入されることはない想定
-            guard let tertiaryImage = self.tertiaryImage else { return }
-
-            self.tertiaryImageView.isHidden = !tertiaryImage.isLoaded
-            self.tertiaryImageOverlayView.isHidden = !tertiaryImage.isLoaded
-
-            self.tertiaryImageView.removeAspectRatioConstraint()
-            guard case let .loaded(image) = tertiaryImage else {
-                self.tertiaryImageView.image = nil
-                return
-            }
-
-            self.tertiaryImageView.addAspectRatioConstraint(image: image)
-            self.tertiaryImageView.image = image
-        }
-    }
-
-    public var visibleSelectedMark: Bool = false {
-        didSet {
-            self.updateOverallOverlayView()
-        }
-    }
-
+    public var onReuse: ((String?) -> Void)?
     public private(set) var visibleHiddenIcon: Bool = false
     public private(set) var isHiddenClip: Bool = false
 
+    public var primaryImage: Image? {
+        didSet { updateImageViewAppearance(primaryImage, .primary) }
+    }
+
+    public var secondaryImage: Image? {
+        didSet { updateImageViewAppearance(secondaryImage, .secondary) }
+    }
+
+    public var tertiaryImage: Image? {
+        didSet { updateImageViewAppearance(tertiaryImage, .tertiary) }
+    }
+
+    public var visibleSelectedMark: Bool = false {
+        didSet { updateOverallOverlayView() }
+    }
+
     public var isLoading: Bool {
-        guard let primaryImage = self.primaryImage,
-              let secondaryImage = self.secondaryImage,
-              let tertiaryImage = self.tertiaryImage
+        guard let primaryImage = primaryImage,
+              let secondaryImage = secondaryImage,
+              let tertiaryImage = tertiaryImage
         else {
             return true
         }
@@ -143,54 +67,41 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             || !primaryImage.isLoaded
     }
 
-    public var onReuse: ((String?) -> Void)?
-
     override public var isSelected: Bool {
-        didSet {
-            self.updateOverallOverlayView()
-        }
+        didSet { updateOverallOverlayView() }
     }
 
-    private var imageViews: [UIImageView] {
-        return [
-            self.primaryImageView,
-            self.secondaryImageView,
-            self.tertiaryImageView
-        ]
-    }
-
-    private var overlayViews: [UIView] {
-        return [
-            self.secondaryImageOverlayView,
-            self.tertiaryImageOverlayView,
-            self.overallOverlayView
-        ]
-    }
 
     @IBOutlet public var primaryImageView: UIImageView!
     @IBOutlet public var secondaryImageView: UIImageView!
     @IBOutlet public var tertiaryImageView: UIImageView!
 
+    @IBOutlet var overallOverlayView: UIView!
     @IBOutlet var secondaryImageOverlayView: UIView!
     @IBOutlet var tertiaryImageOverlayView: UIView!
 
     @IBOutlet var imagesContainerView: UIView!
 
-    @IBOutlet var overallOverlayView: UIView!
     @IBOutlet var selectionMark: UIView!
     @IBOutlet var indicator: UIActivityIndicatorView!
 
     @IBOutlet var hiddenIcon: HiddenIconView!
 
-    // MRAK: - Lifecycle
+    // MARK: - Lifecycle
 
     override public func prepareForReuse() {
         super.prepareForReuse()
+        onReuse?(self.identifier)
+    }
 
-        self.onReuse?(self.identifier)
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+        setupAppearance()
     }
 
     // MARK: - Methods
+
+    // MARK: Setup Appearance
 
     static func setupAppearance(imageView: UIImageView) {
         imageView.layer.cornerRadius = Self.cornerRadius
@@ -198,72 +109,72 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         imageView.clipsToBounds = true
     }
 
-    static func setupAppearance(shadowView: UIView) {
-        shadowView.layer.cornerRadius = Self.cornerRadius
-        shadowView.clipsToBounds = false
-        shadowView.layer.masksToBounds = false
-    }
-
-    override public func awakeFromNib() {
-        super.awakeFromNib()
-        self.setupAppearance()
-    }
-
-    public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
-        self.visibleHiddenIcon = isVisible
-        self.updateHiddenIconAppearance(animated: animated)
-    }
-
-    public func setClipHiding(_ isHiding: Bool, animated: Bool) {
-        self.isHiddenClip = isHiding
-        self.updateHiddenIconAppearance(animated: animated)
-    }
-
-    public func resetContent() {
-        self.primaryImageView.image = nil
-        self.secondaryImageView.image = nil
-        self.tertiaryImageView.image = nil
-        self.primaryImage = .loading
-        self.secondaryImage = .loading
-        self.tertiaryImage = .loading
-    }
-
     private func setupAppearance() {
-        self.imageViews.forEach {
+        ([
+            primaryImageView,
+            secondaryImageView,
+            tertiaryImageView
+        ] as [UIImageView]).forEach {
             $0.isHidden = true
             Self.setupAppearance(imageView: $0)
         }
 
-        self.overlayViews.forEach {
+        ([
+            overallOverlayView,
+            secondaryImageOverlayView,
+            tertiaryImageOverlayView
+        ] as [UIView]).forEach {
             $0.isHidden = true
             $0.layer.cornerRadius = Self.cornerRadius
         }
 
-        self.imagesContainerView.layer.cornerRadius = Self.cornerRadius
-        self.imagesContainerView.clipsToBounds = true
-        self.imagesContainerView.layer.masksToBounds = true
+        indicator.hidesWhenStopped = true
 
-        Self.setupAppearance(shadowView: self.contentView)
+        selectionMark.backgroundColor = .white
+        selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
 
-        self.clipsToBounds = false
-        self.layer.masksToBounds = false
+        clipsToBounds = true
+        layer.cornerRadius = Self.cornerRadius
+        layer.masksToBounds = true
 
-        self.indicator.hidesWhenStopped = true
-
-        self.selectionMark.backgroundColor = .white
-        self.selectionMark.layer.cornerRadius = self.selectionMark.bounds.width / 2.0
-
-        self.updateOverallOverlayView()
+        updateOverallOverlayView()
     }
 
-    private func updateOverallOverlayView() {
-        self.overallOverlayView.isHidden = !((self.isSelected && self.visibleSelectedMark) || self.isLoading)
-        self.selectionMark.isHidden = !(self.visibleSelectedMark && !self.isLoading)
+    // MARK: Set Appearance
 
-        if self.isLoading {
-            self.indicator.startAnimating()
+    public func resetContent() {
+        ([
+            primaryImageView,
+            secondaryImageView,
+            tertiaryImageView
+        ] as [UIImageView]).forEach {
+            $0.image = nil
+        }
+        primaryImage = .loading
+        secondaryImage = .loading
+        tertiaryImage = .loading
+    }
+
+    public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
+        visibleHiddenIcon = isVisible
+        updateHiddenIconAppearance(animated: animated)
+    }
+
+    public func setClipHiding(_ isHiding: Bool, animated: Bool) {
+        isHiddenClip = isHiding
+        updateHiddenIconAppearance(animated: animated)
+    }
+
+    // MARK: Update Appearance
+
+    private func updateOverallOverlayView() {
+        overallOverlayView.isHidden = !((isSelected && visibleSelectedMark) || isLoading)
+        selectionMark.isHidden = !(visibleSelectedMark && !isLoading)
+
+        if isLoading {
+            indicator.startAnimating()
         } else {
-            self.indicator.stopAnimating()
+            indicator.stopAnimating()
         }
     }
 
@@ -272,6 +183,70 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             hiddenIcon.setHiding(!isHiddenClip, animated: animated)
         } else {
             hiddenIcon.setHiding(true, animated: animated)
+        }
+    }
+
+    private func updateImageViewAppearance(_ image: Image?, _ order: ThumbnailOrder) {
+        defer { updateOverallOverlayView() }
+
+        guard let image = image else {
+            return
+        }
+
+        let imageView = imageView(order)
+        imageView.isHidden = !image.isLoaded
+
+        imageView.removeAspectRatioConstraint()
+        overlayView(order)?.isHidden = !image.isLoaded
+
+        imageView.removeAspectRatioConstraint()
+        guard case let .loaded(image) = image else {
+            imageView.image = nil
+            return
+        }
+
+        imageView.addAspectRatioConstraint(image: image)
+        imageView.image = image
+    }
+
+    // MARK: Resolve UI Element
+
+    private func setImage(_ image: Image?, at order: ThumbnailOrder) {
+        switch order {
+        case .primary:
+            primaryImage = image
+
+        case .secondary:
+            secondaryImage = image
+
+        case .tertiary:
+            tertiaryImage = image
+        }
+    }
+
+    private func imageView(_ order: ThumbnailOrder) -> UIImageView {
+        switch order {
+        case .primary:
+            return primaryImageView
+
+        case .secondary:
+            return secondaryImageView
+
+        case .tertiary:
+            return tertiaryImageView
+        }
+    }
+
+    private func overlayView(_ order: ThumbnailOrder) -> UIView? {
+        switch order {
+        case .primary:
+            return nil
+
+        case .secondary:
+            return secondaryImageOverlayView
+
+        case .tertiary:
+            return tertiaryImageOverlayView
         }
     }
 }
@@ -283,17 +258,8 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-            switch kind {
-            case .primary:
-                self.primaryImage = .loading
-
-            case .secondary:
-                self.secondaryImage = .loading
-
-            case .tertiary:
-                self.tertiaryImage = .loading
-            }
+                  let order = ThumbnailOrder(rawValue: value) else { return }
+            self.setImage(.loading, at: order)
         }
     }
 
@@ -301,17 +267,8 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-            switch kind {
-            case .primary:
-                self.primaryImage = .loaded(image)
-
-            case .secondary:
-                self.secondaryImage = .loaded(image)
-
-            case .tertiary:
-                self.tertiaryImage = .loaded(image)
-            }
+                  let order = ThumbnailOrder(rawValue: value) else { return }
+            self.setImage(.loaded(image), at: order)
         }
     }
 
@@ -319,17 +276,8 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[Self.ThumbnailLoadingUserInfoKey] as? String,
-                  let kind = ThumbnailLoadingUserInfoValue(rawValue: value) else { return }
-            switch kind {
-            case .primary:
-                self.primaryImage = .failedToLoad
-
-            case .secondary:
-                self.secondaryImage = .failedToLoad
-
-            case .tertiary:
-                self.tertiaryImage = .failedToLoad
-            }
+                  let order = ThumbnailOrder(rawValue: value) else { return }
+            self.setImage(.failedToLoad, at: order)
         }
     }
 }
@@ -350,6 +298,29 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
 
         default:
             return nil
+        }
+    }
+}
+
+private extension ClipCollectionViewCell.Image {
+    var isLoaded: Bool {
+        switch self {
+        case .loaded:
+            return true
+
+        default:
+            return false
+        }
+    }
+
+    var isLoading: Bool {
+        switch self {
+        // NOTE: failedToLoad は、iCloud同期前でデータが読めていない可能性を考慮し、ロード中とする
+        case .loading, .failedToLoad:
+            return true
+
+        default:
+            return false
         }
     }
 }
