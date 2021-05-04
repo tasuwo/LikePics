@@ -8,6 +8,7 @@ public protocol ThumbnailLoaderProtocol: AnyObject {
     func load(_ request: ThumbnailRequest, observer: ThumbnailLoadObserver?)
     func prefetch(_ request: ThumbnailRequest, observer: ThumbnailPrefetchObserver?)
     func cancel(_ request: ThumbnailRequest)
+    func invalidateCache(having key: String)
 }
 
 public class ThumbnailLoader {
@@ -36,5 +37,9 @@ extension ThumbnailLoader: ThumbnailLoaderProtocol {
 
     public func cancel(_ request: ThumbnailRequest) {
         queue.cancel(request)
+    }
+
+    public func invalidateCache(having key: String) {
+        queue.invalidateCache(having: key)
     }
 }

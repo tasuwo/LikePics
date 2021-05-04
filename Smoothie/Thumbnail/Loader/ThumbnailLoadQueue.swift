@@ -105,6 +105,13 @@ extension ThumbnailLoadQueue {
             pool.cancel(requestHaving: request.requestId)
         }
     }
+
+    func invalidateCache(having key: String) {
+        queue.async {
+            self.config.memoryCache.remove(forKey: key)
+            self.config.diskCache?.remove(forKey: key)
+        }
+    }
 }
 
 // MARK: Operations
