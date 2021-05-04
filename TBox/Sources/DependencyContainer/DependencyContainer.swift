@@ -103,6 +103,7 @@ class DependencyContainer {
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
         clipCacheConfig.diskCache = self.clipDiskCache
+        clipCacheConfig.compressionRatio = 0.5
         let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
         clipCacheConfig.memoryCache = clipMemoryCache
         self.clipThumbnailLoader = ThumbnailLoader(queue: .init(config: clipCacheConfig))
