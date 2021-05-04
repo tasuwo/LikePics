@@ -75,6 +75,16 @@ enum ClipPreviewPageViewReducer: Reducer {
         case let .barEventOccurred(event):
             return execute(action: event, state: nextState, dependency: dependency)
 
+        // MARK: Gesture
+
+        case .didTapView:
+            nextState.isFullscreen = !state.isFullscreen
+            return (nextState, .none)
+
+        case .willBeginZoom:
+            nextState.isFullscreen = true
+            return (nextState, .none)
+
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):

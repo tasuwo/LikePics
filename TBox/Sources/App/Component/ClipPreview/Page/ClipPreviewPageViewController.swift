@@ -150,7 +150,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     @objc
     func didTap(_ sender: UITapGestureRecognizer) {
-        isFullscreen = !isFullscreen
+        store.execute(.didTapView)
     }
 }
 
@@ -158,21 +158,28 @@ class ClipPreviewPageViewController: UIPageViewController {
 
 extension ClipPreviewPageViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
+        store.state
+            .bindNoRetain(\.isFullscreen, to: \.isFullscreen, on: self)
+            .store(in: &subscriptions)
 
-            self.barController.store.execute(.stateChanged(state))
-
-            self.isFullscreen = state.isFullscreen
-
-            self.changePageIfNeeded(for: state)
-            self.presentAlertIfNeeded(for: state.alert)
-
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .removeDuplicates()
+            .sink { [weak self] state in
+                self?.barController.store.execute(.stateChanged(state))
+                self?.changePageIfNeeded(for: state)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
 
         transitionController.outputs.presentInformation
             .sink { [weak self] in
@@ -271,7 +278,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     // MARK: - ClipPreviewPageViewDelegate
 
     func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView) {
-        isFullscreen = true
+        store.execute(.willBeginZoom)
     }
 }
 

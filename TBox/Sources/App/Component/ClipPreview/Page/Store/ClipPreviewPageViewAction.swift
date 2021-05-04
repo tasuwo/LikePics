@@ -23,6 +23,11 @@ enum ClipPreviewPageViewAction: Action {
 
     case barEventOccurred(ClipPreviewPageBarEvent)
 
+    // MARK: Gesture
+
+    case didTapView
+    case willBeginZoom
+
     // MARK: Modal Completion
 
     case tagsSelected(Set<Tag.Identity>?)
