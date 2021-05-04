@@ -66,7 +66,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public var isEditing: Bool = false {
         didSet {
             updateOverallOverlayView()
-            setOverallImageViewHidden(!isEditing)
+            // TODO:
+            // setOverallImageViewHidden(!isEditing)
         }
     }
 

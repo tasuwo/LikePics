@@ -149,10 +149,11 @@ extension ClipCollectionViewController {
                 self.isEditing = isEditing
                 self.collectionView.isEditing = isEditing
 
-                let nextLayout = isEditing
-                    ? Layout.createGridLayout()
-                    : Layout.createLayout(with: self)
-                self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
+                // TODO:
+                // let nextLayout = isEditing
+                //     ? Layout.createGridLayout()
+                //     : Layout.createLayout(with: self)
+                // self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
 
                 // TODO: 各Cell側で設定させる
                 self.collectionView.visibleCells
