@@ -24,6 +24,7 @@ class ClipCollectionViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
     private let thumbnailLoader: ThumbnailLoaderProtocol
@@ -356,6 +357,11 @@ extension ClipCollectionViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+
+        // FIXME: カスタムレイアウトとPreloadの相性が悪い？poolが解放されずに残ってしまうので、一旦無効にする
+        // preLoader = .init(dataSource: dataSource, thumbnailLoader: thumbnailLoader)
+        // collectionView.isPrefetchingEnabled = true
+        // collectionView.prefetchDataSource = preLoader
     }
 
     private func configureReorder() {

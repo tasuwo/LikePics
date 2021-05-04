@@ -105,7 +105,7 @@ extension ClipCollectionViewLayout {
     private static func configureCell(collectionView: UICollectionView,
                                       thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, indexPath, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, _, clip in
             let requestId = UUID().uuidString
             cell.identifier = requestId
 

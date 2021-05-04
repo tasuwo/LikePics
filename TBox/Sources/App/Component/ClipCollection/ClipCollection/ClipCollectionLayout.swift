@@ -74,6 +74,21 @@ class ClipCollectionLayout: UICollectionViewLayout {
         self.setupAttributes()
     }
 
+    // MARK: - Methods
+
+    func calcExpectedThumbnailWidth(originalSize: CGSize) -> CGSize {
+        let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
+        let photoWidth = columnWidth - Self.cellPadding * 2
+
+        if originalSize.width < originalSize.height {
+            return .init(width: photoWidth,
+                         height: photoWidth * (originalSize.height / originalSize.width))
+        } else {
+            return .init(width: photoWidth * (originalSize.width / originalSize.height),
+                         height: photoWidth)
+        }
+    }
+
     // MARK: - Privates
 
     private func resetAttributes() {
