@@ -67,6 +67,10 @@ enum ClipEditViewLayout {
         let dataSize: Double
         let imageHeight: Double
         let imageWidth: Double
+
+        var imageSize: CGSize {
+            return .init(width: CGFloat(imageWidth), height: CGFloat(imageHeight))
+        }
     }
 }
 
@@ -278,8 +282,9 @@ extension ClipEditViewLayout {
 
             let requestId = UUID().uuidString
             cell.identifier = requestId
+            let size = cell.calcThumbnailImageSize(originalSize: item.imageSize)
             let info = ThumbnailConfig(cacheKey: "clip-edit-list-\(item.itemId.uuidString)",
-                                       size: contentConfiguration.calcThumbnailDisplaySize(),
+                                       size: size,
                                        scale: cell.traitCollection.displayScale)
             let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
             let request = ThumbnailRequest(requestId: requestId,

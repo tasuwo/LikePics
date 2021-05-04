@@ -31,10 +31,6 @@ public class AlbumSelectionCell: UICollectionViewCell {
         }
     }
 
-    public var thumbnailDisplaySize: CGSize {
-        thumbnailImageView.bounds.size
-    }
-
     public var clipCount: Int? {
         didSet {
             if let count = self.clipCount {
@@ -52,6 +48,8 @@ public class AlbumSelectionCell: UICollectionViewCell {
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var countLabel: UILabel!
+
+    @IBOutlet var thumbnailWidthConstraint: NSLayoutConstraint!
 
     // MARK: - Methods
 
@@ -96,6 +94,25 @@ extension AlbumSelectionCell: ThumbnailLoadObserver {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
             self.thumbnail = nil
+        }
+    }
+}
+
+extension AlbumSelectionCell: ThumbnailPresentable {
+    // MARK: - ThumbnailPresentable
+
+    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
+        if let originalSize = originalSize {
+            if originalSize.width < originalSize.height {
+                return .init(width: thumbnailWidthConstraint.constant,
+                             height: thumbnailWidthConstraint.constant * (originalSize.height / originalSize.width))
+            } else {
+                return .init(width: thumbnailWidthConstraint.constant * (originalSize.width / originalSize.height),
+                             height: thumbnailWidthConstraint.constant)
+            }
+        } else {
+            return .init(width: thumbnailWidthConstraint.constant,
+                         height: thumbnailWidthConstraint.constant)
         }
     }
 }

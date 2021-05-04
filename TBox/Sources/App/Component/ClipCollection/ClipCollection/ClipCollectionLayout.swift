@@ -74,17 +74,6 @@ class ClipCollectionLayout: UICollectionViewLayout {
         self.setupAttributes()
     }
 
-    // MARK: - Methods
-
-    func thumbnailWidth(at indexPath: IndexPath) -> CGFloat {
-        if cache.indices.contains(indexPath.item) {
-            return cache[indexPath.item].frame.width
-        } else {
-            let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
-            return columnWidth - Self.cellPadding * 2
-        }
-    }
-
     // MARK: - Privates
 
     private func resetAttributes() {

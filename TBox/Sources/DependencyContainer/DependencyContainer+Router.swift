@@ -279,7 +279,7 @@ extension DependencyContainer: Router {
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: dependency,
-                                                           thumbnailLoader: albumThumbnailLoader)
+                                                           thumbnailLoader: temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

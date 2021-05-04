@@ -74,3 +74,21 @@ extension SearchResultClipCell: ClipPreviewPresentingCell {
 
     public func animatingImageView(at index: Int) -> UIImageView? { imageView }
 }
+
+extension SearchResultClipCell: ThumbnailPresentable {
+    // MARK: - ThumbnailPresentable
+
+    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
+        if let originalSize = originalSize {
+            if originalSize.width < originalSize.height {
+                return .init(width: frame.width,
+                             height: frame.width * (originalSize.height / originalSize.width))
+            } else {
+                return .init(width: frame.height * (originalSize.width / originalSize.height),
+                             height: frame.height)
+            }
+        } else {
+            return frame.size
+        }
+    }
+}

@@ -235,8 +235,10 @@ extension ClipCreationViewLayout {
             cell.identifier = requestId
             cell.image = nil
 
+            // Note: サイズ取得をこのタイミングで行うと重いため、行わない
+            let size = cell.calcThumbnailImageSize(originalSize: nil)
             let info = ThumbnailConfig(cacheKey: "clip-creation-\(source.identifier.uuidString)",
-                                       size: cell.imageDisplaySize,
+                                       size: size,
                                        scale: cell.traitCollection.displayScale)
             let request = ThumbnailRequest(requestId: requestId,
                                            originalImageRequest: source,

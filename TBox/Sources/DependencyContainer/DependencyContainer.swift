@@ -109,6 +109,7 @@ class DependencyContainer {
         self.clipThumbnailLoader = ThumbnailLoader(queue: .init(config: clipCacheConfig))
 
         var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
+        albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))

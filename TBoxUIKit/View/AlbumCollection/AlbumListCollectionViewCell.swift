@@ -240,3 +240,22 @@ extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
         }
     }
 }
+
+extension AlbumListCollectionViewCell: ThumbnailPresentable {
+    // MARK: - ThumbnailPresentable
+
+    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
+        // Note: frame.height は不定なので、計算に利用しない
+        if let originalSize = originalSize {
+            if originalSize.width < originalSize.height {
+                return .init(width: frame.width,
+                             height: frame.width * (originalSize.height / originalSize.width))
+            } else {
+                return .init(width: frame.width * (originalSize.width / originalSize.height),
+                             height: frame.width)
+            }
+        } else {
+            return .init(width: frame.width, height: frame.width)
+        }
+    }
+}

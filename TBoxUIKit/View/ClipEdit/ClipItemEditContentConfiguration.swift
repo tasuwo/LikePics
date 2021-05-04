@@ -27,14 +27,6 @@ public struct ClipItemEditContentConfiguration {
         self.dataSize = nil
         self.thumbnail = nil
     }
-
-    public func calcThumbnailDisplaySize() -> CGSize {
-        guard let width = imageWidth, let height = imageHeight else {
-            return .init(width: 100, height: 100)
-        }
-        return .init(width: 100,
-                     height: 100 * height / width)
-    }
 }
 
 extension ClipItemEditContentConfiguration: UIContentConfiguration {

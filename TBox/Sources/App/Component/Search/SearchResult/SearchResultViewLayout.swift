@@ -184,7 +184,8 @@ extension SearchResultViewLayout {
             cell.identifier = requestId
 
             let scale = cell.traitCollection.displayScale
-            let request = self.makeRequest(for: item, id: requestId, size: cell.bounds.size, scale: scale)
+            let size = cell.calcThumbnailImageSize(originalSize: item.imageSize.cgSize)
+            let request = self.makeRequest(for: item, id: requestId, size: size, scale: scale)
             cell.onReuse = { [weak thumbnailLoader] identifier in
                 guard identifier == requestId else { return }
                 thumbnailLoader?.cancel(request)

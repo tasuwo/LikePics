@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -53,13 +53,13 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejc-nz-iTJ">
-                                <rect key="frame" x="0.0" y="208" width="200" height="33"/>
+                                <rect key="frame" x="0.0" y="208" width="200" height="29"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bho-4F-rdd" userLabel="Title Edit Button Container">
-                                        <rect key="frame" x="0.0" y="0.0" width="42" height="33"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="42" height="29"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="djU-fb-ydL">
-                                                <rect key="frame" x="0.0" y="-4.5" width="42" height="42"/>
+                                                <rect key="frame" x="0.0" y="-6.5" width="42" height="42"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="djU-fb-ydL" secondAttribute="height" multiplier="1:1" id="ila-a6-rVq"/>
                                                 </constraints>
@@ -81,7 +81,7 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Atf-U6-DfQ" userLabel="Title">
-                                        <rect key="frame" x="42" y="0.0" width="158" height="33"/>
+                                        <rect key="frame" x="42" y="0.0" width="158" height="29"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <state key="normal" title="Button">
                                             <color key="titleColor" name="like_pics_red"/>
@@ -96,13 +96,13 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxf-Ud-Jj1">
-                                <rect key="frame" x="0.0" y="249" width="200" height="19.5"/>
+                                <rect key="frame" x="0.0" y="245" width="200" height="16"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zTq-qt-n0n" userLabel="Spacer">
-                                <rect key="frame" x="0.0" y="276.5" width="200" height="34.5"/>
+                                <rect key="frame" x="0.0" y="269" width="200" height="42"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>

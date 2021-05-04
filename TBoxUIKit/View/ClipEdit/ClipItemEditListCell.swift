@@ -24,6 +24,20 @@ public class ClipItemEditListCell: UICollectionViewListCell {
     }
 }
 
+extension ClipItemEditListCell: ThumbnailPresentable {
+    // MARK: - ThumbnailPresentable
+
+    public func calcThumbnailImageSize(originalSize: CGSize?) -> CGSize {
+        if let originalSize = originalSize {
+            // See: ClipItemEditContentView
+            return .init(width: 100,
+                         height: 100 * originalSize.height / originalSize.width)
+        } else {
+            return .init(width: 100, height: 100)
+        }
+    }
+}
+
 extension ClipItemEditListCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 

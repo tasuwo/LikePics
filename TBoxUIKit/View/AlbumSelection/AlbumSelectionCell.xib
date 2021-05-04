@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -46,18 +46,18 @@
                                         <rect key="frame" x="0.0" y="0.0" width="197" height="123"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pua-bk-kDd" userLabel="Title Label">
-                                                <rect key="frame" x="0.0" y="0.0" width="197" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="197" height="17"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <color key="highlightedColor" systemColor="labelColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KS-Ov-ROE" userLabel="Count Label">
-                                                <rect key="frame" x="0.0" y="28.5" width="197" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="25" width="197" height="16"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="gU5-Gm-ENm" userLabel="Spacer">
-                                                <rect key="frame" x="0.0" y="56" width="197" height="67"/>
+                                                <rect key="frame" x="0.0" y="49" width="197" height="74"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="249" id="y30-Zn-Vy8"/>
@@ -88,6 +88,7 @@
             <connections>
                 <outlet property="countLabel" destination="2KS-Ov-ROE" id="vHY-c6-jDS"/>
                 <outlet property="thumbnailImageView" destination="5xk-7P-2zc" id="rhR-g2-bev"/>
+                <outlet property="thumbnailWidthConstraint" destination="hzu-f9-gJO" id="4Lm-CO-O26"/>
                 <outlet property="titleLabel" destination="Pua-bk-kDd" id="OEJ-SC-3qz"/>
             </connections>
             <point key="canvasLocation" x="-452.89855072463774" y="148.32589285714286"/>
