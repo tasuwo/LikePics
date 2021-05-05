@@ -16,6 +16,7 @@ struct ClipCollectionState: Equatable {
     let source: ClipCollection.Source
     var sourceDescription: String?
 
+    var layout: ClipCollection.Layout
     var operation: ClipCollection.Operation
 
     var clips: Collection<Clip>

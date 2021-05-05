@@ -24,6 +24,7 @@ struct ClipCollectionNavigationBarState: Equatable {
     }
 
     var source: ClipCollection.Source
+    var layout: ClipCollection.Layout
     var operation: ClipCollection.Operation
 
     var rightItems: [Item]

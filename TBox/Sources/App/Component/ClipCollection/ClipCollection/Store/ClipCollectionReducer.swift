@@ -482,7 +482,12 @@ extension ClipCollectionReducer {
 
         case .select:
             nextState.operation = .selecting
+            nextState.layout = .grid
             nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            return (nextState, .none)
+
+        case let .changeLayout(layout):
+            nextState.layout = layout
             return (nextState, .none)
         }
     }

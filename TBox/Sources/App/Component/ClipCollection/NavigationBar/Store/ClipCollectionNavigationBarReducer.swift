@@ -16,7 +16,7 @@ enum ClipCollectionNavigationBarReducer: Reducer {
 
         let stream = Deferred {
             Future<Action?, Never> { promise in
-                if let event = action.mapToEvent() {
+                if let event = action.mapToEvent(state: state) {
                     dependency.clipCollectionNavigationBarDelegate?.didTriggered(event)
                 }
                 promise(.success(nil))
@@ -34,9 +34,11 @@ enum ClipCollectionNavigationBarReducer: Reducer {
 
         case let .stateChanged(clipCount: clipCount,
                                selectionCount: selectionCount,
+                               layout: layout,
                                operation: operation):
             nextState.clipCount = clipCount
             nextState.selectionCount = selectionCount
+            nextState.layout = layout
             nextState.operation = operation
             nextState = nextState.updatingAppearance()
             return (nextState, [eventEffect])
@@ -46,7 +48,8 @@ enum ClipCollectionNavigationBarReducer: Reducer {
         case .didTapCancel,
              .didTapSelectAll,
              .didTapDeselectAll,
-             .didTapSelect:
+             .didTapSelect,
+             .didTapLayout:
             return (state, [eventEffect])
         }
     }
@@ -58,6 +61,7 @@ private extension ClipCollectionNavigationBarState {
 
         let isSelectedAll = clipCount <= selectionCount
         let isSelectable = clipCount > 0
+        let nextLayout = layout.nextLayout.toItemKind
 
         let rightItems: [Item]
         let leftItems: [Item]
@@ -65,16 +69,14 @@ private extension ClipCollectionNavigationBarState {
         switch operation {
         case .none:
             rightItems = [
-                // TODO:
-                .init(kind: .layout(.grid), isEnabled: clipCount > 0),
+                .init(kind: .layout(nextLayout), isEnabled: clipCount > 0),
                 .init(kind: .select, isEnabled: isSelectable)
             ]
             leftItems = []
 
         case .selecting:
             rightItems = [
-                // TODO:
-                .init(kind: .layout(.grid), isEnabled: false),
+                .init(kind: .layout(nextLayout), isEnabled: false),
                 .init(kind: .cancel, isEnabled: true)
             ]
             leftItems = [
@@ -92,7 +94,7 @@ private extension ClipCollectionNavigationBarState {
 }
 
 private extension ClipCollectionNavigationBarAction {
-    func mapToEvent() -> ClipCollectionNavigationBarEvent? {
+    func mapToEvent(state: ClipCollectionNavigationBarState) -> ClipCollectionNavigationBarEvent? {
         switch self {
         case .didTapCancel:
             return .cancel
@@ -106,8 +108,33 @@ private extension ClipCollectionNavigationBarAction {
         case .didTapSelect:
             return .select
 
+        case .didTapLayout:
+            return .changeLayout(state.layout.nextLayout)
+
         default:
             return nil
+        }
+    }
+}
+
+private extension ClipCollection.Layout {
+    var nextLayout: Self {
+        switch self {
+        case .grid:
+            return .waterfall
+
+        case .waterfall:
+            return .grid
+        }
+    }
+
+    var toItemKind: ClipCollectionNavigationBarState.Item.Kind.Layout {
+        switch self {
+        case .grid:
+            return .grid
+
+        case .waterfall:
+            return .waterFall
         }
     }
 }

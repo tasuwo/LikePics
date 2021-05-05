@@ -146,20 +146,22 @@ extension ClipCollectionViewController {
         store.state
             .onChange(\.isEditing) { [weak self] isEditing in
                 guard let self = self else { return }
-
                 self.isEditing = isEditing
                 self.collectionView.isEditing = isEditing
                 self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .forEach { $0.isEditing = isEditing }
+            }
+            .store(in: &subscriptions)
 
-                let nextLayout = isEditing
-                    ? Layout.createGridLayout()
-                    : Layout.createWaterfallLayout(with: self)
+        store.state
+            .onChange(\.layout) { [weak self] layout in
+                guard let self = self else { return }
 
+                let nextLayout = Layout.createLayout(layout.toRequest(delegate: self))
                 let animationBlocks = self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
-                    .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: isEditing) }
+                    .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
 
                 UIView.animate(withDuration: 0.25) {
                     self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
@@ -193,6 +195,7 @@ extension ClipCollectionViewController {
             .map { state -> ClipCollectionNavigationBarAction in
                 .stateChanged(clipCount: state.clips._displayableIds.count,
                               selectionCount: state.clips._selectedIds.count,
+                              layout: state.layout,
                               operation: state.operation)
             }
             .removeDuplicates()
@@ -342,7 +345,8 @@ extension ClipCollectionViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
-        collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: Layout.createWaterfallLayout(with: self))
+        let layout = Layout.createLayout(store.stateValue.layout.toRequest(delegate: self))
+        collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.translatesAutoresizingMaskIntoConstraints = false

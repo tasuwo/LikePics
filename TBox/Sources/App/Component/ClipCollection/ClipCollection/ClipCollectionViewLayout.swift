@@ -12,6 +12,11 @@ enum ClipCollectionViewLayout {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     typealias SectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>
 
+    enum LayoutRequest {
+        case waterfall(ClipCollectionWaterfallLayoutDelegate)
+        case grid
+    }
+
     enum Section {
         case main
     }
@@ -44,13 +49,27 @@ enum ClipCollectionViewLayout {
 // MARK: - Layout
 
 extension ClipCollectionViewLayout {
-    static func createWaterfallLayout(with delegate: ClipCollectionWaterfallLayoutDelegate) -> UICollectionViewLayout {
+    static func createLayout(_ request: LayoutRequest) -> UICollectionViewLayout {
+        switch request {
+        case let .waterfall(delegate):
+            return createWaterfallLayout(with: delegate)
+
+        case .grid:
+            return createGridLayout()
+        }
+    }
+
+    // MARK: Waterfall
+
+    private static func createWaterfallLayout(with delegate: ClipCollectionWaterfallLayoutDelegate) -> UICollectionViewLayout {
         let layout = ClipCollectionWaterfallLayout()
         layout.delegate = delegate
         return layout
     }
 
-    static func createGridLayout() -> UICollectionViewLayout {
+    // MARK: Grid
+
+    private static func createGridLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
             return self.createSection(environment: environment)
         }
@@ -89,6 +108,18 @@ extension ClipCollectionViewLayout {
     }
 }
 
+extension ClipCollection.Layout {
+    func toRequest(delegate: ClipCollectionWaterfallLayoutDelegate) -> ClipCollectionViewLayout.LayoutRequest {
+        switch self {
+        case .waterfall:
+            return .waterfall(delegate)
+
+        case .grid:
+            return .grid
+        }
+    }
+}
+
 // MARK: - DataSource
 
 extension ClipCollectionViewLayout {
@@ -115,7 +146,7 @@ extension ClipCollectionViewLayout {
 
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = collectionView?.isEditing ?? false
-            cell.setThumbnailType(toSingle: collectionView?.isEditing ?? false)
+            cell.setThumbnailType(toSingle: collectionView?.layout.isSingleThumbnail ?? false)
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
@@ -171,5 +202,17 @@ extension ClipCollectionViewCellSizeDescription {
         return .init(primaryThumbnailSize: clip.primaryItem?.imageSize.cgSize ?? CGSize(width: 100, height: 100),
                      secondaryThumbnailSize: clip.secondaryItem?.imageSize.cgSize,
                      tertiaryThumbnailSize: clip.tertiaryItem?.imageSize.cgSize)
+    }
+}
+
+private extension UICollectionView {
+    var layout: ClipCollection.Layout {
+        switch collectionViewLayout {
+        case is ClipCollectionWaterfallLayout:
+            return .waterfall
+
+        default:
+            return .grid
+        }
     }
 }

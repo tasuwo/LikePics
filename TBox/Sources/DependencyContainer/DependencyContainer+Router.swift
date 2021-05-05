@@ -30,6 +30,7 @@ extension DependencyContainer {
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
         let state = ClipCollectionState(source: source,
                                         sourceDescription: nil,
+                                        layout: .waterfall,
                                         operation: .none,
                                         clips: .init(_values: [:],
                                                      _selectedIds: .init(),
@@ -41,6 +42,7 @@ extension DependencyContainer {
                                         isDismissed: false,
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: source,
+                                                                  layout: .waterfall,
                                                                   operation: .none,
                                                                   rightItems: [],
                                                                   leftItems: [],

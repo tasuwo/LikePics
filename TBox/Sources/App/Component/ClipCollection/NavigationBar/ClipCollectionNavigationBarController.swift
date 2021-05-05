@@ -90,9 +90,8 @@ extension ClipCollectionNavigationBarController {
             self?.store.execute(.didTapSelect)
         }), for: .touchUpInside)
 
-        layoutButton.setIcon(.ellipsis)
         layoutButton.addAction(.init(handler: { [weak self] _ in
-            print("TODO") // TODO:
+            self?.store.execute(.didTapLayout)
         }), for: .touchUpInside)
     }
 }

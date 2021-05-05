@@ -7,4 +7,5 @@ enum ClipCollectionNavigationBarEvent {
     case selectAll
     case deselectAll
     case select
+    case changeLayout(ClipCollection.Layout)
 }

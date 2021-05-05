@@ -16,6 +16,7 @@ extension DependencyContainer: ViewControllerFactory {
     func makeTopClipCollectionViewController() -> UIViewController? {
         let state = ClipCollectionState(source: .all,
                                         sourceDescription: nil,
+                                        layout: .waterfall,
                                         operation: .none,
                                         clips: .init(_values: [:],
                                                      _selectedIds: .init(),
@@ -27,6 +28,7 @@ extension DependencyContainer: ViewControllerFactory {
                                         isDismissed: false,
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: .all,
+                                                                  layout: .waterfall,
                                                                   operation: .none,
                                                                   rightItems: [],
                                                                   leftItems: [],
