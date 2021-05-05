@@ -323,9 +323,9 @@ extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource 
         return currentViewController?.previewView
     }
 
-    func currentItemId(_ animator: ClipPreviewAnimator) -> ClipItem.Identity? {
+    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool {
         view.layoutIfNeeded()
-        return store.stateValue.currentItem?.id
+        return store.stateValue.currentIndex == 0
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {

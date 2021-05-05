@@ -72,7 +72,7 @@ extension SearchResultClipCell: ThumbnailLoadObserver {
 extension SearchResultClipCell: ClipPreviewPresentingCell {
     // MARK: - ClipPreviewPresentingCell
 
-    public func animatingImageView(at index: Int) -> UIImageView? { imageView }
+    public func primaryThumbnailImageView() -> UIImageView { imageView }
 }
 
 extension SearchResultClipCell: ThumbnailPresentable {

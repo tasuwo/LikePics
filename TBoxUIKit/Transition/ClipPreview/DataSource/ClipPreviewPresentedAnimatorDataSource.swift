@@ -7,6 +7,6 @@ import UIKit
 
 public protocol ClipPreviewPresentedAnimatorDataSource {
     func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView?
-    func currentItemId(_ animator: ClipPreviewAnimator) -> ClipItem.Identity?
+    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect
 }

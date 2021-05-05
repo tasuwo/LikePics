@@ -11,6 +11,7 @@ protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingClip: Clip? { get }
     var previewingCell: ClipPreviewPresentingCell? { get }
     var previewingCellCornerRadius: CGFloat { get }
+    var previewingCollectionView: UICollectionView { get }
     func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool)
 }
 
@@ -47,6 +48,24 @@ extension AppRootViewController where Self: UIViewController {
         return viewController.previewingCell
     }
 
+    func animatingCellFrame(_ animator: ClipPreviewAnimator, on containerView: UIView) -> CGRect {
+        guard let viewController = self.resolvePresentingViewController() else { return .zero }
+        guard let selectedCell = viewController.previewingCell else { return .zero }
+        return viewController.previewingCollectionView.convert(selectedCell.frame, to: containerView)
+    }
+
+    func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat {
+        guard let viewController = self.resolvePresentingViewController() else { return .zero }
+        return viewController.previewingCellCornerRadius
+    }
+
+    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, on containerView: UIView) -> CGRect {
+        guard let viewController = self.resolvePresentingViewController() else { return .zero }
+        guard let selectedCell = viewController.previewingCell else { return .zero }
+        let imageView = selectedCell.primaryThumbnailImageView()
+        return selectedCell.convert(imageView.frame, to: containerView)
+    }
+
     func baseView(_ animator: ClipPreviewAnimator) -> UIView? {
         return view
     }
@@ -54,46 +73,6 @@ extension AppRootViewController where Self: UIViewController {
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView] {
         let navigationBar = (self.currentViewController as? UINavigationController)?.navigationBar
         return ([navigationBar] as [UIView?]).compactMap { $0 }
-    }
-
-    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView, forItemId itemId: ClipItem.Identity?) -> CGRect {
-        guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        guard let selectedCell = viewController.previewingCell else { return .zero }
-        guard let clip = viewController.previewingClip else { return .zero }
-
-        guard let targetItem: ClipItem = {
-            guard let itemId = itemId else { return clip.items.first }
-            return clip.items.first(where: { $0.id == itemId })
-        }() else { return .zero }
-
-        let fallbackFrame: CGRect = {
-            let imageSize = targetItem.imageSize
-            let frame = self.calcCenteredFrame(for: .init(width: imageSize.width, height: imageSize.height),
-                                               on: selectedCell.bounds)
-            return selectedCell.convert(frame, to: containerView)
-        }()
-
-        switch targetItem.id {
-        case clip.primaryItem?.id where clip.primaryItem != nil:
-            guard let imageView = selectedCell.animatingImageView(at: 1) else { return fallbackFrame }
-            return selectedCell.convert(imageView.frame, to: containerView)
-
-        case clip.secondaryItem?.id where clip.secondaryItem != nil:
-            guard let imageView = selectedCell.animatingImageView(at: 2) else { return fallbackFrame }
-            return selectedCell.convert(imageView.frame, to: containerView)
-
-        case clip.tertiaryItem?.id where clip.tertiaryItem != nil:
-            guard let imageView = selectedCell.animatingImageView(at: 3) else { return fallbackFrame }
-            return selectedCell.convert(imageView.frame, to: containerView)
-
-        default:
-            return fallbackFrame
-        }
-    }
-
-    func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat {
-        guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        return viewController.previewingCellCornerRadius
     }
 
     private func calcCenteredFrame(for size: CGSize, on frame: CGRect) -> CGRect {

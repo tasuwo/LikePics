@@ -292,20 +292,8 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
 extension ClipCollectionViewCell: ClipPreviewPresentingCell {
     // MARK: - ClipPreviewPresentingCell
 
-    public func animatingImageView(at index: Int) -> UIImageView? {
-        switch index {
-        case 1:
-            return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
-
-        case 2:
-            return isSingleThumbnail ? nil : secondaryThumbnailView.imageView
-
-        case 3:
-            return isSingleThumbnail ? nil : tertiaryThumbnailView.imageView
-
-        default:
-            return nil
-        }
+    public func primaryThumbnailImageView() -> UIImageView {
+        return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
     }
 }
 

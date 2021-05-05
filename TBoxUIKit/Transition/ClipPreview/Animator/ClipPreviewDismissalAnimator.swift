@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
@@ -34,7 +35,6 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
-            let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self, shouldAdjust: true),
@@ -64,19 +64,24 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         // Preprocess
 
         from.view.backgroundColor = .clear
-        toCell.isHidden = true
+        toCell.alpha = 0
         fromImageView.isHidden = true
 
         toViewBaseView.addSubview(fromViewBackgroundView)
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
 
-        let postprocess = {
+        let postprocess = { (completion: @escaping () -> Void) in
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
-            toCell.isHidden = false
             fromImageView.isHidden = false
 
-            fromViewBackgroundView.removeFromSuperview()
-            animatingImageView.removeFromSuperview()
+            UIView.animate(withDuration: 0.15, animations: {
+                toCell.alpha = 1
+            }, completion: { _ in
+                animatingImageView.alpha = 0
+                fromViewBackgroundView.removeFromSuperview()
+                animatingImageView.removeFromSuperview()
+                completion()
+            })
         }
 
         from.navigationController?.navigationBar.alpha = 1.0
@@ -85,9 +90,9 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
-            postprocess()
-
-            transitionContext.completeTransition(true)
+            postprocess {
+                transitionContext.completeTransition(true)
+            }
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
@@ -101,7 +106,14 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             delay: 0,
             options: [.curveEaseIn]
         ) {
-            animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
+            if from.isCurrentItemPrimary(self) {
+                let frame = to.primaryThumbnailFrame(self, on: containerView)
+                animatingImageView.frame = frame
+            } else {
+                let frame = to.animatingCellFrame(self, on: containerView)
+                animatingImageView.frame = frame.scaled(0.2)
+                animatingImageView.alpha = 0
+            }
 
             from.view.alpha = 0
             fromViewBackgroundView.alpha = 0

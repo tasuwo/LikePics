@@ -11,11 +11,16 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let initialImageFrame: CGRect
         let animatingImageView: UIImageView
         let fromViewBackgroundView: UIView
-        let postprocess: () -> Void
+        let postprocess: (@escaping () -> Void) -> Void
     }
 
     struct FinishAnimationParameters {
-        let finalImageFrame: CGRect
+        enum DismissalType {
+            case stickToThumbnail(thumbnailFrame: CGRect)
+            case fadeout(cellFrame: CGRect)
+        }
+
+        let dismissalType: DismissalType
         let currentCornerRadius: CGFloat
         let finalCornerRadius: CGFloat
         let from: ClipPreviewPresentedAnimatorDataSource & UIViewController
@@ -40,6 +45,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private var fallbackAnimator: FadeTransitionAnimatorProtocol
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
+
+    private let lock = NSLock()
 
     // MARK: - Lifecycle
 
@@ -93,11 +100,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
-            let fromPage = from.animatingPage(self),
-            let fromItemId = from.currentItemId(self),
-            let fromImageView = fromPage.imageView,
-            let toCell = to.animatingCell(self, shouldAdjust: true)
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -105,16 +108,12 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // Calculation
 
-        let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
         let translation = sender.translation(in: from.view)
         let verticalDelta = translation.y < 0 ? 0 : translation.y
         let scale = Self.calcScale(in: from.view, verticalDelta: verticalDelta)
         let cornerRadius = Self.calcCornerRadius(in: from.view, verticalDelta: verticalDelta)
 
         // Middle Animation
-
-        toCell.isHidden = true
-        fromImageView.isHidden = true
 
         to.view.alpha = 1
         from.view.alpha = Self.calcAlpha(in: from.view, verticalDelta: verticalDelta)
@@ -132,7 +131,10 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         // End Animation
 
         if sender.state == .ended {
-            let params = FinishAnimationParameters(finalImageFrame: finalImageFrame,
+            let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, on: containerView))
+            let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: cornerRadius,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),
                                                    from: from,
@@ -153,16 +155,19 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     // MARK: Animation
 
     private func startCancelAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.to.view.removeFromSuperview()
+            params.innerContext.postprocess {
+                params.to.view.removeFromSuperview()
 
-            params.innerContext.postprocess()
-
-            params.innerContext.transitionContext.cancelInteractiveTransition()
-            params.innerContext.transitionContext.completeTransition(false)
-            self.innerContext = nil
+                params.innerContext.transitionContext.cancelInteractiveTransition()
+                params.innerContext.transitionContext.completeTransition(false)
+                self.innerContext = nil
+                self.lock.unlock()
+            }
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
@@ -187,14 +192,17 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     }
 
     private func startEndAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.innerContext.postprocess()
-
-            params.innerContext.transitionContext.finishInteractiveTransition()
-            params.innerContext.transitionContext.completeTransition(true)
-            self.innerContext = nil
+            params.innerContext.postprocess {
+                params.innerContext.transitionContext.finishInteractiveTransition()
+                params.innerContext.transitionContext.completeTransition(true)
+                self.innerContext = nil
+                self.lock.unlock()
+            }
         }
 
         let cornerAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
@@ -208,7 +216,14 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             delay: 0,
             options: [.curveEaseIn],
             animations: {
-                params.innerContext.animatingImageView.frame = params.finalImageFrame
+                switch params.dismissalType {
+                case let .stickToThumbnail(thumbnailFrame: frame):
+                    params.innerContext.animatingImageView.frame = frame
+
+                case let .fadeout(cellFrame: frame):
+                    params.innerContext.animatingImageView.frame = frame.scaled(0.2)
+                    params.innerContext.animatingImageView.alpha = 0
+                }
 
                 params.from.view.alpha = 0
                 params.innerContext.fromViewBackgroundView.alpha = 0
@@ -225,13 +240,14 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
     // MARK: - UIViewControllerAnimatedTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        lock.lock(); defer { lock.unlock() }
+
         let containerView = transitionContext.containerView
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let fromPage = from.animatingPage(self),
-            let fromItemId = from.currentItemId(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self, shouldAdjust: true),
@@ -294,19 +310,24 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         // Preprocess
 
         from.view.backgroundColor = .clear
-        toCell.isHidden = true
+        toCell.alpha = 0
         fromImageView.isHidden = true
 
         toViewBaseView.addSubview(fromViewBackgroundView)
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
 
-        let postprocess = {
+        let postprocess = { (completion: @escaping () -> Void) in
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
-            toCell.isHidden = false
             fromImageView.isHidden = false
 
-            fromViewBackgroundView.removeFromSuperview()
-            animatingImageView.removeFromSuperview()
+            UIView.animate(withDuration: 0.15, animations: {
+                toCell.alpha = 1
+            }, completion: { _ in
+                animatingImageView.alpha = 0
+                fromViewBackgroundView.removeFromSuperview()
+                animatingImageView.removeFromSuperview()
+                completion()
+            })
         }
 
         let innerContext = InnerContext(
@@ -319,8 +340,10 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let finalImageFrame = to.clipPreviewAnimator(self, frameOnContainerView: containerView, forItemId: fromItemId)
-            let params = FinishAnimationParameters(finalImageFrame: finalImageFrame,
+            let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, on: containerView))
+            let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: 0,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),
                                                    from: from,

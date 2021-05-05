@@ -287,6 +287,10 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
         return SearchResultClipCell.imageCornerRadius
     }
 
+    var previewingCollectionView: UICollectionView {
+        collectionView
+    }
+
     func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
         guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
 

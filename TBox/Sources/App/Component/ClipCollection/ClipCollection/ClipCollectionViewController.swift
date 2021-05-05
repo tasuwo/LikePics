@@ -597,6 +597,10 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
         return ClipCollectionViewCell.cornerRadius
     }
 
+    var previewingCollectionView: UICollectionView {
+        collectionView
+    }
+
     func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
         guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
 

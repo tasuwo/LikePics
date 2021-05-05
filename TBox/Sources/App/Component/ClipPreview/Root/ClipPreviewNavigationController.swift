@@ -44,8 +44,8 @@ extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSourc
         return pageViewController?.animatingPage(animator)
     }
 
-    func currentItemId(_ animator: ClipPreviewAnimator) -> ClipItem.Identity? {
-        return pageViewController?.currentItemId(animator)
+    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool {
+        return pageViewController?.isCurrentItemPrimary(animator) == true
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
