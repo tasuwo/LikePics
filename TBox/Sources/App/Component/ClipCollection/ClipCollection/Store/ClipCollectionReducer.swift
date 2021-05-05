@@ -468,6 +468,8 @@ extension ClipCollectionReducer {
         switch action {
         case .cancel:
             nextState.operation = .none
+            nextState.layout = state.preservedLayout ?? state.layout
+            nextState.preservedLayout = nil
             nextState.clips = nextState.clips.updated(_selectedIds: .init())
             return (nextState, .none)
 
@@ -483,6 +485,7 @@ extension ClipCollectionReducer {
         case .select:
             nextState.operation = .selecting
             nextState.layout = .grid
+            nextState.preservedLayout = state.layout
             nextState.clips = nextState.clips.updated(_selectedIds: .init())
             return (nextState, .none)
 
@@ -593,6 +596,8 @@ private extension ClipCollectionState {
         var nextState = self
         nextState.clips = nextState.clips.updated(_selectedIds: .init())
         nextState.operation = .none
+        nextState.layout = preservedLayout ?? layout
+        nextState.preservedLayout = nil
         return nextState
     }
 }
