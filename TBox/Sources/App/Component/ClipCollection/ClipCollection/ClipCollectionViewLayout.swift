@@ -44,8 +44,8 @@ enum ClipCollectionViewLayout {
 // MARK: - Layout
 
 extension ClipCollectionViewLayout {
-    static func createLayout(with delegate: ClipsCollectionLayoutDelegate) -> UICollectionViewLayout {
-        let layout = ClipCollectionLayout()
+    static func createWaterfallLayout(with delegate: ClipCollectionWaterfallLayoutDelegate) -> UICollectionViewLayout {
+        let layout = ClipCollectionWaterfallLayout()
         layout.delegate = delegate
         return layout
     }

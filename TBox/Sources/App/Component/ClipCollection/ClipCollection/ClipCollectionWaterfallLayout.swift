@@ -4,16 +4,16 @@
 
 import UIKit
 
-protocol ClipsCollectionLayoutDelegate: AnyObject {
+protocol ClipCollectionWaterfallLayoutDelegate: AnyObject {
     func collectionView(_ collectionView: UICollectionView, thumbnailHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
-class ClipCollectionLayout: UICollectionViewLayout {
+class ClipCollectionWaterfallLayout: UICollectionViewLayout {
     private static let contentPadding: CGFloat = 8
     private static let cellPadding: CGFloat = 8
     private static let defaultContentHeight: CGFloat = 180
 
-    weak var delegate: ClipsCollectionLayoutDelegate?
+    weak var delegate: ClipCollectionWaterfallLayoutDelegate?
 
     private var numberOfColumns: Int {
         guard let collectionView = self.collectionView else {

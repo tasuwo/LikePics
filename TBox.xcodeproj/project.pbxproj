@@ -576,7 +576,7 @@
 		F7F1F28808B94E519175BC58 /* TagCollectionMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A934CBE3A5EFA8A5FAFD5C /* TagCollectionMenuBuilder.swift */; };
 		F7FA10DF23835A3F5D713F58 /* Nimble.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C06AC64DD9C53B2FAE12BCA6 /* Nimble.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F8C1509F1D66FA34777EE46A /* ClipInformationDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AC50A971A22229716AF841 /* ClipInformationDismissalAnimator.swift */; };
-		FAA9B18C0CE08BBE848521C9 /* ClipCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4405E49528BE5D596478B16 /* ClipCollectionLayout.swift */; };
+		FAA9B18C0CE08BBE848521C9 /* ClipCollectionWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4405E49528BE5D596478B16 /* ClipCollectionWaterfallLayout.swift */; };
 		FB3FB498CB8BD103B7CD88C4 /* AppRoot_SideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF552C956010A228346FDE6A /* AppRoot_SideBarItem.swift */; };
 		FB999E5A9B4C9A68FED90DCE /* Domain.AutoDefaultValue.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28F3962B4D6757D6C7EE8EE /* Domain.AutoDefaultValue.generated.swift */; };
 		FBF1B91A314A25A03FB3DFF9 /* TransferringClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCEC3CCBF4581FD7E8603E6F /* TransferringClip.swift */; };
@@ -1325,7 +1325,7 @@
 		B37532E7931B80A86122559B /* ThumbnailRequestPoolObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRequestPoolObserver.swift; sourceTree = "<group>"; };
 		B3E192144946427BF455F890 /* SearchEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewState.swift; sourceTree = "<group>"; };
 		B417CA1A4783C4E45BA4F356 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
-		B4405E49528BE5D596478B16 /* ClipCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionLayout.swift; sourceTree = "<group>"; };
+		B4405E49528BE5D596478B16 /* ClipCollectionWaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionWaterfallLayout.swift; sourceTree = "<group>"; };
 		B4D52FA04679D32FEAAF2CC3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B5317AB1C907EE3EF87D5574 /* CommonTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B54F3DF09B9C9157B8B94577 /* UncategorizedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncategorizedCell.xib; sourceTree = "<group>"; };
@@ -3364,10 +3364,10 @@
 		B8E95450779D2CF179A8332F /* ClipCollection */ = {
 			isa = PBXGroup;
 			children = (
-				B4405E49528BE5D596478B16 /* ClipCollectionLayout.swift */,
 				D96484EE751FDB5154855BD6 /* ClipCollectionPreLoader.swift */,
 				C6A09D031733EAAF2399A1D2 /* ClipCollectionViewController.swift */,
 				80D8F5CFD66244BD80528960 /* ClipCollectionViewLayout.swift */,
+				B4405E49528BE5D596478B16 /* ClipCollectionWaterfallLayout.swift */,
 				D617C313869EA543E3C7B38D /* Store */,
 				1C54E1955D6AC3B3A99DF347 /* ValueObject */,
 			);
@@ -5068,7 +5068,7 @@
 				ECF40583D0D16FD97CC1D77C /* AssetCatalog.swift in Sources */,
 				2EBAA2A3808F7C19BCDE74AE /* ClipCollection.swift in Sources */,
 				440452CE7846A55F79D0F516 /* ClipCollectionAction.swift in Sources */,
-				FAA9B18C0CE08BBE848521C9 /* ClipCollectionLayout.swift in Sources */,
+				FAA9B18C0CE08BBE848521C9 /* ClipCollectionWaterfallLayout.swift in Sources */,
 				748BD29ACB971E13350B01DB /* ClipCollectionMenuBuilder.swift in Sources */,
 				0D2BE0792FB6B8E64B414752 /* ClipCollectionNavigationBarAction.swift in Sources */,
 				3851EDEC3FD9DBDF2CF41E92 /* ClipCollectionNavigationBarController.swift in Sources */,

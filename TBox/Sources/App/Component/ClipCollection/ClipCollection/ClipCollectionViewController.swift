@@ -155,7 +155,7 @@ extension ClipCollectionViewController {
 
                 let nextLayout = isEditing
                     ? Layout.createGridLayout()
-                    : Layout.createLayout(with: self)
+                    : Layout.createWaterfallLayout(with: self)
 
                 let animationBlocks = self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
@@ -342,7 +342,7 @@ extension ClipCollectionViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
-        collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout(with: self))
+        collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: Layout.createWaterfallLayout(with: self))
         collectionView.backgroundColor = .clear
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -550,8 +550,8 @@ extension ClipCollectionViewController: ClipCollectionNavigationBarDelegate {
     }
 }
 
-extension ClipCollectionViewController: ClipsCollectionLayoutDelegate {
-    // MARK: - ClipsCollectionLayoutDelegate
+extension ClipCollectionViewController: ClipCollectionWaterfallLayoutDelegate {
+    // MARK: - ClipCollectionWaterfallLayoutDelegate
 
     func collectionView(_ collectionView: UICollectionView, thumbnailHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         guard let clip = dataSource.itemIdentifier(for: indexPath) else { return .zero }

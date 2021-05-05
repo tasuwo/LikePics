@@ -49,7 +49,7 @@ extension ClipCollectionPreLoader: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         assert(Thread.isMainThread)
 
-        guard let layout = collectionView.collectionViewLayout as? ClipCollectionLayout else { return }
+        guard let layout = collectionView.collectionViewLayout as? ClipCollectionWaterfallLayout else { return }
 
         for indexPath in indexPaths {
             guard let clip = dataSource.itemIdentifier(for: indexPath) else { return }
