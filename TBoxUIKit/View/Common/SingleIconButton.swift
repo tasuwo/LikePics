@@ -100,7 +100,7 @@ public class SingleIconButton: UIControl {
 
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalTo: heightAnchor),
-            heightAnchor.constraint(equalToConstant: 24),
+            heightAnchor.constraint(equalToConstant: 28),
             iconView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
             iconView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
             iconView.leftAnchor.constraint(equalTo: leftAnchor, constant: 4),
