@@ -21,6 +21,7 @@ class ClipCollectionNavigationBarController {
     private let selectAllButton = RoundedButton()
     private let deselectAllButton = RoundedButton()
     private let selectButton = RoundedButton()
+    private let layoutButton = SingleIconButton()
 
     // MARK: Store
 
@@ -88,6 +89,11 @@ extension ClipCollectionNavigationBarController {
         selectButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapSelect)
         }), for: .touchUpInside)
+
+        layoutButton.setIcon(.ellipsis)
+        layoutButton.addAction(.init(handler: { [weak self] _ in
+            print("TODO") // TODO:
+        }), for: .touchUpInside)
     }
 }
 
@@ -110,10 +116,26 @@ extension ClipCollectionNavigationBarController {
 
             case .select:
                 return self.selectButton
+
+            case let .layout(layout):
+                layoutButton.setIcon(layout.toSingleIcon)
+                return self.layoutButton
             }
         }()
         let barButtonItem = UIBarButtonItem(customView: customView)
         barButtonItem.isEnabled = item.isEnabled
         return barButtonItem
+    }
+}
+
+private extension ClipCollectionNavigationBarState.Item.Kind.Layout {
+    var toSingleIcon: SingleIconButton.Icon {
+        switch self {
+        case .grid:
+            return .grid
+
+        case .waterFall:
+            return .offgrid
+        }
     }
 }

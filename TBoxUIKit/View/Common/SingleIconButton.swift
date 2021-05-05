@@ -7,12 +7,22 @@ import UIKit
 public class SingleIconButton: UIControl {
     public enum Icon {
         case ellipsis
+        case offgrid
+        case grid
 
         var image: UIImage {
             switch self {
             case .ellipsis:
                 // swiftlint:disable:next force_unwrapping
                 return UIImage(systemName: "ellipsis")!.withRenderingMode(.alwaysTemplate)
+
+            case .offgrid:
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "rectangle.3.offgrid")!.withRenderingMode(.alwaysTemplate)
+
+            case .grid:
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "square.grid.2x2")!.withRenderingMode(.alwaysTemplate)
             }
         }
     }
@@ -91,10 +101,10 @@ public class SingleIconButton: UIControl {
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalTo: heightAnchor),
             heightAnchor.constraint(equalToConstant: 24),
-            iconView.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-            iconView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
-            iconView.leftAnchor.constraint(equalTo: leftAnchor, constant: 2),
-            iconView.rightAnchor.constraint(equalTo: rightAnchor, constant: -2)
+            iconView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            iconView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+            iconView.leftAnchor.constraint(equalTo: leftAnchor, constant: 4),
+            iconView.rightAnchor.constraint(equalTo: rightAnchor, constant: -4)
         ])
 
         updateAppearance()

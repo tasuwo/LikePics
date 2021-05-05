@@ -64,11 +64,19 @@ private extension ClipCollectionNavigationBarState {
 
         switch operation {
         case .none:
-            rightItems = [.init(kind: .select, isEnabled: isSelectable)]
+            rightItems = [
+                // TODO:
+                .init(kind: .layout(.grid), isEnabled: clipCount > 0),
+                .init(kind: .select, isEnabled: isSelectable)
+            ]
             leftItems = []
 
         case .selecting:
-            rightItems = [.init(kind: .cancel, isEnabled: true)]
+            rightItems = [
+                // TODO:
+                .init(kind: .layout(.grid), isEnabled: false),
+                .init(kind: .cancel, isEnabled: true)
+            ]
             leftItems = [
                 isSelectedAll
                     ? .init(kind: .deselectAll, isEnabled: true)

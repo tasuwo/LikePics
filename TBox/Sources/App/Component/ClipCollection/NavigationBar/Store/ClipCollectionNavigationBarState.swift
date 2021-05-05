@@ -7,10 +7,16 @@ import Domain
 struct ClipCollectionNavigationBarState: Equatable {
     struct Item: Equatable {
         enum Kind: Equatable {
+            enum Layout {
+                case waterFall
+                case grid
+            }
+
             case cancel
             case selectAll
             case deselectAll
             case select
+            case layout(Layout)
         }
 
         let kind: Kind

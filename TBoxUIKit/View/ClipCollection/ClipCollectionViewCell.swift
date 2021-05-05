@@ -297,10 +297,10 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
             return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
 
         case 2:
-            return secondaryThumbnailView.imageView
+            return isSingleThumbnail ? nil : secondaryThumbnailView.imageView
 
         case 3:
-            return tertiaryThumbnailView.imageView
+            return isSingleThumbnail ? nil : tertiaryThumbnailView.imageView
 
         default:
             return nil
