@@ -5,7 +5,7 @@
 import UIKit
 
 protocol ClipsCollectionLayoutDelegate: AnyObject {
-    func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
+    func collectionView(_ collectionView: UICollectionView, thumbnailHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat
 }
 
 class ClipCollectionLayout: UICollectionViewLayout {
@@ -37,9 +37,7 @@ class ClipCollectionLayout: UICollectionViewLayout {
     private var cache: [UICollectionViewLayoutAttributes] = []
 
     private var contentWidth: CGFloat {
-        guard let collectionView = self.collectionView else {
-            return 0
-        }
+        guard let collectionView = self.collectionView else { return 0 }
         let insets = collectionView.adjustedContentInset
         return collectionView.bounds.width - (insets.left + insets.right) - Self.contentPadding * 2
     }
@@ -107,19 +105,24 @@ class ClipCollectionLayout: UICollectionViewLayout {
     }
 
     private func setupCellAttributes(collectionView: UICollectionView) {
-        let columnWidth = self.contentWidth / CGFloat(self.numberOfColumns)
-        let xOffset = (0 ..< self.numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
-        var yOffset = [CGFloat].init(repeating: Self.contentPadding, count: self.numberOfColumns)
+        let columnWidth = contentWidth / CGFloat(numberOfColumns)
+        let xOffset = (0 ..< numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
+        var yOffset = [CGFloat].init(repeating: Self.contentPadding, count: numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {
             let indexPath = IndexPath(item: $0, section: 0)
-            let column = $0 % self.numberOfColumns
 
-            let photoHeight = self.delegate?.collectionView(collectionView,
-                                                            photoHeightForWidth: columnWidth - Self.cellPadding * 2,
-                                                            atIndexPath: indexPath) ?? Self.defaultContentHeight
-            let columnHeight = Self.cellPadding * 2 + photoHeight
-            let frame = CGRect(x: xOffset[column], y: yOffset[column], width: columnWidth, height: columnHeight)
+            // 最も低いcolumnに追加する
+            let column = yOffset.enumerated()
+                .min(by: { $0.element < $1.element })?
+                .offset ?? $0 % numberOfColumns
+
+            let thumbnailHeight = self.delegate?.collectionView(collectionView,
+                                                                thumbnailHeightForWidth: columnWidth - Self.cellPadding * 2,
+                                                                atIndexPath: indexPath) ?? Self.defaultContentHeight
+            let itemHeight = Self.cellPadding * 2 + thumbnailHeight
+
+            let frame = CGRect(x: xOffset[column], y: yOffset[column], width: columnWidth, height: itemHeight)
             let insetFrame = frame.insetBy(dx: Self.cellPadding, dy: Self.cellPadding)
 
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
@@ -127,7 +130,7 @@ class ClipCollectionLayout: UICollectionViewLayout {
             cache.append(attributes)
 
             self.contentHeight = max(contentHeight, frame.maxY)
-            yOffset[column] += columnHeight
+            yOffset[column] += itemHeight
         }
         self.contentHeight += Self.contentPadding * 2
     }

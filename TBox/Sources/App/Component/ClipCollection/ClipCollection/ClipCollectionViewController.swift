@@ -548,7 +548,7 @@ extension ClipCollectionViewController: ClipCollectionNavigationBarDelegate {
 extension ClipCollectionViewController: ClipsCollectionLayoutDelegate {
     // MARK: - ClipsCollectionLayoutDelegate
 
-    func collectionView(_ collectionView: UICollectionView, photoHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, thumbnailHeightForWidth width: CGFloat, atIndexPath indexPath: IndexPath) -> CGFloat {
         guard let clip = dataSource.itemIdentifier(for: indexPath) else { return .zero }
 
         switch (clip.primaryItem, clip.secondaryItem, clip.tertiaryItem) {
