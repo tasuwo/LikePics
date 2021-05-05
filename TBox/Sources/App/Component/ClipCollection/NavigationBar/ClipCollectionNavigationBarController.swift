@@ -53,14 +53,14 @@ extension ClipCollectionNavigationBarController {
         store.state
             .onChange(\.leftItems) { [weak self] items in
                 guard let leftItems = self?.resolveBarButtonItems(for: items) else { return }
-                self?.navigationItem?.setLeftBarButtonItems(leftItems, animated: true)
+                self?.navigationItem?.setLeftBarButtonItems(leftItems, animated: false)
             }
             .store(in: &subscriptions)
 
         store.state
             .onChange(\.rightItems) { [weak self] items in
                 guard let rightItems = self?.resolveBarButtonItems(for: items) else { return }
-                self?.navigationItem?.setRightBarButtonItems(rightItems, animated: true)
+                self?.navigationItem?.setRightBarButtonItems(rightItems, animated: false)
             }
             .store(in: &subscriptions)
     }
