@@ -64,6 +64,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         return false
     }
 
+    public private(set) var isSingleThumbnail: Bool = false
     public private(set) var visibleHiddenIcon: Bool = false
     public private(set) var isHiddenClip: Bool = false
 
@@ -73,6 +74,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
     @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
+
+    @IBOutlet var overallThumbnailView: UIImageView!
 
     @IBOutlet var overallOverlayView: UIView!
 
@@ -106,6 +109,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupAppearance() {
+        overallThumbnailView.alpha = 0
         overallOverlayView.isHidden = true
 
         indicator.hidesWhenStopped = true
@@ -124,6 +128,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public func resetContent() {
         sizeDescription = nil
+        overallThumbnailView.image = nil
         primaryThumbnailView.thumbnail = nil
         secondaryThumbnailView.thumbnail = nil
         tertiaryThumbnailView.thumbnail = nil
@@ -137,6 +142,49 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public func setClipHiding(_ isHiding: Bool, animated: Bool) {
         isHiddenClip = isHiding
         updateHiddenIconAppearance(animated: animated)
+    }
+
+    public func setThumbnailType(toSingle: Bool) {
+        isSingleThumbnail = toSingle
+        self.overallThumbnailView.alpha = toSingle ? 1 : 0
+        self.primaryThumbnailView.alpha = toSingle ? 0 : 1
+        self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
+        self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
+    }
+
+    public func setThumbnailTypeWithAnimationBlocks(toSingle: Bool) -> (() -> Void) {
+        guard !isLoading else {
+            setThumbnailType(toSingle: toSingle)
+            return {}
+        }
+
+        isSingleThumbnail = toSingle
+
+        let animatingImageView = UIImageView(image: primaryThumbnailView.imageView.image)
+        animatingImageView.contentMode = .scaleAspectFill
+        animatingImageView.clipsToBounds = true
+        animatingImageView.layer.cornerRadius = Self.cornerRadius
+        animatingImageView.frame = toSingle ? primaryThumbnailView.frame : overallThumbnailView.frame
+        addSubview(animatingImageView)
+
+        overallThumbnailView.alpha = 0
+        primaryThumbnailView.alpha = 0
+        hiddenIcon.alpha = 0
+
+        return {
+            UIView.animate(withDuration: 0.3) {
+                animatingImageView.frame = toSingle ? self.overallThumbnailView.frame : self.primaryThumbnailView.frame
+                self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
+                self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
+            } completion: { _ in
+                self.overallThumbnailView.alpha = toSingle ? 1 : 0
+                self.primaryThumbnailView.alpha = toSingle ? 0 : 1
+                self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
+                self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
+                self.hiddenIcon.alpha = 1
+                animatingImageView.removeFromSuperview()
+            }
+        }
     }
 
     // MARK: Update Appearance
@@ -183,6 +231,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     private func setResult(_ result: ClipCollectionThumbnailView.ThumbnailLoadResult, at order: ThumbnailOrder) {
         switch order {
         case .primary:
+            overallThumbnailView.image = result.image
             primaryThumbnailView.thumbnail = result
 
         case .secondary:
@@ -235,7 +284,7 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
     public func animatingImageView(at index: Int) -> UIImageView? {
         switch index {
         case 1:
-            return primaryThumbnailView.imageView
+            return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
 
         case 2:
             return secondaryThumbnailView.imageView

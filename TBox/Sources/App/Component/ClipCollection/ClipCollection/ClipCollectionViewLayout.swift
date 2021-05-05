@@ -115,6 +115,7 @@ extension ClipCollectionViewLayout {
 
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = collectionView?.isEditing ?? false
+            cell.setThumbnailType(toSingle: collectionView?.isEditing ?? false)
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)

@@ -149,17 +149,22 @@ extension ClipCollectionViewController {
 
                 self.isEditing = isEditing
                 self.collectionView.isEditing = isEditing
-
-                // TODO:
-                // let nextLayout = isEditing
-                //     ? Layout.createGridLayout()
-                //     : Layout.createLayout(with: self)
-                // self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
-
-                // TODO: 各Cell側で設定させる
                 self.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .forEach { $0.isEditing = isEditing }
+
+                let nextLayout = isEditing
+                    ? Layout.createGridLayout()
+                    : Layout.createLayout(with: self)
+
+                let animationBlocks = self.collectionView.visibleCells
+                    .compactMap { $0 as? ClipCollectionViewCell }
+                    .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: isEditing) }
+
+                UIView.animate(withDuration: 0.3) {
+                    self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
+                    animationBlocks.forEach { $0() }
+                }
             }
             .store(in: &subscriptions)
 

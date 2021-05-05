@@ -67,6 +67,9 @@
                             <constraint firstAttribute="trailing" secondItem="Vf6-AM-fuo" secondAttribute="trailing" id="u5h-Nf-eK8"/>
                         </constraints>
                     </view>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="afu-7T-wNv" userLabel="Overall Thumbnail View">
+                        <rect key="frame" x="0.0" y="0.0" width="197" height="317"/>
+                    </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJb-u8-3T5">
                         <rect key="frame" x="0.0" y="0.0" width="197" height="317"/>
                         <subviews>
@@ -113,8 +116,12 @@
                     <constraint firstAttribute="bottom" secondItem="qJb-u8-3T5" secondAttribute="bottom" id="1jf-5c-GxB"/>
                     <constraint firstItem="qJb-u8-3T5" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" id="2I4-6w-aGF"/>
                     <constraint firstItem="Cof-mn-eeS" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" id="G3s-Pw-SKn"/>
+                    <constraint firstItem="afu-7T-wNv" firstAttribute="top" secondItem="hjv-x9-ehK" secondAttribute="top" id="M1v-Pg-A8G"/>
+                    <constraint firstItem="afu-7T-wNv" firstAttribute="leading" secondItem="hjv-x9-ehK" secondAttribute="leading" id="NnX-5e-k6Q"/>
                     <constraint firstAttribute="trailing" secondItem="Cof-mn-eeS" secondAttribute="trailing" id="RY1-yj-JCx"/>
                     <constraint firstItem="qJb-u8-3T5" firstAttribute="leading" secondItem="hjv-x9-ehK" secondAttribute="leading" id="Sp8-MW-Nc9"/>
+                    <constraint firstAttribute="bottom" secondItem="afu-7T-wNv" secondAttribute="bottom" id="YTJ-kT-9oi"/>
+                    <constraint firstAttribute="trailing" secondItem="afu-7T-wNv" secondAttribute="trailing" id="ZrB-ye-nvh"/>
                     <constraint firstAttribute="trailing" secondItem="qJb-u8-3T5" secondAttribute="trailing" id="ly2-9S-mdD"/>
                     <constraint firstAttribute="bottom" secondItem="Cof-mn-eeS" secondAttribute="bottom" id="pT5-kE-bGU"/>
                     <constraint firstItem="Cof-mn-eeS" firstAttribute="leading" secondItem="hjv-x9-ehK" secondAttribute="leading" id="z8f-4t-cQa"/>
@@ -127,6 +134,7 @@
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
                 <outlet property="indicator" destination="MUZ-FQ-RAF" id="OKh-c3-twc"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
+                <outlet property="overallThumbnailView" destination="afu-7T-wNv" id="Xj9-ff-Wjk"/>
                 <outlet property="primaryThumbnailView" destination="Vf6-AM-fuo" id="Nak-XA-Mc0"/>
                 <outlet property="secondaryThumbnailDisplayConstraint" destination="NbU-7N-Xuq" id="bfO-qL-daI"/>
                 <outlet property="secondaryThumbnailView" destination="wm7-YZ-VcK" id="n7e-p2-GDH"/>
