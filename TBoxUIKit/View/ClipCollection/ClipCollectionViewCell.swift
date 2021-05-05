@@ -75,6 +75,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
     @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
 
+    @IBOutlet var hiddenIconBottomOnPrimaryThumbnailConstraint: NSLayoutConstraint!
+    @IBOutlet var hiddenIconTrailingOnPrimaryThumbnailConstraint: NSLayoutConstraint!
+
     @IBOutlet var overallThumbnailView: UIImageView!
 
     @IBOutlet var overallOverlayView: UIView!
@@ -146,10 +149,12 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public func setThumbnailType(toSingle: Bool) {
         isSingleThumbnail = toSingle
-        self.overallThumbnailView.alpha = toSingle ? 1 : 0
-        self.primaryThumbnailView.alpha = toSingle ? 0 : 1
-        self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
-        self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
+        overallThumbnailView.alpha = toSingle ? 1 : 0
+        primaryThumbnailView.alpha = toSingle ? 0 : 1
+        secondaryThumbnailView.alpha = toSingle ? 0 : 1
+        tertiaryThumbnailView.alpha = toSingle ? 0 : 1
+        hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
+        hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
     }
 
     public func setThumbnailTypeWithAnimationBlocks(toSingle: Bool) -> (() -> Void) {
@@ -172,7 +177,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         hiddenIcon.alpha = 0
 
         return {
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.25) {
                 animatingImageView.frame = toSingle ? self.overallThumbnailView.frame : self.primaryThumbnailView.frame
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
@@ -181,9 +186,14 @@ public class ClipCollectionViewCell: UICollectionViewCell {
                 self.primaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
-                self.hiddenIcon.alpha = 1
+                self.hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
+                self.hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
                 animatingImageView.removeFromSuperview()
             }
+
+            UIView.animate(withDuration: 0.15, delay: 0.25, options: [], animations: {
+                self.hiddenIcon.alpha = 1
+            }, completion: nil)
         }
     }
 

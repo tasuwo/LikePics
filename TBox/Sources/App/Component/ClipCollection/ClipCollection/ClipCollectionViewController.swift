@@ -161,7 +161,7 @@ extension ClipCollectionViewController {
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: isEditing) }
 
-                UIView.animate(withDuration: 0.3) {
+                UIView.animate(withDuration: 0.25) {
                     self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
                     animationBlocks.forEach { $0() }
                 }
