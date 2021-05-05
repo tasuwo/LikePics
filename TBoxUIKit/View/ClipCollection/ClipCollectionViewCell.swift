@@ -176,6 +176,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         primaryThumbnailView.alpha = 0
         hiddenIcon.alpha = 0
 
+        hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
+        hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
+
         return {
             UIView.animate(withDuration: 0.25) {
                 animatingImageView.frame = toSingle ? self.overallThumbnailView.frame : self.primaryThumbnailView.frame
@@ -186,8 +189,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
                 self.primaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
-                self.hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
-                self.hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
                 animatingImageView.removeFromSuperview()
             }
 
