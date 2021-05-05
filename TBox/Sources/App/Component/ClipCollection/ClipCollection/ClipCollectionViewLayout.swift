@@ -106,42 +106,33 @@ extension ClipCollectionViewLayout {
                                       thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
         return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, _, clip in
-            let requestId = UUID().uuidString
-            cell.identifier = requestId
+            cell.resetContent()
 
+            let requestId = UUID().uuidString
+
+            cell.identifier = requestId
             cell.invalidator = thumbnailLoader
+
+            cell.sizeDescription = .make(by: clip.clip)
+            cell.isEditing = collectionView?.isEditing ?? false
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
 
-            cell.isEditing = collectionView?.isEditing ?? false
-            cell.resetContent()
-
-            guard let thumbnailLoader = thumbnailLoader else { return }
-
             let scale = cell.traitCollection.displayScale
-
             var requests: [ThumbnailRequest] = []
 
             if let item = clip.primaryItem {
                 let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .primary))
-            } else {
-                cell.primaryImage = .noImage
             }
-
             if let item = clip.secondaryItem {
                 let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .secondary))
-            } else {
-                cell.secondaryImage = .noImage
             }
-
             if let item = clip.tertiaryItem {
                 let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
                 requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .tertiary))
-            } else {
-                cell.tertiaryImage = .noImage
             }
 
             cell.onReuse = { [weak thumbnailLoader] identifier in
@@ -149,7 +140,7 @@ extension ClipCollectionViewLayout {
                 requests.forEach { thumbnailLoader?.cancel($0) }
             }
 
-            requests.forEach { thumbnailLoader.load($0, observer: cell) }
+            requests.forEach { thumbnailLoader?.load($0, observer: cell) }
         }
     }
 
@@ -171,5 +162,13 @@ extension ClipCollectionViewLayout {
                                     .clipThumbnailOrder: context.rawValue,
                                     .originalImageSize: item.imageSize.cgSize
                                 ])
+    }
+}
+
+extension ClipCollectionViewCellSizeDescription {
+    static func make(by clip: Clip) -> Self {
+        return .init(primaryThumbnailSize: clip.primaryItem?.imageSize.cgSize ?? CGSize(width: 100, height: 100),
+                     secondaryThumbnailSize: clip.secondaryItem?.imageSize.cgSize,
+                     tertiaryThumbnailSize: clip.tertiaryItem?.imageSize.cgSize)
     }
 }

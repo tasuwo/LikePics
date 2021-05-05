@@ -20,6 +20,19 @@ public extension UIImageView {
         }
     }
 
+    func addAspectRatioConstraint(size: CGSize) {
+        removeAspectRatioConstraint()
+        let aspectRatio = size.width / size.height
+        let constraint = NSLayoutConstraint(item: self,
+                                            attribute: .width,
+                                            relatedBy: .equal,
+                                            toItem: self,
+                                            attribute: .height,
+                                            multiplier: aspectRatio,
+                                            constant: 0.0)
+        addConstraint(constraint)
+    }
+
     func removeAspectRatioConstraint() {
         for constraint in self.constraints where (constraint.firstItem as? UIImageView) == self && (constraint.secondItem as? UIImageView) == self {
             removeConstraint(constraint)

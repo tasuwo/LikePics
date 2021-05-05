@@ -24,7 +24,8 @@ extension ThumbnailPresentable {
                                        height: pointSize.height * displayScale)
 
         if originalImageSize.width <= expectedPixelSize.width,
-           originalImageSize.height <= expectedPixelSize.height {
+           originalImageSize.height <= expectedPixelSize.height
+        {
             return false
         }
 

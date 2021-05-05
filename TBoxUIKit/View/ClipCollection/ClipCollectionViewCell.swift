@@ -2,7 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Domain
 import Smoothie
 import UIKit
 
@@ -11,13 +10,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         case primary
         case secondary
         case tertiary
-    }
-
-    public enum Image {
-        case loaded(UIImage)
-        case loading
-        case failedToLoad
-        case noImage
     }
 
     public static var nib: UINib { UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self)) }
@@ -29,60 +21,60 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public var identifier: String?
     public var onReuse: ((String?) -> Void)?
     public weak var invalidator: ThumbnailInvalidatable?
-    public private(set) var visibleHiddenIcon: Bool = false
-    public private(set) var isHiddenClip: Bool = false
 
-    public var primaryImage: Image? {
-        didSet { updateImageViewAppearance(primaryImage, .primary) }
-    }
-
-    public var secondaryImage: Image? {
-        didSet { updateImageViewAppearance(secondaryImage, .secondary) }
-    }
-
-    public var tertiaryImage: Image? {
-        didSet { updateImageViewAppearance(tertiaryImage, .tertiary) }
-    }
-
-    public var isLoading: Bool {
-        guard let primaryImage = primaryImage,
-              let secondaryImage = secondaryImage,
-              let tertiaryImage = tertiaryImage
-        else {
-            return true
+    public var sizeDescription: ClipCollectionViewCellSizeDescription? {
+        didSet {
+            updateThumbnailConstraints()
+            updateOverallOverlayView()
         }
-        return primaryImage.isLoading
-            || secondaryImage.isLoading
-            || tertiaryImage.isLoading
-            // NOTE: iCloud同期はEntity単位で行われ、Relationが欠けている可能性がある
-            //       その場合、primaryImage が nil になり得る
-            //       primaryImage が nil の Clip はあり得ないため、ロード中状態とする
-            // NOTE: secondary, tertiary が未ロードのケースは、未ロードなのか？本当に存在しないのか？
-            //       判定できないため、考慮しない
-            || !primaryImage.isLoaded
     }
 
     public var isEditing: Bool = false {
         didSet {
             updateOverallOverlayView()
-            // TODO:
-            // setOverallImageViewHidden(!isEditing)
         }
     }
 
     override public var isSelected: Bool {
-        didSet { updateOverallOverlayView() }
+        didSet {
+            updateOverallOverlayView()
+        }
     }
 
-    @IBOutlet var overallImageView: UIImageView!
+    public var isLoading: Bool {
+        guard let description = sizeDescription else { return false }
 
-    @IBOutlet public var primaryImageView: UIImageView!
-    @IBOutlet public var secondaryImageView: UIImageView!
-    @IBOutlet public var tertiaryImageView: UIImageView!
+        // NOTE: iCloud同期はEntity単位で行われ、Relationが欠けている可能性がある
+        //       その場合、primaryImage が nil になり得る
+        //       primaryImage が nil の Clip はあり得ないため、ロード中状態とする
+        // NOTE: secondary, tertiary が未ロードのケースは、未ロードなのか？本当に存在しないのか？
+        //       判定できないため、考慮しない
+        if primaryThumbnailView.isLoading {
+            return true
+        }
+
+        if description.containsSecondaryThumbnailSize, secondaryThumbnailView.isLoading {
+            return true
+        }
+
+        if description.containsTertiaryThumbnailSize, tertiaryThumbnailView.isLoading {
+            return true
+        }
+
+        return false
+    }
+
+    public private(set) var visibleHiddenIcon: Bool = false
+    public private(set) var isHiddenClip: Bool = false
+
+    @IBOutlet var primaryThumbnailView: ClipCollectionThumbnailView!
+    @IBOutlet var secondaryThumbnailView: ClipCollectionThumbnailView!
+    @IBOutlet var tertiaryThumbnailView: ClipCollectionThumbnailView!
+
+    @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
+    @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
 
     @IBOutlet var overallOverlayView: UIView!
-    @IBOutlet var secondaryImageOverlayView: UIView!
-    @IBOutlet var tertiaryImageOverlayView: UIView!
 
     @IBOutlet var imagesContainerView: UIView!
 
@@ -114,26 +106,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupAppearance() {
-        ([
-            primaryImageView,
-            secondaryImageView,
-            tertiaryImageView
-        ] as [UIImageView]).forEach {
-            $0.isHidden = true
-            Self.setupAppearance(imageView: $0)
-        }
-
-        overallImageView.contentMode = .scaleAspectFill
-        overallImageView.isHidden = true
-
-        ([
-            overallOverlayView,
-            secondaryImageOverlayView,
-            tertiaryImageOverlayView
-        ] as [UIView]).forEach {
-            $0.isHidden = true
-            $0.layer.cornerRadius = Self.cornerRadius
-        }
+        overallOverlayView.isHidden = true
 
         indicator.hidesWhenStopped = true
 
@@ -141,8 +114,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
 
         clipsToBounds = true
-        layer.cornerRadius = Self.cornerRadius
         layer.masksToBounds = true
+        layer.cornerRadius = Self.cornerRadius
 
         updateOverallOverlayView()
     }
@@ -150,17 +123,10 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     // MARK: Set Appearance
 
     public func resetContent() {
-        ([
-            overallImageView,
-            primaryImageView,
-            secondaryImageView,
-            tertiaryImageView
-        ] as [UIImageView]).forEach {
-            $0.image = nil
-        }
-        primaryImage = .loading
-        secondaryImage = .loading
-        tertiaryImage = .loading
+        sizeDescription = nil
+        primaryThumbnailView.thumbnail = nil
+        secondaryThumbnailView.thumbnail = nil
+        tertiaryThumbnailView.thumbnail = nil
     }
 
     public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
@@ -173,16 +139,25 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         updateHiddenIconAppearance(animated: animated)
     }
 
-    private func setOverallImageViewHidden(_ isHidden: Bool) {
-        overallImageView.isHidden = isHidden
-        primaryImageView.isHidden = !isHidden
-        secondaryImageView.isHidden = !isHidden
-        tertiaryImageView.isHidden = !isHidden
-        secondaryImageOverlayView.isHidden = !isHidden
-        tertiaryImageOverlayView.isHidden = !isHidden
-    }
-
     // MARK: Update Appearance
+
+    private func updateThumbnailConstraints() {
+        guard let description = sizeDescription else {
+            primaryThumbnailView.thumbnailSize = .init(width: 1, height: 1)
+            secondaryThumbnailView.thumbnailSize = nil
+            tertiaryThumbnailView.thumbnailSize = nil
+            secondaryThumbnailDisplayConstraint.isActive = false
+            tertiaryThumbnailDisplayConstraint.isActive = false
+            return
+        }
+
+        primaryThumbnailView.thumbnailSize = description.primaryThumbnailSize
+        secondaryThumbnailView.thumbnailSize = description.secondaryThumbnailSize
+        tertiaryThumbnailView.thumbnailSize = description.tertiaryThumbnailSize
+
+        secondaryThumbnailDisplayConstraint.isActive = description.containsSecondaryThumbnailSize
+        tertiaryThumbnailDisplayConstraint.isActive = description.containsTertiaryThumbnailSize
+    }
 
     private func updateOverallOverlayView() {
         overallOverlayView.isHidden = !((isSelected && isEditing) || isLoading)
@@ -203,70 +178,20 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private func updateImageViewAppearance(_ image: Image?, _ order: ThumbnailOrder) {
-        defer { updateOverallOverlayView() }
-
-        guard let image = image else {
-            return
-        }
-
-        let imageView = imageView(order)
-        imageView.isHidden = !image.isLoaded
-
-        imageView.removeAspectRatioConstraint()
-        overlayView(order)?.isHidden = !image.isLoaded
-
-        imageView.removeAspectRatioConstraint()
-        guard case let .loaded(image) = image else {
-            imageView.image = nil
-            if order.isPrimary { overallImageView.image = nil }
-            return
-        }
-
-        imageView.addAspectRatioConstraint(image: image)
-        imageView.image = image
-        if order.isPrimary { overallImageView.image = image }
-    }
-
     // MARK: Resolve UI Element
 
-    private func setImage(_ image: Image?, at order: ThumbnailOrder) {
+    private func setResult(_ result: ClipCollectionThumbnailView.ThumbnailLoadResult, at order: ThumbnailOrder) {
         switch order {
         case .primary:
-            primaryImage = image
+            primaryThumbnailView.thumbnail = result
 
         case .secondary:
-            secondaryImage = image
+            secondaryThumbnailView.thumbnail = result
 
         case .tertiary:
-            tertiaryImage = image
+            tertiaryThumbnailView.thumbnail = result
         }
-    }
-
-    private func imageView(_ order: ThumbnailOrder) -> UIImageView {
-        switch order {
-        case .primary:
-            return primaryImageView
-
-        case .secondary:
-            return secondaryImageView
-
-        case .tertiary:
-            return tertiaryImageView
-        }
-    }
-
-    private func overlayView(_ order: ThumbnailOrder) -> UIView? {
-        switch order {
-        case .primary:
-            return nil
-
-        case .secondary:
-            return secondaryImageOverlayView
-
-        case .tertiary:
-            return tertiaryImageOverlayView
-        }
+        updateOverallOverlayView()
     }
 }
 
@@ -275,10 +200,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
 
     public func didStartLoading(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
-                  let order = ThumbnailOrder(rawValue: value) else { return }
-            self.setImage(.loading, at: order)
+            self.updateOverallOverlayView()
         }
     }
 
@@ -287,7 +209,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
-            self.setImage(.loaded(image), at: order)
+            self.setResult(.success(image), at: order)
 
             let displayScale = self.traitCollection.displayScale
             let originalSize = request.userInfo?[.originalImageSize] as? CGSize
@@ -302,7 +224,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
             guard self.identifier == request.requestId else { return }
             guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
                   let order = ThumbnailOrder(rawValue: value) else { return }
-            self.setImage(.failedToLoad, at: order)
+            self.setResult(.failure, at: order)
         }
     }
 }
@@ -313,13 +235,13 @@ extension ClipCollectionViewCell: ClipPreviewPresentingCell {
     public func animatingImageView(at index: Int) -> UIImageView? {
         switch index {
         case 1:
-            return primaryImageView
+            return primaryThumbnailView.imageView
 
         case 2:
-            return secondaryImageView
+            return secondaryThumbnailView.imageView
 
         case 3:
-            return tertiaryImageView
+            return tertiaryThumbnailView.imageView
 
         default:
             return nil
@@ -342,35 +264,6 @@ extension ClipCollectionViewCell: ThumbnailPresentable {
             }
         } else {
             return frame.size
-        }
-    }
-}
-
-private extension ClipCollectionViewCell.ThumbnailOrder {
-    var isPrimary: Bool {
-        return self == .primary
-    }
-}
-
-private extension ClipCollectionViewCell.Image {
-    var isLoaded: Bool {
-        switch self {
-        case .loaded:
-            return true
-
-        default:
-            return false
-        }
-    }
-
-    var isLoading: Bool {
-        switch self {
-        // NOTE: failedToLoad は、iCloud同期前でデータが読めていない可能性を考慮し、ロード中とする
-        case .loading, .failedToLoad:
-            return true
-
-        default:
-            return false
         }
     }
 }
