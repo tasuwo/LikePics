@@ -38,8 +38,9 @@ class ClipCollectionWaterfallLayout: UICollectionViewLayout {
 
     private var contentWidth: CGFloat {
         guard let collectionView = self.collectionView else { return 0 }
-        let insets = collectionView.adjustedContentInset
-        return collectionView.bounds.width - (insets.left + insets.right) - Self.contentPadding * 2
+        let insets = collectionView.contentInset
+        let safeAreaInsets = collectionView.safeAreaInsets
+        return collectionView.bounds.width - (insets.left + insets.right + safeAreaInsets.left + safeAreaInsets.right) - Self.contentPadding * 2
     }
 
     private var contentHeight: CGFloat = 0
@@ -106,7 +107,7 @@ class ClipCollectionWaterfallLayout: UICollectionViewLayout {
 
     private func setupCellAttributes(collectionView: UICollectionView) {
         let columnWidth = contentWidth / CGFloat(numberOfColumns)
-        let xOffset = (0 ..< numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding }
+        let xOffset = (0 ..< numberOfColumns).map { CGFloat($0) * columnWidth + Self.contentPadding + collectionView.safeAreaInsets.left }
         var yOffset = [CGFloat].init(repeating: Self.contentPadding, count: numberOfColumns)
 
         (0 ..< collectionView.numberOfItems(inSection: 0)).forEach {

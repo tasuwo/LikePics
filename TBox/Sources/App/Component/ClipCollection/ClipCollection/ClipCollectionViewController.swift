@@ -348,7 +348,6 @@ extension ClipCollectionViewController {
         let layout = Layout.createLayout(store.stateValue.layout.toRequest(delegate: self))
         collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
-        collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = false
