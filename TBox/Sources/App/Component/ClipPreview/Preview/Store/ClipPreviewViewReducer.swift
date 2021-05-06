@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import UIKit
 
 typealias ClipPreviewViewDependency = HasPreviewLoader
     & HasClipQueryService
@@ -93,13 +94,16 @@ extension ClipPreviewViewReducer {
             // これを防ぐため、若干の操作のスムーズさを犠牲にして同期的に downsampling する
             let semaphore = DispatchSemaphore(value: 0)
 
+            var result: UIImage?
             dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
-                defer { semaphore.signal() }
-                guard let image = image else { return }
+                result = image
+                semaphore.signal()
+            }
+            semaphore.wait()
+
+            if let image = result {
                 nextState.source = .image(.init(uiImage: image))
             }
-
-            semaphore.wait()
 
             return (nextState, [])
         } else {
