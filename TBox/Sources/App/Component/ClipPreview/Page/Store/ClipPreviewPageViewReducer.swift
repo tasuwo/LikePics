@@ -10,6 +10,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipQueryService
     & HasClipInformationTransitioningController
     & HasClipInformationViewCaching
+    & HasPreviewLoader
 
 enum ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -29,9 +30,18 @@ enum ClipPreviewPageViewReducer: Reducer {
 
         case let .pageChanged(index: index):
             nextState.currentIndex = index
+            nextState.currentPreloadTargets().forEach {
+                dependency.previewLoader.preloadPreview(imageId: $0)
+            }
             return (nextState, .none)
 
         case let .clipUpdated(clip):
+            defer {
+                nextState.currentPreloadTargets().forEach {
+                    dependency.previewLoader.preloadPreview(imageId: $0)
+                }
+            }
+
             guard !clip.items.isEmpty else {
                 nextState.isDismissed = true
                 return (nextState, .none)
@@ -243,6 +253,13 @@ extension ClipPreviewPageViewReducer {
             else {
                 return (nextState, .none)
             }
+
+            defer {
+                nextState.currentPreloadTargets().forEach {
+                    dependency.previewLoader.preloadPreview(imageId: $0)
+                }
+            }
+
             switch dependency.clipCommandService.deleteClipItem(item) {
             case .success:
                 nextState.items = nextState.items.filter({ $0.id != item.id })

@@ -109,6 +109,7 @@ extension DependencyContainer: Router {
             let clipInformationTransitioningController: ClipInformationTransitioningController?
             let imageQueryService: ImageQueryServiceProtocol
             let informationViewCache: ClipInformationViewCaching?
+            let previewLoader: PreviewLoader
         }
 
         let informationViewCacheState = ClipInformationViewCacheState(clip: nil,
@@ -131,7 +132,8 @@ extension DependencyContainer: Router {
                                     clipQueryService: clipQueryService,
                                     clipInformationTransitioningController: informationTransitionController,
                                     imageQueryService: imageQueryService,
-                                    informationViewCache: informationViewCacheController)
+                                    informationViewCache: informationViewCacheController,
+                                    previewLoader: previewLoader)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
                                              isFullscreen: false,

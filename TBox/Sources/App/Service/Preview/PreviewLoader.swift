@@ -10,20 +10,59 @@ protocol PreviewLoaderProtocol {
     func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage?
     func readCache(forImageId imageId: UUID) -> UIImage?
     func loadPreview(forImageId imageId: UUID, completion: @escaping (UIImage?) -> Void)
-    func preloadPreview(itemId: ClipItem.Identity, imageId: UUID)
+    func preloadPreview(imageId: UUID)
 }
 
 class PreviewLoader {
+    private class LoadingPool {
+        private class Publisher {
+            var completions: [(UIImage?) -> Void] = []
+
+            func append(_ completion: @escaping (UIImage?) -> Void) {
+                completions.append(completion)
+            }
+
+            func publish(_ image: UIImage?) {
+                completions.forEach { $0(image) }
+            }
+        }
+
+        private var pool: [UUID: Publisher] = [:]
+
+        func isLoading(imageId: UUID) -> Bool {
+            pool[imageId] != nil
+        }
+
+        func append(imageId: UUID, completion: ((UIImage?) -> Void)? = nil) {
+            if let publisher = pool[imageId] {
+                if let completion = completion {
+                    publisher.append(completion)
+                }
+            } else {
+                let publisher = Publisher()
+                if let completion = completion {
+                    publisher.append(completion)
+                }
+                pool[imageId] = publisher
+            }
+        }
+
+        func publish(imageId: UUID, image: UIImage?) {
+            guard let publisher = pool[imageId] else { return }
+            publisher.publish(image)
+            pool.removeValue(forKey: imageId)
+        }
+    }
+
     private let thumbnailMemoryCache: MemoryCaching
     private let thumbnailDiskCache: DiskCaching
     private let memoryCache: MemoryCaching
     private let imageQueryService: ImageQueryServiceProtocol
 
-    private let loadingQueue = DispatchQueue(label: "net.tasuwo.TBox.PreviewLoader.loading")
-    private let preloadLockQueue = DispatchQueue(label: "net.tasuwo.TBox.PreviewLoader.preloadLocking")
-    private let downsamplingQueue = OperationQueue()
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.PreviewLoader.loading")
+    private let decompressQueue = OperationQueue()
 
-    private var loadingItemIds: Set<ClipItem.Identity> = []
+    private let pool = LoadingPool()
 
     // MARK: - Lifecycle
 
@@ -37,32 +76,10 @@ class PreviewLoader {
         self.memoryCache = memoryCache
         self.imageQueryService = imageQueryService
 
-        self.downsamplingQueue.maxConcurrentOperationCount = 2
+        self.decompressQueue.maxConcurrentOperationCount = 3
     }
 
     // MARK: - Methods
-
-    private func downsampledImage(for imageId: UUID) -> CGImage? {
-        guard let data = try? imageQueryService.read(having: imageId) else {
-            return nil
-        }
-
-        let options = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let source = CGImageSourceCreateWithData(data as CFData, options) else {
-            return nil
-        }
-
-        let downsamplingOptions = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true
-        ] as CFDictionary
-        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsamplingOptions) else {
-            return nil
-        }
-
-        return downsampledImage
-    }
 
     private func decompress(_ data: Data) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
@@ -81,73 +98,88 @@ class PreviewLoader {
 
         return UIImage(cgImage: cgImage)
     }
+
+    private func addDecompressOperation(imageId: UUID) {
+        let operation = BlockOperation { [weak self] in
+            guard let self = self else { return }
+
+            guard let data = try? self.imageQueryService.read(having: imageId),
+                  let image = self.decompress(data)
+            else {
+                self.queue.async {
+                    self.pool.publish(imageId: imageId, image: nil)
+                }
+                return
+            }
+
+            self.memoryCache.insert(image, forKey: "preview-\(imageId.uuidString)")
+
+            self.queue.async {
+                self.pool.publish(imageId: imageId, image: image)
+            }
+        }
+
+        decompressQueue.addOperation(operation)
+    }
 }
 
 extension PreviewLoader: PreviewLoaderProtocol {
     // MARK: - PreviewLoaderProtocol
 
     func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage? {
-        // - SeeAlso: ClipCollectionProvider
-        if let image = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
-            return image
-        }
+        return queue.sync {
+            // - SeeAlso: ClipCollectionViewLayout
+            if let image = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
+                return image
+            }
 
-        if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"],
-           let image = decompress(data)
-        {
-            return image
-        }
+            // Note: 一時的な表示に利用するものなので、表示速度を優先し decompress はしない
+            if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"] {
+                return UIImage(data: data)
+            }
 
-        return nil
+            return nil
+        }
     }
 
     func readCache(forImageId imageId: UUID) -> UIImage? {
-        guard let image = memoryCache["preview-\(imageId.uuidString)"] else { return nil }
-        return image
+        return queue.sync {
+            guard let image = memoryCache["preview-\(imageId.uuidString)"] else { return nil }
+            return image
+        }
     }
 
     func loadPreview(forImageId imageId: UUID, completion: @escaping (UIImage?) -> Void) {
-        loadingQueue.async {
+        queue.async {
             if let image = self.memoryCache["preview-\(imageId.uuidString)"] {
                 completion(image)
                 return
             }
 
-            guard let downsampledImage = self.downsampledImage(for: imageId) else {
-                completion(nil)
+            if self.pool.isLoading(imageId: imageId) {
+                self.pool.append(imageId: imageId, completion: completion)
                 return
             }
-            let image = UIImage(cgImage: downsampledImage)
 
-            let operation = BlockOperation { [weak self] in
-                guard self?.memoryCache["preview-\(imageId.uuidString)"] == nil else { return }
-                self?.memoryCache.insert(image, forKey: "preview-\(imageId.uuidString)")
-            }
-            self.downsamplingQueue.addOperation(operation)
+            self.pool.append(imageId: imageId, completion: completion)
 
-            completion(image)
+            self.addDecompressOperation(imageId: imageId)
         }
     }
 
-    func preloadPreview(itemId: ClipItem.Identity, imageId: UUID) {
-        guard self.memoryCache["preview-\(imageId.uuidString)"] == nil else { return }
-
-        preloadLockQueue.sync {
-            guard !self.loadingItemIds.contains(itemId) else { return }
-            self.loadingItemIds.insert(itemId)
-
-            let operation = BlockOperation { [weak self] in
-                guard let self = self else { return }
-
-                guard let image = self.downsampledImage(for: imageId) else { return }
-                self.memoryCache.insert(UIImage(cgImage: image), forKey: "preview-\(imageId.uuidString)")
-
-                self.preloadLockQueue.async {
-                    self.loadingItemIds.remove(itemId)
-                }
+    func preloadPreview(imageId: UUID) {
+        queue.async {
+            guard self.memoryCache["preview-\(imageId.uuidString)"] == nil else {
+                return
             }
 
-            downsamplingQueue.addOperation(operation)
+            if self.pool.isLoading(imageId: imageId) {
+                return
+            }
+
+            self.pool.append(imageId: imageId)
+
+            self.addDecompressOperation(imageId: imageId)
         }
     }
 }
