@@ -60,17 +60,20 @@ class ClipPreviewViewController: UIViewController {
 
 extension ClipPreviewViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
+        store.state
+            .bind(\.source, to: \.source, on: previewView)
+            .store(in: &subscriptions)
 
-            self.previewView.source = state.source
-            self.previewView.isLoading = state.isLoading
+        store.state
+            .bind(\.isLoading, to: \.isLoading, on: previewView)
+            .store(in: &subscriptions)
 
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
     }
 }
 
