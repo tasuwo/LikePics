@@ -106,6 +106,13 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             return
         }
 
+        // Display Cell
+
+        to.displayAnimatingCell(self)
+        // HACK: iPad&Landscape&Fullscreen切り替え時にalpha==1でセルが残ってしまうケースがあったため、
+        //       このタイミングでもセルを非表示にする
+        to.animatingCell(self)?.alpha = 0
+
         // Calculation
 
         let translation = sender.translation(in: from.view)
