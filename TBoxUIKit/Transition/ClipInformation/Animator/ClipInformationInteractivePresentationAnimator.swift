@@ -273,8 +273,6 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
         from.view.backgroundColor = .clear
-        // HACK: 画面遷移中にジェスチャ操作され、予期せぬ状態に陥る問題を修正する
-        from.view.isUserInteractionEnabled = false
 
         fromViewBaseView.insertSubview(animatingImageView, aboveSubview: to.view)
 

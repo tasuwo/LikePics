@@ -14,18 +14,23 @@ public enum ClipPreviewTransitionMode {
 
 public protocol ClipPreviewTransitionControllerProtocol {
     var isInteractive: Bool { get }
-    func beginTransition(_ mode: ClipPreviewTransitionMode)
-    func didPanForDismissal(sender: UIPanGestureRecognizer)
+    func isLocked(by id: UUID) -> Bool
+    @discardableResult
+    func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool
+    @discardableResult
+    func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool
 }
 
 public class ClipPreviewTransitioningController: NSObject {
+    private let lock: TransitionLock
     private let logger: TBoxLoggable
     private var dismissalInteractiveAnimator: ClipPreviewInteractiveDismissalAnimator?
     private var transitionMode: ClipPreviewTransitionMode = .initialValue
 
     // MARK: - Lifecycle
 
-    public init(logger: TBoxLoggable) {
+    public init(lock: TransitionLock, logger: TBoxLoggable) {
+        self.lock = lock
         self.logger = logger
     }
 }
@@ -38,12 +43,20 @@ extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerPro
         return true
     }
 
-    public func beginTransition(_ mode: ClipPreviewTransitionMode) {
-        self.transitionMode = mode
+    public func isLocked(by id: UUID) -> Bool {
+        lock.isLocked(by: id)
     }
 
-    public func didPanForDismissal(sender: UIPanGestureRecognizer) {
+    public func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool {
+        guard lock.takeLock(id) else { return false }
+        self.transitionMode = mode
+        return true
+    }
+
+    public func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool {
+        guard lock.isLocked(by: id) else { return false }
         self.dismissalInteractiveAnimator?.didPan(sender: sender)
+        return true
     }
 }
 
@@ -51,6 +64,7 @@ extension ClipPreviewTransitioningController: ClipPreviewAnimatorDelegate {
     // MARK: - ClipPreviewAnimatorDelegate
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, didComplete: Bool) {
+        lock.releaseLock()
         self.transitionMode = .initialValue
     }
 }

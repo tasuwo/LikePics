@@ -117,6 +117,7 @@
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CA8AD272642A7E200C62AF8 /* ClipCollection_Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA8AD262642A7E100C62AF8 /* ClipCollection_Layout.swift */; };
 		2CA8AD292642DBE400C62AF8 /* CGRect+scaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA8AD282642DBE400C62AF8 /* CGRect+scaled.swift */; };
+		2CF45AAC2643D0CB004C233F /* TransitionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF45AAB2643D0CB004C233F /* TransitionLock.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
@@ -1052,6 +1053,7 @@
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CA8AD262642A7E100C62AF8 /* ClipCollection_Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_Layout.swift; sourceTree = "<group>"; };
 		2CA8AD282642DBE400C62AF8 /* CGRect+scaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+scaled.swift"; sourceTree = "<group>"; };
+		2CF45AAB2643D0CB004C233F /* TransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionLock.swift; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -2506,6 +2508,7 @@
 			isa = PBXGroup;
 			children = (
 				5D2694DEB1241D888084119B /* FadeTransitionAnimator.swift */,
+				2CF45AAB2643D0CB004C233F /* TransitionLock.swift */,
 				BC0D4FCBFC70CB3446B06646 /* ClipInformation */,
 				E7696826B909BB33A5D9E324 /* ClipPreview */,
 			);
@@ -4789,6 +4792,7 @@
 				5B0DB1B78E94982C523DE7E4 /* ClipSearchHistoryContentView.swift in Sources */,
 				57A69CD57AE89E330C3FD841 /* ClipSearchHistoryHeaderCell.swift in Sources */,
 				CD6B622911CEC366CF236C8F /* ClipSearchHistoryHeaderConfiguration.swift in Sources */,
+				2CF45AAC2643D0CB004C233F /* TransitionLock.swift in Sources */,
 				577A71E99922A50B9FFDA7BB /* ClipSearchHistoryHeaderContentView.swift in Sources */,
 				C67CD8F6BAD11CFDA2F6A7A8 /* ClipSelectionCollectionViewCell.swift in Sources */,
 				1D054A593E51A35B3C6471F0 /* EmptyMessageView.swift in Sources */,

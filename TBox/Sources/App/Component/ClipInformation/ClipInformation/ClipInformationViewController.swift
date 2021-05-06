@@ -32,6 +32,7 @@ class ClipInformationViewController: UIViewController {
 
     // MARK: - Temporary
 
+    private var transitionId: UUID?
     private var previousState: ClipInformationViewState?
     private var snapshotPreviousState: ClipInformationViewState?
     private let snapshotQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipInformationView.Snapshot")
@@ -103,19 +104,25 @@ class ClipInformationViewController: UIViewController {
     func didPan(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
+            guard transitionId == nil else { return }
+            let id = UUID()
+            guard transitioningController.beginTransition(id: id, mode: .custom(interactive: true)) else { return }
             informationView.isScrollEnabled = false
-            transitioningController.beginTransition(.custom(interactive: true))
             dismiss(animated: true, completion: nil)
+            transitionId = id
 
         case .ended:
-            informationView.isScrollEnabled = true
+            guard let id = transitionId, transitioningController.isLocked(by: id) else { return }
             if transitioningController.isInteractive {
-                transitioningController.didPanForDismissal(sender: sender)
+                transitioningController.didPanForDismissal(id: id, sender: sender)
             }
+            informationView.isScrollEnabled = true
+            transitionId = nil
 
         default:
+            guard let id = transitionId, transitioningController.isLocked(by: id) else { return }
             if transitioningController.isInteractive {
-                transitioningController.didPanForDismissal(sender: sender)
+                transitioningController.didPanForDismissal(id: id, sender: sender)
             }
         }
     }

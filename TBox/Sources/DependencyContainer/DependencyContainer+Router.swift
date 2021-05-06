@@ -122,8 +122,9 @@ extension DependencyContainer: Router {
         let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
                                                                                 dependency: self)
 
-        let previewTransitioningController = ClipPreviewTransitioningController(logger: logger)
-        let informationTransitionController = ClipInformationTransitioningController(logger: logger)
+        let lock = TransitionLock()
+        let previewTransitioningController = ClipPreviewTransitioningController(lock: lock, logger: logger)
+        let informationTransitionController = ClipInformationTransitioningController(lock: lock, logger: logger)
         let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 

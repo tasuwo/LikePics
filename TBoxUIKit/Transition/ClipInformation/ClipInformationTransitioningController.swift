@@ -14,20 +14,26 @@ public enum ClipInformationTransitionMode {
 
 public protocol ClipInformationTransitioningControllerProtocol: UIViewControllerTransitioningDelegate {
     var isInteractive: Bool { get }
-    func beginTransition(_ mode: ClipInformationTransitionMode)
-    func didPanForPresentation(sender: UIPanGestureRecognizer)
-    func didPanForDismissal(sender: UIPanGestureRecognizer)
+    func isLocked(by id: UUID) -> Bool
+    @discardableResult
+    func beginTransition(id: UUID, mode: ClipInformationTransitionMode) -> Bool
+    @discardableResult
+    func didPanForPresentation(id: UUID, sender: UIPanGestureRecognizer) -> Bool
+    @discardableResult
+    func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool
 }
 
 public class ClipInformationTransitioningController: NSObject {
     private var presentationInteractiveAnimator: ClipInformationInteractivePresentationAnimator?
     private var dismissalInteractiveAnimator: ClipInformationInteractiveDismissalAnimator?
     private var transitionMode: ClipInformationTransitionMode = .initialValue
+    private let lock: TransitionLock
     private let logger: TBoxLoggable
 
     // MARK: - Lifecycle
 
-    public init(logger: TBoxLoggable) {
+    public init(lock: TransitionLock, logger: TBoxLoggable) {
+        self.lock = lock
         self.logger = logger
     }
 }
@@ -40,16 +46,29 @@ extension ClipInformationTransitioningController: ClipInformationTransitioningCo
         return true
     }
 
-    public func beginTransition(_ mode: ClipInformationTransitionMode) {
-        self.transitionMode = mode
+    public func isLocked(by id: UUID) -> Bool {
+        lock.isLocked(by: id)
     }
 
-    public func didPanForDismissal(sender: UIPanGestureRecognizer) {
+    @discardableResult
+    public func beginTransition(id: UUID, mode: ClipInformationTransitionMode) -> Bool {
+        guard lock.takeLock(id) else { return false }
+        transitionMode = mode
+        return true
+    }
+
+    @discardableResult
+    public func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool {
+        guard lock.isLocked(by: id) else { return false }
         self.dismissalInteractiveAnimator?.didPan(sender: sender)
+        return true
     }
 
-    public func didPanForPresentation(sender: UIPanGestureRecognizer) {
+    @discardableResult
+    public func didPanForPresentation(id: UUID, sender: UIPanGestureRecognizer) -> Bool {
+        guard lock.isLocked(by: id) else { return false }
         self.presentationInteractiveAnimator?.didPan(sender: sender)
+        return true
     }
 }
 
@@ -57,6 +76,7 @@ extension ClipInformationTransitioningController: ClipInformationAnimatorDelegat
     // MARK: - ClipInformationAnimatorDelegate
 
     func clipInformationAnimatorDelegate(_ animator: ClipInformationAnimator, didComplete: Bool) {
+        lock.releaseLock()
         self.transitionMode = .initialValue
     }
 }

@@ -35,6 +35,11 @@ class ClipPreviewPageTransitionController: NSObject,
         case information
     }
 
+    struct Context {
+        let id: UUID
+        let destination: TransitionDestination
+    }
+
     // MARK: - Properties
 
     // MARK: ClipPreviewPageTransitionControllerType
@@ -66,6 +71,7 @@ class ClipPreviewPageTransitionController: NSObject,
     private let informationTransitioningController: ClipInformationTransitioningControllerProtocol
 
     private var destination: TransitionDestination?
+    private var context: Context?
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
@@ -99,7 +105,7 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginDismissal
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.previewTransitioningController.beginTransition(.custom(interactive: false))
+                self.previewTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false))
                 self.baseViewController?.dismiss(animated: true, completion: nil)
             }
             .store(in: &self.subscriptions)
@@ -107,7 +113,7 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginPresentInformation
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.informationTransitioningController.beginTransition(.custom(interactive: false))
+                self.informationTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false))
                 self.presentInformation.send(())
             }
             .store(in: &self.subscriptions)
@@ -117,35 +123,67 @@ class ClipPreviewPageTransitionController: NSObject,
     func didPan(_ sender: UIPanGestureRecognizer) {
         switch (sender.state, self.destination) {
         case (.began, .back):
+            guard context == nil else { return }
+            let id = UUID()
+            guard self.previewTransitioningController.beginTransition(id: id, mode: .custom(interactive: true)) else { return }
             self.isPreviewScrollEnabled.send(false)
-            self.previewTransitioningController.beginTransition(.custom(interactive: true))
             self.baseViewController?.dismiss(animated: true, completion: nil)
+            context = .init(id: id, destination: .back)
 
         case (.ended, .back):
+            guard let context = context,
+                  context.destination == .back,
+                  previewTransitioningController.isLocked(by: context.id)
+            else {
+                return
+            }
             if self.previewTransitioningController.isInteractive {
+                self.previewTransitioningController.didPanForDismissal(id: context.id, sender: sender)
                 self.isPreviewScrollEnabled.send(true)
-                self.previewTransitioningController.didPanForDismissal(sender: sender)
             }
             self.destination = nil
+            self.context = nil
 
         case (_, .back):
+            guard let context = context,
+                  context.destination == .back,
+                  previewTransitioningController.isLocked(by: context.id)
+            else {
+                return
+            }
             if self.previewTransitioningController.isInteractive {
-                self.previewTransitioningController.didPanForDismissal(sender: sender)
+                self.previewTransitioningController.didPanForDismissal(id: context.id, sender: sender)
             }
 
         case (.began, .information):
-            self.informationTransitioningController.beginTransition(.custom(interactive: true))
+            guard context == nil else { return }
+            let id = UUID()
+            guard self.informationTransitioningController.beginTransition(id: id, mode: .custom(interactive: true)) else { return }
             self.presentInformation.send(())
+            context = .init(id: id, destination: .information)
 
         case (.ended, .information):
-            if self.informationTransitioningController.isInteractive {
-                self.informationTransitioningController.didPanForPresentation(sender: sender)
+            guard let context = context,
+                  context.destination == .information,
+                  previewTransitioningController.isLocked(by: context.id)
+            else {
+                return
             }
-            self.destination = nil
+            if self.informationTransitioningController.isInteractive {
+                self.informationTransitioningController.didPanForPresentation(id: context.id, sender: sender)
+            }
+            destination = nil
+            self.context = nil
 
         case (_, .information):
+            guard let context = context,
+                  context.destination == .information,
+                  previewTransitioningController.isLocked(by: context.id)
+            else {
+                return
+            }
             if self.informationTransitioningController.isInteractive {
-                self.informationTransitioningController.didPanForPresentation(sender: sender)
+                self.informationTransitioningController.didPanForPresentation(id: context.id, sender: sender)
             }
 
         case (_, .none):
