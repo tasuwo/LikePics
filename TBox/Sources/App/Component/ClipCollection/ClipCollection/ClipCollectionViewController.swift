@@ -119,12 +119,12 @@ extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
         store.state
             .receive(on: clipsUpdateQueue)
-            .onChange(\.clips.displayableValues) { clips in
+            .onChange(\.clips.displayableValues) { [weak self] clips in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(clips.map({ .init($0) }))
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.updateHiddenIconAppearance()
+                self?.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self?.updateHiddenIconAppearance()
                 }
             }
             .store(in: &subscriptions)
