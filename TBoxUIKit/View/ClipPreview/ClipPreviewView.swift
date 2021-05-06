@@ -112,9 +112,13 @@ public class ClipPreviewView: UIView {
         }
         set {
             if newValue {
-                self.indicator.startAnimating()
+                imageView.alpha = 0.8
+                isUserInteractionEnabled = false
+                indicator.startAnimating()
             } else {
-                self.indicator.stopAnimating()
+                imageView.alpha = 1.0
+                isUserInteractionEnabled = true
+                indicator.stopAnimating()
             }
         }
     }
