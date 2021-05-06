@@ -20,16 +20,7 @@ enum ClipPreviewViewReducer: Reducer {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            let (state1, effects1) = prepare(state: nextState, dependency: dependency)
-            let (state2, effects2) = readPreview(state: state1, dependency: dependency)
-            return (state2, effects1 + effects2)
-
-        case .itemUpdated:
-            return (nextState, .none)
-
-        case .failedToLoadItem:
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return readPreview(state: nextState, dependency: dependency)
 
         // MARK: Load Completion
 
@@ -39,28 +30,6 @@ enum ClipPreviewViewReducer: Reducer {
             nextState.source = .image(.init(uiImage: image))
             return (nextState, .none)
         }
-    }
-}
-
-// MARK: - Preparation
-
-extension ClipPreviewViewReducer {
-    static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
-        let query: ClipItemQuery
-        switch dependency.clipQueryService.queryClipItem(having: state.itemId) {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            fatalError("Failed to load clips: \(error.localizedDescription)")
-        }
-
-        let stream = query.clipItem
-            .map { Action.itemUpdated($0) as Action? }
-            .catch { _ in Just(Action.failedToLoadItem) }
-        let effect = Effect(stream, underlying: query, completeWith: .failedToLoadItem)
-
-        return (state, [effect])
     }
 }
 

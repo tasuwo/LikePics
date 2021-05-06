@@ -3,10 +3,16 @@
 //
 
 import Domain
+import UIKit
 
 struct ClipPreviewPageViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
+    }
+
+    enum PageChange {
+        case forward
+        case reverse
     }
 
     let clipId: Clip.Identity
@@ -14,6 +20,7 @@ struct ClipPreviewPageViewState: Equatable {
     var isFullscreen: Bool
 
     var currentIndex: Int?
+    var pageChange: PageChange?
     var items: [ClipItem]
 
     var alert: Alert?
@@ -52,5 +59,17 @@ extension ClipPreviewPageViewState {
         let preloadIndices = backwards.union(forwards).subtracting(Set([index]))
 
         return preloadIndices.map { items[$0].imageId }
+    }
+}
+
+extension ClipPreviewPageViewState.PageChange {
+    var navigationDirection: UIPageViewController.NavigationDirection {
+        switch self {
+        case .forward:
+            return .forward
+
+        case .reverse:
+            return .reverse
+        }
     }
 }

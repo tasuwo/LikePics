@@ -202,7 +202,8 @@ extension ClipPreviewPageViewController {
         else {
             return
         }
-        setViewControllers([viewController], direction: .forward, animated: true, completion: { _ in
+        let direction = state.pageChange?.navigationDirection ?? .forward
+        setViewControllers([viewController], direction: direction, animated: true, completion: { _ in
             self.didChangePage(to: viewController)
         })
     }

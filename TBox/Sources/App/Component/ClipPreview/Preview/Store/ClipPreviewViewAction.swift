@@ -10,11 +10,6 @@ enum ClipPreviewViewAction: Action {
 
     case viewDidLoad
 
-    // MARK: State Observation
-
-    case itemUpdated(ClipItem)
-    case failedToLoadItem
-
     // MARK: Load Completion
 
     case imageLoaded(UIImage?)

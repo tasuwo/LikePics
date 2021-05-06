@@ -29,6 +29,7 @@ enum ClipPreviewPageViewReducer: Reducer {
         // MARK: State Observation
 
         case let .pageChanged(index: index):
+            nextState.pageChange = nil
             nextState.currentIndex = index
             nextState.currentPreloadTargets().forEach {
                 dependency.previewLoader.preloadPreview(imageId: $0)
@@ -272,10 +273,13 @@ extension ClipPreviewPageViewReducer {
 
                 if index < nextState.items.count {
                     nextState.currentIndex = index
+                    nextState.pageChange = .forward
                 } else if index - 1 >= 0 {
                     nextState.currentIndex = index - 1
+                    nextState.pageChange = .reverse
                 } else {
                     nextState.currentIndex = 0
+                    nextState.pageChange = .forward
                 }
 
             case .failure:
