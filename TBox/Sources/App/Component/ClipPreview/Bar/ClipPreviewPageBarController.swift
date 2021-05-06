@@ -55,29 +55,46 @@ class ClipPreviewPageBarController {
 
 extension ClipPreviewPageBarController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
+        store.state
             // HACK: navigationController は ViewController が Hierarchy に乗らないと nil となってしまう
             //       これを一瞬まつ
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.01) {
-                DispatchQueue.main.async {
-                    self.barHostingViewController?.navigationController?.setToolbarHidden(state.isToolBarHidden, animated: true)
-                }
+            .delay(for: 0.01, scheduler: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .onChange(\.isToolBarHidden) { [weak self] isHidden in
+                self?.barHostingViewController?.navigationController?.setToolbarHidden(isHidden, animated: true)
             }
+            .store(in: &subscriptions)
 
-            let toolBarItems = self.resolveBarButtonItems(for: state.toolBarItems)
-            self.barHostingViewController?.setToolbarItems(toolBarItems, animated: true)
+        store.state
+            .onChange(\.toolBarItems) { [weak self] items in
+                guard let self = self else { return }
+                let toolBarItems = self.resolveBarButtonItems(for: items)
+                self.barHostingViewController?.setToolbarItems(toolBarItems, animated: true)
+            }
+            .store(in: &subscriptions)
 
-            let leftBarButtonItems = self.resolveBarButtonItems(for: state.leftBarButtonItems)
-            self.barHostingViewController?.navigationItem.setLeftBarButtonItems(leftBarButtonItems, animated: true)
+        store.state
+            .onChange(\.leftBarButtonItems) { [weak self] items in
+                guard let self = self else { return }
+                let leftBarButtonItems = self.resolveBarButtonItems(for: items)
+                self.barHostingViewController?.navigationItem.setLeftBarButtonItems(leftBarButtonItems, animated: true)
+            }
+            .store(in: &subscriptions)
 
-            let rightBarButtonItems = self.resolveBarButtonItems(for: state.rightBarButtonItems)
-            self.barHostingViewController?.navigationItem.setRightBarButtonItems(rightBarButtonItems, animated: true)
+        store.state
+            .onChange(\.rightBarButtonItems) { [weak self] items in
+                guard let self = self else { return }
+                let rightBarButtonItems = self.resolveBarButtonItems(for: items)
+                self.barHostingViewController?.navigationItem.setRightBarButtonItems(rightBarButtonItems, animated: true)
+            }
+            .store(in: &subscriptions)
 
-            self.presentAlertIfNeeded(for: state)
-        }
-        .store(in: &subscriptions)
+        store.state
+            .removeDuplicates(by: \.alert)
+            .sink { [weak self] state in
+                self?.presentAlertIfNeeded(for: state)
+            }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for state: ClipPreviewPageBarState) {
