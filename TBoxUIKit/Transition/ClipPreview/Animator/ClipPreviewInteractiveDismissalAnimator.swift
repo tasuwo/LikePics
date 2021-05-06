@@ -360,6 +360,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
                                                    from: from,
                                                    to: to,
                                                    innerContext: innerContext)
+            lock.unlock()
             self.startEndAnimation(params: params)
             return
         }
