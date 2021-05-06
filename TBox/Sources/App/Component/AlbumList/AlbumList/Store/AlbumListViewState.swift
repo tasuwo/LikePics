@@ -4,6 +4,7 @@
 
 // swiftlint:disable identifier_name
 
+import CoreGraphics
 import Domain
 
 struct AlbumListViewState: Equatable {
@@ -36,5 +37,13 @@ extension AlbumListViewState {
         albums
             .displayableValues
             .map { _isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
+    }
+
+    var emptyMessageViewAlpha: CGFloat {
+        isEmptyMessageViewDisplaying ? 1 : 0
+    }
+
+    var collectionViewAlpha: CGFloat {
+        isCollectionViewDisplaying ? 1 : 0
     }
 }

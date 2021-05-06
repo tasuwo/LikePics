@@ -33,6 +33,7 @@ class AlbumListViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let albumsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController", qos: .background)
 
     // MARK: - Initializers
 
@@ -86,25 +87,52 @@ class AlbumListViewController: UIViewController {
 
 extension AlbumListViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
+        store.state
+            .receive(on: albumsUpdateQueue)
+            .removeDuplicates(by: { $0.displayableAlbums == $1.displayableAlbums && $0.isEditing == $1.isEditing })
+            .sink { [weak self] state in
+                guard let self = self else { return }
                 let items = state.displayableAlbums.map { Layout.Item(album: $0, isEditing: state.isEditing) }
                 Layout.apply(items: items, to: self.dataSource, in: self.collectionView)
             }
+            .store(in: &subscriptions)
 
-            self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
-            self.collectionView.alpha = state.isCollectionViewDisplaying ? 1 : 0
-            self.searchController.set(isEnabled: state.isSearchBarEnabled)
-            self.searchController.set(text: state.searchQuery)
-            self.navigationItem.leftBarButtonItem?.isEnabled = state.isAddButtonEnabled
-            self.editButtonItem.isEnabled = state.isEditButtonEnabled
-            self.collectionView.dragInteractionEnabled = state.isDragInteractionEnabled
+        store.state
+            .onChange(\.searchQuery) { [weak self] query in
+                self?.searchController.set(text: query)
+            }
+            .store(in: &subscriptions)
 
-            self.presentAlertIfNeeded(for: state)
-        }
-        .store(in: &subscriptions)
+        store.state
+            .bind(\.emptyMessageViewAlpha, to: \.alpha, on: emptyMessageView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.collectionViewAlpha, to: \.alpha, on: collectionView)
+            .store(in: &subscriptions)
+        store.state
+            .onChange(\.isSearchBarEnabled) { [weak self] isEnabled in
+                self?.searchController.set(isEnabled: isEnabled)
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.isAddButtonEnabled) { [weak self] isEnabled in
+                self?.navigationItem.leftBarButtonItem?.isEnabled = isEnabled
+            }
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.isEditButtonEnabled, to: \.isEnabled, on: editButtonItem)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.isDragInteractionEnabled, to: \.dragInteractionEnabled, on: collectionView)
+            .store(in: &subscriptions)
+
+        store.state
+            .removeDuplicates(by: \.alert)
+            .sink { [weak self] state in
+                self?.presentAlertIfNeeded(for: state)
+            }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for state: AlbumListViewState) {

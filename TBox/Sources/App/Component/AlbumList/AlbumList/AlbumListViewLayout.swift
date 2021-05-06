@@ -23,13 +23,17 @@ enum AlbumListViewLayout {
         // MARK: - Equatable
 
         static func == (lhs: Self, rhs: Self) -> Bool {
-            return lhs.album == rhs.album
+            return lhs.album.id == rhs.album.id
+                && lhs.album.title == rhs.album.title
+                && lhs.album.clips == rhs.album.clips
         }
 
         // MARK: - Hashable
 
         func hash(into hasher: inout Hasher) {
-            hasher.combine(album)
+            hasher.combine(album.id)
+            hasher.combine(album.title)
+            hasher.combine(album.clips)
         }
     }
 }

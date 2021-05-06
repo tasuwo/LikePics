@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Album {
+public struct Album: Equatable, Hashable {
     public let id: UUID
     public let title: String
     /// - attention: 順序が保持されている
@@ -84,31 +84,11 @@ public struct Album {
     }
 }
 
-extension Album: Equatable {
-    // MARK: - Equatable
-
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.id == rhs.id
-            && lhs.title == rhs.title
-            && lhs.clips == rhs.clips
-    }
-}
-
 extension Album: Identifiable {
     public typealias Identity = UUID
 
     public var identity: UUID {
         return self.id
-    }
-}
-
-extension Album: Hashable {
-    // MARK: - Hashable
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(title)
-        hasher.combine(clips)
     }
 }
 
