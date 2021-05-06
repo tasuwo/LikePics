@@ -601,17 +601,19 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
         collectionView
     }
 
-    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool) {
+    func displayPreviewingCell() {
         guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
 
+        // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
+        // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある
         view.layoutIfNeeded()
         collectionView.layoutIfNeeded()
 
-        if shouldAdjust {
-            collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
-            view.layoutIfNeeded()
-            collectionView.layoutIfNeeded()
-        }
+        collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+
+        // スクロール後に再描画しないと、セルの座標系が更新されない
+        view.layoutIfNeeded()
+        collectionView.layoutIfNeeded()
     }
 }
 

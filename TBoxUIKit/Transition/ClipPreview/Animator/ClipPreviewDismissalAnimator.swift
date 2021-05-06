@@ -37,7 +37,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromPage = from.animatingPage(self),
             let fromImageView = fromPage.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self, shouldAdjust: true),
+            let toCell = to.animatingCell(self),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -60,6 +60,10 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
         animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.layer.masksToBounds = true
+
+        // Display Cell
+
+        to.displayAnimatingCell(self)
 
         // Preprocess
 

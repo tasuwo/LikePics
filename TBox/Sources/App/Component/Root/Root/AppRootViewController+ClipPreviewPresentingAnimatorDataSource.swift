@@ -12,7 +12,7 @@ protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingCell: ClipPreviewPresentingCell? { get }
     var previewingCellCornerRadius: CGFloat { get }
     var previewingCollectionView: UICollectionView { get }
-    func displayOnScreenPreviewingCellIfNeeded(shouldAdjust: Bool)
+    func displayPreviewingCell()
 }
 
 private extension AppRootViewController {
@@ -42,9 +42,8 @@ private extension AppRootViewController {
 // MARK: - ClipPreviewPresentingAnimatorDataSource
 
 extension AppRootViewController where Self: UIViewController {
-    func animatingCell(_ animator: ClipPreviewAnimator, shouldAdjust: Bool) -> ClipPreviewPresentingCell? {
+    func animatingCell(_ animator: ClipPreviewAnimator) -> ClipPreviewPresentingCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
-        viewController.displayOnScreenPreviewingCellIfNeeded(shouldAdjust: shouldAdjust)
         return viewController.previewingCell
     }
 
@@ -57,6 +56,11 @@ extension AppRootViewController where Self: UIViewController {
     func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
         return viewController.previewingCellCornerRadius
+    }
+
+    func displayAnimatingCell(_ animator: ClipPreviewAnimator) {
+        guard let viewController = self.resolvePresentingViewController() else { return }
+        viewController.displayPreviewingCell()
     }
 
     func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, on containerView: UIView) -> CGRect {
