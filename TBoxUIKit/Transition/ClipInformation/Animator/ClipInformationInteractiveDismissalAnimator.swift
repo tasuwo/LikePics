@@ -35,6 +35,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
 
+    private let lock = NSLock()
+
     // MARK: - Lifecycle
 
     init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
@@ -134,6 +136,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     // MARK: Animation
 
     private func startCancelAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -144,6 +148,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             params.innerContext.transitionContext.cancelInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
+            self.lock.unlock()
         }
 
         UIView.animate(
@@ -170,6 +175,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
     }
 
     private func startEndAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -178,6 +185,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             params.innerContext.transitionContext.finishInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(true)
             self.innerContext = nil
+            self.lock.unlock()
         }
 
         UIView.animate(
@@ -209,6 +217,8 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
     // MARK: - UIViewControllerInteractiveTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        lock.lock(); defer { lock.unlock() }
+
         let containerView = transitionContext.containerView
 
         guard
@@ -267,6 +277,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
             let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
+            lock.unlock()
             self.startEndAnimation(params: params)
             return
         }

@@ -35,6 +35,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
 
+    private let lock = NSLock()
+
     // MARK: - Lifecycle
 
     init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
@@ -134,6 +136,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     // MARK: Animation
 
     private func startCancelAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -144,6 +148,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
             params.innerContext.transitionContext.cancelInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(false)
             self.innerContext = nil
+            self.lock.unlock()
         }
 
         UIView.animate(
@@ -167,6 +172,8 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
     }
 
     private func startEndAnimation(params: FinishAnimationParameters) {
+        lock.lock()
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -175,6 +182,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
             params.innerContext.transitionContext.finishInteractiveTransition()
             params.innerContext.transitionContext.completeTransition(true)
             self.innerContext = nil
+            self.lock.unlock()
         }
 
         UIView.animate(
@@ -205,6 +213,8 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
     // MARK: - UIViewControllerInteractiveTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        lock.lock(); defer { lock.unlock() }
+
         let containerView = transitionContext.containerView
 
         guard
@@ -300,6 +310,7 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
             let params = FinishAnimationParameters(from: from,
                                                    to: to,
                                                    innerContext: innerContext)
+            lock.unlock()
             self.startCancelAnimation(params: params)
             return
         }
