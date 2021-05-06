@@ -8,6 +8,7 @@ import Domain
 import Persistence
 import Smoothie
 import TBoxCore
+import TBoxUIKit
 import UIKit
 
 // swiftlint:disable identifier_name
@@ -59,6 +60,10 @@ class DependencyContainer {
     private let clipCommandQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCommand")
     /// - Attention: 排他制御には`commandLock`を利用する
     private let imageQueryQueue = DispatchQueue(label: "net.tasuwo.TBox.ImageQuery")
+
+    // MARK: Lock
+
+    let transitionLock = TransitionLock()
 
     // MARK: Logger
 
@@ -268,3 +273,5 @@ extension DependencyContainer: HasImageQueryService {
 extension DependencyContainer: HasPreviewLoader {
     var previewLoader: PreviewLoader { _previewLoader }
 }
+
+extension DependencyContainer: HasTransitionLock {}

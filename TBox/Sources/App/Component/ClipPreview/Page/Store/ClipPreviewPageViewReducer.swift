@@ -11,6 +11,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipInformationTransitioningController
     & HasClipInformationViewCaching
     & HasPreviewLoader
+    & HasTransitionLock
 
 enum ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -202,6 +203,7 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .infoRequested:
+            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             if let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipInformationTransitioningController

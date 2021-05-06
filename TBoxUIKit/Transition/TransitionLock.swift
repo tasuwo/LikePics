@@ -7,6 +7,11 @@ public class TransitionLock {
 
     var transitionId: UUID?
 
+    public var isFree: Bool {
+        lock.lock(); defer { lock.unlock() }
+        return transitionId == nil
+    }
+
     public init() {}
 
     @discardableResult

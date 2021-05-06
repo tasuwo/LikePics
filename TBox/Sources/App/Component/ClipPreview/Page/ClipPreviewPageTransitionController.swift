@@ -105,7 +105,7 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginDismissal
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.previewTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false))
+                guard self.previewTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false)) else { return }
                 self.baseViewController?.dismiss(animated: true, completion: nil)
             }
             .store(in: &self.subscriptions)
@@ -113,7 +113,7 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginPresentInformation
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.informationTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false))
+                guard self.informationTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false)) else { return }
                 self.presentInformation.send(())
             }
             .store(in: &self.subscriptions)

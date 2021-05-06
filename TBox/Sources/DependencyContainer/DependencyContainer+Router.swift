@@ -110,6 +110,7 @@ extension DependencyContainer: Router {
             let imageQueryService: ImageQueryServiceProtocol
             let informationViewCache: ClipInformationViewCaching?
             let previewLoader: PreviewLoader
+            let transitionLock: TransitionLock
         }
 
         let informationViewCacheState = ClipInformationViewCacheState(clip: nil,
@@ -122,9 +123,8 @@ extension DependencyContainer: Router {
         let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
                                                                                 dependency: self)
 
-        let lock = TransitionLock()
-        let previewTransitioningController = ClipPreviewTransitioningController(lock: lock, logger: logger)
-        let informationTransitionController = ClipInformationTransitioningController(lock: lock, logger: logger)
+        let previewTransitioningController = ClipPreviewTransitioningController(lock: transitionLock, logger: logger)
+        let informationTransitionController = ClipInformationTransitioningController(lock: transitionLock, logger: logger)
         let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
@@ -134,7 +134,8 @@ extension DependencyContainer: Router {
                                     clipInformationTransitioningController: informationTransitionController,
                                     imageQueryService: imageQueryService,
                                     informationViewCache: informationViewCacheController,
-                                    previewLoader: previewLoader)
+                                    previewLoader: previewLoader,
+                                    transitionLock: transitionLock)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
                                              isFullscreen: false,

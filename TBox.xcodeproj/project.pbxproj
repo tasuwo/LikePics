@@ -118,6 +118,7 @@
 		2CA8AD272642A7E200C62AF8 /* ClipCollection_Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA8AD262642A7E100C62AF8 /* ClipCollection_Layout.swift */; };
 		2CA8AD292642DBE400C62AF8 /* CGRect+scaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA8AD282642DBE400C62AF8 /* CGRect+scaled.swift */; };
 		2CF45AAC2643D0CB004C233F /* TransitionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF45AAB2643D0CB004C233F /* TransitionLock.swift */; };
+		2CF45AAE2643DFC0004C233F /* HasTransitionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF45AAD2643DFC0004C233F /* HasTransitionLock.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
@@ -1054,6 +1055,7 @@
 		2CA8AD262642A7E100C62AF8 /* ClipCollection_Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_Layout.swift; sourceTree = "<group>"; };
 		2CA8AD282642DBE400C62AF8 /* CGRect+scaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+scaled.swift"; sourceTree = "<group>"; };
 		2CF45AAB2643D0CB004C233F /* TransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionLock.swift; sourceTree = "<group>"; };
+		2CF45AAD2643DFC0004C233F /* HasTransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTransitionLock.swift; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -3798,6 +3800,7 @@
 				FD25B5F192DA91DFAEAAEE58 /* HasRouter.swift */,
 				75D103ABF75000E14113BFAA /* HasTextValidator.swift */,
 				823BCEB98141B32977A43111 /* HasUserSettingStorage.swift */,
+				2CF45AAD2643DFC0004C233F /* HasTransitionLock.swift */,
 			);
 			path = Dependency;
 			sourceTree = "<group>";
@@ -5140,6 +5143,7 @@
 				C0AC1B9FFE46DC877F1011B5 /* DependencyContainer.swift in Sources */,
 				7C83DF92D46B639A4F7A4279 /* DependencyContainerConfiguration.swift in Sources */,
 				3A39EE0B1BBE297C30A08A74 /* Effect.swift in Sources */,
+				2CF45AAE2643DFC0004C233F /* HasTransitionLock.swift in Sources */,
 				E61470858999E2CC76EDB0B2 /* Effect_Debounce.swift in Sources */,
 				09F46DC058A71CA77CF5B65E /* HasAlbumSelectionModalSubscription.swift in Sources */,
 				BAE8392A8BAA329B541A0CEA /* HasClipCollectionNavigationBarDelegate.swift in Sources */,
