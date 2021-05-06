@@ -33,8 +33,6 @@ class ClipInformationViewController: UIViewController {
     // MARK: - Temporary
 
     private var transitionId: UUID?
-    private var previousState: ClipInformationViewState?
-    private var snapshotPreviousState: ClipInformationViewState?
     private let snapshotQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipInformationView.Snapshot")
 
     // MARK: - Initializers
@@ -132,40 +130,35 @@ class ClipInformationViewController: UIViewController {
 
 extension ClipInformationViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-            defer { self.previousState = state }
-
+        store.state
+            .removeDuplicates(by: { $0.clip == $1.clip && $0.tags == $1.tags && $0.item == $1.item })
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
-            self.snapshotQueue.async {
-                defer { self.snapshotPreviousState = state }
-
+            .receive(on: snapshotQueue)
+            .sink { [weak self] state in
                 // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
                 guard state.isSuspendedCollectionViewUpdate == false else { return }
-
-                // iPadにてセルが過剰にアニメーションされてしまうケースがあったため、差分がある場合のみ更新をかける
-                guard state.hasDifferentValue(at: \.clip, from: self.snapshotPreviousState)
-                    || state.hasDifferentValue(at: \.tags, from: self.snapshotPreviousState)
-                    || state.hasDifferentValue(at: \.item, from: self.snapshotPreviousState)
-                else {
-                    return
-                }
-                self.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
+                self?.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
             }
+            .store(in: &subscriptions)
 
-            if state.hasDifferentValue(at: \.isHiddenStatusBar, from: self.previousState) {
-                self.setNeedsStatusBarAppearanceUpdate()
+        store.state
+            .onChange(\.isHiddenStatusBar) { [weak self] _ in
+                self?.setNeedsStatusBarAppearanceUpdate()
             }
+            .store(in: &subscriptions)
 
-            if state.hasDifferentValue(at: \.alert, from: self.previousState) {
-                self.presentAlertIfNeeded(for: state.alert)
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(for: alert)
             }
+            .store(in: &subscriptions)
 
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for alert: ClipInformationViewState.Alert?) {
