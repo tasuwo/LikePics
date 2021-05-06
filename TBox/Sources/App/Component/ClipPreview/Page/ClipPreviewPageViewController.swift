@@ -14,6 +14,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     struct BarDependency: ClipPreviewPageBarDependency {
         weak var clipPreviewPageBarDelegate: ClipPreviewPageBarDelegate?
         var imageQueryService: ImageQueryServiceProtocol
+        let transitionLock: TransitionLock
     }
 
     struct Context {
@@ -267,7 +268,8 @@ extension ClipPreviewPageViewController {
     private func configureBarController() {
         guard let context = contextForViewDidLoad else { return }
         let barDependency = BarDependency(clipPreviewPageBarDelegate: self,
-                                          imageQueryService: context.dependency.imageQueryService)
+                                          imageQueryService: context.dependency.imageQueryService,
+                                          transitionLock: context.dependency.transitionLock)
         barController = ClipPreviewPageBarController(state: context.barState, dependency: barDependency)
         barController.alertHostingViewController = self
         barController.barHostingViewController = self

@@ -6,6 +6,7 @@ import Combine
 
 typealias ClipPreviewPageBarDependency = HasClipPreviewPageBarDelegate
     & HasImageQueryService
+    & HasTransitionLock
 
 enum ClipPreviewPageBarReducer: Reducer {
     typealias Dependency = ClipPreviewPageBarDependency
@@ -44,13 +45,19 @@ enum ClipPreviewPageBarReducer: Reducer {
         case .backButtonTapped,
              .infoButtonTapped,
              .browseButtonTapped:
+            // 画面遷移中であった場合、ボタン操作は無視する
+            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             return (nextState, [eventEffect])
 
         case .addButtonTapped:
+            // 画面遷移中であった場合、ボタン操作は無視する
+            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             nextState.alert = .addition
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
+            // 画面遷移中であった場合、ボタン操作は無視する
+            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             if nextState.parentState.items.count > 1 {
                 nextState.alert = .shareTargetSelection
                 return (nextState, [eventEffect])
@@ -63,6 +70,8 @@ enum ClipPreviewPageBarReducer: Reducer {
             }
 
         case .deleteButtonTapped:
+            // 画面遷移中であった場合、ボタン操作は無視する
+            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             nextState.alert = .deletion(includesRemoveFromClip: nextState.parentState.items.count > 1)
             return (nextState, [eventEffect])
 

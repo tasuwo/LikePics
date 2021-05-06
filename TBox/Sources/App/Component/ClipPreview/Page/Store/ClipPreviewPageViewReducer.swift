@@ -197,13 +197,15 @@ extension ClipPreviewPageViewReducer {
     {
         var nextState = state
 
+        // 画面遷移中であった場合、ボタン操作は無視する
+        guard dependency.transitionLock.isFree else { return (nextState, .none) }
+
         switch action {
         case .backed:
             nextState.isDismissed = true
             return (nextState, .none)
 
         case .infoRequested:
-            guard dependency.transitionLock.isFree else { return (nextState, .none) }
             if let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipInformationTransitioningController
