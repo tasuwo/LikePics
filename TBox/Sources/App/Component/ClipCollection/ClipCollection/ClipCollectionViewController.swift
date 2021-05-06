@@ -42,6 +42,7 @@ class ClipCollectionViewController: UIViewController {
 
     private var store: ClipCollectionViewStore
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
 
     // MARK: Temporary
 
@@ -117,7 +118,7 @@ class ClipCollectionViewController: UIViewController {
 extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
         store.state
-            .receive(on: DispatchQueue.global())
+            .receive(on: clipsUpdateQueue)
             .onChange(\.clips.displayableValues) { clips in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])

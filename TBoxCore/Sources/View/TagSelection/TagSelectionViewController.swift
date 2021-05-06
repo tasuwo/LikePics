@@ -28,6 +28,7 @@ public class TagSelectionViewController: UIViewController {
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let tagsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.TagSelectionViewController", qos: .userInteractive)
 
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: TagCollectionView!
@@ -117,7 +118,7 @@ public class TagSelectionViewController: UIViewController {
             .store(in: &self.subscriptions)
 
         dependency.outputs.tags
-            .receive(on: DispatchQueue.global())
+            .receive(on: tagsUpdateQueue)
             .sink { [weak self] tags in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
                 snapshot.appendSections([.main])

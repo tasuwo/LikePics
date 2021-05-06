@@ -74,6 +74,7 @@ public class ClipCreationViewController: UIViewController {
 
     private var subscriptions = Set<AnyCancellable>()
     private weak var delegate: ClipCreationDelegate?
+    private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.ClipCreationViewController", qos: .userInteractive)
 
     // MARK: - Lifecycle
 
@@ -167,7 +168,7 @@ public class ClipCreationViewController: UIViewController {
             .store(in: &self.subscriptions)
 
         dependency.outputs.applySnapshot
-            .receive(on: DispatchQueue.global())
+            .receive(on: clipsUpdateQueue)
             .sink { [weak self] snapshot in
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
                     guard let self = self else { return }

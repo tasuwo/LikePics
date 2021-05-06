@@ -100,6 +100,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let logger: TBoxLoggable
     private var searchStorage: SearchableStorage<Tag> = .init()
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let tagsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.TagSelectionViewModel", qos: .userInteractive)
 
     private let initialSelections: Set<Tag.Identity>
 
@@ -136,7 +137,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
         self.query.tags
             .catch { _ in Just([]) }
             .combineLatest(self.inputtedQuery, self.settingStorage.showHiddenItems)
-            .receive(on: DispatchQueue.global())
+            .receive(on: tagsUpdateQueue)
             .sink { [weak self] tags, query, showHiddenItems in
                 guard let self = self else { return }
 
