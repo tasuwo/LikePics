@@ -117,6 +117,9 @@ class ClipPreviewPageViewController: UIPageViewController {
         super.viewDidAppear(animated)
         cacheStore.execute(.viewDidAppear)
 
+        // HACK: 別画面表示 > rotate > この画面に戻る、といった操作をすると、SizeClassの不整合が生じるため、表示時に同期させる
+        barController.traitCollectionDidChange(to: self.view.traitCollection)
+
         // HACK: 画面遷移時に背景色が消失してしまうケースがあるので、再度適用を行う
         updateFullscreenAppearance()
     }
