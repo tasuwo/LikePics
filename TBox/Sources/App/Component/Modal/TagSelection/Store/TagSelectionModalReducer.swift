@@ -167,8 +167,8 @@ extension TagSelectionModalReducer {
 
         nextState.searchQuery = searchQuery
         nextState._isSomeItemsHidden = isSomeItemsHidden
-        nextState.isCollectionViewDisplaying = !filteringTags.isEmpty
-        nextState.isEmptyMessageViewDisplaying = filteringTags.isEmpty
+        nextState.isCollectionViewHidden = filteringTags.isEmpty
+        nextState.isEmptyMessageViewHidden = !filteringTags.isEmpty
         nextState._searchStorage = searchStorage
 
         if filteringTags.isEmpty, !searchQuery.isEmpty {

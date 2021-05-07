@@ -4,6 +4,7 @@
 
 // swiftlint:disable identifier_name
 
+import CoreGraphics
 import Domain
 
 struct TagSelectionModalState: Equatable {
@@ -15,8 +16,8 @@ struct TagSelectionModalState: Equatable {
     var searchQuery: String
     var tags: Collection<Tag>
 
-    var isCollectionViewDisplaying: Bool
-    var isEmptyMessageViewDisplaying: Bool
+    var isCollectionViewHidden: Bool
+    var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
 
     var alert: Alert?
@@ -25,4 +26,10 @@ struct TagSelectionModalState: Equatable {
 
     var _isSomeItemsHidden: Bool
     var _searchStorage: SearchableStorage<Tag>
+}
+
+extension TagSelectionModalState {
+    var emptyMessageViewAlpha: CGFloat {
+        isEmptyMessageViewHidden ? 0 : 1
+    }
 }
