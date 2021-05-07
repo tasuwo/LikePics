@@ -31,6 +31,7 @@ class ClipMergeViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipMergeViewController")
 
     // MARK: Temporary
 
@@ -73,30 +74,26 @@ class ClipMergeViewController: UIViewController {
 
 extension ClipMergeViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
-                defer { self.previousSnapshotState = state }
-                if state.hasDifferentValue(at: \.tags, from: self.previousSnapshotState)
-                    || state.hasDifferentValue(at: \.items, from: self.previousSnapshotState)
-                {
-                    let snapshot = self.createSnapshot(for: state)
-                    self.dataSource.apply(snapshot)
-                }
+        store.state
+            .receive(on: collectionUpdateQueue)
+            .removeDuplicates(by: { $0.tags == $1.tags && $0.items == $1.items })
+            .sink { [weak self] state in
+                self?.dataSource.apply(Layout.createSnapshot(tags: state.tags, items: state.items))
             }
+            .store(in: &subscriptions)
 
-            self.presentAlertIfNeeded(for: state.alert)
-
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(for: alert)
             }
-        }
-        .store(in: &subscriptions)
-    }
+            .store(in: &subscriptions)
 
-    private func createSnapshot(for state: ClipMergeViewState) -> Layout.Snapshot {
-        return Layout.createSnapshot(tags: state.tags, items: state.items)
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for alert: ClipMergeViewState.Alert?) {
