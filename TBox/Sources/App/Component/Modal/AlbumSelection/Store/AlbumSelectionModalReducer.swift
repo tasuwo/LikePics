@@ -149,8 +149,8 @@ extension AlbumSelectionModalReducer {
 
         nextState.searchQuery = searchQuery
         nextState._isSomeItemsHidden = isSomeItemsHidden
-        nextState.isCollectionViewDisplaying = !filteringAlbums.isEmpty
-        nextState.isEmptyMessageViewDisplaying = filteringAlbums.isEmpty
+        nextState.isCollectionViewHidden = filteringAlbums.isEmpty
+        nextState.isEmptyMessageViewHidden = !filteringAlbums.isEmpty
         nextState._searchStorage = searchStorage
 
         if filteringAlbums.isEmpty, !searchQuery.isEmpty {

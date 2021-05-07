@@ -4,6 +4,7 @@
 
 // swiftlint:disable identifier_name
 
+import CoreGraphics
 import Domain
 
 struct AlbumSelectionModalState: Equatable {
@@ -16,8 +17,8 @@ struct AlbumSelectionModalState: Equatable {
     var albums: Collection<Album>
     var selectedAlbumId: Album.Identity?
 
-    var isCollectionViewDisplaying: Bool
-    var isEmptyMessageViewDisplaying: Bool
+    var isCollectionViewHidden: Bool
+    var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
 
     var alert: Alert?
@@ -26,4 +27,10 @@ struct AlbumSelectionModalState: Equatable {
 
     var _isSomeItemsHidden: Bool
     var _searchStorage: SearchableStorage<Album>
+}
+
+extension AlbumSelectionModalState {
+    var emptyMessageViewAlpha: CGFloat {
+        isEmptyMessageViewHidden ? 0 : 1
+    }
 }

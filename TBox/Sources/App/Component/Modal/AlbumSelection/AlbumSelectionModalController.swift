@@ -31,6 +31,7 @@ class AlbumSelectionModalController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumSelectionModalController")
 
     // MARK: - Initializers
 
@@ -78,28 +79,39 @@ class AlbumSelectionModalController: UIViewController {
 
 extension AlbumSelectionModalController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
+        store.state
+            .receive(on: collectionUpdateQueue)
+            .onChange(\.albums.displayableValues) { [weak self] values in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.albums.displayableValues)
-                self.dataSource.apply(snapshot, animatingDifferences: true)
+                snapshot.appendItems(values)
+                self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
+            .store(in: &subscriptions)
 
-            self.searchBar.isHidden = !state.isCollectionViewDisplaying
-            self.collectionView.isHidden = !state.isCollectionViewDisplaying
+        store.state
+            .bind(\.isCollectionViewHidden, to: \.isHidden, on: searchBar)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.isCollectionViewHidden, to: \.isHidden, on: collectionView)
+            .store(in: &subscriptions)
 
-            self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
+        store.state
+            .bind(\.emptyMessageViewAlpha, to: \.alpha, on: emptyMessageView)
+            .store(in: &subscriptions)
 
-            self.presentAlertIfNeeded(for: state.alert)
-
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(for: alert)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for alert: AlbumSelectionModalState.Alert?) {
