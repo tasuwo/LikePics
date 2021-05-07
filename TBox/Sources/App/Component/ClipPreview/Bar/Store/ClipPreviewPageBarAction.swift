@@ -13,6 +13,11 @@ enum ClipPreviewPageBarAction: Action {
 
     case stateChanged(ClipPreviewPageViewState)
 
+    // MARK: Gesture
+
+    case didTapView
+    case willBeginZoom
+
     // MARK: Bar Button
 
     case backButtonTapped

@@ -35,14 +35,10 @@ class ClipPreviewPageViewController: UIPageViewController {
         return store.stateValue.index(of: viewController.itemId)
     }
 
-    private var isFullscreen = false {
-        didSet { updateFullscreenAppearance() }
-    }
-
     private let transitionController: ClipPreviewPageTransitionControllerType
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
-    override var prefersStatusBarHidden: Bool { isFullscreen }
+    override var prefersStatusBarHidden: Bool { barController.store.stateValue.isFullscreen }
 
     // MARK: Component
 
@@ -115,13 +111,12 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        barController.viewDidAppear()
+
         cacheStore.execute(.viewDidAppear)
 
         // HACK: 別画面表示 > rotate > この画面に戻る、といった操作をすると、SizeClassの不整合が生じるため、表示時に同期させる
         barController.traitCollectionDidChange(to: self.view.traitCollection)
-
-        // HACK: 画面遷移時に背景色が消失してしまうケースがあるので、再度適用を行う
-        updateFullscreenAppearance()
     }
 
     override func viewDidLoad() {
@@ -145,23 +140,11 @@ class ClipPreviewPageViewController: UIPageViewController {
         barController.traitCollectionDidChange(to: view.traitCollection)
     }
 
-    // MARK: - Methods
-
-    private func updateFullscreenAppearance() {
-        setNeedsStatusBarAppearanceUpdate()
-
-        UIView.animate(withDuration: 0.2) {
-            self.navigationController?.toolbar.isHidden = self.isFullscreen
-            self.navigationController?.navigationBar.isHidden = self.isFullscreen
-            self.parent?.view.backgroundColor = self.isFullscreen ? .black : Asset.Color.backgroundClient.color
-        }
-    }
-
     // MARK: - IBActions
 
     @objc
     func didTap(_ sender: UITapGestureRecognizer) {
-        store.execute(.didTapView)
+        barController.store.execute(.didTapView)
     }
 }
 
@@ -169,10 +152,6 @@ class ClipPreviewPageViewController: UIPageViewController {
 
 extension ClipPreviewPageViewController {
     private func bind(to store: Store) {
-        store.state
-            .bindNoRetain(\.isFullscreen, to: \.isFullscreen, on: self)
-            .store(in: &subscriptions)
-
         store.state
             .removeDuplicates()
             .sink { [weak self] state in
@@ -289,7 +268,7 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     // MARK: - ClipPreviewPageViewDelegate
 
     func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView) {
-        store.execute(.willBeginZoom)
+        barController.store.execute(.willBeginZoom)
     }
 }
 

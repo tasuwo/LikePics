@@ -34,6 +34,8 @@ struct ClipPreviewPageBarState: Equatable {
     var rightBarButtonItems: [Item]
     var toolBarItems: [Item]
 
+    var isFullscreen: Bool
+    var isNavigationBarHidden: Bool
     var isToolBarHidden: Bool
 
     var alert: Alert?

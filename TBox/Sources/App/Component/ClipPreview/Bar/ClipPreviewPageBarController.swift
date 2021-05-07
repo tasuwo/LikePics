@@ -44,6 +44,11 @@ class ClipPreviewPageBarController {
         store.execute(.sizeClassChanged(traitCollection.verticalSizeClass))
     }
 
+    func viewDidAppear() {
+        // HACK: 画面遷移時に背景色が消失してしまうケースがあるので、再度適用を行う
+        updateBackground(isFullscreen: store.stateValue.isFullscreen)
+    }
+
     func viewDidLoad() {
         configureBarButtons()
 
@@ -56,13 +61,15 @@ class ClipPreviewPageBarController {
 extension ClipPreviewPageBarController {
     private func bind(to store: Store) {
         store.state
-            // HACK: navigationController は ViewController が Hierarchy に乗らないと nil となってしまう
-            //       これを一瞬まつ
-            .delay(for: 0.01, scheduler: DispatchQueue.global())
-            .receive(on: DispatchQueue.main)
-            .bind(\.isToolBarHidden) { [weak self] isHidden in
-                self?.barHostingViewController?.navigationController?.setToolbarHidden(isHidden, animated: true)
-            }
+            // Note: 画面遷移アニメーション時に背景色がつくことを避けるため、delayさせない
+            .bind(\.isFullscreen) { [weak self] isFullscreen in self?.updateBackground(isFullscreen: isFullscreen) }
+            .store(in: &subscriptions)
+
+        store.state
+            .removeDuplicates(by: { $0.isToolBarHidden == $1.isToolBarHidden && $0.isNavigationBarHidden == $1.isNavigationBarHidden })
+            // HACK: navigationController は ViewController が Hierarchy に乗らないと nil となってしまうこれを一瞬まつ
+            .delay(for: 0.01, scheduler: RunLoop.main)
+            .sink { [weak self] state in self?.updateBarAppearance(state: state) }
             .store(in: &subscriptions)
 
         store.state
@@ -93,6 +100,22 @@ extension ClipPreviewPageBarController {
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
+    }
+
+    private func updateBackground(isFullscreen: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            self.barHostingViewController?.parent?.view.backgroundColor = isFullscreen ? .black : Asset.Color.backgroundClient.color
+        }
+    }
+
+    private func updateBarAppearance(state: ClipPreviewPageBarState) {
+        barHostingViewController?.setNeedsStatusBarAppearanceUpdate()
+
+        guard let baseView = barHostingViewController?.navigationController?.view else { return }
+        UIView.transition(with: baseView, duration: 0.1, options: .transitionCrossDissolve) {
+            self.barHostingViewController?.navigationController?.toolbar.isHidden = state.isToolBarHidden
+            self.barHostingViewController?.navigationController?.navigationBar.isHidden = state.isNavigationBarHidden
+        }
     }
 
     private func presentAlertIfNeeded(for state: ClipPreviewPageBarState) {

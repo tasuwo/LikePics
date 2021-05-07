@@ -40,6 +40,18 @@ enum ClipPreviewPageBarReducer: Reducer {
             nextState.parentState = state
             return (nextState, [eventEffect])
 
+        // MARK: Gesture
+
+        case .didTapView:
+            nextState.isFullscreen = !state.isFullscreen
+            nextState = nextState.updatingAppearance()
+            return (nextState, .none)
+
+        case .willBeginZoom:
+            nextState.isFullscreen = true
+            nextState = nextState.updatingAppearance()
+            return (nextState, .none)
+
         // MARK: Bar Button
 
         case .backButtonTapped,
@@ -109,12 +121,19 @@ private extension ClipPreviewPageBarState {
     func updatingAppearance() -> Self {
         var nextState = self
 
+        if nextState.isFullscreen {
+            nextState.isToolBarHidden = true
+            nextState.isNavigationBarHidden = true
+            return nextState
+        }
+
         let existsUrlAtCurrentItem: Bool = {
             guard let index = nextState.parentState.currentIndex else { return false }
             return nextState.parentState.items[index].url != nil
         }()
 
         nextState.isToolBarHidden = verticalSizeClass == .compact
+        nextState.isNavigationBarHidden = false
 
         if nextState.isToolBarHidden {
             nextState.toolBarItems = []

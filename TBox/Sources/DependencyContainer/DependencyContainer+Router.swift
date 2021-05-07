@@ -138,7 +138,6 @@ extension DependencyContainer: Router {
                                     transitionLock: transitionLock)
 
         let state = ClipPreviewPageViewState(clipId: clipId,
-                                             isFullscreen: false,
                                              currentIndex: nil,
                                              items: [],
                                              alert: nil,
@@ -148,6 +147,8 @@ extension DependencyContainer: Router {
                                                leftBarButtonItems: [],
                                                rightBarButtonItems: [],
                                                toolBarItems: [],
+                                               isFullscreen: false,
+                                               isNavigationBarHidden: false,
                                                isToolBarHidden: false,
                                                alert: nil)
         let cacheState = ClipPreviewPageViewCacheState(clipId: clipId, itemId: nil)

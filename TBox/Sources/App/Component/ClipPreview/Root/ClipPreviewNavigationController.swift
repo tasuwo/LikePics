@@ -33,6 +33,8 @@ class ClipPreviewNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setToolbarHidden(false, animated: false)
+
         view.backgroundColor = Asset.Color.backgroundClient.color
     }
 }

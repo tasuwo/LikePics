@@ -17,8 +17,6 @@ struct ClipPreviewPageViewState: Equatable {
 
     let clipId: Clip.Identity
 
-    var isFullscreen: Bool
-
     var currentIndex: Int?
     var pageChange: PageChange?
     var items: [ClipItem]
