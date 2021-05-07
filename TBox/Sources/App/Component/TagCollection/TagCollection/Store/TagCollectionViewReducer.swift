@@ -237,8 +237,8 @@ extension TagCollectionViewReducer {
             nextState.searchQuery = ""
         }
 
-        nextState.isCollectionViewDisplaying = !filteringTags.isEmpty
-        nextState.isEmptyMessageViewDisplaying = filteringTags.isEmpty
+        nextState.isCollectionViewHidden = filteringTags.isEmpty
+        nextState.isEmptyMessageViewHidden = !filteringTags.isEmpty
         nextState.isSearchBarEnabled = !filteringTags.isEmpty
 
         return nextState

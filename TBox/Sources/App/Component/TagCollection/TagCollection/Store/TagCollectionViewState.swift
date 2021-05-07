@@ -4,6 +4,7 @@
 
 // swiftlint:disable identifier_name
 
+import CoreGraphics
 import Domain
 
 struct TagCollectionViewState: Equatable {
@@ -17,12 +18,18 @@ struct TagCollectionViewState: Equatable {
     var tags: Collection<Tag>
     var searchQuery: String
 
-    var isCollectionViewDisplaying: Bool
-    var isEmptyMessageViewDisplaying: Bool
+    var isCollectionViewHidden: Bool
+    var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
 
     var alert: Alert?
 
     var _isSomeItemsHidden: Bool
     var _searchStorage: SearchableStorage<Tag>
+}
+
+extension TagCollectionViewState {
+    var emptyMessageViewAlpha: CGFloat {
+        isEmptyMessageViewHidden ? 0 : 1
+    }
 }

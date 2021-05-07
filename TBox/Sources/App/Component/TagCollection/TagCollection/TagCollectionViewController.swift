@@ -31,6 +31,7 @@ class TagCollectionViewController: UIViewController {
 
     private var store: TagCollectionViewStore
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.TagCollectionViewController")
 
     // MARK: - Initializers
 
@@ -80,25 +81,36 @@ class TagCollectionViewController: UIViewController {
 
 extension TagCollectionViewController {
     private func bind(to store: TagCollectionViewStore) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            // 初回表示時にCollectionViewの表示位置がズレることがあるため、
-            // バックグラウンドスレッドで余裕を持って更新させる
-            DispatchQueue.global().async {
-                self.applySnapshot(for: state)
+        store.state
+            .receive(on: collectionUpdateQueue)
+            .sink { [weak self] state in
+                self?.applySnapshot(for: state)
             }
+            .store(in: &subscriptions)
 
-            self.collectionView.isHidden = !state.isCollectionViewDisplaying
+        store.state
+            .bind(\.isCollectionViewHidden, to: \.isHidden, on: collectionView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.emptyMessageViewAlpha, to: \.alpha, on: emptyMessageView)
+            .store(in: &subscriptions)
 
-            self.emptyMessageView.alpha = state.isEmptyMessageViewDisplaying ? 1 : 0
+        store.state
+            .onChange(\.isSearchBarEnabled) { [searchController] isEnabled in
+                searchController.set(isEnabled: isEnabled)
+            }
+            .store(in: &subscriptions)
+        store.state
+            .onChange(\.searchQuery) { [searchController] query in
+                searchController.set(text: query)
+            }
+            .store(in: &subscriptions)
 
-            self.searchController.set(isEnabled: state.isSearchBarEnabled)
-            self.searchController.set(text: state.searchQuery)
-
-            self.presentAlertIfNeeded(for: state)
-        }
-        .store(in: &subscriptions)
+        store.state
+            .sink { [weak self] state in
+                self?.presentAlertIfNeeded(for: state)
+            }
+            .store(in: &subscriptions)
     }
 
     private func applySnapshot(for state: TagCollectionViewState) {
