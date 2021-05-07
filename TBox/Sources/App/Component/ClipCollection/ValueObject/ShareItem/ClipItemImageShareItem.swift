@@ -10,6 +10,7 @@ import UIKit
 class ClipItemImageShareItem: UIActivityItemProvider {
     let imageId: ImageContainer.Identity
     let imageQueryService: ImageQueryServiceProtocol
+    private let metadata: LPLinkMetadata
 
     // 画像データはCoreDataから直接読み出す
     // アプリから ActivityController に渡す前に全ての画像をロードすると遅くなる恐れがあるので、遅延して読み込ませる
@@ -35,6 +36,17 @@ class ClipItemImageShareItem: UIActivityItemProvider {
         self.imageId = imageId
         self.imageQueryService = imageQueryService
 
+        self.metadata = LPLinkMetadata()
+        self.metadata.imageProvider = NSItemProvider(object: UIImage())
+
         super.init(placeholderItem: UIImage())
+    }
+}
+
+extension ClipItemImageShareItem {
+    // MARK: - UIActivityItemSource
+
+    override func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+        return metadata
     }
 }
