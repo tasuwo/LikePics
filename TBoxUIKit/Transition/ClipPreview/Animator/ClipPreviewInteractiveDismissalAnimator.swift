@@ -172,6 +172,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private func startCancelAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
+        logger.write(ConsoleLog(level: .debug, message: "Start cancel animation for ClipPreviewPageView dismissal", scope: .transition))
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -182,6 +184,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                 params.innerContext.transitionContext.completeTransition(false)
                 self.innerContext = nil
                 self.lock.unlock()
+
+                self.logger.write(ConsoleLog(level: .debug, message: "Finish cancel animation for ClipPreviewPageView dismissal", scope: .transition))
             }
         }
 
@@ -209,6 +213,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private func startEndAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
+        logger.write(ConsoleLog(level: .debug, message: "Start end animation for ClipPreviewPageView dismissal", scope: .transition))
+
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
@@ -217,6 +223,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                 params.innerContext.transitionContext.completeTransition(true)
                 self.innerContext = nil
                 self.lock.unlock()
+
+                self.logger.write(ConsoleLog(level: .debug, message: "Finish end animation for ClipPreviewPageView dismissal", scope: .transition))
             }
         }
 
