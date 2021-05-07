@@ -88,16 +88,16 @@ class DependencyContainer {
         self.cloudUsageContextStorage = cloudUsageContextStorage
         self.cloudAvailabilityObserver = cloudAvailabilityObserver
 
-        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled)
+        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled, logger: logger)
 
         self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
         // Note: clipStorage, imageStorage は、同一トランザクションとして書き込みを行うことが多いため、
         //       同一Contextとする
-        self.clipStorage = ClipStorage(context: self.commandContext)
+        self.clipStorage = ClipStorage(context: self.commandContext, logger: logger)
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
-        self._imageQueryService = ImageQueryService(context: self.imageQueryContext)
+        self._imageQueryService = ImageQueryService(context: self.imageQueryContext, logger: logger)
 
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
         self._clipSearchSettingService = Persistence.ClipSearchSettingService()

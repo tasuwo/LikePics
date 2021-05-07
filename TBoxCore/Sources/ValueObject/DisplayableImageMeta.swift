@@ -46,7 +46,6 @@ struct SelectableImage {
                                        imageSize: CGSize(width: pixelWidth, height: pixelHeight))
             }
             .catch { _ -> AnyPublisher<SelectableImage?, Never> in
-                RootLogger.shared.write(ConsoleLog(level: .info, message: "Failed to resolve size at \(url)"))
                 return Just(SelectableImage?.none)
                     .eraseToAnyPublisher()
             }

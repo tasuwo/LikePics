@@ -61,7 +61,7 @@ class AppRootSplitViewController: UISplitViewController {
 
     init(factory: Factory,
          integrityViewModel: ClipIntegrityResolvingViewModelType,
-         logger: Loggable = RootLogger.shared)
+         logger: Loggable)
     {
         self.factory = factory
         self.integrityViewModel = integrityViewModel

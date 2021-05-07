@@ -18,10 +18,13 @@ public class ImageQueryService {
         }
     }
 
+    private let logger: Loggable
+
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext) {
+    public init(context: NSManagedObjectContext, logger: Loggable) {
         self.context = context
+        self.logger = logger
     }
 }
 
@@ -40,7 +43,7 @@ extension ImageQueryService: OriginalImageLoader {
 
     public func loadData(with request: OriginalImageRequest) -> Data? {
         guard let request = request as? ImageDataLoadRequest else {
-            RootLogger.shared.write(ConsoleLog(level: .error, message: "不正なリクエスト"))
+            logger.write(ConsoleLog(level: .error, message: "不正なリクエスト"))
             return nil
         }
         return try? self.read(having: request.imageId)

@@ -63,7 +63,6 @@ class TextEditAlertController: NSObject {
                  on viewController: UIViewController)
     {
         guard presentingAlert == nil else {
-            RootLogger.shared.write(ConsoleLog(level: .info, message: "既にアラート表示中のためpresentを無視します"))
             return
         }
 

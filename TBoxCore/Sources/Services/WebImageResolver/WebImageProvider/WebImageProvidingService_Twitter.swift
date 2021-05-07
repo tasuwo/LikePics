@@ -56,10 +56,6 @@ public extension WebImageProvidingService {
                                 .eraseToAnyPublisher()
                         }
 
-                        RootLogger.shared.write(ConsoleLog(level: .debug, message: """
-                        Twitter WebImage loading. Transition: \(state.label) => \(nextState.label)
-                        """))
-
                         switch nextState {
                         case .`init`:
                             return Fail(error: WebImageUrlFinderError.internalError)

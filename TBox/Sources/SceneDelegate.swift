@@ -64,7 +64,8 @@ extension SceneDelegate: MainAppLauncher {
 
             let rootViewModel = container.makeClipIntegrityResolvingViewModel()
             // TODO: iPad/iPhoneで切り替える
-            let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel)
+            let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel,
+                                                             logger: container.logger)
 
             self.window?.rootViewController?.dismiss(animated: true) {
                 self.window?.rootViewController = rootViewController
@@ -75,7 +76,6 @@ extension SceneDelegate: MainAppLauncher {
 
             self.cloudStackLoader?.startObserveCloudAvailability()
         } catch {
-            RootLogger.shared.write(ConsoleLog(level: .critical, message: "Unabled to launch app. \(error.localizedDescription)"))
             fatalError("Unable to launch app.")
         }
     }

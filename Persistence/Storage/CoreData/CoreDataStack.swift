@@ -80,7 +80,7 @@ public class CoreDataStack {
 
     public init(isICloudSyncEnabled: Bool,
                 notificationCenter: NotificationCenter = .default,
-                logger: Loggable = RootLogger.shared)
+                logger: Loggable)
     {
         self.persistentContainer = Self.makeContainer(isICloudSyncEnabled: isICloudSyncEnabled)
         self.isICloudSyncEnabled = isICloudSyncEnabled

@@ -396,12 +396,10 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
 
     private func presentTagSelectionView() {
         guard let parent = self.parent else {
-            RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to resolve parent view controller for opening tag selection view"))
             return
         }
         let selectedTags = Set(self.viewModel.outputs.tags.value.map({ $0.identity }))
         guard let nextVC = self.factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else {
-            RootLogger.shared.write(ConsoleLog(level: .error, message: "Failed to open tag selection view"))
             return
         }
         parent.present(nextVC, animated: true, completion: nil)

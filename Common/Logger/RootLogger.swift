@@ -3,8 +3,6 @@
 //
 
 public class RootLogger {
-    public static let shared = RootLogger()
-
     private let internalLoggers: [Loggable]
 
     public init(loggers: [Loggable] = [ConsoleLogger()]) {

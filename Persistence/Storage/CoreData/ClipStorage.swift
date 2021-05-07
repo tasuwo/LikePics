@@ -23,7 +23,7 @@ public class ClipStorage {
 
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext, logger: Loggable = RootLogger.shared) {
+    public init(context: NSManagedObjectContext, logger: Loggable) {
         self.context = context
         self.logger = logger
     }

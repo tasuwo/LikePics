@@ -33,7 +33,7 @@ class DependencyContainer {
             fatalError("Failed to resolve main bundle.")
         }
 
-        self.logger = RootLogger.shared
+        self.logger = RootLogger()
         let imageStorage = try TemporaryImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
         let clipStorage = try TemporaryClipStorage(config: .resolve(for: mainBundle, kind: .group),
                                                    logger: self.logger)
