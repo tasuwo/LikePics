@@ -157,6 +157,13 @@ extension SearchEntryViewController {
     }
 
     private func configureSearchController() {
+        let filterButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"),
+                                               style: .plain,
+                                               target: nil,
+                                               action: nil)
+        navigationItem.rightBarButtonItem = filterButtonItem
+        resultsController.filterButtonItem = filterButtonItem
+
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsSearchResultsController = false
@@ -169,13 +176,6 @@ extension SearchEntryViewController {
 
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
-
-        let filterButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"),
-                                               style: .plain,
-                                               target: nil,
-                                               action: nil)
-        navigationItem.rightBarButtonItem = filterButtonItem
-        resultsController.filterButtonItem = filterButtonItem
 
         searchController.showsSearchResultsController = true
     }

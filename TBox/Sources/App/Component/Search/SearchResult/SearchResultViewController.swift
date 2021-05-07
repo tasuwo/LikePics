@@ -21,12 +21,13 @@ class SearchResultViewController: UIViewController {
     private let notFoundMessageView = NotFoundMessageView()
     private var dataSource: Layout.DataSource!
 
-    weak var filterButtonItem: UIBarButtonItem?
+    var filterButtonItem: UIBarButtonItem!
 
     // MARK: Store
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.SearchResultViewController")
 
     // MARK: Dependencies
 
@@ -88,38 +89,51 @@ extension SearchResultViewController {
 
 extension SearchResultViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
-                self.applySnapshot(for: state)
+        store.state
+            .removeDuplicates(by: { $0.tokenCandidates == $1.tokenCandidates && $0.searchResults == $1.searchResults })
+            .receive(on: collectionUpdateQueue)
+            .sink { [weak self] state in
+                self?.applySnapshot(tokenCandidates: state.tokenCandidates, searchResults: state.searchResults)
             }
+            .store(in: &subscriptions)
 
-            self.notFoundMessageView.message = state.notFoundMessage
-            self.notFoundMessageView.alpha = state.isNotFoundMessageDisplaying ? 1 : 0
+        store.state
+            .bind(\.notFoundMessage, to: \.message, on: notFoundMessageView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.notFoundMessageViewAlpha, to: \.alpha, on: notFoundMessageView)
+            .store(in: &subscriptions)
 
-            self.filterButtonItem?.menu = self.filterMenuBuilder.build(state.menuState,
-                                                                       isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden) { [weak self] change in
-                self?.store.execute(.displaySettingMenuChanged(change))
-            } sortChangeHandler: { [weak self] change in
-                self?.store.execute(.sortMenuChanged(change))
+        store.state
+            .removeDuplicates(by: { $0.menuState == $1.menuState && $0.isSomeItemsHidden == $1.isSomeItemsHidden })
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                self.filterButtonItem.menu = self.filterMenuBuilder.build(state.menuState,
+                                                                          isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden) { change in
+                    self.store.execute(.displaySettingMenuChanged(change))
+                } sortChangeHandler: { change in
+                    self.store.execute(.sortMenuChanged(change))
+                }
             }
+            .store(in: &subscriptions)
 
-            let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
-            let nextTokens = state.inputtedTokens
-            if currentTokens != nextTokens {
-                self.searchController.searchBar.searchTextField.text = state.inputtedText
-                self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
+        store.state
+            .removeDuplicates(by: \.inputtedTokens)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
+                let nextTokens = state.inputtedTokens
+                if currentTokens != nextTokens {
+                    self.searchController.searchBar.searchTextField.text = state.inputtedText
+                    self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
+                }
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
     }
 
-    private func applySnapshot(for state: SearchResultViewState) {
-        let nextTokenCandidates = state.tokenCandidates.map { Layout.Item.tokenCandidate($0) }
-        let nextResults = state.searchResults.map { Layout.Item.result($0) }
-
-        guard dataSource.snapshot().isDifferent(from: state) else { return }
+    private func applySnapshot(tokenCandidates: [ClipSearchToken], searchResults: [Clip]) {
+        let nextTokenCandidates = tokenCandidates.map { Layout.Item.tokenCandidate($0) }
+        let nextResults = searchResults.map { Layout.Item.result($0) }
 
         var snapshot = Layout.Snapshot()
 
@@ -134,31 +148,6 @@ extension SearchResultViewController {
         }
 
         dataSource.apply(snapshot, animatingDifferences: true)
-    }
-}
-
-private extension SearchResultViewController.Layout.Snapshot {
-    func isDifferent(from state: SearchResultViewState) -> Bool {
-        let newTokenCandidates = state.tokenCandidates.map { SearchResultViewController.Layout.Item.tokenCandidate($0) }
-        let newResults = state.searchResults.map { SearchResultViewController.Layout.Item.result($0) }
-
-        let isDifferentTokenCandidatesFromNew: Bool = {
-            if self.sectionIdentifiers.contains(.tokenCandidates) {
-                return self.itemIdentifiers(inSection: .tokenCandidates) != newTokenCandidates
-            } else {
-                return !newTokenCandidates.isEmpty
-            }
-        }()
-
-        let isDifferentResultsFromNew: Bool = {
-            if self.sectionIdentifiers.contains(.results) {
-                return self.itemIdentifiers(inSection: .results) != newResults
-            } else {
-                return !newResults.isEmpty
-            }
-        }()
-
-        return isDifferentTokenCandidatesFromNew || isDifferentResultsFromNew
     }
 }
 

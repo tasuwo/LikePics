@@ -4,7 +4,7 @@
 
 import Domain
 
-struct SearchMenuState {
+struct SearchMenuState: Equatable {
     let shouldSearchOnlyHiddenClip: Bool?
     let sort: ClipSearchSort
 }

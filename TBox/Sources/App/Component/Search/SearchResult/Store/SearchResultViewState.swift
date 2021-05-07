@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import CoreGraphics
 import Domain
 
 struct SearchResultViewState: Equatable {
@@ -65,7 +66,11 @@ extension SearchResultViewState {
         !searchQuery.isEmpty && !isSearching && isResultsEmpty
     }
 
-    var notFoundMessage: String {
+    var notFoundMessageViewAlpha: CGFloat {
+        isNotFoundMessageDisplaying ? 1 : 0
+    }
+
+    var notFoundMessage: String? {
         return L10n.searchResultNotFoundMessage(searchQuery.displayTitle)
     }
 }
