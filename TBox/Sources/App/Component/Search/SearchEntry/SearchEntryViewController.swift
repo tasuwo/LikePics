@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Domain
 import UIKit
 
 class SearchEntryViewController: UIViewController {
@@ -22,6 +23,7 @@ class SearchEntryViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.SearchEntryViewController")
 
     // MARK: - Initializers
 
@@ -66,38 +68,42 @@ class SearchEntryViewController: UIViewController {
 
 extension SearchEntryViewController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
-                self.applySnapshot(for: state)
+        store.state
+            .receive(on: collectionUpdateQueue)
+            .removeDuplicates(by: { $0.searchHistories == $1.searchHistories && $0.isSomeItemsHidden && $1.isSomeItemsHidden })
+            .sink { [weak self] state in
+                self?.applySnapshot(searchHistories: state.searchHistories,
+                                    isSomeItemsHidden: state.isSomeItemsHidden)
             }
+            .store(in: &subscriptions)
 
-            self.presentAlertIfNeeded(for: state)
-        }
-        .store(in: &subscriptions)
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(for: alert)
+            }
+            .store(in: &subscriptions)
     }
 
-    private func applySnapshot(for state: SearchEntryViewState) {
+    private func applySnapshot(searchHistories: [ClipSearchHistory], isSomeItemsHidden: Bool) {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.main])
 
-        snapshot.appendItems([.historyHeader(enabledRemoveAllButton: !state.searchHistories.isEmpty)])
+        snapshot.appendItems([.historyHeader(enabledRemoveAllButton: !searchHistories.isEmpty)])
 
-        if state.searchHistories.isEmpty {
+        if searchHistories.isEmpty {
             snapshot.appendItems([.empty], toSection: .main)
         } else {
-            let histories = state.searchHistories
-                .map { Layout.Item.history(.init(isSomeItemsHidden: state.isSomeItemsHidden, original: $0)) }
+            let histories = searchHistories
+                .map { Layout.Item.history(.init(isSomeItemsHidden: isSomeItemsHidden, original: $0)) }
             snapshot.appendItems(histories, toSection: .main)
         }
 
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    private func presentAlertIfNeeded(for state: SearchEntryViewState) {
-        switch state.alert {
+    private func presentAlertIfNeeded(for alert: SearchEntryViewState.Alert?) {
+        switch alert {
         case .removeAll:
             presentRemoveAllConfirmationAlert()
 
