@@ -75,11 +75,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            guard sender.state.isContinuousGestureFinished else {
-                self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipInformationView is not ready. Ignored gesture."))
-                return
-            }
-            self.shouldEndImmediately = true
+            logger.write(ConsoleLog(level: .debug, message: "Ignored '\(sender.state.description)' gesture for ClipInformationView dismissal", scope: .transition))
+            shouldEndImmediately = sender.state.isContinuousGestureFinished
             return
         }
 
@@ -117,6 +114,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
         transitionContext.updateInteractiveTransition(progress)
 
         // End Animation
+
+        logger.write(ConsoleLog(level: .debug, message: "Handle '\(sender.state.description)' gesture for ClipInformationView dismissal", scope: .transition))
 
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
@@ -228,6 +227,8 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         lock.lock(); defer { lock.unlock() }
 
+        logger.write(ConsoleLog(level: .debug, message: "Start transition for ClipInformationView dismissal", scope: .transition))
+
         let containerView = transitionContext.containerView
 
         guard
@@ -239,6 +240,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             let targetPage = to.animatingPageView(self),
             let toViewBaseView = to.baseView(self)
         else {
+            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipInformationView dismissal", scope: .transition))
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
@@ -287,7 +289,8 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             self.shouldEndImmediately = false
             let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
             lock.unlock()
-            self.startEndAnimation(params: params)
+            logger.write(ConsoleLog(level: .debug, message: "Immediately ended transition for ClipInformationView dismissal", scope: .transition))
+            startEndAnimation(params: params)
             return
         }
 

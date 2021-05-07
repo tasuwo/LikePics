@@ -72,8 +72,11 @@ class DependencyContainer {
     // MARK: - Lifecycle
 
     init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityObserver) throws {
+        self.logger = RootLogger(loggers: [
+            ConsoleLogger(scopes: [.default, .transition])
+        ])
+
         self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
-        self.logger = RootLogger.shared
         self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
 

@@ -113,6 +113,8 @@
 		2C1538F3264247E400647682 /* ClipCollectionViewCellSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1538F2264247E400647682 /* ClipCollectionViewCellSize.swift */; };
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */; };
+		2C4C95012644D2E1003DA34C /* ConsoleLog_Scope+Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4C95002644D2E1003DA34C /* ConsoleLog_Scope+Transition.swift */; };
+		2C4C95032644D3E4003DA34C /* UIGestureRecognizer_State+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4C95022644D3E4003DA34C /* UIGestureRecognizer_State+description.swift */; };
 		2C77F39D2644C9500042CC49 /* UIGestureRecognizer_State+isContinuousGestureFinished.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C77F39C2644C9500042CC49 /* UIGestureRecognizer_State+isContinuousGestureFinished.swift */; };
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
@@ -1052,6 +1054,8 @@
 		2C1538F2264247E400647682 /* ClipCollectionViewCellSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionViewCellSize.swift; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C21EF6A00BBA0A7A0E60795 /* CloudAccountIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountIdentifier.swift; sourceTree = "<group>"; };
+		2C4C95002644D2E1003DA34C /* ConsoleLog_Scope+Transition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsoleLog_Scope+Transition.swift"; sourceTree = "<group>"; };
+		2C4C95022644D3E4003DA34C /* UIGestureRecognizer_State+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer_State+description.swift"; sourceTree = "<group>"; };
 		2C77F39C2644C9500042CC49 /* UIGestureRecognizer_State+isContinuousGestureFinished.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer_State+isContinuousGestureFinished.swift"; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CA8AD262642A7E100C62AF8 /* ClipCollection_Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_Layout.swift; sourceTree = "<group>"; };
@@ -3947,6 +3951,8 @@
 				44BA8E9BB6B01F3486975FFC /* UISwitch+setOnSmoothly.swift */,
 				73250ADD960378BE7B95F8CC /* UIView+ConstraintFittingIn.swift */,
 				2C77F39C2644C9500042CC49 /* UIGestureRecognizer_State+isContinuousGestureFinished.swift */,
+				2C4C95002644D2E1003DA34C /* ConsoleLog_Scope+Transition.swift */,
+				2C4C95022644D3E4003DA34C /* UIGestureRecognizer_State+description.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -4808,6 +4814,7 @@
 				077D1833CDA3E6B5394520B4 /* ListSectionBackgroundDecorationView.swift in Sources */,
 				916648F6C2BC367A2053DF53 /* ListSectionHeader.swift in Sources */,
 				DCDD95AC9E6C362CF9ED38A2 /* MultiLineButton.swift in Sources */,
+				2C4C95012644D2E1003DA34C /* ConsoleLog_Scope+Transition.swift in Sources */,
 				C35C376F659B28DC5AA0A5A0 /* NoFoundMessageView.swift in Sources */,
 				3090938893EC4299AC4C5EF7 /* PaddingTextField.swift in Sources */,
 				960DEDA37D26E6D15C62AC0E /* RoundedButton.swift in Sources */,
@@ -4829,6 +4836,7 @@
 				8E886B38ECD88E1A28A0871D /* UIImage+AspectRatioConstraint.swift in Sources */,
 				C7670115B50F3C70D32AD9E9 /* UIResponder+NextOfType.swift in Sources */,
 				83577A8727B0E2CEC339CC46 /* UISwitch+setOnSmoothly.swift in Sources */,
+				2C4C95032644D3E4003DA34C /* UIGestureRecognizer_State+description.swift in Sources */,
 				2C1538F12642313400647682 /* ClipCollectionThumbnailView.swift in Sources */,
 				8DED993F9A8F575E4820465C /* UIView+ConstraintFittingIn.swift in Sources */,
 				6625F3FA14E96DD856E280D2 /* UncategorizedCell.swift in Sources */,
