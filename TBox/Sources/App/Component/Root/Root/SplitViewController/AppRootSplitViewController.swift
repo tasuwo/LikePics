@@ -54,14 +54,14 @@ class AppRootSplitViewController: UISplitViewController {
 
     // MARK: Privates
 
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Initializers
 
     init(factory: Factory,
          integrityViewModel: ClipIntegrityResolvingViewModelType,
-         logger: TBoxLoggable = RootLogger.shared)
+         logger: Loggable = RootLogger.shared)
     {
         self.factory = factory
         self.integrityViewModel = integrityViewModel

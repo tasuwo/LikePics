@@ -28,11 +28,11 @@ public class ClipInformationTransitioningController: NSObject {
     private var dismissalInteractiveAnimator: ClipInformationInteractiveDismissalAnimator?
     private var transitionMode: ClipInformationTransitionMode = .initialValue
     private let lock: TransitionLock
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     // MARK: - Lifecycle
 
-    public init(lock: TransitionLock, logger: TBoxLoggable) {
+    public init(lock: TransitionLock, logger: Loggable) {
         self.lock = lock
         self.logger = logger
     }

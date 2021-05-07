@@ -17,7 +17,7 @@ protocol ViewControllerFactory {
 }
 
 class DependencyContainer {
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }

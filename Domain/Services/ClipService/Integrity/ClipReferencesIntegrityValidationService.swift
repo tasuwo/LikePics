@@ -9,7 +9,7 @@ public class ClipReferencesIntegrityValidationService {
     private let referenceClipStorage: ReferenceClipStorageProtocol
     private let commandQueue: StorageCommandQueue
     private let lock: NSRecursiveLock
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     // MARK: - Lifecycle
 
@@ -17,7 +17,7 @@ public class ClipReferencesIntegrityValidationService {
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 commandQueue: StorageCommandQueue,
                 lock: NSRecursiveLock,
-                logger: TBoxLoggable)
+                logger: Loggable)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage

@@ -23,13 +23,13 @@ public protocol ClipPreviewTransitionControllerProtocol {
 
 public class ClipPreviewTransitioningController: NSObject {
     private let lock: TransitionLock
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private var dismissalInteractiveAnimator: ClipPreviewInteractiveDismissalAnimator?
     private var transitionMode: ClipPreviewTransitionMode = .initialValue
 
     // MARK: - Lifecycle
 
-    public init(lock: TransitionLock, logger: TBoxLoggable) {
+    public init(lock: TransitionLock, logger: Loggable) {
         self.lock = lock
         self.logger = logger
     }

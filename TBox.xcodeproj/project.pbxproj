@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0000FB2B9C78F9ABBE777C96 /* RealmSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 133FD8A9180124177EEB3A16 /* RealmSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0090D3E9FCC89A0DC298FD9B /* AlbumSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A390DA9C058A402CAFB62AE /* AlbumSelectionCell.xib */; };
-		00F977790C27D6B6D9F9D6F6 /* TBoxLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D6DA3C17F4277013DCD4D0 /* TBoxLog.swift */; };
+		00F977790C27D6B6D9F9D6F6 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D6DA3C17F4277013DCD4D0 /* Log.swift */; };
 		0107B38A8A32FF4D4FAE3581 /* AlbumListViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0D3E6726751A4B7BCD27BC /* AlbumListViewReducer.swift */; };
 		020A2C4F9280EF31CBDD3549 /* Publisher+assignNotRetain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35FF5FED277D7D3546DA7DF /* Publisher+assignNotRetain.swift */; };
 		027226F5AE64612819E4EA0F /* TemporaryImageStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD41B2DAB44C06814F0DABD7 /* TemporaryImageStorage_Configuration+Constants.swift */; };
@@ -218,7 +218,7 @@
 		52D07CB09516DA4DCA4955D9 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75597156848346925DC3F5BA /* WebImageProviderPreset.swift */; };
 		532EE67F2576C559351CFF70 /* WeakContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E506284CB0B1BE25EDAF5 /* WeakContainer.swift */; };
 		537836814ED4537A34CC2065 /* ThumbnailLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66C622F87D1308E1EF25995 /* ThumbnailLoader.swift */; };
-		53AF91B28ECA3502815051CF /* TBoxLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B15A90218316F209E13BF8 /* TBoxLoggable.swift */; };
+		53AF91B28ECA3502815051CF /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B15A90218316F209E13BF8 /* Loggable.swift */; };
 		540C55420C4EB7F2FE92D197 /* ImageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F81EFAC9C98C4D02CB6FCC1 /* ImageContainer.swift */; };
 		5452AF459725932A33DD64A6 /* ClipPreviewPresentedAnimatorDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F5B6EE677428BB6D918D4 /* ClipPreviewPresentedAnimatorDataSource.swift */; };
 		54E1A8E1CB1DE4835A576A41 /* ImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC5B16AF623D758E441B91E /* ImageSource.swift */; };
@@ -1240,7 +1240,7 @@
 		81D36E5B34039C00183839FC /* TemporaryClipStorage_Configuration+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemporaryClipStorage_Configuration+Constants.swift"; sourceTree = "<group>"; };
 		823BCEB98141B32977A43111 /* HasUserSettingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasUserSettingStorage.swift; sourceTree = "<group>"; };
 		84A9023F8DF190A30687493B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		84B15A90218316F209E13BF8 /* TBoxLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLoggable.swift; sourceTree = "<group>"; };
+		84B15A90218316F209E13BF8 /* Loggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
 		84F76C13FDFA2B0115A0D9BD /* ClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageProtocol.swift; sourceTree = "<group>"; };
 		85A84B226F437C0987A58D07 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		86276BDFC1D03B0227826E5A /* NotFoundMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotFoundMessageView.xib; sourceTree = "<group>"; };
@@ -1276,7 +1276,7 @@
 		97D0F26477E9643D46F83BC3 /* Ordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ordered.swift; sourceTree = "<group>"; };
 		98536600F023AB2856E91B67 /* ClipItemEditContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClipItemEditContentView.xib; sourceTree = "<group>"; };
 		98B31EA8C1CA64CEA9AA6FDC /* ClipMergeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewController.swift; sourceTree = "<group>"; };
-		99D6DA3C17F4277013DCD4D0 /* TBoxLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxLog.swift; sourceTree = "<group>"; };
+		99D6DA3C17F4277013DCD4D0 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		99F496B6B9260BDCAD7F5FCC /* ClipCreationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationViewLayout.swift; sourceTree = "<group>"; };
 		99F732A15804A20E7AD4918D /* ImageExtensionResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensionResolverSpec.swift; sourceTree = "<group>"; };
 		9A3E21B8C1D0D6CAF52BE29C /* HasClipCollectionNavigationBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipCollectionNavigationBarDelegate.swift; sourceTree = "<group>"; };
@@ -2004,8 +2004,8 @@
 			isa = PBXGroup;
 			children = (
 				E09C03B5155BEFFEDBC7AB0E /* RootLogger.swift */,
-				99D6DA3C17F4277013DCD4D0 /* TBoxLog.swift */,
-				84B15A90218316F209E13BF8 /* TBoxLoggable.swift */,
+				99D6DA3C17F4277013DCD4D0 /* Log.swift */,
+				84B15A90218316F209E13BF8 /* Loggable.swift */,
 				E06338814AAD242BABE888DD /* Console */,
 			);
 			path = Logger;
@@ -4702,8 +4702,8 @@
 				D7D5A431F175C1FB2494710D /* Result+Value.swift in Sources */,
 				A856BC4EFC37AFE79C836330 /* RootLogger.swift in Sources */,
 				2CA8AD292642DBE400C62AF8 /* CGRect+scaled.swift in Sources */,
-				00F977790C27D6B6D9F9D6F6 /* TBoxLog.swift in Sources */,
-				53AF91B28ECA3502815051CF /* TBoxLoggable.swift in Sources */,
+				00F977790C27D6B6D9F9D6F6 /* Log.swift in Sources */,
+				53AF91B28ECA3502815051CF /* Loggable.swift in Sources */,
 				532EE67F2576C559351CFF70 /* WeakContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

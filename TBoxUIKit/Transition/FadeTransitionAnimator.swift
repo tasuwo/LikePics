@@ -10,11 +10,11 @@ protocol FadeTransitionAnimatorProtocol {
 }
 
 class FadeTransitionAnimator {
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable) {
+    init(logger: Loggable) {
         self.logger = logger
     }
 }

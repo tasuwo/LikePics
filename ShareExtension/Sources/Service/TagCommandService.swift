@@ -7,11 +7,11 @@ import Domain
 
 class TagCommandService {
     private let storage: ReferenceClipStorageProtocol
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     // MARK: - Lifecycle
 
-    init(storage: ReferenceClipStorageProtocol, logger: TBoxLoggable) {
+    init(storage: ReferenceClipStorageProtocol, logger: Loggable) {
         self.storage = storage
         self.logger = logger
     }

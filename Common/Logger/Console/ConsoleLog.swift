@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ConsoleLog: TBoxLog {
+public struct ConsoleLog: Log {
     public enum Level {
         case debug
         case info

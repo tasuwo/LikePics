@@ -67,7 +67,7 @@ class DependencyContainer {
 
     // MARK: Logger
 
-    let logger: TBoxLoggable
+    let logger: Loggable
 
     // MARK: - Lifecycle
 

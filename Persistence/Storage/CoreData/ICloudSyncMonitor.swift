@@ -9,12 +9,12 @@ import CoreData
 public class ICloudSyncMonitor {
     static let userInfoKey = NSPersistentCloudKitContainer.eventNotificationUserInfoKey
 
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private var disposableBag = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
 
-    public init(logger: TBoxLoggable) {
+    public init(logger: Loggable) {
         self.logger = logger
 
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)

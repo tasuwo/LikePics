@@ -19,11 +19,11 @@ public class ClipStorage {
         }
     }
 
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext, logger: TBoxLoggable = RootLogger.shared) {
+    public init(context: NSManagedObjectContext, logger: Loggable = RootLogger.shared) {
         self.context = context
         self.logger = logger
     }

@@ -5,18 +5,18 @@
 public class RootLogger {
     public static let shared = RootLogger()
 
-    private let internalLoggers: [TBoxLoggable]
+    private let internalLoggers: [Loggable]
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Common.TBoxLogger")
 
-    init(loggers: [TBoxLoggable] = [ConsoleLogger()]) {
+    init(loggers: [Loggable] = [ConsoleLogger()]) {
         self.internalLoggers = loggers
     }
 }
 
-extension RootLogger: TBoxLoggable {
+extension RootLogger: Loggable {
     // MARK: - TBoxLoggable
 
-    public func write(_ log: TBoxLog) {
+    public func write(_ log: Log) {
         self.queue.sync {
             self.internalLoggers.forEach { $0.write(log) }
         }

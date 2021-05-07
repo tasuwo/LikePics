@@ -97,7 +97,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let query: TagListQuery
     private let commandService: TagCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private var searchStorage: SearchableStorage<Tag> = .init()
     private var subscriptions: Set<AnyCancellable> = .init()
     private let tagsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.TagSelectionViewModel", qos: .userInteractive)
@@ -110,7 +110,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                 selectedTags: Set<Tag.Identity>,
                 commandService: TagCommandServiceProtocol,
                 settingStorage: UserSettingsStorageProtocol,
-                logger: TBoxLoggable)
+                logger: Loggable)
     {
         self.query = query
         self.commandService = commandService

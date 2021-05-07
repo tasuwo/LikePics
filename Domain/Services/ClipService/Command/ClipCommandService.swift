@@ -12,7 +12,7 @@ public class ClipCommandService {
     let diskCache: DiskCaching
     let commandQueue: StorageCommandQueue
     let lock: NSRecursiveLock
-    let logger: TBoxLoggable
+    let logger: Loggable
 
     private(set) var isTransporting: Bool = false
 
@@ -24,7 +24,7 @@ public class ClipCommandService {
                 diskCache: DiskCaching,
                 commandQueue: StorageCommandQueue,
                 lock: NSRecursiveLock,
-                logger: TBoxLoggable)
+                logger: Loggable)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage

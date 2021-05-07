@@ -41,7 +41,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let endAnimateDuration: TimeInterval = 0.17
     private static let fallbackAnimateDuration: TimeInterval = 0.17
 
-    private var logger: TBoxLoggable
+    private var logger: Loggable
     private var fallbackAnimator: FadeTransitionAnimatorProtocol
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
@@ -50,7 +50,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
+    init(logger: Loggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.logger = logger
         self.fallbackAnimator = fallbackAnimator
     }

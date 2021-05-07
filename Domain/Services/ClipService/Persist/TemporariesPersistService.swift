@@ -12,7 +12,7 @@ public class TemporariesPersistService {
     let imageStorage: ImageStorageProtocol
     let commandQueue: StorageCommandQueue
     let lock: NSRecursiveLock
-    let logger: TBoxLoggable
+    let logger: Loggable
 
     private(set) var isRunning: Bool = false
 
@@ -27,7 +27,7 @@ public class TemporariesPersistService {
                 imageStorage: ImageStorageProtocol,
                 commandQueue: StorageCommandQueue,
                 lock: NSRecursiveLock,
-                logger: TBoxLoggable)
+                logger: Loggable)
     {
         self.temporaryClipStorage = temporaryClipStorage
         self.temporaryImageStorage = temporaryImageStorage

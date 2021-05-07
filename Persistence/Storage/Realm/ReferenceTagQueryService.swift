@@ -12,12 +12,12 @@ public class ReferenceTagQueryService {
     }
 
     let configuration: Realm.Configuration
-    private let logger: TBoxLoggable
+    private let logger: Loggable
     private var realm: Realm?
 
     // MARK: - Lifecycle
 
-    public init(config: ReferenceClipStorage.Configuration, logger: TBoxLoggable) throws {
+    public init(config: ReferenceClipStorage.Configuration, logger: Loggable) throws {
         self.configuration = config.realmConfiguration
         self.logger = logger
     }

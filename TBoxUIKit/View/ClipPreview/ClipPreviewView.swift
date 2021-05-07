@@ -127,7 +127,7 @@ public class ClipPreviewView: UIView {
 
     private var doubleTapGestureRecognizer: UITapGestureRecognizer!
 
-    private lazy var logger: TBoxLoggable = RootLogger.shared
+    private lazy var logger: Loggable = RootLogger.shared
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!

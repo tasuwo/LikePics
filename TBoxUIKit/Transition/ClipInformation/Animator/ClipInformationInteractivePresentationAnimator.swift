@@ -31,7 +31,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
-    private var logger: TBoxLoggable
+    private var logger: Loggable
     private var innerContext: InnerContext?
     private var shouldEndImmediately: Bool = false
 
@@ -39,7 +39,7 @@ class ClipInformationInteractivePresentationAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: TBoxLoggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
+    init(logger: Loggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.logger = logger
         self.fallbackAnimator = fallbackAnimator
     }

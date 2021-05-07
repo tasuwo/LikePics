@@ -14,10 +14,10 @@ public class ConsoleLogger {
     }
 }
 
-extension ConsoleLogger: TBoxLoggable {
+extension ConsoleLogger: Loggable {
     // MARK: - TBoxLoggable
 
-    public func write(_ log: TBoxLog) {
+    public func write(_ log: Log) {
         guard let log = log as? ConsoleLog else { return }
         os_log(log.level.osLogType,
                log: self.osLog,

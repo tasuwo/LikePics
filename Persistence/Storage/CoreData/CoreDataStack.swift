@@ -29,7 +29,7 @@ public class CoreDataStack {
     private var persistentContainer: NSPersistentCloudKitContainer
     private var isICloudSyncEnabled: Bool
     private let notificationCenter: NotificationCenter
-    private let logger: TBoxLoggable
+    private let logger: Loggable
 
     private var lastHistoryToken: NSPersistentHistoryToken? {
         didSet {
@@ -80,7 +80,7 @@ public class CoreDataStack {
 
     public init(isICloudSyncEnabled: Bool,
                 notificationCenter: NotificationCenter = .default,
-                logger: TBoxLoggable = RootLogger.shared)
+                logger: Loggable = RootLogger.shared)
     {
         self.persistentContainer = Self.makeContainer(isICloudSyncEnabled: isICloudSyncEnabled)
         self.isICloudSyncEnabled = isICloudSyncEnabled
