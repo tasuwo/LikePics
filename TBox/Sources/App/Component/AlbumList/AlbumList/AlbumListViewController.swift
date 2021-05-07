@@ -116,6 +116,10 @@ extension AlbumListViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bindNoRetain(\.isEditing, to: \.isEditing, on: self)
+            .store(in: &subscriptions)
+
+        store.state
             .onChange(\.isAddButtonEnabled) { [weak self] isEnabled in
                 self?.navigationItem.leftBarButtonItem?.isEnabled = isEnabled
             }

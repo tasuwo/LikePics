@@ -35,9 +35,7 @@ enum AlbumListViewReducer: Reducer {
             return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case let .editingChanged(isEditing: isEditing):
-            nextState.isEditing = isEditing
-            nextState.isDragInteractionEnabled = isEditing
-            nextState.isAddButtonEnabled = !isEditing
+            nextState.setEditing(isEditing)
             return (nextState, .none)
 
         // MARK: CollectionView
@@ -260,6 +258,10 @@ extension AlbumListViewReducer {
         nextState.isSearchBarEnabled = !filteringAlbums.isEmpty
         nextState._searchStorage = searchStorage
 
+        if filteringAlbums.isEmpty {
+            nextState.setEditing(false)
+        }
+
         if filteringAlbums.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""
         }
@@ -279,5 +281,15 @@ extension AlbumListViewReducer {
                 index += 1
                 return request[index - 1]
             }
+    }
+}
+
+// MARK: - Extensions
+
+private extension AlbumListViewState {
+    mutating func setEditing(_ isEditing: Bool) {
+        self.isEditing = isEditing
+        self.isDragInteractionEnabled = isEditing
+        self.isAddButtonEnabled = !isEditing
     }
 }
