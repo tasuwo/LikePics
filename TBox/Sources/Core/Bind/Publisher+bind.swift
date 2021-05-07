@@ -25,4 +25,19 @@ extension Publisher where Self.Failure == Never {
                 _ = Just(value).assign(to: toKeyPath, on: object)
             }
     }
+
+    func bind<Value>(_ keyPath: KeyPath<Output, Value>,
+                     receiveCompletion: @escaping ((Subscribers.Completion<Self.Failure>) -> Void),
+                     receiveValue: @escaping ((Value) -> Void)) -> AnyCancellable where Value: Equatable
+    {
+        removeDuplicates(by: keyPath)
+            .map(keyPath)
+            .sink(receiveCompletion: receiveCompletion, receiveValue: receiveValue)
+    }
+
+    func bind<Value>(_ keyPath: KeyPath<Output, Value>,
+                     receiveValue: @escaping ((Value) -> Void)) -> AnyCancellable where Value: Equatable
+    {
+        bind(keyPath, receiveCompletion: { _ in }, receiveValue: receiveValue)
+    }
 }

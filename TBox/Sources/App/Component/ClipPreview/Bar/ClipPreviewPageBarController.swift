@@ -60,13 +60,13 @@ extension ClipPreviewPageBarController {
             //       これを一瞬まつ
             .delay(for: 0.01, scheduler: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
-            .onChange(\.isToolBarHidden) { [weak self] isHidden in
+            .bind(\.isToolBarHidden) { [weak self] isHidden in
                 self?.barHostingViewController?.navigationController?.setToolbarHidden(isHidden, animated: true)
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.toolBarItems) { [weak self] items in
+            .bind(\.toolBarItems) { [weak self] items in
                 guard let self = self else { return }
                 let toolBarItems = self.resolveBarButtonItems(for: items)
                 self.barHostingViewController?.setToolbarItems(toolBarItems, animated: true)
@@ -74,7 +74,7 @@ extension ClipPreviewPageBarController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.leftBarButtonItems) { [weak self] items in
+            .bind(\.leftBarButtonItems) { [weak self] items in
                 guard let self = self else { return }
                 let leftBarButtonItems = self.resolveBarButtonItems(for: items)
                 self.barHostingViewController?.navigationItem.setLeftBarButtonItems(leftBarButtonItems, animated: true)
@@ -82,7 +82,7 @@ extension ClipPreviewPageBarController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.rightBarButtonItems) { [weak self] items in
+            .bind(\.rightBarButtonItems) { [weak self] items in
                 guard let self = self else { return }
                 let rightBarButtonItems = self.resolveBarButtonItems(for: items)
                 self.barHostingViewController?.navigationItem.setRightBarButtonItems(rightBarButtonItems, animated: true)

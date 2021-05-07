@@ -96,12 +96,12 @@ extension TagCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isSearchBarEnabled) { [searchController] isEnabled in
+            .bind(\.isSearchBarEnabled) { [searchController] isEnabled in
                 searchController.set(isEnabled: isEnabled)
             }
             .store(in: &subscriptions)
         store.state
-            .onChange(\.searchQuery) { [searchController] query in
+            .bind(\.searchQuery) { [searchController] query in
                 searchController.set(text: query)
             }
             .store(in: &subscriptions)

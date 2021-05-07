@@ -98,7 +98,7 @@ extension AlbumListViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.searchQuery) { [weak self] query in
+            .bind(\.searchQuery) { [weak self] query in
                 self?.searchController.set(text: query)
             }
             .store(in: &subscriptions)
@@ -110,7 +110,7 @@ extension AlbumListViewController {
             .bind(\.collectionViewAlpha, to: \.alpha, on: collectionView)
             .store(in: &subscriptions)
         store.state
-            .onChange(\.isSearchBarEnabled) { [weak self] isEnabled in
+            .bind(\.isSearchBarEnabled) { [weak self] isEnabled in
                 self?.searchController.set(isEnabled: isEnabled)
             }
             .store(in: &subscriptions)
@@ -120,7 +120,7 @@ extension AlbumListViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isAddButtonEnabled) { [weak self] isEnabled in
+            .bind(\.isAddButtonEnabled) { [weak self] isEnabled in
                 self?.navigationItem.leftBarButtonItem?.isEnabled = isEnabled
             }
             .store(in: &subscriptions)

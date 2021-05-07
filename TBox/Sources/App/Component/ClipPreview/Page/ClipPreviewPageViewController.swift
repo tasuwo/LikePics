@@ -182,11 +182,11 @@ extension ClipPreviewPageViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isDismissed) { [weak self] isDismissed in
+            .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
             }

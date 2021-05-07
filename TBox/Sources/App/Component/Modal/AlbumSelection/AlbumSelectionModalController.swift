@@ -81,7 +81,7 @@ extension AlbumSelectionModalController {
     private func bind(to store: Store) {
         store.state
             .receive(on: collectionUpdateQueue)
-            .onChange(\.albums.displayableValues) { [weak self] values in
+            .bind(\.albums.displayableValues) { [weak self] values in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(values)
@@ -101,13 +101,13 @@ extension AlbumSelectionModalController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.alert) { [weak self] alert in
+            .bind(\.alert) { [weak self] alert in
                 self?.presentAlertIfNeeded(for: alert)
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isDismissed) { [weak self] isDismissed in
+            .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
             }

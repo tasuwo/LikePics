@@ -52,20 +52,20 @@ class ClipCollectionToolBarController {
 extension ClipCollectionToolBarController {
     private func bind(to store: Store) {
         store.state
-            .onChange(\.isHidden) { [weak self] isHidden in
+            .bind(\.isHidden) { [weak self] isHidden in
                 self?.toolBarHostingViewController?.navigationController?.setToolbarHidden(isHidden, animated: true)
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.items) { [weak self] items in
+            .bind(\.items) { [weak self] items in
                 guard let items = self?.resolveBarButtonItems(for: items) else { return }
                 self?.toolBarHostingViewController?.setToolbarItems(items, animated: true)
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.alert) { [weak self] alert in
+            .bind(\.alert) { [weak self] alert in
                 guard let alert = alert else { return }
                 self?.presentAlertIfNeeded(for: alert)
             }

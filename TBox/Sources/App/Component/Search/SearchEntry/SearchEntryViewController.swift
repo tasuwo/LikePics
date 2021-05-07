@@ -78,7 +78,7 @@ extension SearchEntryViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.alert) { [weak self] alert in
+            .bind(\.alert) { [weak self] alert in
                 self?.presentAlertIfNeeded(for: alert)
             }
             .store(in: &subscriptions)

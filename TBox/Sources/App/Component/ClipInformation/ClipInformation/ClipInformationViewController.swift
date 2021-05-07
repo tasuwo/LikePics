@@ -150,19 +150,19 @@ extension ClipInformationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isHiddenStatusBar) { [weak self] _ in
+            .bind(\.isHiddenStatusBar) { [weak self] _ in
                 self?.setNeedsStatusBarAppearanceUpdate()
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.alert) { [weak self] alert in
+            .bind(\.alert) { [weak self] alert in
                 self?.presentAlertIfNeeded(for: alert)
             }
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isDismissed) { [weak self] isDismissed in
+            .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
             }

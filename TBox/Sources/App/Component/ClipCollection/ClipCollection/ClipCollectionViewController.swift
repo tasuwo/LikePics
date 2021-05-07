@@ -119,7 +119,7 @@ extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
         store.state
             .receive(on: clipsUpdateQueue)
-            .onChange(\.clips.displayableValues) { [weak self] clips in
+            .bind(\.clips.displayableValues) { [weak self] clips in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(clips.map({ .init($0) }))
@@ -145,7 +145,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isEditing) { [weak self] isEditing in
+            .bind(\.isEditing) { [weak self] isEditing in
                 guard let self = self else { return }
                 self.isEditing = isEditing
                 self.collectionView.isEditing = isEditing
@@ -156,7 +156,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.layout) { [weak self] layout in
+            .bind(\.layout) { [weak self] layout in
                 guard let self = self else { return }
 
                 let nextLayout = Layout.createLayout(layout.toRequest(delegate: self))
@@ -204,7 +204,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .onChange(\.isDismissed) { [weak self] isDismissed in
+            .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
             }
