@@ -4,7 +4,7 @@
 
 import Domain
 
-struct ClipInformationViewState: Equatable, KeyPathComparable {
+struct ClipInformationViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case siteUrlEdit(title: String?)
