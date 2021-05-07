@@ -35,6 +35,7 @@ class ClipEditViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipEditViewController")
 
     // MARK: Temporary
 
@@ -79,24 +80,41 @@ class ClipEditViewController: UIViewController {
 
 extension ClipEditViewController {
     func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            DispatchQueue.global().async {
+        store.state
+            .removeDuplicates(by: {
+                $0.clip == $1.clip
+                    && $0.tags.displayableValues == $1.tags.displayableValues
+                    && $0.items.displayableValues == $1.items.displayableValues
+            })
+            .receive(on: collectionUpdateQueue)
+            .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(state)
-                self.dataSource.apply(snapshot)
+                self?.dataSource.apply(snapshot)
             }
+            .store(in: &subscriptions)
 
-            self.collectionView.isEditing = state.isItemsEditing
+        store.state
+            .bind(\.isItemsEditing, to: \.isEditing, on: collectionView)
+            .store(in: &subscriptions)
 
-            self.applySelections(for: state)
-            self.presentAlertIfNeeded(for: state.alert)
-
-            if state.isDismissed {
-                self.dismiss(animated: true, completion: nil)
+        store.state
+            .sink { [weak self] state in
+                self?.applySelections(for: state)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(for: alert)
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .onChange(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
     }
 
     private static func createSnapshot(_ state: ClipEditViewState) -> Layout.Snapshot {
