@@ -331,7 +331,7 @@ extension ClipInformationInteractivePresentationAnimator: UIViewControllerIntera
                                                    innerContext: innerContext)
             lock.unlock()
             logger.write(ConsoleLog(level: .debug, message: "Immediately ended transition for ClipInformationView presentation", scope: .transition))
-            startCancelAnimation(params: params)
+            startEndAnimation(params: params)
             return
         }
 
