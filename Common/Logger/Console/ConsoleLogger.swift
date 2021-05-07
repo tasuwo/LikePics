@@ -7,9 +7,13 @@ import os.log
 public class ConsoleLogger {
     public static let shared = ConsoleLogger()
 
+    private let scopes: [ConsoleLog.Scope]
     private let osLog: OSLog
 
-    init(osLog: OSLog = OSLog.default) {
+    public init(scopes: [ConsoleLog.Scope] = [.default],
+                osLog: OSLog = OSLog.default)
+    {
+        self.scopes = scopes
         self.osLog = osLog
     }
 }
@@ -19,6 +23,7 @@ extension ConsoleLogger: Loggable {
 
     public func write(_ log: Log) {
         guard let log = log as? ConsoleLog else { return }
+        guard scopes.contains(log.scope) else { return }
         os_log(log.level.osLogType,
                log: self.osLog,
                "[%@] %@:%@:%d | %@",
