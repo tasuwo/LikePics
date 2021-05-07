@@ -72,15 +72,12 @@ extension SearchEntryViewController {
             .receive(on: collectionUpdateQueue)
             .removeDuplicates(by: { $0.searchHistories == $1.searchHistories && $0.isSomeItemsHidden && $1.isSomeItemsHidden })
             .sink { [weak self] state in
-                self?.applySnapshot(searchHistories: state.searchHistories,
-                                    isSomeItemsHidden: state.isSomeItemsHidden)
+                self?.applySnapshot(searchHistories: state.searchHistories, isSomeItemsHidden: state.isSomeItemsHidden)
             }
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.alert) { [weak self] alert in
-                self?.presentAlertIfNeeded(for: alert)
-            }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
     }
 

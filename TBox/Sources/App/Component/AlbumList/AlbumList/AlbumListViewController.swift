@@ -133,9 +133,7 @@ extension AlbumListViewController {
 
         store.state
             .removeDuplicates(by: \.alert)
-            .sink { [weak self] state in
-                self?.presentAlertIfNeeded(for: state)
-            }
+            .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
     }
 

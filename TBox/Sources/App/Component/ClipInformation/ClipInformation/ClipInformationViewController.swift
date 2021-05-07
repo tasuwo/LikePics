@@ -139,13 +139,14 @@ class ClipInformationViewController: UIViewController {
 extension ClipInformationViewController {
     private func bind(to store: Store) {
         store.state
-            .removeDuplicates(by: { $0.clip == $1.clip && $0.tags == $1.tags && $0.item == $1.item })
+            .removeDuplicates(by: { $0.clip == $1.clip && $0.tags.displayableValues == $1.tags.displayableValues && $0.item == $1.item })
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
             .receive(on: snapshotQueue)
             .sink { [weak self] state in
                 // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
                 guard state.isSuspendedCollectionViewUpdate == false else { return }
-                self?.informationView.setInfo(Layout.Information(state), animated: state.shouldCollectionViewUpdateWithAnimation)
+                let information = Layout.Information(clip: state.clip, tags: state.tags.displayableValues, item: state.item)
+                self?.informationView.setInfo(information, animated: state.shouldCollectionViewUpdateWithAnimation)
             }
             .store(in: &subscriptions)
 
@@ -286,11 +287,5 @@ extension ClipInformationViewController: ClipInformationPresentedAnimatorDataSou
         // HACK: Update safeAreaInsets immediately.
         containerView.layoutIfNeeded()
         return informationView.convert(informationView.calcInitialFrame(), to: containerView)
-    }
-}
-
-extension ClipInformationLayout.Information {
-    init(_ state: ClipInformationViewState) {
-        self.init(clip: state.clip, tags: state.tags.displayableValues, item: state.item)
     }
 }

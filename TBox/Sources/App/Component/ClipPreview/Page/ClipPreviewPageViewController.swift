@@ -193,9 +193,7 @@ extension ClipPreviewPageViewController {
             .store(in: &subscriptions)
 
         transitionController.outputs.presentInformation
-            .sink { [weak self] in
-                self?.store.execute(.clipInformationViewPresented)
-            }
+            .sink { [weak self] in self?.store.execute(.clipInformationViewPresented) }
             .store(in: &subscriptions)
     }
 

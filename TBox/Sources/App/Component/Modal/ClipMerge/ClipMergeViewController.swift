@@ -83,9 +83,7 @@ extension ClipMergeViewController {
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.alert) { [weak self] alert in
-                self?.presentAlertIfNeeded(for: alert)
-            }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
 
         store.state

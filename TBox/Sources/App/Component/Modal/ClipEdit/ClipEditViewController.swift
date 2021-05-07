@@ -88,7 +88,7 @@ extension ClipEditViewController {
             })
             .receive(on: collectionUpdateQueue)
             .sink { [weak self] state in
-                let snapshot = Self.createSnapshot(state)
+                let snapshot = Self.createSnapshot(clip: state.clip, tags: state.tags.displayableValues, items: state.items.displayableValues)
                 self?.dataSource.apply(snapshot)
             }
             .store(in: &subscriptions)
@@ -98,15 +98,11 @@ extension ClipEditViewController {
             .store(in: &subscriptions)
 
         store.state
-            .sink { [weak self] state in
-                self?.applySelections(for: state)
-            }
+            .sink { [weak self] state in self?.applySelections(for: state) }
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.alert) { [weak self] alert in
-                self?.presentAlertIfNeeded(for: alert)
-            }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
 
         store.state
@@ -117,23 +113,21 @@ extension ClipEditViewController {
             .store(in: &subscriptions)
     }
 
-    private static func createSnapshot(_ state: ClipEditViewState) -> Layout.Snapshot {
+    private static func createSnapshot(clip: ClipEditViewState.EditingClip, tags: [Tag], items: [ClipItem]) -> Layout.Snapshot {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.tag])
-        let tags = state.tags.displayableValues
-            .map { Layout.Item.tag($0) }
+        let tags = tags.map { Layout.Item.tag($0) }
         snapshot.appendItems([.tagAddition] + tags)
 
         snapshot.appendSections([.meta])
-        let dataSize = ByteCountFormatter.string(fromByteCount: Int64(state.clip.dataSize), countStyle: .binary)
+        let dataSize = ByteCountFormatter.string(fromByteCount: Int64(clip.dataSize), countStyle: .binary)
         snapshot.appendItems([
-            .meta(.init(title: L10n.clipEditViewHiddenTitle, accessory: .switch(isOn: state.clip.isHidden))),
+            .meta(.init(title: L10n.clipEditViewHiddenTitle, accessory: .switch(isOn: clip.isHidden))),
             .meta(.init(title: L10n.clipEditViewClipDataSizeTitle, accessory: .label(title: dataSize)))
         ])
 
-        let items = state.items.displayableValues
-            .map { Layout.Item.clipItem($0.map(to: Layout.ClipItem.self)) }
+        let items = items.map { Layout.Item.clipItem($0.map(to: Layout.ClipItem.self)) }
         snapshot.appendSections([.clipItem])
         snapshot.appendItems(items)
 

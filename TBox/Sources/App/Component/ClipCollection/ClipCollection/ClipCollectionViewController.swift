@@ -145,11 +145,14 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bindNoRetain(\.isEditing, to: \.isEditing, on: self)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.isEditing, to: \.isEditing, on: collectionView)
+            .store(in: &subscriptions)
+        store.state
             .bind(\.isEditing) { [weak self] isEditing in
-                guard let self = self else { return }
-                self.isEditing = isEditing
-                self.collectionView.isEditing = isEditing
-                self.collectionView.visibleCells
+                self?.collectionView.visibleCells
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .forEach { $0.isEditing = isEditing }
             }
@@ -157,17 +160,7 @@ extension ClipCollectionViewController {
 
         store.state
             .bind(\.layout) { [weak self] layout in
-                guard let self = self else { return }
-
-                let nextLayout = Layout.createLayout(layout.toRequest(delegate: self))
-                let animationBlocks = self.collectionView.visibleCells
-                    .compactMap { $0 as? ClipCollectionViewCell }
-                    .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
-
-                UIView.animate(withDuration: 0.25) {
-                    self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
-                    animationBlocks.forEach { $0() }
-                }
+                self?.applyLayout(layout)
             }
             .store(in: &subscriptions)
 
@@ -181,14 +174,13 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
+            .removeDuplicates(by: { $0.clips.selectedValues == $1.clips.selectedValues && $0.operation == $1.operation })
             .map { state -> ClipCollectionToolBarAction in
-                // TODO: 計算はToolBarController側に行わせる
                 let selections = state.clips.selectedValues.reduce(into: [Clip.Identity: Set<ImageContainer.Identity>]()) { dict, clip in
                     dict[clip.identity] = Set(clip.items.compactMap({ $0.imageId }))
                 }
                 return .stateChanged(selections: selections, operation: state.operation)
             }
-            .removeDuplicates()
             .sink { [weak self] action in self?.toolBarController.store.execute(action) }
             .store(in: &subscriptions)
 
@@ -221,6 +213,18 @@ extension ClipCollectionViewController {
         state.clips.deselections(from: _previousState?.clips)
             .compactMap { self.dataSource.indexPath(for: .init($0)) }
             .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+    }
+
+    private func applyLayout(_ layout: ClipCollection.Layout) {
+        let nextLayout = Layout.createLayout(layout.toRequest(delegate: self))
+        let animationBlocks = collectionView.visibleCells
+            .compactMap { $0 as? ClipCollectionViewCell }
+            .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
+
+        UIView.animate(withDuration: 0.25) {
+            self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
+            animationBlocks.forEach { $0() }
+        }
     }
 
     private func presentAlertIfNeeded(for state: ClipCollectionState) {

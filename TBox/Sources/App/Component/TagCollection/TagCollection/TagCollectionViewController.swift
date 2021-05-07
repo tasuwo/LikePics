@@ -83,9 +83,7 @@ extension TagCollectionViewController {
     private func bind(to store: TagCollectionViewStore) {
         store.state
             .receive(on: collectionUpdateQueue)
-            .sink { [weak self] state in
-                self?.applySnapshot(for: state)
-            }
+            .sink { [weak self] state in self?.applySnapshot(for: state) }
             .store(in: &subscriptions)
 
         store.state
@@ -107,9 +105,8 @@ extension TagCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .sink { [weak self] state in
-                self?.presentAlertIfNeeded(for: state)
-            }
+            .removeDuplicates(by: \.alert)
+            .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
     }
 
