@@ -320,7 +320,7 @@ extension AlbumListViewController {
         }
     }
 
-    private func makeAction(from item: AlbumList.MenuItem, for album: Album, at indexPath: IndexPath) -> UIAction {
+    private func makeAction(from item: AlbumListMenuItem, for album: Album, at indexPath: IndexPath) -> UIAction {
         switch item {
         case .hide:
             return UIAction(title: L10n.albumListViewContextMenuActionHide,
