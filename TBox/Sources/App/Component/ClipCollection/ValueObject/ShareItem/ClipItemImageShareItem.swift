@@ -13,19 +13,14 @@ class ClipItemImageShareItem: UIActivityItemProvider {
     private let metadata: LPLinkMetadata
 
     // 画像データはCoreDataから直接読み出す
-    // アプリから ActivityController に渡す前に全ての画像をロードすると遅くなる恐れがあるので、遅延して読み込ませる
+    // アプリから ActivityController に渡す前に全ての画像をロードすると遅くなる、かつメモリ不足になる恐れがあるので、遅延して読み込ませる
     override var item: Any {
-        // HACK: バックエンドが Core Data であり、同期的にアクセスする必要がある
-        //       サービス実装側で Core Data の API で同期をとっているはずだが、
-        //       うまく働かないケースがあるようなので、ここで明示的に同期を取る
-        return DispatchQueue.main.sync {
-            guard let data = try? imageQueryService.read(having: imageId),
-                  let image = UIImage(data: data)
-            else {
-                return super.item
-            }
-            return image
+        guard let data = try? imageQueryService.read(having: imageId),
+              let image = UIImage(data: data)
+        else {
+            return super.item
         }
+        return image
     }
 
     // MARK: - Initializers
