@@ -109,7 +109,7 @@ class ClipInformationViewController: UIViewController {
             dismiss(animated: true, completion: nil)
             transitionId = id
 
-        case .ended:
+        case .ended, .cancelled, .failed, .recognized:
             guard let id = transitionId, transitioningController.isLocked(by: id) else { return }
             if transitioningController.isInteractive {
                 transitioningController.didPanForDismissal(id: id, sender: sender)
@@ -117,11 +117,19 @@ class ClipInformationViewController: UIViewController {
             informationView.isScrollEnabled = true
             transitionId = nil
 
-        default:
+        case .changed:
             guard let id = transitionId, transitioningController.isLocked(by: id) else { return }
             if transitioningController.isInteractive {
                 transitioningController.didPanForDismissal(id: id, sender: sender)
             }
+
+        case .possible:
+            // NOP
+            break
+
+        @unknown default:
+            // NOP
+            break
         }
     }
 }

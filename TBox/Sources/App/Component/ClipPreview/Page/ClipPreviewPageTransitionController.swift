@@ -130,7 +130,10 @@ class ClipPreviewPageTransitionController: NSObject,
             self.baseViewController?.dismiss(animated: true, completion: nil)
             context = .init(id: id, destination: .back)
 
-        case (.ended, .back):
+        case (.ended, .back),
+             (.cancelled, .back),
+             (.failed, .back),
+             (.recognized, .back):
             guard let context = context,
                   context.destination == .back,
                   previewTransitioningController.isLocked(by: context.id)
@@ -144,7 +147,7 @@ class ClipPreviewPageTransitionController: NSObject,
             self.destination = nil
             self.context = nil
 
-        case (_, .back):
+        case (.changed, .back):
             guard let context = context,
                   context.destination == .back,
                   previewTransitioningController.isLocked(by: context.id)
@@ -162,7 +165,10 @@ class ClipPreviewPageTransitionController: NSObject,
             self.presentInformation.send(())
             context = .init(id: id, destination: .information)
 
-        case (.ended, .information):
+        case (.ended, .information),
+             (.cancelled, .information),
+             (.failed, .information),
+             (.recognized, .information):
             guard let context = context,
                   context.destination == .information,
                   previewTransitioningController.isLocked(by: context.id)
@@ -175,7 +181,7 @@ class ClipPreviewPageTransitionController: NSObject,
             destination = nil
             self.context = nil
 
-        case (_, .information):
+        case (.changed, .information):
             guard let context = context,
                   context.destination == .information,
                   previewTransitioningController.isLocked(by: context.id)
@@ -186,7 +192,15 @@ class ClipPreviewPageTransitionController: NSObject,
                 self.informationTransitioningController.didPanForPresentation(id: context.id, sender: sender)
             }
 
+        case (.possible, .back),
+             (.possible, .information):
+            break
+
         case (_, .none):
+            break
+
+        case (_, .back), (_, .information):
+            // @unknown default
             break
         }
     }

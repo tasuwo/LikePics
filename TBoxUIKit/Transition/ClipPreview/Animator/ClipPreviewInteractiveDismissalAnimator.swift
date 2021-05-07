@@ -84,8 +84,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            guard sender.state == .ended else {
-                self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipInformationView is not ready. Ignored gesture."))
+            guard sender.state.isContinuousGestureFinished else {
+                self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipPreviewPageView is not ready. Ignored gesture."))
                 return
             }
             self.shouldEndImmediately = true
@@ -137,7 +137,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // End Animation
 
-        if sender.state == .ended {
+        switch sender.state {
+        case .ended, .cancelled, .failed, .recognized:
             let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
                 ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, on: containerView))
                 : .fadeout(cellFrame: to.animatingCellFrame(self, on: containerView))
@@ -152,10 +153,18 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
             let scrollToUp = velocity.y < 0
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
             if scrollToUp || releaseAboveInitialPosition {
-                self.startCancelAnimation(params: params)
+                startCancelAnimation(params: params)
             } else {
-                self.startEndAnimation(params: params)
+                startEndAnimation(params: params)
             }
+
+        case .possible, .began, .changed:
+            // NOP
+            break
+
+        @unknown default:
+            // NOP
+            break
         }
     }
 

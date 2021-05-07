@@ -75,7 +75,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            guard sender.state == .ended else {
+            guard sender.state.isContinuousGestureFinished else {
                 self.logger.write(ConsoleLog(level: .debug, message: "Interactive dismissal animator for ClipInformationView is not ready. Ignored gesture."))
                 return
             }
@@ -118,7 +118,8 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
         // End Animation
 
-        if sender.state == .ended {
+        switch sender.state {
+        case .ended, .cancelled, .failed, .recognized:
             let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
 
             let velocity = sender.velocity(in: from.view)
@@ -126,10 +127,18 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
             let releaseAboveInitialPosition = nextAnchorPoint.y < initialAnchorPoint.y
 
             if scrollToUp || releaseAboveInitialPosition {
-                self.startCancelAnimation(params: params)
+                startCancelAnimation(params: params)
             } else {
-                self.startEndAnimation(params: params)
+                startEndAnimation(params: params)
             }
+
+        case .possible, .began, .changed:
+            // NOP
+            break
+
+        @unknown default:
+            // NOP
+            break
         }
     }
 
