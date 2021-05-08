@@ -7,6 +7,7 @@ import UIKit
 extension AppRoot {
     enum SideBarItem: Int, CaseIterable {
         case top
+        case search
         case tags
         case albums
         case setting
@@ -15,6 +16,9 @@ extension AppRoot {
             switch self {
             case .top:
                 return UIImage(systemName: "house")
+
+            case .search:
+                return UIImage(systemName: "magnifyingglass")
 
             case .tags:
                 return UIImage(systemName: "tag")
@@ -32,6 +36,9 @@ extension AppRoot {
             case .top:
                 return L10n.appRootTabItemHome
 
+            case .search:
+                return L10n.appRootTabItemSearch
+
             case .tags:
                 return L10n.appRootTabItemTag
 
@@ -47,6 +54,9 @@ extension AppRoot {
             switch self {
             case .top:
                 return .top
+
+            case .search:
+                return .search
 
             case .tags:
                 return .tags

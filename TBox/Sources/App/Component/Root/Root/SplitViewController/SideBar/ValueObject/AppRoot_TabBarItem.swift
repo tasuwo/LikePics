@@ -7,6 +7,7 @@ import UIKit
 extension AppRoot {
     enum TabBarItem: Int, CaseIterable {
         case top
+        case search
         case tags
         case albums
         case setting
@@ -23,6 +24,9 @@ extension AppRoot {
             case .top:
                 return UIImage(systemName: "house")
 
+            case .search:
+                return UIImage(systemName: "magnifyingglass")
+
             case .tags:
                 return UIImage(systemName: "tag")
 
@@ -38,6 +42,9 @@ extension AppRoot {
             switch self {
             case .top:
                 return L10n.appRootTabItemHome
+
+            case .search:
+                return L10n.appRootTabItemSearch
 
             case .tags:
                 return L10n.appRootTabItemTag
@@ -59,6 +66,9 @@ extension AppRoot {
             case .top:
                 return "AppRootTabBarController.tabBarItem.top"
 
+            case .search:
+                return "AppRootTabBarController.tabBarItem.search"
+
             case .tags:
                 return "AppRootTabBarController.tabBarItem.tag"
 
@@ -77,6 +87,13 @@ extension AppRoot {
                 // swiftlint:disable:next identifier_name
                 guard let vc = factory.makeTopClipCollectionViewController() else {
                     fatalError("Unable to initialize TopClipCollectionView.")
+                }
+                viewController = vc
+
+            case .search:
+                // swiftlint:disable:next identifier_name
+                guard let vc = factory.makeSearchViewController() else {
+                    fatalError("Unable to initialize SearchEntryViewController.")
                 }
                 viewController = vc
 
@@ -108,6 +125,9 @@ extension AppRoot {
             switch self {
             case .top:
                 return .top
+
+            case .search:
+                return .search
 
             case .tags:
                 return .tags

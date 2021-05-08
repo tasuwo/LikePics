@@ -26,6 +26,7 @@ class AppRootSplitViewController: UISplitViewController {
     private var compactRootViewController: UITabBarController
 
     private var detailTopClipListViewController: UIViewController
+    private var detailSearchViewController: UIViewController
     private var detailTagListViewController: UIViewController
     private var detailAlbumListViewController: UIViewController
     private var detailSettingViewController: UIViewController
@@ -33,6 +34,7 @@ class AppRootSplitViewController: UISplitViewController {
     private var detailViewControllers: [UIViewController] {
         return [
             detailTopClipListViewController,
+            detailSearchViewController,
             detailTagListViewController,
             detailAlbumListViewController,
             detailSettingViewController
@@ -72,6 +74,7 @@ class AppRootSplitViewController: UISplitViewController {
         self.compactRootViewController = UITabBarController()
 
         self.detailTopClipListViewController = AppRoot.TabBarItem.top.makeViewController(by: factory)
+        self.detailSearchViewController = AppRoot.TabBarItem.search.makeViewController(by: factory)
         self.detailTagListViewController = AppRoot.TabBarItem.tags.makeViewController(by: factory)
         self.detailAlbumListViewController = AppRoot.TabBarItem.albums.makeViewController(by: factory)
         self.detailSettingViewController = AppRoot.TabBarItem.setting.makeViewController(by: factory)
@@ -157,6 +160,9 @@ extension AppRootSplitViewController {
         switch item {
         case .top:
             setViewController(detailTopClipListViewController, for: .secondary)
+
+        case .search:
+            setViewController(detailSearchViewController, for: .secondary)
 
         case .tags:
             setViewController(detailTagListViewController, for: .secondary)
