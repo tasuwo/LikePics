@@ -125,7 +125,7 @@ public class ClipInformationView: UIView {
 
     private func calcInitialFrame(for size: CGSize) -> CGRect {
         guard let dataSource = self.dataSource, let image = dataSource.previewImage(self) else { return .zero }
-        let scale = ClipPreviewView.calcScaleScaleToFit(forSize: image.size, fittingIn: size)
+        let scale = image.size.scale(fittingIn: size)
         let resizedImageSize = image.size.scaled(by: scale)
         return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
                                     y: -resizedImageSize.height + self.safeAreaInsets.top + Self.topImageHeight),

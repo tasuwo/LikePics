@@ -1,0 +1,13 @@
+//
+//  Copyright © 2021 Tasuku Tozawa. All rights reserved.
+//
+
+import CoreGraphics
+
+public extension CGSize {
+    func scale(fittingIn target: CGSize) -> CGFloat {
+        let widthScale = target.width / width
+        let heightScale = target.height / height
+        return min(widthScale, heightScale)
+    }
+}

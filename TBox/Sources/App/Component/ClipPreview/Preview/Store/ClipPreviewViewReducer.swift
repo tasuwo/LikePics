@@ -27,7 +27,7 @@ enum ClipPreviewViewReducer: Reducer {
         case let .imageLoaded(image):
             nextState.isLoading = false
             guard let image = image else { return (nextState, .none) }
-            nextState.source = .image(.init(uiImage: image))
+            nextState.source = .image(image)
             return (nextState, .none)
         }
     }
@@ -40,12 +40,12 @@ extension ClipPreviewViewReducer {
         var nextState = state
 
         if let preview = dependency.previewLoader.readCache(forImageId: state.imageId) {
-            nextState.source = .image(.init(uiImage: preview))
+            nextState.source = .image(preview)
             return (nextState, [])
         }
 
         if let preview = dependency.previewLoader.readThumbnail(forItemId: state.itemId) {
-            nextState.source = .thumbnail(.init(uiImage: preview, originalSize: state.imageSize))
+            nextState.source = .thumbnail(preview, originalSize: state.imageSize)
             nextState.isLoading = true
             let stream = Deferred {
                 Future<Action?, Never> { promise in
@@ -71,7 +71,7 @@ extension ClipPreviewViewReducer {
             semaphore.wait()
 
             if let image = result {
-                nextState.source = .image(.init(uiImage: image))
+                nextState.source = .image(image)
             }
 
             return (nextState, [])

@@ -42,7 +42,7 @@ class ClipPreviewViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        previewView.shouldRecalculateInitialScale()
+        previewView.viewDidLayoutSubviews()
     }
 
     override func viewDidLoad() {
