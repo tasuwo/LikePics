@@ -34,8 +34,8 @@ extension ClipInformationPresentationAnimator: UIViewControllerAnimatedTransitio
             let from = transitionContext.viewController(forKey: .from) as? (ClipInformationPresentingAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipInformationPresentedAnimatorDataSource & UIViewController),
             let targetInformationView = to.animatingInformationView(self),
-            let selectedPage = from.animatingPageView(self),
-            let selectedImageView = selectedPage.imageView,
+            let selectedPreviewView = from.animatingPreviewView(self),
+            let selectedImageView = selectedPreviewView.imageView,
             let selectedImage = selectedImageView.image,
             let fromViewBaseView = from.baseView(self)
         else {

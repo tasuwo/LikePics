@@ -42,8 +42,8 @@ class ClipPreviewNavigationController: UINavigationController {
 extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
-    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
-        return pageViewController?.animatingPage(animator)
+    func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
+        return pageViewController?.animatingPreviewView(animator)
     }
 
     func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool {
@@ -58,8 +58,8 @@ extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSourc
 extension ClipPreviewNavigationController: ClipInformationPresentingAnimatorDataSource {
     // MARK: - ClipInformationPresentingAnimatorDataSource
 
-    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
-        return pageViewController?.animatingPageView(animator)
+    func animatingPreviewView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
+        return pageViewController?.animatingPreviewView(animator)
     }
 
     func baseView(_ animator: ClipInformationAnimator) -> UIView? {

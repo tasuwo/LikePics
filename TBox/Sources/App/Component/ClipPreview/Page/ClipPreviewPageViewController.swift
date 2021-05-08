@@ -301,7 +301,7 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
 extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
-    func animatingPage(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
+    func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }
@@ -323,7 +323,7 @@ extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource 
 extension ClipPreviewPageViewController: ClipInformationPresentingAnimatorDataSource {
     // MARK: - ClipInformationPresentingAnimatorDataSource
 
-    func animatingPageView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
+    func animatingPreviewView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }

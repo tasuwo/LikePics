@@ -34,8 +34,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
-            let fromPage = from.animatingPage(self),
-            let fromImageView = fromPage.imageView,
+            let fromPreviewView = from.animatingPreviewView(self),
+            let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
             let toCell = to.animatingCell(self),
             let toViewBaseView = to.baseView(self)

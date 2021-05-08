@@ -36,7 +36,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
             let fromInformationView = from.animatingInformationView(self),
             let fromImageView = fromInformationView.imageView,
             let fromImage = fromImageView.image,
-            let targetPage = to.animatingPageView(self)
+            let targetPreviewView = to.animatingPreviewView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -55,7 +55,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
         animatingImageView.frame = animatingView.bounds
         animatingView.addSubview(animatingImageView)
 
-        targetPage.imageView.isHidden = true
+        targetPreviewView.imageView.isHidden = true
         fromImageView.isHidden = true
 
         to.view.alpha = 0
@@ -65,7 +65,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
             fromImageView.isHidden = false
-            targetPage.imageView.isHidden = false
+            targetPreviewView.imageView.isHidden = false
             animatingView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }

@@ -33,7 +33,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let targetImageView = to.animatingPage(self),
+            let targetImageView = to.animatingPreviewView(self),
             let selectedCell = from.animatingCell(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)

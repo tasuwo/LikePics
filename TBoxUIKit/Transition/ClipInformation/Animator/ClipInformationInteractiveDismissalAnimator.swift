@@ -245,7 +245,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
             let fromInformationView = from.animatingInformationView(self),
             let fromImageView = fromInformationView.imageView,
             let fromImage = fromImageView.image,
-            let targetPage = to.animatingPageView(self),
+            let targetPreviewView = to.animatingPreviewView(self),
             let toViewBaseView = to.baseView(self)
         else {
             logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipInformationView dismissal", scope: .transition))
@@ -268,7 +268,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
         // Preprocess
 
         to.set(self, isUserInteractionEnabled: false)
-        targetPage.imageView.isHidden = true
+        targetPreviewView.imageView.isHidden = true
         fromImageView.isHidden = true
         to.view.backgroundColor = .clear
 
@@ -276,7 +276,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
 
         let postprocess = {
             to.set(self, isUserInteractionEnabled: true)
-            targetPage.imageView.isHidden = false
+            targetPreviewView.imageView.isHidden = false
             fromImageView.isHidden = false
             to.view.backgroundColor = toViewBackgroundColor
 
