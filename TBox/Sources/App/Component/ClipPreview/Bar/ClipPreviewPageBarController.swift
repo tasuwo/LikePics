@@ -112,7 +112,7 @@ extension ClipPreviewPageBarController {
         barHostingViewController?.setNeedsStatusBarAppearanceUpdate()
 
         guard let baseView = barHostingViewController?.navigationController?.view else { return }
-        UIView.transition(with: baseView, duration: 0.1, options: .transitionCrossDissolve) {
+        UIView.transition(with: baseView, duration: 0.2, options: .transitionCrossDissolve) {
             self.barHostingViewController?.navigationController?.toolbar.isHidden = state.isToolBarHidden
             self.barHostingViewController?.navigationController?.navigationBar.isHidden = state.isNavigationBarHidden
         }
