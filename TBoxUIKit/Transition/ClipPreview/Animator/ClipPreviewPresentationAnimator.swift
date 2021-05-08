@@ -128,8 +128,13 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             selectedCell.alpha = 1
             from.componentsOverBaseView(self).forEach { $0.alpha = 1.0 }
             to.view.backgroundColor = toViewBackgroundView.backgroundColor
-            animatingImageView.removeFromSuperview()
-            toViewBackgroundView.removeFromSuperview()
+
+            // HACK: 性能が低い端末だとここの切り替え時に若干背景色がチラついてしまう問題があったため、一瞬削除を遅らせる
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                animatingImageView.removeFromSuperview()
+                toViewBackgroundView.removeFromSuperview()
+            }
+
             transitionContext.completeTransition(true)
         }
 
