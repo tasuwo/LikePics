@@ -20,3 +20,12 @@ for_lane :release do
   ])
 end
 
+for_lane :release_build_only do
+  type("appstore")
+  readonly(true)
+  app_identifier([
+    "net.tasuwo.TBox",
+    "net.tasuwo.TBox.ShareExtension"
+  ])
+end
+

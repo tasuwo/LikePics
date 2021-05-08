@@ -31,6 +31,11 @@ fastlane ios take_snapshots
 fastlane ios release
 ```
 
+### ios release_build_only
+```
+fastlane ios release_build_only
+```
+
 
 ----
 

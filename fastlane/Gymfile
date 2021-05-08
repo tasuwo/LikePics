@@ -14,3 +14,11 @@ for_lane :release do
   output_name("tbox.ipa")
 end
 
+for_lane :release_build_only do
+  configuration("Release")
+  export_method("app-store")
+  include_bitcode(true)
+
+  output_name("tbox.ipa")
+end
+
