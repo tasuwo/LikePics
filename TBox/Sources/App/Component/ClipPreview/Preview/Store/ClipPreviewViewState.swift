@@ -7,14 +7,13 @@ import TBoxUIKit
 import UIKit
 
 struct ClipPreviewViewState: Equatable {
-    let shouldLoadImageSynchronously: Bool
-
     var itemId: ClipItem.Identity
     var imageId: ImageContainer.Identity
     var imageSize: CGSize
 
     var source: ClipPreviewView.Source?
 
-    var isLoading: Bool
+    var isDisplayingLoadingIndicator: Bool
+    var isUserInteractionEnabled: Bool
     var isDismissed: Bool
 }

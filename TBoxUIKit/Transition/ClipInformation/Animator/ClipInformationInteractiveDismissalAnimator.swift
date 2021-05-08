@@ -269,7 +269,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
 
         to.set(self, isUserInteractionEnabled: false)
         targetPreviewView.imageView.isHidden = true
-        targetPreviewView.isLoadingStateHidden = true
+        targetPreviewView.isLoadingIndicatorHidden = true
         fromImageView.isHidden = true
         to.view.backgroundColor = .clear
 
@@ -278,7 +278,7 @@ extension ClipInformationInteractiveDismissalAnimator: UIViewControllerInteracti
         let postprocess = {
             to.set(self, isUserInteractionEnabled: true)
             targetPreviewView.imageView.isHidden = false
-            targetPreviewView.isLoadingStateHidden = false
+            targetPreviewView.isLoadingIndicatorHidden = false
             fromImageView.isHidden = false
             to.view.backgroundColor = toViewBackgroundColor
 

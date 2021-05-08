@@ -13,5 +13,5 @@ protocol ViewControllerFactory {
     func makeAlbumListViewController() -> UIViewController?
     func makeSearchViewController() -> UIViewController?
     func makeSettingsViewController() -> UIViewController
-    func makeClipPreviewViewController(for item: ClipItem, loadImageSynchronously: Bool) -> ClipPreviewViewController?
+    func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

@@ -25,7 +25,8 @@ enum ClipPreviewViewReducer: Reducer {
         // MARK: Load Completion
 
         case let .imageLoaded(image):
-            nextState.isLoading = false
+            nextState.isDisplayingLoadingIndicator = false
+            nextState.isUserInteractionEnabled = true
             guard let image = image else { return (nextState, .none) }
             nextState.source = .image(image)
             return (nextState, .none)
@@ -46,7 +47,8 @@ extension ClipPreviewViewReducer {
 
         if let preview = dependency.previewLoader.readThumbnail(forItemId: state.itemId) {
             nextState.source = .thumbnail(preview, originalSize: state.imageSize)
-            nextState.isLoading = true
+            nextState.isDisplayingLoadingIndicator = true
+            nextState.isUserInteractionEnabled = false
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
@@ -57,34 +59,15 @@ extension ClipPreviewViewReducer {
             return (nextState, [Effect(stream)])
         }
 
-        if state.shouldLoadImageSynchronously {
-            // クリップ一覧からプレビュー画面への遷移時に、サムネイルのキャッシュが既に揮発している
-            // 可能性もある。そのような場合には遷移アニメーションが若干崩れてしまう
-            // これを防ぐため、若干の操作のスムーズさを犠牲にして同期的に downsampling する
-            let semaphore = DispatchSemaphore(value: 0)
-
-            var result: UIImage?
-            dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
-                result = image
-                semaphore.signal()
-            }
-            semaphore.wait()
-
-            if let image = result {
-                nextState.source = .image(image)
-            }
-
-            return (nextState, [])
-        } else {
-            nextState.isLoading = true
-            let stream = Deferred {
-                Future<Action?, Never> { promise in
-                    dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
-                        promise(.success(.imageLoaded(image)))
-                    }
+        nextState.isDisplayingLoadingIndicator = true
+        nextState.isUserInteractionEnabled = false
+        let stream = Deferred {
+            Future<Action?, Never> { promise in
+                dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
+                    promise(.success(.imageLoaded(image)))
                 }
             }
-            return (nextState, [Effect(stream)])
         }
+        return (nextState, [Effect(stream)])
     }
 }

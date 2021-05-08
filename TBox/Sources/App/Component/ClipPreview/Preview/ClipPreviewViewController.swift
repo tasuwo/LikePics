@@ -71,13 +71,10 @@ extension ClipPreviewViewController {
 
         store.state
             .debounce(for: 0.5, scheduler: RunLoop.main)
-            .bind(\.isLoading, to: \.isLoading, on: previewView)
+            .bind(\.isDisplayingLoadingIndicator, to: \.isDisplayingLoadingIndicator, on: previewView)
             .store(in: &subscriptions)
         store.state
-            .removeDuplicates(by: \.isLoading)
-            .map(\.isLoading)
-            .map { !$0 }
-            .assign(to: \.isUserInteractionEnabled, on: previewView)
+            .bind(\.isUserInteractionEnabled, to: \.isUserInteractionEnabled, on: previewView)
             .store(in: &subscriptions)
 
         store.state

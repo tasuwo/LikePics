@@ -56,7 +56,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
         animatingView.addSubview(animatingImageView)
 
         targetPreviewView.imageView.isHidden = true
-        targetPreviewView.isLoadingStateHidden = true
+        targetPreviewView.isLoadingIndicatorHidden = true
         fromImageView.isHidden = true
 
         to.view.alpha = 0
@@ -67,7 +67,7 @@ extension ClipInformationDismissalAnimator: UIViewControllerAnimatedTransitionin
         CATransaction.setCompletionBlock {
             fromImageView.isHidden = false
             targetPreviewView.imageView.isHidden = false
-            targetPreviewView.isLoadingStateHidden = false
+            targetPreviewView.isLoadingIndicatorHidden = false
             animatingView.removeFromSuperview()
             transitionContext.completeTransition(true)
         }

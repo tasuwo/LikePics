@@ -33,7 +33,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let targetImageView = to.animatingPreviewView(self),
+            let targetPreviewView = to.animatingPreviewView(self),
             let selectedCell = from.animatingCell(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -95,7 +95,11 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        targetImageView.isHidden = true
+        targetPreviewView.frame = from.view.frame
+        if !targetPreviewView.isAlreadyImageLoaded {
+            targetPreviewView.source = .thumbnail(selectedImage, originalSize: selectedImage.size)
+        }
+        targetPreviewView.isHidden = true
         selectedImageView.isHidden = true
 
         let toViewBackgroundView = UIView()
@@ -119,7 +123,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         CATransaction.begin()
         CATransaction.setAnimationDuration(self.transitionDuration(using: transitionContext))
         CATransaction.setCompletionBlock {
-            targetImageView.isHidden = false
+            targetPreviewView.isHidden = false
             selectedImageView.isHidden = false
             selectedCell.alpha = 1
             from.componentsOverBaseView(self).forEach { $0.alpha = 1.0 }

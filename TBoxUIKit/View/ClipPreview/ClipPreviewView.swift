@@ -61,6 +61,16 @@ public class ClipPreviewView: UIView {
         imageView.image
     }
 
+    public var isAlreadyImageLoaded: Bool {
+        switch source {
+        case .image:
+            return true
+
+        case .thumbnail, .none:
+            return false
+        }
+    }
+
     public var panGestureRecognizer: UIPanGestureRecognizer {
         scrollView.panGestureRecognizer
     }
@@ -98,11 +108,11 @@ public class ClipPreviewView: UIView {
         return doubleTapGestureRecognizer
     }
 
-    public var isLoading: Bool = false {
+    public var isDisplayingLoadingIndicator: Bool = false {
         didSet { updateLoadingState() }
     }
 
-    public var isLoadingStateHidden: Bool = false {
+    public var isLoadingIndicatorHidden: Bool = false {
         didSet { updateLoadingState() }
     }
 
@@ -282,13 +292,13 @@ extension ClipPreviewView {
     }
 
     private func updateLoadingState() {
-        guard !isLoadingStateHidden else {
+        guard !isLoadingIndicatorHidden else {
             imageView.alpha = 1.0
             indicator.stopAnimating()
             return
         }
 
-        if isLoading {
+        if isDisplayingLoadingIndicator {
             imageView.alpha = 0.8
             indicator.startAnimating()
         } else {

@@ -179,7 +179,7 @@ extension ClipPreviewPageViewController {
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
         guard let currentItem = state.currentItem,
               currentIndex != state.currentIndex,
-              let viewController = factory.makeClipPreviewViewController(for: currentItem, loadImageSynchronously: true)
+              let viewController = factory.makeClipPreviewViewController(for: currentItem)
         else {
             return
         }
@@ -288,13 +288,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(before: viewController.itemId) else { return nil }
-        return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
+        return factory.makeClipPreviewViewController(for: item)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
         guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
-        return factory.makeClipPreviewViewController(for: item, loadImageSynchronously: false)
+        return factory.makeClipPreviewViewController(for: item)
     }
 }
 

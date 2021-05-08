@@ -342,7 +342,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         from.view.backgroundColor = .clear
         toCell.alpha = 0
         fromImageView.isHidden = true
-        fromPreviewView.isLoadingStateHidden = true
+        fromPreviewView.isLoadingIndicatorHidden = true
 
         toViewBaseView.addSubview(fromViewBackgroundView)
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
@@ -350,7 +350,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         let postprocess = { (completion: @escaping () -> Void) in
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
-            fromPreviewView.isLoadingStateHidden = false
+            fromPreviewView.isLoadingIndicatorHidden = false
 
             UIView.animate(withDuration: 0.15, animations: {
                 toCell.alpha = 1
