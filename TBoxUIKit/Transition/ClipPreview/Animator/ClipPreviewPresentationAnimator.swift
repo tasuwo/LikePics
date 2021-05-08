@@ -95,10 +95,8 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        targetPreviewView.frame = from.view.frame
-        if !targetPreviewView.isAlreadyImageLoaded {
-            targetPreviewView.source = .thumbnail(selectedImage, originalSize: selectedImage.size)
-        }
+        targetPreviewView.viewWillStartTransition(frame: from.view.frame, thumbnail: selectedImage)
+
         targetPreviewView.isHidden = true
         selectedImageView.isHidden = true
 

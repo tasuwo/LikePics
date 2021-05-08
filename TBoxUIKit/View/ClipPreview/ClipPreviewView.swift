@@ -46,9 +46,6 @@ public class ClipPreviewView: UIView {
             guard let source = source else { return }
             imageView.image = source.uiImage
 
-            // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
-            layoutIfNeeded()
-
             updateZoomScaleLimits()
             resetToInitialZoomScale()
             updateInitialZoomScaleFlag()
@@ -59,16 +56,6 @@ public class ClipPreviewView: UIView {
 
     public var image: UIImage? {
         imageView.image
-    }
-
-    public var isAlreadyImageLoaded: Bool {
-        switch source {
-        case .image:
-            return true
-
-        case .thumbnail, .none:
-            return false
-        }
     }
 
     public var panGestureRecognizer: UIPanGestureRecognizer {
@@ -175,11 +162,22 @@ public class ClipPreviewView: UIView {
 
 // MARK: - View Life-Cycle Methods
 
-extension ClipPreviewView {
-    public func viewDidLayoutSubviews() {
-        // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
-        layoutIfNeeded()
+public extension ClipPreviewView {
+    func viewWillStartTransition(frame: CGRect, thumbnail: UIImage) {
+        self.frame = frame
 
+        if source == nil {
+            source = .thumbnail(thumbnail, originalSize: thumbnail.size)
+        } else {
+            updateZoomScaleLimits()
+            resetToInitialZoomScale()
+            updateInitialZoomScaleFlag()
+
+            updateInsetsForCurrentScale()
+        }
+    }
+
+    func viewDidLayoutSubviews() {
         let currentMinimumZoomScale = scrollView.minimumZoomScale
         let currentMaximumZoomScale = scrollView.maximumZoomScale
 
@@ -194,10 +192,7 @@ extension ClipPreviewView {
         updateInsetsForCurrentScale()
     }
 
-    public func viewDidAppear() {
-        // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
-        layoutIfNeeded()
-
+    func viewDidAppear() {
         updateZoomScaleLimits()
         // 遷移アニメーションのことを考慮して、初期スケールにリセットする
         resetToInitialZoomScale()
