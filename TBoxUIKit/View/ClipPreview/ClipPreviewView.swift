@@ -98,19 +98,12 @@ public class ClipPreviewView: UIView {
         return doubleTapGestureRecognizer
     }
 
-    public var isLoading: Bool {
-        get {
-            indicator.isAnimating
-        }
-        set {
-            if newValue {
-                imageView.alpha = 0.8
-                indicator.startAnimating()
-            } else {
-                imageView.alpha = 1.0
-                indicator.stopAnimating()
-            }
-        }
+    public var isLoading: Bool = false {
+        didSet { updateLoadingState() }
+    }
+
+    public var isLoadingStateHidden: Bool = false {
+        didSet { updateLoadingState() }
     }
 
     public weak var delegate: ClipPreviewPageViewDelegate?
@@ -286,6 +279,22 @@ extension ClipPreviewView {
             return
         }
         _isInitialZoomScale.send(scrollView.zoomScale == source.size.scale(fittingIn: bounds.size))
+    }
+
+    private func updateLoadingState() {
+        guard !isLoadingStateHidden else {
+            imageView.alpha = 1.0
+            indicator.stopAnimating()
+            return
+        }
+
+        if isLoading {
+            imageView.alpha = 0.8
+            indicator.startAnimating()
+        } else {
+            imageView.alpha = 1.0
+            indicator.stopAnimating()
+        }
     }
 }
 
