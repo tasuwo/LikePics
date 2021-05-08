@@ -1,5 +1,4 @@
-# SeeAlso: https://github.com/realm/realm-cocoa/issues/7151
-github "realm/realm-cocoa" "py/carthage_arm64"
+github "realm/realm-cocoa" ~> 10.7.5
 
 github "phimage/Erik" ~> 5.1.0
 
