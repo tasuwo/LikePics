@@ -46,6 +46,9 @@ public class ClipPreviewView: UIView {
             guard let source = source else { return }
             imageView.image = source.uiImage
 
+            // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
+            layoutIfNeeded()
+
             updateZoomScaleLimits()
             resetToInitialZoomScale()
             updateInitialZoomScaleFlag()
