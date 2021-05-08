@@ -46,9 +46,12 @@ public class ClipPreviewView: UIView {
             guard let source = source else { return }
             imageView.image = source.uiImage
 
+            // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
+            layoutIfNeeded()
+
             updateZoomScaleLimits()
             resetToInitialZoomScale()
-            _isMinimumZoomScale.send(scrollView.zoomScale == scrollView.minimumZoomScale)
+            updateInitialZoomScaleFlag()
 
             updateInsetsForCurrentScale()
         }
@@ -67,9 +70,9 @@ public class ClipPreviewView: UIView {
             .eraseToAnyPublisher()
     }
 
-    private let _isMinimumZoomScale: CurrentValueSubject<Bool, Never> = .init(true)
-    public var isMinimumZoomScale: AnyPublisher<Bool, Never> {
-        _isMinimumZoomScale.eraseToAnyPublisher()
+    private let _isInitialZoomScale: CurrentValueSubject<Bool, Never> = .init(true)
+    public var isInitialZoomScale: AnyPublisher<Bool, Never> {
+        _isInitialZoomScale.eraseToAnyPublisher()
     }
 
     public var isScrollEnabled: Bool {
@@ -83,7 +86,7 @@ public class ClipPreviewView: UIView {
 
     public var initialImageFrame: CGRect {
         guard let source = source else { return .zero }
-        let scale = min(1, source.originalSizeInPixel.scale(fittingIn: bounds.size))
+        let scale = source.originalSizeInPixel.scale(fittingIn: bounds.size)
         let initialImageSize = CGSize(width: source.originalSizeInPixel.width * scale,
                                       height: source.originalSizeInPixel.height * scale)
         return CGRect(origin: CGPoint(x: (bounds.width - initialImageSize.width) / 2,
@@ -167,22 +170,52 @@ public class ClipPreviewView: UIView {
     }
 }
 
-// MARK: - Methods
+// MARK: - View Life-Cycle Methods
 
 extension ClipPreviewView {
     public func viewDidLayoutSubviews() {
+        // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
+        layoutIfNeeded()
+
+        let currentMinimumZoomScale = scrollView.minimumZoomScale
+        let currentMaximumZoomScale = scrollView.maximumZoomScale
+
         updateZoomScaleLimits()
-        adjustInvalidZoomScale()
-        _isMinimumZoomScale.send(scrollView.zoomScale == scrollView.minimumZoomScale)
+        // `viewDidLayoutSubviews` は画面回転時以外にも呼ばれる可能性がある
+        // そのため、呼出の度にスケールをリセットすると不自然な動作となってしまう
+        // したがって、不正なスケールであった場合のみ調整を行う
+        adjustZoomScale(previousMinimumZoomScale: currentMinimumZoomScale,
+                        previousMaximumZoomScale: currentMaximumZoomScale)
+        updateInitialZoomScaleFlag()
+
+        updateInsetsForCurrentScale()
+    }
+
+    public func viewDidAppear() {
+        // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
+        layoutIfNeeded()
+
+        updateZoomScaleLimits()
+        // 遷移アニメーションのことを考慮して、初期スケールにリセットする
+        resetToInitialZoomScale()
+        updateInitialZoomScaleFlag()
 
         updateInsetsForCurrentScale()
     }
 
     private func resetToInitialZoomScale() {
-        scrollView.zoomScale = scrollView.minimumZoomScale
+        guard let source = source else { return }
+        scrollView.zoomScale = source.size.scale(fittingIn: bounds.size)
     }
 
-    private func adjustInvalidZoomScale() {
+    private func adjustZoomScale(previousMinimumZoomScale: CGFloat,
+                                 previousMaximumZoomScale: CGFloat)
+    {
+        if scrollView.zoomScale == previousMinimumZoomScale {
+            scrollView.zoomScale = scrollView.minimumZoomScale
+            return
+        }
+
         if scrollView.zoomScale > scrollView.maximumZoomScale {
             scrollView.zoomScale = scrollView.maximumZoomScale
         } else if scrollView.zoomScale < scrollView.minimumZoomScale {
@@ -246,6 +279,14 @@ extension ClipPreviewView {
         scrollView.contentSize = .init(width: imageView.frame.width + horizontalInset * 2,
                                        height: imageView.frame.height + verticalInset * 2)
     }
+
+    private func updateInitialZoomScaleFlag() {
+        guard let source = source else {
+            _isInitialZoomScale.send(false)
+            return
+        }
+        _isInitialZoomScale.send(scrollView.zoomScale == source.size.scale(fittingIn: bounds.size))
+    }
 }
 
 extension ClipPreviewView: UIScrollViewDelegate {
@@ -256,7 +297,7 @@ extension ClipPreviewView: UIScrollViewDelegate {
     }
 
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        _isMinimumZoomScale.send(scrollView.zoomScale == scrollView.minimumZoomScale)
+        updateInitialZoomScaleFlag()
         updateInsetsForCurrentScale()
     }
 

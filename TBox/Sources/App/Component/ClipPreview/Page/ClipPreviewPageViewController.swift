@@ -212,9 +212,9 @@ extension ClipPreviewPageViewController {
         viewController.previewView.delegate = self
 
         previewVieSubscriptions.forEach { $0.cancel() }
-        viewController.previewView.isMinimumZoomScale
-            .sink { [weak self] isMinimumZoomScale in
-                self?.transitionController.inputs.isMinimumPreviewZoomScale.send(isMinimumZoomScale)
+        viewController.previewView.isInitialZoomScale
+            .sink { [weak self] isInitialZoomScale in
+                self?.transitionController.inputs.isInitialPreviewZoomScale.send(isInitialZoomScale)
             }
             .store(in: &previewVieSubscriptions)
         viewController.previewView.contentOffset

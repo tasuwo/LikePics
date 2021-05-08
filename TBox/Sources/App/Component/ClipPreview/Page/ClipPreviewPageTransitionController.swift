@@ -12,7 +12,7 @@ protocol ClipPreviewPageTransitionControllerType {
 }
 
 protocol ClipPreviewPageTransitionControllerInputs {
-    var isMinimumPreviewZoomScale: CurrentValueSubject<Bool?, Never> { get }
+    var isInitialPreviewZoomScale: CurrentValueSubject<Bool?, Never> { get }
     var previewContentOffset: CurrentValueSubject<CGPoint?, Never> { get }
     var previewPanGestureRecognizer: CurrentValueSubject<UIPanGestureRecognizer?, Never> { get }
 
@@ -49,7 +49,7 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: ClipPreviewPageTransitionControllerInputs
 
-    let isMinimumPreviewZoomScale: CurrentValueSubject<Bool?, Never> = .init(nil)
+    let isInitialPreviewZoomScale: CurrentValueSubject<Bool?, Never> = .init(nil)
     let previewContentOffset: CurrentValueSubject<CGPoint?, Never> = .init(nil)
     let previewPanGestureRecognizer: CurrentValueSubject<UIPanGestureRecognizer?, Never> = .init(nil)
 
@@ -211,7 +211,7 @@ extension ClipPreviewPageTransitionController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer, gestureRecognizer === self.panGestureRecognizer {
-            guard self.isMinimumPreviewZoomScale.value == true, let baseView = self.baseViewController?.view else { return false }
+            guard self.isInitialPreviewZoomScale.value == true, let baseView = self.baseViewController?.view else { return false }
             if gestureRecognizer.velocity(in: baseView).y > 0 {
                 self.destination = .back
             } else {

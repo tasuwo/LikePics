@@ -45,6 +45,11 @@ class ClipPreviewViewController: UIViewController {
         previewView.viewDidLayoutSubviews()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        previewView.viewDidAppear()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
