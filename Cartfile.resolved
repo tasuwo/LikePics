@@ -1,4 +1,4 @@
-github "Quick/Nimble" "v9.0.1"
+github "Quick/Nimble" "v9.1.0"
 github "Quick/Quick" "v3.1.2"
 github "Thomvis/BrightFutures" "8.0.1"
 github "phimage/Erik" "5.1.0"
