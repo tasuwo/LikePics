@@ -109,20 +109,8 @@ extension DependencyContainer: Router {
                                     previewLoader: previewLoader,
                                     transitionLock: transitionLock)
 
-        let state = ClipPreviewPageViewState(clipId: clipId,
-                                             currentIndex: nil,
-                                             items: [],
-                                             alert: nil,
-                                             isDismissed: false)
-        let barState = ClipPreviewPageBarState(parentState: state,
-                                               verticalSizeClass: .unspecified,
-                                               leftBarButtonItems: [],
-                                               rightBarButtonItems: [],
-                                               toolBarItems: [],
-                                               isFullscreen: false,
-                                               isNavigationBarHidden: false,
-                                               isToolBarHidden: false,
-                                               alert: nil)
+        let state = ClipPreviewPageViewState(clipId: clipId)
+        let barState = ClipPreviewPageBarState(parentState: state)
         let cacheState = ClipPreviewPageViewCacheState(clipId: clipId, itemId: nil)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            barState: barState,

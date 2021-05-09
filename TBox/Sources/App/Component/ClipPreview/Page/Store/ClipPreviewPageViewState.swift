@@ -27,6 +27,16 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
+    init(clipId: Clip.Identity) {
+        self.clipId = clipId
+        currentIndex = nil
+        items = []
+        alert = nil
+        isDismissed = false
+    }
+}
+
+extension ClipPreviewPageViewState {
     var currentItem: ClipItem? {
         guard let index = currentIndex else { return nil }
         return items[index]

@@ -17,3 +17,17 @@ struct ClipPreviewViewState: Equatable {
     var isUserInteractionEnabled: Bool
     var isDismissed: Bool
 }
+
+extension ClipPreviewViewState {
+    init(item: ClipItem) {
+        self.itemId = item.id
+        self.imageId = item.imageId
+        self.imageSize = item.imageSize.cgSize
+
+        source = nil
+
+        isDisplayingLoadingIndicator = false
+        isUserInteractionEnabled = true
+        isDismissed = false
+    }
+}

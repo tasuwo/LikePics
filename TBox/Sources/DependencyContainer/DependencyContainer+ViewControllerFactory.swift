@@ -100,13 +100,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
-        let store = ClipPreviewViewState(itemId: item.id,
-                                         imageId: item.imageId,
-                                         imageSize: item.imageSize.cgSize,
-                                         source: nil,
-                                         isDisplayingLoadingIndicator: false,
-                                         isUserInteractionEnabled: true,
-                                         isDismissed: false)
+        let store = ClipPreviewViewState(item: item)
         let viewController = ClipPreviewViewController(state: store, dependency: self)
         return viewController
     }
