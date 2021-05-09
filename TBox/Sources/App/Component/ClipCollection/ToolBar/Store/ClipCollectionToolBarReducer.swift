@@ -33,31 +33,32 @@ enum ClipCollectionToolBarReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .stateChanged(selections: selections, operation: operation):
-            nextState._selections = selections
-            nextState.operation = operation
+        case let .stateChanged(state):
+            nextState.parentState = state
+            nextState.operation = state.operation
             nextState = nextState.updatingAppearance()
             return (nextState, [eventEffect])
 
         // MARK: ToolBar
 
         case .addButtonTapped:
-            nextState.alert = .addition(targetCount: nextState._selections.count)
+            nextState.alert = .addition(targetCount: nextState.parentState.clips._selectedIds.count)
             return (nextState, [eventEffect])
 
         case .changeVisibilityButtonTapped:
-            nextState.alert = .changeVisibility(targetCount: nextState._selections.count)
+            nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips._selectedIds.count)
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
-            let items = Set(state._selections.values.flatMap({ $0 })).map { imageId in
-                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
-            }
-            nextState.alert = .share(items: items, targetCount: nextState._selections.count)
+            let items = state.parentState.clips._selectedIds
+                .compactMap { state.parentState.clips._values[$0] }
+                .flatMap { $0.value.items }
+                .map { ClipItemImageShareItem(imageId: $0.imageId, imageQueryService: dependency.imageQueryService) }
+            nextState.alert = .share(items: items, targetCount: nextState.parentState.clips._selectedIds.count)
             return (nextState, [eventEffect])
 
         case .deleteButtonTapped:
-            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState._selections.count)
+            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState.parentState.clips._selectedIds.count)
             return (nextState, [eventEffect])
 
         case .mergeButtonTapped:
@@ -82,7 +83,7 @@ enum ClipCollectionToolBarReducer: Reducer {
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
         var nextState = self
-        let isEnabled = !_selections.isEmpty
+        let isEnabled = !parentState.clips._selectedIds.isEmpty
 
         nextState.isHidden = operation != .selecting
         nextState.items = [
@@ -90,7 +91,7 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            Item(kind: .merge, isEnabled: isEnabled && _selections.count > 1)
+            Item(kind: .merge, isEnabled: isEnabled && parentState.clips._selectedIds.count > 1)
         ]
 
         return nextState

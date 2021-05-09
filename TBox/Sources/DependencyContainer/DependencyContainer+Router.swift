@@ -52,7 +52,7 @@ extension DependencyContainer {
                                                       operation: .none,
                                                       items: [],
                                                       isHidden: true,
-                                                      _selections: .init(),
+                                                      parentState: state,
                                                       alert: nil)
 
         return ClipCollectionViewController(state: state,

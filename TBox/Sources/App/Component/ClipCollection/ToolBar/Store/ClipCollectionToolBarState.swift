@@ -33,7 +33,7 @@ struct ClipCollectionToolBarState: Equatable {
     var items: [Item]
     var isHidden: Bool
 
-    var _selections: [Clip.Identity: Set<ImageContainer.Identity>]
+    var parentState: ClipCollectionState
 
     var alert: Alert?
 }

@@ -11,8 +11,7 @@ enum ClipCollectionToolBarAction: Action, Equatable {
 
     // MARK: State Observation
 
-    case stateChanged(selections: [Clip.Identity: Set<ImageContainer.Identity>],
-                      operation: ClipCollection.Operation)
+    case stateChanged(ClipCollectionState)
 
     // MARK: ToolBar
 

@@ -47,6 +47,7 @@ class ClipCollectionViewController: UIViewController {
     // MARK: Temporary
 
     private var _previousState: ClipCollectionState?
+    private var selectionQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewController.selection")
 
     // MARK: - Initializers
 
@@ -165,7 +166,8 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.clips.selectedValues)
+            .removeDuplicates(by: \.clips._selectedIds)
+            .receive(on: selectionQueue)
             .sink { [weak self] state in self?.applySelections(for: state) }
             .store(in: &subscriptions)
         store.state
@@ -174,14 +176,8 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: { $0.clips.selectedValues == $1.clips.selectedValues && $0.operation == $1.operation })
-            .map { state -> ClipCollectionToolBarAction in
-                let selections = state.clips.selectedValues.reduce(into: [Clip.Identity: Set<ImageContainer.Identity>]()) { dict, clip in
-                    dict[clip.identity] = Set(clip.items.compactMap({ $0.imageId }))
-                }
-                return .stateChanged(selections: selections, operation: state.operation)
-            }
-            .sink { [weak self] action in self?.toolBarController.store.execute(action) }
+            .removeDuplicates(by: { $0.clips._selectedIds == $1.clips._selectedIds && $0.operation == $1.operation })
+            .sink { [weak self] state in self?.toolBarController.store.execute(.stateChanged(state)) }
             .store(in: &subscriptions)
 
         store.state
@@ -206,13 +202,17 @@ extension ClipCollectionViewController {
     private func applySelections(for state: ClipCollectionState) {
         defer { _previousState = state }
 
-        state.clips.selections(from: _previousState?.clips)
-            .compactMap { self.dataSource.indexPath(for: .init($0)) }
-            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+        let newSelections = state.clips.selections(from: _previousState?.clips)
+        let newDeselections = state.clips.deselections(from: _previousState?.clips)
 
-        state.clips.deselections(from: _previousState?.clips)
-            .compactMap { self.dataSource.indexPath(for: .init($0)) }
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        DispatchQueue.main.async {
+            newSelections
+                .compactMap { self.dataSource.indexPath(for: .init($0)) }
+                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+            newDeselections
+                .compactMap { self.dataSource.indexPath(for: .init($0)) }
+                .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
+        }
     }
 
     private func applyLayout(_ layout: ClipCollection.Layout) {
