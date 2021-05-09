@@ -83,17 +83,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeAlbumListViewController() -> UIViewController? {
-        let state = AlbumListViewState(searchQuery: "",
-                                       albums: .init(),
-                                       isEditing: false,
-                                       isEmptyMessageViewDisplaying: false,
-                                       isCollectionViewDisplaying: false,
-                                       isSearchBarEnabled: false,
-                                       isAddButtonEnabled: true,
-                                       isDragInteractionEnabled: false,
-                                       alert: nil,
-                                       _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                       _searchStorage: .init())
+        let state = AlbumListViewState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let addAlbumAlertState = TextEditAlertState(id: UUID(),
                                                     title: L10n.albumListViewAlertForAddTitle,
                                                     message: L10n.albumListViewAlertForAddMessage,

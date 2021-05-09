@@ -88,7 +88,7 @@ enum AlbumListViewReducer: Reducer {
             return (nextState, .none)
 
         case let .hideMenuTapped(albumId):
-            if state._isSomeItemsHidden {
+            if state.isSomeItemsHidden {
                 let stream = Deferred {
                     Future<Action?, Never> { promise in
                         // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
@@ -214,7 +214,7 @@ extension AlbumListViewReducer {
     {
         performFilter(albums: albums,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -223,7 +223,7 @@ extension AlbumListViewReducer {
     {
         performFilter(albums: previousState.albums.orderedValues(),
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -242,7 +242,7 @@ extension AlbumListViewReducer {
                                       previousState: State) -> State
     {
         var nextState = previousState
-        var searchStorage = previousState._searchStorage
+        var searchStorage = previousState.searchStorage
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
@@ -252,11 +252,11 @@ extension AlbumListViewReducer {
         nextState.albums = newAlbums
 
         nextState.searchQuery = searchQuery
-        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.searchStorage = searchStorage
+        nextState.isSomeItemsHidden = isSomeItemsHidden
         nextState.isCollectionViewDisplaying = !filteringAlbums.isEmpty
         nextState.isEmptyMessageViewDisplaying = filteringAlbums.isEmpty
         nextState.isSearchBarEnabled = !filteringAlbums.isEmpty
-        nextState._searchStorage = searchStorage
 
         if filteringAlbums.isEmpty {
             nextState.setEditing(false)

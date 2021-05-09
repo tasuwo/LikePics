@@ -16,6 +16,7 @@ struct AlbumListViewState: Equatable {
     }
 
     var searchQuery: String
+    var searchStorage: SearchableStorage<Album>
     var albums: Collection<Album>
 
     var isEditing: Bool
@@ -24,11 +25,27 @@ struct AlbumListViewState: Equatable {
     var isSearchBarEnabled: Bool
     var isAddButtonEnabled: Bool
     var isDragInteractionEnabled: Bool
+    var isSomeItemsHidden: Bool
 
     var alert: Alert?
+}
 
-    var _isSomeItemsHidden: Bool
-    var _searchStorage: SearchableStorage<Album>
+extension AlbumListViewState {
+    init(isSomeItemsHidden: Bool) {
+        searchQuery = ""
+        searchStorage = .init()
+        albums = .init()
+
+        isEditing = false
+        isEmptyMessageViewDisplaying = false
+        isCollectionViewDisplaying = false
+        isSearchBarEnabled = false
+        isAddButtonEnabled = true
+        isDragInteractionEnabled = false
+
+        alert = nil
+        self.isSomeItemsHidden = isSomeItemsHidden
+    }
 }
 
 extension AlbumListViewState {
@@ -39,7 +56,7 @@ extension AlbumListViewState {
     var displayableAlbums: [Album] {
         albums
             .orderedFilteredValues()
-            .map { _isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
+            .map { isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
     }
 
     var emptyMessageViewAlpha: CGFloat {
