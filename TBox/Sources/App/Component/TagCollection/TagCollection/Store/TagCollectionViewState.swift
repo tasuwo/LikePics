@@ -17,15 +17,29 @@ struct TagCollectionViewState: Equatable {
 
     var tags: Collection<Tag>
     var searchQuery: String
+    var searchStorage: SearchableStorage<Tag>
 
     var isCollectionViewHidden: Bool
     var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
+    var isSomeItemsHidden: Bool
 
     var alert: Alert?
+}
 
-    var _isSomeItemsHidden: Bool
-    var _searchStorage: SearchableStorage<Tag>
+extension TagCollectionViewState {
+    init(isSomeItemsHidden: Bool) {
+        tags = .init()
+        searchQuery = ""
+        searchStorage = .init()
+
+        isCollectionViewHidden = true
+        isEmptyMessageViewHidden = true
+        isSearchBarEnabled = false
+        self.isSomeItemsHidden = isSomeItemsHidden
+
+        alert = nil
+    }
 }
 
 extension TagCollectionViewState {

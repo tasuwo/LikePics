@@ -71,7 +71,7 @@ enum TagCollectionViewReducer: Reducer {
             return (state, .none)
 
         case let .hideMenuSelected(tag):
-            if state._isSomeItemsHidden {
+            if state.isSomeItemsHidden {
                 let stream = Deferred {
                     Future<Action?, Never> { promise in
                         // HACK: アイテム削除とContextMenuのドロップのアニメーションがコンフリクトするため、
@@ -195,14 +195,14 @@ extension TagCollectionViewReducer {
     private static func performFilter(by tags: [Tag], previousState: State) -> State {
         return performFilter(tags: tags,
                              searchQuery: previousState.searchQuery,
-                             isSomeItemsHidden: previousState._isSomeItemsHidden,
+                             isSomeItemsHidden: previousState.isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(bySearchQuery searchQuery: String, previousState: State) -> State {
         return performFilter(tags: previousState.tags.orderedValues(),
                              searchQuery: searchQuery,
-                             isSomeItemsHidden: previousState._isSomeItemsHidden,
+                             isSomeItemsHidden: previousState.isSomeItemsHidden,
                              previousState: previousState)
     }
 
@@ -219,7 +219,7 @@ extension TagCollectionViewReducer {
                                       previousState: State) -> State
     {
         var nextState = previousState
-        var searchStorage = previousState._searchStorage
+        var searchStorage = previousState.searchStorage
 
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
@@ -230,8 +230,8 @@ extension TagCollectionViewReducer {
         nextState.tags = newTags
 
         nextState.searchQuery = searchQuery
-        nextState._isSomeItemsHidden = isSomeItemsHidden
-        nextState._searchStorage = searchStorage
+        nextState.isSomeItemsHidden = isSomeItemsHidden
+        nextState.searchStorage = searchStorage
 
         if filteringTags.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""
