@@ -16,6 +16,20 @@ struct TextEditAlertState: Equatable {
 }
 
 extension TextEditAlertState {
+    init(title: String?, message: String?, placeholder: String) {
+        id = UUID()
+
+        self.title = title
+        self.message = message
+        self.placeholder = placeholder
+
+        text = ""
+        shouldReturn = false
+        isPresenting = false
+    }
+}
+
+extension TextEditAlertState {
     func updating(text: String) -> Self {
         return .init(id: id,
                      title: title,

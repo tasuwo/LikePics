@@ -58,20 +58,12 @@ extension DependencyContainer: ViewControllerFactory {
                                            alert: nil,
                                            _isSomeItemsHidden: _userSettingStorage.readShowHiddenItems(),
                                            _searchStorage: .init())
-        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
-                                                       title: L10n.tagListViewAlertForAddTitle,
+        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName,
-                                                       text: "",
-                                                       shouldReturn: false,
-                                                       isPresenting: false)
-        let tagEditAlertState = TextEditAlertState(id: UUID(),
-                                                   title: L10n.tagListViewAlertForUpdateTitle,
+                                                       placeholder: L10n.placeholderTagName)
+        let tagEditAlertState = TextEditAlertState(title: L10n.tagListViewAlertForUpdateTitle,
                                                    message: L10n.tagListViewAlertForUpdateMessage,
-                                                   placeholder: L10n.placeholderTagName,
-                                                   text: "",
-                                                   shouldReturn: false,
-                                                   isPresenting: false)
+                                                   placeholder: L10n.placeholderTagName)
 
         let viewController = TagCollectionViewController(state: state,
                                                          tagAdditionAlertState: tagAdditionAlertState,
@@ -84,20 +76,12 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeAlbumListViewController() -> UIViewController? {
         let state = AlbumListViewState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
-        let addAlbumAlertState = TextEditAlertState(id: UUID(),
-                                                    title: L10n.albumListViewAlertForAddTitle,
+        let addAlbumAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                     message: L10n.albumListViewAlertForAddMessage,
-                                                    placeholder: L10n.placeholderAlbumName,
-                                                    text: "",
-                                                    shouldReturn: false,
-                                                    isPresenting: false)
-        let editAlbumAlertState = TextEditAlertState(id: UUID(),
-                                                     title: L10n.albumListViewAlertForEditTitle,
+                                                    placeholder: L10n.placeholderAlbumName)
+        let editAlbumAlertState = TextEditAlertState(title: L10n.albumListViewAlertForEditTitle,
                                                      message: L10n.albumListViewAlertForEditMessage,
-                                                     placeholder: L10n.placeholderAlbumName,
-                                                     text: "",
-                                                     shouldReturn: false,
-                                                     isPresenting: false)
+                                                     placeholder: L10n.placeholderAlbumName)
 
         let viewController = AlbumListViewController(state: state,
                                                      albumAdditionAlertState: addAlbumAlertState,

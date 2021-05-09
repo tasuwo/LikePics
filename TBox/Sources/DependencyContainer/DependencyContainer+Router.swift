@@ -184,13 +184,9 @@ extension DependencyContainer: Router {
                                              isHiddenStatusBar: false,
                                              alert: nil,
                                              isDismissed: false)
-        let siteUrlEditAlertState = TextEditAlertState(id: UUID(),
-                                                       title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
+        let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
-                                                       placeholder: L10n.placeholderUrl,
-                                                       text: "",
-                                                       shouldReturn: false,
-                                                       isPresenting: false)
+                                                       placeholder: L10n.placeholderUrl)
         let viewController = ClipInformationViewController(state: state,
                                                            siteUrlEditAlertState: siteUrlEditAlertState,
                                                            dependency: self,
@@ -226,13 +222,9 @@ extension DependencyContainer: Router {
                                            isDismissed: false,
                                            _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                            _searchStorage: .init())
-        let tagAdditionAlertState = TextEditAlertState(id: UUID(),
-                                                       title: L10n.tagListViewAlertForAddTitle,
+        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName,
-                                                       text: "",
-                                                       shouldReturn: false,
-                                                       isPresenting: false)
+                                                       placeholder: L10n.placeholderTagName)
         let viewController = TagSelectionModalController(state: state,
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          dependency: dependency)
@@ -268,13 +260,9 @@ extension DependencyContainer: Router {
                                              isDismissed: false,
                                              _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                              _searchStorage: .init())
-        let albumAdditionAlertState = TextEditAlertState(id: UUID(),
-                                                         title: L10n.albumListViewAlertForAddTitle,
+        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
-                                                         placeholder: L10n.placeholderAlbumName,
-                                                         text: "",
-                                                         shouldReturn: false,
-                                                         isPresenting: false)
+                                                         placeholder: L10n.placeholderAlbumName)
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: dependency,
@@ -334,13 +322,9 @@ extension DependencyContainer: Router {
                                       isItemsEditing: false,
                                       alert: nil,
                                       isDismissed: false)
-        let siteUrlEditAlertState = TextEditAlertState(id: UUID(),
-                                                       title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
+        let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
-                                                       placeholder: L10n.placeholderUrl,
-                                                       text: "",
-                                                       shouldReturn: false,
-                                                       isPresenting: false)
+                                                       placeholder: L10n.placeholderUrl)
         let viewController = ClipEditViewController(state: state,
                                                     siteUrlEditAlertState: siteUrlEditAlertState,
                                                     dependency: self,
