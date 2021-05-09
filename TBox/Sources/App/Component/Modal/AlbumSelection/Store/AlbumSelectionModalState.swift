@@ -14,19 +14,36 @@ struct AlbumSelectionModalState: Equatable {
     }
 
     var searchQuery: String
+    var searchStorage: SearchableStorage<Album>
     var albums: Collection<Album>
     var selectedAlbumId: Album.Identity?
 
     var isCollectionViewHidden: Bool
     var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
+    var isSomeItemsHidden: Bool
 
     var alert: Alert?
 
     var isDismissed: Bool
+}
 
-    var _isSomeItemsHidden: Bool
-    var _searchStorage: SearchableStorage<Album>
+extension AlbumSelectionModalState {
+    init(isSomeItemsHidden: Bool) {
+        searchQuery = ""
+        searchStorage = .init()
+        albums = .init()
+        selectedAlbumId = nil
+
+        isCollectionViewHidden = true
+        isEmptyMessageViewHidden = true
+        isSearchBarEnabled = false
+        self.isSomeItemsHidden = isSomeItemsHidden
+
+        alert = nil
+
+        isDismissed = false
+    }
 }
 
 extension AlbumSelectionModalState {

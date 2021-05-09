@@ -127,7 +127,7 @@ extension TagSelectionModalReducer {
     {
         performFilter(tags: tags,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -136,7 +136,7 @@ extension TagSelectionModalReducer {
     {
         performFilter(tags: previousState.tags.orderedValues(),
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -155,7 +155,7 @@ extension TagSelectionModalReducer {
                                       previousState: State) -> State
     {
         var nextState = previousState
-        var searchStorage = previousState._searchStorage
+        var searchStorage = previousState.searchStorage
 
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
@@ -166,10 +166,10 @@ extension TagSelectionModalReducer {
         nextState.tags = newTags
 
         nextState.searchQuery = searchQuery
-        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.isSomeItemsHidden = isSomeItemsHidden
         nextState.isCollectionViewHidden = filteringTags.isEmpty
         nextState.isEmptyMessageViewHidden = !filteringTags.isEmpty
-        nextState._searchStorage = searchStorage
+        nextState.searchStorage = searchStorage
 
         if filteringTags.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""

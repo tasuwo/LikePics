@@ -169,15 +169,8 @@ extension DependencyContainer: Router {
                                     clipQueryService: clipQueryService,
                                     tagSelectionCompleted: completion)
 
-        let state = TagSelectionModalState(searchQuery: "",
-                                           tags: .init(selectedIds: selections),
-                                           isCollectionViewHidden: false,
-                                           isEmptyMessageViewHidden: true,
-                                           isSearchBarEnabled: true,
-                                           alert: nil,
-                                           isDismissed: false,
-                                           _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                           _searchStorage: .init())
+        let state = TagSelectionModalState(selections: selections,
+                                           isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)
@@ -207,15 +200,7 @@ extension DependencyContainer: Router {
                                     clipCommandService: clipCommandService,
                                     clipQueryService: clipQueryService,
                                     albumSelectionCompleted: completion)
-        let state = AlbumSelectionModalState(searchQuery: "",
-                                             albums: .init(),
-                                             isCollectionViewHidden: true,
-                                             isEmptyMessageViewHidden: true,
-                                             isSearchBarEnabled: false,
-                                             alert: nil,
-                                             isDismissed: false,
-                                             _isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                             _searchStorage: .init())
+        let state = AlbumSelectionModalState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
                                                          placeholder: L10n.placeholderAlbumName)
@@ -246,11 +231,7 @@ extension DependencyContainer: Router {
                                     clipCommandService: clipCommandService,
                                     clipQueryService: clipQueryService,
                                     clipMergeCompleted: completion)
-        let state = ClipMergeViewState(items: clips.flatMap({ $0.items }),
-                                       tags: [],
-                                       alert: nil,
-                                       isDismissed: false,
-                                       _sourceClipIds: Set(clips.map({ $0.id })))
+        let state = ClipMergeViewState(clips: clips)
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: dependency,
                                                      thumbnailLoader: temporaryThumbnailLoader)
@@ -268,16 +249,8 @@ extension DependencyContainer: Router {
     }
 
     func showClipEditModal(for clipId: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
-        let state = ClipEditViewState(clip: .init(id: clipId,
-                                                  // 初回は適当な値で埋めておく
-                                                  dataSize: 0,
-                                                  isHidden: false),
-                                      tags: .init(),
-                                      items: .init(),
-                                      isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                      isItemsEditing: false,
-                                      alert: nil,
-                                      isDismissed: false)
+        let state = ClipEditViewState(clipId: clipId,
+                                      isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)

@@ -30,6 +30,22 @@ struct ClipEditViewState: Equatable {
 }
 
 extension ClipEditViewState {
+    init(clipId: Clip.Identity, isSomeItemsHidden: Bool) {
+        // 初回は適当な値で埋めておく
+        clip = .init(id: clipId, dataSize: 0, isHidden: false)
+        tags = .init()
+        items = .init()
+        self.isSomeItemsHidden = isSomeItemsHidden
+
+        isItemsEditing = false
+
+        alert = nil
+
+        isDismissed = false
+    }
+}
+
+extension ClipEditViewState {
     var isItemDeletionEnabled: Bool { items.filteredValues().count > 1 }
     var canReorderItem: Bool { items.filteredValues().count > 1 && !isItemsEditing }
 }

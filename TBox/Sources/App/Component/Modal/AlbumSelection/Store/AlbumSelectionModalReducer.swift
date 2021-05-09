@@ -110,7 +110,7 @@ extension AlbumSelectionModalReducer {
     {
         performFilter(albums: albums,
                       searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -119,7 +119,7 @@ extension AlbumSelectionModalReducer {
     {
         performFilter(albums: previousState.albums.orderedValues(),
                       searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState._isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
@@ -138,7 +138,7 @@ extension AlbumSelectionModalReducer {
                                       previousState: State) -> State
     {
         var nextState = previousState
-        var searchStorage = previousState._searchStorage
+        var searchStorage = previousState.searchStorage
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
@@ -148,10 +148,10 @@ extension AlbumSelectionModalReducer {
         nextState.albums = newAlbums
 
         nextState.searchQuery = searchQuery
-        nextState._isSomeItemsHidden = isSomeItemsHidden
+        nextState.isSomeItemsHidden = isSomeItemsHidden
         nextState.isCollectionViewHidden = filteringAlbums.isEmpty
         nextState.isEmptyMessageViewHidden = !filteringAlbums.isEmpty
-        nextState._searchStorage = searchStorage
+        nextState.searchStorage = searchStorage
 
         if filteringAlbums.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""

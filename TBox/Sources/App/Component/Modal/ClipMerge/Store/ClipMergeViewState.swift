@@ -18,5 +18,18 @@ struct ClipMergeViewState: Equatable {
 
     var isDismissed: Bool
 
-    let _sourceClipIds: Set<Clip.Identity>
+    let sourceClipIds: Set<Clip.Identity>
+}
+
+extension ClipMergeViewState {
+    init(clips: [Clip]) {
+        self.items = clips.flatMap { $0.items }
+        tags = []
+
+        alert = nil
+
+        isDismissed = false
+
+        sourceClipIds = Set(clips.map { $0.id })
+    }
 }

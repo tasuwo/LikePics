@@ -30,7 +30,7 @@ enum ClipMergeViewReducer: Reducer {
         case .saveButtonTapped:
             let itemIds = state.items.map({ $0.id })
             let tagIds = state.tags.map({ $0.id })
-            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state._sourceClipIds)) {
+            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
             case .success:
                 dependency.clipMergeCompleted(true)
                 nextState.isDismissed = true
@@ -94,7 +94,7 @@ enum ClipMergeViewReducer: Reducer {
 extension ClipMergeViewReducer {
     static func prepareState(initialState: State, dependency: Dependency) -> State {
         let tags: [Tag]
-        switch dependency.clipQueryService.readClipAndTags(for: Array(initialState._sourceClipIds)) {
+        switch dependency.clipQueryService.readClipAndTags(for: Array(initialState.sourceClipIds)) {
         case let .success((_, fetchedTags)):
             tags = fetchedTags
 

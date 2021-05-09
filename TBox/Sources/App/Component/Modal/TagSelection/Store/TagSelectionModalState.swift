@@ -14,18 +14,34 @@ struct TagSelectionModalState: Equatable {
     }
 
     var searchQuery: String
+    var searchStorage: SearchableStorage<Tag>
     var tags: Collection<Tag>
 
     var isCollectionViewHidden: Bool
     var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
+    var isSomeItemsHidden: Bool
 
     var alert: Alert?
 
     var isDismissed: Bool
+}
 
-    var _isSomeItemsHidden: Bool
-    var _searchStorage: SearchableStorage<Tag>
+extension TagSelectionModalState {
+    init(selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
+        searchQuery = ""
+        searchStorage = .init()
+        tags = .init(selectedIds: selections)
+
+        isCollectionViewHidden = true
+        isEmptyMessageViewHidden = true
+        isSearchBarEnabled = false
+        self.isSomeItemsHidden = isSomeItemsHidden
+
+        alert = nil
+
+        isDismissed = false
+    }
 }
 
 extension TagSelectionModalState {
