@@ -14,3 +14,12 @@ struct SearchEntryViewState: Equatable {
 
     var alert: Alert?
 }
+
+extension SearchEntryViewState {
+    init(isSomeItemsHidden: Bool) {
+        searchHistories = []
+        self.isSomeItemsHidden = isSomeItemsHidden
+
+        alert = nil
+    }
+}

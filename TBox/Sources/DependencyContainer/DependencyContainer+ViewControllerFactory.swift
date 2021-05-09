@@ -67,12 +67,12 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeSearchViewController() -> UIViewController? {
-        let resultsController = SearchResultViewController(state: .init(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems()),
+        let resultViewState = SearchResultViewState(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems())
+        let resultsController = SearchResultViewController(state: resultViewState,
                                                            dependency: self,
                                                            thumbnailLoader: temporaryThumbnailLoader)
-        let viewController = SearchEntryViewController(state: .init(searchHistories: [],
-                                                                    isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems(),
-                                                                    alert: nil),
+        let entryViewState = SearchEntryViewState(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems())
+        let viewController = SearchEntryViewController(state: entryViewState,
                                                        dependency: self,
                                                        searchResultViewController: resultsController)
         return UINavigationController(rootViewController: viewController)

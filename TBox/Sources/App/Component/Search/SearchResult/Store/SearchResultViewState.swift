@@ -17,24 +17,47 @@ struct SearchResultViewState: Equatable {
         let results: [Clip]
     }
 
-    let searchEffectId = UUID()
-    let searchCandidatesEffectId = UUID()
+    let searchEffectId: UUID
+    let searchCandidatesEffectId: UUID
 
     var searchOnlyHiddenItems: Bool?
-    var selectedSort: ClipSearchSort = .init(kind: .createdDate, order: .descent)
+    var selectedSort: ClipSearchSort
 
-    var inputtedText: String = ""
-    var inputtedTokens: [ClipSearchToken] = []
+    var inputtedText: String
+    var inputtedTokens: [ClipSearchToken]
 
     var searchedTokenCandidates: SearchedTokenCandidates?
     var searchedClips: SearchedClips?
 
     var previewingClipId: Clip.Identity?
 
-    var isSearchingTokenCandidates: Bool = false
-    var isSearchingClips: Bool = false
+    var isSearchingTokenCandidates: Bool
+    var isSearchingClips: Bool
 
     var isSomeItemsHidden: Bool
+}
+
+extension SearchResultViewState {
+    init(isSomeItemsHidden: Bool) {
+        searchEffectId = UUID()
+        searchCandidatesEffectId = UUID()
+
+        searchOnlyHiddenItems = nil
+        selectedSort = .init(kind: .createdDate, order: .descent)
+
+        inputtedText = ""
+        inputtedTokens = []
+
+        searchedTokenCandidates = nil
+        searchedClips = nil
+
+        previewingClipId = nil
+
+        isSearchingTokenCandidates = false
+        isSearchingClips = false
+
+        self.isSomeItemsHidden = isSomeItemsHidden
+    }
 }
 
 extension SearchResultViewState {
