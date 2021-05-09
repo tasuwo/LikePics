@@ -82,7 +82,7 @@ extension Collection {
 
     func selectedIds() -> Set<Value.Identity> {
         _selectedIds
-            .filter { Set(_values.keys).contains($0) }
+            .intersection(Set(_values.keys))
     }
 
     func selectedValues() -> Set<Value> {
@@ -98,7 +98,7 @@ extension Collection {
 
     func filteredIds() -> Set<Value.Identity> {
         _filteredIds
-            .filter { Set(_values.keys).contains($0) }
+            .intersection(Set(_values.keys))
     }
 
     func filteredValues() -> Set<Value> {
@@ -117,8 +117,9 @@ extension Collection {
 
 extension Collection {
     private var _filteredSelections: Set<Value.Identity> {
-        selectedIds()
-            .filter { _filteredIds.contains($0) }
+        _selectedIds
+            .intersection(Set(_values.keys))
+            .intersection(_filteredIds)
     }
 
     func selections(from previous: Self?) -> Set<Value> {
