@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import CoreGraphics
 import Domain
 
@@ -47,6 +45,19 @@ extension AlbumSelectionModalState {
 }
 
 extension AlbumSelectionModalState {
+    var filteredOrderedAlbums: Set<Ordered<Album>> {
+        let albums = albums
+            .filteredOrderedValues()
+            .map { Ordered(index: $0.index, value: isSomeItemsHidden ? $0.value.removingHiddenClips() : $0.value) }
+        return Set(albums)
+    }
+
+    var orderedFilteredAlbums: [Album] {
+        albums
+            .orderedFilteredValues()
+            .map { isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
+    }
+
     var emptyMessageViewAlpha: CGFloat {
         isEmptyMessageViewHidden ? 0 : 1
     }

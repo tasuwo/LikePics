@@ -51,7 +51,14 @@ extension AlbumListViewState {
         !albums.filteredValues().isEmpty
     }
 
-    var displayableAlbums: [Album] {
+    var filteredOrderedAlbums: Set<Ordered<Album>> {
+        let albums = albums
+            .filteredOrderedValues()
+            .map { Ordered(index: $0.index, value: isSomeItemsHidden ? $0.value.removingHiddenClips() : $0.value) }
+        return Set(albums)
+    }
+
+    var orderedFilteredAlbums: [Album] {
         albums
             .orderedFilteredValues()
             .map { isSomeItemsHidden ? $0.removingHiddenClips() : $0 }

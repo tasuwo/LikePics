@@ -89,6 +89,10 @@ extension Collection {
         Set(_selectedIds.compactMap { _values[$0]?.value })
     }
 
+    func selectedOrderedValues() -> Set<Ordered<Value>> {
+        Set(_selectedIds.compactMap { _values[$0] })
+    }
+
     func orderedSelectedValues() -> [Value] {
         _selectedIds
             .compactMap { _values[$0] }
@@ -103,6 +107,10 @@ extension Collection {
 
     func filteredValues() -> Set<Value> {
         Set(_filteredIds.compactMap { _values[$0]?.value })
+    }
+
+    func filteredOrderedValues() -> Set<Ordered<Value>> {
+        Set(_filteredIds.compactMap { _values[$0] })
     }
 
     func orderedFilteredValues() -> [Value] {

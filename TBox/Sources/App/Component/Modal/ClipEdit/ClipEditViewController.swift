@@ -81,12 +81,12 @@ class ClipEditViewController: UIViewController {
 extension ClipEditViewController {
     func bind(to store: Store) {
         store.state
-            .removeDuplicates(by: {
-                $0.clip == $1.clip
-                    && $0.tags.filteredValues() == $1.tags.filteredValues()
-                    && $0.items.filteredValues() == $1.items.filteredValues()
-            })
             .receive(on: collectionUpdateQueue)
+            .removeDuplicates(by: { (lstate: ClipEditViewState, rstate: ClipEditViewState) -> Bool in
+                lstate.clip == rstate.clip
+                    && lstate.tags.filteredOrderedValues() == rstate.tags.filteredOrderedValues()
+                    && lstate.items.filteredOrderedValues() == rstate.items.filteredOrderedValues()
+            })
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(clip: state.clip,
                                                    tags: state.tags.orderedFilteredValues(),

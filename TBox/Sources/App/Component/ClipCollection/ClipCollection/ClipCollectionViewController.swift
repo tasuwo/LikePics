@@ -120,7 +120,7 @@ extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
         store.state
             .receive(on: clipsUpdateQueue)
-            .removeDuplicates(by: { $0.clips.filteredValues() == $1.clips.filteredValues() })
+            .removeDuplicates(by: { $0.clips.filteredOrderedValues() == $1.clips.filteredOrderedValues() })
             .sink { [weak self] state in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])

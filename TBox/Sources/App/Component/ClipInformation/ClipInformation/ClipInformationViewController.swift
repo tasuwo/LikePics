@@ -139,7 +139,11 @@ class ClipInformationViewController: UIViewController {
 extension ClipInformationViewController {
     private func bind(to store: Store) {
         store.state
-            .removeDuplicates(by: { $0.clip == $1.clip && $0.tags.filteredValues() == $1.tags.filteredValues() && $0.item == $1.item })
+            .removeDuplicates(by: {
+                $0.clip == $1.clip
+                    && $0.tags.filteredOrderedValues() == $1.tags.filteredOrderedValues()
+                    && $0.item == $1.item
+            })
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
             .receive(on: snapshotQueue)
             .sink { [weak self] state in
