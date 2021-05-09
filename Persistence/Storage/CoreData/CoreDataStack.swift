@@ -79,8 +79,8 @@ public class CoreDataStack {
     // MARK: - Lifecycle
 
     public init(isICloudSyncEnabled: Bool,
-                notificationCenter: NotificationCenter = .default,
-                logger: Loggable)
+                logger: Loggable,
+                notificationCenter: NotificationCenter = .default)
     {
         self.persistentContainer = Self.makeContainer(isICloudSyncEnabled: isICloudSyncEnabled)
         self.isICloudSyncEnabled = isICloudSyncEnabled

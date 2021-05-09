@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import CoreGraphics
 import Domain
 

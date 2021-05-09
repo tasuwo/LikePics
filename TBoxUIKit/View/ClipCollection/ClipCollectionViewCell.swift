@@ -75,8 +75,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
     @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
 
-    @IBOutlet var hiddenIconBottomOnPrimaryThumbnailConstraint: NSLayoutConstraint!
-    @IBOutlet var hiddenIconTrailingOnPrimaryThumbnailConstraint: NSLayoutConstraint!
+    @IBOutlet var hiddenIconBottomToThumbnailConstraint: NSLayoutConstraint!
+    @IBOutlet var hiddenIconTrailingToThumbnailConstraint: NSLayoutConstraint!
 
     @IBOutlet var overallThumbnailView: UIImageView!
 
@@ -153,8 +153,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         primaryThumbnailView.alpha = toSingle ? 0 : 1
         secondaryThumbnailView.alpha = toSingle ? 0 : 1
         tertiaryThumbnailView.alpha = toSingle ? 0 : 1
-        hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
-        hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
+        hiddenIconBottomToThumbnailConstraint.isActive = !toSingle
+        hiddenIconTrailingToThumbnailConstraint.isActive = !toSingle
     }
 
     public func setThumbnailTypeWithAnimationBlocks(toSingle: Bool) -> (() -> Void) {
@@ -176,8 +176,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         primaryThumbnailView.alpha = 0
         hiddenIcon.alpha = 0
 
-        hiddenIconBottomOnPrimaryThumbnailConstraint.isActive = !toSingle
-        hiddenIconTrailingOnPrimaryThumbnailConstraint.isActive = !toSingle
+        hiddenIconBottomToThumbnailConstraint.isActive = !toSingle
+        hiddenIconTrailingToThumbnailConstraint.isActive = !toSingle
 
         return {
             UIView.animate(withDuration: 0.25) {
