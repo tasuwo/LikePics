@@ -26,3 +26,19 @@ struct ClipInformationViewState: Equatable {
 
     var isDismissed: Bool
 }
+
+extension ClipInformationViewState {
+    init(clipId: Clip.Identity, itemId: ClipItem.Identity, isSomeItemsHidden: Bool) {
+        self.clipId = clipId
+        self.itemId = itemId
+        clip = nil
+        tags = .init()
+        item = nil
+        shouldCollectionViewUpdateWithAnimation = false
+        isSuspendedCollectionViewUpdate = true
+        self.isSomeItemsHidden = isSomeItemsHidden
+        isHiddenStatusBar = false
+        alert = nil
+        isDismissed = false
+    }
+}

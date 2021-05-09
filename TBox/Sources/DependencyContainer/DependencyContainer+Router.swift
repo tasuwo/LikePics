@@ -91,11 +91,7 @@ extension DependencyContainer: Router {
             let transitionLock: TransitionLock
         }
 
-        let informationViewCacheState = ClipInformationViewCacheState(clip: nil,
-                                                                      tags: .init(),
-                                                                      item: nil,
-                                                                      isSomeItemsHidden: true,
-                                                                      isInvalidated: false)
+        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
                                                                                 dependency: self)
 
@@ -155,15 +151,7 @@ extension DependencyContainer: Router {
     {
         let state = ClipInformationViewState(clipId: clipId,
                                              itemId: itemId,
-                                             clip: nil,
-                                             tags: .init(),
-                                             item: nil,
-                                             shouldCollectionViewUpdateWithAnimation: false,
-                                             isSuspendedCollectionViewUpdate: true,
-                                             isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
-                                             isHiddenStatusBar: false,
-                                             alert: nil,
-                                             isDismissed: false)
+                                             isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
