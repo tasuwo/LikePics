@@ -30,6 +30,6 @@ struct ClipEditViewState: Equatable {
 }
 
 extension ClipEditViewState {
-    var isItemDeletionEnabled: Bool { items.displayableValues.count > 1 }
-    var canReorderItem: Bool { items.displayableValues.count > 1 && !isItemsEditing }
+    var isItemDeletionEnabled: Bool { items.filteredValues().count > 1 }
+    var canReorderItem: Bool { items.filteredValues().count > 1 && !isItemsEditing }
 }

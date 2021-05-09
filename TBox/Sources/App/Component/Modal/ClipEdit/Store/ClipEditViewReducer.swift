@@ -38,8 +38,8 @@ enum ClipEditViewReducer: Reducer {
 
         case let .itemsUpdated(items):
             let newItems = state.items
-                .updated(_values: items.indexed())
-                .updated(_displayableIds: Set(items.map({ $0.identity })))
+                .updated(values: items.indexed())
+                .updated(filteredIds: Set(items.map({ $0.identity })))
             nextState.items = newItems
             return (nextState, .none)
 
@@ -58,7 +58,7 @@ enum ClipEditViewReducer: Reducer {
         // MARK: Button/Switch Action
 
         case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags._displayableIds), dependency: dependency)
+            let effect = showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
             return (nextState, [effect])
 
         case let .tagDeletionButtonTapped(tagId):
@@ -81,21 +81,20 @@ enum ClipEditViewReducer: Reducer {
 
         case .itemsEditButtonTapped:
             nextState.isItemsEditing = true
-            nextState.items = state.items.updated(_selectedIds: .init())
+            nextState.items = state.items.updated(selectedIds: .init())
             return (nextState, .none)
 
         case .itemsEditCancelButtonTapped:
             nextState.isItemsEditing = false
-            nextState.items = state.items.updated(_selectedIds: .init())
+            nextState.items = state.items.updated(selectedIds: .init())
             return (nextState, .none)
 
         case .itemsSiteUrlsEditButtonTapped:
-            guard !state.items._validSelections.isEmpty else { return (state, .none) }
-            nextState.alert = .siteUrlEdit(itemIds: state.items._validSelections, title: nil)
+            guard !state.items.selectedIds().isEmpty else { return (state, .none) }
+            nextState.alert = .siteUrlEdit(itemIds: state.items.selectedIds(), title: nil)
             return (nextState, .none)
 
         case let .itemsReordered(itemIds):
-            assert(itemIds.count == state.items._values.values.count)
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
@@ -110,9 +109,9 @@ enum ClipEditViewReducer: Reducer {
                 }
             }
             let newValues = itemIds
-                .compactMap { state.items._values[$0]?.value }
+                .compactMap { state.items.value(having: $0) }
                 .indexed()
-            nextState.items = state.items.updated(_values: newValues)
+            nextState.items = state.items.updated(values: newValues)
             return (nextState, [Effect(stream)])
 
         case .itemsReorderFailed:
@@ -120,7 +119,7 @@ enum ClipEditViewReducer: Reducer {
             return (nextState, .none)
 
         case let .itemSiteUrlEditButtonTapped(itemId):
-            guard let item = state.items._values[itemId]?.value else { return (state, .none) }
+            guard let item = state.items.value(having: itemId) else { return (state, .none) }
             nextState.alert = .siteUrlEdit(itemIds: Set([itemId]), title: item.url?.absoluteString)
             return (nextState, .none)
 
@@ -130,7 +129,7 @@ enum ClipEditViewReducer: Reducer {
             return (state, .none)
 
         case let .itemDeletionActionOccurred(itemId, completion: completion):
-            guard let item = state.items._values[itemId]?.value else {
+            guard let item = state.items.value(having: itemId) else {
                 completion(false)
                 return (state, .none)
             }
@@ -140,22 +139,20 @@ enum ClipEditViewReducer: Reducer {
                 return (state, .none)
             }
 
-            var newItemsValues = state.items._values
-            newItemsValues.removeValue(forKey: item.id)
-            nextState.items = state.items.updated(_values: newItemsValues)
+            nextState.items = state.items.removingValue(having: itemId)
 
             return (nextState, .none)
 
         case let .itemSelected(itemId):
             guard !state.items._selectedIds.contains(itemId) else { return (state, .none) }
             let newSelections = state.items._selectedIds.union([itemId])
-            nextState.items = state.items.updated(_selectedIds: newSelections)
+            nextState.items = state.items.updated(selectedIds: newSelections)
             return (nextState, .none)
 
         case let .itemDeselected(itemId):
             guard state.items._selectedIds.contains(itemId) else { return (state, .none) }
             let newSelections = state.items._selectedIds.subtracting([itemId])
-            nextState.items = state.items.updated(_selectedIds: newSelections)
+            nextState.items = state.items.updated(selectedIds: newSelections)
             return (nextState, .none)
 
         case .clipDeletionButtonTapped:
@@ -165,12 +162,12 @@ enum ClipEditViewReducer: Reducer {
         // MARK: Context Menu
 
         case let .siteUrlOpenMenuTapped(itemId):
-            guard let item = state.items._values[itemId]?.value, let url = item.url else { return (state, .none) }
+            guard let item = state.items.value(having: itemId), let url = item.url else { return (state, .none) }
             dependency.router.open(url)
             return (state, .none)
 
         case let .siteUrlCopyMenuTapped(itemId):
-            guard let item = state.items._values[itemId]?.value, let url = item.url else { return (state, .none) }
+            guard let item = state.items.value(having: itemId), let url = item.url else { return (state, .none) }
             dependency.pasteboard.set(url.absoluteString)
             return (state, .none)
 
@@ -210,7 +207,7 @@ enum ClipEditViewReducer: Reducer {
             case .success:
                 nextState.alert = nil
                 nextState.isItemsEditing = false
-                nextState.items = state.items.updated(_selectedIds: .init())
+                nextState.items = state.items.updated(selectedIds: .init())
 
             case .failure:
                 nextState.alert = .error(L10n.failedToUpdateClip)
@@ -302,7 +299,7 @@ extension ClipEditViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues,
+        performFilter(tags: previousState.tags.orderedValues(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -315,8 +312,8 @@ extension ClipEditViewReducer {
             .filter { isSomeItemsHidden ? !$0.isHidden : true }
             .map { $0.id }
         let newTags = previousState.tags
-            .updated(_values: tags.indexed())
-            .updated(_displayableIds: Set(newDisplayableTagIds))
+            .updated(values: tags.indexed())
+            .updated(filteredIds: Set(newDisplayableTagIds))
 
         var nextState = previousState
         nextState.tags = newTags

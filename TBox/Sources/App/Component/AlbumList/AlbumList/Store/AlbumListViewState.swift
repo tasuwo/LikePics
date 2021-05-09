@@ -32,10 +32,13 @@ struct AlbumListViewState: Equatable {
 }
 
 extension AlbumListViewState {
-    var isEditButtonEnabled: Bool { !albums.displayableValues.isEmpty }
+    var isEditButtonEnabled: Bool {
+        !albums.filteredValues().isEmpty
+    }
+
     var displayableAlbums: [Album] {
         albums
-            .displayableValues
+            .orderedFilteredValues()
             .map { _isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
     }
 

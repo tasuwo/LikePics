@@ -63,7 +63,7 @@ enum ClipInformationViewReducer: Reducer {
         // MARK: Control
 
         case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags._displayableIds), dependency: dependency)
+            let effect = showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
             return (nextState, [effect])
 
         case let .tagRemoveButtonTapped(tagId):
@@ -194,7 +194,7 @@ extension ClipInformationViewReducer {
     private static func performFilter(clip: Clip, previousState: State) -> State {
         performFilter(clip: clip,
                       item: previousState.item,
-                      tags: previousState.tags.orderedValues,
+                      tags: previousState.tags.orderedValues(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -202,7 +202,7 @@ extension ClipInformationViewReducer {
     private static func performFilter(item: ClipItem, previousState: State) -> State {
         performFilter(clip: previousState.clip,
                       item: item,
-                      tags: previousState.tags.orderedValues,
+                      tags: previousState.tags.orderedValues(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -218,7 +218,7 @@ extension ClipInformationViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool, previousState: State) -> State {
         performFilter(clip: previousState.clip,
                       item: previousState.item,
-                      tags: previousState.tags.orderedValues,
+                      tags: previousState.tags.orderedValues(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -238,8 +238,8 @@ extension ClipInformationViewReducer {
         nextState.clip = clip
         nextState.item = item
         nextState.tags = nextState.tags
-            .updated(_values: tags.indexed())
-            .updated(_displayableIds: Set(filteredTagIds))
+            .updated(values: tags.indexed())
+            .updated(filteredIds: Set(filteredTagIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState

@@ -200,14 +200,14 @@ extension TagCollectionViewReducer {
     }
 
     private static func performFilter(bySearchQuery searchQuery: String, previousState: State) -> State {
-        return performFilter(tags: previousState.tags.orderedValues,
+        return performFilter(tags: previousState.tags.orderedValues(),
                              searchQuery: searchQuery,
                              isSomeItemsHidden: previousState._isSomeItemsHidden,
                              previousState: previousState)
     }
 
     private static func performFilter(byItemsVisibility isSomeItemsHidden: Bool, previousState: State) -> State {
-        return performFilter(tags: previousState.tags.orderedValues,
+        return performFilter(tags: previousState.tags.orderedValues(),
                              searchQuery: previousState.searchQuery,
                              isSomeItemsHidden: isSomeItemsHidden,
                              previousState: previousState)
@@ -225,8 +225,8 @@ extension TagCollectionViewReducer {
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
         let newTags = previousState.tags
-            .updated(_values: tags.indexed())
-            .updated(_displayableIds: Set(filteredTagIds))
+            .updated(values: tags.indexed())
+            .updated(filteredIds: Set(filteredTagIds))
         nextState.tags = newTags
 
         nextState.searchQuery = searchQuery

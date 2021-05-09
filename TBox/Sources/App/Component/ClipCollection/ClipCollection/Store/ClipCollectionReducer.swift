@@ -47,7 +47,7 @@ enum ClipCollectionReducer: Reducer {
                     return Set([clipId])
                 }
             }()
-            nextState.clips = state.clips.updated(_selectedIds: selections)
+            nextState.clips = state.clips.updated(selectedIds: selections)
 
             if !state.operation.isAllowedMultipleSelection {
                 dependency.router.showClipPreviewView(for: clipId)
@@ -59,13 +59,13 @@ enum ClipCollectionReducer: Reducer {
         case let .deselected(clipId):
             guard state.clips._selectedIds.contains(clipId) else { return (state, .none) }
             let newSelections = state.clips._selectedIds.subtracting(Set([clipId]))
-            nextState.clips = nextState.clips.updated(_selectedIds: newSelections)
+            nextState.clips = nextState.clips.updated(selectedIds: newSelections)
             return (nextState, .none)
 
         case let .reordered(clipIds):
             guard case let .album(albumId) = state.source else { return (state, .none) }
 
-            let originals = state.clips.orderedValues.map { $0.id }
+            let originals = state.clips.orderedValues().map { $0.id }
             guard Set(originals).count == originals.count, Set(clipIds).count == clipIds.count else {
                 nextState.alert = .error(L10n.albumListViewErrorAtReorderAlbum)
                 return (nextState, .none)
@@ -75,9 +75,9 @@ enum ClipCollectionReducer: Reducer {
             switch dependency.clipCommandService.updateAlbum(having: albumId, byReorderingClipsHaving: ids) {
             case .success:
                 let newClips = ids
-                    .compactMap { state.clips._values[$0]?.value }
+                    .compactMap { state.clips.value(having: $0) }
                     .indexed()
-                nextState.clips = nextState.clips.updated(_values: newClips)
+                nextState.clips = nextState.clips.updated(values: newClips)
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtReorder)
@@ -158,7 +158,7 @@ enum ClipCollectionReducer: Reducer {
             return (state, [Effect(stream)])
 
         case let .shareMenuTapped(clipId):
-            guard let imageIds = state.clips._values[clipId]?.value.items.map({ $0.imageId }) else { return (state, .none) }
+            guard let imageIds = state.clips.value(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }
             let items = imageIds.compactMap { imageId in
                 ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
             }
@@ -417,7 +417,7 @@ extension ClipCollectionReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(clips: previousState.clips.orderedValues,
+        performFilter(clips: previousState.clips.orderedValues(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -432,8 +432,8 @@ extension ClipCollectionReducer {
         let filteredClipIds = filteredClips.map { $0.id }
 
         nextState.clips = previousState.clips
-            .updated(_values: clips.indexed())
-            .updated(_displayableIds: Set(filteredClipIds))
+            .updated(values: clips.indexed())
+            .updated(filteredIds: Set(filteredClipIds))
 
         // 余分な選択を除外する
         let newClipIds = Set(clips.map { $0.id })
@@ -441,7 +441,7 @@ extension ClipCollectionReducer {
             let newSelections = nextState.clips._selectedIds.subtracting(
                 nextState.clips._selectedIds.subtracting(newClipIds)
             )
-            nextState.clips = nextState.clips.updated(_selectedIds: newSelections)
+            nextState.clips = nextState.clips.updated(selectedIds: newSelections)
         }
 
         nextState.isEmptyMessageViewDisplaying = filteredClips.isEmpty
@@ -470,23 +470,23 @@ extension ClipCollectionReducer {
             nextState.operation = .none
             nextState.layout = state.preservedLayout ?? state.layout
             nextState.preservedLayout = nil
-            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            nextState.clips = nextState.clips.updated(selectedIds: .init())
             return (nextState, .none)
 
         case .selectAll:
             guard state.operation.isAllowedMultipleSelection else { return (state, .none) }
-            nextState.clips = nextState.clips.updated(_selectedIds: state.clips._displayableIds)
+            nextState.clips = nextState.clips.updated(selectedIds: state.clips._filteredIds)
             return (nextState, .none)
 
         case .deselectAll:
-            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            nextState.clips = nextState.clips.updated(selectedIds: .init())
             return (nextState, .none)
 
         case .select:
             nextState.operation = .selecting
             nextState.layout = .grid
             nextState.preservedLayout = state.layout
-            nextState.clips = nextState.clips.updated(_selectedIds: .init())
+            nextState.clips = nextState.clips.updated(selectedIds: .init())
             return (nextState, .none)
 
         case let .changeLayout(layout):
@@ -563,7 +563,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .merge:
-            let selections = state.clips.selectedValues
+            let selections = state.clips.orderedSelectedValues()
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     let isPresented = dependency.router.showClipMergeModal(for: selections) { succeeded in
@@ -594,7 +594,7 @@ extension ClipCollectionReducer {
 private extension ClipCollectionState {
     func editingEnded() -> Self {
         var nextState = self
-        nextState.clips = nextState.clips.updated(_selectedIds: .init())
+        nextState.clips = nextState.clips.updated(selectedIds: .init())
         nextState.operation = .none
         nextState.layout = preservedLayout ?? layout
         nextState.preservedLayout = nil

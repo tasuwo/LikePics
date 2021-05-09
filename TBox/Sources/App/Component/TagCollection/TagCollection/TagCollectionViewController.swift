@@ -114,7 +114,7 @@ extension TagCollectionViewController {
         var items: [Layout.Item?] = []
 
         items += state.searchQuery.isEmpty ? [.uncategorized] : [nil]
-        items += state.tags.displayableValues
+        items += state.tags.orderedFilteredValues()
             .map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !state._isSomeItemsHidden)) }
 
         Layout.apply(items: items.compactMap({ $0 }), to: dataSource, in: collectionView)

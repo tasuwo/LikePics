@@ -42,23 +42,22 @@ enum ClipCollectionToolBarReducer: Reducer {
         // MARK: ToolBar
 
         case .addButtonTapped:
-            nextState.alert = .addition(targetCount: nextState.parentState.clips._selectedIds.count)
+            nextState.alert = .addition(targetCount: nextState.parentState.clips.selectedIds().count)
             return (nextState, [eventEffect])
 
         case .changeVisibilityButtonTapped:
-            nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips._selectedIds.count)
+            nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips.selectedIds().count)
             return (nextState, [eventEffect])
 
         case .shareButtonTapped:
-            let items = state.parentState.clips._selectedIds
-                .compactMap { state.parentState.clips._values[$0] }
-                .flatMap { $0.value.items }
+            let items = state.parentState.clips.selectedValues()
+                .flatMap { $0.items }
                 .map { ClipItemImageShareItem(imageId: $0.imageId, imageQueryService: dependency.imageQueryService) }
-            nextState.alert = .share(items: items, targetCount: nextState.parentState.clips._selectedIds.count)
+            nextState.alert = .share(items: items, targetCount: nextState.parentState.clips.selectedIds().count)
             return (nextState, [eventEffect])
 
         case .deleteButtonTapped:
-            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState.parentState.clips._selectedIds.count)
+            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState.parentState.clips.selectedIds().count)
             return (nextState, [eventEffect])
 
         case .mergeButtonTapped:
@@ -83,7 +82,7 @@ enum ClipCollectionToolBarReducer: Reducer {
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
         var nextState = self
-        let isEnabled = !parentState.clips._selectedIds.isEmpty
+        let isEnabled = !parentState.clips.selectedIds().isEmpty
 
         nextState.isHidden = operation != .selecting
         nextState.items = [
@@ -91,7 +90,7 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            Item(kind: .merge, isEnabled: isEnabled && parentState.clips._selectedIds.count > 1)
+            Item(kind: .merge, isEnabled: isEnabled && parentState.clips.selectedIds().count > 1)
         ]
 
         return nextState

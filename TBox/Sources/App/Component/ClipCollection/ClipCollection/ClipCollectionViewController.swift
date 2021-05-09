@@ -120,10 +120,11 @@ extension ClipCollectionViewController {
     private func bind(to store: ClipCollectionViewStore) {
         store.state
             .receive(on: clipsUpdateQueue)
-            .bind(\.clips.displayableValues) { [weak self] clips in
+            .removeDuplicates(by: { $0.clips.filteredValues() == $1.clips.filteredValues() })
+            .sink { [weak self] state in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(clips.map({ .init($0) }))
+                snapshot.appendItems(state.clips.orderedFilteredValues().map({ .init($0) }))
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
                     self?.updateHiddenIconAppearance()
                 }
@@ -182,7 +183,7 @@ extension ClipCollectionViewController {
 
         store.state
             .map { state -> ClipCollectionNavigationBarAction in
-                .stateChanged(clipCount: state.clips._displayableIds.count,
+                .stateChanged(clipCount: state.clips._filteredIds.count,
                               selectionCount: state.clips._selectedIds.count,
                               layout: state.layout,
                               operation: state.operation)

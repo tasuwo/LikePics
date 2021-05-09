@@ -32,9 +32,7 @@ extension DependencyContainer {
                                         sourceDescription: nil,
                                         layout: .waterfall,
                                         operation: .none,
-                                        clips: .init(_values: [:],
-                                                     _selectedIds: .init(),
-                                                     _displayableIds: .init()),
+                                        clips: .init(),
                                         previewingClipId: nil,
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
@@ -114,9 +112,7 @@ extension DependencyContainer: Router {
         }
 
         let informationViewCacheState = ClipInformationViewCacheState(clip: nil,
-                                                                      tags: .init(_values: [:],
-                                                                                  _selectedIds: .init(),
-                                                                                  _displayableIds: .init()),
+                                                                      tags: .init(),
                                                                       item: nil,
                                                                       isSomeItemsHidden: true,
                                                                       isInvalidated: false)
@@ -180,7 +176,7 @@ extension DependencyContainer: Router {
         let state = ClipInformationViewState(clipId: clipId,
                                              itemId: itemId,
                                              clip: nil,
-                                             tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
+                                             tags: .init(),
                                              item: nil,
                                              shouldCollectionViewUpdateWithAnimation: false,
                                              isSuspendedCollectionViewUpdate: true,
@@ -222,9 +218,7 @@ extension DependencyContainer: Router {
                                     tagSelectionCompleted: completion)
 
         let state = TagSelectionModalState(searchQuery: "",
-                                           tags: .init(_values: [:],
-                                                       _selectedIds: selections,
-                                                       _displayableIds: .init()),
+                                           tags: .init(selectedIds: selections),
                                            isCollectionViewHidden: false,
                                            isEmptyMessageViewHidden: true,
                                            isSearchBarEnabled: true,
@@ -266,9 +260,7 @@ extension DependencyContainer: Router {
                                     clipQueryService: clipQueryService,
                                     albumSelectionCompleted: completion)
         let state = AlbumSelectionModalState(searchQuery: "",
-                                             albums: .init(_values: [:],
-                                                           _selectedIds: .init(),
-                                                           _displayableIds: .init()),
+                                             albums: .init(),
                                              isCollectionViewHidden: true,
                                              isEmptyMessageViewHidden: true,
                                              isSearchBarEnabled: false,
@@ -336,8 +328,8 @@ extension DependencyContainer: Router {
                                                   // 初回は適当な値で埋めておく
                                                   dataSize: 0,
                                                   isHidden: false),
-                                      tags: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
-                                      items: .init(_values: [:], _selectedIds: .init(), _displayableIds: .init()),
+                                      tags: .init(),
+                                      items: .init(),
                                       isSomeItemsHidden: !userSettingStorage.readShowHiddenItems(),
                                       isItemsEditing: false,
                                       alert: nil,

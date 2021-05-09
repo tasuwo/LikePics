@@ -25,7 +25,7 @@ enum TagSelectionModalReducer: Reducer {
             return prepareQueryEffects(state, dependency)
 
         case .viewDidDisappear:
-            dependency.tagSelectionCompleted(Set(state.tags.selectedValues))
+            dependency.tagSelectionCompleted(Set(state.tags.orderedSelectedValues()))
             return (nextState, .none)
 
         // MARK: State Observation
@@ -45,12 +45,12 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: Selection
 
         case let .selected(tagId):
-            let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
+            let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.union(Set([tagId])))
             nextState.tags = newTags
             return (nextState, .none)
 
         case let .deselected(tagId):
-            let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.subtracting(Set([tagId])))
+            let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.subtracting(Set([tagId])))
             nextState.tags = newTags
             return (nextState, .none)
 
@@ -69,7 +69,7 @@ enum TagSelectionModalReducer: Reducer {
         case let .alertSaveButtonTapped(text: name):
             switch dependency.clipCommandService.create(tagWithName: name) {
             case let .success(tagId):
-                let newTags = state.tags.updated(_selectedIds: state.tags._selectedIds.union(Set([tagId])))
+                let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.union(Set([tagId])))
                 nextState.tags = newTags
                 nextState.alert = nil
 
@@ -134,7 +134,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues,
+        performFilter(tags: previousState.tags.orderedValues(),
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState._isSomeItemsHidden,
                       previousState: previousState)
@@ -143,7 +143,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues,
+        performFilter(tags: previousState.tags.orderedValues(),
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -161,8 +161,8 @@ extension TagSelectionModalReducer {
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
         let newTags = previousState.tags
-            .updated(_values: tags.indexed())
-            .updated(_displayableIds: Set(filteredTagIds))
+            .updated(values: tags.indexed())
+            .updated(filteredIds: Set(filteredTagIds))
         nextState.tags = newTags
 
         nextState.searchQuery = searchQuery

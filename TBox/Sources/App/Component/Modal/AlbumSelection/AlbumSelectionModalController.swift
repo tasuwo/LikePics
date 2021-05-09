@@ -81,10 +81,11 @@ extension AlbumSelectionModalController {
     private func bind(to store: Store) {
         store.state
             .receive(on: collectionUpdateQueue)
-            .bind(\.albums.displayableValues) { [weak self] values in
+            .removeDuplicates(by: { $0.albums.filteredValues() == $1.albums.filteredValues() })
+            .sink { [weak self] state in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(values)
+                snapshot.appendItems(state.albums.orderedFilteredValues())
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &subscriptions)

@@ -52,13 +52,13 @@ extension ClipCollectionState {
 
     var previewingClip: Clip? {
         guard let clipId = previewingClipId else { return nil }
-        return clips._values[clipId]?.value
+        return clips.value(having: clipId)
     }
 
     var title: String? {
         if operation != .selecting {
             if let description = sourceDescription {
-                return "\(description) (\(clips._displayableIds.count))"
+                return "\(description) (\(clips._filteredIds.count))"
             } else {
                 return nil
             }

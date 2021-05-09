@@ -7,69 +7,118 @@
 import Domain
 
 struct Collection<Value: Identifiable & Equatable & Hashable>: Equatable {
-    let _values: [Value.Identity: Ordered<Value>]
+    private let _values: [Value.Identity: Ordered<Value>]
     let _selectedIds: Set<Value.Identity>
-    let _displayableIds: Set<Value.Identity>
+    let _filteredIds: Set<Value.Identity>
+
+    // MARK: - Initializers
+
+    init(values: [Value.Identity: Ordered<Value>] = [:],
+         selectedIds: Set<Value.Identity> = .init(),
+         filteredIds: Set<Value.Identity> = .init())
+    {
+        self._values = values
+        self._selectedIds = selectedIds
+        self._filteredIds = filteredIds
+    }
 }
+
+// MARK: - Write
+
+extension Collection {
+    func updated(values: [Value.Identity: Ordered<Value>]) -> Self {
+        return .init(values: values,
+                     selectedIds: _selectedIds,
+                     filteredIds: _filteredIds)
+    }
+
+    func updated(selectedIds: Set<Value.Identity>) -> Self {
+        return .init(values: _values,
+                     selectedIds: selectedIds,
+                     filteredIds: _filteredIds)
+    }
+
+    func updated(filteredIds: Set<Value.Identity>) -> Self {
+        return .init(values: _values,
+                     selectedIds: _selectedIds,
+                     filteredIds: filteredIds)
+    }
+
+    func removingValue(having id: Value.Identity) -> Self {
+        var removed = false
+        let newValues = _values.values
+            .sorted(by: { $0.index < $1.index })
+            .reduce(into: [Value.Identity: Ordered<Value>](), { dict, orderedValue in
+                if removed {
+                    dict[orderedValue.value.identity] = Ordered(index: orderedValue.index - 1,
+                                                                value: orderedValue.value)
+                } else {
+                    if orderedValue.value.identity == id {
+                        removed = true
+                    } else {
+                        dict[orderedValue.value.identity] = orderedValue
+                    }
+                }
+            })
+        return .init(values: newValues,
+                     selectedIds: _selectedIds,
+                     filteredIds: _filteredIds)
+    }
+}
+
+// MARK: - Read
 
 extension Collection {
     func value(having id: Value.Identity) -> Value? {
         return _values[id]?.value
     }
-}
 
-extension Collection {
-    func updated(_values: [Value.Identity: Ordered<Value>]) -> Self {
-        return .init(_values: _values,
-                     _selectedIds: _selectedIds,
-                     _displayableIds: _displayableIds)
-    }
-
-    func updated(_selectedIds: Set<Value.Identity>) -> Self {
-        return .init(_values: _values,
-                     _selectedIds: _selectedIds,
-                     _displayableIds: _displayableIds)
-    }
-
-    func updated(_displayableIds: Set<Value.Identity>) -> Self {
-        return .init(_values: _values,
-                     _selectedIds: _selectedIds,
-                     _displayableIds: _displayableIds)
-    }
-}
-
-extension Collection {
-    var orderedValues: [Value] {
+    func orderedValues() -> [Value] {
         _values
             .map { $0.value }
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
 
-    var selectedValues: [Value] {
+    func selectedIds() -> Set<Value.Identity> {
+        _selectedIds
+            .filter { Set(_values.keys).contains($0) }
+    }
+
+    func selectedValues() -> Set<Value> {
+        Set(_selectedIds.compactMap { _values[$0]?.value })
+    }
+
+    func orderedSelectedValues() -> [Value] {
         _selectedIds
             .compactMap { _values[$0] }
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
 
-    var displayableValues: [Value] {
-        _displayableIds
+    func filteredIds() -> Set<Value.Identity> {
+        _filteredIds
+            .filter { Set(_values.keys).contains($0) }
+    }
+
+    func filteredValues() -> Set<Value> {
+        Set(_filteredIds.compactMap { _values[$0]?.value })
+    }
+
+    func orderedFilteredValues() -> [Value] {
+        _filteredIds
             .compactMap { _values[$0] }
             .sorted(by: { $0.index < $1.index })
             .map { $0.value }
     }
 }
 
-extension Collection {
-    var _validSelections: Set<Value.Identity> {
-        _selectedIds
-            .filter { _values.keys.contains($0) }
-    }
+// MARK: - Selection/Deselection
 
-    var _filteredSelections: Set<Value.Identity> {
-        _validSelections
-            .filter { _displayableIds.contains($0) }
+extension Collection {
+    private var _filteredSelections: Set<Value.Identity> {
+        selectedIds()
+            .filter { _filteredIds.contains($0) }
     }
 
     func selections(from previous: Self?) -> Set<Value> {

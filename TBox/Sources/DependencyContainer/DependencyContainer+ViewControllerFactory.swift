@@ -18,9 +18,7 @@ extension DependencyContainer: ViewControllerFactory {
                                         sourceDescription: nil,
                                         layout: .waterfall,
                                         operation: .none,
-                                        clips: .init(_values: [:],
-                                                     _selectedIds: .init(),
-                                                     _displayableIds: .init()),
+                                        clips: .init(),
                                         previewingClipId: nil,
                                         isEmptyMessageViewDisplaying: false,
                                         isCollectionViewDisplaying: false,
@@ -52,9 +50,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeTagCollectionViewController() -> UIViewController? {
-        let state = TagCollectionViewState(tags: .init(_values: [:],
-                                                       _selectedIds: .init(),
-                                                       _displayableIds: .init()),
+        let state = TagCollectionViewState(tags: .init(),
                                            searchQuery: "",
                                            isCollectionViewHidden: true,
                                            isEmptyMessageViewHidden: true,
@@ -88,9 +84,7 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeAlbumListViewController() -> UIViewController? {
         let state = AlbumListViewState(searchQuery: "",
-                                       albums: .init(_values: [:],
-                                                     _selectedIds: .init(),
-                                                     _displayableIds: .init()),
+                                       albums: .init(),
                                        isEditing: false,
                                        isEmptyMessageViewDisplaying: false,
                                        isCollectionViewDisplaying: false,

@@ -84,7 +84,7 @@ extension TagSelectionModalController {
                 guard let self = self else { return }
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.tags.displayableValues)
+                snapshot.appendItems(state.tags.orderedFilteredValues())
                 self.dataSource.apply(snapshot, animatingDifferences: true) {
                     self.applySelections(for: state)
                 }
