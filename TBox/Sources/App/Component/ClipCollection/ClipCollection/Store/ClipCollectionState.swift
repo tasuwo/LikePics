@@ -34,6 +34,22 @@ struct ClipCollectionState: Equatable {
 }
 
 extension ClipCollectionState {
+    init(source: ClipCollection.Source, isSomeItemsHidden: Bool) {
+        self.source = source
+        sourceDescription = nil
+        layout = .waterfall
+        operation = .none
+        clips = .init()
+        previewingClipId = nil
+        isEmptyMessageViewDisplaying = false
+        isCollectionViewDisplaying = false
+        alert = nil
+        isDismissed = false
+        self.isSomeItemsHidden = isSomeItemsHidden
+    }
+}
+
+extension ClipCollectionState {
     var isEditing: Bool {
         operation.isEditing
     }

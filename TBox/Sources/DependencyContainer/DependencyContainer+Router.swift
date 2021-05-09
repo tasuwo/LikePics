@@ -29,29 +29,9 @@ extension DependencyContainer {
 
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
         let state = ClipCollectionState(source: source,
-                                        sourceDescription: nil,
-                                        layout: .waterfall,
-                                        operation: .none,
-                                        clips: .init(),
-                                        previewingClipId: nil,
-                                        isEmptyMessageViewDisplaying: false,
-                                        isCollectionViewDisplaying: false,
-                                        alert: nil,
-                                        isDismissed: false,
                                         isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
-        let navigationBarState = ClipCollectionNavigationBarState(source: source,
-                                                                  layout: .waterfall,
-                                                                  operation: .none,
-                                                                  rightItems: [],
-                                                                  leftItems: [],
-                                                                  clipCount: 0,
-                                                                  selectionCount: 0)
-        let toolBarState = ClipCollectionToolBarState(source: source,
-                                                      operation: .none,
-                                                      items: [],
-                                                      isHidden: true,
-                                                      parentState: state,
-                                                      alert: nil)
+        let navigationBarState = ClipCollectionNavigationBarState(source: source)
+        let toolBarState = ClipCollectionToolBarState(source: source, parentState: state)
 
         return ClipCollectionViewController(state: state,
                                             navigationBarState: navigationBarState,

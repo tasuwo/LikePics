@@ -33,3 +33,15 @@ struct ClipCollectionNavigationBarState: Equatable {
     var clipCount: Int
     var selectionCount: Int
 }
+
+extension ClipCollectionNavigationBarState {
+    init(source: ClipCollection.Source) {
+        self.source = source
+        layout = .waterfall
+        operation = .none
+        rightItems = []
+        leftItems = []
+        clipCount = 0
+        selectionCount = 0
+    }
+}

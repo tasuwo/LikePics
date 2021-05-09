@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import Domain
 
 struct ClipCollectionToolBarState: Equatable {
@@ -36,4 +34,15 @@ struct ClipCollectionToolBarState: Equatable {
     var parentState: ClipCollectionState
 
     var alert: Alert?
+}
+
+extension ClipCollectionToolBarState {
+    init(source: ClipCollection.Source, parentState: ClipCollectionState) {
+        self.source = source
+        operation = .none
+        items = []
+        isHidden = true
+        self.parentState = parentState
+        alert = nil
+    }
 }
