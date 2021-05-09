@@ -89,7 +89,7 @@ extension AlbumListViewController {
     private func bind(to store: Store) {
         store.state
             .receive(on: albumsUpdateQueue)
-            .removeDuplicates(by: { $0.displayableAlbums == $1.displayableAlbums && $0.isEditing == $1.isEditing })
+            .removeDuplicates(by: { $0.albums.filteredValues() == $1.albums.filteredValues() && $0.isEditing == $1.isEditing })
             .sink { [weak self] state in
                 guard let self = self else { return }
                 let items = state.displayableAlbums.map { Layout.Item(album: $0, isEditing: state.isEditing) }
