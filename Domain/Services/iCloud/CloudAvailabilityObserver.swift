@@ -27,7 +27,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
     }
 
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
-    private let cloudAvailabilityResolver: CurrentCloudAccountResolver.Type
+    private let cloudAccountStatusResolver: CloudAccountStatusResolvable.Type
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudAvailabilityObserver")
 
     private var subscriptions: Set<AnyCancellable> = []
@@ -37,10 +37,10 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
     // MARK: - Lifecycle
 
     public init(cloudUsageContextStorage: CloudUsageContextStorageProtocol,
-                cloudAvailabilityResolver: CurrentCloudAccountResolver.Type)
+                cloudAccountStatusResolver: CloudAccountStatusResolvable.Type)
     {
         self.cloudUsageContextStorage = cloudUsageContextStorage
-        self.cloudAvailabilityResolver = cloudAvailabilityResolver
+        self.cloudAccountStatusResolver = cloudAccountStatusResolver
 
         self.state = .init(nil)
 
@@ -68,7 +68,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     private func resolveCurrentContext() -> Future<Context, Never> {
         return Future { [unowned self] promise in
-            self.cloudAvailabilityResolver.currentCloudAccount { result in
+            self.cloudAccountStatusResolver.resolve { result in
                 let lastIdentifier = self.queue.sync { self.cloudUsageContextStorage.lastLoggedInCloudAccountId }
                 switch result {
                 case let .success(identifier) where lastIdentifier == identifier || lastIdentifier == nil:

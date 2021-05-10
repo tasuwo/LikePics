@@ -4,7 +4,7 @@
 
 import CloudKit
 
-public enum CurrentICloudAccountResolver {
+public enum CloudAccountStatusResolver {
     private static func resolveAccountId(_ completion: @escaping (Result<String?, Error>) -> Void) {
         CKContainer.default().fetchUserRecordID { id, error in
             if let error = error {
@@ -22,10 +22,10 @@ public enum CurrentICloudAccountResolver {
     }
 }
 
-extension CurrentICloudAccountResolver: CurrentCloudAccountResolver {
-    // MARK: - CurrentCloudAccountResolver
+extension CloudAccountStatusResolver: CloudAccountStatusResolvable {
+    // MARK: - CloudAccountStatusResolvable
 
-    public static func currentCloudAccount(_ completion: @escaping (Result<CloudAccountIdentifier, CurrentCloudAccountResolverError>) -> Void) {
+    public static func resolve(_ completion: @escaping (Result<CloudAccountIdentifier, CloudAccountStatusError>) -> Void) {
         CKContainer.default().accountStatus { status, error in
             if let error = error {
                 completion(.failure(.failedToCheckAccountStatus(error)))
