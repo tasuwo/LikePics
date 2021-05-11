@@ -2138,6 +2138,16 @@
 			path = TagSelection;
 			sourceTree = "<group>";
 		};
+		2C8565F6264AEC6600F57644 /* Stack */ = {
+			isa = PBXGroup;
+			children = (
+				32FAC93D33310615F0EE9D9B /* CloudStack.swift */,
+				E77924D2530971EBC8182108 /* CloudStackLoader.swift */,
+				F91CE3649A1ACAF564C6E63C /* CloudStackObserver.swift */,
+			);
+			path = Stack;
+			sourceTree = "<group>";
+		};
 		2CDC9B7E264979840045C747 /* Account */ = {
 			isa = PBXGroup;
 			children = (
@@ -3635,11 +3645,9 @@
 		CEEAA2E7FE1DFED0BD93172E /* iCloud */ = {
 			isa = PBXGroup;
 			children = (
+				2C8565F6264AEC6600F57644 /* Stack */,
 				2CEC0A19264ACEF4002F0967 /* Availability */,
 				2CDC9B7E264979840045C747 /* Account */,
-				32FAC93D33310615F0EE9D9B /* CloudStack.swift */,
-				E77924D2530971EBC8182108 /* CloudStackLoader.swift */,
-				F91CE3649A1ACAF564C6E63C /* CloudStackObserver.swift */,
 			);
 			path = iCloud;
 			sourceTree = "<group>";
