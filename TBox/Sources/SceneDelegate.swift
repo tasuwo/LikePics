@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func makeAppRootSetupViewController() -> UIViewController {
         let cloudUsageContextStorage = CloudUsageContextStorage()
-        let cloudAccountService = CloudAccountService.self
+        let cloudAccountService = CloudAccountService()
         let cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: cloudUsageContextStorage,
                                                                 cloudAccountService: cloudAccountService)
         let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),

@@ -168,7 +168,7 @@ class DependencyContainer {
 
     func makeCloudStackLoader() -> CloudStackLoader {
         return CloudStackLoader(userSettingsStorage: self._userSettingStorage,
-                                cloudAvailabilityStore: self.cloudAvailabilityService,
+                                cloudAvailabilityService: self.cloudAvailabilityService,
                                 cloudStack: self.coreDataStack)
     }
 
