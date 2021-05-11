@@ -5,7 +5,7 @@
 import Combine
 import Domain
 
-typealias SettingsViewDependency = HasCloudAvailabilityStore
+typealias SettingsViewDependency = HasCloudAvailabilityService
     & HasUserSettingStorage
 
 enum SettingsViewReducer: Reducer {
@@ -40,7 +40,7 @@ enum SettingsViewReducer: Reducer {
             return (nextState, .none)
 
         case let .iCloudSyncAvailabilityChanged(isEnabled):
-            guard let availability = dependency.cloudAvailabilityStore.state.value else {
+            guard let availability = dependency.cloudAvailabilityService.state.value else {
                 nextState.isICloudSyncEnabled = !isEnabled
                 return (nextState, .none)
             }
@@ -104,7 +104,7 @@ extension SettingsViewReducer {
             .map { Action.itemsVisibilityUpdated(isHidden: !$0) as Action? }
 
         let stream2 = dependency.userSettingStorage.enabledICloudSync
-            .combineLatest(dependency.cloudAvailabilityStore.state)
+            .combineLatest(dependency.cloudAvailabilityService.state)
             .map { settingEnabled, availability in
                 return settingEnabled && availability?.isAvailable == true
             }

@@ -11,7 +11,7 @@ public protocol CloudStackLoaderObserver: AnyObject {
 
 public class CloudStackLoader {
     private let userSettingsStorage: UserSettingsStorageProtocol
-    private let cloudAvailabilityStore: CloudAvailabilityStore
+    private let cloudAvailabilityService: CloudAvailabilityServiceProtocol
     private let cloudStack: CloudStack
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudStackLoader")
 
@@ -22,18 +22,18 @@ public class CloudStackLoader {
     // MARK: - Lifecycle
 
     public init(userSettingsStorage: UserSettingsStorageProtocol,
-                cloudAvailabilityStore: CloudAvailabilityStore,
+                cloudAvailabilityService: CloudAvailabilityServiceProtocol,
                 cloudStack: CloudStack)
     {
         self.userSettingsStorage = userSettingsStorage
-        self.cloudAvailabilityStore = cloudAvailabilityStore
+        self.cloudAvailabilityService = cloudAvailabilityService
         self.cloudStack = cloudStack
     }
 
     // MARK: - Methods
 
     public func startObserveCloudAvailability() {
-        self.cloudAvailabilityStore.state
+        self.cloudAvailabilityService.state
             // 初回起動時の分を除く
             .dropFirst()
             .compactMap { $0 }
@@ -73,7 +73,7 @@ public class CloudStackLoader {
     }
 
     private func didUpdate(isICloudSyncEnabled: Bool) {
-        guard let cloudAvailability = self.cloudAvailabilityStore.state.value else { return }
+        guard let cloudAvailability = self.cloudAvailabilityService.state.value else { return }
         switch (isICloudSyncEnabled, cloudAvailability) {
         case (true, .available):
             self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)

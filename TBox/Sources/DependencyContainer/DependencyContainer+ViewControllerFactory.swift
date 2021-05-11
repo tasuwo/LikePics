@@ -85,7 +85,7 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
         let presenter = SettingsPresenter(storage: self._userSettingStorage,
-                                          availabilityStore: self.cloudAvailabilityObserver)
+                                          cloudAvailabilityService: self.cloudAvailabilityService)
         viewController.factory = self
         viewController.presenter = presenter
 

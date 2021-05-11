@@ -4,6 +4,6 @@
 
 import Combine
 
-public protocol CloudAvailabilityStore {
+public protocol CloudAvailabilityServiceProtocol {
     var state: CurrentValueSubject<CloudAvailability?, Never> { get }
 }

@@ -47,7 +47,7 @@ class DependencyContainer {
     // MARK: Core Data
 
     let coreDataStack: CoreDataStack
-    let cloudAvailabilityObserver: CloudAvailabilityObserver
+    let cloudAvailabilityService: CloudAvailabilityService
     private var imageQueryContext: NSManagedObjectContext
     private var commandContext: NSManagedObjectContext
 
@@ -71,7 +71,7 @@ class DependencyContainer {
 
     // MARK: - Lifecycle
 
-    init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityObserver) throws {
+    init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityService) throws {
         self.logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
@@ -86,7 +86,7 @@ class DependencyContainer {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
-        self.cloudAvailabilityObserver = cloudAvailabilityObserver
+        self.cloudAvailabilityService = cloudAvailabilityObserver
 
         self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled, logger: logger)
 
@@ -168,7 +168,7 @@ class DependencyContainer {
 
     func makeCloudStackLoader() -> CloudStackLoader {
         return CloudStackLoader(userSettingsStorage: self._userSettingStorage,
-                                cloudAvailabilityStore: self.cloudAvailabilityObserver,
+                                cloudAvailabilityStore: self.cloudAvailabilityService,
                                 cloudStack: self.coreDataStack)
     }
 

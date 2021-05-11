@@ -15,7 +15,7 @@ protocol SettingsViewProtocol: AnyObject {
 
 class SettingsPresenter {
     private let storage: UserSettingsStorageProtocol
-    private let availabilityStore: CloudAvailabilityStore
+    private let cloudAvailabilityService: CloudAvailabilityServiceProtocol
 
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -27,10 +27,10 @@ class SettingsPresenter {
     // MARK: - Lifecycle
 
     init(storage: UserSettingsStorageProtocol,
-         availabilityStore: CloudAvailabilityStore)
+         cloudAvailabilityService: CloudAvailabilityServiceProtocol)
     {
         self.storage = storage
-        self.availabilityStore = availabilityStore
+        self.cloudAvailabilityService = cloudAvailabilityService
         self.shouldHideHiddenItems = .init(false)
         self.shouldSyncICloudEnabled = .init(false)
 
@@ -43,7 +43,7 @@ class SettingsPresenter {
             .store(in: &self.subscriptions)
 
         self.storage.enabledICloudSync
-            .combineLatest(self.availabilityStore.state)
+            .combineLatest(self.cloudAvailabilityService.state)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] settingEnabled, availability in
                 let isOn = settingEnabled && availability?.isAvailable == true
@@ -57,7 +57,7 @@ class SettingsPresenter {
     }
 
     func set(isICloudSyncEnabled: Bool) -> Bool {
-        guard let availability = self.availabilityStore.state.value else { return false }
+        guard let availability = self.cloudAvailabilityService.state.value else { return false }
 
         if isICloudSyncEnabled, availability == .unavailable {
             let isEnabledICloudSync = self.storage.readEnabledICloudSync()

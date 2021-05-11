@@ -51,7 +51,7 @@
 		11C54931E0A4601FB3F1FE11 /* AlbumListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A500A91E5429F6104710DFD /* AlbumListCollectionViewCell.xib */; };
 		12535F73DE41D948F397175F /* HasClipInformationViewCaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448F07479CAA5DF95B167D3 /* HasClipInformationViewCaching.swift */; };
 		12600EFB795EDB40DA99FEB2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E62DA54F7E7544BDEFAFC1F2 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		13504EC88AF2EDCE71DE6CBB /* CloudAvailabilityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5011982B15DCD543BD9EAED7 /* CloudAvailabilityObserver.swift */; };
+		13504EC88AF2EDCE71DE6CBB /* CloudAvailabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5011982B15DCD543BD9EAED7 /* CloudAvailabilityService.swift */; };
 		138BA92C5F4CAF2E86342574 /* AppRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1E84FB07399D7EF2307D72 /* AppRoot.swift */; };
 		13B9EB0F568FE7A6C568163B /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5D674BB621706C0F8D71E /* Identifiable.swift */; };
 		13D3C72EA890558843B67140 /* AlbumSelectionModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A6505BDE8B8EC03D95F652 /* AlbumSelectionModalController.swift */; };
@@ -172,7 +172,7 @@
 		4809011156F04B1365450DDD /* ClipListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2747008F06C6F4B5D32AB5F /* ClipListQuery.swift */; };
 		482AB49BF3D934CB1B9FA551 /* ClipCollectionToolBarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF9466314336828C5E459A0 /* ClipCollectionToolBarEvent.swift */; };
 		48424B500C5C0F1BB565D4D1 /* ConsoleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B27C515F7FD7BE531656774 /* ConsoleLogger.swift */; };
-		4852187488FA66C59BC889EA /* CloudAvailabilityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B010C6A24024D3AD083D8DB /* CloudAvailabilityStore.swift */; };
+		4852187488FA66C59BC889EA /* CloudAvailabilityServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B010C6A24024D3AD083D8DB /* CloudAvailabilityServiceProtocol.swift */; };
 		485A3EDE00DD49183D58B5D7 /* Realm.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53BBB71C747011F166E64497 /* Realm.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A29DA75B5C72D6C85795B5 /* ClipItemListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76771E33FAAAB3B3F72D9A44 /* ClipItemListQuery.swift */; };
 		48F7C9296B1A59F70653651A /* TemporariesPersistServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51638835B72737C9E761E /* TemporariesPersistServiceSpec.swift */; };
@@ -416,7 +416,7 @@
 		AA5110FCC98872EE24EB9F4C /* OriginalImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B886165350B02BFA96CA0C /* OriginalImageRequest.swift */; };
 		AB02404C3277A096839CE39B /* TemporaryClipCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0378221C7F286374C5C512 /* TemporaryClipCommandServiceProtocol.swift */; };
 		AB24C04DCC2881CE262130BA /* WebImageUrlFinderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA304B7609307989A2B5CE4A /* WebImageUrlFinderError.swift */; };
-		AB24FA8BB9AD935528CAC3D2 /* HasCloudAvailabilityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityStore.swift */; };
+		AB24FA8BB9AD935528CAC3D2 /* HasCloudAvailabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityService.swift */; };
 		AB3B2F6A5A01CB988E235DE3 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ABD26A06EAC40822B6C28848 /* ClipCollection_MenuElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFE10C4DEB3195F6953B943 /* ClipCollection_MenuElement.swift */; };
 		ACD4983C4267CEE9D0BFADF0 /* NSItemProvider+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B5A487A4154B9235EB3E23 /* NSItemProvider+Type.swift */; };
@@ -1126,8 +1126,8 @@
 		4C7BDAF800D7641484B935C4 /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		4E4BBC1FB7ABA4CD2D913D5D /* ObjectID+NSManagedObjectID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObjectID+NSManagedObjectID.swift"; sourceTree = "<group>"; };
 		4E65893AFFD4D53376B37EA2 /* ClipSearchSort+NSSortDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClipSearchSort+NSSortDescriptor.swift"; sourceTree = "<group>"; };
-		4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasCloudAvailabilityStore.swift; sourceTree = "<group>"; };
-		5011982B15DCD543BD9EAED7 /* CloudAvailabilityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityObserver.swift; sourceTree = "<group>"; };
+		4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasCloudAvailabilityService.swift; sourceTree = "<group>"; };
+		5011982B15DCD543BD9EAED7 /* CloudAvailabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityService.swift; sourceTree = "<group>"; };
 		5047F2FFCD921E4FD7EB8EDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		504D5842B276E942B456D348 /* TagCollection_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollection_MenuItem.swift; sourceTree = "<group>"; };
 		506DDD19E6E45133F0587E39 /* ImageNameResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNameResolverSpec.swift; sourceTree = "<group>"; };
@@ -1279,7 +1279,7 @@
 		9A3E21B8C1D0D6CAF52BE29C /* HasClipCollectionNavigationBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipCollectionNavigationBarDelegate.swift; sourceTree = "<group>"; };
 		9AAB1312D6A9CE3374CDBD62 /* ClipCollectionReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionReducer.swift; sourceTree = "<group>"; };
 		9AF3B79F46CB893C8161ECA9 /* AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
-		9B010C6A24024D3AD083D8DB /* CloudAvailabilityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityStore.swift; sourceTree = "<group>"; };
+		9B010C6A24024D3AD083D8DB /* CloudAvailabilityServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityServiceProtocol.swift; sourceTree = "<group>"; };
 		9B27C515F7FD7BE531656774 /* ConsoleLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogger.swift; sourceTree = "<group>"; };
 		9BB5D674BB621706C0F8D71E /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		9BBBC54B1442F6270ADAC0B5 /* SearchMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMenuBuilder.swift; sourceTree = "<group>"; };
@@ -2146,6 +2146,15 @@
 				2C0F1CF426497A69003722E5 /* CloudAccountStatus.swift */,
 			);
 			path = Account;
+			sourceTree = "<group>";
+		};
+		2CEC0A19264ACEF4002F0967 /* Availability */ = {
+			isa = PBXGroup;
+			children = (
+				5011982B15DCD543BD9EAED7 /* CloudAvailabilityService.swift */,
+				9B010C6A24024D3AD083D8DB /* CloudAvailabilityServiceProtocol.swift */,
+			);
+			path = Availability;
 			sourceTree = "<group>";
 		};
 		321E4BD03961ABBC3B0D85CF /* Store */ = {
@@ -3626,9 +3635,8 @@
 		CEEAA2E7FE1DFED0BD93172E /* iCloud */ = {
 			isa = PBXGroup;
 			children = (
+				2CEC0A19264ACEF4002F0967 /* Availability */,
 				2CDC9B7E264979840045C747 /* Account */,
-				5011982B15DCD543BD9EAED7 /* CloudAvailabilityObserver.swift */,
-				9B010C6A24024D3AD083D8DB /* CloudAvailabilityStore.swift */,
 				32FAC93D33310615F0EE9D9B /* CloudStack.swift */,
 				E77924D2530971EBC8182108 /* CloudStackLoader.swift */,
 				F91CE3649A1ACAF564C6E63C /* CloudStackObserver.swift */,
@@ -3794,7 +3802,7 @@
 				33A178271CFD80F359FBE699 /* HasClipQueryService.swift */,
 				119B687118C62C3EF9BF0879 /* HasClipSearchHistoryService.swift */,
 				65D60416907269802F42DE47 /* HasClipSearchSettingService.swift */,
-				4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityStore.swift */,
+				4F9C97C8875C1EF6991A613A /* HasCloudAvailabilityService.swift */,
 				90CCC5FD9A0E0BB2C670C6A6 /* HasImageQueryService.swift */,
 				5DCDD018C9EEA2155A61E037 /* HasPasteboard.swift */,
 				0ECD0F3CCF3FABBEAF9B8D55 /* HasPreviewLoader.swift */,
@@ -4869,8 +4877,8 @@
 				A6148E3EA933BCEF9FCAF269 /* ClipStorageError.swift in Sources */,
 				709B5E532A0D6C7B82C09DA8 /* ClipStorageProtocol.swift in Sources */,
 				65CDD8723AC956D1365BE32B /* CloudAvailability.swift in Sources */,
-				13504EC88AF2EDCE71DE6CBB /* CloudAvailabilityObserver.swift in Sources */,
-				4852187488FA66C59BC889EA /* CloudAvailabilityStore.swift in Sources */,
+				13504EC88AF2EDCE71DE6CBB /* CloudAvailabilityService.swift in Sources */,
+				4852187488FA66C59BC889EA /* CloudAvailabilityServiceProtocol.swift in Sources */,
 				0D3EAED4EC4861FB65831B2D /* CloudStack.swift in Sources */,
 				6806893926B1E3F2752CB3E2 /* CloudStackLoader.swift in Sources */,
 				55DD121CF43978BC6625274E /* CloudStackObserver.swift in Sources */,
@@ -5161,7 +5169,7 @@
 				0BCA59439C101BA24A37EC4A /* HasClipQueryService.swift in Sources */,
 				3C24D88AE5C63BB963B3D726 /* HasClipSearchHistoryService.swift in Sources */,
 				5948B05A245EBF1DF522D844 /* HasClipSearchSettingService.swift in Sources */,
-				AB24FA8BB9AD935528CAC3D2 /* HasCloudAvailabilityStore.swift in Sources */,
+				AB24FA8BB9AD935528CAC3D2 /* HasCloudAvailabilityService.swift in Sources */,
 				17D876B2760987E09D15FF08 /* HasImageQueryService.swift in Sources */,
 				B0FDF06F80C0013562E04091 /* HasPasteboard.swift in Sources */,
 				F1386C75CF0C4FC5062C2C93 /* HasPreviewLoader.swift in Sources */,

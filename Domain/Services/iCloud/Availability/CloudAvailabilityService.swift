@@ -6,7 +6,7 @@
 
 import Combine
 
-public class CloudAvailabilityObserver: CloudAvailabilityStore {
+public class CloudAvailabilityService: CloudAvailabilityServiceProtocol {
     public enum Context {
         case available(identifier: String)
         case unavailable
@@ -28,7 +28,7 @@ public class CloudAvailabilityObserver: CloudAvailabilityStore {
 
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
     private let cloudAccountService: CloudAccountServiceProtocol.Type
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudAvailabilityObserver")
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.CloudAvailabilityService")
 
     private var subscriptions: Set<AnyCancellable> = []
 

@@ -6,7 +6,7 @@ import Domain
 import UIKit
 
 protocol MainAppLauncher: AnyObject {
-    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver)
+    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityService)
 }
 
 class AppRootSetupViewController: UIViewController {
@@ -68,9 +68,9 @@ extension AppRootSetupViewController: AppRootSetupViewProtocol {
         }
     }
 
-    func launchLikePics(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
+    func launchLikePics(configuration: DependencyContainerConfiguration, service: CloudAvailabilityService) {
         DispatchQueue.main.async {
-            self.launcher?.launch(configuration: configuration, observer: observer)
+            self.launcher?.launch(configuration: configuration, observer: service)
         }
     }
 

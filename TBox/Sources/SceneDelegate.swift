@@ -40,10 +40,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func makeAppRootSetupViewController() -> UIViewController {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         let cloudAccountService = CloudAccountService.self
-        let cloudAvailabilityObserver = CloudAvailabilityObserver(cloudUsageContextStorage: cloudUsageContextStorage,
-                                                                  cloudAccountService: cloudAccountService)
+        let cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: cloudUsageContextStorage,
+                                                                cloudAccountService: cloudAccountService)
         let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
-                                              cloudAvailabilityStore: cloudAvailabilityObserver)
+                                              cloudAvailabilityService: cloudAvailabilityService)
         return AppRootSetupViewController(presenter: presenter, launcher: self)
     }
 
@@ -56,7 +56,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
-    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver) {
+    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityService) {
         do {
             let container = try DependencyContainer(configuration: configuration,
                                                     cloudAvailabilityObserver: observer)

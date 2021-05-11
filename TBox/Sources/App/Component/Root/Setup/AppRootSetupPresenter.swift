@@ -8,14 +8,14 @@ import Domain
 protocol AppRootSetupViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
-    func launchLikePics(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityObserver)
+    func launchLikePics(configuration: DependencyContainerConfiguration, service: CloudAvailabilityService)
     func confirmAccountChanged()
     func confirmUnavailable()
 }
 
 class AppRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
-    private let cloudAvailabilityObserver: CloudAvailabilityObserver
+    private let cloudAvailabilityService: CloudAvailabilityService
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -24,16 +24,16 @@ class AppRootSetupPresenter {
     // MARK: - Lifecycle
 
     init(userSettingsStorage: UserSettingsStorageProtocol,
-         cloudAvailabilityStore: CloudAvailabilityObserver)
+         cloudAvailabilityService: CloudAvailabilityService)
     {
         self.userSettingsStorage = userSettingsStorage
-        self.cloudAvailabilityObserver = cloudAvailabilityStore
+        self.cloudAvailabilityService = cloudAvailabilityService
     }
 
     func checkCloudAvailability() {
         self.view?.startLoading()
 
-        self.cloudAvailabilityObserver.state
+        self.cloudAvailabilityService.state
             .compactMap { $0 }
             .combineLatest(self.userSettingsStorage.enabledICloudSync)
             .sink { [weak self] availability, enabledICloudSync in
@@ -44,12 +44,12 @@ class AppRootSetupPresenter {
 
     func didConfirmAccountChanged() {
         self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                  observer: self.cloudAvailabilityObserver)
+                                  service: self.cloudAvailabilityService)
     }
 
     func didConfirmUnavailable() {
         self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                  observer: self.cloudAvailabilityObserver)
+                                  service: self.cloudAvailabilityService)
     }
 
     private func didFetch(availability: CloudAvailability, enabledICloudSync: Bool) {
@@ -59,7 +59,7 @@ class AppRootSetupPresenter {
         switch (enabledICloudSync, availability) {
         case (true, .available(.none)):
             self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: true),
-                                      observer: self.cloudAvailabilityObserver)
+                                      service: self.cloudAvailabilityService)
 
         case (true, .available(.accountChanged)):
             self.view?.confirmAccountChanged()
@@ -69,7 +69,7 @@ class AppRootSetupPresenter {
 
         case (false, _):
             self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                      observer: self.cloudAvailabilityObserver)
+                                      service: self.cloudAvailabilityService)
         }
     }
 }
