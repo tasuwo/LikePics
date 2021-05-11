@@ -42,14 +42,15 @@ class SettingsPresenter {
             })
             .store(in: &self.subscriptions)
 
-        self.storage.enabledICloudSync
-            .combineLatest(self.cloudAvailabilityService.state)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] settingEnabled, availability in
-                let isOn = settingEnabled && availability?.isAvailable == true
-                self?.shouldSyncICloudEnabled.send(isOn)
-            })
-            .store(in: &self.subscriptions)
+        // TODO:
+        // self.storage.enabledICloudSync
+        //     .combineLatest(self.cloudAvailabilityService.availability)
+        //     .receive(on: DispatchQueue.main)
+        //     .sink(receiveValue: { [weak self] settingEnabled, availability in
+        //         let isOn = settingEnabled && availability?.isAvailable == true
+        //         self?.shouldSyncICloudEnabled.send(isOn)
+        //     })
+        //     .store(in: &self.subscriptions)
     }
 
     func set(hideHiddenItems: Bool) {
@@ -57,6 +58,8 @@ class SettingsPresenter {
     }
 
     func set(isICloudSyncEnabled: Bool) -> Bool {
+        // TODO:
+        /*
         guard let availability = self.cloudAvailabilityService.state.value else { return false }
 
         if isICloudSyncEnabled, availability == .unavailable {
@@ -89,6 +92,7 @@ class SettingsPresenter {
                 self?.storage.set(enabledICloudSync: false)
             }
         }
+         */
 
         return true
     }

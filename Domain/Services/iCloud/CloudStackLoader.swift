@@ -33,59 +33,30 @@ public class CloudStackLoader {
     // MARK: - Methods
 
     public func startObserveCloudAvailability() {
-        self.cloudAvailabilityService.state
-            // 初回起動時の分を除く
-            .dropFirst()
+        self.cloudAvailabilityService.availability
             .compactMap { $0 }
-            .sink { [weak self] availability in
-                self?.queue.sync { self?.didUpdate(cloudAvailability: availability) }
+            .catch { _ in Just(.unavailable) }
+            .combineLatest(userSettingsStorage.enabledICloudSync)
+            .sink { availability, enabledICloudSync in
+                switch (enabledICloudSync, availability) {
+                case (true, .available(.none)):
+                    self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
+
+                case (true, .available(.accountChanged)):
+                    self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
+                    // NOTE: アカウント変更の場合は、リロードの成否にかかわらず通知する
+                    self.observer?.didAccountChanged(self)
+
+                case (true, .unavailable):
+                    if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
+                        self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
+                    }
+
+                case (false, _):
+                    self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
+                }
             }
-            .store(in: &self.subscriptions)
-
-        self.userSettingsStorage.enabledICloudSync
-            // 初回起動時の分を除く
-            .dropFirst()
-            .sink { [weak self] isICloudSyncEnabled in
-                self?.queue.sync { self?.didUpdate(isICloudSyncEnabled: isICloudSyncEnabled) }
-            }
-            .store(in: &self.subscriptions)
-    }
-
-    private func didUpdate(cloudAvailability: CloudAvailability) {
-        let enabledICloudSync = self.userSettingsStorage.readEnabledICloudSync()
-        switch (enabledICloudSync, cloudAvailability) {
-        case (true, .available(.none)):
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
-
-        case (true, .available(.accountChanged)):
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
-            // NOTE: アカウント変更の場合は、リロードの成否にかかわらず通知する
-            self.observer?.didAccountChanged(self)
-
-        case (true, .unavailable):
-            if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
-                self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
-            }
-
-        case (false, _):
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
-        }
-    }
-
-    private func didUpdate(isICloudSyncEnabled: Bool) {
-        guard let cloudAvailability = self.cloudAvailabilityService.state.value else { return }
-        switch (isICloudSyncEnabled, cloudAvailability) {
-        case (true, .available):
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
-
-        case (true, .unavailable):
-            if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
-                self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
-            }
-
-        case (false, _):
-            self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false)
-        }
+            .store(in: &subscriptions)
     }
 
     @discardableResult

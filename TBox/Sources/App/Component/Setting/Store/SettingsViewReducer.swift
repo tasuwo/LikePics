@@ -40,6 +40,7 @@ enum SettingsViewReducer: Reducer {
             return (nextState, .none)
 
         case let .iCloudSyncAvailabilityChanged(isEnabled):
+            /*
             guard let availability = dependency.cloudAvailabilityService.state.value else {
                 nextState.isICloudSyncEnabled = !isEnabled
                 return (nextState, .none)
@@ -63,6 +64,7 @@ enum SettingsViewReducer: Reducer {
                 nextState.alert = .iCloudTurnOffConfirmation
                 nextState.isICloudSyncEnabled = false
             }
+            */
 
             return (nextState, .none)
 
@@ -100,6 +102,7 @@ enum SettingsViewReducer: Reducer {
 
 extension SettingsViewReducer {
     private static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        /*
         let stream1 = dependency.userSettingStorage.showHiddenItems
             .map { Action.itemsVisibilityUpdated(isHidden: !$0) as Action? }
 
@@ -117,5 +120,7 @@ extension SettingsViewReducer {
         nextState.version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
 
         return (nextState, [Effect(stream1), Effect(stream2)])
+         */
+        return (state, .none)
     }
 }

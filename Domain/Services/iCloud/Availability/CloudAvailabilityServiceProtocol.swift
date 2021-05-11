@@ -5,5 +5,6 @@
 import Combine
 
 public protocol CloudAvailabilityServiceProtocol {
-    var state: CurrentValueSubject<CloudAvailability?, Never> { get }
+    var availability: AnyPublisher<CloudAvailability?, Error> { get }
+    func currentAvailability(_ completion: @escaping (Result<CloudAvailability, Error>) -> Void)
 }
