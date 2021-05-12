@@ -71,7 +71,11 @@ extension AppDelegate {
             }
 
             self.container.send(container)
-            self.cloudStackLoader.send(container.makeCloudStackLoader())
+
+            let cloudStackLoader = container.makeCloudStackLoader()
+            self.cloudStackLoader.send(cloudStackLoader)
+
+            cloudStackLoader.startObserveCloudAvailability()
         }
     }
 }

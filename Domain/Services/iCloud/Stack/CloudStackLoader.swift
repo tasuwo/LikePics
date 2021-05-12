@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 
 public protocol CloudStackLoaderObserver: AnyObject {
     func didAccountChanged(_ loader: CloudStackLoader)
@@ -17,7 +18,7 @@ public class CloudStackLoader {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    public weak var observer: CloudStackLoaderObserver?
+    public var observers: WeakContainerSet<CloudStackLoaderObserver> = .init()
 
     // MARK: - Lifecycle
 
@@ -45,11 +46,11 @@ public class CloudStackLoader {
                 case (true, .available(.accountChanged)):
                     self.reloadCloudStackIfNeeded(isCloudSyncEnabled: true)
                     // NOTE: アカウント変更の場合は、リロードの成否にかかわらず通知する
-                    self.observer?.didAccountChanged(self)
+                    self.observers.forEach { $0.value?.didAccountChanged(self) }
 
                 case (true, .unavailable):
                     if self.reloadCloudStackIfNeeded(isCloudSyncEnabled: false) {
-                        self.observer?.didDisabledICloudSyncByUnavailableAccount(self)
+                        self.observers.forEach { $0.value?.didDisabledICloudSyncByUnavailableAccount(self) }
                     }
 
                 case (false, _):

@@ -64,9 +64,7 @@ extension SceneDelegate: MainAppLauncher {
                     self.window?.rootViewController = rootViewController
                 }
 
-                // TODO: 複数のobserverを保持できるようにする
-                cloudStackLoader.observer = rootViewController
-                cloudStackLoader.startObserveCloudAvailability()
+                cloudStackLoader.observers.append(.init(value: rootViewController))
             }
             .store(in: &subscription)
     }
