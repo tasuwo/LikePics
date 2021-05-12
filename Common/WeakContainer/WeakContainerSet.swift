@@ -29,10 +29,12 @@ public class WeakContainerSet<T> {
     }
 
     public func append(_ container: WeakContainer<T>) {
+        clean()
         containers.append(container)
     }
 
     public func forEach(_ body: (WeakContainer<T>) -> Void) {
+        clean()
         containers.forEach(body)
     }
 
