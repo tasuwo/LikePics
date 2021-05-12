@@ -13,7 +13,7 @@ public class ClipQueryService {
         }
     }
 
-    private var observers: [WeakContainer<ViewContextObserver>] = []
+    private var observers: WeakContainerSet<ViewContextObserver> = .init()
 
     public init(context: NSManagedObjectContext) {
         self.context = context
