@@ -6,101 +6,137 @@ import Combine
 import UIKit
 
 class SettingsViewController: UITableViewController {
-    typealias Factory = ViewControllerFactory
+    typealias Store = LikePics.Store<SettingsViewState, SettingsViewAction, SettingsViewDependency>
 
-    var factory: Factory!
-    var presenter: SettingsPresenter!
-    var subscriptions: Set<AnyCancellable> = .init()
+    // MARK: - Properties
+
+    // MARK: View
 
     @IBOutlet var showHiddenItemsSwitch: UISwitch!
     @IBOutlet var syncICloudSwitch: UISwitch!
     @IBOutlet var versionLabel: UILabel!
+
+    // MARK: Store
+
+    var store: Store!
+    var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = L10n.settingViewTitle
+        title = L10n.settingViewTitle
 
-        self.presenter.view = self
+        bind(to: store)
 
-        self.presenter.shouldHideHiddenItems
-            .assign(to: \.isOn, on: self.showHiddenItemsSwitch)
-            .store(in: &self.subscriptions)
-
-        self.presenter.shouldSyncICloudEnabled
-            .assign(to: \.isOn, on: self.syncICloudSwitch)
-            .store(in: &self.subscriptions)
-
-        self.presenter.displayVersion()
+        store.execute(.viewDidLoad)
     }
 
     // MARK: - IBActions
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {
-        self.presenter.set(hideHiddenItems: sender.isOn)
+        store.execute(.itemsVisibilityChanged(isHidden: sender.isOn))
     }
 
     @IBAction func didChangeSyncICloud(_ sender: UISwitch) {
-        guard self.presenter.set(isICloudSyncEnabled: sender.isOn) else {
-            sender.setOnSmoothly(!sender.isOn)
-            return
-        }
+        store.execute(.iCloudSyncAvailabilityChanged(isEnabled: sender.isOn))
     }
 }
 
-extension SettingsViewController: SettingsViewProtocol {
-    // MARK: - SettingsViewProtocol
+extension SettingsViewController {
+    private func bind(to store: Store) {
+        store.state
+            .bind(\.isSomeItemsHidden) { [weak self] isSomeItemsHidden in
+                self?.showHiddenItemsSwitch.setOn(isSomeItemsHidden, animated: true)
+            }
+            .store(in: &subscriptions)
 
-    func set(version: String) {
-        self.versionLabel.text = version
+        store.state
+            .bind(\.isSyncICloudEnabledOn) { [weak self] isSyncICloudEnabledOn in
+                switch isSyncICloudEnabledOn {
+                case .on:
+                    self?.syncICloudSwitch.setOn(true, animated: true)
+
+                case .off:
+                    self?.syncICloudSwitch.setOn(false, animated: true)
+
+                case .loading:
+                    // NOP
+                    break
+                }
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.versionText, to: \.text, on: versionLabel)
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.alert) { [weak self] alert in
+                self?.presentAlertIfNeeded(alert)
+            }
+            .store(in: &subscriptions)
     }
 
-    func set(isICloudSyncEnabled: Bool) {
-        self.syncICloudSwitch.setOn(isICloudSyncEnabled, animated: true)
+    private func presentAlertIfNeeded(_ alert: SettingsViewState.Alert?) {
+        switch alert {
+        case .iCloudTurnOffConfirmation:
+            presentICloudTurnOffConfirmation()
+
+        case .iCloudSettingForceTurnOffConfirmation:
+            presentICloudSettingForceTurnOffConfirmation()
+
+        case .iCloudSettingForceTurnOnConfirmation:
+            presentICloudSettingForceTurnOnConfirmation()
+
+        case .none:
+            break
+        }
     }
 
-    func confirmToUnavailabilityICloudSync(shouldTurnOff: @escaping (Bool) -> Void) {
+    private func presentICloudTurnOffConfirmation() {
+        let alertController = UIAlertController(title: L10n.settingsConfirmIcloudSyncOffTitle,
+                                                message: L10n.settingsConfirmIcloudSyncOffMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.iCloudTurnOffConfirmed)
+        }
+        let cancelAction = UIAlertAction(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func presentICloudSettingForceTurnOffConfirmation() {
         let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                 message: L10n.errorIcloudUnavailableMessage,
                                                 preferredStyle: .alert)
-        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in
-            shouldTurnOff(false)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
         }
-        let turnOffAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOffAction,
-                                          style: .cancel) { _ in
-            shouldTurnOff(true)
+        let turnOffAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOffAction, style: .cancel) { [weak self] _ in
+            self?.store.execute(.iCloudForceTurnOffConfirmed)
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOffAction)
         self.present(alertController, animated: true, completion: nil)
     }
 
-    func confirmToUnavailabilityICloudSync(shouldTurnOn: @escaping (Bool) -> Void) {
+    private func presentICloudSettingForceTurnOnConfirmation() {
         let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                 message: L10n.errorIcloudUnavailableMessage,
                                                 preferredStyle: .alert)
-        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in
-            shouldTurnOn(false)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
         }
-        let turnOnAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOnAction,
-                                         style: .cancel) { _ in
-            shouldTurnOn(true)
+        let turnOnAction = UIAlertAction(title: L10n.errorIcloudUnavailableTurnOnAction, style: .cancel) { [weak self] _ in
+            self?.store.execute(.iCloudForceTurnOnConfirmed)
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOnAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-
-    func confirmToTurnOffICloudSync(confirmation: @escaping (Bool) -> Void) {
-        let alertController = UIAlertController(title: L10n.settingsConfirmIcloudSyncOffTitle,
-                                                message: L10n.settingsConfirmIcloudSyncOffMessage,
-                                                preferredStyle: .alert)
-        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { _ in confirmation(true) }
-        let cancelAction = UIAlertAction(title: L10n.confirmAlertCancel, style: .cancel) { _ in confirmation(false) }
-        alertController.addAction(okAction)
-        alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
 }

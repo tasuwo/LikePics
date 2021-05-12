@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
+
 enum SettingsViewAction: Action {
     // MARK: View Life-Cycle
 
@@ -11,6 +13,7 @@ enum SettingsViewAction: Action {
 
     case itemsVisibilityUpdated(isHidden: Bool)
     case iCloudSyncAvailabilityUpdated(isEnabled: Bool)
+    case cloudAvailabilityUpdated(availability: CloudAvailability?)
 
     // MARK: Control
 
@@ -19,9 +22,8 @@ enum SettingsViewAction: Action {
 
     // MARK: Alert Completion
 
-    case unavailableICloudTurnOffConfirmed
-    case unavailableICloudTurnOnConfirmed
+    case iCloudForceTurnOffConfirmed
+    case iCloudForceTurnOnConfirmed
     case iCloudTurnOffConfirmed
-    case iCloudTurnOffCancelled
     case alertDismissed
 }

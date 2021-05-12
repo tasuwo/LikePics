@@ -84,10 +84,11 @@ extension DependencyContainer: ViewControllerFactory {
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
-        let presenter = SettingsPresenter(storage: self._userSettingStorage,
-                                          cloudAvailabilityService: self.cloudAvailabilityService)
-        viewController.factory = self
-        viewController.presenter = presenter
+        let state = SettingsViewState(cloudAvailability: nil,
+                                      isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems(),
+                                      isICloudSyncEnabled: _userSettingStorage.readEnabledICloudSync())
+        let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer.self)
+        viewController.store = store
 
         return UINavigationController(rootViewController: viewController)
     }

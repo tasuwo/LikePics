@@ -53,6 +53,7 @@ extension SceneDelegate: MainAppLauncher {
                 guard let container = container, let cloudStackLoader = cloudStackLoader else { return nil }
                 return (container, cloudStackLoader)
             }
+            .receive(on: DispatchQueue.main)
             .sink { container, cloudStackLoader in
                 // TODO: AppDelegate に保持させる
                 let rootViewModel = container.makeClipIntegrityResolvingViewModel()

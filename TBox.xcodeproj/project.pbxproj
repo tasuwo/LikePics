@@ -190,7 +190,6 @@
 		4AFB2601EDBD886E0A5597A1 /* ClipReferencesIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4377A46479150FA5D774096B /* ClipReferencesIntegrityValidationService.swift */; };
 		4B25E62EDC8CF44BF9BD9C7A /* ImageExtensionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EE3CC3A9BC275DCA1D180E /* ImageExtensionResolver.swift */; };
 		4B99A6532D67BA6A76D00417 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA7718B42E2140B6CB0D5B92 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF4C58A5A4954612604A2BB /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7E47D7BA6965F6EA6C7633 /* SettingsPresenter.swift */; };
 		4C3E3915058F1E625935C864 /* ListingClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D142FB52CB5798EDBBB0411 /* ListingClip.swift */; };
 		4C63852BF4D6FE8BFA1AB85C /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2B22C6872BB0A9DFF820CC /* ImageLoader.swift */; };
 		4CD9C83C4C7E3AF473C1B8B2 /* TagSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB228A5D6CF7356012B30E5C /* TagSelectionViewController.swift */; };
@@ -1489,7 +1488,6 @@
 		FA7718B42E2140B6CB0D5B92 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FABA9005071426AB5EFA902D /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		FB01173FAA54E7C92A7EED44 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		FB7E47D7BA6965F6EA6C7633 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
 		FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlert.swift; sourceTree = "<group>"; };
 		FBA8097284A5E09ACCEEB9F7 /* Object+makeDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+makeDefault.swift"; sourceTree = "<group>"; };
 		FCEC3CCBF4581FD7E8603E6F /* TransferringClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferringClip.swift; sourceTree = "<group>"; };
@@ -3487,7 +3485,6 @@
 		BE9E187EF783718E9F2AE668 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				FB7E47D7BA6965F6EA6C7633 /* SettingsPresenter.swift */,
 				8AAB3F1DA829481C75506A85 /* SettingsViewController.storyboard */,
 				FB01173FAA54E7C92A7EED44 /* SettingsViewController.swift */,
 				F7486E104957FE76F9519FFE /* Store */,
@@ -5223,7 +5220,6 @@
 				4CDA89467A514476885D7DBF /* SearchResultViewLayout.swift in Sources */,
 				5ACE93D48D37BC4B2495920C /* SearchResultViewReducer.swift in Sources */,
 				91B32657788D49E892C9489E /* SearchResultViewState.swift in Sources */,
-				4BF4C58A5A4954612604A2BB /* SettingsPresenter.swift in Sources */,
 				A6CBBEE23E8F0B64FAB9C16E /* SettingsViewAction.swift in Sources */,
 				301462664C7EB9EDFF2AA0CA /* SettingsViewController.swift in Sources */,
 				C4F9A7D2FACE3F166C379183 /* SettingsViewReducer.swift in Sources */,
