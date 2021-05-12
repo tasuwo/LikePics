@@ -8,7 +8,7 @@ import Domain
 protocol AppRootSetupViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
-    func launchLikePics(configuration: DependencyContainerConfiguration, service: CloudAvailabilityService)
+    func launchLikePics()
     func confirmAccountChanged()
     func confirmUnavailable()
 }
@@ -16,8 +16,6 @@ protocol AppRootSetupViewProtocol: AnyObject {
 class AppRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudAvailabilityService: CloudAvailabilityService
-
-    private var subscription: AnyCancellable?
 
     weak var view: AppRootSetupViewProtocol?
 
@@ -33,43 +31,41 @@ class AppRootSetupPresenter {
     func checkCloudAvailability() {
         self.view?.startLoading()
 
-        subscription = self.cloudAvailabilityService.availability
-            .compactMap { $0 }
-            .catch { _ in Just(.unavailable) } // TODO: 別のエラー文言を表示する
-            .combineLatest(userSettingsStorage.enabledICloudSync)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] availability, enabledICloudSync in
-                guard let self = self else { return }
+        // TODO: 必要に応じて表示をスキップする
+        cloudAvailabilityService.currentAvailability { [weak self] availability in
+            guard let self = self else { return }
 
+            DispatchQueue.main.async {
                 self.view?.endLoading()
 
-                switch (enabledICloudSync, availability) {
-                case (true, .available(.none)):
-                    self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: true),
-                                              service: self.cloudAvailabilityService)
+                let enabledICloudSync = self.userSettingsStorage.readEnabledICloudSync()
 
-                case (true, .available(.accountChanged)):
+                switch (enabledICloudSync, availability) {
+                case (true, .success(.available(.none))):
+                    self.view?.launchLikePics()
+
+                case (true, .success(.available(.accountChanged))):
                     self.view?.confirmAccountChanged()
 
-                case (true, .unavailable):
+                case (true, .success(.unavailable)):
+                    self.view?.confirmUnavailable()
+
+                case (true, .failure):
+                    // TODO: 別の文言を表示する
                     self.view?.confirmUnavailable()
 
                 case (false, _):
-                    self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                              service: self.cloudAvailabilityService)
+                    self.view?.launchLikePics()
                 }
-
-                self.subscription?.cancel()
             }
+        }
     }
 
     func didConfirmAccountChanged() {
-        self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                  service: self.cloudAvailabilityService)
+        self.view?.launchLikePics()
     }
 
     func didConfirmUnavailable() {
-        self.view?.launchLikePics(configuration: .init(isCloudSyncEnabled: false),
-                                  service: self.cloudAvailabilityService)
+        self.view?.launchLikePics()
     }
 }

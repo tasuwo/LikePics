@@ -60,7 +60,7 @@ public class CloudAvailabilityService {
     }
 }
 
-extension CloudAvailabilityService: CloudAvailabilityServiceProtocol  {
+extension CloudAvailabilityService: CloudAvailabilityServiceProtocol {
     public var availability: AnyPublisher<CloudAvailability?, Error> {
         _availability.eraseToAnyPublisher()
     }

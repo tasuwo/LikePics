@@ -6,45 +6,33 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import Persistence
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    var cloudStackLoader: CloudStackLoader?
-    var dependencyContainer: DependencyContainer?
     var window: UIWindow?
 
-    private let launchQueue = DispatchQueue(label: "net.tasuwo.TBox.SceneDelegate.launch")
+    private var subscription: Set<AnyCancellable> = .init()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
-                AppDataLoader.loadAppData()
-                UserSettingsStorage().set(enabledICloudSync: false)
-            }
-        #endif
+        // swiftlint:disable:next force_cast
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
+                                              cloudAvailabilityService: delegate.cloudAvailabilityService)
+        let rootViewController = AppRootSetupViewController(presenter: presenter, launcher: self)
 
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = self.makeAppRootSetupViewController()
+        window.rootViewController = rootViewController
         window.makeKeyAndVisible()
 
         self.window = window
 
         self.setupAppearance()
-    }
-
-    private func makeAppRootSetupViewController() -> UIViewController {
-        let cloudUsageContextStorage = CloudUsageContextStorage()
-        let cloudAccountService = CloudAccountService()
-        let cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: cloudUsageContextStorage,
-                                                                cloudAccountService: cloudAccountService)
-        let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
-                                              cloudAvailabilityService: cloudAvailabilityService)
-        return AppRootSetupViewController(presenter: presenter, launcher: self)
     }
 
     private func setupAppearance() {
@@ -56,27 +44,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
-    func launch(configuration: DependencyContainerConfiguration, observer: CloudAvailabilityService) {
-        do {
-            let container = try DependencyContainer(configuration: configuration,
-                                                    cloudAvailabilityObserver: observer)
-            self.dependencyContainer = container
-
-            let rootViewModel = container.makeClipIntegrityResolvingViewModel()
-            // TODO: iPad/iPhoneで切り替える
-            let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel,
-                                                             logger: container.logger)
-
-            self.window?.rootViewController?.dismiss(animated: true) {
-                self.window?.rootViewController = rootViewController
+    func launch() {
+        // swiftlint:disable:next force_cast
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        delegate.container
+            .combineLatest(delegate.cloudStackLoader)
+            .compactMap { container, cloudStackLoader -> (DependencyContainer, CloudStackLoader)? in
+                guard let container = container, let cloudStackLoader = cloudStackLoader else { return nil }
+                return (container, cloudStackLoader)
             }
+            .sink { container, cloudStackLoader in
+                // TODO: AppDelegate に保持させる
+                let rootViewModel = container.makeClipIntegrityResolvingViewModel()
+                // TODO: iPad/iPhoneで切り替える
+                let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel,
+                                                                 logger: container.logger)
 
-            self.cloudStackLoader = container.makeCloudStackLoader()
-            self.cloudStackLoader?.observer = rootViewController
+                self.window?.rootViewController?.dismiss(animated: true) {
+                    self.window?.rootViewController = rootViewController
+                }
 
-            self.cloudStackLoader?.startObserveCloudAvailability()
-        } catch {
-            fatalError("Unable to launch app.")
-        }
+                // TODO: 複数のobserverを保持できるようにする
+                cloudStackLoader.observer = rootViewController
+                cloudStackLoader.startObserveCloudAvailability()
+            }
+            .store(in: &subscription)
     }
 }

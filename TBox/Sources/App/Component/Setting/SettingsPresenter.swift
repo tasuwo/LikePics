@@ -60,39 +60,39 @@ class SettingsPresenter {
     func set(isICloudSyncEnabled: Bool) -> Bool {
         // TODO:
         /*
-        guard let availability = self.cloudAvailabilityService.state.value else { return false }
+         guard let availability = self.cloudAvailabilityService.state.value else { return false }
 
-        if isICloudSyncEnabled, availability == .unavailable {
-            let isEnabledICloudSync = self.storage.readEnabledICloudSync()
-            if isEnabledICloudSync {
-                self.view?.confirmToUnavailabilityICloudSync(shouldTurnOff: { [weak self] shouldTurnOff in
-                    guard shouldTurnOff else { return }
-                    self?.view?.confirmToTurnOffICloudSync { isOk in
-                        guard isOk else { return }
-                        self?.storage.set(enabledICloudSync: false)
-                    }
-                })
-            } else {
-                self.view?.confirmToUnavailabilityICloudSync(shouldTurnOn: { [weak self] shouldTurnOn in
-                    guard shouldTurnOn else { return }
-                    self?.storage.set(enabledICloudSync: true)
-                })
-            }
-            return false
-        }
+         if isICloudSyncEnabled, availability == .unavailable {
+             let isEnabledICloudSync = self.storage.readEnabledICloudSync()
+             if isEnabledICloudSync {
+                 self.view?.confirmToUnavailabilityICloudSync(shouldTurnOff: { [weak self] shouldTurnOff in
+                     guard shouldTurnOff else { return }
+                     self?.view?.confirmToTurnOffICloudSync { isOk in
+                         guard isOk else { return }
+                         self?.storage.set(enabledICloudSync: false)
+                     }
+                 })
+             } else {
+                 self.view?.confirmToUnavailabilityICloudSync(shouldTurnOn: { [weak self] shouldTurnOn in
+                     guard shouldTurnOn else { return }
+                     self?.storage.set(enabledICloudSync: true)
+                 })
+             }
+             return false
+         }
 
-        if isICloudSyncEnabled {
-            self.storage.set(enabledICloudSync: true)
-        } else {
-            self.view?.confirmToTurnOffICloudSync { [weak self] isOk in
-                guard isOk else {
-                    self?.view?.set(isICloudSyncEnabled: true)
-                    return
-                }
-                self?.storage.set(enabledICloudSync: false)
-            }
-        }
-         */
+         if isICloudSyncEnabled {
+             self.storage.set(enabledICloudSync: true)
+         } else {
+             self.view?.confirmToTurnOffICloudSync { [weak self] isOk in
+                 guard isOk else {
+                     self?.view?.set(isICloudSyncEnabled: true)
+                     return
+                 }
+                 self?.storage.set(enabledICloudSync: false)
+             }
+         }
+          */
 
         return true
     }
