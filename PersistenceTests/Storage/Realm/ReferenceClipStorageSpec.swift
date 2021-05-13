@@ -20,7 +20,7 @@ class ReferenceClipStorageSpec: QuickSpec {
 
         beforeEach {
             storage = try! ReferenceClipStorage(config: .init(realmConfiguration: configuration),
-                                                logger: RootLogger.shared)
+                                                logger: RootLogger(loggers: []))
             try! realm.write {
                 realm.deleteAll()
             }

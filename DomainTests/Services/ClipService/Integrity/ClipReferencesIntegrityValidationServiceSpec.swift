@@ -25,7 +25,7 @@ class ClipReferencesIntegrityValidationServiceSpec: QuickSpec {
                                                                referenceClipStorage: referenceClipStorage,
                                                                commandQueue: queue,
                                                                lock: NSRecursiveLock(),
-                                                               logger: RootLogger.shared)
+                                                               logger: RootLogger(loggers: []))
 
             queue.syncHandler = { $0() }
             queue.syncBlockHandler = { try $0() }

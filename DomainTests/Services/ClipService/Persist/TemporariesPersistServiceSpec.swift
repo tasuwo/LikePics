@@ -43,7 +43,7 @@ class TemporariesPersistServiceSpec: QuickSpec {
                             imageStorage: imageStorage,
                             commandQueue: queue,
                             lock: .init(),
-                            logger: RootLogger.shared)
+                            logger: RootLogger(loggers: []))
             service.set(observer: observer)
         }
 

@@ -19,7 +19,7 @@ class TemporaryClipStorageSpec: QuickSpec {
         var clipStorage: TemporaryClipStorage!
 
         beforeEach {
-            clipStorage = try! TemporaryClipStorage(config: .init(realmConfiguration: configuration), logger: RootLogger.shared)
+            clipStorage = try! TemporaryClipStorage(config: .init(realmConfiguration: configuration), logger: RootLogger(loggers: []))
             try! realm.write {
                 realm.deleteAll()
             }

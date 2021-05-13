@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import CoreData
 import Domain
 
@@ -42,7 +43,7 @@ class ClipStorageSpec: QuickSpec {
         beforeEach {
             container = self.coreDataStack()
             managedContext = container.newBackgroundContext()
-            service = ClipStorage(context: managedContext)
+            service = ClipStorage(context: managedContext, logger: RootLogger(loggers: []))
         }
 
         describe("create(clip:overwrite:)") {
