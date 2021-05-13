@@ -241,48 +241,6 @@ extension DependencyContainer: CoreDataStackObserver {
 
 extension ClipCommandService: ClipStorable {}
 
-extension DependencyContainer: HasRouter {
-    var router: Router { self }
-}
-
-extension DependencyContainer: HasPasteboard {
-    var pasteboard: Pasteboard { UIPasteboard.general }
-}
-
-extension DependencyContainer: HasClipCommandService {
-    var clipCommandService: ClipCommandServiceProtocol { _clipCommandService }
-}
-
-extension DependencyContainer: HasClipQueryService {
-    var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
-}
-
-extension DependencyContainer: HasClipSearchSettingService {
-    var clipSearchSettingService: Domain.ClipSearchSettingService { _clipSearchSettingService }
-}
-
-extension DependencyContainer: HasClipSearchHistoryService {
-    var clipSearchHistoryService: Domain.ClipSearchHistoryService { _clipSearchHistoryService }
-}
-
-extension DependencyContainer: HasUserSettingStorage {
-    var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
-}
-
-extension DependencyContainer: HasImageQueryService {
-    var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
-}
-
-extension DependencyContainer: HasPreviewLoader {
-    var previewLoader: PreviewLoader { _previewLoader }
-}
-
-extension DependencyContainer: HasTransitionLock {}
-
-extension DependencyContainer: HasCloudAvailabilityService {
-    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { _cloudAvailabilityService }
-}
-
 extension DependencyContainer: HasTemporariesPersistService {
     var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
 }

@@ -15,6 +15,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
+    private var sceneDependencyContainer: SceneDependencyContainer!
     private var subscription: Set<AnyCancellable> = .init()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -52,8 +53,10 @@ extension SceneDelegate: MainAppLauncher {
             .receive(on: DispatchQueue.main)
             // swiftlint:disable:next unowned_variable_capture
             .sink { [unowned self] singleton in
+                self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: singleton.container)
+
                 // TODO: iPad/iPhoneで切り替える
-                let rootViewController = AppRootTabBarController(factory: singleton.container,
+                let rootViewController = AppRootTabBarController(factory: self.sceneDependencyContainer,
                                                                  clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
                                                                  logger: singleton.container.logger)
 

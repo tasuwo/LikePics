@@ -7,9 +7,9 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-extension DependencyContainer {
+extension SceneDependencyContainer {
     private var rootViewController: AppRootViewController? {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+        guard let windowScene = sceneResolver.resolveScene(),
               let sceneDelegate = windowScene.delegate as? SceneDelegate,
               let rootViewController = sceneDelegate.window?.rootViewController as? AppRootViewController
         else {
@@ -29,7 +29,7 @@ extension DependencyContainer {
 
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
         let state = ClipCollectionState(source: source,
-                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+                                        isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: source)
         let toolBarState = ClipCollectionToolBarState(source: source, parentState: state)
 
@@ -37,17 +37,17 @@ extension DependencyContainer {
                                             navigationBarState: navigationBarState,
                                             toolBarState: toolBarState,
                                             dependency: self,
-                                            thumbnailLoader: clipThumbnailLoader,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
+                                            thumbnailLoader: container.clipThumbnailLoader,
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 }
 
-extension DependencyContainer: Router {
+extension SceneDependencyContainer: Router {
     // MARK: - Router
 
     func open(_ url: URL) -> Bool {
         guard UIApplication.shared.canOpenURL(url) else { return false }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        sceneResolver.resolveScene()?.open(url, options: nil, completionHandler: nil)
         return true
     }
 
@@ -91,23 +91,23 @@ extension DependencyContainer: Router {
             let transitionLock: TransitionLock
         }
 
-        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
                                                                                 dependency: self)
 
-        let previewTransitioningController = ClipPreviewTransitioningController(lock: transitionLock, logger: logger)
-        let informationTransitionController = ClipInformationTransitioningController(lock: transitionLock, logger: logger)
+        let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let informationTransitionController = ClipInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
         let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
         let dependency = Dependency(router: self,
-                                    clipCommandService: clipCommandService,
-                                    clipQueryService: clipQueryService,
+                                    clipCommandService: container._clipCommandService,
+                                    clipQueryService: container._clipQueryService,
                                     clipInformationTransitioningController: informationTransitionController,
-                                    imageQueryService: imageQueryService,
+                                    imageQueryService: container._imageQueryService,
                                     informationViewCache: informationViewCacheController,
-                                    previewLoader: previewLoader,
-                                    transitionLock: transitionLock)
+                                    previewLoader: container._previewLoader,
+                                    transitionLock: container.transitionLock)
 
         let state = ClipPreviewPageViewState(clipId: clipId)
         let barState = ClipPreviewPageBarState(parentState: state)
@@ -139,7 +139,7 @@ extension DependencyContainer: Router {
     {
         let state = ClipInformationViewState(clipId: clipId,
                                              itemId: itemId,
-                                             isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+                                             isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
@@ -164,13 +164,13 @@ extension DependencyContainer: Router {
             let clipQueryService: ClipQueryServiceProtocol
             let tagSelectionCompleted: (Set<Tag>?) -> Void
         }
-        let dependency = Dependency(userSettingStorage: userSettingStorage,
-                                    clipCommandService: clipCommandService,
-                                    clipQueryService: clipQueryService,
+        let dependency = Dependency(userSettingStorage: container._userSettingStorage,
+                                    clipCommandService: container._clipCommandService,
+                                    clipQueryService: container._clipQueryService,
                                     tagSelectionCompleted: completion)
 
         let state = TagSelectionModalState(selections: selections,
-                                           isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+                                           isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)
@@ -196,18 +196,18 @@ extension DependencyContainer: Router {
             let clipQueryService: ClipQueryServiceProtocol
             let albumSelectionCompleted: (Album.Identity?) -> Void
         }
-        let dependency = Dependency(userSettingStorage: userSettingStorage,
-                                    clipCommandService: clipCommandService,
-                                    clipQueryService: clipQueryService,
+        let dependency = Dependency(userSettingStorage: container._userSettingStorage,
+                                    clipCommandService: container._clipCommandService,
+                                    clipQueryService: container._clipQueryService,
                                     albumSelectionCompleted: completion)
-        let state = AlbumSelectionModalState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+        let state = AlbumSelectionModalState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
                                                          placeholder: L10n.placeholderAlbumName)
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: dependency,
-                                                           thumbnailLoader: temporaryThumbnailLoader)
+                                                           thumbnailLoader: container.temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
@@ -228,13 +228,13 @@ extension DependencyContainer: Router {
             let clipMergeCompleted: (Bool) -> Void
         }
         let dependency = Dependency(router: self,
-                                    clipCommandService: clipCommandService,
-                                    clipQueryService: clipQueryService,
+                                    clipCommandService: container._clipCommandService,
+                                    clipQueryService: container._clipQueryService,
                                     clipMergeCompleted: completion)
         let state = ClipMergeViewState(clips: clips)
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: dependency,
-                                                     thumbnailLoader: temporaryThumbnailLoader)
+                                                     thumbnailLoader: container.temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
@@ -250,14 +250,14 @@ extension DependencyContainer: Router {
 
     func showClipEditModal(for clipId: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
         let state = ClipEditViewState(clipId: clipId,
-                                      isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
         let viewController = ClipEditViewController(state: state,
                                                     siteUrlEditAlertState: siteUrlEditAlertState,
                                                     dependency: self,
-                                                    thumbnailLoader: temporaryThumbnailLoader)
+                                                    thumbnailLoader: container.temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

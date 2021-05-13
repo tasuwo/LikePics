@@ -58,8 +58,8 @@ extension URLButtonInteractionHandler: UIContextMenuInteractionDelegate {
     }
 
     private func makeActionProvider(for url: URL) -> UIContextMenuActionProvider {
-        let open = UIAction(title: L10n.urlContextMenuOpen, image: UIImage(systemName: "globe")) { _ in
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        let open = UIAction(title: L10n.urlContextMenuOpen, image: UIImage(systemName: "globe")) { [weak self] _ in
+            self?.baseView?.window?.windowScene?.open(url, options: nil, completionHandler: nil)
         }
         let copy = UIAction(title: L10n.urlContextMenuCopy, image: UIImage(systemName: "square.on.square.fill")) { _ in
             UIPasteboard.general.string = url.absoluteString

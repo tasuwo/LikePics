@@ -10,12 +10,12 @@ import TBoxCore
 import TBoxUIKit
 import UIKit
 
-extension DependencyContainer: ViewControllerFactory {
+extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipCollectionViewController() -> UIViewController? {
         let state = ClipCollectionState(source: .all,
-                                        isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+                                        isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let navigationBarState = ClipCollectionNavigationBarState(source: .all)
         let toolBarState = ClipCollectionToolBarState(source: .all, parentState: state)
 
@@ -23,14 +23,14 @@ extension DependencyContainer: ViewControllerFactory {
                                                           navigationBarState: navigationBarState,
                                                           toolBarState: toolBarState,
                                                           dependency: self,
-                                                          thumbnailLoader: clipThumbnailLoader,
-                                                          menuBuilder: ClipCollectionMenuBuilder(storage: userSettingStorage))
+                                                          thumbnailLoader: container.clipThumbnailLoader,
+                                                          menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
 
     func makeTagCollectionViewController() -> UIViewController? {
-        let state = TagCollectionViewState(isSomeItemsHidden: _userSettingStorage.readShowHiddenItems())
+        let state = TagCollectionViewState(isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems())
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)
@@ -42,13 +42,13 @@ extension DependencyContainer: ViewControllerFactory {
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          tagEditAlertState: tagEditAlertState,
                                                          dependency: self,
-                                                         menuBuilder: TagCollectionMenuBuilder(storage: userSettingStorage))
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: container._userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
 
     func makeAlbumListViewController() -> UIViewController? {
-        let state = AlbumListViewState(isSomeItemsHidden: !userSettingStorage.readShowHiddenItems())
+        let state = AlbumListViewState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let addAlbumAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                     message: L10n.albumListViewAlertForAddMessage,
                                                     placeholder: L10n.placeholderAlbumName)
@@ -60,18 +60,18 @@ extension DependencyContainer: ViewControllerFactory {
                                                      albumAdditionAlertState: addAlbumAlertState,
                                                      albumEditAlertState: editAlbumAlertState,
                                                      dependency: self,
-                                                     thumbnailLoader: albumThumbnailLoader,
+                                                     thumbnailLoader: container.albumThumbnailLoader,
                                                      menuBuilder: AlbumListMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
     }
 
     func makeSearchViewController() -> UIViewController? {
-        let resultViewState = SearchResultViewState(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems())
+        let resultViewState = SearchResultViewState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let resultsController = SearchResultViewController(state: resultViewState,
                                                            dependency: self,
-                                                           thumbnailLoader: temporaryThumbnailLoader)
-        let entryViewState = SearchEntryViewState(isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems())
+                                                           thumbnailLoader: container.temporaryThumbnailLoader)
+        let entryViewState = SearchEntryViewState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let viewController = SearchEntryViewController(state: entryViewState,
                                                        dependency: self,
                                                        searchResultViewController: resultsController)
@@ -85,8 +85,8 @@ extension DependencyContainer: ViewControllerFactory {
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
         let state = SettingsViewState(cloudAvailability: nil,
-                                      isSomeItemsHidden: !_userSettingStorage.readShowHiddenItems(),
-                                      isICloudSyncEnabled: _userSettingStorage.readEnabledICloudSync())
+                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
+                                      isICloudSyncEnabled: container._userSettingStorage.readEnabledICloudSync())
         let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer.self)
         viewController.store = store
 
