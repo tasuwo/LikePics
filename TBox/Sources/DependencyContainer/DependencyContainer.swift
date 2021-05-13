@@ -41,8 +41,8 @@ class DependencyContainer {
     let _clipSearchHistoryService: Persistence.ClipSearchHistoryService
     let _clipSearchSettingService: Persistence.ClipSearchSettingService
     let _imageQueryService: ImageQueryService
-    let integrityValidationService: ClipReferencesIntegrityValidationService
-    let persistService: TemporariesPersistServiceProtocol
+    let _integrityValidationService: ClipReferencesIntegrityValidationService
+    let _temporariesPersistService: TemporariesPersistService
 
     // MARK: Core Data
 
@@ -144,24 +144,24 @@ class DependencyContainer {
                                                       commandQueue: clipStorage,
                                                       lock: commandLock,
                                                       logger: logger)
-        self.integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
-                                                                                   referenceClipStorage: referenceClipStorage,
-                                                                                   // Note: ImageStorage, ClipStorage は同一 Context である前提
-                                                                                   commandQueue: clipStorage,
-                                                                                   lock: commandLock,
-                                                                                   logger: logger)
-        self.persistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
-                                                        temporaryImageStorage: tmpImageStorage,
-                                                        clipStorage: clipStorage,
-                                                        referenceClipStorage: referenceClipStorage,
-                                                        imageStorage: imageStorage,
-                                                        // Note: ImageStorage, ClipStorage は同一 Context である前提
-                                                        commandQueue: clipStorage,
-                                                        lock: commandLock,
-                                                        logger: logger)
+        self._integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
+                                                                                    referenceClipStorage: referenceClipStorage,
+                                                                                    // Note: ImageStorage, ClipStorage は同一 Context である前提
+                                                                                    commandQueue: clipStorage,
+                                                                                    lock: commandLock,
+                                                                                    logger: logger)
+        self._temporariesPersistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
+                                                                    temporaryImageStorage: tmpImageStorage,
+                                                                    clipStorage: clipStorage,
+                                                                    referenceClipStorage: referenceClipStorage,
+                                                                    imageStorage: imageStorage,
+                                                                    // Note: ImageStorage, ClipStorage は同一 Context である前提
+                                                                    commandQueue: clipStorage,
+                                                                    lock: commandLock,
+                                                                    logger: logger)
 
         self.coreDataStack.coreDataStackObserver = self
-        self.coreDataStack.cloudStackObserver = integrityValidationService
+        self.coreDataStack.cloudStackObserver = _integrityValidationService
     }
 
     // MARK: - Methods
@@ -172,10 +172,10 @@ class DependencyContainer {
                                 cloudStack: self.coreDataStack)
     }
 
-    func makeClipIntegrityResolvingViewModel() -> ClipIntegrityResolvingViewModelType {
-        return ClipIntegrityResolvingViewModel(persistService: self.persistService,
-                                               integrityValidationService: self.integrityValidationService,
-                                               darwinNotificationCenter: DarwinNotificationCenter.default)
+    func makeClipsIntegrityValidatorStore() -> Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency> {
+        return .init(initialState: ClipsIntegrityValidatorState(),
+                     dependency: self,
+                     reducer: ClipsIntegrityValidatorReducer.self)
     }
 
     private static func sweepLegacyThumbnailCachesIfExists() {
@@ -281,4 +281,12 @@ extension DependencyContainer: HasTransitionLock {}
 
 extension DependencyContainer: HasCloudAvailabilityService {
     var cloudAvailabilityService: CloudAvailabilityServiceProtocol { _cloudAvailabilityService }
+}
+
+extension DependencyContainer: HasTemporariesPersistService {
+    var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
+}
+
+extension DependencyContainer: HasIntegrityValidationService {
+    var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
 }

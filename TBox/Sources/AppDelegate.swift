@@ -9,18 +9,18 @@
 import Combine
 import Domain
 import Persistence
+import TBoxCore
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    struct Context {
+    struct Singleton {
         let container: DependencyContainer
         let cloudStackLoader: CloudStackLoader
-        let integrityResolvingViewModel: ClipIntegrityResolvingViewModelType
+        let clipsIntegrityValidatorStore: Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
     }
 
-    let context: CurrentValueSubject<Context?, Never> = .init(nil)
-    private var subscriptions: Set<AnyCancellable> = .init()
+    let singleton: CurrentValueSubject<Singleton?, Never> = .init(nil)
     private(set) var cloudAvailabilityService: CloudAvailabilityService!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -33,10 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
                                                                 cloudAccountService: CloudAccountService())
-
         self.cloudAvailabilityService = cloudAvailabilityService
 
-        prepareDependencyContainer(by: cloudAvailabilityService)
+        prepareSingleton(by: cloudAvailabilityService)
 
         return true
     }
@@ -53,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
-    func prepareDependencyContainer(by cloudAvailabilityService: CloudAvailabilityService) {
+    func prepareSingleton(by cloudAvailabilityService: CloudAvailabilityService) {
         // swiftlint:disable:next unowned_variable_capture
         cloudAvailabilityService.currentAvailability { [unowned self, unowned cloudAvailabilityService] result in
             let isSyncEnabled = UserSettingsStorage().readEnabledICloudSync()
@@ -76,19 +75,16 @@ extension AppDelegate {
             }
 
             let cloudStackLoader = container.makeCloudStackLoader()
-            let integrityResolvingViewModel = container.makeClipIntegrityResolvingViewModel()
+            let clipsIntegrityValidatorStore = container.makeClipsIntegrityValidatorStore()
+            let context = Singleton(container: container,
+                                    cloudStackLoader: cloudStackLoader,
+                                    clipsIntegrityValidatorStore: clipsIntegrityValidatorStore)
+            self.singleton.send(context)
 
-            let context = Context(container: container,
-                                  cloudStackLoader: cloudStackLoader,
-                                  integrityResolvingViewModel: integrityResolvingViewModel)
-            self.context.send(context)
-
-            NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-                .sink { _ in integrityResolvingViewModel.inputs.sceneDidBecomeActive.send(()) }
-                .store(in: &self.subscriptions)
-
-            integrityResolvingViewModel.inputs.didLaunchApp.send(())
-
+            DarwinNotificationCenter.default.addObserver(self, for: .shareExtensionDidCompleteRequest) { [weak self] _ in
+                self?.singleton.value?.clipsIntegrityValidatorStore.execute(.shareExtensionDidCompleteRequest)
+            }
+            clipsIntegrityValidatorStore.execute(.didLaunchApp)
             cloudStackLoader.startObserveCloudAvailability()
         }
     }

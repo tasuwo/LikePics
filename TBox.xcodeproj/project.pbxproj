@@ -109,10 +109,14 @@
 		2A29803128C23B7C2D84E311 /* ClipSearchQuery+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04F0AA0A9BA0AF44F073087 /* ClipSearchQuery+Display.swift */; };
 		2A491D5998011BADDD0B9662 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 23DB3E163B625E1EC4BE6228 /* Localizable.strings */; };
 		2BCB1AE8F77B23C950555A79 /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FA45AE3B7889A43CDB98EF /* WebImageProvidingService.swift */; };
+		2C031CE8264D54DA00820EBF /* ClipsIntegrityValidatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C031CE7264D54DA00820EBF /* ClipsIntegrityValidatorState.swift */; };
+		2C031CEA264D54E700820EBF /* ClipsIntegrityValidatorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C031CE9264D54E700820EBF /* ClipsIntegrityValidatorAction.swift */; };
+		2C031CEC264D54F200820EBF /* ClipsIntegrityValidatorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C031CEB264D54F200820EBF /* ClipsIntegrityValidatorReducer.swift */; };
+		2C031CEE264D566200820EBF /* HasTemporariesPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C031CED264D566200820EBF /* HasTemporariesPersistService.swift */; };
+		2C031CF2264D56C100820EBF /* HasIntegrityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C031CF1264D56C100820EBF /* HasIntegrityValidationService.swift */; };
 		2C0F1CF526497A69003722E5 /* CloudAccountStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F1CF426497A69003722E5 /* CloudAccountStatus.swift */; };
 		2C207EC1264C2AB600FEE14F /* WeakContainerSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C207EC0264C2AB600FEE14F /* WeakContainerSet.swift */; };
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */; };
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
@@ -1021,7 +1025,6 @@
 		1B27838CC268B54F47E4AD30 /* ClipEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewController.swift; sourceTree = "<group>"; };
 		1B753609E0A78CA3B762795E /* ListSectionHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListSectionHeader.xib; sourceTree = "<group>"; };
 		1B93B5F3E58C229545064206 /* TransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionLock.swift; sourceTree = "<group>"; };
-		1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipIntegrityResolvingViewModel.swift; sourceTree = "<group>"; };
 		1C9D54144B5F8527BA4850E5 /* ClipMergeViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewAction.swift; sourceTree = "<group>"; };
 		1CC5B16AF623D758E441B91E /* ImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSource.swift; sourceTree = "<group>"; };
 		1D6ACF9831830B9DBA142CA9 /* TextEditAlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertReducer.swift; sourceTree = "<group>"; };
@@ -1050,6 +1053,11 @@
 		27B82A976AFED982222939E4 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = TBox.app; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AAC5BC9C185604B92D45004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2C031CE7264D54DA00820EBF /* ClipsIntegrityValidatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorState.swift; sourceTree = "<group>"; };
+		2C031CE9264D54E700820EBF /* ClipsIntegrityValidatorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorAction.swift; sourceTree = "<group>"; };
+		2C031CEB264D54F200820EBF /* ClipsIntegrityValidatorReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorReducer.swift; sourceTree = "<group>"; };
+		2C031CED264D566200820EBF /* HasTemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTemporariesPersistService.swift; sourceTree = "<group>"; };
+		2C031CF1264D56C100820EBF /* HasIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasIntegrityValidationService.swift; sourceTree = "<group>"; };
 		2C0378221C7F286374C5C512 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C0F1CF426497A69003722E5 /* CloudAccountStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountStatus.swift; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
@@ -2766,7 +2774,9 @@
 		71DCDA8D8F884A1FFA46F0C1 /* Store */ = {
 			isa = PBXGroup;
 			children = (
-				1C61F8DC70A7A296B1D00752 /* ClipIntegrityResolvingViewModel.swift */,
+				2C031CE7264D54DA00820EBF /* ClipsIntegrityValidatorState.swift */,
+				2C031CE9264D54E700820EBF /* ClipsIntegrityValidatorAction.swift */,
+				2C031CEB264D54F200820EBF /* ClipsIntegrityValidatorReducer.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -3826,6 +3836,8 @@
 				75D103ABF75000E14113BFAA /* HasTextValidator.swift */,
 				A35871C2F2F888212ADB59F5 /* HasTransitionLock.swift */,
 				823BCEB98141B32977A43111 /* HasUserSettingStorage.swift */,
+				2C031CED264D566200820EBF /* HasTemporariesPersistService.swift */,
+				2C031CF1264D56C100820EBF /* HasIntegrityValidationService.swift */,
 			);
 			path = Dependency;
 			sourceTree = "<group>";
@@ -5074,6 +5086,7 @@
 				2E101C3EB080DE63DF553D17 /* Action.swift in Sources */,
 				7D68D0C4E3AD0FD6049F7BEC /* AlbumListMenuBuilder.swift in Sources */,
 				516486CC49975DFB9ECF3088 /* AlbumListMenuItem.swift in Sources */,
+				2C031CF2264D56C100820EBF /* HasIntegrityValidationService.swift in Sources */,
 				9C759FD984296B79632A8448 /* AlbumListViewAction.swift in Sources */,
 				FE5C0346748096C8B0AB37E1 /* AlbumListViewController.swift in Sources */,
 				8EEC403570339361A9C88FBC /* AlbumListViewLayout.swift in Sources */,
@@ -5090,6 +5103,7 @@
 				138BA92C5F4CAF2E86342574 /* AppRoot.swift in Sources */,
 				395402851D60CF185F44BB42 /* AppRootSetupPresenter.swift in Sources */,
 				5C10FA63CC5EA5F7315664FD /* AppRootSetupViewController.swift in Sources */,
+				2C031CEE264D566200820EBF /* HasTemporariesPersistService.swift in Sources */,
 				853334DB27C4B62F2882A4D6 /* AppRootSideBarController.swift in Sources */,
 				9B57D20FAECE2C9543F39D15 /* AppRootSplitViewController.swift in Sources */,
 				9B4726510F72047051D738F7 /* AppRootTabBarController.swift in Sources */,
@@ -5104,9 +5118,11 @@
 				440452CE7846A55F79D0F516 /* ClipCollectionAction.swift in Sources */,
 				748BD29ACB971E13350B01DB /* ClipCollectionMenuBuilder.swift in Sources */,
 				0D2BE0792FB6B8E64B414752 /* ClipCollectionNavigationBarAction.swift in Sources */,
+				2C031CEC264D54F200820EBF /* ClipsIntegrityValidatorReducer.swift in Sources */,
 				3851EDEC3FD9DBDF2CF41E92 /* ClipCollectionNavigationBarController.swift in Sources */,
 				F1B5C15FDFE3FBF9F103ADFF /* ClipCollectionNavigationBarDelegate.swift in Sources */,
 				4EC81B389CCA26F29259D7B0 /* ClipCollectionNavigationBarEvent.swift in Sources */,
+				2C031CEA264D54E700820EBF /* ClipsIntegrityValidatorAction.swift in Sources */,
 				0730313ADEA7BDDDD02EDF6C /* ClipCollectionNavigationBarReducer.swift in Sources */,
 				CCD0F04535C20BBD4F2F30DD /* ClipCollectionNavigationBarState.swift in Sources */,
 				5A1ACE3774733FC0B8161F60 /* ClipCollectionPreLoader.swift in Sources */,
@@ -5119,6 +5135,7 @@
 				DB444C640596FA9E5BDE083A /* ClipCollectionToolBarReducer.swift in Sources */,
 				AA4651BA13F04ABD7AC16A25 /* ClipCollectionToolBarState.swift in Sources */,
 				FF0CD4E67EB64528D59E645B /* ClipCollectionViewController.swift in Sources */,
+				2C031CE8264D54DA00820EBF /* ClipsIntegrityValidatorState.swift in Sources */,
 				E3B82640AD7E2BEDFBC9B3CF /* ClipCollectionViewLayout.swift in Sources */,
 				99AD0A7F1068FA3E014C6C03 /* ClipCollectionWaterfallLayout.swift in Sources */,
 				5711EB16C159932D0F8DE762 /* ClipCollection_Layout.swift in Sources */,
@@ -5140,7 +5157,6 @@
 				4184455DD64E789DCBA635EB /* ClipInformationViewController.swift in Sources */,
 				490DE101AA8A2941C5434FEC /* ClipInformationViewReducer.swift in Sources */,
 				9344FA199BBFF86E41C53BED /* ClipInformationViewState.swift in Sources */,
-				2C3A2B69F38CD197E63A765A /* ClipIntegrityResolvingViewModel.swift in Sources */,
 				2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */,
 				A4B77F03ADF4553A384D38DE /* ClipMergeViewAction.swift in Sources */,
 				21B85DB53E7AC1B7514C6EFD /* ClipMergeViewController.swift in Sources */,

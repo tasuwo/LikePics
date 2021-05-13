@@ -47,20 +47,23 @@ extension SceneDelegate: MainAppLauncher {
     func launch() {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        delegate.context
+        delegate.singleton
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { context in
+            // swiftlint:disable:next unowned_variable_capture
+            .sink { [unowned self] singleton in
                 // TODO: iPad/iPhoneで切り替える
-                let rootViewController = AppRootTabBarController(factory: context.container,
-                                                                 integrityViewModel: context.integrityResolvingViewModel,
-                                                                 logger: context.container.logger)
+                let rootViewController = AppRootTabBarController(factory: singleton.container,
+                                                                 clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                 logger: singleton.container.logger)
 
                 self.window?.rootViewController?.dismiss(animated: true) {
                     self.window?.rootViewController = rootViewController
                 }
 
-                context.cloudStackLoader.observers.append(.init(value: rootViewController))
+                singleton.cloudStackLoader.observers.append(.init(value: rootViewController))
+
+                self.subscription.first?.cancel()
             }
             .store(in: &subscription)
     }

@@ -18,7 +18,7 @@ class AppRootSplitViewController: UISplitViewController {
 
     // MARK: Dependency
 
-    private let integrityViewModel: ClipIntegrityResolvingViewModelType
+    // private let integrityViewModel: ClipIntegrityResolvingViewModelType
 
     // MARK: View
 
@@ -62,11 +62,11 @@ class AppRootSplitViewController: UISplitViewController {
     // MARK: - Initializers
 
     init(factory: Factory,
-         integrityViewModel: ClipIntegrityResolvingViewModelType,
+         // integrityViewModel: ClipIntegrityResolvingViewModelType,
          logger: Loggable)
     {
         self.factory = factory
-        self.integrityViewModel = integrityViewModel
+        // self.integrityViewModel = integrityViewModel
         self.logger = logger
 
         self.sideBarController = AppRootSideBarController()
@@ -103,40 +103,42 @@ class AppRootSplitViewController: UISplitViewController {
 
         applyInitialValues()
 
-        bind(to: integrityViewModel)
+        // bind(to: integrityViewModel)
 
-        integrityViewModel.inputs.didLaunchApp.send(())
+        // integrityViewModel.inputs.didLaunchApp.send(())
     }
 
     // MARK: - Methods
 
     // MARK: Bind
 
-    private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
-        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
-            .store(in: &self.subscriptions)
+    /*
+     private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
+         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+             .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
+             .store(in: &self.subscriptions)
 
-        dependency.outputs.isLoading
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.addLoadingView()
-                } else {
-                    self?.removeLoadingView()
-                }
-            }
-            .store(in: &self.subscriptions)
+         dependency.outputs.isLoading
+             .debounce(for: 0.1, scheduler: DispatchQueue.main)
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] isLoading in
+                 if isLoading {
+                     self?.addLoadingView()
+                 } else {
+                     self?.removeLoadingView()
+                 }
+             }
+             .store(in: &self.subscriptions)
 
-        dependency.outputs.loadingTargetIndex
-            .combineLatest(dependency.outputs.allLoadingTargetCount)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] loadingTargetIndex, allLoadingTargetCount in
-                self?.didStartLoad(at: loadingTargetIndex, in: allLoadingTargetCount)
-            }
-            .store(in: &self.subscriptions)
-    }
+         dependency.outputs.loadingTargetIndex
+             .combineLatest(dependency.outputs.allLoadingTargetCount)
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] loadingTargetIndex, allLoadingTargetCount in
+                 self?.didStartLoad(at: loadingTargetIndex, in: allLoadingTargetCount)
+             }
+             .store(in: &self.subscriptions)
+     }
+      */
 }
 
 // MARK: Configuration
