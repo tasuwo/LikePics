@@ -9,7 +9,7 @@ env:
 
 jobs:
   test:
-    runs-on: macos-11.0
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby and `bundle install`
