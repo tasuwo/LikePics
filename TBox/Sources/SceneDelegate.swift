@@ -47,25 +47,20 @@ extension SceneDelegate: MainAppLauncher {
     func launch() {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        delegate.container
-            .combineLatest(delegate.cloudStackLoader)
-            .compactMap { container, cloudStackLoader -> (DependencyContainer, CloudStackLoader)? in
-                guard let container = container, let cloudStackLoader = cloudStackLoader else { return nil }
-                return (container, cloudStackLoader)
-            }
+        delegate.context
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { container, cloudStackLoader in
-                // TODO: AppDelegate に保持させる
-                let rootViewModel = container.makeClipIntegrityResolvingViewModel()
+            .sink { context in
                 // TODO: iPad/iPhoneで切り替える
-                let rootViewController = AppRootTabBarController(factory: container, integrityViewModel: rootViewModel,
-                                                                 logger: container.logger)
+                let rootViewController = AppRootTabBarController(factory: context.container,
+                                                                 integrityViewModel: context.integrityResolvingViewModel,
+                                                                 logger: context.container.logger)
 
                 self.window?.rootViewController?.dismiss(animated: true) {
                     self.window?.rootViewController = rootViewController
                 }
 
-                cloudStackLoader.observers.append(.init(value: rootViewController))
+                context.cloudStackLoader.observers.append(.init(value: rootViewController))
             }
             .store(in: &subscription)
     }

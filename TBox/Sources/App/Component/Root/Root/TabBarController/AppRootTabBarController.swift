@@ -56,8 +56,6 @@ class AppRootTabBarController: UITabBarController {
         configureTabBar()
 
         bind(to: integrityViewModel)
-
-        integrityViewModel.inputs.didLaunchApp.send(())
     }
 }
 
@@ -65,10 +63,6 @@ class AppRootTabBarController: UITabBarController {
 
 extension AppRootTabBarController {
     private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
-        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
-            .store(in: &self.subscriptions)
-
         dependency.outputs.isLoading
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)

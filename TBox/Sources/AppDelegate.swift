@@ -13,9 +13,14 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    let container: CurrentValueSubject<DependencyContainer?, Never> = .init(nil)
-    let cloudStackLoader: CurrentValueSubject<CloudStackLoader?, Never> = .init(nil)
+    struct Context {
+        let container: DependencyContainer
+        let cloudStackLoader: CloudStackLoader
+        let integrityResolvingViewModel: ClipIntegrityResolvingViewModelType
+    }
 
+    let context: CurrentValueSubject<Context?, Never> = .init(nil)
+    private var subscriptions: Set<AnyCancellable> = .init()
     private(set) var cloudAvailabilityService: CloudAvailabilityService!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -70,10 +75,19 @@ extension AppDelegate {
                                                      cloudAvailabilityObserver: cloudAvailabilityService)
             }
 
-            self.container.send(container)
-
             let cloudStackLoader = container.makeCloudStackLoader()
-            self.cloudStackLoader.send(cloudStackLoader)
+            let integrityResolvingViewModel = container.makeClipIntegrityResolvingViewModel()
+
+            let context = Context(container: container,
+                                  cloudStackLoader: cloudStackLoader,
+                                  integrityResolvingViewModel: integrityResolvingViewModel)
+            self.context.send(context)
+
+            NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+                .sink { _ in integrityResolvingViewModel.inputs.sceneDidBecomeActive.send(()) }
+                .store(in: &self.subscriptions)
+
+            integrityResolvingViewModel.inputs.didLaunchApp.send(())
 
             cloudStackLoader.startObserveCloudAvailability()
         }
