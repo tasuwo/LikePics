@@ -4,22 +4,22 @@
 
 import UIKit
 
-protocol AppRootSideBarControllerDelegate: AnyObject {
-    func appRootSideBarController(_ controller: AppRootSideBarController, didSelect item: AppRootSideBarController.Item)
+protocol SceneRootSideBarControllerDelegate: AnyObject {
+    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item)
 }
 
-class AppRootSideBarController: UIViewController {
+class SceneRootSideBarController: UIViewController {
     typealias Factory = ViewControllerFactory
 
     enum Section: Int {
         case main
     }
 
-    typealias Item = AppRoot.SideBarItem
+    typealias Item = SceneRoot.SideBarItem
 
     // MARK: - Properties
 
-    var currentItem: AppRoot.SideBarItem {
+    var currentItem: SceneRoot.SideBarItem {
         guard isViewLoaded else { return initialItem }
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first,
               let item = dataSource.itemIdentifier(for: indexPath)
@@ -32,9 +32,9 @@ class AppRootSideBarController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
-    weak var delegate: AppRootSideBarControllerDelegate?
+    weak var delegate: SceneRootSideBarControllerDelegate?
 
-    private var initialItem: AppRoot.SideBarItem = .top
+    private var initialItem: SceneRoot.SideBarItem = .top
     private var isAppliedInitialValues: Bool = false
 
     // MARK: - Lifecycle
@@ -63,7 +63,7 @@ class AppRootSideBarController: UIViewController {
         applyInitialValuesIfNeeded()
     }
 
-    func select(_ item: AppRoot.SideBarItem) {
+    func select(_ item: SceneRoot.SideBarItem) {
         guard isViewLoaded else {
             initialItem = item
             return
@@ -91,7 +91,7 @@ class AppRootSideBarController: UIViewController {
 
 // MARK: - Layout
 
-extension AppRootSideBarController {
+extension SceneRootSideBarController {
     private func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
             var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
@@ -101,7 +101,7 @@ extension AppRootSideBarController {
     }
 }
 
-extension AppRootSideBarController {
+extension SceneRootSideBarController {
     private func configureHierarchy() {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
         collectionView.backgroundColor = Asset.Color.backgroundClient.color
@@ -130,7 +130,7 @@ extension AppRootSideBarController {
     }
 }
 
-extension AppRootSideBarController: UICollectionViewDelegate {
+extension SceneRootSideBarController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         self.delegate?.appRootSideBarController(self, didSelect: item)

@@ -20,30 +20,30 @@ class TBoxUITests: XCTestCase {
     func testExample() throws {
         let app = XCUIApplication()
 
-        let tabBar = app.tabBars["AppRootTabBarController.tabBar"]
+        let tabBar = app.tabBars["SceneRootTabBarController.tabBar"]
 
         tabBar
-            .buttons["AppRootTabBarController.tabBarItem.top"]
+            .buttons["SceneRootTabBarController.tabBarItem.top"]
             .tap()
         snapshot("01_Home")
 
         tabBar
-            .buttons["AppRootTabBarController.tabBarItem.search"]
+            .buttons["SceneRootTabBarController.tabBarItem.search"]
             .tap()
         snapshot("02_Search")
 
         tabBar
-            .buttons["AppRootTabBarController.tabBarItem.tag"]
+            .buttons["SceneRootTabBarController.tabBarItem.tag"]
             .tap()
         snapshot("03_Tag")
 
         tabBar
-            .buttons["AppRootTabBarController.tabBarItem.album"]
+            .buttons["SceneRootTabBarController.tabBarItem.album"]
             .tap()
         snapshot("04_Album")
 
         tabBar
-            .buttons["AppRootTabBarController.tabBarItem.top"]
+            .buttons["SceneRootTabBarController.tabBarItem.top"]
             .tap()
         app.collectionViews
             .children(matching: .any)

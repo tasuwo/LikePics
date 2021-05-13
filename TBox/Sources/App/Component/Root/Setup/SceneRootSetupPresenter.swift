@@ -5,7 +5,7 @@
 import Combine
 import Domain
 
-protocol AppRootSetupViewProtocol: AnyObject {
+protocol SceneRootSetupViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
     func launchLikePics()
@@ -13,11 +13,11 @@ protocol AppRootSetupViewProtocol: AnyObject {
     func confirmUnavailable()
 }
 
-class AppRootSetupPresenter {
+class SceneRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudAvailabilityService: CloudAvailabilityService
 
-    weak var view: AppRootSetupViewProtocol?
+    weak var view: SceneRootSetupViewProtocol?
 
     // MARK: - Lifecycle
 

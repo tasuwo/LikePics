@@ -5,6 +5,6 @@
 import TBoxUIKit
 import UIKit
 
-protocol AppRootViewController: ClipPreviewPresentingAnimatorDataSource {
+protocol SceneRootViewController: ClipPreviewPresentingAnimatorDataSource {
     var currentViewController: UIViewController? { get }
 }

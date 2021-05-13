@@ -4,7 +4,7 @@
 
 import UIKit
 
-extension AppRoot {
+extension SceneRoot {
     enum TabBarItem: Int, CaseIterable {
         case top
         case search
@@ -64,19 +64,19 @@ extension AppRoot {
         var accessibilityIdentifier: String {
             switch self {
             case .top:
-                return "AppRootTabBarController.tabBarItem.top"
+                return "SceneRootTabBarController.tabBarItem.top"
 
             case .search:
-                return "AppRootTabBarController.tabBarItem.search"
+                return "SceneRootTabBarController.tabBarItem.search"
 
             case .tags:
-                return "AppRootTabBarController.tabBarItem.tag"
+                return "SceneRootTabBarController.tabBarItem.tag"
 
             case .albums:
-                return "AppRootTabBarController.tabBarItem.album"
+                return "SceneRootTabBarController.tabBarItem.album"
 
             case .setting:
-                return "AppRootTabBarController.tabBarItem.setting"
+                return "SceneRootTabBarController.tabBarItem.setting"
             }
         }
 
@@ -121,7 +121,7 @@ extension AppRoot {
             return viewController
         }
 
-        func map(to: AppRoot.SideBarItem.Type) -> AppRoot.SideBarItem {
+        func map(to: SceneRoot.SideBarItem.Type) -> SceneRoot.SideBarItem {
             switch self {
             case .top:
                 return .top

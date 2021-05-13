@@ -7,7 +7,7 @@ import Common
 import Domain
 import UIKit
 
-class AppRootSplitViewController: UISplitViewController {
+class SceneRootSplitViewController: UISplitViewController {
     typealias Factory = ViewControllerFactory
 
     // MARK: - Properties
@@ -22,7 +22,7 @@ class AppRootSplitViewController: UISplitViewController {
 
     // MARK: View
 
-    private var sideBarController: AppRootSideBarController
+    private var sideBarController: SceneRootSideBarController
     private var compactRootViewController: UITabBarController
 
     private var detailTopClipListViewController: UIViewController
@@ -69,15 +69,15 @@ class AppRootSplitViewController: UISplitViewController {
         // self.integrityViewModel = integrityViewModel
         self.logger = logger
 
-        self.sideBarController = AppRootSideBarController()
+        self.sideBarController = SceneRootSideBarController()
 
         self.compactRootViewController = UITabBarController()
 
-        self.detailTopClipListViewController = AppRoot.TabBarItem.top.makeViewController(by: factory)
-        self.detailSearchViewController = AppRoot.TabBarItem.search.makeViewController(by: factory)
-        self.detailTagListViewController = AppRoot.TabBarItem.tags.makeViewController(by: factory)
-        self.detailAlbumListViewController = AppRoot.TabBarItem.albums.makeViewController(by: factory)
-        self.detailSettingViewController = AppRoot.TabBarItem.setting.makeViewController(by: factory)
+        self.detailTopClipListViewController = SceneRoot.TabBarItem.top.makeViewController(by: factory)
+        self.detailSearchViewController = SceneRoot.TabBarItem.search.makeViewController(by: factory)
+        self.detailTagListViewController = SceneRoot.TabBarItem.tags.makeViewController(by: factory)
+        self.detailAlbumListViewController = SceneRoot.TabBarItem.albums.makeViewController(by: factory)
+        self.detailSettingViewController = SceneRoot.TabBarItem.setting.makeViewController(by: factory)
 
         super.init(style: .doubleColumn)
 
@@ -143,7 +143,7 @@ class AppRootSplitViewController: UISplitViewController {
 
 // MARK: Configuration
 
-extension AppRootSplitViewController {
+extension SceneRootSplitViewController {
     private func applyInitialValues() {
         switch traitCollection.horizontalSizeClass {
         case .compact:
@@ -158,7 +158,7 @@ extension AppRootSplitViewController {
         }
     }
 
-    private func setSecondaryViewController(for item: AppRootSideBarController.Item) {
+    private func setSecondaryViewController(for item: SceneRootSideBarController.Item) {
         switch item {
         case .top:
             setViewController(detailTopClipListViewController, for: .secondary)
@@ -178,13 +178,13 @@ extension AppRootSplitViewController {
     }
 }
 
-extension AppRootSplitViewController: AppRootSideBarControllerDelegate {
-    func appRootSideBarController(_ controller: AppRootSideBarController, didSelect item: AppRootSideBarController.Item) {
+extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
+    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item) {
         setSecondaryViewController(for: item)
     }
 }
 
-extension AppRootSplitViewController: CloudStackLoaderObserver {
+extension SceneRootSplitViewController: CloudStackLoaderObserver {
     // MARK: - CloudStackLoaderObserver
 
     func didAccountChanged(_ loader: CloudStackLoader) {
@@ -214,7 +214,7 @@ extension AppRootSplitViewController: CloudStackLoaderObserver {
     }
 }
 
-extension AppRootSplitViewController {
+extension SceneRootSplitViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -223,7 +223,7 @@ extension AppRootSplitViewController {
             switch traitCollection.horizontalSizeClass {
             case .compact:
                 compactRootViewController.setViewControllers(detailViewControllers, animated: false)
-                let preferredItem = sideBarController.currentItem.map(to: AppRoot.TabBarItem.self)
+                let preferredItem = sideBarController.currentItem.map(to: SceneRoot.TabBarItem.self)
                 compactRootViewController.selectedIndex = preferredItem.next.rawValue
                 compactRootViewController.selectedIndex = preferredItem.rawValue
 
@@ -247,7 +247,7 @@ extension AppRootSplitViewController {
     }
 }
 
-extension AppRootSplitViewController: LoadingViewPresentable {
+extension SceneRootSplitViewController: LoadingViewPresentable {
     // MARK: - LoadingViewPresentable
 
     var loadingView: UIView? {
@@ -261,8 +261,8 @@ extension AppRootSplitViewController: LoadingViewPresentable {
     }
 }
 
-extension AppRootSplitViewController: AppRootViewController {
-    // MARK: - AppRootViewController
+extension SceneRootSplitViewController: SceneRootViewController {
+    // MARK: - SceneRootViewController
 
     var currentViewController: UIViewController? { currentDetailViewController }
 }

@@ -8,7 +8,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-class AppRootTabBarController: UITabBarController {
+class SceneRootTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
     typealias Store = LikePics.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
@@ -62,7 +62,7 @@ class AppRootTabBarController: UITabBarController {
 
 // MARK: Bind
 
-extension AppRootTabBarController {
+extension SceneRootTabBarController {
     private func bind(to store: Store) {
         store.state
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
@@ -91,7 +91,7 @@ extension AppRootTabBarController {
 
 // MARK: - Configuration
 
-extension AppRootTabBarController {
+extension SceneRootTabBarController {
     private func configureTabBar() {
         guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController() else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipCollectionView."))
@@ -115,32 +115,32 @@ extension AppRootTabBarController {
 
         let settingsViewController = self.factory.makeSettingsViewController()
 
-        self.tabBar.accessibilityIdentifier = "AppRootTabBarController.tabBar"
+        self.tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
 
         topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
                                                              image: UIImage(systemName: "house"),
                                                              tag: 0)
-        topClipsListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.top"
+        topClipsListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.top"
 
         searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
                                                             image: UIImage(systemName: "magnifyingglass"),
                                                             tag: 2)
-        searchEntryViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.search"
+        searchEntryViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.search"
 
         tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
                                                         image: UIImage(systemName: "tag"),
                                                         tag: 3)
-        tagListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.tag"
+        tagListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.tag"
 
         albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
                                                           image: UIImage(systemName: "square.stack"),
                                                           tag: 4)
-        albumListViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.album"
+        albumListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.album"
 
         settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
                                                          image: UIImage(systemName: "gear"),
                                                          tag: 5)
-        settingsViewController.tabBarItem.accessibilityIdentifier = "AppRootTabBarController.tabBarItem.setting"
+        settingsViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
             topClipsListViewController,
@@ -152,7 +152,7 @@ extension AppRootTabBarController {
     }
 }
 
-extension AppRootTabBarController: CloudStackLoaderObserver {
+extension SceneRootTabBarController: CloudStackLoaderObserver {
     // MARK: - CloudStackLoaderObserver
 
     func didAccountChanged(_ loader: CloudStackLoader) {
@@ -182,7 +182,7 @@ extension AppRootTabBarController: CloudStackLoaderObserver {
     }
 }
 
-extension AppRootTabBarController: LoadingViewPresentable {
+extension SceneRootTabBarController: LoadingViewPresentable {
     // MARK: - LoadingViewPresentable
 
     var loadingView: UIView? {
@@ -196,8 +196,8 @@ extension AppRootTabBarController: LoadingViewPresentable {
     }
 }
 
-extension AppRootTabBarController: AppRootViewController {
-    // MARK: - AppRootViewController
+extension SceneRootTabBarController: SceneRootViewController {
+    // MARK: - SceneRootViewController
 
     var currentViewController: UIViewController? { selectedViewController }
 }

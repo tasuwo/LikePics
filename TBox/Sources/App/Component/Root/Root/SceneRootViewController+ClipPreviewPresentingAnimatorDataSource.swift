@@ -15,7 +15,7 @@ protocol ClipPreviewPresentingViewController: UIViewController {
     func displayPreviewingCell()
 }
 
-private extension AppRootViewController {
+private extension SceneRootViewController {
     func resolvePresentingViewController() -> ClipPreviewPresentingViewController? {
         guard let topViewController = currentViewController else { return nil }
 
@@ -41,7 +41,7 @@ private extension AppRootViewController {
 
 // MARK: - ClipPreviewPresentingAnimatorDataSource
 
-extension AppRootViewController where Self: UIViewController {
+extension SceneRootViewController where Self: UIViewController {
     func animatingCell(_ animator: ClipPreviewAnimator) -> ClipPreviewPresentingCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
         return viewController.previewingCell

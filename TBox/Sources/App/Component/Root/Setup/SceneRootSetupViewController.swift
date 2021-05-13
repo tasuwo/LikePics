@@ -9,14 +9,14 @@ protocol MainAppLauncher: AnyObject {
     func launch()
 }
 
-class AppRootSetupViewController: UIViewController {
+class SceneRootSetupViewController: UIViewController {
     private let indicator = UIActivityIndicatorView(style: .large)
-    private let presenter: AppRootSetupPresenter
+    private let presenter: SceneRootSetupPresenter
     weak var launcher: MainAppLauncher?
 
     // MARK: - Lifecycle
 
-    init(presenter: AppRootSetupPresenter,
+    init(presenter: SceneRootSetupPresenter,
          launcher: MainAppLauncher)
     {
         self.presenter = presenter
@@ -55,8 +55,8 @@ class AppRootSetupViewController: UIViewController {
     }
 }
 
-extension AppRootSetupViewController: AppRootSetupViewProtocol {
-    // MARK: - AppRootSetupViewProtocol
+extension SceneRootSetupViewController: SceneRootSetupViewProtocol {
+    // MARK: - SceneRootSetupViewProtocol
 
     func startLoading() {
         self.indicator.startAnimating()

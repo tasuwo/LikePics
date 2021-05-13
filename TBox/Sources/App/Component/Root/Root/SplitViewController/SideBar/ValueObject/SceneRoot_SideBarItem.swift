@@ -4,7 +4,7 @@
 
 import UIKit
 
-extension AppRoot {
+extension SceneRoot {
     enum SideBarItem: Int, CaseIterable {
         case top
         case search
@@ -50,7 +50,7 @@ extension AppRoot {
             }
         }
 
-        func map(to: AppRoot.TabBarItem.Type) -> AppRoot.TabBarItem {
+        func map(to: SceneRoot.TabBarItem.Type) -> SceneRoot.TabBarItem {
             switch self {
             case .top:
                 return .top

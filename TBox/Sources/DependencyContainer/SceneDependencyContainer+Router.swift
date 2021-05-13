@@ -8,10 +8,10 @@ import TBoxUIKit
 import UIKit
 
 extension SceneDependencyContainer {
-    private var rootViewController: AppRootViewController? {
+    private var rootViewController: SceneRootViewController? {
         guard let windowScene = sceneResolver.resolveScene(),
               let sceneDelegate = windowScene.delegate as? SceneDelegate,
-              let rootViewController = sceneDelegate.window?.rootViewController as? AppRootViewController
+              let rootViewController = sceneDelegate.window?.rootViewController as? SceneRootViewController
         else {
             return nil
         }

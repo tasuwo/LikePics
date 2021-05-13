@@ -23,9 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        let presenter = AppRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
+        let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
                                               cloudAvailabilityService: delegate.cloudAvailabilityService)
-        let rootViewController = AppRootSetupViewController(presenter: presenter, launcher: self)
+        let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
@@ -56,7 +56,7 @@ extension SceneDelegate: MainAppLauncher {
                 self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: singleton.container)
 
                 // TODO: iPad/iPhoneで切り替える
-                let rootViewController = AppRootTabBarController(factory: self.sceneDependencyContainer,
+                let rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
                                                                  clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
                                                                  logger: singleton.container.logger)
 
