@@ -2,9 +2,10 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import TBoxUIKit
 import UIKit
 
-protocol SceneRootViewController: ClipPreviewPresentingAnimatorDataSource {
+protocol SceneRootViewController: UIViewController, CloudStackLoaderObserver, ClipPreviewPresentingAnimatorDataSource {
     var currentViewController: UIViewController? { get }
 }

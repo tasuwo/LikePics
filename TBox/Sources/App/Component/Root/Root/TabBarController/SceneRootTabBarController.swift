@@ -60,7 +60,7 @@ class SceneRootTabBarController: UITabBarController {
     }
 }
 
-// MARK: Bind
+// MARK: - Bind
 
 extension SceneRootTabBarController {
     private func bind(to store: Store) {

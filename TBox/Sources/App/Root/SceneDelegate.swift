@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
-                                              cloudAvailabilityService: delegate.cloudAvailabilityService)
+                                                cloudAvailabilityService: delegate.cloudAvailabilityService)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
         let window = UIWindow(windowScene: windowScene)
@@ -55,10 +55,16 @@ extension SceneDelegate: MainAppLauncher {
             .sink { [unowned self] singleton in
                 self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: singleton.container)
 
-                // TODO: iPad/iPhoneで切り替える
-                let rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
-                                                                 clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
-                                                                 logger: singleton.container.logger)
+                let rootViewController: SceneRootViewController
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
+                                                                      clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                      logger: singleton.container.logger)
+                } else {
+                    rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
+                                                                   clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                   logger: singleton.container.logger)
+                }
 
                 self.window?.rootViewController?.dismiss(animated: true) {
                     self.window?.rootViewController = rootViewController

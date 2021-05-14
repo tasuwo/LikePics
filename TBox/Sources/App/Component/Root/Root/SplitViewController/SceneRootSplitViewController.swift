@@ -9,16 +9,13 @@ import UIKit
 
 class SceneRootSplitViewController: UISplitViewController {
     typealias Factory = ViewControllerFactory
+    typealias Store = LikePics.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
 
     // MARK: Factory
 
     private let factory: Factory
-
-    // MARK: Dependency
-
-    // private let integrityViewModel: ClipIntegrityResolvingViewModelType
 
     // MARK: View
 
@@ -54,19 +51,23 @@ class SceneRootSplitViewController: UISplitViewController {
     private var _loadingView: UIView?
     private var _loadingLabel: UILabel?
 
+    // MARK: Store
+
+    private var clipsIntegrityValidatorStore: Store
+    private var subscriptions = Set<AnyCancellable>()
+
     // MARK: Privates
 
     private let logger: Loggable
-    private var subscriptions = Set<AnyCancellable>()
 
     // MARK: - Initializers
 
     init(factory: Factory,
-         // integrityViewModel: ClipIntegrityResolvingViewModelType,
+         clipsIntegrityValidatorStore: Store,
          logger: Loggable)
     {
         self.factory = factory
-        // self.integrityViewModel = integrityViewModel
+        self.clipsIntegrityValidatorStore = clipsIntegrityValidatorStore
         self.logger = logger
 
         self.sideBarController = SceneRootSideBarController()
@@ -103,45 +104,40 @@ class SceneRootSplitViewController: UISplitViewController {
 
         applyInitialValues()
 
-        // bind(to: integrityViewModel)
-
-        // integrityViewModel.inputs.didLaunchApp.send(())
+        bind(to: clipsIntegrityValidatorStore)
     }
-
-    // MARK: - Methods
-
-    // MARK: Bind
-
-    /*
-     private func bind(to dependency: ClipIntegrityResolvingViewModelType) {
-         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-             .sink { [weak dependency] _ in dependency?.inputs.sceneDidBecomeActive.send(()) }
-             .store(in: &self.subscriptions)
-
-         dependency.outputs.isLoading
-             .debounce(for: 0.1, scheduler: DispatchQueue.main)
-             .receive(on: DispatchQueue.main)
-             .sink { [weak self] isLoading in
-                 if isLoading {
-                     self?.addLoadingView()
-                 } else {
-                     self?.removeLoadingView()
-                 }
-             }
-             .store(in: &self.subscriptions)
-
-         dependency.outputs.loadingTargetIndex
-             .combineLatest(dependency.outputs.allLoadingTargetCount)
-             .receive(on: DispatchQueue.main)
-             .sink { [weak self] loadingTargetIndex, allLoadingTargetCount in
-                 self?.didStartLoad(at: loadingTargetIndex, in: allLoadingTargetCount)
-             }
-             .store(in: &self.subscriptions)
-     }
-      */
 }
 
-// MARK: Configuration
+// MARK: - Bind
+
+extension SceneRootSplitViewController {
+    private func bind(to store: Store) {
+        store.state
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
+            .bind(\.state.isLoading) { [weak self] isLoading in
+                if isLoading {
+                    self?.addLoadingView()
+                } else {
+                    self?.removeLoadingView()
+                }
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.state) { [weak self] state in
+                switch state {
+                case let .loading(currentIndex: index, counts: counts):
+                    self?.didStartLoad(at: index, in: counts)
+
+                case .stopped:
+                    self?.didStartLoad(at: nil, in: nil)
+                }
+            }
+            .store(in: &subscriptions)
+    }
+}
+
+// MARK: - Configuration
 
 extension SceneRootSplitViewController {
     private func applyInitialValues() {
@@ -237,6 +233,9 @@ extension SceneRootSplitViewController {
                 } else if compactRootViewController.selectedViewController === detailAlbumListViewController {
                     sideBarController.select(.albums)
                     setSecondaryViewController(for: .albums)
+                } else if compactRootViewController.selectedViewController === detailSearchViewController {
+                    sideBarController.select(.search)
+                    setSecondaryViewController(for: .search)
                 } else {
                     sideBarController.select(.top)
                     setSecondaryViewController(for: .top)
