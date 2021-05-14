@@ -5,7 +5,7 @@
 import Combine
 import Foundation
 
-class Store<State: Equatable, Action: LikePics.Action, Dependency> {
+class Store<State: Equatable, Action: LikePics.Action, Dependency>: Storing {
     var stateValue: State { _state.value }
     var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 

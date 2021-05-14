@@ -39,3 +39,12 @@ class Effect<Action: LikePics.Action> {
         self.actionAtCompleted = nil
     }
 }
+
+extension Effect {
+    func map<T: LikePics.Action>(_ transform: @escaping (Action?) -> T?) -> Effect<T> {
+        .init(id: id,
+              publisher: upstream.map({ transform($0) }).eraseToAnyPublisher(),
+              underlying: underlyingObject,
+              completeWith: transform(actionAtCompleted))
+    }
+}
