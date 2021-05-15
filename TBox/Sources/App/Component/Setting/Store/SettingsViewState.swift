@@ -4,14 +4,14 @@
 
 import Domain
 
-struct SettingsViewState: Equatable {
-    enum Alert: Equatable {
-        case iCloudSettingForceTurnOnConfirmation
-        case iCloudSettingForceTurnOffConfirmation
-        case iCloudTurnOffConfirmation
+struct SettingsViewState: Equatable, Codable {
+    enum Alert: String, Equatable, Codable {
+        case iCloudSettingForceTurnOnConfirmation = "icloud_setting_force_turn_on_confirmation"
+        case iCloudSettingForceTurnOffConfirmation = "icloud_setting_force_turn_off_confirmation"
+        case iCloudTurnOffConfirmation = "icloud_turn_off_confirmation"
     }
 
-    enum SwitchState {
+    enum SwitchState: String, Codable {
         // swiftlint:disable:next identifier_name
         case on
         case off
