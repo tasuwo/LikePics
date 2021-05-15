@@ -8,12 +8,12 @@ typealias ClipPreviewPageBarDependency = HasClipPreviewPageBarDelegate
     & HasImageQueryService
     & HasTransitionLock
 
-enum ClipPreviewPageBarReducer: Reducer {
+struct ClipPreviewPageBarReducer: Reducer {
     typealias Dependency = ClipPreviewPageBarDependency
     typealias Action = ClipPreviewPageBarAction
     typealias State = ClipPreviewPageBarState
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         let stream = Deferred {

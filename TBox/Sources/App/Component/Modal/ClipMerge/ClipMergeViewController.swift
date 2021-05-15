@@ -43,7 +43,7 @@ class ClipMergeViewController: UIViewController {
          dependency: ClipMergeViewDependency,
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
         self.thumbnailLoader = thumbnailLoader
 
         super.init(nibName: nil, bundle: nil)

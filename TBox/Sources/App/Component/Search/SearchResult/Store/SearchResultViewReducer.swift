@@ -12,23 +12,23 @@ typealias SearchResultViewDependency = HasClipQueryService
     & HasClipSearchSettingService
     & HasClipSearchHistoryService
 
-enum SearchResultViewReducer: Reducer {
+struct SearchResultViewReducer: Reducer {
     typealias Dependency = SearchResultViewDependency
     typealias State = SearchResultViewState
     typealias Action = SearchResultViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepare(state, dependency)
+            return Self.prepare(state, dependency)
 
         case .entryViewDidAppear:
             // 別画面で状態が更新されている可能性があるため、再建策をかける
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency, forced: true)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency, forced: true)
             nextState.previewingClipId = nil
             return (nextState, effects)
 
@@ -37,12 +37,12 @@ enum SearchResultViewReducer: Reducer {
         case let .searchBarChanged(text: text, tokens: tokens):
             nextState.inputtedText = text
             nextState.inputtedTokens = tokens
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             nextState.isSomeItemsHidden = isSomeItemsHidden
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         // MARK: - Menu
@@ -50,13 +50,13 @@ enum SearchResultViewReducer: Reducer {
         case let .displaySettingMenuChanged(searchOnlyHiddenItems):
             nextState.searchOnlyHiddenItems = searchOnlyHiddenItems
             dependency.clipSearchSettingService.save(.init(isHidden: searchOnlyHiddenItems, sort: state.selectedSort))
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         case let .sortMenuChanged(sort):
             nextState.selectedSort = sort
             dependency.clipSearchSettingService.save(.init(isHidden: state.searchOnlyHiddenItems, sort: sort))
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         // MARK: - Selection
@@ -66,7 +66,7 @@ enum SearchResultViewReducer: Reducer {
             nextState.inputtedTokens = history.query.tokens
             nextState.selectedSort = history.query.sort
             nextState.searchOnlyHiddenItems = history.query.isHidden
-            let effects = resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
+            let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency)
             return (nextState, effects)
 
         case let .selectedTokenCandidate(token):

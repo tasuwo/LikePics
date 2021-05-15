@@ -10,29 +10,29 @@ typealias AlbumListViewDependency = HasUserSettingStorage
     & HasClipQueryService
     & HasRouter
 
-enum AlbumListViewReducer: Reducer {
+struct AlbumListViewReducer: Reducer {
     typealias Dependency = AlbumListViewDependency
     typealias State = AlbumListViewState
     typealias Action = AlbumListViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepareQueryEffects(state, dependency)
+            return Self.prepareQueryEffects(state, dependency)
 
         // MARK: State Observation
 
         case let .albumsUpdated(albums):
-            return (performFilter(albums: albums, previousState: state), .none)
+            return (Self.performFilter(albums: albums, previousState: state), .none)
 
         case let .searchQueryChanged(query):
-            return (performFilter(searchQuery: query, previousState: state), .none)
+            return (Self.performFilter(searchQuery: query, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case let .editingChanged(isEditing: isEditing):
             nextState.setEditing(isEditing)
@@ -71,7 +71,7 @@ enum AlbumListViewReducer: Reducer {
 
         case let .reordered(albumIds):
             let originals = state.albums.orderedValues().map { $0.id }
-            let newOrder = performReorder(originals: originals, request: albumIds)
+            let newOrder = Self.performReorder(originals: originals, request: albumIds)
             switch dependency.clipCommandService.updateAlbums(byReordering: newOrder) {
             case .success: ()
 

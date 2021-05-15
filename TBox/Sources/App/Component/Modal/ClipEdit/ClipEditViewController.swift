@@ -48,7 +48,7 @@ class ClipEditViewController: UIViewController {
          dependency: ClipEditViewDependency,
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipEditViewReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipEditViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.thumbnailLoader = thumbnailLoader
 

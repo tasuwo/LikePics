@@ -21,7 +21,7 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency> {
 
     // MARK: - Initializers
 
-    init<R: Reducer>(initialState: State, dependency: Dependency, reducer: R.Type) where R.Action == Action, R.State == State, R.Dependency == Dependency {
+    init<R: Reducer>(initialState: State, dependency: Dependency, reducer: R) where R.Action == Action, R.State == State, R.Dependency == Dependency {
         self._state = .init(initialState)
         self.dependency = dependency
         self.reducer = reducer.eraseToAnyReducer()

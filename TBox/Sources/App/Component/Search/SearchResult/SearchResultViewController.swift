@@ -41,7 +41,7 @@ class SearchResultViewController: UIViewController {
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.thumbnailLoader = thumbnailLoader
-        self.store = Store(initialState: state, dependency: dependency, reducer: SearchResultViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: SearchResultViewReducer())
 
         super.init(nibName: nil, bundle: nil)
     }

@@ -77,10 +77,10 @@ class ClipPreviewPageViewController: UIPageViewController {
             weak var informationViewCache: ClipInformationViewCaching?
         }
 
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer())
         self.cacheStore = CacheStore(initialState: cacheState,
                                      dependency: CacheDependency(informationViewCache: cacheController),
-                                     reducer: ClipPreviewPageViewCacheReducer.self)
+                                     reducer: ClipPreviewPageViewCacheReducer())
         self.cacheController = cacheController
         self.transitionController = transitionController
         self.factory = factory

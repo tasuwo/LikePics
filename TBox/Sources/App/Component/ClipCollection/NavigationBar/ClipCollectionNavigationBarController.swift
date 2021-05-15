@@ -33,7 +33,7 @@ class ClipCollectionNavigationBarController {
     init(state: ClipCollectionNavigationBarState,
          dependency: ClipCollectionNavigationBarDependency)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionNavigationBarReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionNavigationBarReducer())
 
         configureBarButtons()
     }

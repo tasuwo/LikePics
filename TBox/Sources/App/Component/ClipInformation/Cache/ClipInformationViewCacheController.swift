@@ -42,7 +42,7 @@ class ClipInformationViewCacheController {
          dependency: ClipInformationViewCacheDependency)
     {
         self.dependency = dependency
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipInformationViewCacheReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipInformationViewCacheReducer())
 
         configureViewHierarchy()
     }
@@ -93,7 +93,7 @@ extension ClipInformationViewCacheController: ClipInformationViewCaching {
                                           isSomeItemsHidden: true,
                                           isInvalidated: false),
                       dependency: dependency,
-                      reducer: ClipInformationViewCacheReducer.self)
+                      reducer: ClipInformationViewCacheReducer())
         bind(to: store)
         store.execute(.loaded(clipId, itemId))
     }

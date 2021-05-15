@@ -11,7 +11,7 @@ typealias TagCollectionViewDependency = HasClipCommandService
     & HasClipQueryService
     & HasUserSettingStorage
 
-enum TagCollectionViewReducer: Reducer {
+struct TagCollectionViewReducer: Reducer {
     typealias Dependency = TagCollectionViewDependency
     typealias State = TagCollectionViewState
     typealias Action = TagCollectionViewAction
@@ -20,24 +20,24 @@ enum TagCollectionViewReducer: Reducer {
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepareQueryEffects(state, dependency)
+            return Self.prepareQueryEffects(state, dependency)
 
         // MARK: State Observation
 
         case let .tagsUpdated(tags):
-            return (performFilter(by: tags, previousState: state), .none)
+            return (Self.performFilter(by: tags, previousState: state), .none)
 
         case let .searchQueryChanged(query):
-            return (performFilter(bySearchQuery: query, previousState: state), .none)
+            return (Self.performFilter(bySearchQuery: query, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(byItemsVisibility: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(byItemsVisibility: isSomeItemsHidden, previousState: state), .none)
 
         // MARK: Selection
 

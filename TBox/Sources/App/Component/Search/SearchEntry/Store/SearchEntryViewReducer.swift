@@ -7,19 +7,19 @@ import Foundation
 typealias SearchEntryViewDependency = HasClipSearchHistoryService
     & HasUserSettingStorage
 
-enum SearchEntryViewReducer: Reducer {
+struct SearchEntryViewReducer: Reducer {
     typealias Dependency = SearchEntryViewDependency
     typealias State = SearchEntryViewState
     typealias Action = SearchEntryViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepare(nextState, dependency)
+            return Self.prepare(nextState, dependency)
 
         // MARK: State Observation
 

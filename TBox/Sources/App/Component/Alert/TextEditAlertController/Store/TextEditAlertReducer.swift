@@ -7,14 +7,14 @@ import Combine
 typealias TextEditAlertDependency = HasTextValidator
     & HasTextEditAlertDelegate
 
-enum TextEditAlertReducer: Reducer {
+struct TextEditAlertReducer: Reducer {
     typealias Dependency = TextEditAlertDependency
     typealias State = TextEditAlertState
     typealias Action = TextEditAlertAction
 
     // MARK: - Methods
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
         case .presented:
             return (state.updating(isPresenting: true), .none)

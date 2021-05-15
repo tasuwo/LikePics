@@ -7,11 +7,11 @@ protocol Reducer {
     associatedtype State: Equatable
     associatedtype Dependency
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?)
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?)
 }
 
 extension Reducer {
-    static func eraseToAnyReducer() -> AnyReducer<Action, State, Dependency> {
+    func eraseToAnyReducer() -> AnyReducer<Action, State, Dependency> {
         return .init(reducer: self)
     }
 }

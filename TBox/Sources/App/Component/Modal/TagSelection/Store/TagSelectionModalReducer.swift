@@ -10,19 +10,19 @@ typealias TagSelectionModalDependency = HasUserSettingStorage
     & HasClipQueryService
     & HasTagSelectionModalSubscription
 
-enum TagSelectionModalReducer: Reducer {
+struct TagSelectionModalReducer: Reducer {
     typealias Dependency = TagSelectionModalDependency
     typealias State = TagSelectionModalState
     typealias Action = TagSelectionModalAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepareQueryEffects(state, dependency)
+            return Self.prepareQueryEffects(state, dependency)
 
         case .viewDidDisappear:
             dependency.tagSelectionCompleted(Set(state.tags.orderedSelectedValues()))
@@ -31,15 +31,15 @@ enum TagSelectionModalReducer: Reducer {
         // MARK: State Observation
 
         case let .tagsUpdated(tags):
-            nextState = performFilter(tags: tags, previousState: state)
+            nextState = Self.performFilter(tags: tags, previousState: state)
             return (nextState, .none)
 
         case let .searchQueryChanged(query):
-            nextState = performFilter(searchQuery: query, previousState: state)
+            nextState = Self.performFilter(searchQuery: query, previousState: state)
             return (nextState, .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            nextState = performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state)
+            nextState = Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state)
             return (nextState, .none)
 
         // MARK: Selection

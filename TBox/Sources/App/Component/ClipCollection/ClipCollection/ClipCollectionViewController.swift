@@ -58,7 +58,7 @@ class ClipCollectionViewController: UIViewController {
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: ClipCollectionMenuBuildable)
     {
-        self.store = ClipCollectionViewStore(initialState: state, dependency: dependency, reducer: ClipCollectionReducer.self)
+        self.store = ClipCollectionViewStore(initialState: state, dependency: dependency, reducer: ClipCollectionReducer())
 
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder

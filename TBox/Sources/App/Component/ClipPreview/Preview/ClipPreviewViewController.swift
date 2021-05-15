@@ -28,7 +28,7 @@ class ClipPreviewViewController: UIViewController {
     init(state: ClipPreviewViewState,
          dependency: ClipPreviewViewDependency)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewViewReducer())
 
         super.init(nibName: nil, bundle: nil)
     }

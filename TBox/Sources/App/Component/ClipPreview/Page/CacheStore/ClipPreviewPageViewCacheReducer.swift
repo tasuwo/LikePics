@@ -4,12 +4,12 @@
 
 typealias ClipPreviewPageViewCacheDependency = HasClipInformationViewCaching
 
-enum ClipPreviewPageViewCacheReducer: Reducer {
+struct ClipPreviewPageViewCacheReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewCacheDependency
     typealias Action = ClipPreviewPageViewCacheAction
     typealias State = ClipPreviewPageViewCacheState
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         switch action {
         // MARK: View Life-Cycle
 

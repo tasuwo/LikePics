@@ -8,32 +8,32 @@ import Domain
 typealias ClipInformationViewCacheDependency = HasClipQueryService
     & HasUserSettingStorage
 
-enum ClipInformationViewCacheReducer: Reducer {
+struct ClipInformationViewCacheReducer: Reducer {
     typealias Dependency = ClipInformationViewCacheDependency
     typealias State = ClipInformationViewCacheState
     typealias Action = ClipInformationViewCacheAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: Life-Cycle
 
         case let .loaded(clipId, itemId):
-            return prepare(clipId: clipId, itemId: itemId, state: nextState, dependency: dependency)
+            return Self.prepare(clipId: clipId, itemId: itemId, state: nextState, dependency: dependency)
 
         // MARK: State Observation
 
         case let .clipUpdated(clip):
-            return (performFilter(clip: clip, previousState: state), .none)
+            return (Self.performFilter(clip: clip, previousState: state), .none)
 
         case let .clipItemUpdated(item):
-            return (performFilter(item: item, previousState: state), .none)
+            return (Self.performFilter(item: item, previousState: state), .none)
 
         case let .tagsUpdated(tags):
-            return (performFilter(tags: tags, previousState: state), .none)
+            return (Self.performFilter(tags: tags, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case .failedToLoadClip,
              .failedToLoadClipItem,

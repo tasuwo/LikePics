@@ -87,7 +87,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let state = SettingsViewState(cloudAvailability: nil,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
                                       isICloudSyncEnabled: container._userSettingStorage.readEnabledICloudSync())
-        let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer.self)
+        let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer())
         viewController.store = store
 
         return UINavigationController(rootViewController: viewController)

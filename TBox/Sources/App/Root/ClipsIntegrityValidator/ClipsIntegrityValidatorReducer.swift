@@ -8,14 +8,14 @@ import Domain
 typealias ClipsIntegrityValidatorDependency = HasTemporariesPersistService
     & HasIntegrityValidationService
 
-enum ClipsIntegrityValidatorReducer: Reducer {
+struct ClipsIntegrityValidatorReducer: Reducer {
     typealias Dependency = ClipsIntegrityValidatorDependency
     typealias State = ClipsIntegrityValidatorState
     typealias Action = ClipsIntegrityValidatorAction
 
-    static let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipsIntegrityValidatorReducer")
+    let queue = DispatchQueue(label: "net.tasuwo.TBox.ClipsIntegrityValidatorReducer")
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {

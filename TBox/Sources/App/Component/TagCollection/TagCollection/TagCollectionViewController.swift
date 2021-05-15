@@ -41,7 +41,7 @@ class TagCollectionViewController: UIViewController {
          dependency: TagCollectionViewDependency,
          menuBuilder: TagCollectionMenuBuildable)
     {
-        self.store = TagCollectionViewStore(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer.self)
+        self.store = TagCollectionViewStore(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 

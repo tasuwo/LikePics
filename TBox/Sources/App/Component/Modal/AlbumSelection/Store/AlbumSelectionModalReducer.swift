@@ -10,19 +10,19 @@ typealias AlbumSelectionModalDependency = HasUserSettingStorage
     & HasClipQueryService
     & HasAlbumSelectionModalSubscription
 
-enum AlbumSelectionModalReducer: Reducer {
+struct AlbumSelectionModalReducer: Reducer {
     typealias Dependency = AlbumSelectionModalDependency
     typealias State = AlbumSelectionModalState
     typealias Action = AlbumSelectionModalAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepareQueryEffects(nextState, dependency)
+            return Self.prepareQueryEffects(nextState, dependency)
 
         case .viewDidDisappear:
             dependency.albumSelectionCompleted(nextState.selectedAlbumId)
@@ -31,15 +31,15 @@ enum AlbumSelectionModalReducer: Reducer {
         // MARK: State Observation
 
         case let .albumsUpdated(albums):
-            nextState = performFilter(albums: albums, previousState: nextState)
+            nextState = Self.performFilter(albums: albums, previousState: nextState)
             return (nextState, .none)
 
         case let .searchQueryChanged(query):
-            nextState = performFilter(searchQuery: query, previousState: nextState)
+            nextState = Self.performFilter(searchQuery: query, previousState: nextState)
             return (nextState, .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: nextState), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: nextState), .none)
 
         // MARK: Button Action
 

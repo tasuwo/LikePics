@@ -5,7 +5,7 @@
 struct AnyReducer<Action: LikePics.Action, State: Equatable, Dependency> {
     let reducer: (Action, State, Dependency) -> (State, [Effect<Action>]?)
 
-    init<R: Reducer>(reducer: R.Type) where R.Action == Action, R.State == State, R.Dependency == Dependency {
+    init<R: Reducer>(reducer: R) where R.Action == Action, R.State == State, R.Dependency == Dependency {
         self.reducer = { reducer.execute(action: $0, state: $1, dependency: $2) }
     }
 

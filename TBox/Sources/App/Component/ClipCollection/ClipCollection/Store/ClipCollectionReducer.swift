@@ -11,19 +11,19 @@ typealias ClipCollectionDependency = HasRouter
     & HasClipQueryService
     & HasImageQueryService
 
-enum ClipCollectionReducer: Reducer {
+struct ClipCollectionReducer: Reducer {
     typealias Dependency = ClipCollectionDependency
     typealias State = ClipCollectionState
     typealias Action = ClipCollectionAction
 
     // swiftlint:disable:next function_body_length
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepare(state: state, dependency: dependency)
+            return Self.prepare(state: state, dependency: dependency)
 
         case .viewDidAppear:
             nextState.previewingClipId = nil
@@ -32,10 +32,10 @@ enum ClipCollectionReducer: Reducer {
         // MARK: State Observation
 
         case let .clipsUpdated(clips):
-            return (performFilter(clips: clips, previousState: state), .none)
+            return (Self.performFilter(clips: clips, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         // MARK: Selection
 
@@ -71,7 +71,7 @@ enum ClipCollectionReducer: Reducer {
                 return (nextState, .none)
             }
 
-            let ids = self.performReorder(originals: originals, request: clipIds)
+            let ids = Self.performReorder(originals: originals, request: clipIds)
             switch dependency.clipCommandService.updateAlbum(having: albumId, byReorderingClipsHaving: ids) {
             case .success:
                 let newClips = ids
@@ -87,17 +87,17 @@ enum ClipCollectionReducer: Reducer {
         // MARK: NavigationBar/ToolBar
 
         case let .navigationBarEventOccurred(event):
-            return execute(action: event, state: state, dependency: dependency)
+            return Self.execute(action: event, state: state, dependency: dependency)
 
         case let .toolBarEventOccurred(event):
-            return execute(action: event, state: state, dependency: dependency)
+            return Self.execute(action: event, state: state, dependency: dependency)
 
         // MARK: Actions for Single Clip
 
         case let .tagAdditionMenuTapped(clipId):
             switch dependency.clipQueryService.readClipAndTags(for: [clipId]) {
             case let .success((_, tags)):
-                let effect = showTagSelectionModal(for: .init([clipId]), selections: Set(tags.map({ $0.id })), dependency: dependency)
+                let effect = Self.showTagSelectionModal(for: .init([clipId]), selections: Set(tags.map({ $0.id })), dependency: dependency)
                 return (state, [effect])
 
             case .failure:
@@ -106,7 +106,7 @@ enum ClipCollectionReducer: Reducer {
             }
 
         case let .albumAdditionMenuTapped(clipId):
-            let effect = showAlbumSelectionModal(for: Set([clipId]), dependency: dependency)
+            let effect = Self.showAlbumSelectionModal(for: Set([clipId]), dependency: dependency)
             return (state, [effect])
 
         case let .hideMenuTapped(clipId):

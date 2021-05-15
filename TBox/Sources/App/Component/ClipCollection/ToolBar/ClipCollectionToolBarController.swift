@@ -34,7 +34,7 @@ class ClipCollectionToolBarController {
     init(state: ClipCollectionToolBarState,
          dependency: ClipCollectionToolBarDependency)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionToolBarReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionToolBarReducer())
 
         configureBarButtons()
     }

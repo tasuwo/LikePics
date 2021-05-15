@@ -8,19 +8,19 @@ import Domain
 typealias SettingsViewDependency = HasCloudAvailabilityService
     & HasUserSettingStorage
 
-enum SettingsViewReducer: Reducer {
+struct SettingsViewReducer: Reducer {
     typealias Dependency = SettingsViewDependency
     typealias State = SettingsViewState
     typealias Action = SettingsViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepare(state: state, dependency: dependency)
+            return Self.prepare(state: state, dependency: dependency)
 
         // MARK: State Observation
 

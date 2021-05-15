@@ -40,7 +40,7 @@ class AlbumSelectionModalController: UIViewController {
          dependency: AlbumSelectionModalDependency,
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)

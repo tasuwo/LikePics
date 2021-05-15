@@ -40,7 +40,7 @@ class TagSelectionModalController: UIViewController {
          tagAdditionAlertState: TextEditAlertState,
          dependency: TagSelectionModalDependency)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         super.init(nibName: nil, bundle: nil)
 

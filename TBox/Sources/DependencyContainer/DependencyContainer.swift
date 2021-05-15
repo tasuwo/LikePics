@@ -175,7 +175,7 @@ class DependencyContainer {
     func makeClipsIntegrityValidatorStore() -> Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency> {
         return .init(initialState: ClipsIntegrityValidatorState(),
                      dependency: self,
-                     reducer: ClipsIntegrityValidatorReducer.self)
+                     reducer: ClipsIntegrityValidatorReducer())
     }
 
     private static func sweepLegacyThumbnailCachesIfExists() {

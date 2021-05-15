@@ -11,20 +11,20 @@ typealias ClipEditViewDependency = HasRouter
     & HasUserSettingStorage
     & HasPasteboard
 
-enum ClipEditViewReducer: Reducer {
+struct ClipEditViewReducer: Reducer {
     typealias Dependency = ClipEditViewDependency
     typealias State = ClipEditViewState
     typealias Action = ClipEditViewAction
 
     // swiftlint:disable:next function_body_length
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepareQueryEffects(for: state.clip.id, state: state, dependency: dependency)
+            return Self.prepareQueryEffects(for: state.clip.id, state: state, dependency: dependency)
 
         // MARK: State Observation
 
@@ -44,10 +44,10 @@ enum ClipEditViewReducer: Reducer {
             return (nextState, .none)
 
         case let .tagsUpdated(tags):
-            return (performFilter(tags: tags, previousState: nextState), .none)
+            return (Self.performFilter(tags: tags, previousState: nextState), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         // MARK: NavigationBar
 
@@ -58,7 +58,7 @@ enum ClipEditViewReducer: Reducer {
         // MARK: Button/Switch Action
 
         case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
+            let effect = Self.showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
             return (nextState, [effect])
 
         case let .tagDeletionButtonTapped(tagId):

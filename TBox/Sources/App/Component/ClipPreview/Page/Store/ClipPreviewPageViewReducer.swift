@@ -13,19 +13,19 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasPreviewLoader
     & HasTransitionLock
 
-enum ClipPreviewPageViewReducer: Reducer {
+struct ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
     typealias State = ClipPreviewPageViewState
     typealias Action = ClipPreviewPageViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return prepare(state: nextState, dependency: dependency)
+            return Self.prepare(state: nextState, dependency: dependency)
 
         // MARK: State Observation
 
@@ -85,7 +85,7 @@ enum ClipPreviewPageViewReducer: Reducer {
         // MARK: Bar
 
         case let .barEventOccurred(event):
-            return execute(action: event, state: nextState, dependency: dependency)
+            return Self.execute(action: event, state: nextState, dependency: dependency)
 
         // MARK: Modal Completion
 

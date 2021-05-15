@@ -35,7 +35,7 @@ class ClipPreviewPageBarController {
     init(state: ClipPreviewPageBarState,
          dependency: ClipPreviewPageBarDependency)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageBarReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageBarReducer())
     }
 
     // MARK: - View Life-Cycle Methods

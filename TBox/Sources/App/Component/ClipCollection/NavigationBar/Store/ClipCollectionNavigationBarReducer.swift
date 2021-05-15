@@ -6,12 +6,12 @@ import Combine
 
 typealias ClipCollectionNavigationBarDependency = HasClipCollectionNavigationBarDelegate
 
-enum ClipCollectionNavigationBarReducer: Reducer {
+struct ClipCollectionNavigationBarReducer: Reducer {
     typealias Dependency = ClipCollectionNavigationBarDependency
     typealias State = ClipCollectionNavigationBarState
     typealias Action = ClipCollectionNavigationBarAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         let stream = Deferred {

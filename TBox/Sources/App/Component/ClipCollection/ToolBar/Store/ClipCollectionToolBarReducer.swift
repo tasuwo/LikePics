@@ -7,12 +7,12 @@ import Combine
 typealias ClipCollectionToolBarDependency = HasClipCollectionToolBarDelegate
     & HasImageQueryService
 
-enum ClipCollectionToolBarReducer: Reducer {
+struct ClipCollectionToolBarReducer: Reducer {
     typealias Dependency = ClipCollectionToolBarDependency
     typealias State = ClipCollectionToolBarState
     typealias Action = ClipCollectionToolBarAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         let stream = Deferred {

@@ -32,7 +32,7 @@ class SearchEntryViewController: UIViewController {
          searchResultViewController: SearchResultViewController)
     {
         resultsController = searchResultViewController
-        self.store = Store(initialState: state, dependency: dependency, reducer: SearchEntryViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: SearchEntryViewReducer())
 
         super.init(nibName: nil, bundle: nil)
     }

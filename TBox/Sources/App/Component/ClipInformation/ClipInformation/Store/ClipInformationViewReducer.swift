@@ -11,12 +11,12 @@ typealias ClipInformationViewDependency = HasRouter
     & HasUserSettingStorage
     & HasPasteboard
 
-enum ClipInformationViewReducer: Reducer {
+struct ClipInformationViewReducer: Reducer {
     typealias Dependency = ClipInformationViewDependency
     typealias State = ClipInformationViewState
     typealias Action = ClipInformationViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: View Life-Cycle
@@ -37,21 +37,21 @@ enum ClipInformationViewReducer: Reducer {
         case .viewDidLoad:
             nextState.shouldCollectionViewUpdateWithAnimation = false
             nextState.isSuspendedCollectionViewUpdate = true
-            return prepare(state: nextState, dependency: dependency)
+            return Self.prepare(state: nextState, dependency: dependency)
 
         // MARK: State Observation
 
         case let .clipUpdated(clip):
-            return (performFilter(clip: clip, previousState: state), .none)
+            return (Self.performFilter(clip: clip, previousState: state), .none)
 
         case let .clipItemUpdated(item):
-            return (performFilter(item: item, previousState: state), .none)
+            return (Self.performFilter(item: item, previousState: state), .none)
 
         case let .tagsUpdated(tags):
-            return (performFilter(tags: tags, previousState: state), .none)
+            return (Self.performFilter(tags: tags, previousState: state), .none)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case .failedToLoadClip,
              .failedToLoadClipItem,
@@ -63,7 +63,7 @@ enum ClipInformationViewReducer: Reducer {
         // MARK: Control
 
         case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
+            let effect = Self.showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
             return (nextState, [effect])
 
         case let .tagRemoveButtonTapped(tagId):

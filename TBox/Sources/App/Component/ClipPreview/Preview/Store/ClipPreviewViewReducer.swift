@@ -9,18 +9,18 @@ import UIKit
 typealias ClipPreviewViewDependency = HasPreviewLoader
     & HasClipQueryService
 
-enum ClipPreviewViewReducer: Reducer {
+struct ClipPreviewViewReducer: Reducer {
     typealias Dependency = ClipPreviewViewDependency
     typealias State = ClipPreviewViewState
     typealias Action = ClipPreviewViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return readPreview(state: nextState, dependency: dependency)
+            return Self.readPreview(state: nextState, dependency: dependency)
 
         // MARK: Load Completion
 

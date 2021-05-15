@@ -51,7 +51,7 @@ class TextEditAlertController: NSObject {
     // MARK: - Lifecycle
 
     init(state: TextEditAlertState) {
-        self.store = .init(initialState: state, dependency: dependency, reducer: TextEditAlertReducer.self)
+        self.store = .init(initialState: state, dependency: dependency, reducer: TextEditAlertReducer())
         super.init()
         bind()
     }

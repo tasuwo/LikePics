@@ -44,7 +44,7 @@ class AlbumListViewController: UIViewController {
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: AlbumListMenuBuildable.Type)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.albumEditAlert = .init(state: albumEditAlertState)
 

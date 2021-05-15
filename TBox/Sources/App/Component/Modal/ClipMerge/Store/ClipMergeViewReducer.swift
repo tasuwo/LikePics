@@ -10,19 +10,19 @@ typealias ClipMergeViewDependency = HasRouter
     & HasClipCommandService
     & HasClipMergeModalSubscription
 
-enum ClipMergeViewReducer: Reducer {
+struct ClipMergeViewReducer: Reducer {
     typealias Dependency = ClipMergeViewDependency
     typealias State = ClipMergeViewState
     typealias Action = ClipMergeViewAction
 
-    static func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            nextState = prepareState(initialState: state, dependency: dependency)
+            nextState = Self.prepareState(initialState: state, dependency: dependency)
             return (nextState, .none)
 
         // MARK: NavigationBar
@@ -48,7 +48,7 @@ enum ClipMergeViewReducer: Reducer {
         // MARK: Button Action
 
         case .tagAdditionButtonTapped:
-            let effect = showTagSelectionModal(selections: Set(state.tags.map({ $0.id })), dependency: dependency)
+            let effect = Self.showTagSelectionModal(selections: Set(state.tags.map({ $0.id })), dependency: dependency)
             return (state, [effect])
 
         case let .tagDeleteButtonTapped(tagId):

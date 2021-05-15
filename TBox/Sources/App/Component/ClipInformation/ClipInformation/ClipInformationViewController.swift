@@ -43,7 +43,7 @@ class ClipInformationViewController: UIViewController {
          clipInformationViewCache: ClipInformationViewCaching,
          transitioningController: ClipInformationTransitioningControllerProtocol)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipInformationViewReducer.self)
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
         self.informationView = clipInformationViewCache.readCachingView()
