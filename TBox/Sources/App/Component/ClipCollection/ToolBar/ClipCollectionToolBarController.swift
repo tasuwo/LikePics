@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Domain
 import UIKit
 
 class ClipCollectionToolBarController {
@@ -29,12 +30,17 @@ class ClipCollectionToolBarController {
     let store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    // MARK: Privates
+
+    private let imageQueryService: ImageQueryServiceProtocol
+
     // MARK: - Initializers
 
     init(store: Store,
          dependency: ClipCollectionToolBarDependency)
     {
         self.store = store
+        self.imageQueryService = dependency.imageQueryService
 
         configureBarButtons()
     }
@@ -90,8 +96,8 @@ extension ClipCollectionToolBarController {
         case .deletion(includesRemoveFromAlbum: true, targetCount: _):
             presentAlertForDeleteIncludesRemoveFromAlbum()
 
-        case let .share(items: items, targetCount: _):
-            presentAlertForShare(items: items)
+        case let .share(imageIds: imageIds, targetCount: _):
+            presentAlertForShare(imageIds: imageIds)
         }
     }
 
@@ -173,7 +179,8 @@ extension ClipCollectionToolBarController {
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func presentAlertForShare(items: [ClipItemImageShareItem]) {
+    private func presentAlertForShare(imageIds: [ImageContainer.Identity]) {
+        let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         controller.popoverPresentationController?.barButtonItem = shareItem
         controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in

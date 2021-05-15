@@ -2,13 +2,14 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
 struct ClipPreviewPageBarState: Equatable {
     enum Alert: Equatable {
         case addition
         case deletion(includesRemoveFromClip: Bool)
-        case share(items: [ClipItemImageShareItem])
+        case share(imageIds: [ImageContainer.Identity])
         case shareTargetSelection
         case error(String)
     }

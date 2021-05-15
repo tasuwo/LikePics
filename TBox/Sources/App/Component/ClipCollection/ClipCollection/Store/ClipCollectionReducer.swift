@@ -159,10 +159,7 @@ struct ClipCollectionReducer: Reducer {
 
         case let .shareMenuTapped(clipId):
             guard let imageIds = state.clips.value(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }
-            let items = imageIds.compactMap { imageId in
-                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
-            }
-            nextState.alert = .share(clipId: clipId, items: items)
+            nextState.alert = .share(clipId: clipId, imageIds: imageIds)
             return (nextState, .none)
 
         case let .purgeMenuTapped(clipId):

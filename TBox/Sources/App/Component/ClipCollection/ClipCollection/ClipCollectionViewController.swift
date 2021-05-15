@@ -49,6 +49,10 @@ class ClipCollectionViewController: UIViewController {
     private var _previousState: ClipCollectionState?
     private var selectionQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewController.selection")
 
+    // MARK: Privates
+
+    private let imageQueryService: ImageQueryServiceProtocol
+
     // MARK: - Initializers
 
     init(state: ClipCollectionViewRootState,
@@ -58,6 +62,7 @@ class ClipCollectionViewController: UIViewController {
     {
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
+        self.imageQueryService = dependency.imageQueryService
 
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
         self.rootStore = rootStore
@@ -248,8 +253,8 @@ extension ClipCollectionViewController {
         case let .purge(clipId: clipId):
             presentPurgeAlert(for: clipId, state: state)
 
-        case let .share(clipId: clipId, items: items):
-            presentShareAlert(for: clipId, items: items, state: state)
+        case let .share(clipId: clipId, imageIds: imageIds):
+            presentShareAlert(for: clipId, imageIds: imageIds, state: state)
 
         case .none:
             break
@@ -317,7 +322,8 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(for clipId: Clip.Identity, items: [ClipItemImageShareItem], state: ClipCollectionState) {
+    private func presentShareAlert(for clipId: Clip.Identity, imageIds: [ImageContainer.Identity], state: ClipCollectionState) {
+        let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
         guard let clip = state.clips.value(having: clipId),
               let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)

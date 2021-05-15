@@ -74,10 +74,8 @@ struct ClipPreviewPageBarReducer: Reducer {
                 nextState.alert = .shareTargetSelection
                 return (nextState, [eventEffect])
             } else {
-                let items = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
-                    ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
-                }
-                nextState.alert = .share(items: items)
+                let imageIds = state.parentState.items.map({ $0.imageId })
+                nextState.alert = .share(imageIds: imageIds)
                 return (nextState, [eventEffect])
             }
 
@@ -103,15 +101,12 @@ struct ClipPreviewPageBarReducer: Reducer {
                 return (nextState, [eventEffect])
             }
             let currentItem = state.parentState.items[index]
-            let item = ClipItemImageShareItem(imageId: currentItem.imageId, imageQueryService: dependency.imageQueryService)
-            nextState.alert = .share(items: [item])
+            nextState.alert = .share(imageIds: [currentItem.imageId])
             return (nextState, [eventEffect])
 
         case .alertShareClipConfirmed:
-            let items = Set(state.parentState.items.map({ $0.imageId })).compactMap { imageId in
-                ClipItemImageShareItem(imageId: imageId, imageQueryService: dependency.imageQueryService)
-            }
-            nextState.alert = .share(items: items)
+            let imageIds = state.parentState.items.map({ $0.imageId })
+            nextState.alert = .share(imageIds: imageIds)
             return (nextState, [eventEffect])
         }
     }

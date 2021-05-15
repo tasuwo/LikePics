@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Domain
 import UIKit
 
 class ClipPreviewPageBarController {
@@ -30,12 +31,17 @@ class ClipPreviewPageBarController {
     let store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    // MARK: Privates
+
+    private let imageQueryService: ImageQueryServiceProtocol
+
     // MARK: - Initializers
 
     init(state: ClipPreviewPageBarState,
          dependency: ClipPreviewPageBarDependency)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageBarReducer())
+        self.imageQueryService = dependency.imageQueryService
     }
 
     // MARK: - View Life-Cycle Methods
@@ -126,8 +132,8 @@ extension ClipPreviewPageBarController {
         case let .deletion(includesRemoveFromClip: includesRemoveFromClip):
             presentDeleteAlert(includesRemoveFromClip: includesRemoveFromClip)
 
-        case let .share(items: items):
-            presentShareAlert(items: items)
+        case let .share(imageIds: imageIds):
+            presentShareAlert(imageIds: imageIds)
 
         case .shareTargetSelection:
             presentShareTargetSelectionAlert(targetCount: state.parentState.items.count)
@@ -206,7 +212,8 @@ extension ClipPreviewPageBarController {
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(items: [ClipItemImageShareItem]) {
+    private func presentShareAlert(imageIds: [ImageContainer.Identity]) {
+        let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         controller.popoverPresentationController?.barButtonItem = shareItem
         controller.completionWithItemsHandler = { [weak self] activity, success, _, _ in
