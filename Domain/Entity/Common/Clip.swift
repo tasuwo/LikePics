@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Clip {
+public struct Clip: Codable, Equatable, Hashable {
     public let id: UUID
     public let description: String?
     /// - attention: Sorted by clipIndex.
@@ -75,5 +75,3 @@ extension Clip: Identifiable {
         return self.id
     }
 }
-
-extension Clip: Equatable, Hashable {}

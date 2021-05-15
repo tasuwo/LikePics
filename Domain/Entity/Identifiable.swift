@@ -3,12 +3,12 @@
 //
 
 public protocol Identifiable {
-    associatedtype Identity: Hashable
+    associatedtype Identity: Hashable & Codable
 
     var identity: Identity { get }
 }
 
-public extension Identifiable where Self: Hashable {
+public extension Identifiable where Self: Hashable & Codable {
     // MARK: - Hashable
 
     func hash(into hasher: inout Hasher) {

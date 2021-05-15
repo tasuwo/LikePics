@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct ClipItem: Equatable {
+public struct ClipItem: Codable, Equatable, Hashable {
     public let id: UUID
     public let url: URL?
     public let clipId: Clip.Identity
@@ -51,5 +51,3 @@ extension ClipItem: Identifiable {
         return self.id
     }
 }
-
-extension ClipItem: Hashable {}

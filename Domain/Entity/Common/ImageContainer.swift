@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ImageContainer: Equatable {
+public struct ImageContainer: Codable, Equatable, Hashable {
     public let id: Identity
     public let data: Data
 

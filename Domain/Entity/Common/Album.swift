@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Album: Equatable, Hashable {
+public struct Album: Codable, Equatable, Hashable {
     public let id: UUID
     public let title: String
     /// - attention: 順序が保持されている

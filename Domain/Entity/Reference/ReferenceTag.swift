@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct ReferenceTag: Equatable {
+public struct ReferenceTag: Codable, Equatable, Hashable {
     public let id: UUID
     public let name: String
     public let isHidden: Bool
@@ -26,8 +26,6 @@ extension ReferenceTag: Identifiable {
         return self.id
     }
 }
-
-extension ReferenceTag: Hashable {}
 
 extension ReferenceTag {
     func map(to: Tag.Type) -> Tag {

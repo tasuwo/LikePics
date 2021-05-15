@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ListingClip {
-    public struct Item {
+public struct ListingClip: Codable, Hashable {
+    public struct Item: Codable, Equatable, Hashable {
         public let itemId: UUID
         public let imageId: UUID
 

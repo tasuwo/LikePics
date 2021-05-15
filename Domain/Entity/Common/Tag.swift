@@ -3,7 +3,7 @@
 //
 
 // sourcery: AutoDefaultValue
-public struct Tag: Equatable {
+public struct Tag: Codable, Equatable, Hashable {
     public let id: UUID
     public let name: String
     public let isHidden: Bool
@@ -48,8 +48,6 @@ extension Tag: Identifiable {
         return self.id
     }
 }
-
-extension Tag: Hashable {}
 
 extension Tag: Searchable {
     public var searchableText: String? {
