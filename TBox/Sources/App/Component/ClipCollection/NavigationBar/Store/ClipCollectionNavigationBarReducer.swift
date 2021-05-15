@@ -4,7 +4,8 @@
 
 import Combine
 
-typealias ClipCollectionNavigationBarDependency = HasClipCollectionNavigationBarDelegate
+// TODO:
+typealias ClipCollectionNavigationBarDependency = HasRouter // HasClipCollectionNavigationBarDelegate
 
 struct ClipCollectionNavigationBarReducer: Reducer {
     typealias Dependency = ClipCollectionNavigationBarDependency
@@ -14,34 +15,17 @@ struct ClipCollectionNavigationBarReducer: Reducer {
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                if let event = action.mapToEvent(state: state) {
-                    dependency.clipCollectionNavigationBarDelegate?.didTriggered(event)
-                }
-                promise(.success(nil))
-            }
-        }
-        let eventEffect = Effect(stream)
-
         switch action {
         // MARK: - View Life-Cycle
 
         case .viewDidLoad:
-            return (state.updatingAppearance(), [eventEffect])
+            return (state.updatingAppearance(), [])
 
         // MARK: - State Observation
 
-        case let .stateChanged(clipCount: clipCount,
-                               selectionCount: selectionCount,
-                               layout: layout,
-                               operation: operation):
-            nextState.clipCount = clipCount
-            nextState.selectionCount = selectionCount
-            nextState.layout = layout
-            nextState.operation = operation
+        case .stateChanged:
             nextState = nextState.updatingAppearance()
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         // MARK: - NavigationBar
 
@@ -50,7 +34,7 @@ struct ClipCollectionNavigationBarReducer: Reducer {
              .didTapDeselectAll,
              .didTapSelect,
              .didTapLayout:
-            return (state, [eventEffect])
+            return (state, .none)
         }
     }
 }
@@ -93,41 +77,7 @@ private extension ClipCollectionNavigationBarState {
     }
 }
 
-private extension ClipCollectionNavigationBarAction {
-    func mapToEvent(state: ClipCollectionNavigationBarState) -> ClipCollectionNavigationBarEvent? {
-        switch self {
-        case .didTapCancel:
-            return .cancel
-
-        case .didTapSelectAll:
-            return .selectAll
-
-        case .didTapDeselectAll:
-            return .deselectAll
-
-        case .didTapSelect:
-            return .select
-
-        case .didTapLayout:
-            return .changeLayout(state.layout.nextLayout)
-
-        default:
-            return nil
-        }
-    }
-}
-
 private extension ClipCollection.Layout {
-    var nextLayout: Self {
-        switch self {
-        case .grid:
-            return .waterfall
-
-        case .waterfall:
-            return .grid
-        }
-    }
-
     var toItemKind: ClipCollectionNavigationBarState.Item.Kind.Layout {
         switch self {
         case .grid:

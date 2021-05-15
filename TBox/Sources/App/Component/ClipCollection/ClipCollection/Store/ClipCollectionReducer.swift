@@ -489,8 +489,8 @@ extension ClipCollectionReducer {
             nextState.clips = nextState.clips.updated(selectedIds: .init())
             return (nextState, .none)
 
-        case let .changeLayout(layout):
-            nextState.layout = layout
+        case .changeLayout:
+            nextState.layout = nextState.layout.nextLayout
             return (nextState, .none)
         }
     }

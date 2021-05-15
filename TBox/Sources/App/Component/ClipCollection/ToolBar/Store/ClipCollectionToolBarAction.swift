@@ -11,7 +11,7 @@ enum ClipCollectionToolBarAction: Action, Equatable {
 
     // MARK: State Observation
 
-    case stateChanged(ClipCollectionState)
+    case stateChanged
 
     // MARK: ToolBar
 

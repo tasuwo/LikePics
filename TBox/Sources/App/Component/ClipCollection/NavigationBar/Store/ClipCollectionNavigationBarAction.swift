@@ -9,10 +9,7 @@ enum ClipCollectionNavigationBarAction: Action, Equatable {
 
     // MARK: - State Observation
 
-    case stateChanged(clipCount: Int,
-                      selectionCount: Int,
-                      layout: ClipCollection.Layout,
-                      operation: ClipCollection.Operation)
+    case stateChanged
 
     // MARK: - NavigationBar
 

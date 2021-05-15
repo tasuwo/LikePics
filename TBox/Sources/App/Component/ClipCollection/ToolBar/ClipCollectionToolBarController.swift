@@ -6,7 +6,7 @@ import Combine
 import UIKit
 
 class ClipCollectionToolBarController {
-    typealias Store = LikePics.Store<ClipCollectionToolBarState, ClipCollectionToolBarAction, ClipCollectionToolBarDependency>
+    typealias Store = AnyStoring<ClipCollectionToolBarState, ClipCollectionToolBarAction, ClipCollectionToolBarDependency>
 
     // MARK: - Properties
 
@@ -31,10 +31,10 @@ class ClipCollectionToolBarController {
 
     // MARK: - Initializers
 
-    init(state: ClipCollectionToolBarState,
+    init(store: Store,
          dependency: ClipCollectionToolBarDependency)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionToolBarReducer())
+        self.store = store
 
         configureBarButtons()
     }

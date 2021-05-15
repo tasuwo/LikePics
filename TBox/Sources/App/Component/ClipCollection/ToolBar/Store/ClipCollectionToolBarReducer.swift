@@ -4,8 +4,7 @@
 
 import Combine
 
-typealias ClipCollectionToolBarDependency = HasClipCollectionToolBarDelegate
-    & HasImageQueryService
+typealias ClipCollectionToolBarDependency = HasImageQueryService
 
 struct ClipCollectionToolBarReducer: Reducer {
     typealias Dependency = ClipCollectionToolBarDependency
@@ -15,53 +14,41 @@ struct ClipCollectionToolBarReducer: Reducer {
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                if let event = action.mapToEvent() {
-                    dependency.clipCollectionToolBarDelegate?.didTriggered(event)
-                }
-                promise(.success(nil))
-            }
-        }
-        let eventEffect = Effect(stream)
-
         switch action {
         // MARK: View Life-Cycle
 
         case .viewDidLoad:
-            return (state.updatingAppearance(), [eventEffect])
+            return (state.updatingAppearance(), .none)
 
         // MARK: State Observation
 
-        case let .stateChanged(state):
-            nextState.parentState = state
-            nextState.operation = state.operation
+        case .stateChanged:
             nextState = nextState.updatingAppearance()
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         // MARK: ToolBar
 
         case .addButtonTapped:
             nextState.alert = .addition(targetCount: nextState.parentState.clips.selectedIds().count)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .changeVisibilityButtonTapped:
             nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips.selectedIds().count)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .shareButtonTapped:
             let items = state.parentState.clips.selectedValues()
                 .flatMap { $0.items }
                 .map { ClipItemImageShareItem(imageId: $0.imageId, imageQueryService: dependency.imageQueryService) }
             nextState.alert = .share(items: items, targetCount: nextState.parentState.clips.selectedIds().count)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .deleteButtonTapped:
             nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState.parentState.clips.selectedIds().count)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .mergeButtonTapped:
-            return (state, [eventEffect])
+            return (state, .none)
 
         // MARK: Alert Completion
 
@@ -74,7 +61,7 @@ struct ClipCollectionToolBarReducer: Reducer {
              .alertDismissed,
              .alertShareConfirmed:
             nextState.alert = nil
-            return (nextState, [eventEffect])
+            return (nextState, .none)
         }
     }
 }
@@ -94,38 +81,5 @@ private extension ClipCollectionToolBarState {
         ]
 
         return nextState
-    }
-}
-
-private extension ClipCollectionToolBarAction {
-    func mapToEvent() -> ClipCollectionToolBarEvent? {
-        switch self {
-        case .alertAddToAlbumConfirmed:
-            return .addToAlbum
-
-        case .alertAddTagsConfirmed:
-            return .addTags
-
-        case .alertHideConfirmed:
-            return .hide
-
-        case .alertRevealConfirmed:
-            return .reveal
-
-        case let .alertShareConfirmed(succeeded):
-            return .share(succeeded)
-
-        case .alertRemoveFromAlbumConfirmed:
-            return .removeFromAlbum
-
-        case .alertDeleteConfirmed:
-            return .delete
-
-        case .mergeButtonTapped:
-            return .merge
-
-        default:
-            return nil
-        }
     }
 }

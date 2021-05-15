@@ -7,7 +7,7 @@ import TBoxUIKit
 import UIKit
 
 class ClipCollectionNavigationBarController {
-    typealias Store = LikePics.Store<ClipCollectionNavigationBarState, ClipCollectionNavigationBarAction, ClipCollectionNavigationBarDependency>
+    typealias Store = AnyStoring<ClipCollectionNavigationBarState, ClipCollectionNavigationBarAction, ClipCollectionNavigationBarDependency>
 
     // MARK: - Properties
 
@@ -30,10 +30,10 @@ class ClipCollectionNavigationBarController {
 
     // MARK: - Initializers
 
-    init(state: ClipCollectionNavigationBarState,
+    init(store: Store,
          dependency: ClipCollectionNavigationBarDependency)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipCollectionNavigationBarReducer())
+        self.store = store
 
         configureBarButtons()
     }

@@ -14,14 +14,9 @@ extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
     func makeTopClipCollectionViewController() -> UIViewController? {
-        let state = ClipCollectionState(source: .all,
-                                        isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let navigationBarState = ClipCollectionNavigationBarState(source: .all)
-        let toolBarState = ClipCollectionToolBarState(source: .all, parentState: state)
-
+        let state = ClipCollectionViewRootState(source: .all,
+                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let viewController = ClipCollectionViewController(state: state,
-                                                          navigationBarState: navigationBarState,
-                                                          toolBarState: toolBarState,
                                                           dependency: self,
                                                           thumbnailLoader: container.clipThumbnailLoader,
                                                           menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))

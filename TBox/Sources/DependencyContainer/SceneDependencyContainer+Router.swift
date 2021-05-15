@@ -28,14 +28,9 @@ extension SceneDependencyContainer {
     }
 
     private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
-        let state = ClipCollectionState(source: source,
-                                        isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let navigationBarState = ClipCollectionNavigationBarState(source: source)
-        let toolBarState = ClipCollectionToolBarState(source: source, parentState: state)
-
+        let state = ClipCollectionViewRootState(source: source,
+                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
-                                            navigationBarState: navigationBarState,
-                                            toolBarState: toolBarState,
                                             dependency: self,
                                             thumbnailLoader: container.clipThumbnailLoader,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))

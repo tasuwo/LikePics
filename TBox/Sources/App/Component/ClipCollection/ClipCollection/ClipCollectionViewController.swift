@@ -9,14 +9,13 @@ import TBoxUIKit
 import UIKit
 
 class ClipCollectionViewController: UIViewController {
-    typealias Layout = ClipCollectionViewLayout
-    typealias ClipCollectionViewStore = Store<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
+    typealias RootState = ClipCollectionViewRootState
+    typealias RootAction = ClipCollectionViewRootAction
+    typealias RootDependency = ClipCollectionViewRootDependency
+    typealias RootStore = LikePics.Store<RootState, RootAction, RootDependency>
 
-    struct BarDependencyContainer: HasClipCollectionToolBarDelegate, HasClipCollectionNavigationBarDelegate, HasImageQueryService {
-        weak var clipCollectionToolBarDelegate: ClipCollectionToolBarDelegate?
-        weak var clipCollectionNavigationBarDelegate: ClipCollectionNavigationBarDelegate?
-        var imageQueryService: ImageQueryServiceProtocol
-    }
+    typealias Layout = ClipCollectionViewLayout
+    typealias Store = AnyStoring<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
 
     // MARK: - Properties
 
@@ -40,7 +39,8 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: Store
 
-    private var store: ClipCollectionViewStore
+    private var rootStore: RootStore
+    private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
 
@@ -51,25 +51,31 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipCollectionState,
-         navigationBarState: ClipCollectionNavigationBarState,
-         toolBarState: ClipCollectionToolBarState,
-         dependency: ClipCollectionDependency & HasImageQueryService,
+    init(state: ClipCollectionViewRootState,
+         dependency: ClipCollectionViewRootDependency,
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: ClipCollectionMenuBuildable)
     {
-        self.store = ClipCollectionViewStore(initialState: state, dependency: dependency, reducer: ClipCollectionReducer())
-
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
 
+        let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
+        self.rootStore = rootStore
+        self.store = rootStore
+            .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
+            .eraseToAnyStoring()
+
         super.init(nibName: nil, bundle: nil)
 
-        let barDependency = BarDependencyContainer(clipCollectionToolBarDelegate: self,
-                                                   clipCollectionNavigationBarDelegate: self,
-                                                   imageQueryService: dependency.imageQueryService)
-        navigationBarController = ClipCollectionNavigationBarController(state: navigationBarState, dependency: barDependency)
-        toolBarController = ClipCollectionToolBarController(state: toolBarState, dependency: barDependency)
+        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
+            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
+            .eraseToAnyStoring()
+        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore, dependency: dependency)
+
+        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
+            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
+            .eraseToAnyStoring()
+        toolBarController = ClipCollectionToolBarController(store: toolBarStore, dependency: dependency)
     }
 
     @available(*, unavailable)
@@ -94,6 +100,7 @@ class ClipCollectionViewController: UIViewController {
         navigationBarController.viewDidLoad()
         toolBarController.viewDidLoad()
 
+        bind(to: rootStore)
         bind(to: store)
 
         store.execute(.viewDidLoad)
@@ -117,7 +124,21 @@ class ClipCollectionViewController: UIViewController {
 // MARK: - Bind
 
 extension ClipCollectionViewController {
-    private func bind(to store: ClipCollectionViewStore) {
+    private func bind(to store: RootStore) {
+        store.state
+            .removeDuplicates(by: RootState.toolBarConverter.hasEqualChild(_:_:))
+            .sink { [weak self] _ in self?.toolBarController.store.execute(.stateChanged) }
+            .store(in: &subscriptions)
+
+        store.state
+            .removeDuplicates(by: RootState.navigationBarConverter.hasEqualChild(_:_:))
+            .sink { [weak self] _ in self?.navigationBarController.store.execute(.stateChanged) }
+            .store(in: &subscriptions)
+    }
+}
+
+extension ClipCollectionViewController {
+    private func bind(to store: Store) {
         store.state
             .receive(on: clipsUpdateQueue)
             .removeDuplicates(by: { $0.clips.filteredOrderedValues() == $1.clips.filteredOrderedValues() })
@@ -174,22 +195,6 @@ extension ClipCollectionViewController {
         store.state
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
-            .store(in: &subscriptions)
-
-        store.state
-            .removeDuplicates(by: { $0.clips._selectedIds == $1.clips._selectedIds && $0.operation == $1.operation })
-            .sink { [weak self] state in self?.toolBarController.store.execute(.stateChanged(state)) }
-            .store(in: &subscriptions)
-
-        store.state
-            .map { state -> ClipCollectionNavigationBarAction in
-                .stateChanged(clipCount: state.clips._filteredIds.count,
-                              selectionCount: state.clips._selectedIds.count,
-                              layout: state.layout,
-                              operation: state.operation)
-            }
-            .removeDuplicates()
-            .sink { [weak self] action in self?.navigationBarController.store.execute(action) }
             .store(in: &subscriptions)
 
         store.state
@@ -540,22 +545,6 @@ extension ClipCollectionViewController {
                 self?.store.execute(.editMenuTapped(clip.id))
             }
         }
-    }
-}
-
-extension ClipCollectionViewController: ClipCollectionToolBarDelegate {
-    // MARK: - ClipCollectionToolBarDelegate
-
-    func didTriggered(_ event: ClipCollectionToolBarEvent) {
-        store.execute(.toolBarEventOccurred(event))
-    }
-}
-
-extension ClipCollectionViewController: ClipCollectionNavigationBarDelegate {
-    // MARK: - ClipCollectionNavigationBarDelegate
-
-    func didTriggered(_ event: ClipCollectionNavigationBarEvent) {
-        store.execute(.navigationBarEventOccurred(event))
     }
 }
 
