@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -112,6 +112,7 @@
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
+		2CFF0EC7264FEA1800FA79D7 /* CloudAvailabilitySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF0EC6264FEA1800FA79D7 /* CloudAvailabilitySpec.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
 		2DA2C85D73CD0DB1DEE4A61C /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12868618839F88636C1E5081 /* Store.swift */; };
@@ -1075,6 +1076,7 @@
 		2C0378221C7F286374C5C512 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
+		2CFF0EC6264FEA1800FA79D7 /* CloudAvailabilitySpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilitySpec.swift; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -2184,6 +2186,22 @@
 			path = TagSelection;
 			sourceTree = "<group>";
 		};
+		2CFF0EC4264FEA0400FA79D7 /* ValueObject */ = {
+			isa = PBXGroup;
+			children = (
+				2CFF0EC5264FEA0D00FA79D7 /* Cloud */,
+			);
+			path = ValueObject;
+			sourceTree = "<group>";
+		};
+		2CFF0EC5264FEA0D00FA79D7 /* Cloud */ = {
+			isa = PBXGroup;
+			children = (
+				2CFF0EC6264FEA1800FA79D7 /* CloudAvailabilitySpec.swift */,
+			);
+			path = Cloud;
+			sourceTree = "<group>";
+		};
 		321E4BD03961ABBC3B0D85CF /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -3204,6 +3222,7 @@
 			children = (
 				FA0A323E506D456BF8F0DBAF /* Info.plist */,
 				FCAD5AD964D580BD6B25EAA0 /* Services */,
+				2CFF0EC4264FEA0400FA79D7 /* ValueObject */,
 			);
 			path = DomainTests;
 			sourceTree = "<group>";
@@ -5103,6 +5122,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F85A2761276BA54F30F8C8D /* ClipReferencesIntegrityValidationServiceSpec.swift in Sources */,
+				2CFF0EC7264FEA1800FA79D7 /* CloudAvailabilitySpec.swift in Sources */,
 				7651285265E79B5C0F4939DC /* ImageExtensionResolverSpec.swift in Sources */,
 				8EBAEBD57C8011893C48B30B /* ImageNameResolverSpec.swift in Sources */,
 				48F7C9296B1A59F70653651A /* TemporariesPersistServiceSpec.swift in Sources */,
