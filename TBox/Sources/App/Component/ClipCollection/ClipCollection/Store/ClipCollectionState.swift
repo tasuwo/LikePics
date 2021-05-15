@@ -84,3 +84,64 @@ extension ClipCollectionState {
             : L10n.clipCollectionViewTitleSelecting(clips._selectedIds.count)
     }
 }
+
+// MARK: - Codable
+
+extension ClipCollectionState: Codable {}
+
+extension ClipCollectionState.Alert: Codable {
+    enum CodingKeys: CodingKey {
+        case error
+        case deletion
+        case purge
+        case share
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .error:
+            let message = try container.decodeIfPresent(String.self, forKey: .deletion)
+            self = .error(message)
+
+        case .deletion:
+            let clipId = try container.decode(Clip.Identity.self, forKey: .deletion)
+            self = .deletion(clipId: clipId)
+
+        case .purge:
+            let clipId = try container.decode(Clip.Identity.self, forKey: .purge)
+            self = .purge(clipId: clipId)
+
+        case .share:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .share)
+            let clipId = try nestedContainer.decode(Clip.Identity.self)
+            let imageIds = try nestedContainer.decode([ImageContainer.Identity].self)
+            self = .share(clipId: clipId, imageIds: imageIds)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .error(message):
+            try container.encode(message, forKey: .error)
+
+        case let .deletion(clipId: clipId):
+            try container.encode(clipId, forKey: .deletion)
+
+        case let .purge(clipId: clipId):
+            try container.encode(clipId, forKey: .purge)
+
+        case let .share(clipId: clipId, imageIds: imageIds):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .share)
+            try nestedContainer.encode(clipId)
+            try nestedContainer.encode(imageIds)
+        }
+    }
+}

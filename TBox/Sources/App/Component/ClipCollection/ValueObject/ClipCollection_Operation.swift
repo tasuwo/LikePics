@@ -5,7 +5,7 @@
 import Domain
 
 extension ClipCollection {
-    enum Operation: Equatable {
+    enum Operation: String, Codable, Equatable {
         case none
         case selecting
 

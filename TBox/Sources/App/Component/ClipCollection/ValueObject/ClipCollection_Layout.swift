@@ -3,7 +3,7 @@
 //
 
 extension ClipCollection {
-    enum Layout: Equatable {
+    enum Layout: String, Codable, Equatable {
         case waterfall
         case grid
 

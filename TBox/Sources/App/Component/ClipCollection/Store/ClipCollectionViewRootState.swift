@@ -67,3 +67,7 @@ extension ClipCollectionViewRootState {
         return nextParent
     }
 }
+
+// MARK: - Codable
+
+extension ClipCollectionViewRootState: Codable {}
