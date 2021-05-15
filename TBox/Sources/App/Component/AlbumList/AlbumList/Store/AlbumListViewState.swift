@@ -5,7 +5,7 @@
 import CoreGraphics
 import Domain
 
-struct AlbumListViewState: Equatable {
+struct AlbumListViewState: Equatable, Codable {
     enum Alert: Equatable {
         case error(String?)
         case addition
@@ -70,5 +70,67 @@ extension AlbumListViewState {
 
     var collectionViewAlpha: CGFloat {
         isCollectionViewDisplaying ? 1 : 0
+    }
+}
+
+extension AlbumListViewState.Alert: Codable {
+    // MARK: - Codable
+
+    enum CodingKeys: CodingKey {
+        case error
+        case addition
+        case renaming
+        case deletion
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .error:
+            let message = try container.decodeIfPresent(String.self, forKey: .deletion)
+            self = .error(message)
+
+        case .addition:
+            self = .addition
+
+        case .renaming:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .renaming)
+            let albumId = try nestedContainer.decode(Album.Identity.self)
+            let title = try nestedContainer.decode(String.self)
+            self = .renaming(albumId: albumId, title: title)
+
+        case .deletion:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .deletion)
+            let albumId = try nestedContainer.decode(Album.Identity.self)
+            let title = try nestedContainer.decode(String.self)
+            self = .deletion(albumId: albumId, title: title)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .error(message):
+            try container.encode(message, forKey: .error)
+
+        case .addition:
+            try container.encode(true, forKey: .addition)
+
+        case let .renaming(albumId: albumId, title: title):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .renaming)
+            try nestedContainer.encode(albumId)
+            try nestedContainer.encode(title)
+
+        case let .deletion(albumId: albumId, title: title):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .deletion)
+            try nestedContainer.encode(albumId)
+            try nestedContainer.encode(title)
+        }
     }
 }
