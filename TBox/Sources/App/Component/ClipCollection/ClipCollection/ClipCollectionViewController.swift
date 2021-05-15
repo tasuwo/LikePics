@@ -140,6 +140,9 @@ extension ClipCollectionViewController {
 extension ClipCollectionViewController {
     private func bind(to store: Store) {
         store.state
+            .filter { !$0.clips.isEmpty() }
+            .removeDuplicates(by: \.clips)
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
             .receive(on: clipsUpdateQueue)
             .removeDuplicates(by: { $0.clips.filteredOrderedValues() == $1.clips.filteredOrderedValues() })
             .sink { [weak self] state in
@@ -189,6 +192,7 @@ extension ClipCollectionViewController {
 
         store.state
             .removeDuplicates(by: \.clips._selectedIds)
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
             .receive(on: selectionQueue)
             .sink { [weak self] state in self?.applySelections(for: state) }
             .store(in: &subscriptions)

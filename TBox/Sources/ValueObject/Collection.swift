@@ -69,6 +69,10 @@ extension Collection {
 // MARK: - Read
 
 extension Collection {
+    func isEmpty() -> Bool {
+        return _filteredIds.isEmpty
+    }
+
     func value(having id: Value.Identity) -> Value? {
         return _values[id]?.value
     }
