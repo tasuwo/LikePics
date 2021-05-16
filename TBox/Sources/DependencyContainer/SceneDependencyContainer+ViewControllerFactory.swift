@@ -13,9 +13,14 @@ import UIKit
 extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeTopClipCollectionViewController() -> UIViewController? {
-        let state = ClipCollectionViewRootState(source: .all,
-                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+    func makeTopClipCollectionViewController(_ state: ClipCollectionViewRootState?) -> UIViewController? {
+        let state: ClipCollectionViewRootState = {
+            if let state = state {
+                return state
+            } else {
+                return .init(source: .all, isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+            }
+        }()
         let viewController = ClipCollectionViewController(state: state,
                                                           dependency: self,
                                                           thumbnailLoader: container.clipThumbnailLoader,

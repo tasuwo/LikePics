@@ -96,7 +96,7 @@ extension SceneRootTabBarController {
 
 extension SceneRootTabBarController {
     private func configureTabBar() {
-        guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController() else {
+        guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController(intent?.clipCollectionViewRootState) else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipCollectionView."))
             return
         }
@@ -154,6 +154,9 @@ extension SceneRootTabBarController {
         ]
 
         switch self.intent {
+        case .seeHome:
+            selectedIndex = 0
+
         case .seeAlbumList:
             selectedIndex = 3
 

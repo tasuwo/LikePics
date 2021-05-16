@@ -139,6 +139,21 @@ extension ClipCollectionViewController {
             .removeDuplicates(by: RootState.navigationBarConverter.hasEqualChild(_:_:))
             .sink { [weak self] _ in self?.navigationBarController.store.execute(.stateChanged) }
             .store(in: &subscriptions)
+
+        store.state
+            .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
+            .sink { [weak self] state in self?.updateUserActivity(state) }
+            .store(in: &subscriptions)
+    }
+
+    private func updateUserActivity(_ state: ClipCollectionViewRootState) {
+        switch state.clipCollectionState.source {
+        case .all:
+            view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeHome(state))
+
+        default:
+            break
+        }
     }
 }
 

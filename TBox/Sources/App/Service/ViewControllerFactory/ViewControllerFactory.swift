@@ -8,7 +8,7 @@ import TBoxUIKit
 import UIKit
 
 protocol ViewControllerFactory {
-    func makeTopClipCollectionViewController() -> UIViewController?
+    func makeTopClipCollectionViewController(_ state: ClipCollectionViewRootState?) -> UIViewController?
     func makeTagCollectionViewController() -> UIViewController?
     func makeAlbumListViewController(_ state: AlbumListViewState?) -> UIViewController?
     func makeSearchViewController() -> UIViewController?

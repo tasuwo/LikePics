@@ -85,7 +85,7 @@ extension SceneRoot {
             switch self {
             case .top:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeTopClipCollectionViewController() else {
+                guard let vc = factory.makeTopClipCollectionViewController(intent?.clipCollectionViewRootState) else {
                     fatalError("Unable to initialize TopClipCollectionView.")
                 }
                 viewController = vc
