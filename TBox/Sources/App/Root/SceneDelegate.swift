@@ -24,7 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
-                                                cloudAvailabilityService: delegate.cloudAvailabilityService)
+                                                cloudAvailabilityService: delegate.cloudAvailabilityService,
+                                                intent: session.stateRestorationActivity?.intent)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
         let window = UIWindow(windowScene: windowScene)
@@ -40,12 +41,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UISwitch.appearance().onTintColor = Asset.Color.likePicsSwitchClient.color
         self.window?.tintColor = Asset.Color.likePicsRedClient.color
     }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        window?.windowScene?.userActivity?.resignCurrent()
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        window?.windowScene?.userActivity?.becomeCurrent()
+    }
 }
 
 extension SceneDelegate: MainAppLauncher {
     // MARK: - MainAppLauncher
 
-    func launch() {
+    func launch(_ intent: Intent?) {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
         delegate.singleton
@@ -59,10 +68,12 @@ extension SceneDelegate: MainAppLauncher {
                 if UIDevice.current.userInterfaceIdiom == .pad {
                     rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
                                                                       clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                      intent: intent,
                                                                       logger: singleton.container.logger)
                 } else {
                     rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
                                                                    clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                   intent: intent,
                                                                    logger: singleton.container.logger)
                 }
 

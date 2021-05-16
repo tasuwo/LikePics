@@ -80,7 +80,7 @@ extension SceneRoot {
             }
         }
 
-        func makeViewController(by factory: ViewControllerFactory) -> UIViewController {
+        func makeViewController(by factory: ViewControllerFactory, intent: Intent?) -> UIViewController {
             let viewController: UIViewController
             switch self {
             case .top:
@@ -112,7 +112,7 @@ extension SceneRoot {
                 viewController = vc
 
             case .setting:
-                viewController = factory.makeSettingsViewController()
+                viewController = factory.makeSettingsViewController(intent?.settingsViewState)
             }
 
             viewController.tabBarItem = tabBarItem

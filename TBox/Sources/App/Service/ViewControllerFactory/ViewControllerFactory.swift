@@ -12,6 +12,6 @@ protocol ViewControllerFactory {
     func makeTagCollectionViewController() -> UIViewController?
     func makeAlbumListViewController() -> UIViewController?
     func makeSearchViewController() -> UIViewController?
-    func makeSettingsViewController() -> UIViewController
+    func makeSettingsViewController(_ state: SettingsViewState?) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

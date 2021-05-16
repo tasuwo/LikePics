@@ -58,27 +58,30 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: Privates
 
+    private let intent: Intent?
     private let logger: Loggable
 
     // MARK: - Initializers
 
     init(factory: Factory,
          clipsIntegrityValidatorStore: Store,
+         intent: Intent?,
          logger: Loggable)
     {
         self.factory = factory
         self.clipsIntegrityValidatorStore = clipsIntegrityValidatorStore
+        self.intent = intent
         self.logger = logger
 
         self.sideBarController = SceneRootSideBarController()
 
         self.compactRootViewController = UITabBarController()
 
-        self.detailTopClipListViewController = SceneRoot.TabBarItem.top.makeViewController(by: factory)
-        self.detailSearchViewController = SceneRoot.TabBarItem.search.makeViewController(by: factory)
-        self.detailTagListViewController = SceneRoot.TabBarItem.tags.makeViewController(by: factory)
-        self.detailAlbumListViewController = SceneRoot.TabBarItem.albums.makeViewController(by: factory)
-        self.detailSettingViewController = SceneRoot.TabBarItem.setting.makeViewController(by: factory)
+        self.detailTopClipListViewController = SceneRoot.TabBarItem.top.makeViewController(by: factory, intent: intent)
+        self.detailSearchViewController = SceneRoot.TabBarItem.search.makeViewController(by: factory, intent: intent)
+        self.detailTagListViewController = SceneRoot.TabBarItem.tags.makeViewController(by: factory, intent: intent)
+        self.detailAlbumListViewController = SceneRoot.TabBarItem.albums.makeViewController(by: factory, intent: intent)
+        self.detailSettingViewController = SceneRoot.TabBarItem.setting.makeViewController(by: factory, intent: intent)
 
         super.init(style: .doubleColumn)
 

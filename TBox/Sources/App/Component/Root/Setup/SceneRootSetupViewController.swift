@@ -6,7 +6,7 @@ import Domain
 import UIKit
 
 protocol MainAppLauncher: AnyObject {
-    func launch()
+    func launch(_ intent: Intent?)
 }
 
 class SceneRootSetupViewController: UIViewController {
@@ -68,9 +68,9 @@ extension SceneRootSetupViewController: SceneRootSetupViewProtocol {
         }
     }
 
-    func launchLikePics() {
+    func launchLikePics(_ intent: Intent?) {
         DispatchQueue.main.async {
-            self.launcher?.launch()
+            self.launcher?.launch(intent)
         }
     }
 

@@ -31,15 +31,18 @@ class SceneRootTabBarController: UITabBarController {
     // MARK: Privates
 
     private let logger: Loggable
+    private let intent: Intent?
 
     // MARK: - Initializers
 
     init(factory: Factory,
          clipsIntegrityValidatorStore: Store,
+         intent: Intent?,
          logger: Loggable)
     {
         self.factory = factory
         self.clipsIntegrityValidatorStore = clipsIntegrityValidatorStore
+        self.intent = intent
         self.logger = logger
         super.init(nibName: nil, bundle: nil)
     }
@@ -113,7 +116,7 @@ extension SceneRootTabBarController {
             return
         }
 
-        let settingsViewController = self.factory.makeSettingsViewController()
+        let settingsViewController = self.factory.makeSettingsViewController(intent?.settingsViewState)
 
         self.tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
 
@@ -149,6 +152,14 @@ extension SceneRootTabBarController {
             albumListViewController,
             settingsViewController
         ]
+
+        switch self.intent {
+        case .seeSetting:
+            selectedIndex = 4
+
+        default:
+            break
+        }
     }
 }
 

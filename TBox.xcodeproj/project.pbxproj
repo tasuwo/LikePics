@@ -112,7 +112,10 @@
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
+		2CFF0EBF264FCC8900FA79D7 /* Intent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF0EBE264FCC8900FA79D7 /* Intent.swift */; };
+		2CFF0EC1264FCF3300FA79D7 /* SceneDelegate+StateRestoration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF0EC0264FCF3300FA79D7 /* SceneDelegate+StateRestoration.swift */; };
 		2CFF0EC7264FEA1800FA79D7 /* CloudAvailabilitySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF0EC6264FEA1800FA79D7 /* CloudAvailabilitySpec.swift */; };
+		2CFF0EC9264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF0EC8264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
 		2DA2C85D73CD0DB1DEE4A61C /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12868618839F88636C1E5081 /* Store.swift */; };
@@ -1071,12 +1074,15 @@
 		272B2A69BEBB097D96AFD08C /* ClipsIntegrityValidatorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorAction.swift; sourceTree = "<group>"; };
 		272C32D585E8121EFF79DAD5 /* HasClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		27B82A976AFED982222939E4 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
-		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = TBox.app; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AAC5BC9C185604B92D45004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C0378221C7F286374C5C512 /* TemporaryClipCommandServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipCommandServiceProtocol.swift; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
+		2CFF0EBE264FCC8900FA79D7 /* Intent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intent.swift; sourceTree = "<group>"; };
+		2CFF0EC0264FCF3300FA79D7 /* SceneDelegate+StateRestoration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+StateRestoration.swift"; sourceTree = "<group>"; };
 		2CFF0EC6264FEA1800FA79D7 /* CloudAvailabilitySpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilitySpec.swift; sourceTree = "<group>"; };
+		2CFF0EC8264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSUserActivity+initWithIntent.swift"; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -2184,6 +2190,15 @@
 				03C1C478F77D40A203EAF7E2 /* TagSelectionViewModel.swift */,
 			);
 			path = TagSelection;
+			sourceTree = "<group>";
+		};
+		2CFF0EBD264FCC1700FA79D7 /* Intent */ = {
+			isa = PBXGroup;
+			children = (
+				2CFF0EBE264FCC8900FA79D7 /* Intent.swift */,
+				2CFF0EC8264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift */,
+			);
+			path = Intent;
 			sourceTree = "<group>";
 		};
 		2CFF0EC4264FEA0400FA79D7 /* ValueObject */ = {
@@ -3482,6 +3497,7 @@
 			children = (
 				FE08B1DD4D3AE192871B1B23 /* Component */,
 				DE20476792A7711707FD5C39 /* Dependency */,
+				2CFF0EBD264FCC1700FA79D7 /* Intent */,
 				E01BDD9DAD164E659E21F2DF /* Root */,
 				65B496FB6D8D230A02D7929E /* Service */,
 			);
@@ -3924,6 +3940,7 @@
 			children = (
 				B65E867B2F49345CFE82700C /* AppDelegate.swift */,
 				9A839A575315F4B3DE860533 /* SceneDelegate.swift */,
+				2CFF0EC0264FCF3300FA79D7 /* SceneDelegate+StateRestoration.swift */,
 				A911D5FE128FF9B0151B218D /* ClipsIntegrityValidator */,
 			);
 			path = Root;
@@ -5179,6 +5196,7 @@
 				0107B38A8A32FF4D4FAE3581 /* AlbumListViewReducer.swift in Sources */,
 				4CED9547D785976DF71D08B7 /* AlbumListViewState.swift in Sources */,
 				FCEC7EC4073BEF150965494E /* AlbumSelectionModalAction.swift in Sources */,
+				2CFF0EBF264FCC8900FA79D7 /* Intent.swift in Sources */,
 				13D3C72EA890558843B67140 /* AlbumSelectionModalController.swift in Sources */,
 				9364B4F696040A0B02438461 /* AlbumSelectionModalLayout.swift in Sources */,
 				57D0BEAD9FA16B837F6418E4 /* AlbumSelectionModalReducer.swift in Sources */,
@@ -5280,6 +5298,7 @@
 				4826AA7CA58EA98BB6AD9FCA /* HasIntegrityValidationService.swift in Sources */,
 				B0FDF06F80C0013562E04091 /* HasPasteboard.swift in Sources */,
 				F1386C75CF0C4FC5062C2C93 /* HasPreviewLoader.swift in Sources */,
+				2CFF0EC9264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift in Sources */,
 				4912A33826EB693866A3D9B9 /* HasRouter.swift in Sources */,
 				7E4561984824DFC5ECBA6F96 /* HasTagSelectionModalSubscription.swift in Sources */,
 				80156D4149D90337F4617789 /* HasTemporariesPersistService.swift in Sources */,
@@ -5313,6 +5332,7 @@
 				B1DB3DF30765B756CD723CA5 /* SceneRoot_SideBarItem.swift in Sources */,
 				2559FBF0EAE408BFD121BE6A /* SceneRoot_TabBarItem.swift in Sources */,
 				A2E87E4DE95AB184E42C8CC2 /* SearchEntryViewAction.swift in Sources */,
+				2CFF0EC1264FCF3300FA79D7 /* SceneDelegate+StateRestoration.swift in Sources */,
 				CB6AB2BFF0E2119F8415FD16 /* SearchEntryViewController.swift in Sources */,
 				B88BA889914BF869EE20037D /* SearchEntryViewLayout.swift in Sources */,
 				24E89CA28CDFB473774CA4D7 /* SearchEntryViewReducer.swift in Sources */,

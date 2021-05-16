@@ -8,7 +8,7 @@ import Domain
 protocol SceneRootSetupViewProtocol: AnyObject {
     func startLoading()
     func endLoading()
-    func launchLikePics()
+    func launchLikePics(_ intent: Intent?)
     func confirmAccountChanged()
     func confirmUnavailable()
 }
@@ -16,16 +16,19 @@ protocol SceneRootSetupViewProtocol: AnyObject {
 class SceneRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
     private let cloudAvailabilityService: CloudAvailabilityService
+    private let intent: Intent?
 
     weak var view: SceneRootSetupViewProtocol?
 
     // MARK: - Lifecycle
 
     init(userSettingsStorage: UserSettingsStorageProtocol,
-         cloudAvailabilityService: CloudAvailabilityService)
+         cloudAvailabilityService: CloudAvailabilityService,
+         intent: Intent?)
     {
         self.userSettingsStorage = userSettingsStorage
         self.cloudAvailabilityService = cloudAvailabilityService
+        self.intent = intent
     }
 
     func checkCloudAvailability() {
@@ -42,7 +45,7 @@ class SceneRootSetupPresenter {
 
                 switch (enabledICloudSync, availability) {
                 case (true, .success(.available(.none))):
-                    self.view?.launchLikePics()
+                    self.view?.launchLikePics(self.intent)
 
                 case (true, .success(.available(.accountChanged))):
                     self.view?.confirmAccountChanged()
@@ -55,17 +58,17 @@ class SceneRootSetupPresenter {
                     self.view?.confirmUnavailable()
 
                 case (false, _):
-                    self.view?.launchLikePics()
+                    self.view?.launchLikePics(self.intent)
                 }
             }
         }
     }
 
     func didConfirmAccountChanged() {
-        self.view?.launchLikePics()
+        self.view?.launchLikePics(intent)
     }
 
     func didConfirmUnavailable() {
-        self.view?.launchLikePics()
+        self.view?.launchLikePics(intent)
     }
 }

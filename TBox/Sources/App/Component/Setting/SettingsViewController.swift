@@ -77,6 +77,11 @@ extension SettingsViewController {
                 self?.presentAlertIfNeeded(alert)
             }
             .store(in: &subscriptions)
+
+        store.state
+            .debounce(for: 3, scheduler: RunLoop.main)
+            .sink { [weak self] state in self?.updateUserActivity(state) }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(_ alert: SettingsViewState.Alert?) {
@@ -138,5 +143,9 @@ extension SettingsViewController {
         alertController.addAction(okAction)
         alertController.addAction(turnOnAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func updateUserActivity(_ state: SettingsViewState) {
+        view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeSetting(state))
     }
 }

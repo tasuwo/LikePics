@@ -73,15 +73,21 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSettingsViewController() -> UIViewController {
+    func makeSettingsViewController(_ state: SettingsViewState?) -> UIViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
 
-        let state = SettingsViewState(cloudAvailability: nil,
-                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
-                                      isICloudSyncEnabled: container._userSettingStorage.readEnabledICloudSync())
+        let state: SettingsViewState = {
+            if let state = state {
+                return state
+            } else {
+                return SettingsViewState(cloudAvailability: nil,
+                                         isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
+                                         isICloudSyncEnabled: container._userSettingStorage.readEnabledICloudSync())
+            }
+        }()
         let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer())
         viewController.store = store
 
