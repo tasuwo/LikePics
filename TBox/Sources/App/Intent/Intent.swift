@@ -4,11 +4,17 @@
 
 enum Intent {
     case seeSetting(SettingsViewState)
+    case seeAlbumList(AlbumListViewState)
 }
 
 extension Intent {
     var settingsViewState: SettingsViewState? {
         guard case let .seeSetting(state) = self else { return nil }
+        return state
+    }
+
+    var albumLitViewState: AlbumListViewState? {
+        guard case let .seeAlbumList(state) = self else { return nil }
         return state
     }
 }
@@ -18,6 +24,7 @@ extension Intent: Codable {
 
     enum CodingKeys: CodingKey {
         case seeSetting
+        case seeAlbumList
     }
 
     public init(from decoder: Decoder) throws {
@@ -28,6 +35,10 @@ extension Intent: Codable {
         case .seeSetting:
             let state = try container.decode(SettingsViewState.self, forKey: .seeSetting)
             self = .seeSetting(state)
+
+        case .seeAlbumList:
+            let state = try container.decode(AlbumListViewState.self, forKey: .seeAlbumList)
+            self = .seeAlbumList(state)
 
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
@@ -40,6 +51,9 @@ extension Intent: Codable {
         switch self {
         case let .seeSetting(state):
             try container.encode(state, forKey: .seeSetting)
+
+        case let .seeAlbumList(state):
+            try container.encode(state, forKey: .seeAlbumList)
         }
     }
 }

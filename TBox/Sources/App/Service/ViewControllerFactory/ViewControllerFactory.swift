@@ -10,7 +10,7 @@ import UIKit
 protocol ViewControllerFactory {
     func makeTopClipCollectionViewController() -> UIViewController?
     func makeTagCollectionViewController() -> UIViewController?
-    func makeAlbumListViewController() -> UIViewController?
+    func makeAlbumListViewController(_ state: AlbumListViewState?) -> UIViewController?
     func makeSearchViewController() -> UIViewController?
     func makeSettingsViewController(_ state: SettingsViewState?) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?

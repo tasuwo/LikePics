@@ -106,7 +106,7 @@ extension SceneRootTabBarController {
             return
         }
 
-        guard let albumListViewController = self.factory.makeAlbumListViewController() else {
+        guard let albumListViewController = self.factory.makeAlbumListViewController(intent?.albumLitViewState) else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize AlbumListViewController."))
             return
         }
@@ -154,6 +154,9 @@ extension SceneRootTabBarController {
         ]
 
         switch self.intent {
+        case .seeAlbumList:
+            selectedIndex = 3
+
         case .seeSetting:
             selectedIndex = 4
 

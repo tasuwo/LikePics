@@ -42,8 +42,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAlbumListViewController() -> UIViewController? {
-        let state = AlbumListViewState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+    func makeAlbumListViewController(_ state: AlbumListViewState?) -> UIViewController? {
+        let state: AlbumListViewState = {
+            if let state = state {
+                return state
+            } else {
+                return .init(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+            }
+        }()
         let addAlbumAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                     message: L10n.albumListViewAlertForAddMessage,
                                                     placeholder: L10n.placeholderAlbumName)

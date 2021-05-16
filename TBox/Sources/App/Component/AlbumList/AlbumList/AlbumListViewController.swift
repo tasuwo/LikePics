@@ -135,6 +135,11 @@ extension AlbumListViewController {
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
+
+        store.state
+            .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
+            .sink { [weak self] state in self?.updateUserActivity(state) }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for state: AlbumListViewState) {
@@ -191,6 +196,10 @@ extension AlbumListViewController {
         alert.popoverPresentationController?.sourceRect = cell.frame
 
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func updateUserActivity(_ state: AlbumListViewState) {
+        view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeAlbumList(state))
     }
 }
 

@@ -106,7 +106,7 @@ extension SceneRoot {
 
             case .albums:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeAlbumListViewController() else {
+                guard let vc = factory.makeAlbumListViewController(intent?.albumLitViewState) else {
                     fatalError("Unable to initialize AlbumListViewController.")
                 }
                 viewController = vc
