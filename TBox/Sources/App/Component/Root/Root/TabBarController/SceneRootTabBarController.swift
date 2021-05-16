@@ -68,7 +68,7 @@ class SceneRootTabBarController: UITabBarController {
 extension SceneRootTabBarController {
     private func bind(to store: Store) {
         store.state
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
+            .debounce(for: 1, scheduler: DispatchQueue.main)
             .bind(\.state.isLoading) { [weak self] isLoading in
                 if isLoading {
                     self?.addLoadingView()
