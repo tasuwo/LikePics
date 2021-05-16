@@ -45,3 +45,67 @@ extension TagCollectionViewState {
         isEmptyMessageViewHidden ? 0 : 1
     }
 }
+
+// MARK: - Codable
+
+extension TagCollectionViewState: Codable {}
+
+extension TagCollectionViewState.Alert: Codable {
+    enum CodingKeys: CodingKey {
+        case error
+        case addition
+        case edit
+        case deletion
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .error:
+            let message = try container.decodeIfPresent(String.self, forKey: .deletion)
+            self = .error(message)
+
+        case .addition:
+            self = .addition
+
+        case .edit:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .edit)
+            let tagId = try nestedContainer.decode(Tag.Identity.self)
+            let name = try nestedContainer.decode(String.self)
+            self = .edit(tagId: tagId, name: name)
+
+        case .deletion:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .deletion)
+            let tagId = try nestedContainer.decode(Tag.Identity.self)
+            let tagName = try nestedContainer.decode(String.self)
+            self = .deletion(tagId: tagId, tagName: tagName)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .error(message):
+            try container.encode(message, forKey: .error)
+
+        case .addition:
+            try container.encode(true, forKey: .addition)
+
+        case let .edit(tagId: tagId, name: name):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .edit)
+            try nestedContainer.encode(tagId)
+            try nestedContainer.encode(name)
+
+        case let .deletion(tagId: tagId, tagName: tagName):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .deletion)
+            try nestedContainer.encode(tagId)
+            try nestedContainer.encode(tagName)
+        }
+    }
+}
