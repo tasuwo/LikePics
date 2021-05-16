@@ -29,8 +29,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeTagCollectionViewController() -> UIViewController? {
-        let state = TagCollectionViewState(isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems())
+    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> UIViewController? {
+        let state: TagCollectionViewState = {
+            if let state = state {
+                return state
+            } else {
+                return .init(isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems())
+            }
+        }()
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)

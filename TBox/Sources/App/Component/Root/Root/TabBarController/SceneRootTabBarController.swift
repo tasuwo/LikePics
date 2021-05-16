@@ -101,7 +101,7 @@ extension SceneRootTabBarController {
             return
         }
 
-        guard let tagListViewController = self.factory.makeTagCollectionViewController() else {
+        guard let tagListViewController = self.factory.makeTagCollectionViewController(intent?.tagCollectionViewState) else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TagListViewController."))
             return
         }
@@ -156,6 +156,9 @@ extension SceneRootTabBarController {
         switch self.intent {
         case .seeHome:
             selectedIndex = 0
+
+        case .seeTagCollection:
+            selectedIndex = 2
 
         case .seeAlbumList:
             selectedIndex = 3

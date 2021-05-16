@@ -99,7 +99,7 @@ extension SceneRoot {
 
             case .tags:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeTagCollectionViewController() else {
+                guard let vc = factory.makeTagCollectionViewController(intent?.tagCollectionViewState) else {
                     fatalError("Unable to initialize TagListViewController.")
                 }
                 viewController = vc

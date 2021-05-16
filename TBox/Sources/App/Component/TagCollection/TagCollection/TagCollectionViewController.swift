@@ -108,6 +108,11 @@ extension TagCollectionViewController {
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
+
+        store.state
+            .debounce(for: 3, scheduler: RunLoop.main)
+            .sink { [weak self] state in self?.updateUserActivity(state) }
+            .store(in: &subscriptions)
     }
 
     private func applySnapshot(for state: TagCollectionViewState) {
@@ -171,6 +176,10 @@ extension TagCollectionViewController {
         alert.popoverPresentationController?.sourceRect = cell.frame
 
         present(alert, animated: true, completion: nil)
+    }
+
+    private func updateUserActivity(_ state: TagCollectionViewState) {
+        view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeTagCollection(state))
     }
 }
 

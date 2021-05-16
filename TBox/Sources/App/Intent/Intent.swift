@@ -6,6 +6,7 @@ enum Intent {
     case seeHome(ClipCollectionViewRootState)
     case seeSetting(SettingsViewState)
     case seeAlbumList(AlbumListViewState)
+    case seeTagCollection(TagCollectionViewState)
 }
 
 extension Intent {
@@ -23,6 +24,11 @@ extension Intent {
         guard case let .seeAlbumList(state) = self else { return nil }
         return state
     }
+
+    var tagCollectionViewState: TagCollectionViewState? {
+        guard case let .seeTagCollection(state) = self else { return nil }
+        return state
+    }
 }
 
 extension Intent: Codable {
@@ -32,6 +38,7 @@ extension Intent: Codable {
         case seeHome
         case seeSetting
         case seeAlbumList
+        case seeTagCollection
     }
 
     public init(from decoder: Decoder) throws {
@@ -51,6 +58,10 @@ extension Intent: Codable {
             let state = try container.decode(AlbumListViewState.self, forKey: .seeAlbumList)
             self = .seeAlbumList(state)
 
+        case .seeTagCollection:
+            let state = try container.decode(TagCollectionViewState.self, forKey: .seeTagCollection)
+            self = .seeTagCollection(state)
+
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
         }
@@ -68,6 +79,9 @@ extension Intent: Codable {
 
         case let .seeAlbumList(state):
             try container.encode(state, forKey: .seeAlbumList)
+
+        case let .seeTagCollection(state):
+            try container.encode(state, forKey: .seeTagCollection)
         }
     }
 }
