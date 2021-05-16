@@ -29,8 +29,8 @@ struct ClipPreviewPageBarReducer: Reducer {
         switch action {
         // MARK: View Life-Cycle
 
-        case let .sizeClassChanged(sizeClass):
-            nextState.verticalSizeClass = sizeClass
+        case let .sizeClassChanged(isVerticalSizeClassCompact: isVerticalSizeClassCompact):
+            nextState.isVerticalSizeClassCompact = isVerticalSizeClassCompact
             nextState = nextState.updatingAppearance()
             return (nextState, [eventEffect])
 
@@ -127,7 +127,7 @@ private extension ClipPreviewPageBarState {
             return nextState.parentState.items[index].url != nil
         }()
 
-        nextState.isToolBarHidden = verticalSizeClass == .compact
+        nextState.isToolBarHidden = isVerticalSizeClassCompact
         nextState.isNavigationBarHidden = false
 
         if nextState.isToolBarHidden {

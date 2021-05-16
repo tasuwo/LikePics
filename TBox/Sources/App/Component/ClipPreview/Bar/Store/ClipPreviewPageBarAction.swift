@@ -7,7 +7,7 @@ import UIKit
 enum ClipPreviewPageBarAction: Action {
     // MARK: View Life-Cycle
 
-    case sizeClassChanged(UIUserInterfaceSizeClass)
+    case sizeClassChanged(isVerticalSizeClassCompact: Bool)
 
     // MARK: State Observation
 

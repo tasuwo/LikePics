@@ -47,7 +47,7 @@ class ClipPreviewPageBarController {
     // MARK: - View Life-Cycle Methods
 
     func traitCollectionDidChange(to traitCollection: UITraitCollection) {
-        store.execute(.sizeClassChanged(traitCollection.verticalSizeClass))
+        store.execute(.sizeClassChanged(isVerticalSizeClassCompact: traitCollection.verticalSizeClass == .compact))
     }
 
     func viewDidAppear() {

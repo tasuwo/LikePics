@@ -3,7 +3,6 @@
 //
 
 import Domain
-import UIKit
 
 struct ClipPreviewPageBarState: Equatable {
     enum Alert: Equatable {
@@ -29,7 +28,7 @@ struct ClipPreviewPageBarState: Equatable {
     }
 
     var parentState: ClipPreviewPageViewState
-    var verticalSizeClass: UIUserInterfaceSizeClass
+    var isVerticalSizeClassCompact: Bool
 
     var leftBarButtonItems: [Item]
     var rightBarButtonItems: [Item]
@@ -45,7 +44,7 @@ struct ClipPreviewPageBarState: Equatable {
 extension ClipPreviewPageBarState {
     init(parentState: ClipPreviewPageViewState) {
         self.parentState = parentState
-        verticalSizeClass = .unspecified
+        isVerticalSizeClassCompact = true
         leftBarButtonItems = []
         rightBarButtonItems = []
         toolBarItems = []
