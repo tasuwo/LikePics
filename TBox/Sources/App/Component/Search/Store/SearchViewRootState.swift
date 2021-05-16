@@ -33,3 +33,7 @@ extension SearchViewRootState {
         return nextParent
     }
 }
+
+// MARK: - Codable
+
+extension SearchViewRootState: Codable {}

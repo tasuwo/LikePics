@@ -5,8 +5,8 @@
 import Domain
 
 struct SearchEntryViewState: Equatable {
-    enum Alert: Equatable {
-        case removeAll
+    enum Alert: String, Equatable {
+        case removeAll = "remove_all"
     }
 
     var searchHistories: [ClipSearchHistory]
@@ -23,3 +23,9 @@ extension SearchEntryViewState {
         alert = nil
     }
 }
+
+// MARK: - Codable
+
+extension SearchEntryViewState: Codable {}
+
+extension SearchEntryViewState.Alert: Codable {}

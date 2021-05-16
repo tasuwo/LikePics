@@ -97,3 +97,11 @@ extension SearchResultViewState {
         return L10n.searchResultNotFoundMessage(searchQuery.displayTitle)
     }
 }
+
+// MARK: - Codable
+
+extension SearchResultViewState: Codable {}
+
+extension SearchResultViewState.SearchedTokenCandidates: Codable {}
+
+extension SearchResultViewState.SearchedClips: Codable {}
