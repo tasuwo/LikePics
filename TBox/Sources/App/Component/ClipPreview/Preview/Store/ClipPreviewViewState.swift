@@ -7,9 +7,9 @@ import TBoxUIKit
 import UIKit
 
 struct ClipPreviewViewState: Equatable {
-    var itemId: ClipItem.Identity
-    var imageId: ImageContainer.Identity
-    var imageSize: CGSize
+    let itemId: ClipItem.Identity
+    let imageId: ImageContainer.Identity
+    let imageSize: CGSize
 
     var source: ClipPreviewView.Source?
 
