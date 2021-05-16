@@ -10,6 +10,12 @@ struct SearchViewRootState: Equatable {
 }
 
 extension SearchViewRootState {
+    var shouldShowResultsView: Bool {
+        resultState.inputtedText.isEmpty == false || resultState.inputtedTokens.isEmpty == false
+    }
+}
+
+extension SearchViewRootState {
     init(isSomeItemsHidden: Bool) {
         entryState = .init(isSomeItemsHidden: isSomeItemsHidden)
         resultState = .init(isSomeItemsHidden: isSomeItemsHidden)

@@ -4,6 +4,7 @@
 
 enum Intent {
     case seeHome(ClipCollectionViewRootState)
+    case seeSearch(SearchViewRootState)
     case seeSetting(SettingsViewState)
     case seeAlbumList(AlbumListViewState)
     case seeTagCollection(TagCollectionViewState)
@@ -12,6 +13,11 @@ enum Intent {
 extension Intent {
     var clipCollectionViewRootState: ClipCollectionViewRootState? {
         guard case let .seeHome(state) = self else { return nil }
+        return state
+    }
+
+    var searchViewState: SearchViewRootState? {
+        guard case let .seeSearch(state) = self else { return nil }
         return state
     }
 
@@ -36,6 +42,7 @@ extension Intent: Codable {
 
     enum CodingKeys: CodingKey {
         case seeHome
+        case seeSearch
         case seeSetting
         case seeAlbumList
         case seeTagCollection
@@ -49,6 +56,10 @@ extension Intent: Codable {
         case .seeHome:
             let state = try container.decode(ClipCollectionViewRootState.self, forKey: .seeHome)
             self = .seeHome(state)
+
+        case .seeSearch:
+            let state = try container.decode(SearchViewRootState.self, forKey: .seeSearch)
+            self = .seeSearch(state)
 
         case .seeSetting:
             let state = try container.decode(SettingsViewState.self, forKey: .seeSetting)
@@ -73,6 +84,9 @@ extension Intent: Codable {
         switch self {
         case let .seeHome(state):
             try container.encode(state, forKey: .seeHome)
+
+        case let .seeSearch(state):
+            try container.encode(state, forKey: .seeSearch)
 
         case let .seeSetting(state):
             try container.encode(state, forKey: .seeSetting)

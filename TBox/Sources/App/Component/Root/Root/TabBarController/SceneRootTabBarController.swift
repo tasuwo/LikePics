@@ -111,7 +111,7 @@ extension SceneRootTabBarController {
             return
         }
 
-        guard let searchEntryViewController = self.factory.makeSearchViewController() else {
+        guard let searchEntryViewController = self.factory.makeSearchViewController(intent?.searchViewState) else {
             self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize SearchEntryViewController."))
             return
         }
@@ -156,6 +156,9 @@ extension SceneRootTabBarController {
         switch self.intent {
         case .seeHome:
             selectedIndex = 0
+
+        case .seeSearch:
+            selectedIndex = 1
 
         case .seeTagCollection:
             selectedIndex = 2

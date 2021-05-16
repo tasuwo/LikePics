@@ -179,6 +179,10 @@ extension SearchResultViewController {
     }
 
     private func configureSearchController() {
+        // イベント発火を避けるためにdelegate設定前にリストアする必要がある
+        searchController.searchBar.text = store.stateValue.inputtedText
+        searchController.searchBar.searchTextField.tokens = store.stateValue.inputtedTokens.map { $0.uiSearchToken }
+
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
     }

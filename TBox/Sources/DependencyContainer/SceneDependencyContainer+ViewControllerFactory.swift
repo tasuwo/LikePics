@@ -78,8 +78,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSearchViewController() -> UIViewController? {
-        let state = SearchViewRootState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+    func makeSearchViewController(_ state: SearchViewRootState?) -> UIViewController? {
+        let state: SearchViewRootState = {
+            if let state = state {
+                return state
+            } else {
+                return .init(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+            }
+        }()
         let rootStore = Store(initialState: state, dependency: self as SearchViewRootDependency, reducer: searchViewRootReducer)
 
         let entryStore: SearchEntryViewController.Store = rootStore

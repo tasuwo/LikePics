@@ -92,7 +92,7 @@ extension SceneRoot {
 
             case .search:
                 // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeSearchViewController() else {
+                guard let vc = factory.makeSearchViewController(intent?.searchViewState) else {
                     fatalError("Unable to initialize SearchEntryViewController.")
                 }
                 viewController = vc

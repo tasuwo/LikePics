@@ -63,13 +63,36 @@ class SearchEntryViewController: UIViewController {
         configureDataSource()
         configureSearchController()
 
+        bind(to: rootStore)
         bind(to: store)
 
         store.execute(.viewDidLoad)
     }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        // リストア時には自動でアクティブにならないため、手動でアクティブにする
+        if rootStore.stateValue.shouldShowResultsView {
+            searchController.isActive = true
+        }
+    }
 }
 
 // MARK: - Bind
+
+extension SearchEntryViewController {
+    private func bind(to store: RootStore) {
+        store.state
+            .debounce(for: 3, scheduler: RunLoop.main)
+            .sink { [weak self] state in self?.updateUserActivity(state) }
+            .store(in: &subscriptions)
+    }
+
+    private func updateUserActivity(_ state: SearchViewRootState) {
+        view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeSearch(state))
+    }
+}
 
 extension SearchEntryViewController {
     private func bind(to store: Store) {
