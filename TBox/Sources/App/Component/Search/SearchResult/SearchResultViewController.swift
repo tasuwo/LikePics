@@ -10,7 +10,7 @@ import UIKit
 
 class SearchResultViewController: UIViewController {
     typealias Layout = SearchResultViewLayout
-    typealias Store = LikePics.Store<SearchResultViewState, SearchResultViewAction, SearchResultViewDependency>
+    typealias Store = AnyStoring<SearchResultViewState, SearchResultViewAction, SearchResultViewDependency>
 
     // MARK: - Properties
 
@@ -36,12 +36,11 @@ class SearchResultViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: SearchResultViewState,
-         dependency: SearchResultViewDependency,
+    init(store: Store,
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
+        self.store = store
         self.thumbnailLoader = thumbnailLoader
-        self.store = Store(initialState: state, dependency: dependency, reducer: SearchResultViewReducer())
 
         super.init(nibName: nil, bundle: nil)
     }

@@ -7,8 +7,10 @@ import Domain
 import UIKit
 
 class SearchEntryViewController: UIViewController {
+    typealias RootStore = LikePics.Store<SearchViewRootState, SearchViewRootAction, SearchViewRootDependency>
+
     typealias Layout = SearchEntryViewLayout
-    typealias Store = LikePics.Store<SearchEntryViewState, SearchEntryViewAction, SearchEntryViewDependency>
+    typealias Store = AnyStoring<SearchEntryViewState, SearchEntryViewAction, SearchEntryViewDependency>
 
     // MARK: - Properties
 
@@ -21,18 +23,21 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: Store
 
+    private let rootStore: RootStore
+
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.SearchEntryViewController")
 
     // MARK: - Initializers
 
-    init(state: SearchEntryViewState,
-         dependency: SearchEntryViewDependency,
+    init(rootStore: RootStore,
+         store: Store,
          searchResultViewController: SearchResultViewController)
     {
+        self.rootStore = rootStore
+        self.store = store
         resultsController = searchResultViewController
-        self.store = Store(initialState: state, dependency: dependency, reducer: SearchEntryViewReducer())
 
         super.init(nibName: nil, bundle: nil)
     }
