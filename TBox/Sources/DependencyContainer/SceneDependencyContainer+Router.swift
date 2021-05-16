@@ -104,12 +104,8 @@ extension SceneDependencyContainer: Router {
                                     previewLoader: container._previewLoader,
                                     transitionLock: container.transitionLock)
 
-        let state = ClipPreviewPageViewState(clipId: clipId)
-        let barState = ClipPreviewPageBarState(parentState: state)
-        let cacheState = ClipPreviewPageViewCacheState(clipId: clipId, itemId: nil)
+        let state = ClipPreviewPageViewRootState(clipId: clipId)
         let viewController = ClipPreviewPageViewController(state: state,
-                                                           barState: barState,
-                                                           cacheState: cacheState,
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,
                                                            factory: self,

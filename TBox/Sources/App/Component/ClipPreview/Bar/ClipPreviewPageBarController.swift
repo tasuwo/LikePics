@@ -7,7 +7,7 @@ import Domain
 import UIKit
 
 class ClipPreviewPageBarController {
-    typealias Store = LikePics.Store<ClipPreviewPageBarState, ClipPreviewPageBarAction, ClipPreviewPageBarDependency>
+    typealias Store = AnyStoring<ClipPreviewPageBarState, ClipPreviewPageBarAction, ClipPreviewPageBarDependency>
 
     // MARK: - Properties
 
@@ -37,11 +37,11 @@ class ClipPreviewPageBarController {
 
     // MARK: - Initializers
 
-    init(state: ClipPreviewPageBarState,
-         dependency: ClipPreviewPageBarDependency)
+    init(store: Store,
+         imageQueryService: ImageQueryServiceProtocol)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageBarReducer())
-        self.imageQueryService = dependency.imageQueryService
+        self.store = store
+        self.imageQueryService = imageQueryService
     }
 
     // MARK: - View Life-Cycle Methods

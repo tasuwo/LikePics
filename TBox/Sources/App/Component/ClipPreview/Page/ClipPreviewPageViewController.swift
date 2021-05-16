@@ -8,19 +8,13 @@ import TBoxUIKit
 import UIKit
 
 class ClipPreviewPageViewController: UIPageViewController {
-    typealias Store = LikePics.Store<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
-    typealias CacheStore = LikePics.Store<ClipPreviewPageViewCacheState, ClipPreviewPageViewCacheAction, ClipPreviewPageViewCacheDependency>
+    typealias RootState = ClipPreviewPageViewRootState
+    typealias RootAction = ClipPreviewPageViewRootAction
+    typealias RootDependency = ClipPreviewPageViewRootDependency
+    typealias RootStore = LikePics.Store<RootState, RootAction, RootDependency>
 
-    struct BarDependency: ClipPreviewPageBarDependency {
-        weak var clipPreviewPageBarDelegate: ClipPreviewPageBarDelegate?
-        var imageQueryService: ImageQueryServiceProtocol
-        let transitionLock: TransitionLock
-    }
-
-    struct Context {
-        let barState: ClipPreviewPageBarState
-        let dependency: ClipPreviewPageViewDependency & HasImageQueryService
-    }
+    typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
+    typealias CacheStore = AnyStoring<ClipPreviewPageViewCacheState, ClipPreviewPageViewCacheAction, ClipPreviewPageViewCacheDependency>
 
     // MARK: - Properties
 
@@ -47,6 +41,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: Store
 
+    private var rootStore: RootStore
+
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
@@ -57,19 +53,11 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let factory: ViewControllerFactory
 
-    // MARK: Temporary
-
-    // super.init が呼ばれた時点で、initializer 内の 全処理が完了数前に viewDidLoad が呼び出されてしまうケースがある
-    // 本来 initializer 内で行いたかった初期化処理を viewDidLoad 側に委譲するために一時的に保持するコンテキスト
-    private var contextForViewDidLoad: Context?
-
     // MARK: - Initializers
 
-    init(state: ClipPreviewPageViewState,
-         barState: ClipPreviewPageBarState,
-         cacheState: ClipPreviewPageViewCacheState,
+    init(state: ClipPreviewPageViewRootState,
          cacheController: ClipInformationViewCacheController,
-         dependency: ClipPreviewPageViewDependency & HasImageQueryService,
+         dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
          transitionController: ClipPreviewPageTransitionControllerType)
     {
@@ -77,14 +65,23 @@ class ClipPreviewPageViewController: UIPageViewController {
             weak var informationViewCache: ClipInformationViewCaching?
         }
 
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewPageViewReducer())
-        self.cacheStore = CacheStore(initialState: cacheState,
-                                     dependency: CacheDependency(informationViewCache: cacheController),
-                                     reducer: ClipPreviewPageViewCacheReducer())
+        let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
+        self.rootStore = rootStore
+
+        self.store = rootStore
+            .proxy(RootState.pageConverter, RootAction.pageConverter)
+            .eraseToAnyStoring()
+        self.cacheStore = rootStore
+            .proxy(RootState.cacheConverter, RootAction.cacheConverter)
+            .eraseToAnyStoring()
+        let barStore: ClipPreviewPageBarController.Store = rootStore
+            .proxy(RootState.barConverter, RootAction.barConverter)
+            .eraseToAnyStoring()
+        self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
+
         self.cacheController = cacheController
         self.transitionController = transitionController
         self.factory = factory
-        self.contextForViewDidLoad = .init(barState: barState, dependency: dependency)
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
@@ -122,8 +119,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        defer { self.contextForViewDidLoad = nil }
-
         configureViewHierarchy()
         configureGestureRecognizer()
         configureBarController()
@@ -155,7 +150,6 @@ extension ClipPreviewPageViewController {
         store.state
             .removeDuplicates()
             .sink { [weak self] state in
-                self?.barController.store.execute(.stateChanged(state))
                 self?.changePageIfNeeded(for: state)
             }
             .store(in: &subscriptions)
@@ -246,21 +240,8 @@ extension ClipPreviewPageViewController {
     }
 
     private func configureBarController() {
-        guard let context = contextForViewDidLoad else { return }
-        let barDependency = BarDependency(clipPreviewPageBarDelegate: self,
-                                          imageQueryService: context.dependency.imageQueryService,
-                                          transitionLock: context.dependency.transitionLock)
-        barController = ClipPreviewPageBarController(state: context.barState, dependency: barDependency)
         barController.alertHostingViewController = self
         barController.barHostingViewController = self
-    }
-}
-
-extension ClipPreviewPageViewController: ClipPreviewPageBarDelegate {
-    // MARK: - ClipPreviewPageBarDelegate
-
-    func didTriggered(_ event: ClipPreviewPageBarEvent) {
-        store.execute(.barEventOccurred(event))
     }
 }
 

@@ -40,17 +40,3 @@ struct ClipPreviewPageBarState: Equatable {
 
     var alert: Alert?
 }
-
-extension ClipPreviewPageBarState {
-    init(parentState: ClipPreviewPageViewState) {
-        self.parentState = parentState
-        isVerticalSizeClassCompact = true
-        leftBarButtonItems = []
-        rightBarButtonItems = []
-        toolBarItems = []
-        isFullscreen = false
-        isNavigationBarHidden = false
-        isToolBarHidden = false
-        alert = nil
-    }
-}

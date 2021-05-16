@@ -15,23 +15,19 @@ struct ClipPreviewPageViewCacheReducer: Reducer {
 
         case .viewWillDisappear:
             dependency.informationViewCache?.stopUpdating()
-            return (state, .none)
 
         case .viewDidAppear:
             dependency.informationViewCache?.insertCachingViewHierarchyIfNeeded()
-            guard let itemId = state.itemId else { return (state, .none) }
-            dependency.informationViewCache?.startUpdating(clipId: state.clipId,
-                                                           itemId: itemId)
-            return (state, .none)
+            if let itemId = state.itemId {
+                dependency.informationViewCache?.startUpdating(clipId: state.clipId, itemId: itemId)
+            }
 
         // MARK: Transition
 
         case let .pageChanged(clipId, itemId):
             dependency.informationViewCache?.startUpdating(clipId: clipId, itemId: itemId)
-            var nextState = state
-            nextState.clipId = clipId
-            nextState.itemId = itemId
-            return (nextState, .none)
         }
+
+        return (state, .none)
     }
 }

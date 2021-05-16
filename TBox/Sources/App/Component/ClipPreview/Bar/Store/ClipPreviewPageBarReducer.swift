@@ -4,8 +4,7 @@
 
 import Combine
 
-typealias ClipPreviewPageBarDependency = HasClipPreviewPageBarDelegate
-    & HasImageQueryService
+typealias ClipPreviewPageBarDependency = HasImageQueryService
     & HasTransitionLock
 
 struct ClipPreviewPageBarReducer: Reducer {
@@ -16,29 +15,13 @@ struct ClipPreviewPageBarReducer: Reducer {
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                if let event = action.mapToEvent() {
-                    dependency.clipPreviewPageBarDelegate?.didTriggered(event)
-                }
-                promise(.success(nil))
-            }
-        }
-        let eventEffect = Effect(stream)
-
         switch action {
         // MARK: View Life-Cycle
 
         case let .sizeClassChanged(isVerticalSizeClassCompact: isVerticalSizeClassCompact):
             nextState.isVerticalSizeClassCompact = isVerticalSizeClassCompact
             nextState = nextState.updatingAppearance()
-            return (nextState, [eventEffect])
-
-        // MARK: State Observation
-
-        case let .stateChanged(state):
-            nextState.parentState = state
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         // MARK: Gesture
 
@@ -59,31 +42,31 @@ struct ClipPreviewPageBarReducer: Reducer {
              .browseButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .addButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
             nextState.alert = .addition
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .shareButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
             if nextState.parentState.items.count > 1 {
                 nextState.alert = .shareTargetSelection
-                return (nextState, [eventEffect])
+                return (nextState, .none)
             } else {
                 let imageIds = state.parentState.items.map({ $0.imageId })
                 nextState.alert = .share(imageIds: imageIds)
-                return (nextState, [eventEffect])
+                return (nextState, .none)
             }
 
         case .deleteButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
             nextState.alert = .deletion(includesRemoveFromClip: nextState.parentState.items.count > 1)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
@@ -94,20 +77,20 @@ struct ClipPreviewPageBarReducer: Reducer {
              .alertShareDismissed,
              .alertDismissed:
             nextState.alert = nil
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .alertShareItemConfirmed:
             guard let index = state.parentState.currentIndex else {
-                return (nextState, [eventEffect])
+                return (nextState, .none)
             }
             let currentItem = state.parentState.items[index]
             nextState.alert = .share(imageIds: [currentItem.imageId])
-            return (nextState, [eventEffect])
+            return (nextState, .none)
 
         case .alertShareClipConfirmed:
             let imageIds = state.parentState.items.map({ $0.imageId })
             nextState.alert = .share(imageIds: imageIds)
-            return (nextState, [eventEffect])
+            return (nextState, .none)
         }
     }
 }
@@ -151,38 +134,5 @@ private extension ClipPreviewPageBarState {
         }
 
         return nextState
-    }
-}
-
-private extension ClipPreviewPageBarAction {
-    func mapToEvent() -> ClipPreviewPageBarEvent? {
-        switch self {
-        case .backButtonTapped:
-            return .backed
-
-        case .infoButtonTapped:
-            return .infoRequested
-
-        case .browseButtonTapped:
-            return .browsed
-
-        case .alertDeleteClipConfirmed:
-            return .deleteClip
-
-        case .alertDeleteClipItemConfirmed:
-            return .removeFromClip
-
-        case .alertTagAdditionConfirmed:
-            return .addTags
-
-        case .alertAlbumAdditionConfirmed:
-            return .addToAlbum
-
-        case let .alertShareDismissed(succeeded):
-            return .shared(succeeded)
-
-        default:
-            return nil
-        }
     }
 }

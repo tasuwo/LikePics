@@ -9,10 +9,6 @@ enum ClipPreviewPageBarAction: Action {
 
     case sizeClassChanged(isVerticalSizeClassCompact: Bool)
 
-    // MARK: State Observation
-
-    case stateChanged(ClipPreviewPageViewState)
-
     // MARK: Gesture
 
     case didTapView
