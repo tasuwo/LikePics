@@ -270,6 +270,9 @@ extension AlbumListViewController {
     }
 
     private func configureSearchController() {
+        // イベント発火を避けるためにdelegate設定前にリストアする必要がある
+        searchController.searchBar.text = store.stateValue.searchQuery
+
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = L10n.placeholderSearchTag
