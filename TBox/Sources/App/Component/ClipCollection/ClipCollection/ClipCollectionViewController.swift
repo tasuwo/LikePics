@@ -23,6 +23,7 @@ class ClipCollectionViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, Clip>!
     private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
@@ -43,11 +44,6 @@ class ClipCollectionViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
-
-    // MARK: Temporary
-
-    private var _previousState: ClipCollectionState?
-    private var selectionQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewController.selection")
 
     // MARK: Privates
 
@@ -172,6 +168,7 @@ extension ClipCollectionViewController {
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
                     self?.updateHiddenIconAppearance()
                 }
+                self?.selectionApplier.didApplyDataSource(collection: state.clips)
             }
             .store(in: &subscriptions)
 
@@ -213,8 +210,7 @@ extension ClipCollectionViewController {
         store.state
             .removeDuplicates(by: \.clips._selectedIds)
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
-            .receive(on: selectionQueue)
-            .sink { [weak self] state in self?.applySelections(for: state) }
+            .sink { [weak self] state in self?.selectionApplier.apply(collection: state.clips) }
             .store(in: &subscriptions)
         store.state
             .removeDuplicates(by: \.alert)
@@ -227,22 +223,6 @@ extension ClipCollectionViewController {
                 self?.dismiss(animated: true, completion: nil)
             }
             .store(in: &subscriptions)
-    }
-
-    private func applySelections(for state: ClipCollectionState) {
-        defer { _previousState = state }
-
-        let newSelections = state.clips.selections(from: _previousState?.clips)
-        let newDeselections = state.clips.deselections(from: _previousState?.clips)
-
-        DispatchQueue.main.async {
-            newSelections
-                .compactMap { self.dataSource.indexPath(for: .init($0)) }
-                .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            newDeselections
-                .compactMap { self.dataSource.indexPath(for: .init($0)) }
-                .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-        }
     }
 
     private func applyLayout(_ layout: ClipCollection.Layout) {
@@ -401,6 +381,9 @@ extension ClipCollectionViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
+                                                                dataSource: dataSource,
+                                                                itemBuilder: { .init($0) })
 
         // FIXME: カスタムレイアウトとPreloadの相性が悪い？poolが解放されずに残ってしまうので、一旦無効にする
         // preLoader = .init(dataSource: dataSource, thumbnailLoader: thumbnailLoader)

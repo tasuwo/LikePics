@@ -19,6 +19,7 @@ class TagSelectionModalController: UIViewController {
     private var searchBar: UISearchBar!
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: Layout.DataSource!
+    private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, Tag>!
 
     // MARK: Component
 
@@ -29,10 +30,6 @@ class TagSelectionModalController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.TagSelectionModalController")
-
-    // MARK: Temporary
-
-    private var _previousState: TagSelectionModalState?
 
     // MARK: - Initializers
 
@@ -85,9 +82,8 @@ extension TagSelectionModalController {
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(state.tags.orderedFilteredValues())
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.applySelections(for: state)
-                }
+                self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.selectionApplier.didApplyDataSource(collection: state.tags)
             }
             .store(in: &subscriptions)
 
@@ -103,6 +99,10 @@ extension TagSelectionModalController {
             .store(in: &subscriptions)
 
         store.state
+            .removeDuplicates(by: \.tags._selectedIds)
+            .sink { [weak self] state in self?.selectionApplier.apply(collection: state.tags) }
+            .store(in: &subscriptions)
+        store.state
             .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
 
@@ -112,18 +112,6 @@ extension TagSelectionModalController {
                 self?.dismiss(animated: true, completion: nil)
             }
             .store(in: &subscriptions)
-    }
-
-    private func applySelections(for state: TagSelectionModalState) {
-        defer { self._previousState = state }
-
-        state.tags.selections(from: _previousState?.tags)
-            .compactMap { dataSource.indexPath(for: $0) }
-            .forEach { collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-
-        state.tags.deselections(from: _previousState?.tags)
-            .compactMap { dataSource.indexPath(for: $0) }
-            .forEach { collectionView.deselectItem(at: $0, animated: false) }
     }
 
     private func presentAlertIfNeeded(for alert: TagSelectionModalState.Alert?) {
@@ -185,6 +173,9 @@ extension TagSelectionModalController {
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         dataSource = Layout.configureDataSource(collectionView)
+        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
+                                                                dataSource: dataSource,
+                                                                itemBuilder: { $0 })
     }
 
     private func configureSearchBar() {

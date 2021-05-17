@@ -18,6 +18,7 @@ class ClipEditViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, ClipItem>!
     private var proxy: Layout.Proxy!
     private lazy var interactionHandler: URLButtonInteractionHandler = {
         let handler = URLButtonInteractionHandler()
@@ -36,10 +37,6 @@ class ClipEditViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipEditViewController")
-
-    // MARK: Temporary
-
-    private var _previousItemsForSelection: Collection<ClipItem>?
 
     // MARK: - Initializers
 
@@ -92,6 +89,7 @@ extension ClipEditViewController {
                                                    tags: state.tags.orderedFilteredValues(),
                                                    items: state.items.orderedFilteredValues())
                 self?.dataSource.apply(snapshot)
+                self?.selectionApplier.didApplyDataSource(collection: state.items)
             }
             .store(in: &subscriptions)
 
@@ -100,7 +98,8 @@ extension ClipEditViewController {
             .store(in: &subscriptions)
 
         store.state
-            .sink { [weak self] state in self?.applySelections(for: state) }
+            .removeDuplicates(by: \.items._selectedIds)
+            .sink { [weak self] state in self?.selectionApplier.apply(collection: state.items) }
             .store(in: &subscriptions)
 
         store.state
@@ -137,22 +136,6 @@ extension ClipEditViewController {
         snapshot.appendItems([.deleteClip])
 
         return snapshot
-    }
-
-    private func applySelections(for state: ClipEditViewState) {
-        defer { _previousItemsForSelection = state.items }
-
-        state.items.selections(from: _previousItemsForSelection)
-            .map { $0.map(to: Layout.ClipItem.self) }
-            .map { Layout.Item.clipItem($0) }
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-
-        state.items.deselections(from: _previousItemsForSelection)
-            .map { $0.map(to: Layout.ClipItem.self) }
-            .map { Layout.Item.clipItem($0) }
-            .compactMap { self.dataSource.indexPath(for: $0) }
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
     }
 
     private func presentAlertIfNeeded(for alert: ClipEditViewState.Alert?) {
@@ -224,6 +207,9 @@ extension ClipEditViewController {
         // swiftlint:disable identifier_name
         let (_dataSource, _proxy) = Layout.createDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
         dataSource = _dataSource
+        selectionApplier = .init(collectionView: collectionView,
+                                 dataSource: dataSource,
+                                 itemBuilder: { Layout.Item.clipItem($0.map(to: Layout.ClipItem.self)) })
         proxy = _proxy
         proxy.delegate = self
         proxy.interactionDelegate = interactionHandler
