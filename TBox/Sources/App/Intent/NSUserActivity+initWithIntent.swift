@@ -4,15 +4,10 @@
 
 import UIKit
 
-// swiftlint:disable force_try force_unwrapping
-
 extension NSUserActivity {
-    static func make(with intent: Intent) -> NSUserActivity {
+    static func make(with intentJsonString: String) -> NSUserActivity {
         let userActivity = NSUserActivity(activityType: SceneDelegate.MainSceneActivityType)
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(intent)
-        let string = String(data: data, encoding: .utf8)! as NSString
-        userActivity.addUserInfoEntries(from: [SceneDelegate.intentKey: string])
+        userActivity.addUserInfoEntries(from: [SceneDelegate.intentKey: intentJsonString])
         return userActivity
     }
 

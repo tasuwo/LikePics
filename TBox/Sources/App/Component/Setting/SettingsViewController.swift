@@ -79,7 +79,9 @@ extension SettingsViewController {
             .store(in: &subscriptions)
 
         store.state
-            .debounce(for: 3, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.global())
+            .removeDuplicates()
+            .debounce(for: 3, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
@@ -146,6 +148,13 @@ extension SettingsViewController {
     }
 
     private func updateUserActivity(_ state: SettingsViewState) {
-        view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeSetting(state))
+        DispatchQueue.global().async {
+            let encoder = JSONEncoder()
+            guard let data = try? encoder.encode(Intent.seeSetting(state.removingSessionStates())),
+                  let string = String(data: data, encoding: .utf8) else { return }
+            DispatchQueue.main.async {
+                self.view.window?.windowScene?.userActivity = NSUserActivity.make(with: string)
+            }
+        }
     }
 }

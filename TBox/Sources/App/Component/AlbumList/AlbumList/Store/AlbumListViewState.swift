@@ -73,6 +73,18 @@ extension AlbumListViewState {
     }
 }
 
+extension AlbumListViewState {
+    func removingSessionStates() -> Self {
+        var state = self
+        state.searchStorage = .init()
+        state.albums = state.albums
+            .updated(values: [:])
+            .updated(filteredIds: .init())
+        state.alert = nil
+        return state
+    }
+}
+
 extension AlbumListViewState.Alert: Codable {
     // MARK: - Codable
 

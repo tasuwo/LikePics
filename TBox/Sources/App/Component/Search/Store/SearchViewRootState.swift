@@ -40,6 +40,18 @@ extension SearchViewRootState {
     }
 }
 
+extension SearchViewRootState {
+    func removingSessionStates() -> Self {
+        var state = self
+        state.entryState.searchHistories = []
+        state.entryState.alert = nil
+        state.resultState.searchedTokenCandidates = nil
+        state.resultState.searchedClips = nil
+        state.resultState.previewingClipId = nil
+        return state
+    }
+}
+
 // MARK: - Codable
 
 extension SearchViewRootState: Codable {}

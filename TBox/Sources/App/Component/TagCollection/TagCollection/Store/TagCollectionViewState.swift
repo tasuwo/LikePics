@@ -46,6 +46,18 @@ extension TagCollectionViewState {
     }
 }
 
+extension TagCollectionViewState {
+    func removingSessionStates() -> Self {
+        var state = self
+        state.tags = state.tags
+            .updated(values: [:])
+            .updated(filteredIds: .init())
+        state.searchStorage = .init()
+        state.alert = nil
+        return state
+    }
+}
+
 // MARK: - Codable
 
 extension TagCollectionViewState: Codable {}

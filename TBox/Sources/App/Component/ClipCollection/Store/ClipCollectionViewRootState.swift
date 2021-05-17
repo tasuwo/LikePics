@@ -29,6 +29,17 @@ extension ClipCollectionViewRootState {
 }
 
 extension ClipCollectionViewRootState {
+    func removingSessionStates() -> Self {
+        var state = self
+        state.clipCollectionState.clips = state.clipCollectionState.clips
+            .updated(values: [:])
+            .updated(filteredIds: .init())
+        state.clipCollectionState.alert = nil
+        return state
+    }
+}
+
+extension ClipCollectionViewRootState {
     static let clipCollectionConverter: StateConverter<Self, ClipCollectionState> = .init { parent in
         parent.clipCollectionState
     } merge: { state, parent in

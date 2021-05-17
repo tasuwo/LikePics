@@ -53,3 +53,11 @@ extension SettingsViewState {
         version
     }
 }
+
+extension SettingsViewState {
+    func removingSessionStates() -> Self {
+        var state = self
+        state.alert = nil
+        return state
+    }
+}

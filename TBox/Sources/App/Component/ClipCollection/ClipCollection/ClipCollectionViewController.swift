@@ -137,18 +137,27 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
+            .receive(on: DispatchQueue.global())
+            .removeDuplicates()
+            .debounce(for: 3, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
 
     private func updateUserActivity(_ state: ClipCollectionViewRootState) {
-        switch state.clipCollectionState.source {
-        case .all:
-            view.window?.windowScene?.userActivity = NSUserActivity.make(with: .seeHome(state))
+        DispatchQueue.global().async {
+            switch state.clipCollectionState.source {
+            case .all:
+                let encoder = JSONEncoder()
+                guard let data = try? encoder.encode(Intent.seeHome(state.removingSessionStates())),
+                      let string = String(data: data, encoding: .utf8) else { return }
+                DispatchQueue.main.async {
+                    self.view.window?.windowScene?.userActivity = NSUserActivity.make(with: string)
+                }
 
-        default:
-            break
+            default:
+                break
+            }
         }
     }
 }
