@@ -432,15 +432,6 @@ extension ClipCollectionReducer {
             .updated(values: clips.indexed())
             .updated(filteredIds: Set(filteredClipIds))
 
-        // 余分な選択を除外する
-        let newClipIds = Set(clips.map { $0.id })
-        if !nextState.clips._selectedIds.isSubset(of: newClipIds) {
-            let newSelections = nextState.clips._selectedIds.subtracting(
-                nextState.clips._selectedIds.subtracting(newClipIds)
-            )
-            nextState.clips = nextState.clips.updated(selectedIds: newSelections)
-        }
-
         nextState.isEmptyMessageViewDisplaying = filteredClips.isEmpty
         nextState.isCollectionViewDisplaying = !filteredClips.isEmpty
         nextState.isSomeItemsHidden = isSomeItemsHidden
