@@ -33,6 +33,12 @@ class SettingsViewController: UITableViewController {
         store.execute(.viewDidLoad)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        updateUserActivity(store.stateValue)
+    }
+
     // MARK: - IBActions
 
     @IBAction func didChangeShouldShowHiddenItems(_ sender: UISwitch) {

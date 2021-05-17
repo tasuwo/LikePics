@@ -111,6 +111,8 @@ class ClipCollectionViewController: UIViewController {
         super.viewDidAppear(animated)
 
         store.execute(.viewDidAppear)
+
+        updateUserActivity(rootStore.stateValue)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

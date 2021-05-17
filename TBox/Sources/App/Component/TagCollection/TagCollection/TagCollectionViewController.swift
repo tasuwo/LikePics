@@ -75,6 +75,12 @@ class TagCollectionViewController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        updateUserActivity(store.stateValue)
+    }
 }
 
 // MARK: - Bind

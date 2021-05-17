@@ -52,6 +52,7 @@ class SearchEntryViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resultsController.entryViewDidAppear(animated)
+        updateUserActivity(rootStore.stateValue)
     }
 
     override func viewDidLoad() {

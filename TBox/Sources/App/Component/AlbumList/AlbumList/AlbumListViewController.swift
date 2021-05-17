@@ -79,6 +79,12 @@ class AlbumListViewController: UIViewController {
         store.execute(.viewDidLoad)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        updateUserActivity(store.stateValue)
+    }
+
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         store.execute(.editingChanged(isEditing: editing))
