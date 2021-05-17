@@ -7,7 +7,7 @@
 import Domain
 
 struct Collection<Value: Identifiable & Codable & Hashable>: Equatable, Codable {
-    private let _values: [Value.Identity: Ordered<Value>]
+    let _values: [Value.Identity: Ordered<Value>]
     let _selectedIds: Set<Value.Identity>
     let _filteredIds: Set<Value.Identity>
 
