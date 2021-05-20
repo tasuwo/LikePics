@@ -120,7 +120,6 @@ extension ClipPreviewPageViewState.Alert: Codable {
     }
 }
 
-
 extension ClipPreviewPageViewState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection

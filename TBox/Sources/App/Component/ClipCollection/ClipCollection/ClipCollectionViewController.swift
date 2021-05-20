@@ -44,7 +44,7 @@ class ClipCollectionViewController: UIViewController {
     private var rootStore: RootStore
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
-    private var albumSelectionModalSubscription: Cancellable?
+    private var modalSubscription: Cancellable?
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
 
     // MARK: Privates
@@ -366,27 +366,51 @@ extension ClipCollectionViewController {
 
     private func presentModalIfNeeded(for modal: ClipCollectionState.Modal?) {
         switch modal {
-        case let .albumSelection(id):
-            presentAlbumSelectionModal(id: id)
+        case .albumSelection:
+            presentAlbumSelectionModal()
+
+        case let .clipMerge(clips: clips):
+            presentClipMergeModal(clips: clips)
 
         case .none:
             break
         }
     }
 
-    private func presentAlbumSelectionModal(id: UUID) {
-        albumSelectionModalSubscription = ModalNotificationCenter.default
+    private func presentAlbumSelectionModal() {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .albumSelectionModal)
             .sink { [weak self] notification in
                 let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
                 self?.store.execute(.albumsSelected(albumId))
-                self?.albumSelectionModalSubscription?.cancel()
-                self?.albumSelectionModalSubscription = nil
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
             }
 
         if router.showAlbumSelectionModal(id: id) == false {
-            albumSelectionModalSubscription?.cancel()
-            albumSelectionModalSubscription = nil
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentClipMergeModal(clips: [Clip]) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .clipMergeModal)
+            .sink { [weak self] notification in
+                let isCompleted = notification.userInfo?[ModalNotification.UserInfoKey.clipMergeCompleted] as? Bool
+                self?.store.execute(.modalCompleted(isCompleted ?? false))
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showClipMergeModal(id: id, clips: clips) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
             store.execute(.modalCompleted(false))
         }
     }

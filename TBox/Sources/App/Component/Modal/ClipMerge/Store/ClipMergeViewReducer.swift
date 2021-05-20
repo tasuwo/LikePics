@@ -8,7 +8,7 @@ import Domain
 typealias ClipMergeViewDependency = HasRouter
     & HasClipQueryService
     & HasClipCommandService
-    & HasClipMergeModalSubscription
+    & HasModalNotificationCenter
 
 struct ClipMergeViewReducer: Reducer {
     typealias Dependency = ClipMergeViewDependency
@@ -32,7 +32,9 @@ struct ClipMergeViewReducer: Reducer {
             let tagIds = state.tags.map({ $0.id })
             switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
             case .success:
-                dependency.clipMergeCompleted(true)
+                dependency.modalNotificationCenter.post(id: state.id,
+                                                        name: .clipMergeModal,
+                                                        userInfo: [.clipMergeCompleted: true])
                 nextState.isDismissed = true
 
             case .failure:
@@ -41,7 +43,9 @@ struct ClipMergeViewReducer: Reducer {
             return (nextState, .none)
 
         case .cancelButtonTapped:
-            dependency.clipMergeCompleted(false)
+            dependency.modalNotificationCenter.post(id: state.id,
+                                                    name: .clipMergeModal,
+                                                    userInfo: [.clipMergeCompleted: false])
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -82,7 +86,9 @@ struct ClipMergeViewReducer: Reducer {
         // MARK: Transition
 
         case .didDismissedManually:
-            dependency.clipMergeCompleted(false)
+            dependency.modalNotificationCenter.post(id: state.id,
+                                                    name: .clipMergeModal,
+                                                    userInfo: [.clipMergeCompleted: false])
             nextState.isDismissed = true
             return (nextState, .none)
         }
@@ -125,4 +131,14 @@ extension ClipMergeViewReducer {
         }
         return Effect(stream)
     }
+}
+
+// MARK: - ModalNotification
+
+extension ModalNotification.Name {
+    static let clipMergeModal = ModalNotification.Name("net.tasuwo.TBox.ClipMergeViewReducer.clipMergeModal")
+}
+
+extension ModalNotification.UserInfoKey {
+    static let clipMergeCompleted = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.ClipMergeViewReducer.clipMergeCompleted")
 }

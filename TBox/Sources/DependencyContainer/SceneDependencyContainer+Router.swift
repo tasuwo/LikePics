@@ -201,20 +201,10 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool {
-        struct Dependency: ClipMergeViewDependency {
-            let router: Router
-            let clipCommandService: ClipCommandServiceProtocol
-            let clipQueryService: ClipQueryServiceProtocol
-            let clipMergeCompleted: (Bool) -> Void
-        }
-        let dependency = Dependency(router: self,
-                                    clipCommandService: container._clipCommandService,
-                                    clipQueryService: container._clipQueryService,
-                                    clipMergeCompleted: completion)
-        let state = ClipMergeViewState(clips: clips)
+    func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
+        let state = ClipMergeViewState(id: id, clips: clips)
         let viewController = ClipMergeViewController(state: state,
-                                                     dependency: dependency,
+                                                     dependency: self,
                                                      thumbnailLoader: container.temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }

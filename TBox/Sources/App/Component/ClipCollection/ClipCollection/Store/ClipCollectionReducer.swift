@@ -105,8 +105,8 @@ struct ClipCollectionReducer: Reducer {
                 return (nextState, .none)
             }
 
-        case let .albumAdditionMenuTapped(clipId):
-            nextState.modal = .albumSelection(UUID())
+        case .albumAdditionMenuTapped:
+            nextState.modal = .albumSelection
             return (nextState, .none)
 
         case let .hideMenuTapped(clipId):
@@ -191,6 +191,7 @@ struct ClipCollectionReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
             }
+            nextState.modal = nil
             return (nextState, .none)
 
         case let .albumsSelected(albumId):
@@ -206,10 +207,12 @@ struct ClipCollectionReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
             }
+            nextState.modal = nil
             return (nextState, .none)
 
         case let .modalCompleted(succeeded):
             if succeeded { nextState = nextState.editingEnded() }
+            nextState.modal = nil
             return (nextState, .none)
 
         // MARK: Alert Completion
@@ -481,7 +484,7 @@ extension ClipCollectionReducer {
         var nextState = state
         switch action {
         case .addToAlbum:
-            nextState.modal = .albumSelection(UUID())
+            nextState.modal = .albumSelection
             nextState.alert = nil
             return (nextState, .none)
 
@@ -539,17 +542,8 @@ extension ClipCollectionReducer {
 
         case .merge:
             let selections = state.clips.orderedSelectedValues()
-            let stream = Deferred {
-                Future<Action?, Never> { promise in
-                    let isPresented = dependency.router.showClipMergeModal(for: selections) { succeeded in
-                        promise(.success(.modalCompleted(succeeded)))
-                    }
-                    if !isPresented {
-                        promise(.success(.modalCompleted(false)))
-                    }
-                }
-            }
-            return (state, [Effect(stream)])
+            nextState.modal = .clipMerge(clips: selections)
+            return (nextState, .none)
         }
     }
 }

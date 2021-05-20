@@ -14,7 +14,8 @@ struct ClipCollectionState: Equatable {
     }
 
     enum Modal: Equatable {
-        case albumSelection(UUID)
+        case albumSelection
+        case clipMerge(clips: [Clip])
     }
 
     let source: ClipCollection.Source
@@ -154,6 +155,7 @@ extension ClipCollectionState.Alert: Codable {
 extension ClipCollectionState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection
+        case clipMerge
     }
 
     public init(from decoder: Decoder) throws {
@@ -162,8 +164,11 @@ extension ClipCollectionState.Modal: Codable {
 
         switch key {
         case .albumSelection:
-            let albumId = try container.decode(Album.Identity.self, forKey: .albumSelection)
-            self = .albumSelection(albumId)
+            self = .albumSelection
+
+        case .clipMerge:
+            let clips = try container.decode([Clip].self, forKey: .clipMerge)
+            self = .clipMerge(clips: clips)
 
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
@@ -174,8 +179,11 @@ extension ClipCollectionState.Modal: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case let .albumSelection(albumId):
-            try container.encode(albumId, forKey: .albumSelection)
+        case .albumSelection:
+            try container.encode(true, forKey: .albumSelection)
+
+        case let .clipMerge(clips):
+            try container.encode(clips, forKey: .clipMerge)
         }
     }
 }

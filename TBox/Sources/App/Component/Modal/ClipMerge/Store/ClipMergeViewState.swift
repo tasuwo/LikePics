@@ -11,6 +11,8 @@ struct ClipMergeViewState: Equatable {
         case error(String?)
     }
 
+    let id: UUID
+
     var items: [ClipItem]
     var tags: [Tag]
 
@@ -22,7 +24,8 @@ struct ClipMergeViewState: Equatable {
 }
 
 extension ClipMergeViewState {
-    init(clips: [Clip]) {
+    init(id: UUID, clips: [Clip]) {
+        self.id = id
         self.items = clips.flatMap { $0.items }
         tags = []
 
