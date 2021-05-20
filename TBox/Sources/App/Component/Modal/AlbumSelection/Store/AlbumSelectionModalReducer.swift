@@ -25,7 +25,9 @@ struct AlbumSelectionModalReducer: Reducer {
             return Self.prepareQueryEffects(nextState, dependency)
 
         case .viewDidDisappear:
-            dependency.modalNotificationCenter.post(id: state.id, name: .albumSelectionModal, userInfo: [.selectedAlbumId: state.selectedAlbumId])
+            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
+            userInfo[.selectedAlbumId] = state.selectedAlbumId
+            dependency.modalNotificationCenter.post(id: state.id, name: .albumSelectionModal, userInfo: userInfo)
             return (nextState, .none)
 
         // MARK: State Observation
