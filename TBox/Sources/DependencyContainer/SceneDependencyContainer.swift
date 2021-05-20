@@ -68,3 +68,7 @@ extension SceneDependencyContainer: HasTransitionLock {
 extension SceneDependencyContainer: HasCloudAvailabilityService {
     var cloudAvailabilityService: CloudAvailabilityServiceProtocol { container._cloudAvailabilityService }
 }
+
+extension SceneDependencyContainer: HasModalNotificationCenter {
+    var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
+}

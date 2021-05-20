@@ -115,6 +115,9 @@
 		2C7E512B82BD89525790705C /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9FAD94FC165C81E13CAAF3 /* TemporaryImageStorageProtocol.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CAA19972652AE02001BFC4A /* UICollectionViewSelectionLazyApplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAA19962652AE02001BFC4A /* UICollectionViewSelectionLazyApplier.swift */; };
+		2CB8AB9226568CDB00B53AEE /* ModalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8AB9126568CDB00B53AEE /* ModalNotificationCenter.swift */; };
+		2CB8AB9426569E5800B53AEE /* ModalNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB8AB9326569E5800B53AEE /* ModalNotification.swift */; };
+		2CDAEB4C2655545A00C5C641 /* HasModalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDAEB4B2655545A00C5C641 /* HasModalNotificationCenter.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2CFEB5F62650976600889E6D /* ClipPreviewPageViewRootAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEB5F52650976600889E6D /* ClipPreviewPageViewRootAction.swift */; };
 		2CFEB5F82650977100889E6D /* ClipPreviewPageViewRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEB5F72650977100889E6D /* ClipPreviewPageViewRootState.swift */; };
@@ -1088,6 +1091,9 @@
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CAA19962652AE02001BFC4A /* UICollectionViewSelectionLazyApplier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewSelectionLazyApplier.swift; sourceTree = "<group>"; };
+		2CB8AB9126568CDB00B53AEE /* ModalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNotificationCenter.swift; sourceTree = "<group>"; };
+		2CB8AB9326569E5800B53AEE /* ModalNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNotification.swift; sourceTree = "<group>"; };
+		2CDAEB4B2655545A00C5C641 /* HasModalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasModalNotificationCenter.swift; sourceTree = "<group>"; };
 		2CFEB5F52650976600889E6D /* ClipPreviewPageViewRootAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewRootAction.swift; sourceTree = "<group>"; };
 		2CFEB5F72650977100889E6D /* ClipPreviewPageViewRootState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewRootState.swift; sourceTree = "<group>"; };
 		2CFEB5F92650977C00889E6D /* ClipPreviewPageViewRootReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewRootReducer.swift; sourceTree = "<group>"; };
@@ -2210,6 +2216,15 @@
 			path = TagSelection;
 			sourceTree = "<group>";
 		};
+		2CB8AB9026568CCD00B53AEE /* ModalNotificationCenter */ = {
+			isa = PBXGroup;
+			children = (
+				2CB8AB9126568CDB00B53AEE /* ModalNotificationCenter.swift */,
+				2CB8AB9326569E5800B53AEE /* ModalNotification.swift */,
+			);
+			path = ModalNotificationCenter;
+			sourceTree = "<group>";
+		};
 		2CFEB5F42650975300889E6D /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -2704,6 +2719,7 @@
 		65B496FB6D8D230A02D7929E /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				2CB8AB9026568CCD00B53AEE /* ModalNotificationCenter */,
 				23F4C7C3418429044C8B9B57 /* Pasteboard */,
 				69E5E7DBDA851EEDA8B59FE0 /* Preview */,
 				7ED26C5316EE37279DCD510F /* Router */,
@@ -3950,6 +3966,7 @@
 				75D103ABF75000E14113BFAA /* HasTextValidator.swift */,
 				A35871C2F2F888212ADB59F5 /* HasTransitionLock.swift */,
 				823BCEB98141B32977A43111 /* HasUserSettingStorage.swift */,
+				2CDAEB4B2655545A00C5C641 /* HasModalNotificationCenter.swift */,
 			);
 			path = Dependency;
 			sourceTree = "<group>";
@@ -5228,6 +5245,7 @@
 				4CED9547D785976DF71D08B7 /* AlbumListViewState.swift in Sources */,
 				FCEC7EC4073BEF150965494E /* AlbumSelectionModalAction.swift in Sources */,
 				2CFF0EBF264FCC8900FA79D7 /* Intent.swift in Sources */,
+				2CB8AB9226568CDB00B53AEE /* ModalNotificationCenter.swift in Sources */,
 				13D3C72EA890558843B67140 /* AlbumSelectionModalController.swift in Sources */,
 				9364B4F696040A0B02438461 /* AlbumSelectionModalLayout.swift in Sources */,
 				57D0BEAD9FA16B837F6418E4 /* AlbumSelectionModalReducer.swift in Sources */,
@@ -5340,11 +5358,13 @@
 				2CFEB5F82650977100889E6D /* ClipPreviewPageViewRootState.swift in Sources */,
 				BCC470F185965E417ABFD61D /* HasTransitionLock.swift in Sources */,
 				C8A734BAFEF19293B394CE73 /* HasUserSettingStorage.swift in Sources */,
+				2CDAEB4C2655545A00C5C641 /* HasModalNotificationCenter.swift in Sources */,
 				0791C252A7A742D57B52F169 /* LoadingViewPresentable.swift in Sources */,
 				07C70A7150885185FEE9719C /* MergeReducer.swift in Sources */,
 				6A578660ADDCF67939911305 /* Ordered.swift in Sources */,
 				EDF0CD7B2D8C88CB16453018 /* Pasteboard.swift in Sources */,
 				80211411E553652074B01078 /* PreviewLoader.swift in Sources */,
+				2CB8AB9426569E5800B53AEE /* ModalNotification.swift in Sources */,
 				A282AF21F4E891D850D96D39 /* Publisher+bind.swift in Sources */,
 				06CBA7521CAAD8F1418FF5E7 /* Publisher+removeDuplicatesByKeyPath.swift in Sources */,
 				8DEA04470034BDBED5BB66D0 /* Reducer.swift in Sources */,
