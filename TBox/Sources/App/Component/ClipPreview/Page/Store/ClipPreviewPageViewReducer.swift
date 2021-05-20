@@ -97,6 +97,7 @@ struct ClipPreviewPageViewReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
             }
+            nextState.modal = nil
             return (nextState, .none)
 
         case let .albumsSelected(albumId):
@@ -107,9 +108,11 @@ struct ClipPreviewPageViewReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
             }
+            nextState.modal = nil
             return (nextState, .none)
 
         case .modalCompleted:
+            nextState.modal = nil
             return (nextState, .none)
 
         // MARK: Alert Completion
@@ -162,20 +165,6 @@ extension ClipPreviewPageViewReducer {
         }
         return Effect(stream)
     }
-
-    static func showAlbumSelectionModal(for clipId: Clip.Identity, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showAlbumSelectionModal { albumId in
-                    promise(.success(.albumsSelected(albumId)))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
-    }
 }
 
 // MARK: - Bar Event
@@ -214,8 +203,8 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .addToAlbum:
-            let effect = showAlbumSelectionModal(for: state.clipId, dependency: dependency)
-            return (nextState, [effect])
+            nextState.modal = .albumSelection(UUID())
+            return (nextState, .none)
 
         case .addTags:
             var effects: [Effect<Action>]?

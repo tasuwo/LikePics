@@ -11,6 +11,8 @@ struct AlbumSelectionModalState: Equatable {
         case addition
     }
 
+    let id: UUID
+
     var searchQuery: String
     var searchStorage: SearchableStorage<Album>
     var albums: Collection<Album>
@@ -27,7 +29,9 @@ struct AlbumSelectionModalState: Equatable {
 }
 
 extension AlbumSelectionModalState {
-    init(isSomeItemsHidden: Bool) {
+    init(id: UUID, isSomeItemsHidden: Bool) {
+        self.id = id
+
         searchQuery = ""
         searchStorage = .init()
         albums = .init()

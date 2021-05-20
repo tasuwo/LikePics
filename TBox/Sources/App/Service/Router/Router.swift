@@ -34,7 +34,7 @@ protocol Router {
     func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool
 
     @discardableResult
-    func showAlbumSelectionModal(completion: @escaping (Album.Identity?) -> Void) -> Bool
+    func showAlbumSelectionModal(id: UUID) -> Bool
 
     @discardableResult
     func showClipMergeModal(for clips: [Clip], completion: @escaping (Bool) -> Void) -> Bool

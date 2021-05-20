@@ -106,8 +106,8 @@ struct ClipCollectionReducer: Reducer {
             }
 
         case let .albumAdditionMenuTapped(clipId):
-            let effect = Self.showAlbumSelectionModal(for: Set([clipId]), dependency: dependency)
-            return (state, [effect])
+            nextState.modal = .albumSelection(UUID())
+            return (nextState, .none)
 
         case let .hideMenuTapped(clipId):
             if state.isSomeItemsHidden {
@@ -193,8 +193,9 @@ struct ClipCollectionReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .albumsSelected(albumId, for: clipIds):
+        case let .albumsSelected(albumId):
             guard let albumId = albumId else { return (state, .none) }
+            let clipIds = state.clips.selectedIds()
             switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(clipIds)) {
             case .success:
                 nextState = nextState.editingEnded()
@@ -384,20 +385,6 @@ extension ClipCollectionReducer {
         }
         return Effect(stream)
     }
-
-    static func showAlbumSelectionModal(for clipIds: Set<Clip.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showAlbumSelectionModal { albumId in
-                    promise(.success(.albumsSelected(albumId, for: clipIds)))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
-    }
 }
 
 // MARK: - Filter
@@ -494,9 +481,9 @@ extension ClipCollectionReducer {
         var nextState = state
         switch action {
         case .addToAlbum:
-            let effect = showAlbumSelectionModal(for: state.clips._selectedIds, dependency: dependency)
+            nextState.modal = .albumSelection(UUID())
             nextState.alert = nil
-            return (nextState, [effect])
+            return (nextState, .none)
 
         case .addTags:
             let effect = showTagSelectionModal(for: state.clips._selectedIds, selections: .init(), dependency: dependency)

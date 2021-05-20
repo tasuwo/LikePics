@@ -27,6 +27,7 @@ class ClipCollectionViewController: UIViewController {
     private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
+    private let router: Router
     private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
 
     // MARK: Component
@@ -43,6 +44,7 @@ class ClipCollectionViewController: UIViewController {
     private var rootStore: RootStore
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private var albumSelectionModalSubscription: Cancellable?
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
 
     // MARK: Privates
@@ -56,6 +58,7 @@ class ClipCollectionViewController: UIViewController {
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: ClipCollectionMenuBuildable)
     {
+        self.router = dependency.router
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
@@ -223,9 +226,14 @@ extension ClipCollectionViewController {
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
             .sink { [weak self] state in self?.selectionApplier.apply(collection: state.clips) }
             .store(in: &subscriptions)
+
         store.state
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
             .store(in: &subscriptions)
 
         store.state
@@ -354,6 +362,33 @@ extension ClipCollectionViewController {
         }
 
         self.present(controller, animated: true, completion: nil)
+    }
+
+    private func presentModalIfNeeded(for modal: ClipCollectionState.Modal?) {
+        switch modal {
+        case let .albumSelection(id):
+            presentAlbumSelectionModal(id: id)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentAlbumSelectionModal(id: UUID) {
+        albumSelectionModalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .albumSelectionModal)
+            .sink { [weak self] notification in
+                let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
+                self?.store.execute(.albumsSelected(albumId))
+                self?.albumSelectionModalSubscription?.cancel()
+                self?.albumSelectionModalSubscription = nil
+            }
+
+        if router.showAlbumSelectionModal(id: id) == false {
+            albumSelectionModalSubscription?.cancel()
+            albumSelectionModalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
     }
 
     private func updateHiddenIconAppearance() {

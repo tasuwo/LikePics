@@ -180,24 +180,14 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showAlbumSelectionModal(completion: @escaping (Album.Identity?) -> Void) -> Bool {
-        struct Dependency: AlbumSelectionModalDependency {
-            let userSettingStorage: UserSettingsStorageProtocol
-            let clipCommandService: ClipCommandServiceProtocol
-            let clipQueryService: ClipQueryServiceProtocol
-            let albumSelectionCompleted: (Album.Identity?) -> Void
-        }
-        let dependency = Dependency(userSettingStorage: container._userSettingStorage,
-                                    clipCommandService: container._clipCommandService,
-                                    clipQueryService: container._clipQueryService,
-                                    albumSelectionCompleted: completion)
-        let state = AlbumSelectionModalState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+    func showAlbumSelectionModal(id: UUID) -> Bool {
+        let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
                                                          placeholder: L10n.placeholderAlbumName)
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
-                                                           dependency: dependency,
+                                                           dependency: self,
                                                            thumbnailLoader: container.temporaryThumbnailLoader)
 
         guard let topViewController = topViewController else { return false }

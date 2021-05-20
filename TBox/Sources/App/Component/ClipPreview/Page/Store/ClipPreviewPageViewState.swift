@@ -10,7 +10,11 @@ struct ClipPreviewPageViewState: Equatable {
         case error(String?)
     }
 
-    enum PageChange {
+    enum Modal: Equatable {
+        case albumSelection(UUID)
+    }
+
+    enum PageChange: String, Codable {
         case forward
         case reverse
     }
@@ -22,6 +26,7 @@ struct ClipPreviewPageViewState: Equatable {
     var items: [ClipItem]
 
     var alert: Alert?
+    var modal: Modal?
 
     var isDismissed: Bool
 }
@@ -78,6 +83,69 @@ extension ClipPreviewPageViewState.PageChange {
 
         case .reverse:
             return .reverse
+        }
+    }
+}
+
+// MARK: - Codable
+
+extension ClipPreviewPageViewState: Codable {}
+
+extension ClipPreviewPageViewState.Alert: Codable {
+    enum CodingKeys: CodingKey {
+        case error
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .error:
+            let message = try container.decodeIfPresent(String.self, forKey: .error)
+            self = .error(message)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .error(message):
+            try container.encode(message, forKey: .error)
+        }
+    }
+}
+
+
+extension ClipPreviewPageViewState.Modal: Codable {
+    enum CodingKeys: CodingKey {
+        case albumSelection
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .albumSelection:
+            let albumId = try container.decode(Album.Identity.self, forKey: .albumSelection)
+            self = .albumSelection(albumId)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .albumSelection(albumId):
+            try container.encode(albumId, forKey: .albumSelection)
         }
     }
 }

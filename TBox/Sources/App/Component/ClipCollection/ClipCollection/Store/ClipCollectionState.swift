@@ -13,6 +13,10 @@ struct ClipCollectionState: Equatable {
         case share(clipId: Clip.Identity, imageIds: [ImageContainer.Identity])
     }
 
+    enum Modal: Equatable {
+        case albumSelection(UUID)
+    }
+
     let source: ClipCollection.Source
     var sourceDescription: String?
 
@@ -27,6 +31,7 @@ struct ClipCollectionState: Equatable {
     var isCollectionViewDisplaying: Bool
 
     var alert: Alert?
+    var modal: Modal?
 
     var isDismissed: Bool
 
@@ -142,6 +147,35 @@ extension ClipCollectionState.Alert: Codable {
             var nestedContainer = container.nestedUnkeyedContainer(forKey: .share)
             try nestedContainer.encode(clipId)
             try nestedContainer.encode(imageIds)
+        }
+    }
+}
+
+extension ClipCollectionState.Modal: Codable {
+    enum CodingKeys: CodingKey {
+        case albumSelection
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .albumSelection:
+            let albumId = try container.decode(Album.Identity.self, forKey: .albumSelection)
+            self = .albumSelection(albumId)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .albumSelection(albumId):
+            try container.encode(albumId, forKey: .albumSelection)
         }
     }
 }

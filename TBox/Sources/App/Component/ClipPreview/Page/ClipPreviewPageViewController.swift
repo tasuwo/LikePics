@@ -32,6 +32,8 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let transitionController: ClipPreviewPageTransitionControllerType
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
+    private let router: Router
+
     override var prefersStatusBarHidden: Bool { barController.store.stateValue.isFullscreen }
 
     // MARK: Component
@@ -50,6 +52,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var cacheSubscriptions: Set<AnyCancellable> = .init()
 
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
+    private var albumSelectionModalSubscription: Cancellable?
 
     private let factory: ViewControllerFactory
 
@@ -82,6 +85,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.cacheController = cacheController
         self.transitionController = transitionController
         self.factory = factory
+
+        self.router = dependency.router
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
@@ -159,6 +164,10 @@ extension ClipPreviewPageViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
+            .store(in: &subscriptions)
+
+        store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
@@ -199,6 +208,33 @@ extension ClipPreviewPageViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentModalIfNeeded(for modal: ClipPreviewPageViewState.Modal?) {
+        switch modal {
+        case let .albumSelection(id):
+            presentAlbumSelectionModal(id: id)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentAlbumSelectionModal(id: UUID) {
+        albumSelectionModalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .albumSelectionModal)
+            .sink { [weak self] notification in
+                let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
+                self?.store.execute(.albumsSelected(albumId))
+                self?.albumSelectionModalSubscription?.cancel()
+                self?.albumSelectionModalSubscription = nil
+            }
+
+        if router.showAlbumSelectionModal(id: id) == false {
+            albumSelectionModalSubscription?.cancel()
+            albumSelectionModalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
     }
 
     private func didChangePage(to viewController: ClipPreviewViewController) {

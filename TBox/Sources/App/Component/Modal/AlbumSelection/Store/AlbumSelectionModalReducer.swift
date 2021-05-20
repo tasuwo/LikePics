@@ -8,7 +8,7 @@ import Domain
 typealias AlbumSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
-    & HasAlbumSelectionModalSubscription
+    & HasModalNotificationCenter
 
 struct AlbumSelectionModalReducer: Reducer {
     typealias Dependency = AlbumSelectionModalDependency
@@ -25,7 +25,7 @@ struct AlbumSelectionModalReducer: Reducer {
             return Self.prepareQueryEffects(nextState, dependency)
 
         case .viewDidDisappear:
-            dependency.albumSelectionCompleted(nextState.selectedAlbumId)
+            dependency.modalNotificationCenter.post(id: state.id, name: .albumSelectionModal, userInfo: [.selectedAlbumId: state.selectedAlbumId])
             return (nextState, .none)
 
         // MARK: State Observation
@@ -159,4 +159,14 @@ extension AlbumSelectionModalReducer {
 
         return nextState
     }
+}
+
+// MARK: - ModalNotification
+
+extension ModalNotification.Name {
+    static let albumSelectionModal = ModalNotification.Name("net.tasuwo.TBox.AlbumSelectionModalReducer.albumSelectionModal")
+}
+
+extension ModalNotification.UserInfoKey {
+    static let selectedAlbumId = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.AlbumSelectionModalReducer.selectedAlbumId")
 }
