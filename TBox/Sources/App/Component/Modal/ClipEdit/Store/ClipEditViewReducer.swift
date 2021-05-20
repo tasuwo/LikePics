@@ -10,6 +10,7 @@ typealias ClipEditViewDependency = HasRouter
     & HasClipQueryService
     & HasUserSettingStorage
     & HasPasteboard
+    & HasModalNotificationCenter
 
 struct ClipEditViewReducer: Reducer {
     typealias Dependency = ClipEditViewDependency
@@ -33,6 +34,7 @@ struct ClipEditViewReducer: Reducer {
             return (nextState, .none)
 
         case .clipDeleted:
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -52,6 +54,7 @@ struct ClipEditViewReducer: Reducer {
         // MARK: NavigationBar
 
         case .doneButtonTapped:
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -225,6 +228,7 @@ struct ClipEditViewReducer: Reducer {
         // MARK: Transition
 
         case .didDismissedManually:
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
             nextState.isDismissed = true
             return (nextState, .none)
         }
@@ -333,4 +337,10 @@ private extension Clip {
                      dataSize: dataSize,
                      isHidden: isHidden)
     }
+}
+
+// MARK: - ModalNotification
+
+extension ModalNotification.Name {
+    static let clipEditModal = ModalNotification.Name("net.tasuwo.TBox.ClipEditViewReducer.clipEditModal")
 }

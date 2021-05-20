@@ -145,17 +145,8 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .editMenuTapped(clipId):
-            let stream = Deferred {
-                Future<Action?, Never> { promise in
-                    let isPresented = dependency.router.showClipEditModal(for: clipId) { succeeded in
-                        promise(.success(.modalCompleted(succeeded)))
-                    }
-                    if !isPresented {
-                        promise(.success(.modalCompleted(false)))
-                    }
-                }
-            }
-            return (state, [Effect(stream)])
+            nextState.modal = .clipEdit(clipId: clipId)
+            return (nextState, .none)
 
         case let .shareMenuTapped(clipId):
             guard let imageIds = state.clips.value(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }

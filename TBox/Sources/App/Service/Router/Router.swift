@@ -40,5 +40,5 @@ protocol Router {
     func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool
 
     @discardableResult
-    func showClipEditModal(for clipId: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool
+    func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool
 }

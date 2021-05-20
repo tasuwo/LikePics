@@ -209,8 +209,9 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipEditModal(for clipId: Clip.Identity, completion: ((Bool) -> Void)?) -> Bool {
-        let state = ClipEditViewState(clipId: clipId,
+    func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool {
+        let state = ClipEditViewState(id: id,
+                                      clipId: clipId,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,

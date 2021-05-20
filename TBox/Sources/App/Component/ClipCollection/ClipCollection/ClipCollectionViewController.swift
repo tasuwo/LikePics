@@ -372,6 +372,9 @@ extension ClipCollectionViewController {
         case let .tagSelection(tagIds: tagIds):
             presentTagSelectionModal(selections: tagIds)
 
+        case let .clipEdit(clipId: clipId):
+            presentClipEditModal(clipId: clipId)
+
         case let .clipMerge(clips: clips):
             presentClipMergeModal(clips: clips)
 
@@ -415,6 +418,24 @@ extension ClipCollectionViewController {
             }
 
         if router.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentClipEditModal(clipId: Clip.Identity) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .clipEditModal)
+            .sink { [weak self] notification in
+                self?.store.execute(.modalCompleted(true))
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showClipEditModal(id: id, clipId: clipId) == false {
             modalSubscription?.cancel()
             modalSubscription = nil
             store.execute(.modalCompleted(false))
