@@ -25,12 +25,14 @@ class ClipMergeViewController: UIViewController {
         return handler
     }()
 
+    private let router: Router
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: Store
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private var modalSubscription: Cancellable?
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipMergeViewController")
 
     // MARK: Temporary
@@ -44,6 +46,7 @@ class ClipMergeViewController: UIViewController {
          thumbnailLoader: ThumbnailLoaderProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
+        self.router = dependency.router
         self.thumbnailLoader = thumbnailLoader
 
         super.init(nibName: nil, bundle: nil)
@@ -87,6 +90,10 @@ extension ClipMergeViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
+            .store(in: &subscriptions)
+
+        store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
@@ -110,6 +117,35 @@ extension ClipMergeViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentModalIfNeeded(for modal: ClipMergeViewState.Modal?) {
+        switch modal {
+        case let .tagSelection(tagIds: selections):
+            presentTagSelectionModal(selections: selections)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModal)
+            .sink { [weak self] notification in
+                let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag>
+                self?.store.execute(.tagsSelected(tags))
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
     }
 }
 

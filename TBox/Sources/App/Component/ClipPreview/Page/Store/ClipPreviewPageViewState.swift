@@ -11,7 +11,8 @@ struct ClipPreviewPageViewState: Equatable {
     }
 
     enum Modal: Equatable {
-        case albumSelection(UUID)
+        case albumSelection
+        case tagSelection(tagIds: Set<Tag.Identity>)
     }
 
     enum PageChange: String, Codable {
@@ -123,6 +124,7 @@ extension ClipPreviewPageViewState.Alert: Codable {
 extension ClipPreviewPageViewState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection
+        case tagSelection
     }
 
     public init(from decoder: Decoder) throws {
@@ -131,8 +133,11 @@ extension ClipPreviewPageViewState.Modal: Codable {
 
         switch key {
         case .albumSelection:
-            let albumId = try container.decode(Album.Identity.self, forKey: .albumSelection)
-            self = .albumSelection(albumId)
+            self = .albumSelection
+
+        case .tagSelection:
+            let tagIds = try container.decode(Set<Tag.Identity>.self, forKey: .tagSelection)
+            self = .tagSelection(tagIds: tagIds)
 
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
@@ -143,8 +148,11 @@ extension ClipPreviewPageViewState.Modal: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case let .albumSelection(albumId):
-            try container.encode(albumId, forKey: .albumSelection)
+        case .albumSelection:
+            try container.encode(true, forKey: .albumSelection)
+
+        case let .tagSelection(tagIds: tagIds):
+            try container.encode(tagIds, forKey: .tagSelection)
         }
     }
 }

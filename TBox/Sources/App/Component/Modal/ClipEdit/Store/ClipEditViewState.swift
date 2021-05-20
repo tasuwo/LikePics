@@ -11,6 +11,10 @@ struct ClipEditViewState: Equatable {
         case deleteConfirmation
     }
 
+    enum Modal: Equatable {
+        case tagSelection(tagIds: Set<Tag.Identity>)
+    }
+
     struct EditingClip: Equatable {
         let id: Clip.Identity
         let dataSize: Int
@@ -25,6 +29,7 @@ struct ClipEditViewState: Equatable {
     var isItemsEditing: Bool
 
     var alert: Alert?
+    var modal: Modal?
 
     var isDismissed: Bool
 }

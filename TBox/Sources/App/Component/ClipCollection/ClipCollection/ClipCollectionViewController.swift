@@ -369,6 +369,9 @@ extension ClipCollectionViewController {
         case .albumSelection:
             presentAlbumSelectionModal()
 
+        case let .tagSelection(tagIds: tagIds):
+            presentTagSelectionModal(selections: tagIds)
+
         case let .clipMerge(clips: clips):
             presentClipMergeModal(clips: clips)
 
@@ -390,6 +393,28 @@ extension ClipCollectionViewController {
             }
 
         if router.showAlbumSelectionModal(id: id) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModal)
+            .sink { [weak self] notification in
+                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag> {
+                    self?.store.execute(.tagsSelected(Set(tags.map({ $0.id }))))
+                } else {
+                    self?.store.execute(.tagsSelected(nil))
+                }
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showTagSelectionModal(id: id, selections: selections) == false {
             modalSubscription?.cancel()
             modalSubscription = nil
             store.execute(.modalCompleted(false))

@@ -10,6 +10,10 @@ struct ClipInformationViewState: Equatable {
         case siteUrlEdit(title: String?)
     }
 
+    enum Modal: Equatable {
+        case tagSelection(tagIds: Set<Tag.Identity>)
+    }
+
     let clipId: Clip.Identity
     let itemId: ClipItem.Identity
 
@@ -23,6 +27,7 @@ struct ClipInformationViewState: Equatable {
     var isHiddenStatusBar: Bool
 
     var alert: Alert?
+    var modal: Modal?
 
     var isDismissed: Bool
 }

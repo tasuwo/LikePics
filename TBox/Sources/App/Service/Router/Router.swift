@@ -31,7 +31,7 @@ protocol Router {
                                  transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult
-    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool
+    func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool
 
     @discardableResult
     func showAlbumSelectionModal(id: UUID) -> Bool

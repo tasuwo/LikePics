@@ -15,6 +15,7 @@ struct ClipCollectionState: Equatable {
 
     enum Modal: Equatable {
         case albumSelection
+        case tagSelection(tagIds: Set<Tag.Identity>)
         case clipMerge(clips: [Clip])
     }
 
@@ -155,6 +156,7 @@ extension ClipCollectionState.Alert: Codable {
 extension ClipCollectionState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection
+        case tagSelection
         case clipMerge
     }
 
@@ -165,6 +167,10 @@ extension ClipCollectionState.Modal: Codable {
         switch key {
         case .albumSelection:
             self = .albumSelection
+
+        case .tagSelection:
+            let tagIds = try container.decode(Set<Tag.Identity>.self, forKey: .tagSelection)
+            self = .tagSelection(tagIds: tagIds)
 
         case .clipMerge:
             let clips = try container.decode([Clip].self, forKey: .clipMerge)
@@ -181,6 +187,9 @@ extension ClipCollectionState.Modal: Codable {
         switch self {
         case .albumSelection:
             try container.encode(true, forKey: .albumSelection)
+
+        case let .tagSelection(tagIds: tagIds):
+            try container.encode(tagIds, forKey: .tagSelection)
 
         case let .clipMerge(clips):
             try container.encode(clips, forKey: .clipMerge)

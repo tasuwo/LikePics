@@ -97,8 +97,8 @@ struct ClipCollectionReducer: Reducer {
         case let .tagAdditionMenuTapped(clipId):
             switch dependency.clipQueryService.readClipAndTags(for: [clipId]) {
             case let .success((_, tags)):
-                let effect = Self.showTagSelectionModal(for: .init([clipId]), selections: Set(tags.map({ $0.id })), dependency: dependency)
-                return (state, [effect])
+                nextState.modal = .tagSelection(tagIds: Set(tags.map({ $0.id })))
+                return (nextState, .none)
 
             case .failure:
                 nextState.alert = .error(L10n.errorTagRead)
@@ -182,8 +182,12 @@ struct ClipCollectionReducer: Reducer {
 
         // MARK: Modal Completion
 
-        case let .tagsSelected(tagIds, for: clipIds):
-            guard let tagIds = tagIds else { return (state, .none) }
+        case let .tagsSelected(tagIds):
+            nextState.modal = nil
+
+            guard let tagIds = tagIds else { return (nextState, .none) }
+
+            let clipIds = state.clips.selectedIds()
             switch dependency.clipCommandService.updateClips(having: Array(clipIds), byReplacingTagsHaving: Array(tagIds)) {
             case .success:
                 nextState = nextState.editingEnded()
@@ -191,11 +195,13 @@ struct ClipCollectionReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
             }
-            nextState.modal = nil
             return (nextState, .none)
 
         case let .albumsSelected(albumId):
-            guard let albumId = albumId else { return (state, .none) }
+            nextState.modal = nil
+
+            guard let albumId = albumId else { return (nextState, .none) }
+
             let clipIds = state.clips.selectedIds()
             switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: Array(clipIds)) {
             case .success:
@@ -207,12 +213,11 @@ struct ClipCollectionReducer: Reducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtAddClipToAlbum)
             }
-            nextState.modal = nil
             return (nextState, .none)
 
         case let .modalCompleted(succeeded):
-            if succeeded { nextState = nextState.editingEnded() }
             nextState.modal = nil
+            if succeeded { nextState = nextState.editingEnded() }
             return (nextState, .none)
 
         // MARK: Alert Completion
@@ -368,28 +373,6 @@ extension ClipCollectionReducer {
     }
 }
 
-// MARK: - Router
-
-extension ClipCollectionReducer {
-    static func showTagSelectionModal(for clipIds: Set<Clip.Identity>, selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
-                    let tagIds: Set<Tag.Identity>? = {
-                        guard let tags = tags else { return nil }
-                        return Set(tags.map({ $0.id }))
-                    }()
-                    promise(.success(.tagsSelected(tagIds, for: clipIds)))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
-    }
-}
-
 // MARK: - Filter
 
 extension ClipCollectionReducer {
@@ -489,9 +472,9 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .addTags:
-            let effect = showTagSelectionModal(for: state.clips._selectedIds, selections: .init(), dependency: dependency)
+            nextState.modal = .tagSelection(tagIds: .init())
             nextState.alert = nil
-            return (nextState, [effect])
+            return (nextState, .none)
 
         case .hide:
             switch dependency.clipCommandService.updateClips(having: Array(state.clips._selectedIds), byHiding: true) {

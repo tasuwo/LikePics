@@ -27,6 +27,7 @@ enum ClipMergeViewAction: Action {
     // MARK: Modal Completion
 
     case tagsSelected(Set<Tag>?)
+    case modalCompleted(Bool)
 
     // MARK: Alert Completion
 

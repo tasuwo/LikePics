@@ -319,7 +319,6 @@
 		7D9A1887191477B06527EB94 /* RealmSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 133FD8A9180124177EEB3A16 /* RealmSwift.xcframework */; };
 		7DDD389D72A76C9B7893A47F /* ClipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67B1A3764809EA28A9770 /* ClipCollectionViewCell.swift */; };
 		7E0D7CDBBD2501616197B63F /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; };
-		7E4561984824DFC5ECBA6F96 /* HasTagSelectionModalSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE568A1EDBCC67D3BB740459 /* HasTagSelectionModalSubscription.swift */; };
 		7EC46DC4CDE7443C276C44CF /* ClipEditViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1642C1BDDBFA45832D5218E6 /* ClipEditViewState.swift */; };
 		7EC856ED43E502F5E4277102 /* AnyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A928382FEAE01ECD9B15F8 /* AnyStoring.swift */; };
 		7EDFDF80681C9C405E421222 /* Realm.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53BBB71C747011F166E64497 /* Realm.xcframework */; };
@@ -1506,7 +1505,6 @@
 		EC29BD4CACF3893E701E8232 /* ClipMergeViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipMergeViewLayout.swift; sourceTree = "<group>"; };
 		ED44DEDCF1C3A70A8FF84AF6 /* CloudAccountServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountServiceProtocol.swift; sourceTree = "<group>"; };
 		EDB0A36145DAE79E0624A163 /* HasTemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTemporariesPersistService.swift; sourceTree = "<group>"; };
-		EE568A1EDBCC67D3BB740459 /* HasTagSelectionModalSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagSelectionModalSubscription.swift; sourceTree = "<group>"; };
 		EF72945CBF972A23A9A297A6 /* ClipInformationViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewState.swift; sourceTree = "<group>"; };
 		F114CC601CED4FC053CE781D /* ClipInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationViewController.swift; sourceTree = "<group>"; };
 		F17C625AA5CB9F599615614F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -2042,7 +2040,6 @@
 				F20B76C40F4311EE73079F15 /* TagSelectionModalAction.swift */,
 				35E5E6FEFC473F31DBEAD5FD /* TagSelectionModalReducer.swift */,
 				45CC734A371A52DC2616C2ED /* TagSelectionModalState.swift */,
-				7154F75C0E74EB2A21AECA6F /* Dependency */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -2856,14 +2853,6 @@
 				F55C39249665DE22C2F43BD8 /* ClipPreviewPresentationAnimator.swift */,
 			);
 			path = Animator;
-			sourceTree = "<group>";
-		};
-		7154F75C0E74EB2A21AECA6F /* Dependency */ = {
-			isa = PBXGroup;
-			children = (
-				EE568A1EDBCC67D3BB740459 /* HasTagSelectionModalSubscription.swift */,
-			);
-			path = Dependency;
 			sourceTree = "<group>";
 		};
 		728EEF18BF147F41B915A936 /* CoreData */ = {
@@ -5327,7 +5316,6 @@
 				2CFF0EC9264FED2F00FA79D7 /* NSUserActivity+initWithIntent.swift in Sources */,
 				2C00ECD02650BF820085FFBB /* SearchViewRootReducer.swift in Sources */,
 				4912A33826EB693866A3D9B9 /* HasRouter.swift in Sources */,
-				7E4561984824DFC5ECBA6F96 /* HasTagSelectionModalSubscription.swift in Sources */,
 				80156D4149D90337F4617789 /* HasTemporariesPersistService.swift in Sources */,
 				4D0DD6C9A05350336F127AF2 /* HasTextEditAlertDelegate.swift in Sources */,
 				45DB0848C6C9D172EF50369C /* HasTextValidator.swift in Sources */,

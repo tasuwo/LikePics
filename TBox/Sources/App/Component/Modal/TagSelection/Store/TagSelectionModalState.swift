@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import CoreGraphics
 import Domain
 
@@ -12,6 +10,8 @@ struct TagSelectionModalState: Equatable {
         case error(String?)
         case addition
     }
+
+    let id: UUID
 
     var searchQuery: String
     var searchStorage: SearchableStorage<Tag>
@@ -28,7 +28,9 @@ struct TagSelectionModalState: Equatable {
 }
 
 extension TagSelectionModalState {
-    init(selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
+    init(id: UUID, selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
+        self.id = id
+
         searchQuery = ""
         searchStorage = .init()
         tags = .init(selectedIds: selections)

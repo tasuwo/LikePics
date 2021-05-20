@@ -52,7 +52,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var cacheSubscriptions: Set<AnyCancellable> = .init()
 
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
-    private var albumSelectionModalSubscription: Cancellable?
+    private var modalSubscription: Cancellable?
 
     private let factory: ViewControllerFactory
 
@@ -212,27 +212,54 @@ extension ClipPreviewPageViewController {
 
     private func presentModalIfNeeded(for modal: ClipPreviewPageViewState.Modal?) {
         switch modal {
-        case let .albumSelection(id):
-            presentAlbumSelectionModal(id: id)
+        case .albumSelection:
+            presentAlbumSelectionModal()
+
+        case let .tagSelection(tagIds: selections):
+            presentTagSelectionModal(selections: selections)
 
         case .none:
             break
         }
     }
 
-    private func presentAlbumSelectionModal(id: UUID) {
-        albumSelectionModalSubscription = ModalNotificationCenter.default
+    private func presentAlbumSelectionModal() {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .albumSelectionModal)
             .sink { [weak self] notification in
                 let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
                 self?.store.execute(.albumsSelected(albumId))
-                self?.albumSelectionModalSubscription?.cancel()
-                self?.albumSelectionModalSubscription = nil
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
             }
 
         if router.showAlbumSelectionModal(id: id) == false {
-            albumSelectionModalSubscription?.cancel()
-            albumSelectionModalSubscription = nil
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModal)
+            .sink { [weak self] notification in
+                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag> {
+                    self?.store.execute(.tagsSelected(Set(tags.map({ $0.id }))))
+                } else {
+                    self?.store.execute(.tagsSelected(nil))
+                }
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
             store.execute(.modalCompleted(false))
         }
     }

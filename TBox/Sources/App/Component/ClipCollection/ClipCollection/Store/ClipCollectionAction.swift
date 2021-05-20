@@ -41,7 +41,7 @@ enum ClipCollectionAction: Action {
 
     // MARK: Modal Completion
 
-    case tagsSelected(Set<Tag.Identity>?, for: Set<Clip.Identity>)
+    case tagsSelected(Set<Tag.Identity>?)
     case albumsSelected(Album.Identity?)
     case modalCompleted(Bool)
 

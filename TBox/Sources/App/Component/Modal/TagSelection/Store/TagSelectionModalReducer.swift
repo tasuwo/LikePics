@@ -8,7 +8,7 @@ import Domain
 typealias TagSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
-    & HasTagSelectionModalSubscription
+    & HasModalNotificationCenter
 
 struct TagSelectionModalReducer: Reducer {
     typealias Dependency = TagSelectionModalDependency
@@ -25,7 +25,9 @@ struct TagSelectionModalReducer: Reducer {
             return Self.prepareQueryEffects(state, dependency)
 
         case .viewDidDisappear:
-            dependency.tagSelectionCompleted(Set(state.tags.orderedSelectedValues()))
+            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
+            userInfo[.selectedTags] = Set(state.tags.orderedSelectedValues())
+            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModal, userInfo: userInfo)
             return (nextState, .none)
 
         // MARK: State Observation
@@ -177,4 +179,14 @@ extension TagSelectionModalReducer {
 
         return nextState
     }
+}
+
+// MARK: - ModalNotification
+
+extension ModalNotification.Name {
+    static let tagSelectionModal = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModal")
+}
+
+extension ModalNotification.UserInfoKey {
+    static let selectedTags = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
 }

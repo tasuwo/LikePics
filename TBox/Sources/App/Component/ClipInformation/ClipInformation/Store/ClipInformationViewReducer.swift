@@ -63,8 +63,8 @@ struct ClipInformationViewReducer: Reducer {
         // MARK: Control
 
         case .tagAdditionButtonTapped:
-            let effect = Self.showTagSelectionModal(selections: Set(state.tags._filteredIds), dependency: dependency)
-            return (nextState, [effect])
+            nextState.modal = .tagSelection(tagIds: state.tags._filteredIds)
+            return (nextState, .none)
 
         case let .tagRemoveButtonTapped(tagId):
             if case .failure = dependency.clipCommandService.updateClips(having: [state.clipId], byDeletingTagsHaving: [tagId]) {
@@ -99,7 +99,10 @@ struct ClipInformationViewReducer: Reducer {
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):
-            guard let tagIds = tagIds else { return (state, .none) }
+            nextState.modal = nil
+
+            guard let tagIds = tagIds else { return (nextState, .none) }
+
             switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
             case .success: ()
 
@@ -109,7 +112,8 @@ struct ClipInformationViewReducer: Reducer {
             return (nextState, .none)
 
         case .modalCompleted:
-            return (state, .none)
+            nextState.modal = nil
+            return (nextState, .none)
 
         // MARK: Alert Completion
 
@@ -243,27 +247,5 @@ extension ClipInformationViewReducer {
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
-    }
-}
-
-// MARK: - Router
-
-extension ClipInformationViewReducer {
-    static func showTagSelectionModal(selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
-                    guard let tagIds = tags?.map({ $0.id }) else {
-                        promise(.success(.modalCompleted(false)))
-                        return
-                    }
-                    promise(.success(.tagsSelected(Set(tagIds))))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
     }
 }

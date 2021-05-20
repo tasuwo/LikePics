@@ -52,8 +52,8 @@ struct ClipMergeViewReducer: Reducer {
         // MARK: Button Action
 
         case .tagAdditionButtonTapped:
-            let effect = Self.showTagSelectionModal(selections: Set(state.tags.map({ $0.id })), dependency: dependency)
-            return (state, [effect])
+            nextState.modal = .tagSelection(tagIds: Set(state.tags.map({ $0.id })))
+            return (nextState, .none)
 
         case let .tagDeleteButtonTapped(tagId):
             nextState.tags = state.tags.filter({ $0.id != tagId })
@@ -72,9 +72,17 @@ struct ClipMergeViewReducer: Reducer {
         // MARK: Modal Completion
 
         case let .tagsSelected(tags):
-            guard let tags = tags else { return (state, .none) }
+            nextState.modal = nil
+
+            guard let tags = tags else { return (nextState, .none) }
+
             let sortedTags = Array(tags).sorted(by: { $0.name < $1.name })
             nextState.tags = sortedTags
+
+            return (nextState, .none)
+
+        case .modalCompleted:
+            nextState.modal = nil
             return (nextState, .none)
 
         // MARK: Alert Completion
@@ -112,24 +120,6 @@ extension ClipMergeViewReducer {
         nextState.tags = tags
 
         return nextState
-    }
-}
-
-// MARK: - Router
-
-extension ClipMergeViewReducer {
-    static func showTagSelectionModal(selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
-                    promise(.success(.tagsSelected(tags)))
-                }
-                if !isPresented {
-                    promise(.success(.tagsSelected(nil)))
-                }
-            }
-        }
-        return Effect(stream)
     }
 }
 

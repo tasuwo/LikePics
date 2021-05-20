@@ -21,6 +21,8 @@ class ClipInformationViewController: UIViewController {
     private let transitioningController: ClipInformationTransitioningControllerProtocol
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
+    private let router: Router
+
     // MARK: Component
 
     private let siteUrlEditAlert: TextEditAlertController
@@ -29,6 +31,7 @@ class ClipInformationViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private var modalSubscription: Cancellable?
 
     // MARK: - Temporary
 
@@ -47,6 +50,7 @@ class ClipInformationViewController: UIViewController {
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
         self.informationView = clipInformationViewCache.readCachingView()
+        self.router = dependency.router
 
         super.init(nibName: nil, bundle: nil)
 
@@ -161,9 +165,11 @@ extension ClipInformationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.alert) { [weak self] alert in
-                self?.presentAlertIfNeeded(for: alert)
-            }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
             .store(in: &subscriptions)
 
         store.state
@@ -193,6 +199,38 @@ extension ClipInformationViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentModalIfNeeded(for modal: ClipInformationViewState.Modal?) {
+        switch modal {
+        case let .tagSelection(tagIds: tagIds):
+            presentTagSelectionModal(selections: tagIds)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModal)
+            .sink { [weak self] notification in
+                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag> {
+                    self?.store.execute(.tagsSelected(Set(tags.map({ $0.id }))))
+                } else {
+                    self?.store.execute(.tagsSelected(nil))
+                }
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
     }
 }
 

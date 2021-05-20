@@ -148,26 +148,16 @@ extension SceneDependencyContainer: Router {
         return false
     }
 
-    func showTagSelectionModal(selections: Set<Tag.Identity>, completion: @escaping (Set<Tag>?) -> Void) -> Bool {
-        struct Dependency: TagSelectionModalDependency {
-            let userSettingStorage: UserSettingsStorageProtocol
-            let clipCommandService: ClipCommandServiceProtocol
-            let clipQueryService: ClipQueryServiceProtocol
-            let tagSelectionCompleted: (Set<Tag>?) -> Void
-        }
-        let dependency = Dependency(userSettingStorage: container._userSettingStorage,
-                                    clipCommandService: container._clipCommandService,
-                                    clipQueryService: container._clipQueryService,
-                                    tagSelectionCompleted: completion)
-
-        let state = TagSelectionModalState(selections: selections,
+    func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
+        let state = TagSelectionModalState(id: id,
+                                           selections: selections,
                                            isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)
         let viewController = TagSelectionModalController(state: state,
                                                          tagAdditionAlertState: tagAdditionAlertState,
-                                                         dependency: dependency)
+                                                         dependency: self)
 
         guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)

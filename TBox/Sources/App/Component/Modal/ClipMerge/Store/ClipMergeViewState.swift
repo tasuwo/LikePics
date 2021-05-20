@@ -2,13 +2,15 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-// swiftlint:disable identifier_name
-
 import Domain
 
 struct ClipMergeViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
+    }
+
+    enum Modal: Equatable {
+        case tagSelection(tagIds: Set<Tag.Identity>)
     }
 
     let id: UUID
@@ -17,6 +19,7 @@ struct ClipMergeViewState: Equatable {
     var tags: [Tag]
 
     var alert: Alert?
+    var modal: Modal?
 
     var isDismissed: Bool
 

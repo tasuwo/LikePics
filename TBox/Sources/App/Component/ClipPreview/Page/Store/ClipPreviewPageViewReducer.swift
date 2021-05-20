@@ -90,7 +90,10 @@ struct ClipPreviewPageViewReducer: Reducer {
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):
-            guard let tagIds = tagIds else { return (state, .none) }
+            nextState.modal = nil
+
+            guard let tagIds = tagIds else { return (nextState, .none) }
+
             switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
             case .success: ()
 
@@ -101,7 +104,10 @@ struct ClipPreviewPageViewReducer: Reducer {
             return (nextState, .none)
 
         case let .albumsSelected(albumId):
-            guard let albumId = albumId else { return (state, .none) }
+            nextState.modal = nil
+
+            guard let albumId = albumId else { return (nextState, .none) }
+
             switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [state.clipId]) {
             case .success: ()
 
@@ -145,28 +151,6 @@ extension ClipPreviewPageViewReducer {
     }
 }
 
-// MARK: - Router
-
-extension ClipPreviewPageViewReducer {
-    static func showTagSelectionModal(for clipId: Clip.Identity, selections: Set<Tag.Identity>, dependency: HasRouter) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                let isPresented = dependency.router.showTagSelectionModal(selections: selections) { tags in
-                    let tagIds: Set<Tag.Identity>? = {
-                        guard let tags = tags else { return nil }
-                        return Set(tags.map({ $0.id }))
-                    }()
-                    promise(.success(.tagsSelected(tagIds)))
-                }
-                if !isPresented {
-                    promise(.success(.modalCompleted(false)))
-                }
-            }
-        }
-        return Effect(stream)
-    }
-}
-
 // MARK: - Bar Event
 
 extension ClipPreviewPageViewReducer {
@@ -203,21 +187,18 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .addToAlbum:
-            nextState.modal = .albumSelection(UUID())
+            nextState.modal = .albumSelection
             return (nextState, .none)
 
         case .addTags:
-            var effects: [Effect<Action>]?
             switch dependency.clipQueryService.readClipAndTags(for: [state.clipId]) {
             case let .success((_, tags)):
-                effects = [
-                    showTagSelectionModal(for: state.clipId, selections: Set(tags.map({ $0.id })), dependency: dependency)
-                ]
+                nextState.modal = .tagSelection(tagIds: Set(tags.map({ $0.id })))
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
             }
-            return (nextState, effects)
+            return (nextState, .none)
 
         case .shared:
             return (state, .none)
