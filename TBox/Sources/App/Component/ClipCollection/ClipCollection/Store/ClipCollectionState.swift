@@ -111,7 +111,7 @@ extension ClipCollectionState.Alert: Codable {
 
         switch key {
         case .error:
-            let message = try container.decodeIfPresent(String.self, forKey: .deletion)
+            let message = try container.decodeIfPresent(String.self, forKey: .error)
             self = .error(message)
 
         case .deletion:
@@ -175,7 +175,7 @@ extension ClipCollectionState.Modal: Codable {
             self = .tagSelection(tagIds: tagIds)
 
         case .clipEdit:
-            let clipId = try container.decode(Clip.Identity.self, forKey: .clipMerge)
+            let clipId = try container.decode(Clip.Identity.self, forKey: .clipEdit)
             self = .clipEdit(clipId: clipId)
 
         case .clipMerge:

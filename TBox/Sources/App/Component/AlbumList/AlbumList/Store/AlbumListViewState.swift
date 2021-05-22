@@ -101,7 +101,7 @@ extension AlbumListViewState.Alert: Codable {
 
         switch key {
         case .error:
-            let message = try container.decodeIfPresent(String.self, forKey: .deletion)
+            let message = try container.decodeIfPresent(String.self, forKey: .error)
             self = .error(message)
 
         case .addition:
