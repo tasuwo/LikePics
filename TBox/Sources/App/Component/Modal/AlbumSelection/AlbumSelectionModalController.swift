@@ -21,11 +21,13 @@ class AlbumSelectionModalController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: Layout.DataSource!
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol
-
     // MARK: Component
 
     private let albumAdditionAlert: TextEditAlertController
+
+    // MARK: Service
+
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: Store
 
@@ -53,7 +55,7 @@ class AlbumSelectionModalController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -114,6 +116,8 @@ extension AlbumSelectionModalController {
             }
             .store(in: &subscriptions)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for alert: AlbumSelectionModalState.Alert?) {
         switch alert {

@@ -34,9 +34,7 @@ struct ClipEditViewReducer: Reducer {
             return (nextState, .none)
 
         case .clipDeleted:
-            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return Self.dismiss(state: state, dependency: dependency)
 
         case let .itemsUpdated(items):
             let newItems = state.items
@@ -54,9 +52,7 @@ struct ClipEditViewReducer: Reducer {
         // MARK: NavigationBar
 
         case .doneButtonTapped:
-            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return Self.dismiss(state: state, dependency: dependency)
 
         // MARK: Button/Switch Action
 
@@ -228,9 +224,7 @@ struct ClipEditViewReducer: Reducer {
         // MARK: Transition
 
         case .didDismissedManually:
-            dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return Self.dismiss(state: state, dependency: dependency)
         }
     }
 }
@@ -336,6 +330,17 @@ private extension Clip {
         return .init(id: id,
                      dataSize: dataSize,
                      isHidden: isHidden)
+    }
+}
+
+// MARK: - Dismiss
+
+extension ClipEditViewReducer {
+    private static func dismiss(state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+        dependency.modalNotificationCenter.post(id: state.id, name: .clipEditModal)
+        nextState.isDismissed = true
+        return (nextState, .none)
     }
 }
 

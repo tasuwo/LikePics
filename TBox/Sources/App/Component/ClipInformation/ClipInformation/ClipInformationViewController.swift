@@ -21,11 +21,13 @@ class ClipInformationViewController: UIViewController {
     private let transitioningController: ClipInformationTransitioningControllerProtocol
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
-    private let router: Router
-
     // MARK: Component
 
     private let siteUrlEditAlert: TextEditAlertController
+
+    // MARK: Service
+
+    private let router: Router
 
     // MARK: Store
 
@@ -179,6 +181,8 @@ extension ClipInformationViewController {
             }
             .store(in: &subscriptions)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for alert: ClipInformationViewState.Alert?) {
         switch alert {

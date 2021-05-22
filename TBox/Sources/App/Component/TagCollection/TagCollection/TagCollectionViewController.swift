@@ -20,12 +20,14 @@ class TagCollectionViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    private let menuBuilder: TagCollectionMenuBuildable
-
     // MARK: Component
 
     private let tagAdditionAlert: TextEditAlertController
     private let tagEditAlert: TextEditAlertController
+
+    // MARK: Service
+
+    private let menuBuilder: TagCollectionMenuBuildable
 
     // MARK: Store
 
@@ -58,7 +60,7 @@ class TagCollectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +125,8 @@ extension TagCollectionViewController {
             .store(in: &subscriptions)
     }
 
+    // MARK: Snapshot
+
     private func applySnapshot(for state: TagCollectionViewState) {
         var items: [Layout.Item?] = []
 
@@ -132,6 +136,8 @@ extension TagCollectionViewController {
 
         Layout.apply(items: items.compactMap({ $0 }), to: dataSource, in: collectionView)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for state: TagCollectionViewState) {
         switch state.alert {
@@ -185,6 +191,8 @@ extension TagCollectionViewController {
 
         present(alert, animated: true, completion: nil)
     }
+
+    // MARK: User Activity
 
     private func updateUserActivity(_ state: TagCollectionViewState) {
         DispatchQueue.global().async {

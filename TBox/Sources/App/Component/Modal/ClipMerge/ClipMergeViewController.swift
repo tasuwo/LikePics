@@ -25,6 +25,8 @@ class ClipMergeViewController: UIViewController {
         return handler
     }()
 
+    // MARK: Service
+
     private let router: Router
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
@@ -34,10 +36,6 @@ class ClipMergeViewController: UIViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipMergeViewController")
-
-    // MARK: Temporary
-
-    private var previousSnapshotState: ClipMergeViewState?
 
     // MARK: - Initializers
 
@@ -57,7 +55,7 @@ class ClipMergeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()

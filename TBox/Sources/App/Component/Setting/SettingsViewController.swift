@@ -50,6 +50,8 @@ class SettingsViewController: UITableViewController {
     }
 }
 
+// MARK: - Bind
+
 extension SettingsViewController {
     private func bind(to store: Store) {
         store.state
@@ -91,6 +93,8 @@ extension SettingsViewController {
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(_ alert: SettingsViewState.Alert?) {
         switch alert {
@@ -152,6 +156,8 @@ extension SettingsViewController {
         alertController.addAction(turnOnAction)
         self.present(alertController, animated: true, completion: nil)
     }
+
+    // MARK: User Activity
 
     private func updateUserActivity(_ state: SettingsViewState) {
         DispatchQueue.global().async {

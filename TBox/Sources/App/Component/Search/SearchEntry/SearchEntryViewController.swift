@@ -47,7 +47,7 @@ class SearchEntryViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -80,7 +80,7 @@ class SearchEntryViewController: UIViewController {
     }
 }
 
-// MARK: - Bind
+// MARK: - Bind (Root)
 
 extension SearchEntryViewController {
     private func bind(to store: RootStore) {
@@ -91,6 +91,8 @@ extension SearchEntryViewController {
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
+
+    // MARK: User Activity
 
     private func updateUserActivity(_ state: SearchViewRootState) {
         DispatchQueue.global().async {
@@ -103,6 +105,8 @@ extension SearchEntryViewController {
         }
     }
 }
+
+// MARK: - Bind
 
 extension SearchEntryViewController {
     private func bind(to store: Store) {
@@ -118,6 +122,8 @@ extension SearchEntryViewController {
             .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
     }
+
+    // MARK: Snapshot
 
     private func applySnapshot(searchHistories: [ClipSearchHistory], isSomeItemsHidden: Bool) {
         var snapshot = Layout.Snapshot()
@@ -136,6 +142,8 @@ extension SearchEntryViewController {
 
         dataSource.apply(snapshot, animatingDifferences: true)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for alert: SearchEntryViewState.Alert?) {
         switch alert {

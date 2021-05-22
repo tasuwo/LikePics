@@ -26,12 +26,14 @@ class ClipEditViewController: UIViewController {
         return handler
     }()
 
-    private let router: Router
-    private let thumbnailLoader: ThumbnailLoaderProtocol
-
     // MARK: Component
 
     private let siteUrlEditAlert: TextEditAlertController
+
+    // MARK: Service
+
+    private let router: Router
+    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: Store
 
@@ -62,7 +64,7 @@ class ClipEditViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +123,8 @@ extension ClipEditViewController {
             .store(in: &subscriptions)
     }
 
+    // MARK: Snapshot
+
     private static func createSnapshot(clip: ClipEditViewState.EditingClip, tags: [Tag], items: [ClipItem]) -> Layout.Snapshot {
         var snapshot = Layout.Snapshot()
 
@@ -144,6 +148,8 @@ extension ClipEditViewController {
 
         return snapshot
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for alert: ClipEditViewState.Alert?) {
         switch alert {
@@ -195,6 +201,8 @@ extension ClipEditViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
+    // MARK: Modal
+
     private func presentModalIfNeeded(for modal: ClipEditViewState.Modal?) {
         switch modal {
         case let .tagSelection(tagIds: selections):
@@ -227,6 +235,8 @@ extension ClipEditViewController {
         }
     }
 }
+
+// MARK: - Configuration
 
 extension ClipEditViewController {
     private func configureViewHierarchy() {

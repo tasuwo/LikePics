@@ -38,7 +38,7 @@ class ClipPreviewViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

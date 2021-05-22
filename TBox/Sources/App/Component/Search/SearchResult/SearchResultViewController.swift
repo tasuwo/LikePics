@@ -29,7 +29,7 @@ class SearchResultViewController: UIViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.SearchResultViewController")
 
-    // MARK: Dependencies
+    // MARK: Service
 
     private let filterMenuBuilder = SearchMenuBuilder()
     private let thumbnailLoader: ThumbnailLoaderProtocol
@@ -50,7 +50,7 @@ class SearchResultViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,6 +129,8 @@ extension SearchResultViewController {
             }
             .store(in: &subscriptions)
     }
+
+    // MARK: Snapshot
 
     private func applySnapshot(tokenCandidates: [ClipSearchToken], searchResults: [Clip]) {
         let nextTokenCandidates = tokenCandidates.map { Layout.Item.tokenCandidate($0) }

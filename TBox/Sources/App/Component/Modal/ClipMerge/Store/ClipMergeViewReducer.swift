@@ -32,22 +32,15 @@ struct ClipMergeViewReducer: Reducer {
             let tagIds = state.tags.map({ $0.id })
             switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
             case .success:
-                dependency.modalNotificationCenter.post(id: state.id,
-                                                        name: .clipMergeModal,
-                                                        userInfo: [.clipMergeCompleted: true])
-                nextState.isDismissed = true
+                return Self.dismiss(isCompleted: true, state: state, dependency: dependency)
 
             case .failure:
                 nextState.alert = .error(L10n.clipMergeViewErrorAtMerge)
+                return (nextState, .none)
             }
-            return (nextState, .none)
 
         case .cancelButtonTapped:
-            dependency.modalNotificationCenter.post(id: state.id,
-                                                    name: .clipMergeModal,
-                                                    userInfo: [.clipMergeCompleted: false])
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return Self.dismiss(isCompleted: false, state: state, dependency: dependency)
 
         // MARK: Button Action
 
@@ -94,12 +87,19 @@ struct ClipMergeViewReducer: Reducer {
         // MARK: Transition
 
         case .didDismissedManually:
-            dependency.modalNotificationCenter.post(id: state.id,
-                                                    name: .clipMergeModal,
-                                                    userInfo: [.clipMergeCompleted: false])
-            nextState.isDismissed = true
-            return (nextState, .none)
+            return Self.dismiss(isCompleted: false, state: state, dependency: dependency)
         }
+    }
+}
+
+// MARK: - Dismiss
+
+extension ClipMergeViewReducer {
+    private static func dismiss(isCompleted: Bool, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+        var nextState = state
+        dependency.modalNotificationCenter.post(id: state.id, name: .clipMergeModal, userInfo: [.clipMergeCompleted: isCompleted])
+        nextState.isDismissed = true
+        return (nextState, .none)
     }
 }
 

@@ -21,15 +21,17 @@ class AlbumListViewController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
-    private let menuBuilder: AlbumListMenuBuildable.Type
-
     // MARK: Component
 
     private let albumAdditionAlert: TextEditAlertController
     private let albumEditAlert: TextEditAlertController
 
-    // MARK: Store
+    // MARK: Service
+
+    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
+    private let menuBuilder: AlbumListMenuBuildable.Type
+
+    // MARK: Store/Subscription
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
@@ -62,7 +64,7 @@ class AlbumListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +92,8 @@ class AlbumListViewController: UIViewController {
         store.execute(.editingChanged(isEditing: editing))
     }
 }
+
+// MARK: - Bind
 
 extension AlbumListViewController {
     private func bind(to store: Store) {
@@ -144,11 +148,13 @@ extension AlbumListViewController {
 
         store.state
             .receive(on: DispatchQueue.global())
-            .removeDuplicates()
+            .removeDuplicates(by: { $0.removingSessionStates() == $1.removingSessionStates() })
             .debounce(for: 3, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for state: AlbumListViewState) {
         switch state.alert {
@@ -205,6 +211,8 @@ extension AlbumListViewController {
 
         self.present(alert, animated: true, completion: nil)
     }
+
+    // MARK: User Activity
 
     private func updateUserActivity(_ state: AlbumListViewState) {
         DispatchQueue.global().async {

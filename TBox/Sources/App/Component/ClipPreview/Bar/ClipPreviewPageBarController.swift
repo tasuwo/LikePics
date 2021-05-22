@@ -108,6 +108,8 @@ extension ClipPreviewPageBarController {
             .store(in: &subscriptions)
     }
 
+    // MARK: Appearance
+
     private func updateBackground(isFullscreen: Bool) {
         UIView.animate(withDuration: 0.2) {
             self.barHostingViewController?.parent?.view.backgroundColor = isFullscreen ? .black : Asset.Color.backgroundClient.color
@@ -123,6 +125,8 @@ extension ClipPreviewPageBarController {
             self.barHostingViewController?.navigationController?.navigationBar.isHidden = state.isNavigationBarHidden
         }
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for state: ClipPreviewPageBarState) {
         switch state.alert {

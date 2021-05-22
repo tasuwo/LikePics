@@ -27,16 +27,15 @@ class ClipCollectionViewController: UIViewController {
     private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
-    private let router: Router
-    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
-
     // MARK: Component
 
     private var navigationBarController: ClipCollectionNavigationBarController!
     private var toolBarController: ClipCollectionToolBarController!
 
-    // MARK: Builder
+    // MARK: Service
 
+    private let router: Router
+    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
     private let menuBuilder: ClipCollectionMenuBuildable
 
     // MARK: Store
@@ -87,7 +86,7 @@ class ClipCollectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: View Life-Cycle Methods
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +126,7 @@ class ClipCollectionViewController: UIViewController {
     }
 }
 
-// MARK: - Bind
+// MARK: - Bind (Root)
 
 extension ClipCollectionViewController {
     private func bind(to store: RootStore) {
@@ -143,11 +142,13 @@ extension ClipCollectionViewController {
 
         store.state
             .receive(on: DispatchQueue.global())
-            .removeDuplicates()
+            .removeDuplicates(by: { $0.removingSessionStates() == $1.removingSessionStates() })
             .debounce(for: 3, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
+
+    // MARK: User Activity
 
     private func updateUserActivity(_ state: ClipCollectionViewRootState) {
         DispatchQueue.global().async {
@@ -166,6 +167,8 @@ extension ClipCollectionViewController {
         }
     }
 }
+
+// MARK: - Bind
 
 extension ClipCollectionViewController {
     private func bind(to store: Store) {
@@ -244,6 +247,8 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
     }
 
+    // MARK: Layout
+
     private func applyLayout(_ layout: ClipCollection.Layout) {
         let nextLayout = Layout.createLayout(layout.toRequest(delegate: self))
         let animationBlocks = collectionView.visibleCells
@@ -255,6 +260,8 @@ extension ClipCollectionViewController {
             animationBlocks.forEach { $0() }
         }
     }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for state: ClipCollectionState) {
         switch state.alert {
@@ -364,6 +371,8 @@ extension ClipCollectionViewController {
         self.present(controller, animated: true, completion: nil)
     }
 
+    // MARK: Modal
+
     private func presentModalIfNeeded(for modal: ClipCollectionState.Modal?) {
         switch modal {
         case .albumSelection:
@@ -429,7 +438,7 @@ extension ClipCollectionViewController {
 
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipEditModal)
-            .sink { [weak self] notification in
+            .sink { [weak self] _ in
                 self?.store.execute(.modalCompleted(true))
                 self?.modalSubscription?.cancel()
                 self?.modalSubscription = nil
@@ -460,6 +469,8 @@ extension ClipCollectionViewController {
             store.execute(.modalCompleted(false))
         }
     }
+
+    // MARK: Appearance
 
     private func updateHiddenIconAppearance() {
         collectionView.indexPathsForVisibleItems.forEach { indexPath in
@@ -501,7 +512,7 @@ extension ClipCollectionViewController {
                                                                 dataSource: dataSource,
                                                                 itemBuilder: { .init($0) })
 
-        // FIXME: カスタムレイアウトとPreloadの相性が悪い？poolが解放されずに残ってしまうので、一旦無効にする
+        // カスタムレイアウトとPreloadの相性が悪い？poolが解放されずに残ってしまうので、一旦無効にする
         // preLoader = .init(dataSource: dataSource, thumbnailLoader: thumbnailLoader)
         // collectionView.isPrefetchingEnabled = true
         // collectionView.prefetchDataSource = preLoader

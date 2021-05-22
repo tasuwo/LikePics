@@ -32,14 +32,17 @@ class ClipPreviewPageViewController: UIPageViewController {
     private let transitionController: ClipPreviewPageTransitionControllerType
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
-    private let router: Router
-
     override var prefersStatusBarHidden: Bool { barController.store.stateValue.isFullscreen }
 
     // MARK: Component
 
     private var barController: ClipPreviewPageBarController!
     private let cacheController: ClipInformationViewCacheController
+
+    // MARK: Service
+
+    private let router: Router
+    private let factory: ViewControllerFactory
 
     // MARK: Store
 
@@ -53,8 +56,6 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
-
-    private let factory: ViewControllerFactory
 
     // MARK: - Initializers
 
@@ -179,6 +180,8 @@ extension ClipPreviewPageViewController {
             .store(in: &subscriptions)
     }
 
+    // MARK: Page
+
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
         guard let currentItem = state.currentItem,
               currentIndex != state.currentIndex,
@@ -191,6 +194,28 @@ extension ClipPreviewPageViewController {
             self.didChangePage(to: viewController)
         })
     }
+
+    private func didChangePage(to viewController: ClipPreviewViewController) {
+        tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
+        viewController.previewView.delegate = self
+
+        previewVieSubscriptions.forEach { $0.cancel() }
+        viewController.previewView.isInitialZoomScale
+            .sink { [weak self] isInitialZoomScale in
+                self?.transitionController.inputs.isInitialPreviewZoomScale.send(isInitialZoomScale)
+            }
+            .store(in: &previewVieSubscriptions)
+        viewController.previewView.contentOffset
+            .sink { [weak self] offset in
+                self?.transitionController.inputs.previewContentOffset.send(offset)
+            }
+            .store(in: &previewVieSubscriptions)
+        transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
+
+        cacheStore.execute(.pageChanged(store.stateValue.clipId, viewController.itemId))
+    }
+
+    // MARK: Alert
 
     private func presentAlertIfNeeded(for alert: ClipPreviewPageViewState.Alert?) {
         switch alert {
@@ -209,6 +234,8 @@ extension ClipPreviewPageViewController {
         })
         self.present(alert, animated: true, completion: nil)
     }
+
+    // MARK: Modal
 
     private func presentModalIfNeeded(for modal: ClipPreviewPageViewState.Modal?) {
         switch modal {
@@ -262,26 +289,6 @@ extension ClipPreviewPageViewController {
             modalSubscription = nil
             store.execute(.modalCompleted(false))
         }
-    }
-
-    private func didChangePage(to viewController: ClipPreviewViewController) {
-        tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
-        viewController.previewView.delegate = self
-
-        previewVieSubscriptions.forEach { $0.cancel() }
-        viewController.previewView.isInitialZoomScale
-            .sink { [weak self] isInitialZoomScale in
-                self?.transitionController.inputs.isInitialPreviewZoomScale.send(isInitialZoomScale)
-            }
-            .store(in: &previewVieSubscriptions)
-        viewController.previewView.contentOffset
-            .sink { [weak self] offset in
-                self?.transitionController.inputs.previewContentOffset.send(offset)
-            }
-            .store(in: &previewVieSubscriptions)
-        transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
-
-        cacheStore.execute(.pageChanged(store.stateValue.clipId, viewController.itemId))
     }
 }
 
