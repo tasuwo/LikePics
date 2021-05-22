@@ -105,7 +105,7 @@ extension ClipEditViewController {
 
         store.state
             .removeDuplicates(by: \.items._selectedIds)
-            .sink { [weak self] state in self?.selectionApplier.apply(snapshot: state.items) }
+            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.items) }
             .store(in: &subscriptions)
 
         store.state

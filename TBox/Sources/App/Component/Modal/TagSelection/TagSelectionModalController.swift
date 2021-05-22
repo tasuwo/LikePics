@@ -101,7 +101,7 @@ extension TagSelectionModalController {
 
         store.state
             .removeDuplicates(by: \.tags._selectedIds)
-            .sink { [weak self] state in self?.selectionApplier.apply(snapshot: state.tags) }
+            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.tags) }
             .store(in: &subscriptions)
         store.state
             .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }

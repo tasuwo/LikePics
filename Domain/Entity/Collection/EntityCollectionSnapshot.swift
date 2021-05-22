@@ -102,6 +102,11 @@ public extension EntityCollectionSnapshot {
             .map { $0.value }
     }
 
+    func filteredEntity(having id: Entity.Identity) -> Entity? {
+        guard _filteredIds.contains(id) else { return nil }
+        return _entities[id]?.value
+    }
+
     func filteredIds() -> Set<Entity.Identity> {
         _filteredIds
             .intersection(Set(_entities.keys))

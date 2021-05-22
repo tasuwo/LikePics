@@ -32,6 +32,13 @@ public extension UICollectionViewSelectionLazyApplier {
             self.suspendedSelections = .init()
             var nextSuspendedSelections = Set<Entity.Identity>()
 
+            // 選択中のEntityが消えていたら、後ほど再度選択させるためにsuspendedSelectionsに積む
+            self.previousSelections.subtracting(self.suspendedSelections).forEach { id in
+                if snapshot.filteredEntity(having: id) == nil {
+                    nextSuspendedSelections.insert(id)
+                }
+            }
+
             DispatchQueue.main.sync {
                 selections.forEach { id in
                     guard let entity = snapshot.entity(having: id),
@@ -48,7 +55,7 @@ public extension UICollectionViewSelectionLazyApplier {
         }
     }
 
-    func apply(snapshot: EntityCollectionSnapshot<Entity>) {
+    func applySelection(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             defer {
                 self.previousSelections = snapshot._selectedIds
@@ -73,7 +80,7 @@ public extension UICollectionViewSelectionLazyApplier {
 
             DispatchQueue.main.sync {
                 selections.forEach { id in
-                    guard let entity = snapshot.entity(having: id),
+                    guard let entity = snapshot.filteredEntity(having: id),
                           let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         nextSuspendedSelections.insert(id)
@@ -83,7 +90,7 @@ public extension UICollectionViewSelectionLazyApplier {
                 }
 
                 deselections.forEach { id in
-                    guard let entity = snapshot.entity(having: id),
+                    guard let entity = snapshot.filteredEntity(having: id),
                           let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         return
