@@ -19,15 +19,11 @@ enum TagSelectionModalLayout {
 
 extension TagSelectionModalLayout {
     static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { _, _ -> NSCollectionLayoutSection? in
-            let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
-                                                                 top: nil,
-                                                                 trailing: nil,
-                                                                 bottom: .fixed(4))
-            let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
-            return section
-        }
+        let layout = TagCollectionBrickworkLayout()
+        layout.sectionInset = .init(top: 0, left: 12, bottom: 0, right: 12)
+        layout.sectionInsetReference = .fromSafeArea
+        // 計算コストが高く描画がカクつくので、あえて利用しない
+        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         return layout
     }
 }

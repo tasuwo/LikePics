@@ -173,4 +173,34 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.titleLabel.text = title
         }
     }
+
+    public static func preferredSize(title: String,
+                                     clipCount: Int?,
+                                     isHidden: Bool,
+                                     visibleCountIfPossible: Bool,
+                                     visibleDeleteButton: Bool) -> CGSize
+    {
+        let label = UILabel()
+        if let count = clipCount, visibleCountIfPossible {
+            label.text = "\(title) (\(count))"
+        } else {
+            label.text = title
+        }
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.sizeToFit()
+
+        var width = label.frame.width + 16
+        if visibleDeleteButton {
+            width += 44 + 1
+        }
+        if isHidden {
+            width += 16
+        } else {
+            width += 18
+        }
+
+        let height = label.frame.height + 16
+
+        return .init(width: min(240, width), height: height)
+    }
 }
