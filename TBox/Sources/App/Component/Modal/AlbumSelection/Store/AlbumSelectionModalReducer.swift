@@ -171,5 +171,5 @@ extension ModalNotification.Name {
 }
 
 extension ModalNotification.UserInfoKey {
-    static let selectedAlbumId = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.AlbumSelectionModalReducer.selectedAlbumId")
+    static let selectedAlbumId = ModalNotification.UserInfoKey("net.tasuwo.TBox.AlbumSelectionModalReducer.selectedAlbumId")
 }

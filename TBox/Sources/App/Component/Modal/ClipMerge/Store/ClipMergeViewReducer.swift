@@ -131,5 +131,5 @@ extension ModalNotification.Name {
 }
 
 extension ModalNotification.UserInfoKey {
-    static let clipMergeCompleted = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.ClipMergeViewReducer.clipMergeCompleted")
+    static let clipMergeCompleted = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipMergeViewReducer.clipMergeCompleted")
 }

@@ -189,5 +189,5 @@ extension ModalNotification.Name {
 }
 
 extension ModalNotification.UserInfoKey {
-    static let selectedTags = ModalNotification.UserInfoKey(rawValue: "net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
+    static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
 }

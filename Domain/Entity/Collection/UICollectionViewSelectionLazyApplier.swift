@@ -25,8 +25,8 @@ public class UICollectionViewSelectionLazyApplier<Section: Hashable, Item: Hasha
     }
 }
 
-extension UICollectionViewSelectionLazyApplier {
-    public func didApplyDataSource(snapshot: EntityCollectionSnapshot<Entity>) {
+public extension UICollectionViewSelectionLazyApplier {
+    func didApplyDataSource(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             let selections = self.suspendedSelections
             self.suspendedSelections = .init()
@@ -48,7 +48,7 @@ extension UICollectionViewSelectionLazyApplier {
         }
     }
 
-    public func apply(snapshot: EntityCollectionSnapshot<Entity>) {
+    func apply(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             defer {
                 self.previousSelections = snapshot._selectedIds

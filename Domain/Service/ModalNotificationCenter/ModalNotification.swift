@@ -4,18 +4,18 @@
 
 import Foundation
 
-struct ModalNotification {
-    struct Name: Equatable {
+public struct ModalNotification {
+    public struct Name: Equatable {
         let rawValue: String
     }
 
-    struct UserInfoKey: Equatable, Hashable {
+    public struct UserInfoKey: Equatable, Hashable {
         let rawValue: String
     }
 
-    let id: UUID
-    let name: Name
-    let userInfo: [AnyHashable: Any]?
+    public let id: UUID
+    public let name: Name
+    public let userInfo: [AnyHashable: Any]?
 }
 
 extension ModalNotification {
@@ -24,8 +24,8 @@ extension ModalNotification {
     }
 }
 
-extension ModalNotification.Name {
-    var notificationName: Notification.Name { .init(rawValue) }
+public extension ModalNotification.Name {
+    internal var notificationName: Notification.Name { .init(rawValue) }
 
     init(_ rawValue: String) {
         self.rawValue = rawValue
@@ -33,5 +33,11 @@ extension ModalNotification.Name {
 
     init(_ name: Notification.Name) {
         rawValue = name.rawValue
+    }
+}
+
+public extension ModalNotification.UserInfoKey {
+    init(_ rawValue: String) {
+        self.rawValue = rawValue
     }
 }
