@@ -59,8 +59,7 @@ enum TagCollectionViewLayout {
 extension TagCollectionViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = TagCollectionBrickworkLayout()
-        layout.sectionInset = .init(top: 0, left: 12, bottom: 0, right: 12)
-        layout.sectionInsetReference = .fromSafeArea
+        layout.sectionInset = .init(top: 0, left: 12, bottom: 12, right: 12)
         // 計算コストが高く描画がカクつくので、あえて利用しない
         // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         return layout
