@@ -95,7 +95,7 @@ extension ClipEditViewController {
                                                    tags: state.tags.orderedFilteredEntities(),
                                                    items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot)
-                self?.selectionApplier.didApplyDataSource(collection: state.items)
+                self?.selectionApplier.didApplyDataSource(snapshot: state.items)
             }
             .store(in: &subscriptions)
 
@@ -105,7 +105,7 @@ extension ClipEditViewController {
 
         store.state
             .removeDuplicates(by: \.items._selectedIds)
-            .sink { [weak self] state in self?.selectionApplier.apply(collection: state.items) }
+            .sink { [weak self] state in self?.selectionApplier.apply(snapshot: state.items) }
             .store(in: &subscriptions)
 
         store.state

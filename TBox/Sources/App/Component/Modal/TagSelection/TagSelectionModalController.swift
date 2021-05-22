@@ -84,7 +84,7 @@ extension TagSelectionModalController {
                 snapshot.appendSections([.main])
                 snapshot.appendItems(state.tags.orderedFilteredEntities())
                 self.dataSource.apply(snapshot, animatingDifferences: true)
-                self.selectionApplier.didApplyDataSource(collection: state.tags)
+                self.selectionApplier.didApplyDataSource(snapshot: state.tags)
             }
             .store(in: &subscriptions)
 
@@ -101,7 +101,7 @@ extension TagSelectionModalController {
 
         store.state
             .removeDuplicates(by: \.tags._selectedIds)
-            .sink { [weak self] state in self?.selectionApplier.apply(collection: state.tags) }
+            .sink { [weak self] state in self?.selectionApplier.apply(snapshot: state.tags) }
             .store(in: &subscriptions)
         store.state
             .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
