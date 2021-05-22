@@ -2183,14 +2183,6 @@
 			path = ValueObject;
 			sourceTree = "<group>";
 		};
-		2C2B0610B5C943E6A9398DDA /* TagSelection */ = {
-			isa = PBXGroup;
-			children = (
-				03C1C478F77D40A203EAF7E2 /* TagSelectionViewModel.swift */,
-			);
-			path = TagSelection;
-			sourceTree = "<group>";
-		};
 		2CA06B802C5DB8E8C71FCC5F /* Reducer */ = {
 			isa = PBXGroup;
 			children = (
@@ -2222,15 +2214,6 @@
 				0448B038F051A3A11EE67748 /* DependencyContainer.swift */,
 			);
 			path = Cotnext;
-			sourceTree = "<group>";
-		};
-		33B366288BEA968AC353B060 /* ClipCreation */ = {
-			isa = PBXGroup;
-			children = (
-				99F496B6B9260BDCAD7F5FCC /* ClipCreationViewLayout.swift */,
-				237E1E02BEA222FF18DB0643 /* ClipCreationViewModel.swift */,
-			);
-			path = ClipCreation;
 			sourceTree = "<group>";
 		};
 		35077F85E8D1A495C63C8A31 /* ClipInformation */ = {
@@ -2485,7 +2468,6 @@
 				06AFA39C56AF3350B9B9435C /* Services */,
 				5ADBEEE7A7D921E5DEDB5EB8 /* ValueObject */,
 				E031DF7DFC1F2DF82AAF0AFC /* View */,
-				C24E55C0469E1DBF73072E27 /* ViewModel */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -3614,15 +3596,6 @@
 			path = TBoxUIKit;
 			sourceTree = "<group>";
 		};
-		C24E55C0469E1DBF73072E27 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				33B366288BEA968AC353B060 /* ClipCreation */,
-				2C2B0610B5C943E6A9398DDA /* TagSelection */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		C3437DB65D5655CDEFBDFDF8 /* Listing */ = {
 			isa = PBXGroup;
 			children = (
@@ -3676,6 +3649,7 @@
 			isa = PBXGroup;
 			children = (
 				BB228A5D6CF7356012B30E5C /* TagSelectionViewController.swift */,
+				03C1C478F77D40A203EAF7E2 /* TagSelectionViewModel.swift */,
 				0622272D2258C4E117D97218 /* TagSelectionViewController.xib */,
 			);
 			path = TagSelection;
@@ -3716,6 +3690,8 @@
 			isa = PBXGroup;
 			children = (
 				53044ABF306C21BC79CC9AC3 /* ClipCreationViewController.swift */,
+				99F496B6B9260BDCAD7F5FCC /* ClipCreationViewLayout.swift */,
+				237E1E02BEA222FF18DB0643 /* ClipCreationViewModel.swift */,
 				4ABC2CC9144BE841BB9A6C3A /* ClipCreationViewController.xib */,
 			);
 			path = ClipCreation;
