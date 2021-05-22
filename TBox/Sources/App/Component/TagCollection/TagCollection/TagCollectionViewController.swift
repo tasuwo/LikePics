@@ -71,6 +71,21 @@ class TagCollectionViewController: UIViewController {
         }
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        // HACK: 画面回転時にStackViewの状態がおかしくなるケースがあるため、強制的に表示を更新する
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.collectionView.visibleCells
+                .compactMap { $0 as? TagCollectionViewCell }
+                .forEach { $0.updateAppearance() }
+        }, completion: { [weak self] _ in
+            self?.collectionView.visibleCells
+                .compactMap { $0 as? TagCollectionViewCell }
+                .forEach { $0.updateAppearance() }
+        })
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

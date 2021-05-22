@@ -129,7 +129,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         self.layer.borderColor = UIColor.systemGray3.cgColor
     }
 
-    func updateAppearance() {
+    public func updateAppearance() {
         switch (self.displayMode, self.isSelected) {
         case (.checkAtSelect, true):
             self.contentView.backgroundColor = UIColor.systemGreen
