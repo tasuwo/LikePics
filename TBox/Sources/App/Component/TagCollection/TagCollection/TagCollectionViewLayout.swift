@@ -58,41 +58,12 @@ enum TagCollectionViewLayout {
 
 extension TagCollectionViewLayout {
     static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
-            switch Section(rawValue: sectionIndex) {
-            case .uncategorized:
-                return self.createUncategorizedLayoutSection()
-
-            case .main:
-                return self.createTagsLayoutSection()
-
-            case .none:
-                return nil
-            }
-        }
+        let layout = TagCollectionBrickworkLayout()
+        layout.sectionInset = .init(top: 0, left: 12, bottom: 0, right: 12)
+        layout.sectionInsetReference = .fromSafeArea
+        // 計算コストが高く描画がカクつくので、あえて利用しない
+        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         return layout
-    }
-
-    private static func createUncategorizedLayoutSection() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0),
-                                                            heightDimension: .fractionalHeight(1.0)))
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(40))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14)
-
-        return NSCollectionLayoutSection(group: group)
-    }
-
-    private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let groupEdgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
-                                                             top: nil,
-                                                             trailing: nil,
-                                                             bottom: .fixed(4))
-        let section = TagCollectionView.createLayoutSection(groupEdgeSpacing: groupEdgeSpacing)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12)
-        return section
     }
 }
 

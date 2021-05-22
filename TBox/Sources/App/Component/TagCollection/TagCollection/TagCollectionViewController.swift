@@ -63,6 +63,14 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: - View Life-Cycle Methods
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -217,7 +225,7 @@ extension TagCollectionViewController {
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
+        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view.safeAreaLayoutGuide))
 
         emptyMessageView.alpha = 0
         view.addSubview(self.emptyMessageView)
@@ -278,6 +286,35 @@ extension TagCollectionViewController: UICollectionViewDelegate {
 
         default: () // NOP
         }
+    }
+}
+
+extension TagCollectionViewController: UICollectionViewDelegateFlowLayout {
+    // MARK: - UICollectionViewDelegateFlowLayout
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case .uncategorized:
+            return UncategorizedCell.preferredSize()
+
+        case let .tag(item):
+            return TagCollectionViewCell.preferredSize(title: item.tag.name,
+                                                       clipCount: item.tag.clipCount,
+                                                       isHidden: item.tag.isHidden,
+                                                       visibleCountIfPossible: item.displayCount,
+                                                       visibleDeleteButton: false)
+
+        default:
+            return .zero
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 12.0
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 8.0
     }
 }
 

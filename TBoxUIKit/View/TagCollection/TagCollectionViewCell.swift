@@ -189,14 +189,9 @@ public class TagCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.sizeToFit()
 
-        var width = label.frame.width + 16
+        var width = label.frame.width + 18 + 16
         if visibleDeleteButton {
             width += 44 + 1
-        }
-        if isHidden {
-            width += 16
-        } else {
-            width += 18
         }
 
         let height = label.frame.height + 16

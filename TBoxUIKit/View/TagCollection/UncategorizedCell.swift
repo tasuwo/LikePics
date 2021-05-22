@@ -34,4 +34,16 @@ public class UncategorizedCell: UICollectionViewCell {
         self.button.titleLabel?.adjustsFontForContentSizeCategory = true
         self.button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
+
+    public static func preferredSize() -> CGSize {
+        let label = UILabel()
+        label.text = L10n.uncategorizedCellTitle
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.sizeToFit()
+
+        let width = label.frame.width
+        let height = label.frame.height + 32
+
+        return .init(width: width, height: height)
+    }
 }
