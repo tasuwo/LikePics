@@ -26,7 +26,7 @@ struct TagSelectionModalReducer: Reducer {
 
         case .viewDidDisappear:
             var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
-            userInfo[.selectedTags] = Set(state.tags.orderedSelectedValues())
+            userInfo[.selectedTags] = Set(state.tags.orderedSelectedEntities())
             dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModal, userInfo: userInfo)
             return (nextState, .none)
 
@@ -136,7 +136,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues(),
+        performFilter(tags: previousState.tags.orderedEntities(),
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -145,7 +145,7 @@ extension TagSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues(),
+        performFilter(tags: previousState.tags.orderedEntities(),
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -163,7 +163,7 @@ extension TagSelectionModalReducer {
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
         let newTags = previousState.tags
-            .updated(values: tags.indexed())
+            .updated(entities: tags.indexed())
             .updated(filteredIds: Set(filteredTagIds))
         nextState.tags = newTags
 

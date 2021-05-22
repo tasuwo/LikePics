@@ -27,7 +27,7 @@ class UICollectionViewSelectionLazyApplier<Section: Hashable, Item: Hashable, En
 }
 
 extension UICollectionViewSelectionLazyApplier {
-    func didApplyDataSource(collection: Collection<Entity>) {
+    func didApplyDataSource(collection: EntityCollectionSnapshot<Entity>) {
         queue.async {
             let selections = self.suspendedSelections
             self.suspendedSelections = .init()
@@ -35,7 +35,7 @@ extension UICollectionViewSelectionLazyApplier {
 
             DispatchQueue.main.sync {
                 selections.forEach { id in
-                    guard let entity = collection.value(having: id),
+                    guard let entity = collection.entity(having: id),
                           let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         nextSuspendedSelections.insert(id)
@@ -49,7 +49,7 @@ extension UICollectionViewSelectionLazyApplier {
         }
     }
 
-    func apply(collection: Collection<Entity>) {
+    func apply(collection: EntityCollectionSnapshot<Entity>) {
         queue.async {
             defer {
                 self.previousSelections = collection._selectedIds
@@ -74,7 +74,7 @@ extension UICollectionViewSelectionLazyApplier {
 
             DispatchQueue.main.sync {
                 selections.forEach { id in
-                    guard let entity = collection.value(having: id),
+                    guard let entity = collection.entity(having: id),
                           let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         nextSuspendedSelections.insert(id)
@@ -84,7 +84,7 @@ extension UICollectionViewSelectionLazyApplier {
                 }
 
                 deselections.forEach { id in
-                    guard let entity = collection.value(having: id),
+                    guard let entity = collection.entity(having: id),
                           let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         return

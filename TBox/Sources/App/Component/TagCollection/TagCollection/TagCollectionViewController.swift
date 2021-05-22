@@ -131,7 +131,7 @@ extension TagCollectionViewController {
         var items: [Layout.Item?] = []
 
         items += state.searchQuery.isEmpty ? [.uncategorized] : [nil]
-        items += state.tags.orderedFilteredValues()
+        items += state.tags.orderedFilteredEntities()
             .map { .tag(Layout.Item.ListingTag(tag: $0, displayCount: !state.isSomeItemsHidden)) }
 
         Layout.apply(items: items.compactMap({ $0 }), to: dataSource, in: collectionView)
@@ -167,7 +167,7 @@ extension TagCollectionViewController {
     }
 
     private func presentDeleteConfirmationAlert(for tagId: Tag.Identity, tagName: String, state: TagCollectionViewState) {
-        guard let tag = state.tags.value(having: tagId),
+        guard let tag = state.tags.entity(having: tagId),
               let indexPath = dataSource.indexPath(for: .tag(.init(tag: tag, displayCount: !state.isSomeItemsHidden))),
               let cell = collectionView.cellForItem(at: indexPath)
         else {

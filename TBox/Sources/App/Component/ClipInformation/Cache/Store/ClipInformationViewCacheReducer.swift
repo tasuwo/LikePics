@@ -116,7 +116,7 @@ extension ClipInformationViewCacheReducer {
     private static func performFilter(clip: Clip, previousState: State) -> State {
         performFilter(clip: clip,
                       item: previousState.item,
-                      tags: previousState.tags.orderedValues(),
+                      tags: previousState.tags.orderedEntities(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -124,7 +124,7 @@ extension ClipInformationViewCacheReducer {
     private static func performFilter(item: ClipItem, previousState: State) -> State {
         performFilter(clip: previousState.clip,
                       item: item,
-                      tags: previousState.tags.orderedValues(),
+                      tags: previousState.tags.orderedEntities(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -140,7 +140,7 @@ extension ClipInformationViewCacheReducer {
     private static func performFilter(isSomeItemsHidden: Bool, previousState: State) -> State {
         performFilter(clip: previousState.clip,
                       item: previousState.item,
-                      tags: previousState.tags.orderedValues(),
+                      tags: previousState.tags.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -160,7 +160,7 @@ extension ClipInformationViewCacheReducer {
         nextState.clip = clip
         nextState.item = item
         nextState.tags = nextState.tags
-            .updated(values: tags.indexed())
+            .updated(entities: tags.indexed())
             .updated(filteredIds: Set(filteredTagIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 

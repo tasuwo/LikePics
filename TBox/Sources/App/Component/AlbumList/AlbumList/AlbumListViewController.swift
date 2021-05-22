@@ -184,7 +184,7 @@ extension AlbumListViewController {
     }
 
     private func presentDeleteConfirmationAlert(for albumId: Album.Identity, title: String, state: AlbumListViewState) {
-        guard let album = state.albums.value(having: albumId),
+        guard let album = state.albums.entity(having: albumId),
               let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: state.isEditing)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {

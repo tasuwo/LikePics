@@ -15,7 +15,7 @@ struct AlbumSelectionModalState: Equatable {
 
     var searchQuery: String
     var searchStorage: SearchableStorage<Album>
-    var albums: Collection<Album>
+    var albums: EntityCollectionSnapshot<Album>
     var selectedAlbumId: Album.Identity?
 
     var isCollectionViewHidden: Bool
@@ -51,14 +51,14 @@ extension AlbumSelectionModalState {
 extension AlbumSelectionModalState {
     var filteredOrderedAlbums: Set<Ordered<Album>> {
         let albums = albums
-            .filteredOrderedValues()
+            .filteredOrderedEntities()
             .map { Ordered(index: $0.index, value: isSomeItemsHidden ? $0.value.removingHiddenClips() : $0.value) }
         return Set(albums)
     }
 
     var orderedFilteredAlbums: [Album] {
         albums
-            .orderedFilteredValues()
+            .orderedFilteredEntities()
             .map { isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
     }
 

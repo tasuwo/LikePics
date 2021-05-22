@@ -13,7 +13,7 @@ struct TagCollectionViewState: Equatable {
         case addition
     }
 
-    var tags: Collection<Tag>
+    var tags: EntityCollectionSnapshot<Tag>
     var searchQuery: String
     var searchStorage: SearchableStorage<Tag>
 
@@ -50,7 +50,7 @@ extension TagCollectionViewState {
     func removingSessionStates() -> Self {
         var state = self
         state.tags = state.tags
-            .updated(values: [:])
+            .updated(entities: [:])
             .updated(filteredIds: .init())
         state.searchStorage = .init()
         state.alert = nil

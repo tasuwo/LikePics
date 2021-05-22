@@ -86,13 +86,13 @@ extension ClipEditViewController {
             .receive(on: collectionUpdateQueue)
             .removeDuplicates(by: { (lstate: ClipEditViewState, rstate: ClipEditViewState) -> Bool in
                 lstate.clip == rstate.clip
-                    && lstate.tags.filteredOrderedValues() == rstate.tags.filteredOrderedValues()
-                    && lstate.items.filteredOrderedValues() == rstate.items.filteredOrderedValues()
+                    && lstate.tags.filteredOrderedEntities() == rstate.tags.filteredOrderedEntities()
+                    && lstate.items.filteredOrderedEntities() == rstate.items.filteredOrderedEntities()
             })
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(clip: state.clip,
-                                                   tags: state.tags.orderedFilteredValues(),
-                                                   items: state.items.orderedFilteredValues())
+                                                   tags: state.tags.orderedFilteredEntities(),
+                                                   items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot)
                 self?.selectionApplier.didApplyDataSource(collection: state.items)
             }

@@ -177,11 +177,11 @@ extension ClipCollectionViewController {
             .removeDuplicates(by: \.clips)
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
             .receive(on: clipsUpdateQueue)
-            .removeDuplicates(by: { $0.clips.filteredOrderedValues() == $1.clips.filteredOrderedValues() })
+            .removeDuplicates(by: { $0.clips.filteredOrderedEntities() == $1.clips.filteredOrderedEntities() })
             .sink { [weak self] state in
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.clips.orderedFilteredValues().map({ .init($0) }))
+                snapshot.appendItems(state.clips.orderedFilteredEntities().map({ .init($0) }))
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
                     self?.updateHiddenIconAppearance()
                 }
@@ -291,7 +291,7 @@ extension ClipCollectionViewController {
     }
 
     private func presentPurgeAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
-        guard let clip = state.clips.value(having: clipId),
+        guard let clip = state.clips.entity(having: clipId),
               let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
@@ -317,7 +317,7 @@ extension ClipCollectionViewController {
     }
 
     private func presentDeletionAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
-        guard let clip = state.clips.value(having: clipId),
+        guard let clip = state.clips.entity(having: clipId),
               let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
@@ -345,7 +345,7 @@ extension ClipCollectionViewController {
 
     private func presentShareAlert(for clipId: Clip.Identity, imageIds: [ImageContainer.Identity], state: ClipCollectionState) {
         let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
-        guard let clip = state.clips.value(having: clipId),
+        guard let clip = state.clips.entity(having: clipId),
               let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {

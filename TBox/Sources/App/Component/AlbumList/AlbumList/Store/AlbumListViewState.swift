@@ -15,7 +15,7 @@ struct AlbumListViewState: Equatable, Codable {
 
     var searchQuery: String
     var searchStorage: SearchableStorage<Album>
-    var albums: Collection<Album>
+    var albums: EntityCollectionSnapshot<Album>
 
     var isEditing: Bool
     var isEmptyMessageViewDisplaying: Bool
@@ -48,19 +48,19 @@ extension AlbumListViewState {
 
 extension AlbumListViewState {
     var isEditButtonEnabled: Bool {
-        !albums.filteredValues().isEmpty
+        !albums.filteredEntities().isEmpty
     }
 
     var filteredOrderedAlbums: Set<Ordered<Album>> {
         let albums = albums
-            .filteredOrderedValues()
+            .filteredOrderedEntities()
             .map { Ordered(index: $0.index, value: isSomeItemsHidden ? $0.value.removingHiddenClips() : $0.value) }
         return Set(albums)
     }
 
     var orderedFilteredAlbums: [Album] {
         albums
-            .orderedFilteredValues()
+            .orderedFilteredEntities()
             .map { isSomeItemsHidden ? $0.removingHiddenClips() : $0 }
     }
 
@@ -78,7 +78,7 @@ extension AlbumListViewState {
         var state = self
         state.searchStorage = .init()
         state.albums = state.albums
-            .updated(values: [:])
+            .updated(entities: [:])
             .updated(filteredIds: .init())
         state.alert = nil
         return state

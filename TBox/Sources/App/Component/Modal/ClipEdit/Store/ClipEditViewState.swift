@@ -24,8 +24,8 @@ struct ClipEditViewState: Equatable {
     let id: UUID
 
     var clip: EditingClip
-    var tags: Collection<Tag>
-    var items: Collection<ClipItem>
+    var tags: EntityCollectionSnapshot<Tag>
+    var items: EntityCollectionSnapshot<ClipItem>
     var isSomeItemsHidden: Bool
 
     var isItemsEditing: Bool
@@ -54,6 +54,6 @@ extension ClipEditViewState {
 }
 
 extension ClipEditViewState {
-    var isItemDeletionEnabled: Bool { items.filteredValues().count > 1 }
-    var canReorderItem: Bool { items.filteredValues().count > 1 && !isItemsEditing }
+    var isItemDeletionEnabled: Bool { items.filteredEntities().count > 1 }
+    var canReorderItem: Bool { items.filteredEntities().count > 1 && !isItemsEditing }
 }

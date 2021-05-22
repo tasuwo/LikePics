@@ -119,6 +119,6 @@ extension ClipInformationViewCacheController: ClipInformationViewCaching {
 
 extension ClipInformationLayout.Information {
     init(_ state: ClipInformationViewCacheState) {
-        self.init(clip: state.clip, tags: state.tags.orderedFilteredValues(), item: state.item)
+        self.init(clip: state.clip, tags: state.tags.orderedFilteredEntities(), item: state.item)
     }
 }

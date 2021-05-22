@@ -37,7 +37,7 @@ struct ClipCollectionToolBarReducer: Reducer {
             return (nextState, .none)
 
         case .shareButtonTapped:
-            let imageIds = state.parentState.clips.selectedValues()
+            let imageIds = state.parentState.clips.selectedEntities()
                 .flatMap { $0.items.map { $0.imageId } }
             nextState.alert = .share(imageIds: imageIds, targetCount: nextState.parentState.clips.selectedIds().count)
             return (nextState, .none)

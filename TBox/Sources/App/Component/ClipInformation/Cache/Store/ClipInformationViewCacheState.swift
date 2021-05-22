@@ -6,7 +6,7 @@ import Domain
 
 struct ClipInformationViewCacheState: Equatable {
     var clip: Clip?
-    var tags: Collection<Tag>
+    var tags: EntityCollectionSnapshot<Tag>
     var item: ClipItem?
     var isSomeItemsHidden: Bool
 

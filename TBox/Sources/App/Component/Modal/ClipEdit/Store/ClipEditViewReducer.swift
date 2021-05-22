@@ -38,7 +38,7 @@ struct ClipEditViewReducer: Reducer {
 
         case let .itemsUpdated(items):
             let newItems = state.items
-                .updated(values: items.indexed())
+                .updated(entities: items.indexed())
                 .updated(filteredIds: Set(items.map({ $0.identity })))
             nextState.items = newItems
             return (nextState, .none)
@@ -108,9 +108,9 @@ struct ClipEditViewReducer: Reducer {
                 }
             }
             let newValues = itemIds
-                .compactMap { state.items.value(having: $0) }
+                .compactMap { state.items.entity(having: $0) }
                 .indexed()
-            nextState.items = state.items.updated(values: newValues)
+            nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
 
         case .itemsReorderFailed:
@@ -118,7 +118,7 @@ struct ClipEditViewReducer: Reducer {
             return (nextState, .none)
 
         case let .itemSiteUrlEditButtonTapped(itemId):
-            guard let item = state.items.value(having: itemId) else { return (state, .none) }
+            guard let item = state.items.entity(having: itemId) else { return (state, .none) }
             nextState.alert = .siteUrlEdit(itemIds: Set([itemId]), title: item.url?.absoluteString)
             return (nextState, .none)
 
@@ -128,7 +128,7 @@ struct ClipEditViewReducer: Reducer {
             return (state, .none)
 
         case let .itemDeletionActionOccurred(itemId, completion: completion):
-            guard let item = state.items.value(having: itemId) else {
+            guard let item = state.items.entity(having: itemId) else {
                 completion(false)
                 return (state, .none)
             }
@@ -138,7 +138,7 @@ struct ClipEditViewReducer: Reducer {
                 return (state, .none)
             }
 
-            nextState.items = state.items.removingValue(having: itemId)
+            nextState.items = state.items.removingEntity(having: itemId)
 
             return (nextState, .none)
 
@@ -161,12 +161,12 @@ struct ClipEditViewReducer: Reducer {
         // MARK: Context Menu
 
         case let .siteUrlOpenMenuTapped(itemId):
-            guard let item = state.items.value(having: itemId), let url = item.url else { return (state, .none) }
+            guard let item = state.items.entity(having: itemId), let url = item.url else { return (state, .none) }
             dependency.router.open(url)
             return (state, .none)
 
         case let .siteUrlCopyMenuTapped(itemId):
-            guard let item = state.items.value(having: itemId), let url = item.url else { return (state, .none) }
+            guard let item = state.items.entity(having: itemId), let url = item.url else { return (state, .none) }
             dependency.pasteboard.set(url.absoluteString)
             return (state, .none)
 
@@ -301,7 +301,7 @@ extension ClipEditViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(tags: previousState.tags.orderedValues(),
+        performFilter(tags: previousState.tags.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -314,7 +314,7 @@ extension ClipEditViewReducer {
             .filter { isSomeItemsHidden ? !$0.isHidden : true }
             .map { $0.id }
         let newTags = previousState.tags
-            .updated(values: tags.indexed())
+            .updated(entities: tags.indexed())
             .updated(filteredIds: Set(newDisplayableTagIds))
 
         var nextState = previousState

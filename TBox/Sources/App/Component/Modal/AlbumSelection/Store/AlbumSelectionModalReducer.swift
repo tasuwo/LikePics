@@ -119,7 +119,7 @@ extension AlbumSelectionModalReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState.albums.orderedValues(),
+        performFilter(albums: previousState.albums.orderedEntities(),
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -128,7 +128,7 @@ extension AlbumSelectionModalReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState.albums.orderedValues(),
+        performFilter(albums: previousState.albums.orderedEntities(),
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -145,7 +145,7 @@ extension AlbumSelectionModalReducer {
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
         let newAlbums = previousState.albums
-            .updated(values: albums.indexed())
+            .updated(entities: albums.indexed())
             .updated(filteredIds: Set(filteredAlbumIds))
         nextState.albums = newAlbums
 

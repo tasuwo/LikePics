@@ -27,7 +27,7 @@ struct ClipCollectionState: Equatable {
     var preservedLayout: ClipCollection.Layout?
     var operation: ClipCollection.Operation
 
-    var clips: Collection<Clip>
+    var clips: EntityCollectionSnapshot<Clip>
     var previewingClipId: Clip.Identity?
 
     var isEmptyMessageViewDisplaying: Bool
@@ -76,7 +76,7 @@ extension ClipCollectionState {
 
     var previewingClip: Clip? {
         guard let clipId = previewingClipId else { return nil }
-        return clips.value(having: clipId)
+        return clips.entity(having: clipId)
     }
 
     var title: String? {

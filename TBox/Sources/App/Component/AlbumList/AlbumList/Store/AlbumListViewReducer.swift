@@ -54,12 +54,12 @@ struct AlbumListViewReducer: Reducer {
         // MARK: Button Action
 
         case let .removerTapped(albumId):
-            guard let title = state.albums.value(having: albumId)?.title else { return (state, .none) }
+            guard let title = state.albums.entity(having: albumId)?.title else { return (state, .none) }
             nextState.alert = .deletion(albumId: albumId, title: title)
             return (nextState, .none)
 
         case let .editingTitleTapped(albumId):
-            guard let title = state.albums.value(having: albumId)?.title else { return (state, .none) }
+            guard let title = state.albums.entity(having: albumId)?.title else { return (state, .none) }
             nextState.alert = .renaming(albumId: albumId, title: title)
             return (nextState, .none)
 
@@ -70,7 +70,7 @@ struct AlbumListViewReducer: Reducer {
         // MARK: Reorder
 
         case let .reordered(albumIds):
-            let originals = state.albums.orderedValues().map { $0.id }
+            let originals = state.albums.orderedEntities().map { $0.id }
             let newOrder = Self.performReorder(originals: originals, request: albumIds)
             switch dependency.clipCommandService.updateAlbums(byReordering: newOrder) {
             case .success: ()
@@ -83,7 +83,7 @@ struct AlbumListViewReducer: Reducer {
         // MARK: Context Menu
 
         case let .renameMenuTapped(albumId):
-            guard let title = state.albums.value(having: albumId)?.title else { return (state, .none) }
+            guard let title = state.albums.entity(having: albumId)?.title else { return (state, .none) }
             nextState.alert = .renaming(albumId: albumId, title: title)
             return (nextState, .none)
 
@@ -114,7 +114,7 @@ struct AlbumListViewReducer: Reducer {
             return (nextState, .none)
 
         case let .deleteMenuTapped(albumId):
-            guard let title = state.albums.value(having: albumId)?.title else { return (state, .none) }
+            guard let title = state.albums.entity(having: albumId)?.title else { return (state, .none) }
             nextState.alert = .deletion(albumId: albumId, title: title)
             return (nextState, .none)
 
@@ -221,7 +221,7 @@ extension AlbumListViewReducer {
     private static func performFilter(searchQuery: String,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState.albums.orderedValues(),
+        performFilter(albums: previousState.albums.orderedEntities(),
                       searchQuery: searchQuery,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
@@ -230,7 +230,7 @@ extension AlbumListViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(albums: previousState.albums.orderedValues(),
+        performFilter(albums: previousState.albums.orderedEntities(),
                       searchQuery: previousState.searchQuery,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
@@ -247,7 +247,7 @@ extension AlbumListViewReducer {
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
         let newAlbums = previousState.albums
-            .updated(values: albums.indexed())
+            .updated(entities: albums.indexed())
             .updated(filteredIds: Set(filteredAlbumIds))
         nextState.albums = newAlbums
 

@@ -18,7 +18,7 @@ struct ClipInformationViewState: Equatable {
     let itemId: ClipItem.Identity
 
     var clip: Clip?
-    var tags: Collection<Tag>
+    var tags: EntityCollectionSnapshot<Tag>
     var item: ClipItem?
 
     var shouldCollectionViewUpdateWithAnimation: Bool

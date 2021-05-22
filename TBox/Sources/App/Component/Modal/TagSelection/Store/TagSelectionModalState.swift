@@ -15,7 +15,7 @@ struct TagSelectionModalState: Equatable {
 
     var searchQuery: String
     var searchStorage: SearchableStorage<Tag>
-    var tags: Collection<Tag>
+    var tags: EntityCollectionSnapshot<Tag>
 
     var isCollectionViewHidden: Bool
     var isEmptyMessageViewHidden: Bool

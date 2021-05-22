@@ -65,7 +65,7 @@ struct ClipCollectionReducer: Reducer {
         case let .reordered(clipIds):
             guard case let .album(albumId) = state.source else { return (state, .none) }
 
-            let originals = state.clips.orderedValues().map { $0.id }
+            let originals = state.clips.orderedEntities().map { $0.id }
             guard Set(originals).count == originals.count, Set(clipIds).count == clipIds.count else {
                 nextState.alert = .error(L10n.albumListViewErrorAtReorderAlbum)
                 return (nextState, .none)
@@ -75,9 +75,9 @@ struct ClipCollectionReducer: Reducer {
             switch dependency.clipCommandService.updateAlbum(having: albumId, byReorderingClipsHaving: ids) {
             case .success:
                 let newClips = ids
-                    .compactMap { state.clips.value(having: $0) }
+                    .compactMap { state.clips.entity(having: $0) }
                     .indexed()
-                nextState.clips = nextState.clips.updated(values: newClips)
+                nextState.clips = nextState.clips.updated(entities: newClips)
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtReorder)
@@ -149,7 +149,7 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .shareMenuTapped(clipId):
-            guard let imageIds = state.clips.value(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }
+            guard let imageIds = state.clips.entity(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }
             nextState.alert = .share(clipId: clipId, imageIds: imageIds)
             return (nextState, .none)
 
@@ -378,7 +378,7 @@ extension ClipCollectionReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
-        performFilter(clips: previousState.clips.orderedValues(),
+        performFilter(clips: previousState.clips.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -393,7 +393,7 @@ extension ClipCollectionReducer {
         let filteredClipIds = filteredClips.map { $0.id }
 
         nextState.clips = previousState.clips
-            .updated(values: clips.indexed())
+            .updated(entities: clips.indexed())
             .updated(filteredIds: Set(filteredClipIds))
 
         nextState.isEmptyMessageViewDisplaying = filteredClips.isEmpty
@@ -515,7 +515,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .merge:
-            let selections = state.clips.orderedSelectedValues()
+            let selections = state.clips.orderedSelectedEntities()
             nextState.modal = .clipMerge(clips: selections)
             return (nextState, .none)
         }
