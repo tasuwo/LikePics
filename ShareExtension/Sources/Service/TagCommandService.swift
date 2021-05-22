@@ -20,11 +20,13 @@ class TagCommandService {
 extension TagCommandService: TagCommandServiceProtocol {
     // MARK: - TagCommandServiceProtocol
 
-    func create(tagWithName name: String) -> Result<Void, TagCommandServiceError> {
+    func create(tagWithName name: String) -> Result<Tag.Identity, TagCommandServiceError> {
         do {
             try self.storage.beginTransaction()
 
-            switch self.storage.create(tag: .init(id: UUID(), name: name, isHidden: false, isDirty: true)) {
+            let id = UUID()
+
+            switch self.storage.create(tag: .init(id: id, name: name, isHidden: false, isDirty: true)) {
             case .success:
                 break
 
@@ -42,7 +44,7 @@ extension TagCommandService: TagCommandServiceProtocol {
 
             try self.storage.commitTransaction()
 
-            return .success(())
+            return .success(id)
         } catch {
             self.logger.write(ConsoleLog(level: .error, message: """
             タグの作成に失敗: \(error.localizedDescription)

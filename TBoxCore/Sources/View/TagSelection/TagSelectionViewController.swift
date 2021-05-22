@@ -27,6 +27,7 @@ public class TagSelectionViewController: UIViewController {
     )
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    private var selectionApplier: UICollectionViewSelectionLazyApplier<Section, Tag, Tag>!
     private var subscriptions: Set<AnyCancellable> = .init()
     private let tagsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.TagSelectionViewController", qos: .userInteractive)
 
@@ -97,34 +98,20 @@ public class TagSelectionViewController: UIViewController {
             .assignNoRetain(to: \.alpha, on: self.emptyMessageView)
             .store(in: &self.subscriptions)
 
-        dependency.outputs.selected
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] selected in
-                guard let self = self else { return }
-                selected
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
-            }
-            .store(in: &self.subscriptions)
-
-        dependency.outputs.deselected
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] deselected in
-                guard let self = self else { return }
-                deselected
-                    .compactMap { self.dataSource.indexPath(for: $0) }
-                    .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-            }
-            .store(in: &self.subscriptions)
+        dependency.outputs.tags
+            .removeDuplicates(by: { $0._selectedIds == $1._selectedIds })
+            .sink { [weak self] tags in self?.selectionApplier.applySelection(snapshot: tags) }
+            .store(in: &subscriptions)
 
         dependency.outputs.tags
             .receive(on: tagsUpdateQueue)
+            .removeDuplicates()
             .sink { [weak self] tags in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(tags)
+                snapshot.appendItems(tags.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
-                self?.viewModel.inputs.dataSourceUpdated.send(())
+                self?.selectionApplier.didApplyDataSource(snapshot: tags)
             }
             .store(in: &self.subscriptions)
 
@@ -158,7 +145,7 @@ public class TagSelectionViewController: UIViewController {
     @objc
     func didTapDone() {
         self.dismiss(animated: true) {
-            self.delegate?.didSelectTags(tags: self.viewModel.outputs.selectedTagsValue)
+            self.delegate?.didSelectTags(tags: self.viewModel.outputs.tags.value.orderedSelectedEntities())
         }
     }
 
@@ -172,6 +159,9 @@ public class TagSelectionViewController: UIViewController {
         self.collectionView.backgroundColor = Asset.Color.background.color
         self.dataSource = .init(collectionView: self.collectionView,
                                 cellProvider: self.cellProvider())
+        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
+                                                                dataSource: dataSource,
+                                                                itemBuilder: { $0 })
     }
 
     private func cellProvider() -> (UICollectionView, IndexPath, Tag) -> UICollectionViewCell? {

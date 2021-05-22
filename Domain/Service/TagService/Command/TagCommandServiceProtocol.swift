@@ -8,5 +8,5 @@ public enum TagCommandServiceError: Error {
 }
 
 public protocol TagCommandServiceProtocol {
-    func create(tagWithName name: String) -> Result<Void, TagCommandServiceError>
+    func create(tagWithName name: String) -> Result<Tag.Identity, TagCommandServiceError>
 }
