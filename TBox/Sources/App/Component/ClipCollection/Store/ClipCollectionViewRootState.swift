@@ -37,6 +37,7 @@ extension ClipCollectionViewRootState {
             .updated(entities: [:])
             .updated(filteredIds: .init())
         state.clipCollectionState.alert = nil
+        state.clipCollectionState.modal = nil
         return state
     }
 }
