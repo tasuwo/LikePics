@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import Foundation
+import ForestKit
 
 struct SearchViewRootState: Equatable {
     var entryState: SearchEntryViewState

@@ -4,9 +4,9 @@
 
 import Combine
 
-protocol Storing {
+public protocol Storing {
     associatedtype State: Equatable
-    associatedtype Action: LikePics.Action
+    associatedtype Action: ForestKit.Action
     associatedtype Dependency
 
     var stateValue: State { get }
@@ -14,7 +14,7 @@ protocol Storing {
     func execute(_ action: Action)
 }
 
-extension Storing {
+public extension Storing {
     func eraseToAnyStoring() -> AnyStoring<State, Action, Dependency> {
         return .init(self)
     }

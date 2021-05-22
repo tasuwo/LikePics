@@ -5,7 +5,7 @@
 import Combine
 import Foundation
 
-extension Effect {
+public extension Effect {
     func debounce<S: Scheduler>(
         id: UUID,
         for time: S.SchedulerTimeType.Stride,

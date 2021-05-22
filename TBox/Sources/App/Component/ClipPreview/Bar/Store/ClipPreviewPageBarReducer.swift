@@ -3,6 +3,7 @@
 //
 
 import Combine
+import ForestKit
 
 typealias ClipPreviewPageBarDependency = HasImageQueryService
     & HasTransitionLock

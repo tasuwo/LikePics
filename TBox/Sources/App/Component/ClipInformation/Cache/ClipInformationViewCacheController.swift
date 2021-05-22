@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
@@ -19,7 +20,7 @@ protocol ClipInformationViewCachingDelegate: AnyObject {
 }
 
 class ClipInformationViewCacheController {
-    typealias Store = LikePics.Store<ClipInformationViewCacheState, ClipInformationViewCacheAction, ClipInformationViewCacheDependency>
+    typealias Store = ForestKit.Store<ClipInformationViewCacheState, ClipInformationViewCacheAction, ClipInformationViewCacheDependency>
     typealias Layout = ClipInformationLayout
 
     // MARK: - Properties

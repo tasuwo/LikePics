@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 
 typealias ClipCollectionDependency = HasRouter
     & HasUserSettingStorage

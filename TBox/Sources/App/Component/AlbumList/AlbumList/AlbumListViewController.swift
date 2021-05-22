@@ -4,13 +4,14 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
 
 class AlbumListViewController: UIViewController {
     typealias Layout = AlbumListViewLayout
-    typealias Store = LikePics.Store<AlbumListViewState, AlbumListViewAction, AlbumListViewDependency>
+    typealias Store = ForestKit.Store<AlbumListViewState, AlbumListViewAction, AlbumListViewDependency>
 
     // MARK: - Properties
 

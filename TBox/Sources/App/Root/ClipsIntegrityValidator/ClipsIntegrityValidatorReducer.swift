@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 
 typealias ClipsIntegrityValidatorDependency = HasTemporariesPersistService
     & HasIntegrityValidationService

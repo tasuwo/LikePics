@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
@@ -12,7 +13,7 @@ class ClipCollectionViewController: UIViewController {
     typealias RootState = ClipCollectionViewRootState
     typealias RootAction = ClipCollectionViewRootAction
     typealias RootDependency = ClipCollectionViewRootDependency
-    typealias RootStore = LikePics.Store<RootState, RootAction, RootDependency>
+    typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
 
     typealias Layout = ClipCollectionViewLayout
     typealias Store = AnyStoring<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>

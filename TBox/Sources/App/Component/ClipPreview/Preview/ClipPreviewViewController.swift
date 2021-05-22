@@ -4,11 +4,12 @@
 
 import Combine
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
 class ClipPreviewViewController: UIViewController {
-    typealias Store = LikePics.Store<ClipPreviewViewState, ClipPreviewViewAction, ClipPreviewViewDependency>
+    typealias Store = ForestKit.Store<ClipPreviewViewState, ClipPreviewViewAction, ClipPreviewViewDependency>
 
     // MARK: - Properties
 

@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import ForestKit
 import UIKit
 
 class TextEditAlertController: NSObject {

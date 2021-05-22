@@ -4,19 +4,19 @@
 
 import Combine
 
-class StoreProxy<
+public class StoreProxy<
     State: Equatable,
-    Action: LikePics.Action,
+    Action: ForestKit.Action,
     Dependency,
     RootState: Equatable,
-    RootAction: LikePics.Action,
+    RootAction: ForestKit.Action,
     RootDependency
 > {
     private let store: Store<RootState, RootAction, RootDependency>
     private let stateConverter: StateConverter<RootState, State>
     private let actionConverter: ActionConverter<RootAction, Action>
 
-    init(
+    public init(
         store: Store<RootState, RootAction, RootDependency>,
         stateConverter: StateConverter<RootState, State>,
         actionConverter: ActionConverter<RootAction, Action>
@@ -30,23 +30,23 @@ class StoreProxy<
 extension StoreProxy: Storing {
     // MARK: - Storing
 
-    var stateValue: State {
+    public var stateValue: State {
         stateConverter.extract(from: store.stateValue)
     }
 
-    var state: AnyPublisher<State, Never> {
+    public var state: AnyPublisher<State, Never> {
         store.state
             .map { [stateConverter] state in stateConverter.extract(from: state) }
             .eraseToAnyPublisher()
     }
 
-    func execute(_ action: Action) {
+    public func execute(_ action: Action) {
         store.execute(actionConverter.convert(action))
     }
 }
 
-extension Store {
-    func proxy<CS: Equatable, CA: LikePics.Action, CD>(
+public extension Store {
+    func proxy<CS: Equatable, CA: ForestKit.Action, CD>(
         _ stateConverter: StateConverter<State, CS>,
         _ actionConverter: ActionConverter<Action, CA>
     ) -> StoreProxy<CS, CA, CD, State, Action, Dependency> {

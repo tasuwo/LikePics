@@ -4,10 +4,11 @@
 
 import Combine
 import Domain
+import ForestKit
 import UIKit
 
 class SearchEntryViewController: UIViewController {
-    typealias RootStore = LikePics.Store<SearchViewRootState, SearchViewRootAction, SearchViewRootDependency>
+    typealias RootStore = ForestKit.Store<SearchViewRootState, SearchViewRootAction, SearchViewRootDependency>
 
     typealias Layout = SearchEntryViewLayout
     typealias Store = AnyStoring<SearchEntryViewState, SearchEntryViewAction, SearchEntryViewDependency>

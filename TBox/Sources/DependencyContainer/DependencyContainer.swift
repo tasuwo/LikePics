@@ -5,6 +5,7 @@
 import Common
 import CoreData
 import Domain
+import ForestKit
 import Persistence
 import Smoothie
 import TBoxCore

@@ -19,6 +19,7 @@ options:
       - ShareExtension
       - TestHelper
       - Smoothie
+      - ForestKit
 attributes:
   LastUpgradeVersion: '1250'
   ORGANIZATIONNAME: Tasuku Tozawa
@@ -395,6 +396,21 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         SUPPORTS_MACCATALYST: NO
+  ForestKit:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ForestKit
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: YES
+        DEVELOPMENT_TEAM: RY2377PP7S
+        INFOPLIST_FILE: ForestKit/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.ForestKit
+        PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]:
+        PROVISIONING_PROFILE_SPECIFIER:
+        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
+        SUPPORTS_MACCATALYST: NO
   TBox:
     type: application
     platform: iOS
@@ -408,6 +424,7 @@ targets:
       - target: TBoxCore
       - target: Common
       - target: Smoothie
+      - target: ForestKit
       - framework: Carthage/Build/Realm.xcframework
       - framework: Carthage/Build/RealmSwift.xcframework
       - framework: Carthage/Build/Erik.xcframework

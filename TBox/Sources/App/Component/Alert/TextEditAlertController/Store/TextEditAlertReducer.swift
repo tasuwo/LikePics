@@ -3,6 +3,7 @@
 //
 
 import Combine
+import ForestKit
 
 typealias TextEditAlertDependency = HasTextValidator
     & HasTextEditAlertDelegate

@@ -4,13 +4,14 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
 
 class ClipEditViewController: UIViewController {
     typealias Layout = ClipEditViewLayout
-    typealias Store = LikePics.Store<ClipEditViewState, ClipEditViewAction, ClipEditViewDependency>
+    typealias Store = ForestKit.Store<ClipEditViewState, ClipEditViewAction, ClipEditViewDependency>
 
     // MARK: - Properties
 

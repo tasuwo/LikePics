@@ -5,11 +5,12 @@
 import Combine
 import Common
 import Domain
+import ForestKit
 import UIKit
 
 class SceneRootSplitViewController: UISplitViewController {
     typealias Factory = ViewControllerFactory
-    typealias Store = LikePics.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
+    typealias Store = ForestKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
 

@@ -5,12 +5,13 @@
 import Combine
 import Common
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
 class SceneRootTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
-    typealias Store = LikePics.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
+    typealias Store = ForestKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
 

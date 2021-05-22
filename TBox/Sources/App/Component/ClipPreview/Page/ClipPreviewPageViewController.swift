@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
@@ -11,7 +12,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     typealias RootState = ClipPreviewPageViewRootState
     typealias RootAction = ClipPreviewPageViewRootAction
     typealias RootDependency = ClipPreviewPageViewRootDependency
-    typealias RootStore = LikePics.Store<RootState, RootAction, RootDependency>
+    typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
     typealias CacheStore = AnyStoring<ClipPreviewPageViewCacheState, ClipPreviewPageViewCacheAction, ClipPreviewPageViewCacheDependency>

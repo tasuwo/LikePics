@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import ForestKit
+
 enum SearchViewRootAction: Action {
     case entry(SearchEntryViewAction)
     case result(SearchResultViewAction)

@@ -4,13 +4,14 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
 
 class ClipMergeViewController: UIViewController {
     typealias Layout = ClipMergeViewLayout
-    typealias Store = LikePics.Store<ClipMergeViewState, ClipMergeViewAction, ClipMergeViewDependency>
+    typealias Store = ForestKit.Store<ClipMergeViewState, ClipMergeViewAction, ClipMergeViewDependency>
 
     // MARK: - Properties
 

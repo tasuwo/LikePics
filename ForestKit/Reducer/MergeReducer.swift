@@ -2,18 +2,18 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-struct MergeReducer<State: Equatable, Action: LikePics.Action, Dependency> {
+public struct MergeReducer<State: Equatable, Action: ForestKit.Action, Dependency> {
     private let reducers: [UpstreamReducer<State, Action, Dependency>]
 
     // MARK: - Initializers
 
-    init(_ reducers: UpstreamReducer<State, Action, Dependency>...) {
+    public init(_ reducers: UpstreamReducer<State, Action, Dependency>...) {
         self.reducers = reducers
     }
 }
 
 extension MergeReducer: Reducer {
-    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    public func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var currentState = state
         var currentEffects: [Effect<Action>] = []
 

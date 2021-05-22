@@ -4,7 +4,7 @@
 
 import Combine
 
-extension Publisher where Self.Failure == Never {
+public extension Publisher where Self.Failure == Never {
     func bind<Value, Root>(_ fromKeyPath: KeyPath<Output, Value>,
                            to toKeyPath: ReferenceWritableKeyPath<Root, Value>,
                            on object: Root) -> AnyCancellable where Root: AnyObject, Value: Equatable

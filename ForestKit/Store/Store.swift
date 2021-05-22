@@ -5,9 +5,9 @@
 import Combine
 import Foundation
 
-class Store<State: Equatable, Action: LikePics.Action, Dependency>: Storing {
-    var stateValue: State { _state.value }
-    var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
+public class Store<State: Equatable, Action: ForestKit.Action, Dependency>: Storing {
+    public var stateValue: State { _state.value }
+    public var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 
     private let dependency: Dependency
     private let reducer: AnyReducer<Action, State, Dependency>
@@ -21,7 +21,7 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency>: Storing {
 
     // MARK: - Initializers
 
-    init<R: Reducer>(initialState: State, dependency: Dependency, reducer: R) where R.Action == Action, R.State == State, R.Dependency == Dependency {
+    public init<R: Reducer>(initialState: State, dependency: Dependency, reducer: R) where R.Action == Action, R.State == State, R.Dependency == Dependency {
         self._state = .init(initialState)
         self.dependency = dependency
         self.reducer = reducer.eraseToAnyReducer()
@@ -29,7 +29,7 @@ class Store<State: Equatable, Action: LikePics.Action, Dependency>: Storing {
 
     // MARK: - Methods
 
-    func execute(_ action: Action) {
+    public func execute(_ action: Action) {
         if Thread.isMainThread {
             _execute(action)
         } else {

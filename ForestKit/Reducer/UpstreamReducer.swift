@@ -2,10 +2,10 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-struct UpstreamReducer<State: Equatable, Action: LikePics.Action, Dependency> {
+public struct UpstreamReducer<State: Equatable, Action: ForestKit.Action, Dependency> {
     private let executeBlock: (Action, State, Dependency) -> (State, [Effect<Action>]?)
 
-    init<R: Reducer, SC: StateConvertible, AC: ActionConvertible>(
+    public init<R: Reducer, SC: StateConvertible, AC: ActionConvertible>(
         reducer: R,
         stateConverter: SC,
         actionConverter: AC,
@@ -39,13 +39,13 @@ struct UpstreamReducer<State: Equatable, Action: LikePics.Action, Dependency> {
 }
 
 extension UpstreamReducer: Reducer {
-    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    public func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         self.executeBlock(action, state, dependency)
     }
 }
 
-extension Reducer {
-    func upstream<PS: Equatable, PA: LikePics.Action, PD>(
+public extension Reducer {
+    func upstream<PS: Equatable, PA: ForestKit.Action, PD>(
         _ stateConverter: StateConverter<PS, State>,
         _ actionConverter: ActionConverter<PA, Action>,
         _ dependencyCaster: @escaping (PD) -> Dependency

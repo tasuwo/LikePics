@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import ForestKit
 import UIKit
 
 class ClipCollectionToolBarController {

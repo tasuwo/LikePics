@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-protocol StateConvertible {
+public protocol StateConvertible {
     associatedtype Parent: Equatable
     associatedtype Child: Equatable
 

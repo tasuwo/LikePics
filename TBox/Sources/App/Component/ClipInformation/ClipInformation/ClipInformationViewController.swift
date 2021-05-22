@@ -4,11 +4,12 @@
 
 import Combine
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
 class ClipInformationViewController: UIViewController {
-    typealias Store = LikePics.Store<ClipInformationViewState, ClipInformationViewAction, ClipInformationViewDependency>
+    typealias Store = ForestKit.Store<ClipInformationViewState, ClipInformationViewAction, ClipInformationViewDependency>
     typealias Layout = ClipInformationLayout
 
     // MARK: - Properties

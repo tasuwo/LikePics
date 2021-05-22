@@ -3,6 +3,7 @@
 //
 
 import Domain
+import ForestKit
 
 enum SearchResultViewAction: Action {
     // MARK: View Life-Cycle

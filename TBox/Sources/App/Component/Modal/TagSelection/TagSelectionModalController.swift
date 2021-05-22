@@ -4,12 +4,13 @@
 
 import Combine
 import Domain
+import ForestKit
 import TBoxUIKit
 import UIKit
 
 class TagSelectionModalController: UIViewController {
     typealias Layout = TagSelectionModalLayout
-    typealias Store = LikePics.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
+    typealias Store = ForestKit.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
 
     // MARK: - Properties
 

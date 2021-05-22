@@ -4,13 +4,14 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
 
 class AlbumSelectionModalController: UIViewController {
     typealias Layout = AlbumSelectionModalLayout
-    typealias Store = LikePics.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
+    typealias Store = ForestKit.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
 
     // MARK: - Properties
 
