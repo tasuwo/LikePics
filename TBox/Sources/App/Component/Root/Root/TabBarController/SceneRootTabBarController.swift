@@ -155,19 +155,19 @@ extension SceneRootTabBarController {
         ]
 
         switch self.intent {
-        case .seeHome:
+        case .clips:
             selectedIndex = 0
 
-        case .seeSearch:
+        case .search:
             selectedIndex = 1
 
-        case .seeTagCollection:
+        case .tags:
             selectedIndex = 2
 
-        case .seeAlbumList:
+        case .albums:
             selectedIndex = 3
 
-        case .seeSetting:
+        case .setting:
             selectedIndex = 4
 
         default:

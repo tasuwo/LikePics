@@ -98,7 +98,7 @@ extension SearchEntryViewController {
     private func updateUserActivity(_ state: SearchViewRootState) {
         DispatchQueue.global().async {
             let encoder = JSONEncoder()
-            guard let data = try? encoder.encode(Intent.seeSearch(state.removingSessionStates())),
+            guard let data = try? encoder.encode(Intent.search(state.removingSessionStates())),
                   let string = String(data: data, encoding: .utf8) else { return }
             DispatchQueue.main.async {
                 self.view.window?.windowScene?.userActivity = NSUserActivity.make(with: string)

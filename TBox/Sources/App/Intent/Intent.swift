@@ -2,37 +2,39 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
+
 enum Intent {
-    case seeHome(ClipCollectionViewRootState)
-    case seeSearch(SearchViewRootState)
-    case seeSetting(SettingsViewState)
-    case seeAlbumList(AlbumListViewState)
-    case seeTagCollection(TagCollectionViewState)
+    case clips(ClipCollectionViewRootState, preview: Clip.Identity?)
+    case search(SearchViewRootState)
+    case setting(SettingsViewState)
+    case albums(AlbumListViewState)
+    case tags(TagCollectionViewState)
 }
 
 extension Intent {
     var clipCollectionViewRootState: ClipCollectionViewRootState? {
-        guard case let .seeHome(state) = self else { return nil }
+        guard case let .clips(state, _) = self else { return nil }
         return state
     }
 
     var searchViewState: SearchViewRootState? {
-        guard case let .seeSearch(state) = self else { return nil }
+        guard case let .search(state) = self else { return nil }
         return state
     }
 
     var settingsViewState: SettingsViewState? {
-        guard case let .seeSetting(state) = self else { return nil }
+        guard case let .setting(state) = self else { return nil }
         return state
     }
 
     var albumLitViewState: AlbumListViewState? {
-        guard case let .seeAlbumList(state) = self else { return nil }
+        guard case let .albums(state) = self else { return nil }
         return state
     }
 
     var tagCollectionViewState: TagCollectionViewState? {
-        guard case let .seeTagCollection(state) = self else { return nil }
+        guard case let .tags(state) = self else { return nil }
         return state
     }
 }
@@ -41,11 +43,11 @@ extension Intent: Codable {
     // MARK: - Codable
 
     enum CodingKeys: CodingKey {
-        case seeHome
-        case seeSearch
-        case seeSetting
-        case seeAlbumList
-        case seeTagCollection
+        case clips
+        case search
+        case setting
+        case albums
+        case tags
     }
 
     public init(from decoder: Decoder) throws {
@@ -53,25 +55,27 @@ extension Intent: Codable {
         let key = container.allKeys.first
 
         switch key {
-        case .seeHome:
-            let state = try container.decode(ClipCollectionViewRootState.self, forKey: .seeHome)
-            self = .seeHome(state)
+        case .clips:
+            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .clips)
+            let state = try nestedContainer.decode(ClipCollectionViewRootState.self)
+            let clipId = try nestedContainer.decodeIfPresent(Clip.Identity.self)
+            self = .clips(state, preview: clipId)
 
-        case .seeSearch:
-            let state = try container.decode(SearchViewRootState.self, forKey: .seeSearch)
-            self = .seeSearch(state)
+        case .search:
+            let state = try container.decode(SearchViewRootState.self, forKey: .search)
+            self = .search(state)
 
-        case .seeSetting:
-            let state = try container.decode(SettingsViewState.self, forKey: .seeSetting)
-            self = .seeSetting(state)
+        case .setting:
+            let state = try container.decode(SettingsViewState.self, forKey: .setting)
+            self = .setting(state)
 
-        case .seeAlbumList:
-            let state = try container.decode(AlbumListViewState.self, forKey: .seeAlbumList)
-            self = .seeAlbumList(state)
+        case .albums:
+            let state = try container.decode(AlbumListViewState.self, forKey: .albums)
+            self = .albums(state)
 
-        case .seeTagCollection:
-            let state = try container.decode(TagCollectionViewState.self, forKey: .seeTagCollection)
-            self = .seeTagCollection(state)
+        case .tags:
+            let state = try container.decode(TagCollectionViewState.self, forKey: .tags)
+            self = .tags(state)
 
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
@@ -82,20 +86,22 @@ extension Intent: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case let .seeHome(state):
-            try container.encode(state, forKey: .seeHome)
+        case let .clips(state, preview: clipId):
+            var nestedContainer = container.nestedUnkeyedContainer(forKey: .clips)
+            try nestedContainer.encode(state)
+            try nestedContainer.encode(clipId)
 
-        case let .seeSearch(state):
-            try container.encode(state, forKey: .seeSearch)
+        case let .search(state):
+            try container.encode(state, forKey: .search)
 
-        case let .seeSetting(state):
-            try container.encode(state, forKey: .seeSetting)
+        case let .setting(state):
+            try container.encode(state, forKey: .setting)
 
-        case let .seeAlbumList(state):
-            try container.encode(state, forKey: .seeAlbumList)
+        case let .albums(state):
+            try container.encode(state, forKey: .albums)
 
-        case let .seeTagCollection(state):
-            try container.encode(state, forKey: .seeTagCollection)
+        case let .tags(state):
+            try container.encode(state, forKey: .tags)
         }
     }
 }
