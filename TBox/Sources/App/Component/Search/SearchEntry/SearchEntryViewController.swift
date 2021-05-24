@@ -87,8 +87,9 @@ extension SearchEntryViewController {
     private func bind(to store: RootStore) {
         store.state
             .receive(on: DispatchQueue.global())
+            .debounce(for: 1, scheduler: DispatchQueue.global())
+            .map({ $0.removingSessionStates() })
             .removeDuplicates()
-            .debounce(for: 3, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }

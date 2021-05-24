@@ -149,8 +149,9 @@ extension AlbumListViewController {
 
         store.state
             .receive(on: DispatchQueue.global())
-            .removeDuplicates(by: { $0.removingSessionStates() == $1.removingSessionStates() })
-            .debounce(for: 3, scheduler: DispatchQueue.global())
+            .map({ $0.removingSessionStates() })
+            .removeDuplicates()
+            .debounce(for: 1, scheduler: DispatchQueue.global())
             .sink { [weak self] state in self?.updateUserActivity(state) }
             .store(in: &subscriptions)
     }
