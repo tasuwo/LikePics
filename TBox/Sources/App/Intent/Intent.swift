@@ -13,8 +13,8 @@ enum Intent {
 }
 
 extension Intent {
-    var clipCollectionViewRootState: ClipCollectionViewRootState? {
-        guard case let .clips(state, _) = self else { return nil }
+    var homeViewState: ClipCollectionViewRootState? {
+        guard case let .clips(state, _) = self, case .all = state.clipCollectionState.source else { return nil }
         return state
     }
 

@@ -38,6 +38,7 @@ class ClipCollectionViewController: UIViewController {
     private let router: Router
     private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
     private let menuBuilder: ClipCollectionMenuBuildable
+    private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
 
@@ -47,9 +48,9 @@ class ClipCollectionViewController: UIViewController {
     private var modalSubscription: Cancellable?
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.ClipCollectionViewCotnroller", qos: .userInteractive)
 
-    // MARK: Privates
+    // MARK: Temporary
 
-    private let imageQueryService: ImageQueryServiceProtocol
+    private var execAfterLoad: (() -> Void)?
 
     // MARK: - Initializers
 
@@ -112,6 +113,11 @@ class ClipCollectionViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        if let exec = execAfterLoad {
+            exec()
+            execAfterLoad = nil
+        }
 
         store.execute(.viewDidAppear)
 
@@ -528,6 +534,16 @@ extension ClipCollectionViewController {
         emptyMessageView.message = store.stateValue.source.emptyMessageViewMessage
         emptyMessageView.isMessageHidden = store.stateValue.source.isEmptyMessageViewMessageHidden
         emptyMessageView.isActionButtonHidden = store.stateValue.source.isEmptyMessageViewActionButtonHidden
+    }
+}
+
+extension ClipCollectionViewController: ViewLazyPresentable {
+    func presentAfterLoad(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
+        if isViewLoaded {
+            present(viewController, animated: animated, completion: completion)
+        } else {
+            execAfterLoad = { [weak self] in self?.present(viewController, animated: animated, completion: completion) }
+        }
     }
 }
 

@@ -14,7 +14,7 @@ import UIKit
 extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipCollectionViewController(from source: ClipCollection.Source) -> UIViewController {
+    func makeClipCollectionViewController(from source: ClipCollection.Source) -> UIViewController & ViewLazyPresentable {
         let state = ClipCollectionViewRootState(source: source,
                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
@@ -23,7 +23,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
-    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> UIViewController {
+    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> UIViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailLoader: container.clipThumbnailLoader,

@@ -97,53 +97,35 @@ extension SceneRootTabBarController {
 
 extension SceneRootTabBarController {
     private func configureTabBar() {
-        guard let topClipsListViewController = self.factory.makeTopClipCollectionViewController(intent?.clipCollectionViewRootState) else {
-            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TopClipCollectionView."))
-            return
+        let topClipsListViewController: UIViewController & ViewLazyPresentable
+        if let homeViewState = intent?.homeViewState {
+            topClipsListViewController = self.factory.makeClipCollectionViewController(homeViewState)
+        } else {
+            topClipsListViewController = self.factory.makeClipCollectionViewController(from: .all)
         }
-
-        guard let tagListViewController = self.factory.makeTagCollectionViewController(intent?.tagCollectionViewState) else {
-            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize TagListViewController."))
-            return
-        }
-
-        guard let albumListViewController = self.factory.makeAlbumListViewController(intent?.albumLitViewState) else {
-            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize AlbumListViewController."))
-            return
-        }
-
-        guard let searchEntryViewController = self.factory.makeSearchViewController(intent?.searchViewState) else {
-            self.logger.write(ConsoleLog(level: .critical, message: "Unable to initialize SearchEntryViewController."))
-            return
-        }
-
+        // swiftlint:disable:next force_unwrapping
+        let tagListViewController = self.factory.makeTagCollectionViewController(intent?.tagCollectionViewState)!
+        // swiftlint:disable:next force_unwrapping
+        let albumListViewController = self.factory.makeAlbumListViewController(intent?.albumLitViewState)!
+        // swiftlint:disable:next force_unwrapping
+        let searchEntryViewController = self.factory.makeSearchViewController(intent?.searchViewState)!
         let settingsViewController = self.factory.makeSettingsViewController(intent?.settingsViewState)
 
         self.tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
 
-        topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome,
-                                                             image: UIImage(systemName: "house"),
-                                                             tag: 0)
+        topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome, image: UIImage(systemName: "house"), tag: 0)
         topClipsListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.top"
 
-        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch,
-                                                            image: UIImage(systemName: "magnifyingglass"),
-                                                            tag: 2)
+        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch, image: UIImage(systemName: "magnifyingglass"), tag: 2)
         searchEntryViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.search"
 
-        tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag,
-                                                        image: UIImage(systemName: "tag"),
-                                                        tag: 3)
+        tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag, image: UIImage(systemName: "tag"), tag: 3)
         tagListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.tag"
 
-        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum,
-                                                          image: UIImage(systemName: "square.stack"),
-                                                          tag: 4)
+        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum, image: UIImage(systemName: "square.stack"), tag: 4)
         albumListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.album"
 
-        settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings,
-                                                         image: UIImage(systemName: "gear"),
-                                                         tag: 5)
+        settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings, image: UIImage(systemName: "gear"), tag: 5)
         settingsViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
@@ -155,8 +137,39 @@ extension SceneRootTabBarController {
         ]
 
         switch self.intent {
-        case .clips:
-            selectedIndex = 0
+        case let .clips(state, preview: clipId):
+            let topViewController: UIViewController & ViewLazyPresentable
+
+            switch state.clipCollectionState.source {
+            case .all:
+                topViewController = topClipsListViewController
+                selectedIndex = 0
+
+            case let .search(query):
+                selectedIndex = 1
+                topViewController = factory.makeClipCollectionViewController(from: .search(query))
+                tagListViewController.show(topViewController, sender: nil)
+
+            case .uncategorized:
+                selectedIndex = 2
+                topViewController = factory.makeClipCollectionViewController(from: .uncategorized)
+                tagListViewController.show(topViewController, sender: nil)
+
+            case let .tag(tag):
+                selectedIndex = 2
+                topViewController = factory.makeClipCollectionViewController(from: .tag(tag))
+                tagListViewController.show(topViewController, sender: nil)
+
+            case let .album(albumId):
+                selectedIndex = 3
+                topViewController = factory.makeClipCollectionViewController(from: .album(albumId))
+                tagListViewController.show(topViewController, sender: nil)
+            }
+
+            if let clipId = clipId {
+                let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId)
+                topViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+            }
 
         case .search:
             selectedIndex = 1
