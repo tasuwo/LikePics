@@ -26,10 +26,6 @@ struct ClipCollectionReducer: Reducer {
         case .viewDidLoad:
             return Self.prepare(state: state, dependency: dependency)
 
-        case .viewDidAppear:
-            nextState.previewingClipId = nil
-            return (nextState, .none)
-
         // MARK: State Observation
 
         case let .clipsUpdated(clips):
@@ -52,7 +48,6 @@ struct ClipCollectionReducer: Reducer {
 
             if !state.operation.isAllowedMultipleSelection {
                 dependency.router.showClipPreviewView(for: clipId)
-                nextState.previewingClipId = clipId
             }
 
             return (nextState, .none)

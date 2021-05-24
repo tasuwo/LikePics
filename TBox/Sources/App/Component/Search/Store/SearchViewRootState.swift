@@ -47,7 +47,6 @@ extension SearchViewRootState {
         state.entryState.alert = nil
         state.resultState.searchedTokenCandidates = nil
         state.resultState.searchedClips = nil
-        state.resultState.previewingClipId = nil
         return state
     }
 }

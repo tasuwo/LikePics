@@ -9,7 +9,6 @@ enum ClipCollectionAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad
-    case viewDidAppear
 
     // MARK: State Observation
 

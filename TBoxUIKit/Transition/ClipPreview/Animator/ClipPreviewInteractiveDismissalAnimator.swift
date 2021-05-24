@@ -97,7 +97,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController)
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let previewingClipId = from.previewingClipId
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -105,10 +106,10 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // Display Cell
 
-        to.displayAnimatingCell(self)
+        to.displayAnimatingCell(self, clipId: previewingClipId)
         // HACK: iPad&Landscape&Fullscreen切り替え時にalpha==1でセルが残ってしまうケースがあったため、
         //       このタイミングでもセルを非表示にする
-        to.animatingCell(self)?.alpha = 0
+        to.animatingCell(self, clipId: previewingClipId)?.alpha = 0
 
         // Calculation
 
@@ -139,8 +140,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
             let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
-                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, on: containerView))
-                : .fadeout(cellFrame: to.animatingCellFrame(self, on: containerView))
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, on: containerView))
             let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: cornerRadius,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),
@@ -275,7 +276,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let fromPreviewView = from.animatingPreviewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self),
+            let previewingClipId = from.previewingClipId,
+            let toCell = to.animatingCell(self, clipId: previewingClipId),
             let toViewBaseView = to.baseView(self)
         else {
             logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipPreviewPageView dismissal", scope: .transition))
@@ -335,7 +337,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         // Display Cell
 
-        to.displayAnimatingCell(self)
+        to.displayAnimatingCell(self, clipId: previewingClipId)
 
         // Preprocess
 
@@ -373,8 +375,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
             let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
-                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, on: containerView))
-                : .fadeout(cellFrame: to.animatingCellFrame(self, on: containerView))
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, on: containerView))
             let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: 0,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),

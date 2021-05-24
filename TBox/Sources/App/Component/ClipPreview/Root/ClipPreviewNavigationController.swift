@@ -42,6 +42,10 @@ class ClipPreviewNavigationController: UINavigationController {
 extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
+    var previewingClipId: Clip.Identity? {
+        pageViewController?.previewingClipId
+    }
+
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         return pageViewController?.animatingPreviewView(animator)
     }

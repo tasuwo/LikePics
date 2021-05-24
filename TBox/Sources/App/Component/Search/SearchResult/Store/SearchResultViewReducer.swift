@@ -30,7 +30,6 @@ struct SearchResultViewReducer: Reducer {
         case .entryViewDidAppear:
             // 別画面で状態が更新されている可能性があるため、再建策をかける
             let effects = Self.resolveSearchEffects(nextState: &nextState, prevState: state, dependency: dependency, forced: true)
-            nextState.previewingClipId = nil
             return (nextState, effects)
 
         // MARK: - State Observation
@@ -77,7 +76,6 @@ struct SearchResultViewReducer: Reducer {
 
         case let .selectedResult(clip):
             dependency.router.showClipPreviewView(for: clip.id)
-            nextState.previewingClipId = clip.id
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:

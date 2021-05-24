@@ -370,6 +370,10 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
 extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
     // MARK: - ClipPreviewPresentedAnimatorDataSource
 
+    var previewingClipId: Clip.Identity? {
+        store.stateValue.clipId
+    }
+
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView

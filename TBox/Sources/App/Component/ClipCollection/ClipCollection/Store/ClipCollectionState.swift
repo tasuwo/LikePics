@@ -28,7 +28,6 @@ struct ClipCollectionState: Equatable {
     var operation: ClipCollection.Operation
 
     var clips: EntityCollectionSnapshot<Clip>
-    var previewingClipId: Clip.Identity?
 
     var isEmptyMessageViewDisplaying: Bool
     var isCollectionViewDisplaying: Bool
@@ -48,7 +47,6 @@ extension ClipCollectionState {
         layout = .waterfall
         operation = .none
         clips = .init()
-        previewingClipId = nil
         isEmptyMessageViewDisplaying = false
         isCollectionViewDisplaying = false
         alert = nil
@@ -72,11 +70,6 @@ extension ClipCollectionState {
 
     var emptyMessageViewAlpha: CGFloat {
         isEmptyMessageViewDisplaying ? 1 : 0
-    }
-
-    var previewingClip: Clip? {
-        guard let clipId = previewingClipId else { return nil }
-        return clips.entity(having: clipId)
     }
 
     var title: String? {

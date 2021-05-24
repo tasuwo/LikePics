@@ -119,8 +119,6 @@ class ClipCollectionViewController: UIViewController {
             execAfterLoad = nil
         }
 
-        store.execute(.viewDidAppear)
-
         updateUserActivity(rootStore.stateValue)
     }
 
@@ -722,25 +720,21 @@ extension ClipCollectionViewController: ClipCollectionWaterfallLayoutDelegate {
 extension ClipCollectionViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
-    var previewingClip: Clip? {
-        store.stateValue.previewingClip
-    }
-
-    var previewingCell: ClipPreviewPresentingCell? {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return nil }
-        return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
-    }
-
     var previewingCellCornerRadius: CGFloat {
         return ClipCollectionViewCell.cornerRadius
     }
 
-    var previewingCollectionView: UICollectionView {
-        collectionView
+    var previewingCollectionView: UICollectionView { collectionView }
+
+    func previewingCell(for clipId: Clip.Identity) -> ClipPreviewPresentingCell? {
+        guard let clip = store.stateValue.clips.entity(having: clipId),
+              let indexPath = dataSource.indexPath(for: .init(clip)) else { return nil }
+        return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
     }
 
-    func displayPreviewingCell() {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
+    func displayPreviewingCell(for clipId: Clip.Identity) {
+        guard let clip = store.stateValue.clips.entity(having: clipId),
+              let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある

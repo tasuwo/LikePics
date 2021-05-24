@@ -129,7 +129,7 @@ extension SceneRootTabBarController {
         settingsViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.setting"
 
         self.viewControllers = [
-            topClipsListViewController,
+            UINavigationController(rootViewController: topClipsListViewController),
             searchEntryViewController,
             tagListViewController,
             albumListViewController,
@@ -148,7 +148,7 @@ extension SceneRootTabBarController {
             case let .search(query):
                 selectedIndex = 1
                 topViewController = factory.makeClipCollectionViewController(from: .search(query))
-                tagListViewController.show(topViewController, sender: nil)
+                searchEntryViewController.show(topViewController, sender: nil)
 
             case .uncategorized:
                 selectedIndex = 2
@@ -163,7 +163,7 @@ extension SceneRootTabBarController {
             case let .album(albumId):
                 selectedIndex = 3
                 topViewController = factory.makeClipCollectionViewController(from: .album(albumId))
-                tagListViewController.show(topViewController, sender: nil)
+                albumListViewController.show(topViewController, sender: nil)
             }
 
             if let clipId = clipId {

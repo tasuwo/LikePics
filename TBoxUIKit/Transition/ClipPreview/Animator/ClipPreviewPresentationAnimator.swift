@@ -33,8 +33,9 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
+            let previewingClipId = to.previewingClipId,
             let targetPreviewView = to.animatingPreviewView(self),
-            let selectedCell = from.animatingCell(self)
+            let selectedCell = from.animatingCell(self, clipId: previewingClipId)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -110,7 +111,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         animatingImageView.layer.cornerRadius = from.animatingCellCornerRadius(self)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
-        animatingImageView.frame = from.primaryThumbnailFrame(self, on: containerView)
+        animatingImageView.frame = from.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView)
         containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
         containerView.insertSubview(to.view, aboveSubview: animatingImageView)

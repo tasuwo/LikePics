@@ -29,8 +29,6 @@ struct SearchResultViewState: Equatable {
     var searchedTokenCandidates: SearchedTokenCandidates?
     var searchedClips: SearchedClips?
 
-    var previewingClipId: Clip.Identity?
-
     var isSearchingTokenCandidates: Bool
     var isSearchingClips: Bool
 
@@ -50,8 +48,6 @@ extension SearchResultViewState {
 
         searchedTokenCandidates = nil
         searchedClips = nil
-
-        previewingClipId = nil
 
         isSearchingTokenCandidates = false
         isSearchingClips = false
@@ -76,11 +72,6 @@ extension SearchResultViewState {
     var menuState: SearchMenuState {
         return .init(shouldSearchOnlyHiddenClip: searchOnlyHiddenItems,
                      sort: selectedSort)
-    }
-
-    var previewingClip: Clip? {
-        guard let clipId = previewingClipId else { return nil }
-        return searchedClips?.results.first(where: { $0.id == clipId })
     }
 }
 

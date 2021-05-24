@@ -269,15 +269,6 @@ extension SearchResultViewController {
 extension SearchResultViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
-    var previewingClip: Clip? {
-        store.stateValue.previewingClip
-    }
-
-    var previewingCell: ClipPreviewPresentingCell? {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
-        return collectionView.cellForItem(at: indexPath) as? SearchResultClipCell
-    }
-
     var previewingCellCornerRadius: CGFloat {
         return SearchResultClipCell.imageCornerRadius
     }
@@ -286,8 +277,15 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
         collectionView
     }
 
-    func displayPreviewingCell() {
-        guard let clip = previewingClip, let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
+    func previewingCell(for clipId: Clip.Identity) -> ClipPreviewPresentingCell? {
+        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == clipId }),
+              let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
+        return collectionView.cellForItem(at: indexPath) as? SearchResultClipCell
+    }
+
+    func displayPreviewingCell(for clipId: Clip.Identity) {
+        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == clipId }),
+              let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある

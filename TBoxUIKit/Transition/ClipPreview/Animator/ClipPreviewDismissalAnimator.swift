@@ -37,7 +37,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromPreviewView = from.animatingPreviewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
-            let toCell = to.animatingCell(self),
+            let previewingClipId = from.previewingClipId,
+            let toCell = to.animatingCell(self, clipId: previewingClipId),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -63,7 +64,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         // Display Cell
 
-        to.displayAnimatingCell(self)
+        to.displayAnimatingCell(self, clipId: previewingClipId)
 
         // Preprocess
 
@@ -113,10 +114,10 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             options: [.curveEaseIn]
         ) {
             if from.isCurrentItemPrimary(self) {
-                let frame = to.primaryThumbnailFrame(self, on: containerView)
+                let frame = to.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView)
                 animatingImageView.frame = frame
             } else {
-                let frame = to.animatingCellFrame(self, on: containerView)
+                let frame = to.animatingCellFrame(self, clipId: previewingClipId, on: containerView)
                 animatingImageView.frame = frame.scaled(0.2)
                 animatingImageView.alpha = 0
             }
