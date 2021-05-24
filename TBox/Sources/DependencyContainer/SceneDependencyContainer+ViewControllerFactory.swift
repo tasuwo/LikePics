@@ -14,20 +14,20 @@ import UIKit
 extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeTopClipCollectionViewController(_ state: ClipCollectionViewRootState?) -> UIViewController? {
-        let state: ClipCollectionViewRootState = {
-            if let state = state {
-                return state
-            } else {
-                return .init(source: .all, isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-            }
-        }()
-        let viewController = ClipCollectionViewController(state: state,
-                                                          dependency: self,
-                                                          thumbnailLoader: container.clipThumbnailLoader,
-                                                          menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
+    func makeClipCollectionViewController(from source: ClipCollection.Source) -> UIViewController {
+        let state = ClipCollectionViewRootState(source: source,
+                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        return ClipCollectionViewController(state: state,
+                                            dependency: self,
+                                            thumbnailLoader: container.clipThumbnailLoader,
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
+    }
 
-        return UINavigationController(rootViewController: viewController)
+    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> UIViewController {
+        return ClipCollectionViewController(state: state,
+                                            dependency: self,
+                                            thumbnailLoader: container.clipThumbnailLoader,
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
     func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> UIViewController? {
@@ -124,6 +124,52 @@ extension SceneDependencyContainer: ViewControllerFactory {
         viewController.store = store
 
         return UINavigationController(rootViewController: viewController)
+    }
+
+    func makeClipPreviewPageViewController(for clipId: Clip.Identity) -> UIViewController {
+        struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
+            let router: Router
+            let clipCommandService: ClipCommandServiceProtocol
+            let clipQueryService: ClipQueryServiceProtocol
+            let clipInformationTransitioningController: ClipInformationTransitioningController?
+            let imageQueryService: ImageQueryServiceProtocol
+            let informationViewCache: ClipInformationViewCaching?
+            let previewLoader: PreviewLoader
+            let transitionLock: TransitionLock
+        }
+
+        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
+                                                                                dependency: self)
+
+        let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let informationTransitionController = ClipInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
+                                                                       informationTransitionController: informationTransitionController)
+
+        let dependency = Dependency(router: self,
+                                    clipCommandService: container._clipCommandService,
+                                    clipQueryService: container._clipQueryService,
+                                    clipInformationTransitioningController: informationTransitionController,
+                                    imageQueryService: container._imageQueryService,
+                                    informationViewCache: informationViewCacheController,
+                                    previewLoader: container._previewLoader,
+                                    transitionLock: container.transitionLock)
+
+        let state = ClipPreviewPageViewRootState(clipId: clipId)
+        let viewController = ClipPreviewPageViewController(state: state,
+                                                           cacheController: informationViewCacheController,
+                                                           dependency: dependency,
+                                                           factory: self,
+                                                           transitionController: transitionController)
+
+        transitionController.setup(baseViewController: viewController)
+
+        let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
+        navigationController.transitioningDelegate = previewTransitioningController
+        navigationController.modalPresentationStyle = .fullScreen
+
+        return navigationController
     }
 
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {

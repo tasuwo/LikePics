@@ -26,15 +26,6 @@ extension SceneDependencyContainer {
         }
         return topViewController
     }
-
-    private func makeClipCollectionView(from source: ClipCollection.Source) -> UIViewController {
-        let state = ClipCollectionViewRootState(source: source,
-                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        return ClipCollectionViewController(state: state,
-                                            dependency: self,
-                                            thumbnailLoader: container.clipThumbnailLoader,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
-    }
 }
 
 extension SceneDependencyContainer: Router {
@@ -47,79 +38,37 @@ extension SceneDependencyContainer: Router {
     }
 
     func showUncategorizedClipCollectionView() -> Bool {
-        let viewController = makeClipCollectionView(from: .uncategorized)
+        let viewController = makeClipCollectionViewController(from: .uncategorized)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for query: ClipSearchQuery) -> Bool {
-        let viewController = makeClipCollectionView(from: .search(query))
+        let viewController = makeClipCollectionViewController(from: .search(query))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for tag: Tag) -> Bool {
-        let viewController = makeClipCollectionView(from: .tag(tag))
+        let viewController = makeClipCollectionViewController(from: .tag(tag))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipCollectionView(for albumId: Album.Identity) -> Bool {
-        let viewController = makeClipCollectionView(from: .album(albumId))
+        let viewController = makeClipCollectionViewController(from: .album(albumId))
         guard let detailViewController = rootViewController?.currentViewController as? UINavigationController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
     func showClipPreviewView(for clipId: Clip.Identity) -> Bool {
-        struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
-            let router: Router
-            let clipCommandService: ClipCommandServiceProtocol
-            let clipQueryService: ClipQueryServiceProtocol
-            let clipInformationTransitioningController: ClipInformationTransitioningController?
-            let imageQueryService: ImageQueryServiceProtocol
-            let informationViewCache: ClipInformationViewCaching?
-            let previewLoader: PreviewLoader
-            let transitionLock: TransitionLock
-        }
-
-        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
-                                                                                dependency: self)
-
-        let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let informationTransitionController = ClipInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
-                                                                       informationTransitionController: informationTransitionController)
-
-        let dependency = Dependency(router: self,
-                                    clipCommandService: container._clipCommandService,
-                                    clipQueryService: container._clipQueryService,
-                                    clipInformationTransitioningController: informationTransitionController,
-                                    imageQueryService: container._imageQueryService,
-                                    informationViewCache: informationViewCacheController,
-                                    previewLoader: container._previewLoader,
-                                    transitionLock: container.transitionLock)
-
-        let state = ClipPreviewPageViewRootState(clipId: clipId)
-        let viewController = ClipPreviewPageViewController(state: state,
-                                                           cacheController: informationViewCacheController,
-                                                           dependency: dependency,
-                                                           factory: self,
-                                                           transitionController: transitionController)
-
-        transitionController.setup(baseViewController: viewController)
-
-        let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
-        navigationController.transitioningDelegate = previewTransitioningController
-        navigationController.modalPresentationStyle = .fullScreen
-
+        let viewController = makeClipPreviewPageViewController(for: clipId)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
-        detailViewController.present(navigationController, animated: true, completion: nil)
-
+        detailViewController.present(viewController, animated: true, completion: nil)
         return true
     }
 
@@ -159,12 +108,12 @@ extension SceneDependencyContainer: Router {
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          dependency: self)
 
-        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.isModalInPresentation = false
 
+        guard let topViewController = topViewController else { return false }
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
@@ -180,12 +129,12 @@ extension SceneDependencyContainer: Router {
                                                            dependency: self,
                                                            thumbnailLoader: container.temporaryThumbnailLoader)
 
-        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.isModalInPresentation = false
 
+        guard let topViewController = topViewController else { return false }
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
@@ -197,13 +146,13 @@ extension SceneDependencyContainer: Router {
                                                      dependency: self,
                                                      thumbnailLoader: container.temporaryThumbnailLoader)
 
-        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
+        guard let topViewController = topViewController else { return false }
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
@@ -221,13 +170,13 @@ extension SceneDependencyContainer: Router {
                                                     dependency: self,
                                                     thumbnailLoader: container.temporaryThumbnailLoader)
 
-        guard let topViewController = topViewController else { return false }
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
         navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
+        guard let topViewController = topViewController else { return false }
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
