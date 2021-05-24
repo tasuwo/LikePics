@@ -727,6 +727,10 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
     func previewingCell(for clipId: Clip.Identity) -> ClipPreviewPresentingCell? {
         guard let clip = store.stateValue.clips.entity(having: clipId),
               let indexPath = dataSource.indexPath(for: .init(clip)) else { return nil }
+
+        // セルが画面外だとインスタンスを取り出せないので、表示する
+        displayPreviewingCell(for: clipId)
+
         return collectionView.cellForItem(at: indexPath) as? ClipCollectionViewCell
     }
 

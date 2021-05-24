@@ -280,6 +280,10 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
     func previewingCell(for clipId: Clip.Identity) -> ClipPreviewPresentingCell? {
         guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == clipId }),
               let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
+
+        // セルが画面外だとインスタンスを取り出せないので、表示する
+        displayPreviewingCell(for: clipId)
+
         return collectionView.cellForItem(at: indexPath) as? SearchResultClipCell
     }
 
