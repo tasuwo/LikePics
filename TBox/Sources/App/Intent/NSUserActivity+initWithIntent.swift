@@ -5,9 +5,11 @@
 import UIKit
 
 extension NSUserActivity {
-    static func make(with intentJsonString: String) -> NSUserActivity {
+    static func make(with intent: Intent) -> NSUserActivity? {
+        guard let data = try? JSONEncoder().encode(intent),
+              let jsonString = String(data: data, encoding: .utf8) else { return nil }
         let userActivity = NSUserActivity(activityType: SceneDelegate.MainSceneActivityType)
-        userActivity.addUserInfoEntries(from: [SceneDelegate.intentKey: intentJsonString])
+        userActivity.addUserInfoEntries(from: [SceneDelegate.intentKey: jsonString])
         return userActivity
     }
 

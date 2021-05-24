@@ -158,11 +158,8 @@ extension ClipPreviewPageViewController {
     private func updateUserActivity() {
         guard case let .clips(state, preview: _) = view.window?.windowScene?.userActivity?.intent else { return }
         DispatchQueue.global().async {
-            guard let data = try? JSONEncoder().encode(Intent.clips(state, preview: self.store.stateValue.clipId)),
-                  let string = String(data: data, encoding: .utf8) else { return }
-            DispatchQueue.main.async {
-                self.view.window?.windowScene?.userActivity = NSUserActivity.make(with: string)
-            }
+            guard let activity = NSUserActivity.make(with: .clips(state, preview: self.store.stateValue.clipId)) else { return }
+            DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
 }

@@ -158,11 +158,8 @@ extension ClipCollectionViewController {
 
     private func updateUserActivity(_ state: ClipCollectionViewRootState) {
         DispatchQueue.global().async {
-            guard let data = try? JSONEncoder().encode(Intent.clips(state.removingSessionStates(), preview: nil)),
-                  let string = String(data: data, encoding: .utf8) else { return }
-            DispatchQueue.main.async {
-                self.view.window?.windowScene?.userActivity = NSUserActivity.make(with: string)
-            }
+            guard let activity = NSUserActivity.make(with: .clips(state.removingSessionStates(), preview: nil)) else { return }
+            DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
 }
