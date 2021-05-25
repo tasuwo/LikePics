@@ -171,7 +171,7 @@ extension ClipCollectionViewController {
         store.state
             .filter { !$0.clips.isEmpty() }
             .removeDuplicates(by: \.clips)
-            .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .receive(on: clipsUpdateQueue)
             .removeDuplicates(by: { $0.clips.filteredOrderedEntities() == $1.clips.filteredOrderedEntities() })
             .sink { [weak self] state in
@@ -222,7 +222,7 @@ extension ClipCollectionViewController {
 
         store.state
             .removeDuplicates(by: \.clips._selectedIds)
-            .throttle(for: 0.5, scheduler: RunLoop.main, latest: false)
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.clips) }
             .store(in: &subscriptions)
 
