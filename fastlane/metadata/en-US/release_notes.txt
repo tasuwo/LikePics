@@ -1,7 +1,4 @@
-- You can switch the layout of clips collection. This allows you to improve performance of selecting multiple clips by dragging.
+- Support multiple windows on iPad.
 
-- Fixed an issue where some thumbnails quality are unexpectedly low.
-- Fixed a freeze that sometimes occurred when you transition between screens wih animation.
-- Fixed a bug where sometimes clips are hidden unexpectedly when you add or delete clips.
-- Fixed other minor bugs.
-- Modified some app designs, animations.
+- Fixed minor bugs.
+- Improve performance.
