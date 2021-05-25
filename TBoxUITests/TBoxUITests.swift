@@ -30,17 +30,16 @@ class TBoxUITests: XCTestCase {
         tabBar
             .buttons["SceneRootTabBarController.tabBarItem.search"]
             .tap()
-        snapshot("02_Search")
 
         tabBar
             .buttons["SceneRootTabBarController.tabBarItem.tag"]
             .tap()
-        snapshot("03_Tag")
+        snapshot("02_Tag")
 
         tabBar
             .buttons["SceneRootTabBarController.tabBarItem.album"]
             .tap()
-        snapshot("04_Album")
+        snapshot("03_Album")
 
         tabBar
             .buttons["SceneRootTabBarController.tabBarItem.top"]
@@ -52,6 +51,6 @@ class TBoxUITests: XCTestCase {
         app.navigationBars["LikePics.ClipPreviewPageView"]
             .buttons["ClipPreviewPageBarController.infoItem"]
             .tap()
-        snapshot("05_Info")
+        snapshot("04_Info")
     }
 }
