@@ -10,7 +10,7 @@ import UIKit
 protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingCellCornerRadius: CGFloat { get }
     var previewingCollectionView: UICollectionView { get }
-    func previewingCell(for clipId: Clip.Identity) -> ClipPreviewPresentingCell?
+    func previewingCell(for clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell?
     func displayPreviewingCell(for clipId: Clip.Identity)
 }
 
@@ -41,14 +41,14 @@ private extension SceneRootViewController {
 // MARK: - ClipPreviewPresentingAnimatorDataSource
 
 extension SceneRootViewController where Self: UIViewController {
-    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity) -> ClipPreviewPresentingCell? {
+    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
-        return viewController.previewingCell(for: clipId)
+        return viewController.previewingCell(for: clipId, needsScroll: needsScroll)
     }
 
-    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, on containerView: UIView) -> CGRect {
+    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        guard let selectedCell = viewController.previewingCell(for: clipId) else { return .zero }
+        guard let selectedCell = viewController.previewingCell(for: clipId, needsScroll: needsScroll) else { return .zero }
         return viewController.previewingCollectionView.convert(selectedCell.frame, to: containerView)
     }
 
@@ -62,9 +62,9 @@ extension SceneRootViewController where Self: UIViewController {
         viewController.displayPreviewingCell(for: clipId)
     }
 
-    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, on containerView: UIView) -> CGRect {
+    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        guard let selectedCell = viewController.previewingCell(for: clipId) else { return .zero }
+        guard let selectedCell = viewController.previewingCell(for: clipId, needsScroll: needsScroll) else { return .zero }
         let imageView = selectedCell.primaryThumbnailImageView()
         return selectedCell.convert(imageView.frame, to: containerView)
     }

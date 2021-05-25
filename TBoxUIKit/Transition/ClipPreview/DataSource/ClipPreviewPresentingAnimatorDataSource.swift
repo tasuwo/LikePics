@@ -10,11 +10,11 @@ public protocol ClipPreviewPresentingCell: UICollectionViewCell {
 }
 
 public protocol ClipPreviewPresentingAnimatorDataSource {
-    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity) -> ClipPreviewPresentingCell?
-    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, on containerView: UIView) -> CGRect
+    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell?
+    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect
     func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat
     func displayAnimatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity)
-    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, on containerView: UIView) -> CGRect
+    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect
     func baseView(_ animator: ClipPreviewAnimator) -> UIView?
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView]
 }

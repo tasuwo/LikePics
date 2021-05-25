@@ -109,7 +109,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         to.displayAnimatingCell(self, clipId: previewingClipId)
         // HACK: iPad&Landscape&Fullscreen切り替え時にalpha==1でセルが残ってしまうケースがあったため、
         //       このタイミングでもセルを非表示にする
-        to.animatingCell(self, clipId: previewingClipId)?.alpha = 0
+        to.animatingCell(self, clipId: previewingClipId, needsScroll: true)?.alpha = 0
 
         // Calculation
 
@@ -140,8 +140,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
             let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
-                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView))
-                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, on: containerView))
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView))
             let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: cornerRadius,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),
@@ -277,7 +277,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
             let previewingClipId = from.previewingClipId,
-            let toCell = to.animatingCell(self, clipId: previewingClipId),
+            let toCell = to.animatingCell(self, clipId: previewingClipId, needsScroll: true),
             let toViewBaseView = to.baseView(self)
         else {
             logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipPreviewPageView dismissal", scope: .transition))
@@ -375,8 +375,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
             let dismissalType: FinishAnimationParameters.DismissalType = from.isCurrentItemPrimary(self)
-                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, on: containerView))
-                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, on: containerView))
+                ? .stickToThumbnail(thumbnailFrame: to.primaryThumbnailFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView))
+                : .fadeout(cellFrame: to.animatingCellFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView))
             let params = FinishAnimationParameters(dismissalType: dismissalType,
                                                    currentCornerRadius: 0,
                                                    finalCornerRadius: to.animatingCellCornerRadius(self),
