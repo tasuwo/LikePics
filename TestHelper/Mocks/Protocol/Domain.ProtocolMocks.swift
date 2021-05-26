@@ -3,6 +3,7 @@
 ///
 
 import Combine
+import Common
 @testable import Domain
 import Smoothie
 
@@ -1246,9 +1247,17 @@ public class TagQueryMock: TagQuery {
 
 public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public init() { }
-    public init(showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>) {
+    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>) {
+        self._userInterfaceStyle = userInterfaceStyle
         self._showHiddenItems = showHiddenItems
         self._enabledICloudSync = enabledICloudSync
+    }
+
+    public private(set) var userInterfaceStyleSetCallCount = 0
+    private var _userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>! { didSet { userInterfaceStyleSetCallCount += 1 } }
+    public var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> {
+        get { return _userInterfaceStyle }
+        set { _userInterfaceStyle = newValue }
     }
 
     public private(set) var showHiddenItemsSetCallCount = 0
@@ -1263,6 +1272,16 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public var enabledICloudSync: AnyPublisher<Bool, Never> {
         get { return _enabledICloudSync }
         set { _enabledICloudSync = newValue }
+    }
+
+    public private(set) var readUserInterfaceStyleCallCount = 0
+    public var readUserInterfaceStyleHandler: (() -> (UserInterfaceStyle))?
+    public func readUserInterfaceStyle() -> UserInterfaceStyle {
+        readUserInterfaceStyleCallCount += 1
+        if let readUserInterfaceStyleHandler = readUserInterfaceStyleHandler {
+            return readUserInterfaceStyleHandler()
+        }
+        fatalError("readUserInterfaceStyleHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var readShowHiddenItemsCallCount = 0
@@ -1286,11 +1305,20 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     }
 
     public private(set) var setCallCount = 0
-    public var setHandler: ((Bool) -> Void)?
-    public func set(showHiddenItems: Bool) {
+    public var setHandler: ((UserInterfaceStyle) -> Void)?
+    public func set(userInterfaceStyle: UserInterfaceStyle) {
         setCallCount += 1
         if let setHandler = setHandler {
-            setHandler(showHiddenItems)
+            setHandler(userInterfaceStyle)
+        }
+    }
+
+    public private(set) var setShowHiddenItemsCallCount = 0
+    public var setShowHiddenItemsHandler: ((Bool) -> Void)?
+    public func set(showHiddenItems: Bool) {
+        setShowHiddenItemsCallCount += 1
+        if let setShowHiddenItemsHandler = setShowHiddenItemsHandler {
+            setShowHiddenItemsHandler(showHiddenItems)
         }
     }
 

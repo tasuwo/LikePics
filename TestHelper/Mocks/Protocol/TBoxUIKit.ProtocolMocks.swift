@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import CoreGraphics
 import Domain
 import Smoothie
 @testable import TBoxUIKit

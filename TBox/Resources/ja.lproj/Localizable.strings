@@ -176,6 +176,9 @@
 "setting_view_title" = "設定";
 "settings_confirm_icloud_sync_off_title" = "iCloud同期をオフにしますか？";
 "settings_confirm_icloud_sync_off_message" = "この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます";
+"settings_interface_style_light" = "ライト";
+"settings_interface_style_dark" = "ダーク";
+"settings_interface_style_unspecified" = "端末に合わせる";
 
 "url_context_menu_open" = "開く";
 "url_context_menu_copy" = "コピー";

@@ -168,3 +168,11 @@ extension SettingsViewController {
         }
     }
 }
+
+extension SettingsViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath == IndexPath(row: 0, section: 0) {
+            show(UserInterfaceStyleSelectionViewController(), sender: nil)
+        }
+    }
+}

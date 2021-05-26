@@ -375,6 +375,12 @@ internal enum L10n {
     internal static let settingsConfirmIcloudSyncOffMessage = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_message")
     /// iCloud同期をオフにしますか？
     internal static let settingsConfirmIcloudSyncOffTitle = L10n.tr("Localizable", "settings_confirm_icloud_sync_off_title")
+    /// ダーク
+    internal static let settingsInterfaceStyleDark = L10n.tr("Localizable", "settings_interface_style_dark")
+    /// ライト
+    internal static let settingsInterfaceStyleLight = L10n.tr("Localizable", "settings_interface_style_light")
+    /// 端末に合わせる
+    internal static let settingsInterfaceStyleUnspecified = L10n.tr("Localizable", "settings_interface_style_unspecified")
     /// このタグの名前を入力してください
     internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
     /// 新規タグ

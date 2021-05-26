@@ -32,7 +32,7 @@ name: Erik, nameSpecified: , owner: phimage, version: 5.1.0
 
 name: Kanna, nameSpecified: , owner: tid-kijyun, version: 5.2.4
 
-name: realm-cocoa, nameSpecified: , owner: realm, version: cf49bb9
+name: realm-cocoa, nameSpecified: , owner: realm, version: v10.7.5
 
 add-version-numbers: false
 
