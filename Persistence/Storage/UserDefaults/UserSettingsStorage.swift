@@ -8,6 +8,7 @@ import Domain
 
 public class UserSettingsStorage {
     enum Key: String {
+        case userInterfaceStyle = "userSettingsUserInterfaceStyle"
         case showHiddenItems = "userSettingsShowHiddenItems"
         case enabledICloudSync = "userSettingsEnabledICloudSync"
     }
@@ -30,6 +31,7 @@ public class UserSettingsStorage {
     public init(bundle: Bundle = Bundle.main) {
         self.bundle = bundle
         self.userDefaults.register(defaults: [
+            Self.Key.userInterfaceStyle.rawValue: UserInterfaceStyle.unspecified.rawValue,
             Self.Key.showHiddenItems.rawValue: false,
             Self.Key.enabledICloudSync.rawValue: true
         ])
@@ -37,63 +39,91 @@ public class UserSettingsStorage {
 
     // MARK: - Methods
 
+    private func setUserInterfaceStyleNonAtomically(_ userInterfaceStyle: UserInterfaceStyle) {
+        guard fetchUserInterfaceStyleNonAtomically() != userInterfaceStyle else { return }
+        userDefaults.set(userInterfaceStyle.rawValue, forKey: Key.userInterfaceStyle.rawValue)
+    }
+
     private func setShowHiddenItemsNonAtomically(_ showHiddenItems: Bool) {
-        guard self.fetchShowHiddenItemsNonAtomically() != showHiddenItems else { return }
-        self.userDefaults.set(showHiddenItems, forKey: Key.showHiddenItems.rawValue)
+        guard fetchShowHiddenItemsNonAtomically() != showHiddenItems else { return }
+        userDefaults.set(showHiddenItems, forKey: Key.showHiddenItems.rawValue)
     }
 
     private func setEnabledICloudSyncNonAtomically(_ enabledICloudSync: Bool) {
-        guard self.fetchEnabledICloudSync() != enabledICloudSync else { return }
-        self.userDefaults.set(enabledICloudSync, forKey: Key.enabledICloudSync.rawValue)
+        guard fetchEnabledICloudSync() != enabledICloudSync else { return }
+        userDefaults.set(enabledICloudSync, forKey: Key.enabledICloudSync.rawValue)
+    }
+
+    private func fetchUserInterfaceStyleNonAtomically() -> UserInterfaceStyle {
+        return UserInterfaceStyle(rawValue: userDefaults.userSettingsUserInterfaceStyle) ?? .unspecified
     }
 
     private func fetchShowHiddenItemsNonAtomically() -> Bool {
-        return self.userDefaults.userSettingsShowHiddenItems
+        return userDefaults.userSettingsShowHiddenItems
     }
 
     private func fetchEnabledICloudSync() -> Bool {
-        return self.userDefaults.userSettingsEnabledICloudSync
+        return userDefaults.userSettingsEnabledICloudSync
     }
 }
 
 extension UserDefaults {
+    @objc dynamic var userSettingsUserInterfaceStyle: String {
+        return string(forKey: UserSettingsStorage.Key.userInterfaceStyle.rawValue) ?? UserInterfaceStyle.unspecified.rawValue
+    }
+
     @objc dynamic var userSettingsShowHiddenItems: Bool {
-        return self.bool(forKey: UserSettingsStorage.Key.showHiddenItems.rawValue)
+        return bool(forKey: UserSettingsStorage.Key.showHiddenItems.rawValue)
     }
 
     @objc dynamic var userSettingsEnabledICloudSync: Bool {
-        return self.bool(forKey: UserSettingsStorage.Key.enabledICloudSync.rawValue)
+        return bool(forKey: UserSettingsStorage.Key.enabledICloudSync.rawValue)
     }
 }
 
 extension UserSettingsStorage: UserSettingsStorageProtocol {
     // MARK: - UserSettingsStorageProtocol
 
+    public var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> {
+        return userDefaults
+            .publisher(for: \.userSettingsUserInterfaceStyle)
+            .map { UserInterfaceStyle(rawValue: $0) ?? .unspecified }
+            .eraseToAnyPublisher()
+    }
+
     public var showHiddenItems: AnyPublisher<Bool, Never> {
-        return self.userDefaults
+        return userDefaults
             .publisher(for: \.userSettingsShowHiddenItems)
             .eraseToAnyPublisher()
     }
 
     public var enabledICloudSync: AnyPublisher<Bool, Never> {
-        return self.userDefaults
+        return userDefaults
             .publisher(for: \.userSettingsEnabledICloudSync)
             .eraseToAnyPublisher()
     }
 
+    public func readUserInterfaceStyle() -> UserInterfaceStyle {
+        return fetchUserInterfaceStyleNonAtomically()
+    }
+
     public func readShowHiddenItems() -> Bool {
-        return self.fetchShowHiddenItemsNonAtomically()
+        return fetchShowHiddenItemsNonAtomically()
     }
 
     public func readEnabledICloudSync() -> Bool {
-        return self.fetchEnabledICloudSync()
+        return fetchEnabledICloudSync()
+    }
+
+    public func set(userInterfaceStyle: UserInterfaceStyle) {
+        queue.sync { setUserInterfaceStyleNonAtomically(userInterfaceStyle) }
     }
 
     public func set(showHiddenItems: Bool) {
-        self.queue.sync { self.setShowHiddenItemsNonAtomically(showHiddenItems) }
+        queue.sync { setShowHiddenItemsNonAtomically(showHiddenItems) }
     }
 
     public func set(enabledICloudSync: Bool) {
-        self.queue.sync { self.setEnabledICloudSyncNonAtomically(enabledICloudSync) }
+        queue.sync { setEnabledICloudSyncNonAtomically(enabledICloudSync) }
     }
 }
