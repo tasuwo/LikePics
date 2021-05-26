@@ -16,7 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="background_client"/>
-                        <color key="separatorColor" name="background_client"/>
                         <color key="sectionIndexBackgroundColor" name="background_client"/>
                         <sections>
                             <tableViewSection headerTitle="表示設定" id="R8c-8b-MTp">
