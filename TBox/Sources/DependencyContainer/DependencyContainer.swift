@@ -83,7 +83,7 @@ class DependencyContainer {
 
         self.monitor = ICloudSyncMonitor(logger: self.logger)
 
-        let userSettingsStorage = UserSettingsStorage()
+        let userSettingsStorage = UserSettingsStorage.shared
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage

@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #if DEBUG
             if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
                 AppDataLoader.loadAppData()
-                UserSettingsStorage().set(enabledICloudSync: false)
+                UserSettingsStorage.shared.set(enabledICloudSync: false)
             }
         #endif
 
@@ -56,7 +56,7 @@ extension AppDelegate {
     func prepareSingleton(by cloudAvailabilityService: CloudAvailabilityService) {
         // swiftlint:disable:next unowned_variable_capture
         cloudAvailabilityService.currentAvailability { [unowned self, unowned cloudAvailabilityService] result in
-            let isSyncEnabled = UserSettingsStorage().readEnabledICloudSync()
+            let isSyncEnabled = UserSettingsStorage.shared.readEnabledICloudSync()
 
             let container: DependencyContainer
 

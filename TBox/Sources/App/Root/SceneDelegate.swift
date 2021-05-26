@@ -19,12 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var sceneDependencyContainer: SceneDependencyContainer!
     private var subscription: Set<AnyCancellable> = .init()
 
+    private var userSettingsStorage: UserSettingsStorage!
+    private var uiStyleSubscription: AnyCancellable?
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage(),
+        let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage.shared,
                                                 cloudAvailabilityService: delegate.cloudAvailabilityService,
                                                 intent: session.stateRestorationActivity?.intent)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
@@ -32,6 +35,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
         window.makeKeyAndVisible()
+
+        userSettingsStorage = UserSettingsStorage.shared
+        uiStyleSubscription = userSettingsStorage
+            .userInterfaceStyle
+            .map { $0.uiUserInterfaceStyle }
+            .sink { [window] style in window.overrideUserInterfaceStyle = style }
 
         self.window = window
 

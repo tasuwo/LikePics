@@ -4,12 +4,6 @@
 
 import Combine
 
-public enum UserInterfaceStyle: String {
-    case light
-    case dark
-    case unspecified
-}
-
 /// @mockable
 public protocol UserSettingsStorageProtocol {
     var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> { get }
