@@ -231,6 +231,13 @@ internal enum L10n {
     internal static let clipsListAlertForPurgeAction = L10n.tr("Localizable", "clips_list_alert_for_purge_action")
     /// このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます
     internal static let clipsListAlertForPurgeMessage = L10n.tr("Localizable", "clips_list_alert_for_purge_message")
+    /// %d件のクリップを取り除く
+    internal static func clipsListAlertForRemoveFromAlbumAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "clips_list_alert_for_remove_from_album_action", p1)
+    }
+
+    /// これらのクリップをアルバムから取り除きますか？クリップ自体や含まれる画像は削除されません
+    internal static let clipsListAlertForRemoveFromAlbumMessage = L10n.tr("Localizable", "clips_list_alert_for_remove_from_album_message")
     /// この画像のみ共有する
     internal static let clipsListAlertForShareItemAction = L10n.tr("Localizable", "clips_list_alert_for_share_item_action")
     /// クリップ内の%d件の画像を共有する

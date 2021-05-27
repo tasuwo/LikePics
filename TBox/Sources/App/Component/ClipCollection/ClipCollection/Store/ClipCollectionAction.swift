@@ -48,6 +48,7 @@ enum ClipCollectionAction: Action {
     // MARK: Alert Completion
 
     case alertDeleteConfirmed
+    case alertRemoveFromAlbumConfirmed
     case alertPurgeConfirmed
     case alertShareDismissed(Bool)
     case alertDismissed

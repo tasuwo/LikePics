@@ -23,6 +23,8 @@
 "clips_list_alert_for_add_tag" = "タグを追加する";
 "clips_list_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
 "clips_list_alert_for_delete_action" = "%d件のクリップを削除";
+"clips_list_alert_for_remove_from_album_message" = "クリップをアルバムから取り除きますか？クリップ自体や含まれる画像は削除されません";
+"clips_list_alert_for_remove_from_album_action" = "%d件のクリップを取り除く";
 "clips_list_alert_for_delete_in_album_message" = "これらのクリップを削除、あるいはアルバムから削除しますか？";
 "clips_list_alert_for_delete_in_album_action_remove_from_album" = "アルバムから削除";
 "clips_list_alert_for_delete_in_album_action_delete" = "削除";

@@ -158,13 +158,7 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .removeFromAlbumMenuTapped(clipId):
-            guard case let .album(albumId) = state.source else { return (state, .none) }
-            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: [clipId]) {
-            case .success: ()
-
-            case .failure:
-                nextState.alert = .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)
-            }
+            nextState.alert = .removeFromAlbum(clipId: clipId)
             return (nextState, .none)
 
         // MARK: Modal Completion
@@ -229,6 +223,22 @@ struct ClipCollectionReducer: Reducer {
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClips)
+            }
+            return (nextState, .none)
+
+        case .alertRemoveFromAlbumConfirmed:
+            guard case let .removeFromAlbum(clipId: clipId) = state.alert,
+                  case let .album(albumId) = state.source
+            else {
+                nextState.alert = nil
+                return (nextState, .none)
+            }
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: [clipId]) {
+            case .success:
+                nextState.alert = nil
+
+            case .failure:
+                nextState.alert = .error(L10n.clipCollectionErrorAtRemoveClipsFromAlbum)
             }
             return (nextState, .none)
 

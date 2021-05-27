@@ -267,6 +267,9 @@ extension ClipCollectionViewController {
         case let .deletion(clipId: clipId):
             presentDeletionAlert(for: clipId, state: state)
 
+        case let .removeFromAlbum(clipId: clipId):
+            presentRemoveFromAlbumAlert(for: clipId, state: state)
+
         case let .purge(clipId: clipId):
             presentPurgeAlert(for: clipId, state: state)
 
@@ -328,6 +331,33 @@ extension ClipCollectionViewController {
         let title = L10n.clipsListAlertForDeleteAction(1)
         alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
             self?.store.execute(.alertDeleteConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentRemoveFromAlbumAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
+        guard let clip = state.clips.entity(having: clipId),
+              let indexPath = dataSource.indexPath(for: .init(clip)),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let alert = UIAlertController(title: nil,
+                                      message: L10n.clipsListAlertForRemoveFromAlbumMessage,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipsListAlertForRemoveFromAlbumAction(1)
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertRemoveFromAlbumConfirmed)
         }))
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
             self?.store.execute(.alertDismissed)

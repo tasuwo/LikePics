@@ -8,6 +8,7 @@ import Domain
 struct ClipCollectionState: Equatable {
     enum Alert: Equatable {
         case error(String?)
+        case removeFromAlbum(clipId: Clip.Identity)
         case deletion(clipId: Clip.Identity)
         case purge(clipId: Clip.Identity)
         case share(clipId: Clip.Identity, imageIds: [ImageContainer.Identity])
@@ -93,6 +94,7 @@ extension ClipCollectionState: Codable {}
 extension ClipCollectionState.Alert: Codable {
     enum CodingKeys: CodingKey {
         case error
+        case removeFromAlbum
         case deletion
         case purge
         case share
@@ -106,6 +108,10 @@ extension ClipCollectionState.Alert: Codable {
         case .error:
             let message = try container.decodeIfPresent(String.self, forKey: .error)
             self = .error(message)
+
+        case .removeFromAlbum:
+            let clipId = try container.decode(Clip.Identity.self, forKey: .removeFromAlbum)
+            self = .removeFromAlbum(clipId: clipId)
 
         case .deletion:
             let clipId = try container.decode(Clip.Identity.self, forKey: .deletion)
@@ -132,6 +138,9 @@ extension ClipCollectionState.Alert: Codable {
         switch self {
         case let .error(message):
             try container.encode(message, forKey: .error)
+
+        case let .removeFromAlbum(clipId: clipId):
+            try container.encode(clipId, forKey: .removeFromAlbum)
 
         case let .deletion(clipId: clipId):
             try container.encode(clipId, forKey: .deletion)
