@@ -1,4 +1,4 @@
-- Support multiple windows on iPad.
+- You can select dark/dark theme.
 
-- Fixed minor bugs.
-- Improve performance.
+- Fixed a bug that failed to add a clip to album from long press menu.
+- Change some long press menu items.
