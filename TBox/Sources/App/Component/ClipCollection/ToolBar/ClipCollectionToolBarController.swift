@@ -91,11 +91,11 @@ extension ClipCollectionToolBarController {
         case let .changeVisibility(targetCount: targetCount):
             presentAlertForChangeVisibility(targetCount: targetCount)
 
-        case .deletion(includesRemoveFromAlbum: false, targetCount: let targetCount):
+        case let .deletion(targetCount: targetCount):
             presentAlertForDelete(targetCount: targetCount)
 
-        case .deletion(includesRemoveFromAlbum: true, targetCount: _):
-            presentAlertForDeleteIncludesRemoveFromAlbum()
+        case .chooseDeletionType:
+            presentAlertForChooseDeletionType()
 
         case let .share(imageIds: imageIds, targetCount: _):
             presentAlertForShare(imageIds: imageIds)
@@ -160,7 +160,7 @@ extension ClipCollectionToolBarController {
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func presentAlertForDeleteIncludesRemoveFromAlbum() {
+    private func presentAlertForChooseDeletionType() {
         let alert = UIAlertController(title: nil,
                                       message: L10n.clipsListAlertForDeleteInAlbumMessage,
                                       preferredStyle: .actionSheet)
@@ -169,7 +169,7 @@ extension ClipCollectionToolBarController {
             self?.store.execute(.alertRemoveFromAlbumConfirmed)
         })
         alert.addAction(.init(title: L10n.clipsListAlertForDeleteInAlbumActionDelete, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
+            self?.store.execute(.alertDeleteSelected)
         })
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
             self?.store.execute(.alertDismissed)

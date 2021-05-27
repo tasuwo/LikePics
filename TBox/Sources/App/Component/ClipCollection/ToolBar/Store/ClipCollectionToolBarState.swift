@@ -8,7 +8,8 @@ struct ClipCollectionToolBarState: Equatable {
     enum Alert: Equatable {
         case addition(targetCount: Int)
         case changeVisibility(targetCount: Int)
-        case deletion(includesRemoveFromAlbum: Bool, targetCount: Int)
+        case chooseDeletionType
+        case deletion(targetCount: Int)
         case share(imageIds: [ImageContainer.Identity], targetCount: Int)
     }
 
@@ -46,6 +47,7 @@ extension ClipCollectionToolBarState.Alert: Codable {
     enum CodingKeys: CodingKey {
         case addition
         case changeVisibility
+        case chooseDeletionType
         case deletion
         case share
     }
@@ -63,11 +65,12 @@ extension ClipCollectionToolBarState.Alert: Codable {
             let targetCount = try container.decode(Int.self, forKey: .changeVisibility)
             self = .changeVisibility(targetCount: targetCount)
 
+        case .chooseDeletionType:
+            self = .chooseDeletionType
+
         case .deletion:
-            var nestedContainer = try container.nestedUnkeyedContainer(forKey: .deletion)
-            let includesRemoveFromAlbum = try nestedContainer.decode(Bool.self)
-            let targetCount = try nestedContainer.decode(Int.self)
-            self = .deletion(includesRemoveFromAlbum: includesRemoveFromAlbum, targetCount: targetCount)
+            let targetCount = try container.decode(Int.self, forKey: .deletion)
+            self = .deletion(targetCount: targetCount)
 
         case .share:
             var nestedContainer = try container.nestedUnkeyedContainer(forKey: .share)
@@ -90,10 +93,11 @@ extension ClipCollectionToolBarState.Alert: Codable {
         case let .changeVisibility(targetCount: targetCount):
             try container.encode(targetCount, forKey: .changeVisibility)
 
-        case let .deletion(includesRemoveFromAlbum: includesRemoveFromAlbum, targetCount: targetCount):
-            var nestedContainer = container.nestedUnkeyedContainer(forKey: .deletion)
-            try nestedContainer.encode(includesRemoveFromAlbum)
-            try nestedContainer.encode(targetCount)
+        case .chooseDeletionType:
+            try container.encode(true, forKey: .chooseDeletionType)
+
+        case let .deletion(targetCount: targetCount):
+            try container.encode(targetCount, forKey: .deletion)
 
         case let .share(imageIds: imageIds, targetCount: targetCount):
             var nestedContainer = container.nestedUnkeyedContainer(forKey: .share)

@@ -44,13 +44,21 @@ struct ClipCollectionToolBarReducer: Reducer {
             return (nextState, .none)
 
         case .deleteButtonTapped:
-            nextState.alert = .deletion(includesRemoveFromAlbum: state.source.isAlbum, targetCount: nextState.parentState.clips.selectedIds().count)
+            if state.source.isAlbum {
+                nextState.alert = .chooseDeletionType
+            } else {
+                nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds().count)
+            }
             return (nextState, .none)
 
         case .mergeButtonTapped:
             return (state, .none)
 
         // MARK: Alert Completion
+
+        case .alertDeleteSelected:
+            nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds().count)
+            return (nextState, .none)
 
         case .alertAddToAlbumConfirmed,
              .alertAddTagsConfirmed,

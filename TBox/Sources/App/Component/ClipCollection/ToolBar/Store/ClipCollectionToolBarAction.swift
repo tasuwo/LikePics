@@ -31,6 +31,7 @@ enum ClipCollectionToolBarAction: Action, Equatable {
     case alertRevealConfirmed
 
     case alertRemoveFromAlbumConfirmed
+    case alertDeleteSelected
     case alertDeleteConfirmed
     case alertShareConfirmed(Bool)
 
