@@ -374,7 +374,7 @@ extension ClipCollectionViewController {
         case .albumSelection:
             presentAlbumSelectionModal()
 
-        case let .tagSelection(tagIds: tagIds):
+        case let .tagSelection(clipIds: _, tagIds: tagIds):
             presentTagSelectionModal(selections: tagIds)
 
         case let .clipEdit(clipId: clipId):
@@ -395,7 +395,7 @@ extension ClipCollectionViewController {
             .publisher(for: id, name: .albumSelectionModal)
             .sink { [weak self] notification in
                 let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
-                self?.store.execute(.albumsSelected(albumId))
+                self?.store.execute(.albumSelected(albumId))
                 self?.modalSubscription?.cancel()
                 self?.modalSubscription = nil
             }

@@ -42,7 +42,7 @@ enum ClipCollectionAction: Action {
     // MARK: Modal Completion
 
     case tagsSelected(Set<Tag.Identity>?)
-    case albumsSelected(Album.Identity?)
+    case albumSelected(Album.Identity?)
     case modalCompleted(Bool)
 
     // MARK: Alert Completion
