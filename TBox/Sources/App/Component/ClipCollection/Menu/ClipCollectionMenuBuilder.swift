@@ -39,7 +39,8 @@ extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
                            isInline: true,
                            children: [
                                clip.items.count > 1 ? .item(.purge) : nil,
-                               source.isAlbum ? .item(.removeFromAlbum) : .item(.delete)
+                               source.isAlbum ? .item(.removeFromAlbum) : nil,
+                               .item(.delete)
                            ].compactMap { $0 }))
         ].compactMap { $0 }
     }
