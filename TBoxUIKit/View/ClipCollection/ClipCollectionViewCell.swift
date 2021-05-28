@@ -29,7 +29,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var isEditing: Bool = false {
+    public var isEditing = false {
         didSet {
             updateOverallOverlayView()
         }
@@ -64,9 +64,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         return false
     }
 
-    public private(set) var isSingleThumbnail: Bool = false
-    public private(set) var visibleHiddenIcon: Bool = false
-    public private(set) var isHiddenClip: Bool = false
+    public private(set) var isSingleThumbnail = false
+    public private(set) var visibleHiddenIcon = false
+    public private(set) var isHiddenClip = false
 
     @IBOutlet var primaryThumbnailView: ClipCollectionThumbnailView!
     @IBOutlet var secondaryThumbnailView: ClipCollectionThumbnailView!

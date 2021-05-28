@@ -33,7 +33,7 @@ class ClipInformationInteractiveDismissalAnimator: NSObject {
 
     private var logger: Loggable
     private var innerContext: InnerContext?
-    private var shouldEndImmediately: Bool = false
+    private var shouldEndImmediately = false
 
     private let lock = NSLock()
 

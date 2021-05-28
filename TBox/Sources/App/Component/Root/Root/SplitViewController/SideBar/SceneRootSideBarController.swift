@@ -35,7 +35,7 @@ class SceneRootSideBarController: UIViewController {
     weak var delegate: SceneRootSideBarControllerDelegate?
 
     private var initialItem: SceneRoot.SideBarItem = .top
-    private var isAppliedInitialValues: Bool = false
+    private var isAppliedInitialValues = false
 
     // MARK: - Lifecycle
 

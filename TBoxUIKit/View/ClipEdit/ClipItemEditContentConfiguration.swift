@@ -12,7 +12,7 @@ public protocol ClipItemEditContentDelegate: AnyObject {
 
 public struct ClipItemEditContentConfiguration {
     public var siteUrl: URL?
-    public var isSiteUrlEditable: Bool = true
+    public var isSiteUrlEditable = true
     public var dataSize: Int?
     public var thumbnail: UIImage?
     public var imageWidth: Double?
@@ -20,7 +20,7 @@ public struct ClipItemEditContentConfiguration {
     public weak var delegate: ClipItemEditContentDelegate?
     public weak var interactionDelegate: UIContextMenuInteractionDelegate?
 
-    public var siteUrlDisabledForce: Bool = false
+    public var siteUrlDisabledForce = false
 
     public init() {
         self.siteUrl = nil

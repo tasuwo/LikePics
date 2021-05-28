@@ -8,8 +8,8 @@ import RealmSwift
 final class ReferenceTagObject: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var name: String = ""
-    @objc dynamic var isHidden: Bool = false
-    @objc dynamic var isDirty: Bool = false
+    @objc dynamic var isHidden = false
+    @objc dynamic var isDirty = false
 
     override static func primaryKey() -> String? {
         return "id"

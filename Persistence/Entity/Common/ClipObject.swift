@@ -10,7 +10,7 @@ final class ClipObject: Object {
     @objc dynamic var descriptionText: String?
     let items = List<ClipItemObject>()
     let tagIds = List<TagIdObject>()
-    @objc dynamic var isHidden: Bool = false
+    @objc dynamic var isHidden = false
     @objc dynamic var dataSize: Int = 0
     @objc dynamic var registeredAt = Date()
     @objc dynamic var updatedAt = Date()

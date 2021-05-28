@@ -48,7 +48,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var visibleCountIfPossible: Bool = true {
+    public var visibleCountIfPossible = true {
         didSet {
             self.updateLabel()
         }
@@ -60,7 +60,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public var isHiddenTag: Bool = false {
+    public var isHiddenTag = false {
         didSet {
             self.updateAppearance()
         }

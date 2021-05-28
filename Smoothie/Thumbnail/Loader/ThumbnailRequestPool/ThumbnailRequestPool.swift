@@ -56,7 +56,7 @@ class ThumbnailRequestPool {
     private let baseRequest: ThumbnailRequest
     private let lock = NSLock()
     private var pool: [RequestId: ThumbnailRequestContext]
-    private var isPrefetched: Bool = false
+    private var isPrefetched = false
 
     var config: ThumbnailConfig { baseRequest.config }
     var imageRequest: OriginalImageRequest { baseRequest.imageRequest }

@@ -6,7 +6,7 @@ import Domain
 import UIKit
 
 public class ClipSearchHistoryHeaderCell: UICollectionViewListCell {
-    public var isRemoveAllButtonEnabled: Bool = false
+    public var isRemoveAllButtonEnabled = false
     public var removeAllHistoriesHandler: (() -> Void)?
 
     override public func updateConfiguration(using state: UICellConfigurationState) {

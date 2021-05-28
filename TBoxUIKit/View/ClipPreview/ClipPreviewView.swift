@@ -98,11 +98,11 @@ public class ClipPreviewView: UIView {
         return doubleTapGestureRecognizer
     }
 
-    public var isDisplayingLoadingIndicator: Bool = false {
+    public var isDisplayingLoadingIndicator = false {
         didSet { updateLoadingState() }
     }
 
-    public var isLoadingIndicatorHidden: Bool = false {
+    public var isLoadingIndicatorHidden = false {
         didSet { updateLoadingState() }
     }
 
