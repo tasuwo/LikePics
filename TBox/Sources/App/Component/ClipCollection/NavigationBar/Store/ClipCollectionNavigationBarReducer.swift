@@ -5,8 +5,7 @@
 import Combine
 import ForestKit
 
-// TODO:
-typealias ClipCollectionNavigationBarDependency = HasRouter // HasClipCollectionNavigationBarDelegate
+typealias ClipCollectionNavigationBarDependency = HasNop
 
 struct ClipCollectionNavigationBarReducer: Reducer {
     typealias Dependency = ClipCollectionNavigationBarDependency

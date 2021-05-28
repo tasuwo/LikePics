@@ -72,3 +72,5 @@ extension SceneDependencyContainer: HasCloudAvailabilityService {
 extension SceneDependencyContainer: HasModalNotificationCenter {
     var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
 }
+
+extension SceneDependencyContainer: HasNop {}
