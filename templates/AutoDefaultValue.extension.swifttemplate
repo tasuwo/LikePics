@@ -1,0 +1,32 @@
+
+<%_ 
+enum DefaultValueSettings {
+    static let simpleMappings: [String:String] = [
+        "Date":"Date(timeIntervalSince1970: 0)",
+        "URL":"URL(string: \"https://xxx.xxxx.xx\")!",
+        "UUID":"UUID()",
+        "Clip.Identity":"UUID()",
+        // Please add extra default value mappings
+    ]
+
+    static let genericTypeFormatMappings: [String:String] = [
+        "ClosedRange":"@0...@0",
+        "Set":"[]"
+        // Please add extra default value mappings
+    ]
+
+    static func defaultValue(from typeName: String) -> String {
+        guard let defaultValue = Self.simpleMappings[typeName] else {
+            fatalError("Unexpected type name: \(typeName)")
+        }
+        return defaultValue
+    }
+
+    static func defaultValueFormat(for genericTypeName: String) -> String {
+        guard let format = Self.genericTypeFormatMappings[genericTypeName] else {
+            fatalError("Unexpected type name: \(genericTypeName)")
+        }
+        return format
+    }
+}
+-%>

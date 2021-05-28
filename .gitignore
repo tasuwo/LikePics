@@ -39,6 +39,7 @@ Carthage/Build/
 
 templates/*
 !templates/.gitkeep
+!templates/AutoDefaultValue.extension.swifttemplate
 
 ## Fastlane
 # fastlane specific
