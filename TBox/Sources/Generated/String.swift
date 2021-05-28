@@ -236,7 +236,7 @@ internal enum L10n {
         return L10n.tr("Localizable", "clips_list_alert_for_remove_from_album_action", p1)
     }
 
-    /// これらのクリップをアルバムから取り除きますか？クリップ自体や含まれる画像は削除されません
+    /// クリップをアルバムから取り除きますか？クリップ自体や含まれる画像は削除されません
     internal static let clipsListAlertForRemoveFromAlbumMessage = L10n.tr("Localizable", "clips_list_alert_for_remove_from_album_message")
     /// この画像のみ共有する
     internal static let clipsListAlertForShareItemAction = L10n.tr("Localizable", "clips_list_alert_for_share_item_action")

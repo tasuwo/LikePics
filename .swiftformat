@@ -16,8 +16,6 @@
 --hexgrouping none
 --hexliteralcase lowercase
 --octalgrouping none
---self insert
---stripunusedargs closure-only
 --wrapcollections beforefirst
 --exclude Pods
 
