@@ -7,6 +7,6 @@ import ForestKit
 enum ClipsIntegrityValidatorAction: Action {
     case didLaunchApp
     case shareExtensionDidCompleteRequest
-    case didStartLoading(at: Int, count: Int)
+    case didStartLoading(index: Int, count: Int)
     case didFinishLoading
 }

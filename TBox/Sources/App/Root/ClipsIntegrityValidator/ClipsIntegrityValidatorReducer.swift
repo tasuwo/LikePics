@@ -49,7 +49,7 @@ struct ClipsIntegrityValidatorReducer: Reducer {
             nextState.state = .loading(currentIndex: nil, counts: nil)
             return (nextState, [Effect(stream)])
 
-        case let .didStartLoading(at: index, count: count):
+        case let .didStartLoading(index: index, count: count):
             guard nextState.state.isLoading else { return (nextState, .none) }
             nextState.state = .loading(currentIndex: index, counts: count)
             return (nextState, .none)
