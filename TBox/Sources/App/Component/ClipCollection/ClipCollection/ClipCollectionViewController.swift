@@ -75,12 +75,43 @@ class ClipCollectionViewController: UIViewController {
         let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
             .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
             .eraseToAnyStoring()
-        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore, dependency: dependency)
+        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
 
         let toolBarStore: ClipCollectionToolBarController.Store = rootStore
             .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
             .eraseToAnyStoring()
-        toolBarController = ClipCollectionToolBarController(store: toolBarStore, dependency: dependency)
+        toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
+    }
+
+    init(rootStore: RootStore,
+         navigationBarStore: ClipCollectionNavigationBarController.Store,
+         toolBarStore: ClipCollectionToolBarController.Store,
+         router: Router,
+         imageQueryService: ImageQueryServiceProtocol,
+         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+         menuBuilder: ClipCollectionMenuBuildable)
+    {
+        self.router = router
+        self.thumbnailLoader = thumbnailLoader
+        self.menuBuilder = menuBuilder
+        self.imageQueryService = imageQueryService
+
+        self.rootStore = rootStore
+        self.store = rootStore
+            .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
+            .eraseToAnyStoring()
+
+        super.init(nibName: nil, bundle: nil)
+
+        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
+            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
+            .eraseToAnyStoring()
+        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
+
+        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
+            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
+            .eraseToAnyStoring()
+        toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
     }
 
     @available(*, unavailable)
@@ -819,6 +850,20 @@ extension ClipCollectionViewController: UICollectionViewDropDelegate {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
         return parameters
+    }
+}
+
+extension ClipCollectionViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> UIViewController {
+        return ClipCollectionViewController(rootStore: rootStore,
+                                            navigationBarStore: navigationBarController.store,
+                                            toolBarStore: toolBarController.store,
+                                            router: router,
+                                            imageQueryService: imageQueryService,
+                                            thumbnailLoader: thumbnailLoader,
+                                            menuBuilder: menuBuilder)
     }
 }
 

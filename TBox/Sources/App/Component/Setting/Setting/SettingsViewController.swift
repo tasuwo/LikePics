@@ -176,3 +176,17 @@ extension SettingsViewController {
         }
     }
 }
+
+extension SettingsViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> UIViewController {
+        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
+
+        // swiftlint:disable:next force_cast
+        let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
+        viewController.store = store
+
+        return viewController
+    }
+}

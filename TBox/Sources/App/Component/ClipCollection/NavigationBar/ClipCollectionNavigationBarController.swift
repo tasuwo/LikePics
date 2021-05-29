@@ -31,9 +31,7 @@ class ClipCollectionNavigationBarController {
 
     // MARK: - Initializers
 
-    init(store: Store,
-         dependency: ClipCollectionNavigationBarDependency)
-    {
+    init(store: Store) {
         self.store = store
 
         configureBarButtons()

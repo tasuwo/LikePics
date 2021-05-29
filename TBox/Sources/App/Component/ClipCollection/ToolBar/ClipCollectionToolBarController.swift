@@ -38,10 +38,10 @@ class ClipCollectionToolBarController {
     // MARK: - Initializers
 
     init(store: Store,
-         dependency: ClipCollectionToolBarDependency)
+         imageQueryService: ImageQueryServiceProtocol)
     {
         self.store = store
-        self.imageQueryService = dependency.imageQueryService
+        self.imageQueryService = imageQueryService
 
         configureBarButtons()
     }

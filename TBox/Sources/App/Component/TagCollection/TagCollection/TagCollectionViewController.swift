@@ -10,7 +10,7 @@ import UIKit
 
 class TagCollectionViewController: UIViewController {
     typealias Layout = TagCollectionViewLayout
-    typealias TagCollectionViewStore = Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
+    typealias Store = ForestKit.Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
 
     // MARK: - Properties
 
@@ -32,7 +32,7 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: Store
 
-    private var store: TagCollectionViewStore
+    private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.TagCollectionViewController")
 
@@ -44,9 +44,26 @@ class TagCollectionViewController: UIViewController {
          dependency: TagCollectionViewDependency,
          menuBuilder: TagCollectionMenuBuildable)
     {
-        self.store = TagCollectionViewStore(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
+        self.store = Store(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
+
+        self.menuBuilder = menuBuilder
+
+        super.init(nibName: nil, bundle: nil)
+
+        tagAdditionAlert.textEditAlertDelegate = self
+        tagEditAlert.textEditAlertDelegate = self
+    }
+
+    init(store: Store,
+         tagAdditionAlertStore: TextEditAlertController.Store,
+         tagEditAlertStore: TextEditAlertController.Store,
+         menuBuilder: TagCollectionMenuBuildable)
+    {
+        self.store = store
+        self.tagAdditionAlert = .init(store: tagAdditionAlertStore)
+        self.tagEditAlert = .init(store: tagEditAlertStore)
 
         self.menuBuilder = menuBuilder
 
@@ -114,7 +131,7 @@ class TagCollectionViewController: UIViewController {
 // MARK: - Bind
 
 extension TagCollectionViewController {
-    private func bind(to store: TagCollectionViewStore) {
+    private func bind(to store: Store) {
         store.state
             .receive(on: collectionUpdateQueue)
             .sink { [weak self] state in self?.applySnapshot(for: state) }
@@ -469,5 +486,16 @@ extension TagCollectionViewController: TextEditAlertDelegate {
 
     func textEditAlertDidCancel(_ id: UUID) {
         store.execute(.alertDismissed)
+    }
+}
+
+extension TagCollectionViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> UIViewController {
+        return TagCollectionViewController(store: store,
+                                           tagAdditionAlertStore: tagAdditionAlert.store,
+                                           tagEditAlertStore: tagEditAlert.store,
+                                           menuBuilder: menuBuilder)
     }
 }

@@ -235,3 +235,13 @@ extension SearchEntryViewController: UICollectionViewDelegate {
         resultsController.entrySelected(history.original)
     }
 }
+
+extension SearchEntryViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> UIViewController {
+        return SearchEntryViewController(rootStore: rootStore,
+                                         store: store,
+                                         searchResultViewController: resultsController)
+    }
+}

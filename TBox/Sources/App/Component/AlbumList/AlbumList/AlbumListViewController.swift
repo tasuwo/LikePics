@@ -60,6 +60,25 @@ class AlbumListViewController: UIViewController {
         albumEditAlert.textEditAlertDelegate = self
     }
 
+    init(store: Store,
+         albumAdditionAlertStore: TextEditAlertController.Store,
+         albumEditAlertStore: TextEditAlertController.Store,
+         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+         menuBuilder: AlbumListMenuBuildable.Type)
+    {
+        self.store = store
+        self.albumAdditionAlert = .init(store: albumAdditionAlertStore)
+        self.albumEditAlert = .init(store: albumEditAlertStore)
+
+        self.thumbnailLoader = thumbnailLoader
+        self.menuBuilder = menuBuilder
+
+        super.init(nibName: nil, bundle: nil)
+
+        albumAdditionAlert.textEditAlertDelegate = self
+        albumEditAlert.textEditAlertDelegate = self
+    }
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -518,5 +537,17 @@ extension AlbumListViewController: TextEditAlertDelegate {
 
     func textEditAlertDidCancel(_ id: UUID) {
         store.execute(.alertDismissed)
+    }
+}
+
+extension AlbumListViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> UIViewController {
+        return AlbumListViewController(store: store,
+                                       albumAdditionAlertStore: albumAdditionAlert.store,
+                                       albumEditAlertStore: albumEditAlert.store,
+                                       thumbnailLoader: thumbnailLoader,
+                                       menuBuilder: menuBuilder)
     }
 }

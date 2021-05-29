@@ -8,10 +8,10 @@ import ForestKit
 import UIKit
 
 class TextEditAlertController: NSObject {
-    typealias TextEditAlertStore = Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
+    typealias Store = ForestKit.Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
 
     private class AlertController: UIAlertController {
-        weak var store: TextEditAlertStore?
+        weak var store: Store?
         deinit {
             store?.execute(.dismissed)
         }
@@ -32,7 +32,7 @@ class TextEditAlertController: NSObject {
         var textEditAlertDelegate: TextEditAlertDelegate? { _textEditAlertDelegate }
     }
 
-    private(set) var store: TextEditAlertStore
+    private(set) var store: Store
     private let dependency = Dependency()
 
     private weak var presentingAlert: AlertController?
@@ -53,6 +53,12 @@ class TextEditAlertController: NSObject {
 
     init(state: TextEditAlertState) {
         self.store = .init(initialState: state, dependency: dependency, reducer: TextEditAlertReducer())
+        super.init()
+        bind()
+    }
+
+    init(store: Store) {
+        self.store = store
         super.init()
         bind()
     }
