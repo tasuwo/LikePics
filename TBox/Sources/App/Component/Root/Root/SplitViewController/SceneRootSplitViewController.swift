@@ -103,10 +103,19 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: - View Life-Cycle Methods
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        guard let previousTraitCollection = previousTraitCollection else { return }
+        if previousTraitCollection.horizontalSizeClass != traitCollection.horizontalSizeClass {
+            updateViewHierarchy(for: traitCollection.horizontalSizeClass)
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        applyInitialValues()
+        configureViewHierarchy()
 
         bind(to: clipsIntegrityValidatorStore)
     }
@@ -144,7 +153,7 @@ extension SceneRootSplitViewController {
 // MARK: - Configuration
 
 extension SceneRootSplitViewController {
-    private func applyInitialValues() {
+    private func configureViewHierarchy() {
         switch traitCollection.horizontalSizeClass {
         case .compact:
             compactRootViewController.setViewControllers(detailViewControllers, animated: false)
@@ -158,7 +167,44 @@ extension SceneRootSplitViewController {
         }
     }
 
+    private func updateViewHierarchy(for horizontalSizeClass: UIUserInterfaceSizeClass) {
+        switch horizontalSizeClass {
+        case .compact:
+            compactRootViewController.setViewControllers(detailViewControllers, animated: false)
+            let preferredItem = sideBarController.currentItem.map(to: SceneRoot.TabBarItem.self)
+            compactRootViewController.selectedIndex = preferredItem.next.rawValue
+            compactRootViewController.selectedIndex = preferredItem.rawValue
+
+        default:
+            let item = resolveCompactRootViewControllerSelectedItem()
+            sideBarController.select(item)
+            setSecondaryViewController(for: item)
+            compactRootViewController.setViewControllers([], animated: false)
+        }
+    }
+
+    private func resolveCompactRootViewControllerSelectedItem() -> SceneRootSideBarController.Item {
+        switch compactRootViewController.selectedViewController {
+        case detailSettingViewController:
+            return .setting
+
+        case detailTagListViewController:
+            return .tags
+
+        case detailAlbumListViewController:
+            return .albums
+
+        case detailSearchViewController:
+            return .search
+
+        default:
+            return .top
+        }
+    }
+
     private func setSecondaryViewController(for item: SceneRootSideBarController.Item) {
+        // HACK: detailViewController同士の切り替え時に、互いをViewHierarchyに積まないよう、リセットを挟む
+        setViewController(nil, for: .secondary)
         switch item {
         case .top:
             setViewController(detailTopClipListViewController, for: .secondary)
@@ -179,6 +225,8 @@ extension SceneRootSplitViewController {
 }
 
 extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
+    // MARK: - SceneRootSideBarControllerDelegate
+
     func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item) {
         setSecondaryViewController(for: item)
     }
@@ -210,42 +258,6 @@ extension SceneRootSplitViewController: CloudStackLoaderObserver {
                                          handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
-        }
-    }
-}
-
-extension SceneRootSplitViewController {
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        guard let previousTraitCollection = previousTraitCollection else { return }
-        if previousTraitCollection.horizontalSizeClass != traitCollection.horizontalSizeClass {
-            switch traitCollection.horizontalSizeClass {
-            case .compact:
-                compactRootViewController.setViewControllers(detailViewControllers, animated: false)
-                let preferredItem = sideBarController.currentItem.map(to: SceneRoot.TabBarItem.self)
-                compactRootViewController.selectedIndex = preferredItem.next.rawValue
-                compactRootViewController.selectedIndex = preferredItem.rawValue
-
-            default:
-                if compactRootViewController.selectedViewController === detailSettingViewController {
-                    sideBarController.select(.setting)
-                    setSecondaryViewController(for: .setting)
-                } else if compactRootViewController.selectedViewController === detailTagListViewController {
-                    sideBarController.select(.tags)
-                    setSecondaryViewController(for: .tags)
-                } else if compactRootViewController.selectedViewController === detailAlbumListViewController {
-                    sideBarController.select(.albums)
-                    setSecondaryViewController(for: .albums)
-                } else if compactRootViewController.selectedViewController === detailSearchViewController {
-                    sideBarController.select(.search)
-                    setSecondaryViewController(for: .search)
-                } else {
-                    sideBarController.select(.top)
-                    setSecondaryViewController(for: .top)
-                }
-                compactRootViewController.setViewControllers([], animated: false)
-            }
         }
     }
 }

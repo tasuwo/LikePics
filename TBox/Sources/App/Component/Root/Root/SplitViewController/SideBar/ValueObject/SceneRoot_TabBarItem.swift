@@ -84,30 +84,23 @@ extension SceneRoot {
             let viewController: UIViewController
             switch self {
             case .top:
-                // TODO:
-                // swiftlint:disable:next identifier_name
-                viewController = factory.makeClipCollectionViewController(from: .all)
+                if let homeViewState = intent?.homeViewState {
+                    viewController = factory.makeClipCollectionViewController(homeViewState)
+                } else {
+                    viewController = factory.makeClipCollectionViewController(from: .all)
+                }
 
             case .search:
-                // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeSearchViewController(intent?.searchViewState) else {
-                    fatalError("Unable to initialize SearchEntryViewController.")
-                }
-                viewController = vc
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeSearchViewController(intent?.searchViewState)!
 
             case .tags:
-                // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeTagCollectionViewController(intent?.tagCollectionViewState) else {
-                    fatalError("Unable to initialize TagListViewController.")
-                }
-                viewController = vc
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeTagCollectionViewController(intent?.tagCollectionViewState)!
 
             case .albums:
-                // swiftlint:disable:next identifier_name
-                guard let vc = factory.makeAlbumListViewController(intent?.albumLitViewState) else {
-                    fatalError("Unable to initialize AlbumListViewController.")
-                }
-                viewController = vc
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeAlbumListViewController(intent?.albumLitViewState)!
 
             case .setting:
                 viewController = factory.makeSettingsViewController(intent?.settingsViewState)

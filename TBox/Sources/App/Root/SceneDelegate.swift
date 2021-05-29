@@ -75,17 +75,17 @@ extension SceneDelegate: MainAppLauncher {
                 self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: singleton.container)
 
                 let rootViewController: SceneRootViewController
-                // if UIDevice.current.userInterfaceIdiom == .pad {
-                //     rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
-                //                                                       clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
-                //                                                       intent: intent,
-                //                                                       logger: singleton.container.logger)
-                // } else {
-                rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
-                                                               clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
-                                                               intent: intent,
-                                                               logger: singleton.container.logger)
-                // }
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
+                                                                      clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                      intent: intent,
+                                                                      logger: singleton.container.logger)
+                } else {
+                    rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
+                                                                   clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
+                                                                   intent: intent,
+                                                                   logger: singleton.container.logger)
+                }
 
                 self.window?.rootViewController?.dismiss(animated: true) {
                     self.window?.rootViewController = rootViewController
