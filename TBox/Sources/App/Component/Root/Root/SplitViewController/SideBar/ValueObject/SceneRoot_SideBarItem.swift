@@ -50,6 +50,46 @@ extension SceneRoot {
             }
         }
 
+        func makeViewController(from intent: Intent?, by factory: ViewControllerFactory) -> UIViewController {
+            let viewController: UIViewController
+            switch self {
+            case .top:
+                if let homeViewState = intent?.homeViewState {
+                    viewController = factory.makeClipCollectionViewController(homeViewState)
+                } else {
+                    viewController = factory.makeClipCollectionViewController(from: .all)
+                }
+                return UINavigationController(rootViewController: viewController)
+
+            case .search:
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeSearchViewController(intent?.searchViewState)!
+
+            case .tags:
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeTagCollectionViewController(intent?.tagCollectionViewState)!
+
+            case .albums:
+                // swiftlint:disable:next force_unwrapping
+                viewController = factory.makeAlbumListViewController(intent?.albumLitViewState)!
+
+            case .setting:
+                viewController = factory.makeSettingsViewController(intent?.settingsViewState)
+            }
+
+            if case let .clips(state, preview: clipId) = intent {
+                let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
+                viewController.show(clipCollectionViewController, sender: nil)
+
+                if let clipId = clipId {
+                    let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId)
+                    clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                }
+            }
+
+            return viewController
+        }
+
         func map(to: SceneRoot.TabBarItem.Type) -> SceneRoot.TabBarItem {
             switch self {
             case .top:

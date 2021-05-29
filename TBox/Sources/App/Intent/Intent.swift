@@ -105,3 +105,73 @@ extension Intent: Codable {
         }
     }
 }
+
+extension Intent {
+    var selectedTabBarItem: SceneRoot.TabBarItem {
+        switch self {
+        case let .clips(state, preview: _):
+            switch state.clipCollectionState.source {
+            case .all:
+                return .top
+
+            case .search:
+                return .search
+
+            case .uncategorized:
+                return .tags
+
+            case .tag:
+                return .tags
+
+            case .album:
+                return .albums
+            }
+
+        case .search:
+            return .search
+
+        case .tags:
+            return .tags
+
+        case .albums:
+            return .albums
+
+        case .setting:
+            return .setting
+        }
+    }
+
+    var selectedSideBarItem: SceneRoot.SideBarItem {
+        switch self {
+        case let .clips(state, preview: _):
+            switch state.clipCollectionState.source {
+            case .all:
+                return .top
+
+            case .search:
+                return .search
+
+            case .uncategorized:
+                return .tags
+
+            case .tag:
+                return .tags
+
+            case .album:
+                return .albums
+            }
+
+        case .search:
+            return .search
+
+        case .tags:
+            return .tags
+
+        case .albums:
+            return .albums
+
+        case .setting:
+            return .setting
+        }
+    }
+}

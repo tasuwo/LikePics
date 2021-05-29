@@ -20,34 +20,10 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: View
 
-    private var sideBarController: SceneRootSideBarController
-    private var compactRootViewController: UITabBarController
+    private var sideBarController: SceneRootSideBarController!
+    private var viewHierarchy: SceneRootViewLayoutProvider!
 
-    private var detailTopClipListViewController: UIViewController
-    private var detailSearchViewController: UIViewController
-    private var detailTagListViewController: UIViewController
-    private var detailAlbumListViewController: UIViewController
-    private var detailSettingViewController: UIViewController
-
-    private var detailViewControllers: [UIViewController] {
-        return [
-            detailTopClipListViewController,
-            detailSearchViewController,
-            detailTagListViewController,
-            detailAlbumListViewController,
-            detailSettingViewController
-        ]
-    }
-
-    var currentDetailViewController: UIViewController? {
-        switch traitCollection.horizontalSizeClass {
-        case .compact:
-            return compactRootViewController.selectedViewController
-
-        default:
-            return viewController(for: .secondary)
-        }
-    }
+    var currentDetailViewController: UIViewController? { viewHierarchy.currentTopViewController }
 
     private var _loadingView: UIView?
     private var _loadingLabel: UILabel?
@@ -73,27 +49,7 @@ class SceneRootSplitViewController: UISplitViewController {
         self.clipsIntegrityValidatorStore = clipsIntegrityValidatorStore
         self.intent = intent
         self.logger = logger
-
-        self.sideBarController = SceneRootSideBarController()
-
-        self.compactRootViewController = UITabBarController()
-
-        self.detailTopClipListViewController = SceneRoot.TabBarItem.top.makeViewController(by: factory, intent: intent)
-        self.detailSearchViewController = SceneRoot.TabBarItem.search.makeViewController(by: factory, intent: intent)
-        self.detailTagListViewController = SceneRoot.TabBarItem.tags.makeViewController(by: factory, intent: intent)
-        self.detailAlbumListViewController = SceneRoot.TabBarItem.albums.makeViewController(by: factory, intent: intent)
-        self.detailSettingViewController = SceneRoot.TabBarItem.setting.makeViewController(by: factory, intent: intent)
-
         super.init(style: .doubleColumn)
-
-        addChild(sideBarController)
-        setViewController(sideBarController, for: .primary)
-        sideBarController.delegate = self
-
-        addChild(compactRootViewController)
-        setViewController(compactRootViewController, for: .compact)
-
-        detailViewControllers.forEach { addChild($0) }
     }
 
     @available(*, unavailable)
@@ -108,7 +64,7 @@ class SceneRootSplitViewController: UISplitViewController {
 
         guard let previousTraitCollection = previousTraitCollection else { return }
         if previousTraitCollection.horizontalSizeClass != traitCollection.horizontalSizeClass {
-            updateViewHierarchy(for: traitCollection.horizontalSizeClass)
+            viewHierarchy.apply(horizontalSizeClass: traitCollection.horizontalSizeClass)
         }
     }
 
@@ -126,7 +82,7 @@ class SceneRootSplitViewController: UISplitViewController {
 extension SceneRootSplitViewController {
     private func bind(to store: Store) {
         store.state
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
+            .debounce(for: 1, scheduler: DispatchQueue.main)
             .bind(\.state.isLoading) { [weak self] isLoading in
                 if isLoading {
                     self?.addLoadingView()
@@ -154,72 +110,33 @@ extension SceneRootSplitViewController {
 
 extension SceneRootSplitViewController {
     private func configureViewHierarchy() {
-        switch traitCollection.horizontalSizeClass {
-        case .compact:
-            compactRootViewController.setViewControllers(detailViewControllers, animated: false)
-            compactRootViewController.selectedIndex = 0
-            // HACK: 初期値がcompactだった場合、expand時に不正な状態にならないよう、
-            //       空のViewControllerを配置しておく
-            setViewController(UIViewController(), for: .secondary)
+        viewHierarchy = SceneRootViewLayoutProvider(horizontalSizeClass: traitCollection.horizontalSizeClass,
+                                                    intent: intent,
+                                                    factory: factory)
 
-        default:
-            setSecondaryViewController(for: .top)
-        }
+        let sideBarItem = viewHierarchy.layout
+            .map { $0.sideBarItem }
+            .eraseToAnyPublisher()
+        sideBarController = SceneRootSideBarController(sideBarItem: sideBarItem)
+        addChild(sideBarController)
+        setViewController(sideBarController, for: .primary)
+        sideBarController.delegate = self
+
+        viewHierarchy.layout
+            .sink { [weak self] layout in self?.apply(layout: layout) }
+            .store(in: &subscriptions)
     }
 
-    private func updateViewHierarchy(for horizontalSizeClass: UIUserInterfaceSizeClass) {
-        switch horizontalSizeClass {
-        case .compact:
-            compactRootViewController.setViewControllers(detailViewControllers, animated: false)
-            let preferredItem = sideBarController.currentItem.map(to: SceneRoot.TabBarItem.self)
-            compactRootViewController.selectedIndex = preferredItem.next.rawValue
-            compactRootViewController.selectedIndex = preferredItem.rawValue
+    private func apply(layout: SceneRootViewLayout) {
+        switch layout {
+        case let .compact(viewHierarchy):
+            setViewController(viewHierarchy.tabBarController, for: .compact)
+            setViewController(nil, for: .secondary)
 
-        default:
-            let item = resolveCompactRootViewControllerSelectedItem()
-            sideBarController.select(item)
-            setSecondaryViewController(for: item)
-            compactRootViewController.setViewControllers([], animated: false)
-        }
-    }
-
-    private func resolveCompactRootViewControllerSelectedItem() -> SceneRootSideBarController.Item {
-        switch compactRootViewController.selectedViewController {
-        case detailSettingViewController:
-            return .setting
-
-        case detailTagListViewController:
-            return .tags
-
-        case detailAlbumListViewController:
-            return .albums
-
-        case detailSearchViewController:
-            return .search
-
-        default:
-            return .top
-        }
-    }
-
-    private func setSecondaryViewController(for item: SceneRootSideBarController.Item) {
-        // HACK: detailViewController同士の切り替え時に、互いをViewHierarchyに積まないよう、リセットを挟む
-        setViewController(nil, for: .secondary)
-        switch item {
-        case .top:
-            setViewController(detailTopClipListViewController, for: .secondary)
-
-        case .search:
-            setViewController(detailSearchViewController, for: .secondary)
-
-        case .tags:
-            setViewController(detailTagListViewController, for: .secondary)
-
-        case .albums:
-            setViewController(detailAlbumListViewController, for: .secondary)
-
-        case .setting:
-            setViewController(detailSettingViewController, for: .secondary)
+        case let .split(viewHierarchy):
+            setViewController(nil, for: .secondary)
+            setViewController(viewHierarchy.currentDetailViewController(), for: .secondary)
+            setViewController(nil, for: .compact)
         }
     }
 }
@@ -228,7 +145,7 @@ extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
     // MARK: - SceneRootSideBarControllerDelegate
 
     func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item) {
-        setSecondaryViewController(for: item)
+        viewHierarchy.select(item)
     }
 }
 

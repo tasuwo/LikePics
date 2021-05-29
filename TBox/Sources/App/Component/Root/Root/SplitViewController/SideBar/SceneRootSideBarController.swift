@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import UIKit
 
 protocol SceneRootSideBarControllerDelegate: AnyObject {
@@ -19,27 +20,24 @@ class SceneRootSideBarController: UIViewController {
 
     // MARK: - Properties
 
-    var currentItem: SceneRoot.SideBarItem {
-        guard isViewLoaded else { return initialItem }
-        guard let indexPath = collectionView.indexPathsForSelectedItems?.first,
-              let item = dataSource.itemIdentifier(for: indexPath)
-        else {
-            return .top
-        }
-        return item
-    }
+    // MARK: View
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
-    weak var delegate: SceneRootSideBarControllerDelegate?
+    // MARK: Store
 
-    private var initialItem: SceneRoot.SideBarItem = .top
-    private var isAppliedInitialValues = false
+    private let sideBarItem: AnyPublisher<Item, Never>
+    private var subscription: Set<AnyCancellable> = .init()
+
+    // MARK: Delegate
+
+    weak var delegate: SceneRootSideBarControllerDelegate?
 
     // MARK: - Lifecycle
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    init(sideBarItem: AnyPublisher<Item, Never>) {
+        self.sideBarItem = sideBarItem
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,36 +54,22 @@ class SceneRootSideBarController: UIViewController {
 
         configureHierarchy()
         configureDataSource()
+
+        bind(to: sideBarItem)
     }
+}
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        applyInitialValuesIfNeeded()
-    }
+// MARK: - Bind
 
-    func select(_ item: SceneRoot.SideBarItem) {
-        guard isViewLoaded else {
-            initialItem = item
-            return
-        }
-        collectionView.selectItem(at: IndexPath(row: item.rawValue, section: 0),
-                                  animated: false,
-                                  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
-    }
-
-    private func applyInitialValuesIfNeeded() {
-        guard !isAppliedInitialValues else { return }
-
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(Item.allCases)
-        dataSource.apply(snapshot)
-
-        collectionView.selectItem(at: IndexPath(row: initialItem.rawValue, section: 0),
-                                  animated: false,
-                                  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
-
-        isAppliedInitialValues = true
+extension SceneRootSideBarController {
+    private func bind(to sideBarItem: AnyPublisher<Item, Never>) {
+        sideBarItem
+            .sink { [weak self] item in
+                self?.collectionView.selectItem(at: IndexPath(row: item.rawValue, section: 0),
+                                                animated: false,
+                                                scrollPosition: [])
+            }
+            .store(in: &subscription)
     }
 }
 
@@ -123,10 +107,16 @@ extension SceneRootSideBarController {
             contentConfiguration.text = item.title
             cell.contentConfiguration = contentConfiguration
         }
+
         dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: item)
         }
         collectionView.dataSource = dataSource
+
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(Item.allCases)
+        dataSource.apply(snapshot)
     }
 }
 

@@ -80,7 +80,7 @@ extension SceneRoot {
             }
         }
 
-        func makeViewController(by factory: ViewControllerFactory, intent: Intent?) -> UIViewController {
+        func makeViewController(from intent: Intent?, by factory: ViewControllerFactory) -> UIViewController {
             let viewController: UIViewController
             switch self {
             case .top:
@@ -89,6 +89,7 @@ extension SceneRoot {
                 } else {
                     viewController = factory.makeClipCollectionViewController(from: .all)
                 }
+                return UINavigationController(rootViewController: viewController)
 
             case .search:
                 // swiftlint:disable:next force_unwrapping
@@ -104,6 +105,16 @@ extension SceneRoot {
 
             case .setting:
                 viewController = factory.makeSettingsViewController(intent?.settingsViewState)
+            }
+
+            if case let .clips(state, preview: clipId) = intent {
+                let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
+                viewController.show(clipCollectionViewController, sender: nil)
+
+                if let clipId = clipId {
+                    let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId)
+                    clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                }
             }
 
             viewController.tabBarItem = tabBarItem

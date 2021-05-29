@@ -114,7 +114,11 @@
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CAE55DD26611EE700839921 /* HasNop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAE55DC26611EE700839921 /* HasNop.swift */; };
+		2CC305652661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */; };
 		2CC305682661DFE500DEE93A /* Restorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305672661DFE500DEE93A /* Restorable.swift */; };
+		2CC3056D2661F1C100DEE93A /* TabBarViewHierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */; };
+		2CC3056F2661F1FD00DEE93A /* SplitViewHierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3056E2661F1FD00DEE93A /* SplitViewHierarchy.swift */; };
+		2CC305752662A1DB00DEE93A /* SceneRootViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305742662A1DB00DEE93A /* SceneRootViewLayout.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1517EBB9B3F8FAC048B006C4 /* ClipItemImageShareItem.swift */; };
 		2D682CD34D73E65064CB9092 /* ClipMergeImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4266439A54DC2A1BD5771A /* ClipMergeImageCell.xib */; };
@@ -1109,7 +1113,11 @@
 		2C1A1011F5093268C2A2B51F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CAE55DC26611EE700839921 /* HasNop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasNop.swift; sourceTree = "<group>"; };
+		2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewLayoutProvider.swift; sourceTree = "<group>"; };
 		2CC305672661DFE500DEE93A /* Restorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restorable.swift; sourceTree = "<group>"; };
+		2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewHierarchy.swift; sourceTree = "<group>"; };
+		2CC3056E2661F1FD00DEE93A /* SplitViewHierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewHierarchy.swift; sourceTree = "<group>"; };
+		2CC305742662A1DB00DEE93A /* SceneRootViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewLayout.swift; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
 		2F09E79C19111463EBFBAD62 /* EmptyMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessageView.xib; sourceTree = "<group>"; };
@@ -2257,6 +2265,25 @@
 			path = Restorable;
 			sourceTree = "<group>";
 		};
+		2CC305692661F18D00DEE93A /* SceneRootViewLayout */ = {
+			isa = PBXGroup;
+			children = (
+				2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */,
+				2CC305742662A1DB00DEE93A /* SceneRootViewLayout.swift */,
+				2CC305762662A30300DEE93A /* ViewHierarchy */,
+			);
+			path = SceneRootViewLayout;
+			sourceTree = "<group>";
+		};
+		2CC305762662A30300DEE93A /* ViewHierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				2CC3056E2661F1FD00DEE93A /* SplitViewHierarchy.swift */,
+				2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */,
+			);
+			path = ViewHierarchy;
+			sourceTree = "<group>";
+		};
 		321E4BD03961ABBC3B0D85CF /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -2737,6 +2764,7 @@
 				207682263ED9FF0588CE2A40 /* SceneRootSplitViewController.swift */,
 				BB2F16BC6018207141EF553E /* SideBar */,
 				2CC305662661DFD200DEE93A /* Restorable */,
+				2CC305692661F18D00DEE93A /* SceneRootViewLayout */,
 			);
 			path = SplitViewController;
 			sourceTree = "<group>";
@@ -5336,6 +5364,7 @@
 				0730313ADEA7BDDDD02EDF6C /* ClipCollectionNavigationBarReducer.swift in Sources */,
 				CCD0F04535C20BBD4F2F30DD /* ClipCollectionNavigationBarState.swift in Sources */,
 				5A1ACE3774733FC0B8161F60 /* ClipCollectionPreLoader.swift in Sources */,
+				2CC305652661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift in Sources */,
 				771394D9DB1110BB75E17CE2 /* ClipCollectionReducer.swift in Sources */,
 				E237C67D91E415E72455DDC6 /* ClipCollectionState.swift in Sources */,
 				828769B6208E4B5AF5B83188 /* ClipCollectionToolBarAction.swift in Sources */,
@@ -5383,6 +5412,7 @@
 				9604839D042B47CBBE0906FB /* ClipPreviewPageTransitionController.swift in Sources */,
 				CCC5213C35F62E0AA0E2389D /* ClipPreviewPageViewAction.swift in Sources */,
 				A64F66A24E5963ABD631ACBB /* ClipPreviewPageViewCacheAction.swift in Sources */,
+				2CC3056D2661F1C100DEE93A /* TabBarViewHierarchy.swift in Sources */,
 				EBD623C6AAB053C5B61D36BA /* ClipPreviewPageViewCacheReducer.swift in Sources */,
 				39825AF3BBCA3477A672D0DB /* ClipPreviewPageViewCacheState.swift in Sources */,
 				B2CC0AB6486497B985F982FF /* ClipPreviewPageViewController.swift in Sources */,
@@ -5429,6 +5459,7 @@
 				99F388FD844F30C9C51B026E /* Router.swift in Sources */,
 				8EEC3F386C4348DF16F0720A /* SceneDelegate+SceneResolvable.swift in Sources */,
 				C051D01D4A43F6360B9750F8 /* SceneDelegate+StateRestoration.swift in Sources */,
+				2CC3056F2661F1FD00DEE93A /* SplitViewHierarchy.swift in Sources */,
 				F7BA443EC3C547B08FAFBE16 /* SceneDelegate.swift in Sources */,
 				9719DA0243600447FE25B60D /* SceneDependencyContainer+Router.swift in Sources */,
 				03C4CC02F70585984574D5BB /* SceneDependencyContainer+ViewControllerFactory.swift in Sources */,
@@ -5467,6 +5498,7 @@
 				3E15C92BA47853A75431AE20 /* SettingsViewReducer.swift in Sources */,
 				C7715D9CFE9F6CC472DA3BE7 /* SettingsViewState.swift in Sources */,
 				5E4F7BFB9FBA23B206946537 /* String+IsUrlConvertible.swift in Sources */,
+				2CC305752662A1DB00DEE93A /* SceneRootViewLayout.swift in Sources */,
 				987323C69EED3508BF7AF62D /* String.swift in Sources */,
 				DD6F52DDE06E655DF0FFBB80 /* TagCollection.swift in Sources */,
 				E9098378F00230E584D7ACC7 /* TagCollectionBrickworkLayout.swift in Sources */,
