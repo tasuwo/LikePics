@@ -56,6 +56,10 @@ class ClipMergeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        modalSubscription?.cancel()
+    }
+
     // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {

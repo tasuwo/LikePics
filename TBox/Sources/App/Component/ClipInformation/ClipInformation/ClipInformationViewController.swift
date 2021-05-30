@@ -65,6 +65,10 @@ class ClipInformationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        modalSubscription?.cancel()
+    }
+
     // MARK: - View Life-Cycle Methods
 
     override func viewWillAppear(_ animated: Bool) {
