@@ -239,7 +239,7 @@ extension SearchEntryViewController: UICollectionViewDelegate {
 extension SearchEntryViewController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> UIViewController {
+    func restore() -> RestorableViewController {
         return SearchEntryViewController(rootStore: rootStore,
                                          store: store,
                                          searchResultViewController: resultsController)

@@ -14,7 +14,7 @@ import UIKit
 extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipCollectionViewController(from source: ClipCollection.Source) -> UIViewController & ViewLazyPresentable {
+    func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable {
         let state = ClipCollectionViewRootState(source: source,
                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
@@ -23,14 +23,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
-    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> UIViewController & ViewLazyPresentable {
+    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailLoader: container.clipThumbnailLoader,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
-    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> UIViewController? {
+    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController? {
         let state: TagCollectionViewState = {
             if let state = state {
                 return state
@@ -54,7 +54,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAlbumListViewController(_ state: AlbumListViewState?) -> UIViewController? {
+    func makeAlbumListViewController(_ state: AlbumListViewState?) -> RestorableViewController? {
         let state: AlbumListViewState = {
             if let state = state {
                 return state
@@ -79,7 +79,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSearchViewController(_ state: SearchViewRootState?) -> UIViewController? {
+    func makeSearchViewController(_ state: SearchViewRootState?) -> RestorableViewController? {
         let state: SearchViewRootState = {
             if let state = state {
                 return state
@@ -105,7 +105,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSettingsViewController(_ state: SettingsViewState?) -> UIViewController {
+    func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 
         // swiftlint:disable:next force_cast

@@ -492,7 +492,7 @@ extension TagCollectionViewController: TextEditAlertDelegate {
 extension TagCollectionViewController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> UIViewController {
+    func restore() -> RestorableViewController {
         return TagCollectionViewController(store: store,
                                            tagAdditionAlertStore: tagAdditionAlert.store,
                                            tagEditAlertStore: tagEditAlert.store,

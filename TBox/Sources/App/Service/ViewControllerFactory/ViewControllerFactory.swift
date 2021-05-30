@@ -8,12 +8,12 @@ import TBoxUIKit
 import UIKit
 
 protocol ViewControllerFactory {
-    func makeClipCollectionViewController(from source: ClipCollection.Source) -> UIViewController & ViewLazyPresentable
-    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> UIViewController & ViewLazyPresentable
-    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> UIViewController?
-    func makeAlbumListViewController(_ state: AlbumListViewState?) -> UIViewController?
-    func makeSearchViewController(_ state: SearchViewRootState?) -> UIViewController?
-    func makeSettingsViewController(_ state: SettingsViewState?) -> UIViewController
+    func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable
+    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable
+    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController?
+    func makeAlbumListViewController(_ state: AlbumListViewState?) -> RestorableViewController?
+    func makeSearchViewController(_ state: SearchViewRootState?) -> RestorableViewController?
+    func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController
     func makeClipPreviewPageViewController(for clipId: Clip.Identity) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

@@ -856,7 +856,7 @@ extension ClipCollectionViewController: UICollectionViewDropDelegate {
 extension ClipCollectionViewController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> UIViewController {
+    func restore() -> RestorableViewController {
         return ClipCollectionViewController(rootStore: rootStore,
                                             navigationBarStore: navigationBarController.store,
                                             toolBarStore: toolBarController.store,

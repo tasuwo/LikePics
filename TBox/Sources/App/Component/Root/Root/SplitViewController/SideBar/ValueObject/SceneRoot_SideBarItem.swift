@@ -50,8 +50,8 @@ extension SceneRoot {
             }
         }
 
-        func makeViewController(from intent: Intent?, by factory: ViewControllerFactory) -> UIViewController {
-            let viewController: UIViewController
+        func makeViewController(from intent: Intent?, by factory: ViewControllerFactory) -> RestorableViewController {
+            let viewController: RestorableViewController
             switch self {
             case .top:
                 if let homeViewState = intent?.homeViewState {

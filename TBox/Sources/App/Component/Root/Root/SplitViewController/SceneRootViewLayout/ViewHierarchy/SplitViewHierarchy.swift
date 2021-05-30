@@ -10,7 +10,7 @@ struct SplitViewHierarchy {
     // MARK: - Properties
 
     let currentItem: SceneRoot.SideBarItem
-    private let detailViewControllers: [SceneRoot.SideBarItem: UIViewController]
+    let detailViewControllers: [SceneRoot.SideBarItem: RestorableViewController]
     private let factory: ViewControllerFactory
 
     // MARK: - Initializers
@@ -23,7 +23,7 @@ struct SplitViewHierarchy {
     }
 
     private init(item: SceneRoot.SideBarItem,
-                 detailViewControllers: [SceneRoot.SideBarItem: UIViewController],
+                 detailViewControllers: [SceneRoot.SideBarItem: RestorableViewController],
                  factory: ViewControllerFactory)
     {
         self.currentItem = item

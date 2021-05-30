@@ -543,7 +543,7 @@ extension AlbumListViewController: TextEditAlertDelegate {
 extension AlbumListViewController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> UIViewController {
+    func restore() -> RestorableViewController {
         return AlbumListViewController(store: store,
                                        albumAdditionAlertStore: albumAdditionAlert.store,
                                        albumEditAlertStore: albumEditAlert.store,

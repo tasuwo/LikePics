@@ -180,7 +180,7 @@ extension SettingsViewController {
 extension SettingsViewController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> UIViewController {
+    func restore() -> RestorableViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 
         // swiftlint:disable:next force_cast
