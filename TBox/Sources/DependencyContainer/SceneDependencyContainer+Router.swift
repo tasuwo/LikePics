@@ -26,6 +26,18 @@ extension SceneDependencyContainer {
         }
         return topViewController
     }
+
+    private func isPresentingModal(having id: UUID) -> Bool {
+        if let topViewController = topViewController as? ModalController {
+            return topViewController.id == id
+        }
+
+        if let topViewController = (topViewController as? UINavigationController)?.topViewController as? ModalController {
+            return topViewController.id == id
+        }
+
+        return false
+    }
 }
 
 extension SceneDependencyContainer: Router {
@@ -98,6 +110,8 @@ extension SceneDependencyContainer: Router {
     }
 
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
         let state = TagSelectionModalState(id: id,
                                            selections: selections,
                                            isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
@@ -120,6 +134,8 @@ extension SceneDependencyContainer: Router {
     }
 
     func showAlbumSelectionModal(id: UUID) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
         let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
@@ -141,6 +157,8 @@ extension SceneDependencyContainer: Router {
     }
 
     func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
         let state = ClipMergeViewState(id: id, clips: clips)
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: self,
@@ -159,6 +177,8 @@ extension SceneDependencyContainer: Router {
     }
 
     func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
         let state = ClipEditViewState(id: id,
                                       clipId: clipId,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
