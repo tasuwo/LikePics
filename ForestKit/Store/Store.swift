@@ -9,7 +9,7 @@ public class Store<State: Equatable, Action: ForestKit.Action, Dependency>: Stor
     public var stateValue: State { _state.value }
     public var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 
-    private let dependency: Dependency
+    public let dependency: Dependency
     private let reducer: AnyReducer<Action, State, Dependency>
     private let _state: CurrentValueSubject<State, Never>
 

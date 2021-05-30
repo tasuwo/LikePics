@@ -5,6 +5,7 @@
 import Combine
 import Domain
 import ForestKit
+import Smoothie
 import UIKit
 
 class SearchEntryViewController: UIViewController {
@@ -30,15 +31,26 @@ class SearchEntryViewController: UIViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.SearchEntryViewController")
 
+    // MARK: State Restoration
+
+    private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
+    private var previewingAlert: UIViewController?
+
     // MARK: - Initializers
 
-    init(rootStore: RootStore,
-         store: Store,
-         searchResultViewController: SearchResultViewController)
+    init(state: SearchViewRootState,
+         dependency: SearchViewRootDependency,
+         temporaryThumbnailLoader: ThumbnailLoaderProtocol)
     {
-        self.rootStore = rootStore
-        self.store = store
-        resultsController = searchResultViewController
+        rootStore = ForestKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
+        store = rootStore
+            .proxy(SearchViewRootState.entryConverter, SearchViewRootAction.entryConverter)
+            .eraseToAnyStoring()
+        let resultStore: SearchResultViewController.Store = rootStore
+            .proxy(SearchViewRootState.resultConverter, SearchViewRootAction.resultConverter)
+            .eraseToAnyStoring()
+        resultsController = SearchResultViewController(store: resultStore,
+                                                       thumbnailLoader: temporaryThumbnailLoader)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,6 +66,7 @@ class SearchEntryViewController: UIViewController {
         super.viewDidAppear(animated)
         resultsController.entryViewDidAppear(animated)
         updateUserActivity(rootStore.stateValue)
+        viewDidAppeared.send(true)
     }
 
     override func viewDidLoad() {
@@ -117,6 +130,7 @@ extension SearchEntryViewController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
             .store(in: &subscriptions)
     }
@@ -161,6 +175,7 @@ extension SearchEntryViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
             self?.store.execute(.alertDismissed)
         }))
+        previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -240,8 +255,9 @@ extension SearchEntryViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        return SearchEntryViewController(rootStore: rootStore,
-                                         store: store,
-                                         searchResultViewController: resultsController)
+        previewingAlert?.dismiss(animated: false, completion: nil)
+        return SearchEntryViewController(state: rootStore.stateValue,
+                                         dependency: rootStore.dependency,
+                                         temporaryThumbnailLoader: resultsController.thumbnailLoader)
     }
 }

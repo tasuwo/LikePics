@@ -36,6 +36,11 @@ class TagCollectionViewController: UIViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
     private let collectionUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.TagCollectionViewController")
 
+    // MARK: State Restoration
+
+    private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
+    private var previewingAlert: UIViewController?
+
     // MARK: - Initializers
 
     init(state: TagCollectionViewState,
@@ -45,23 +50,6 @@ class TagCollectionViewController: UIViewController {
          menuBuilder: TagCollectionMenuBuildable)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
-        self.tagAdditionAlert = .init(state: tagAdditionAlertState)
-        self.tagEditAlert = .init(state: tagEditAlertState)
-
-        self.menuBuilder = menuBuilder
-
-        super.init(nibName: nil, bundle: nil)
-
-        tagAdditionAlert.textEditAlertDelegate = self
-        tagEditAlert.textEditAlertDelegate = self
-    }
-
-    init(store: Store,
-         tagAdditionAlertState: TextEditAlertState,
-         tagEditAlertState: TextEditAlertState,
-         menuBuilder: TagCollectionMenuBuildable)
-    {
-        self.store = store
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 
@@ -125,6 +113,7 @@ class TagCollectionViewController: UIViewController {
         super.viewDidAppear(animated)
 
         updateUserActivity(store.stateValue)
+        viewDidAppeared.send(true)
     }
 }
 
@@ -156,6 +145,7 @@ extension TagCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
@@ -207,6 +197,7 @@ extension TagCollectionViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
+        previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -233,6 +224,7 @@ extension TagCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
+        previewingAlert = alert
         present(alert, animated: true, completion: nil)
     }
 
@@ -493,9 +485,14 @@ extension TagCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        return TagCollectionViewController(store: store,
+        previewingAlert?.dismiss(animated: false, completion: nil)
+        tagAdditionAlert.dismiss(animated: false, completion: nil)
+        tagEditAlert.dismiss(animated: false, completion: nil)
+
+        return TagCollectionViewController(state: store.stateValue,
                                            tagAdditionAlertState: tagAdditionAlert.store.stateValue,
                                            tagEditAlertState: tagEditAlert.store.stateValue,
+                                           dependency: store.dependency,
                                            menuBuilder: menuBuilder)
     }
 }

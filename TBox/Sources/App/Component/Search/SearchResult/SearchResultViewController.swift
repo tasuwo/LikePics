@@ -32,8 +32,8 @@ class SearchResultViewController: UIViewController {
 
     // MARK: Service
 
+    let thumbnailLoader: ThumbnailLoaderProtocol
     private let filterMenuBuilder = SearchMenuBuilder()
-    private let thumbnailLoader: ThumbnailLoaderProtocol
 
     // MARK: - Initializers
 

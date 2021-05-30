@@ -52,6 +52,11 @@ class ClipCollectionViewController: UIViewController {
 
     private var execAfterLoad: (() -> Void)?
 
+    // MARK: State Restoration
+
+    private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
+    private var previewingAlert: UIViewController?
+
     // MARK: - Initializers
 
     init(state: ClipCollectionViewRootState,
@@ -64,28 +69,6 @@ class ClipCollectionViewController: UIViewController {
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
-        self.store = rootStore
-            .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
-            .eraseToAnyStoring()
-
-        super.init(nibName: nil, bundle: nil)
-
-        configureComponents()
-    }
-
-    init(rootStore: RootStore,
-         navigationBarStore: ClipCollectionNavigationBarController.Store,
-         toolBarStore: ClipCollectionToolBarController.Store,
-         router: Router,
-         imageQueryService: ImageQueryServiceProtocol,
-         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
-         menuBuilder: ClipCollectionMenuBuildable)
-    {
-        self.router = router
-        self.thumbnailLoader = thumbnailLoader
-        self.menuBuilder = menuBuilder
-        self.imageQueryService = imageQueryService
-        self.rootStore = rootStore
         self.store = rootStore
             .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
             .eraseToAnyStoring()
@@ -136,6 +119,9 @@ class ClipCollectionViewController: UIViewController {
         }
 
         updateUserActivity(rootStore.stateValue)
+        viewDidAppeared.send(true)
+
+        toolBarController.viewDidAppear()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -243,6 +229,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
@@ -306,6 +293,7 @@ extension ClipCollectionViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
+        self.previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -331,6 +319,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
+        self.previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -357,6 +346,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
+        self.previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -383,6 +373,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
+        self.previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -410,6 +401,7 @@ extension ClipCollectionViewController {
             }
         }
 
+        self.previewingAlert = controller
         self.present(controller, animated: true, completion: nil)
     }
 
@@ -846,11 +838,10 @@ extension ClipCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        return ClipCollectionViewController(rootStore: rootStore,
-                                            navigationBarStore: navigationBarController.store,
-                                            toolBarStore: toolBarController.store,
-                                            router: router,
-                                            imageQueryService: imageQueryService,
+        previewingAlert?.dismiss(animated: false, completion: nil)
+        toolBarController.previewingAlert?.dismiss(animated: false, completion: nil)
+        return ClipCollectionViewController(state: rootStore.stateValue,
+                                            dependency: rootStore.dependency,
                                             thumbnailLoader: thumbnailLoader,
                                             menuBuilder: menuBuilder)
     }

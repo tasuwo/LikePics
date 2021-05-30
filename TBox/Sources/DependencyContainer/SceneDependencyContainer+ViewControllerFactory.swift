@@ -87,20 +87,9 @@ extension SceneDependencyContainer: ViewControllerFactory {
                 return .init(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
             }
         }()
-        let rootStore = Store(initialState: state, dependency: self as SearchViewRootDependency, reducer: searchViewRootReducer)
-
-        let entryStore: SearchEntryViewController.Store = rootStore
-            .proxy(SearchViewRootState.entryConverter, SearchViewRootAction.entryConverter)
-            .eraseToAnyStoring()
-        let resultStore: SearchResultViewController.Store = rootStore
-            .proxy(SearchViewRootState.resultConverter, SearchViewRootAction.resultConverter)
-            .eraseToAnyStoring()
-
-        let resultsController = SearchResultViewController(store: resultStore,
-                                                           thumbnailLoader: container.temporaryThumbnailLoader)
-        let viewController = SearchEntryViewController(rootStore: rootStore,
-                                                       store: entryStore,
-                                                       searchResultViewController: resultsController)
+        let viewController = SearchEntryViewController(state: state,
+                                                       dependency: self,
+                                                       temporaryThumbnailLoader: container.temporaryThumbnailLoader)
 
         return UINavigationController(rootViewController: viewController)
     }

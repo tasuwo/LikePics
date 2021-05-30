@@ -22,7 +22,12 @@ class SettingsViewController: UITableViewController {
     var store: Store!
     var subscriptions: Set<AnyCancellable> = .init()
 
-    // MARK: - Lifecycle
+    // MARK: State Restoration
+
+    private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
+    private var previewingAlert: UIViewController?
+
+    // MARK: - View Life-Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +43,7 @@ class SettingsViewController: UITableViewController {
         super.viewDidAppear(animated)
 
         updateUserActivity(store.stateValue)
+        viewDidAppeared.send(true)
     }
 
     // MARK: - IBActions
@@ -82,6 +88,7 @@ extension SettingsViewController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .bind(\.alert) { [weak self] alert in
                 self?.presentAlertIfNeeded(alert)
             }
@@ -126,6 +133,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
+        previewingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -141,6 +149,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOffAction)
+        previewingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -156,6 +165,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOnAction)
+        previewingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -181,10 +191,15 @@ extension SettingsViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
+        previewingAlert?.dismiss(animated: false, completion: nil)
+
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
+        let store = Store(initialState: store.stateValue,
+                          dependency: store.dependency,
+                          reducer: SettingsViewReducer())
         viewController.store = store
 
         return viewController

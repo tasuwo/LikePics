@@ -38,6 +38,11 @@ class AlbumListViewController: UIViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
     private let albumsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBox.AlbumListViewController", qos: .background)
 
+    // MARK: State Restoration
+
+    private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
+    private var previewingAlert: UIViewController?
+
     // MARK: - Initializers
 
     init(state: AlbumListViewState,
@@ -48,25 +53,6 @@ class AlbumListViewController: UIViewController {
          menuBuilder: AlbumListMenuBuildable.Type)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer())
-        self.albumAdditionAlert = .init(state: albumAdditionAlertState)
-        self.albumEditAlert = .init(state: albumEditAlertState)
-
-        self.thumbnailLoader = thumbnailLoader
-        self.menuBuilder = menuBuilder
-
-        super.init(nibName: nil, bundle: nil)
-
-        albumAdditionAlert.textEditAlertDelegate = self
-        albumEditAlert.textEditAlertDelegate = self
-    }
-
-    init(store: Store,
-         albumAdditionAlertState: TextEditAlertState,
-         albumEditAlertState: TextEditAlertState,
-         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
-         menuBuilder: AlbumListMenuBuildable.Type)
-    {
-        self.store = store
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.albumEditAlert = .init(state: albumEditAlertState)
 
@@ -105,6 +91,7 @@ class AlbumListViewController: UIViewController {
         super.viewDidAppear(animated)
 
         updateUserActivity(store.stateValue)
+        viewDidAppeared.send(true)
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -162,6 +149,7 @@ extension AlbumListViewController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
@@ -201,6 +189,7 @@ extension AlbumListViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
+        previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -230,6 +219,7 @@ extension AlbumListViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
+        previewingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -544,9 +534,14 @@ extension AlbumListViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        return AlbumListViewController(store: store,
+        previewingAlert?.dismiss(animated: false, completion: nil)
+        albumAdditionAlert.dismiss(animated: false, completion: nil)
+        albumEditAlert.dismiss(animated: false, completion: nil)
+
+        return AlbumListViewController(state: store.stateValue,
                                        albumAdditionAlertState: albumAdditionAlert.store.stateValue,
                                        albumEditAlertState: albumEditAlert.store.stateValue,
+                                       dependency: store.dependency,
                                        thumbnailLoader: thumbnailLoader,
                                        menuBuilder: menuBuilder)
     }

@@ -108,6 +108,10 @@ class TextEditAlertController: NSObject {
         }
     }
 
+    func dismiss(animated: Bool, completion: (() -> Void)?) {
+        presentingAlert?.dismiss(animated: animated, completion: completion)
+    }
+
     @objc
     private func textFieldDidChange(sender: UITextField) {
         RunLoop.main.perform { [weak self] in

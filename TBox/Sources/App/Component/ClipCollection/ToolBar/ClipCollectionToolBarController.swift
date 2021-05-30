@@ -31,9 +31,14 @@ class ClipCollectionToolBarController {
     let store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    // MARK: Privates
+    // MARK: Service
 
     private let imageQueryService: ImageQueryServiceProtocol
+
+    // MARK: State Restoration
+
+    private(set) var previewingAlert: UIViewController?
+    private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: - Initializers
 
@@ -47,6 +52,10 @@ class ClipCollectionToolBarController {
     }
 
     // MARK: - View Life-Cycle Methods
+
+    func viewDidAppear() {
+        viewDidAppeared.send(true)
+    }
 
     func viewDidLoad() {
         bind(to: store)
@@ -72,6 +81,7 @@ extension ClipCollectionToolBarController {
             .store(in: &subscriptions)
 
         store.state
+            .waitUntilToBeTrue(viewDidAppeared)
             .bind(\.alert) { [weak self] alert in
                 guard let alert = alert else { return }
                 self?.presentAlertIfNeeded(for: alert)
@@ -119,6 +129,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = addItem
 
+        previewingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -139,6 +150,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = changeVisibilityItem
 
+        previewingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -157,6 +169,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
+        previewingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -177,6 +190,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
+        previewingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -196,6 +210,7 @@ extension ClipCollectionToolBarController {
             }
         }
 
+        previewingAlert = controller
         alertHostingViewController?.present(controller, animated: true, completion: nil)
     }
 }
