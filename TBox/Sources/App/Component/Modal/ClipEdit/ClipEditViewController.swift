@@ -206,17 +206,15 @@ extension ClipEditViewController {
 
     private func presentModalIfNeeded(for modal: ClipEditViewState.Modal?) {
         switch modal {
-        case let .tagSelection(tagIds: selections):
-            presentTagSelectionModal(selections: selections)
+        case let .tagSelection(id: id, tagIds: selections):
+            presentTagSelectionModal(id: id, selections: selections)
 
         case .none:
             break
         }
     }
 
-    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
-        let id = UUID()
-
+    private func presentTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) {
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .tagSelectionModal)
             .sink { [weak self] notification in

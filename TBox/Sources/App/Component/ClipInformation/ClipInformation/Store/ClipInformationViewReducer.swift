@@ -64,7 +64,7 @@ struct ClipInformationViewReducer: Reducer {
         // MARK: Control
 
         case .tagAdditionButtonTapped:
-            nextState.modal = .tagSelection(tagIds: state.tags._filteredIds)
+            nextState.modal = .tagSelection(id: UUID(), tagIds: state.tags._filteredIds)
             return (nextState, .none)
 
         case let .tagRemoveButtonTapped(tagId):

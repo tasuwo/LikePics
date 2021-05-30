@@ -7,10 +7,6 @@ import TBoxUIKit
 import UIKit
 
 struct ClipPreviewViewState: Equatable {
-    enum Modal: Equatable {
-        case albumSelection(UUID)
-    }
-
     let itemId: ClipItem.Identity
     let imageId: ImageContainer.Identity
     let imageSize: CGSize
@@ -20,8 +16,6 @@ struct ClipPreviewViewState: Equatable {
     var isDisplayingLoadingIndicator: Bool
     var isUserInteractionEnabled: Bool
     var isDismissed: Bool
-
-    var modal: Modal?
 }
 
 extension ClipPreviewViewState {

@@ -188,13 +188,13 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .addToAlbum:
-            nextState.modal = .albumSelection
+            nextState.modal = .albumSelection(id: UUID())
             return (nextState, .none)
 
         case .addTags:
             switch dependency.clipQueryService.readClipAndTags(for: [state.clipId]) {
             case let .success((_, tags)):
-                nextState.modal = .tagSelection(tagIds: Set(tags.map({ $0.id })))
+                nextState.modal = .tagSelection(id: UUID(), tagIds: Set(tags.map({ $0.id })))
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)

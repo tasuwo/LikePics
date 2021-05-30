@@ -46,7 +46,7 @@ struct ClipMergeViewReducer: Reducer {
         // MARK: Button Action
 
         case .tagAdditionButtonTapped:
-            nextState.modal = .tagSelection(tagIds: Set(state.tags.map({ $0.id })))
+            nextState.modal = .tagSelection(id: UUID(), tagIds: Set(state.tags.map({ $0.id })))
             return (nextState, .none)
 
         case let .tagDeleteButtonTapped(tagId):

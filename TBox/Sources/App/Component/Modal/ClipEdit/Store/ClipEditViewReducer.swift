@@ -58,7 +58,7 @@ struct ClipEditViewReducer: Reducer {
         // MARK: Button/Switch Action
 
         case .tagAdditionButtonTapped:
-            nextState.modal = .tagSelection(tagIds: state.tags._filteredIds)
+            nextState.modal = .tagSelection(id: UUID(), tagIds: state.tags._filteredIds)
             return (nextState, .none)
 
         case let .tagDeletionButtonTapped(tagId):

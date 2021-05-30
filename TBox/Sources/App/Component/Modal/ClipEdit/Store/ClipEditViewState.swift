@@ -12,7 +12,7 @@ struct ClipEditViewState: Equatable {
     }
 
     enum Modal: Equatable {
-        case tagSelection(tagIds: Set<Tag.Identity>)
+        case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
     }
 
     struct EditingClip: Equatable {
