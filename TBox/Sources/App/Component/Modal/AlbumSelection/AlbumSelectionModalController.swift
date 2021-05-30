@@ -274,3 +274,9 @@ extension AlbumSelectionModalController: TextEditAlertDelegate {
         store.execute(.alertDismissed)
     }
 }
+
+extension AlbumSelectionModalController: ModalController {
+    // MARK: - ModalController
+
+    var id: UUID { store.stateValue.id }
+}

@@ -332,3 +332,9 @@ extension TagSelectionModalController: TextEditAlertDelegate {
         store.execute(.alertDismissed)
     }
 }
+
+extension TagSelectionModalController: ModalController {
+    // MARK: - ModalController
+
+    var id: UUID { store.stateValue.id }
+}

@@ -462,6 +462,12 @@ extension ClipEditViewController: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+extension ClipEditViewController: ModalController {
+    // MARK: - ModalController
+
+    var id: UUID { store.stateValue.id }
+}
+
 private extension ClipItem {
     func map(to: ClipEditViewLayout.ClipItem.Type) -> ClipEditViewLayout.ClipItem {
         return .init(itemId: id,

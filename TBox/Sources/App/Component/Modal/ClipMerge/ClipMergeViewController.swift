@@ -272,6 +272,12 @@ extension ClipMergeViewController: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+extension ClipMergeViewController: ModalController {
+    // MARK: - ModalController
+
+    var id: UUID { store.stateValue.id }
+}
+
 extension ClipMergeViewLayout.Item {
     var isClipItem: Bool {
         switch self {
