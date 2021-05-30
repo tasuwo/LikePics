@@ -28,15 +28,27 @@ extension SceneDependencyContainer {
     }
 
     private func isPresentingModal(having id: UUID) -> Bool {
-        if let topViewController = topViewController as? ModalController {
-            return topViewController.id == id
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
+
+        let isModal = { (id: UUID, viewController: UIViewController) -> Bool in
+            if let viewController = viewController as? ModalController {
+                return viewController.id == id
+            }
+
+            if let viewController = (viewController as? UINavigationController)?.topViewController as? ModalController {
+                return viewController.id == id
+            }
+
+            return false
         }
 
-        if let topViewController = (topViewController as? UINavigationController)?.topViewController as? ModalController {
-            return topViewController.id == id
+        var topViewController = detailViewController
+        while let presentedViewController = topViewController.presentedViewController {
+            if isModal(id, presentedViewController) { return true }
+            topViewController = presentedViewController
         }
 
-        return false
+        return isModal(id, topViewController)
     }
 }
 
