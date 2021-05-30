@@ -19,22 +19,27 @@ extension SceneRoot {
             return nextItem
         }
 
-        var image: UIImage? {
+        var image: UIImage {
             switch self {
             case .top:
-                return UIImage(systemName: "house")
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "house")!
 
             case .search:
-                return UIImage(systemName: "magnifyingglass")
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "magnifyingglass")!
 
             case .tags:
-                return UIImage(systemName: "tag")
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "tag")!
 
             case .albums:
-                return UIImage(systemName: "square.stack")
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "square.stack")!
 
             case .setting:
-                return UIImage(systemName: "gear")
+                // swiftlint:disable:next force_unwrapping
+                return UIImage(systemName: "gear")!
             }
         }
 
@@ -58,7 +63,9 @@ extension SceneRoot {
         }
 
         var tabBarItem: UITabBarItem {
-            UITabBarItem(title: title, image: image, tag: rawValue)
+            let tabBarItem = UITabBarItem(title: title, image: image, tag: rawValue)
+            tabBarItem.accessibilityIdentifier = accessibilityIdentifier
+            return tabBarItem
         }
 
         var accessibilityIdentifier: String {
@@ -89,7 +96,9 @@ extension SceneRoot {
                 } else {
                     viewController = factory.makeClipCollectionViewController(from: .all)
                 }
-                return UINavigationController(rootViewController: viewController)
+                let navigationController = UINavigationController(rootViewController: viewController)
+                navigationController.tabBarItem = tabBarItem
+                return navigationController
 
             case .search:
                 // swiftlint:disable:next force_unwrapping
@@ -107,7 +116,9 @@ extension SceneRoot {
                 viewController = factory.makeSettingsViewController(intent?.settingsViewState)
             }
 
-            if case let .clips(state, preview: clipId) = intent {
+            if case let .clips(state, preview: clipId) = intent,
+               state.clipCollectionState.source.mapToTabBarItem() == self
+            {
                 let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
                 viewController.show(clipCollectionViewController, sender: nil)
 
@@ -118,8 +129,6 @@ extension SceneRoot {
             }
 
             viewController.tabBarItem = tabBarItem
-            viewController.tabBarItem.accessibilityIdentifier = accessibilityIdentifier
-
             return viewController
         }
 
@@ -140,6 +149,24 @@ extension SceneRoot {
             case .setting:
                 return .setting
             }
+        }
+    }
+}
+
+private extension ClipCollection.Source {
+    func mapToTabBarItem() -> SceneRoot.TabBarItem {
+        switch self {
+        case .all:
+            return .top
+
+        case .uncategorized, .tag:
+            return .tags
+
+        case .album:
+            return .albums
+
+        case .search:
+            return .search
         }
     }
 }
