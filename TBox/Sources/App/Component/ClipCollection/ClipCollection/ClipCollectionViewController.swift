@@ -432,26 +432,24 @@ extension ClipCollectionViewController {
 
     private func presentModalIfNeeded(for modal: ClipCollectionState.Modal?) {
         switch modal {
-        case .albumSelection:
-            presentAlbumSelectionModal()
+        case let .albumSelection(id: id, clipIds: _):
+            presentAlbumSelectionModal(id: id)
 
-        case let .tagSelection(clipIds: _, tagIds: tagIds):
-            presentTagSelectionModal(selections: tagIds)
+        case let .tagSelection(id: id, clipIds: _, tagIds: tagIds):
+            presentTagSelectionModal(id: id, selections: tagIds)
 
-        case let .clipEdit(clipId: clipId):
-            presentClipEditModal(clipId: clipId)
+        case let .clipEdit(id: id, clipId: clipId):
+            presentClipEditModal(id: id, clipId: clipId)
 
-        case let .clipMerge(clips: clips):
-            presentClipMergeModal(clips: clips)
+        case let .clipMerge(id: id, clips: clips):
+            presentClipMergeModal(id: id, clips: clips)
 
         case .none:
             break
         }
     }
 
-    private func presentAlbumSelectionModal() {
-        let id = UUID()
-
+    private func presentAlbumSelectionModal(id: UUID) {
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .albumSelectionModal)
             .sink { [weak self] notification in
@@ -468,9 +466,7 @@ extension ClipCollectionViewController {
         }
     }
 
-    private func presentTagSelectionModal(selections: Set<Tag.Identity>) {
-        let id = UUID()
-
+    private func presentTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) {
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .tagSelectionModal)
             .sink { [weak self] notification in
@@ -490,9 +486,7 @@ extension ClipCollectionViewController {
         }
     }
 
-    private func presentClipEditModal(clipId: Clip.Identity) {
-        let id = UUID()
-
+    private func presentClipEditModal(id: UUID, clipId: Clip.Identity) {
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipEditModal)
             .sink { [weak self] _ in
@@ -508,9 +502,7 @@ extension ClipCollectionViewController {
         }
     }
 
-    private func presentClipMergeModal(clips: [Clip]) {
-        let id = UUID()
-
+    private func presentClipMergeModal(id: UUID, clips: [Clip]) {
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipMergeModal)
             .sink { [weak self] notification in

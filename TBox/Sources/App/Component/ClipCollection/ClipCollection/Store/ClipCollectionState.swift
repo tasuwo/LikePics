@@ -15,10 +15,10 @@ struct ClipCollectionState: Equatable {
     }
 
     enum Modal: Equatable {
-        case albumSelection(clipIds: Set<Clip.Identity>)
-        case tagSelection(clipIds: Set<Clip.Identity>, tagIds: Set<Tag.Identity>)
-        case clipEdit(clipId: Clip.Identity)
-        case clipMerge(clips: [Clip])
+        case albumSelection(id: UUID, clipIds: Set<Clip.Identity>)
+        case tagSelection(id: UUID, clipIds: Set<Clip.Identity>, tagIds: Set<Tag.Identity>)
+        case clipEdit(id: UUID, clipId: Clip.Identity)
+        case clipMerge(id: UUID, clips: [Clip])
     }
 
     let source: ClipCollection.Source
@@ -164,9 +164,25 @@ extension ClipCollectionState.Modal: Codable {
         case clipMerge
     }
 
+    enum AlbumSelectionKeys: CodingKey {
+        case id
+        case clipIds
+    }
+
     enum TagSelectionKeys: CodingKey {
+        case id
         case clipIds
         case tagIds
+    }
+
+    enum ClipEditKeys: CodingKey {
+        case id
+        case clipId
+    }
+
+    enum ClipMergeKeys: CodingKey {
+        case id
+        case clips
     }
 
     public init(from decoder: Decoder) throws {
@@ -175,22 +191,29 @@ extension ClipCollectionState.Modal: Codable {
 
         switch key {
         case .albumSelection:
-            let clipIds = try container.decode(Set<Clip.Identity>.self, forKey: .albumSelection)
-            self = .albumSelection(clipIds: clipIds)
+            let nestedContainer = try container.nestedContainer(keyedBy: AlbumSelectionKeys.self, forKey: .albumSelection)
+            let id = try nestedContainer.decode(UUID.self, forKey: .id)
+            let clipIds = try nestedContainer.decode(Set<Clip.Identity>.self, forKey: .clipIds)
+            self = .albumSelection(id: id, clipIds: clipIds)
 
         case .tagSelection:
             let nestedContainer = try container.nestedContainer(keyedBy: TagSelectionKeys.self, forKey: .tagSelection)
+            let id = try nestedContainer.decode(UUID.self, forKey: .id)
             let clipIds = try nestedContainer.decode(Set<Clip.Identity>.self, forKey: .clipIds)
             let tagIds = try nestedContainer.decode(Set<Tag.Identity>.self, forKey: .tagIds)
-            self = .tagSelection(clipIds: clipIds, tagIds: tagIds)
+            self = .tagSelection(id: id, clipIds: clipIds, tagIds: tagIds)
 
         case .clipEdit:
-            let clipId = try container.decode(Clip.Identity.self, forKey: .clipEdit)
-            self = .clipEdit(clipId: clipId)
+            let nestedContainer = try container.nestedContainer(keyedBy: ClipEditKeys.self, forKey: .clipEdit)
+            let id = try nestedContainer.decode(UUID.self, forKey: .id)
+            let clipId = try nestedContainer.decode(Clip.Identity.self, forKey: .clipId)
+            self = .clipEdit(id: id, clipId: clipId)
 
         case .clipMerge:
-            let clips = try container.decode([Clip].self, forKey: .clipMerge)
-            self = .clipMerge(clips: clips)
+            let nestedContainer = try container.nestedContainer(keyedBy: ClipMergeKeys.self, forKey: .clipMerge)
+            let id = try nestedContainer.decode(UUID.self, forKey: .id)
+            let clips = try nestedContainer.decode([Clip].self, forKey: .clips)
+            self = .clipMerge(id: id, clips: clips)
 
         default:
             throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
@@ -201,19 +224,26 @@ extension ClipCollectionState.Modal: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case let .albumSelection(clipIds: clipIds):
-            try container.encode(clipIds, forKey: .albumSelection)
+        case let .albumSelection(id: id, clipIds: clipIds):
+            var nestedContainer = container.nestedContainer(keyedBy: AlbumSelectionKeys.self, forKey: .tagSelection)
+            try nestedContainer.encode(id, forKey: .id)
+            try nestedContainer.encode(clipIds, forKey: .clipIds)
 
-        case let .tagSelection(clipIds: clipIds, tagIds: tagIds):
+        case let .tagSelection(id: id, clipIds: clipIds, tagIds: tagIds):
             var nestedContainer = container.nestedContainer(keyedBy: TagSelectionKeys.self, forKey: .tagSelection)
+            try nestedContainer.encode(id, forKey: .id)
             try nestedContainer.encode(clipIds, forKey: .clipIds)
             try nestedContainer.encode(tagIds, forKey: .tagIds)
 
-        case let .clipEdit(clipId: clipId):
-            try container.encode(clipId, forKey: .clipEdit)
+        case let .clipEdit(id: id, clipId: clipId):
+            var nestedContainer = container.nestedContainer(keyedBy: ClipEditKeys.self, forKey: .clipEdit)
+            try nestedContainer.encode(id, forKey: .id)
+            try nestedContainer.encode(clipId, forKey: .clipId)
 
-        case let .clipMerge(clips):
-            try container.encode(clips, forKey: .clipMerge)
+        case let .clipMerge(id: id, clips: clips):
+            var nestedContainer = container.nestedContainer(keyedBy: ClipMergeKeys.self, forKey: .clipMerge)
+            try nestedContainer.encode(id, forKey: .id)
+            try nestedContainer.encode(clips, forKey: .clips)
         }
     }
 }

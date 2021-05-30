@@ -93,7 +93,7 @@ struct ClipCollectionReducer: Reducer {
         case let .tagAdditionMenuTapped(clipId):
             switch dependency.clipQueryService.readClipAndTags(for: [clipId]) {
             case let .success((_, tags)):
-                nextState.modal = .tagSelection(clipIds: .init([clipId]), tagIds: Set(tags.map({ $0.id })))
+                nextState.modal = .tagSelection(id: UUID(), clipIds: .init([clipId]), tagIds: Set(tags.map({ $0.id })))
                 return (nextState, .none)
 
             case .failure:
@@ -102,7 +102,7 @@ struct ClipCollectionReducer: Reducer {
             }
 
         case let .albumAdditionMenuTapped(clipId):
-            nextState.modal = .albumSelection(clipIds: .init([clipId]))
+            nextState.modal = .albumSelection(id: UUID(), clipIds: .init([clipId]))
             return (nextState, .none)
 
         case let .hideMenuTapped(clipId):
@@ -141,7 +141,7 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .editMenuTapped(clipId):
-            nextState.modal = .clipEdit(clipId: clipId)
+            nextState.modal = .clipEdit(id: UUID(), clipId: clipId)
             return (nextState, .none)
 
         case let .shareMenuTapped(clipId):
@@ -164,7 +164,7 @@ struct ClipCollectionReducer: Reducer {
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):
-            guard case let .tagSelection(clipIds: clipIds, tagIds: _) = nextState.modal,
+            guard case let .tagSelection(id: _, clipIds: clipIds, tagIds: _) = nextState.modal,
                   let tagIds = tagIds
             else {
                 nextState.modal = nil
@@ -183,7 +183,7 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .albumSelected(albumId):
-            guard case let .albumSelection(clipIds: clipIds) = nextState.modal,
+            guard case let .albumSelection(id: _, clipIds: clipIds) = nextState.modal,
                   let albumId = albumId
             else {
                 nextState.modal = nil
@@ -472,12 +472,12 @@ extension ClipCollectionReducer {
         var nextState = state
         switch action {
         case .addToAlbum:
-            nextState.modal = .albumSelection(clipIds: nextState.clips.selectedIds())
+            nextState.modal = .albumSelection(id: UUID(), clipIds: nextState.clips.selectedIds())
             nextState.alert = nil
             return (nextState, .none)
 
         case .addTags:
-            nextState.modal = .tagSelection(clipIds: nextState.clips.selectedIds(), tagIds: .init())
+            nextState.modal = .tagSelection(id: UUID(), clipIds: nextState.clips.selectedIds(), tagIds: .init())
             nextState.alert = nil
             return (nextState, .none)
 
@@ -530,7 +530,7 @@ extension ClipCollectionReducer {
 
         case .merge:
             let selections = state.clips.orderedSelectedEntities()
-            nextState.modal = .clipMerge(clips: selections)
+            nextState.modal = .clipMerge(id: UUID(), clips: selections)
             return (nextState, .none)
         }
     }
