@@ -281,16 +281,20 @@ extension ClipCollectionViewController {
             presentErrorMessageAlertIfNeeded(message: message)
 
         case let .deletion(clipId: clipId):
-            presentDeletionAlert(for: clipId, state: state)
+            guard let clip = state.clips.entity(having: clipId) else { return }
+            presentDeletionAlert(for: clip)
 
         case let .removeFromAlbum(clipId: clipId):
-            presentRemoveFromAlbumAlert(for: clipId, state: state)
+            guard let clip = state.clips.entity(having: clipId) else { return }
+            presentRemoveFromAlbumAlert(for: clip)
 
         case let .purge(clipId: clipId):
-            presentPurgeAlert(for: clipId, state: state)
+            guard let clip = state.clips.entity(having: clipId) else { return }
+            presentPurgeAlert(for: clip)
 
         case let .share(clipId: clipId, imageIds: imageIds):
-            presentShareAlert(for: clipId, imageIds: imageIds, state: state)
+            guard let clip = state.clips.entity(having: clipId) else { return }
+            presentShareAlert(for: clip, imageIds: imageIds)
 
         case .none:
             break
@@ -305,9 +309,8 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentPurgeAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
-        guard let clip = state.clips.entity(having: clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)),
+    private func presentPurgeAlert(for clip: Clip) {
+        guard let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -331,9 +334,8 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentDeletionAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
-        guard let clip = state.clips.entity(having: clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)),
+    private func presentDeletionAlert(for clip: Clip) {
+        guard let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -358,9 +360,8 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentRemoveFromAlbumAlert(for clipId: Clip.Identity, state: ClipCollectionState) {
-        guard let clip = state.clips.entity(having: clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)),
+    private func presentRemoveFromAlbumAlert(for clip: Clip) {
+        guard let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -385,10 +386,9 @@ extension ClipCollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func presentShareAlert(for clipId: Clip.Identity, imageIds: [ImageContainer.Identity], state: ClipCollectionState) {
+    private func presentShareAlert(for clip: Clip, imageIds: [ImageContainer.Identity]) {
         let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
-        guard let clip = state.clips.entity(having: clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)),
+        guard let indexPath = dataSource.indexPath(for: .init(clip)),
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
