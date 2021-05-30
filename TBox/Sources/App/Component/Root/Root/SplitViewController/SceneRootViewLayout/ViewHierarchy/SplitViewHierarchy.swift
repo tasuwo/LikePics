@@ -36,7 +36,15 @@ struct SplitViewHierarchy {
 
 extension SplitViewHierarchy {
     static func build(from viewHierarchy: TabBarViewHierarchy, by factory: ViewControllerFactory) -> Self {
-        fatalError("TODO")
+        let viewControllers = SceneRoot.TabBarItem.allCases.reduce(into: [SceneRoot.SideBarItem: RestorableViewController]()) { dict, item in
+            let sideBarItem = item.map(to: SceneRoot.SideBarItem.self)
+            let viewController = viewHierarchy.resolveViewController(at: item)?.restore()
+                ?? sideBarItem.makeViewController(from: nil, by: factory)
+            dict[sideBarItem] = viewController
+        }
+        return .init(item: viewHierarchy.resolveCurrentTabBarItem().map(to: SceneRoot.SideBarItem.self),
+                     detailViewControllers: viewControllers,
+                     factory: factory)
     }
 
     func currentDetailViewController() -> UIViewController {
