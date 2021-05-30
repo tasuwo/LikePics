@@ -61,14 +61,14 @@ class AlbumListViewController: UIViewController {
     }
 
     init(store: Store,
-         albumAdditionAlertStore: TextEditAlertController.Store,
-         albumEditAlertStore: TextEditAlertController.Store,
+         albumAdditionAlertState: TextEditAlertState,
+         albumEditAlertState: TextEditAlertState,
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
          menuBuilder: AlbumListMenuBuildable.Type)
     {
         self.store = store
-        self.albumAdditionAlert = .init(store: albumAdditionAlertStore)
-        self.albumEditAlert = .init(store: albumEditAlertStore)
+        self.albumAdditionAlert = .init(state: albumAdditionAlertState)
+        self.albumEditAlert = .init(state: albumEditAlertState)
 
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
@@ -545,8 +545,8 @@ extension AlbumListViewController: Restorable {
 
     func restore() -> RestorableViewController {
         return AlbumListViewController(store: store,
-                                       albumAdditionAlertStore: albumAdditionAlert.store,
-                                       albumEditAlertStore: albumEditAlert.store,
+                                       albumAdditionAlertState: albumAdditionAlert.store.stateValue,
+                                       albumEditAlertState: albumEditAlert.store.stateValue,
                                        thumbnailLoader: thumbnailLoader,
                                        menuBuilder: menuBuilder)
     }

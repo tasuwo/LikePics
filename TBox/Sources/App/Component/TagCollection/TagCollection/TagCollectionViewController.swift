@@ -57,13 +57,13 @@ class TagCollectionViewController: UIViewController {
     }
 
     init(store: Store,
-         tagAdditionAlertStore: TextEditAlertController.Store,
-         tagEditAlertStore: TextEditAlertController.Store,
+         tagAdditionAlertState: TextEditAlertState,
+         tagEditAlertState: TextEditAlertState,
          menuBuilder: TagCollectionMenuBuildable)
     {
         self.store = store
-        self.tagAdditionAlert = .init(store: tagAdditionAlertStore)
-        self.tagEditAlert = .init(store: tagEditAlertStore)
+        self.tagAdditionAlert = .init(state: tagAdditionAlertState)
+        self.tagEditAlert = .init(state: tagEditAlertState)
 
         self.menuBuilder = menuBuilder
 
@@ -494,8 +494,8 @@ extension TagCollectionViewController: Restorable {
 
     func restore() -> RestorableViewController {
         return TagCollectionViewController(store: store,
-                                           tagAdditionAlertStore: tagAdditionAlert.store,
-                                           tagEditAlertStore: tagEditAlert.store,
+                                           tagAdditionAlertState: tagAdditionAlert.store.stateValue,
+                                           tagEditAlertState: tagEditAlert.store.stateValue,
                                            menuBuilder: menuBuilder)
     }
 }
