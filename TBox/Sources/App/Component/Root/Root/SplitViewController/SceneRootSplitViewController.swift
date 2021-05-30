@@ -21,6 +21,8 @@ class SceneRootSplitViewController: UISplitViewController {
     // MARK: View
 
     private var sideBarController: SceneRootSideBarController!
+    private let compactBaseViewController = UIViewController()
+    private let secondaryBaseViewController = UIViewController()
     private var viewHierarchy: SceneRootViewLayoutProvider!
 
     var currentDetailViewController: UIViewController? { viewHierarchy.currentTopViewController }
@@ -58,15 +60,6 @@ class SceneRootSplitViewController: UISplitViewController {
     }
 
     // MARK: - View Life-Cycle Methods
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        guard let previousTraitCollection = previousTraitCollection else { return }
-        if previousTraitCollection.horizontalSizeClass != traitCollection.horizontalSizeClass {
-            viewHierarchy.apply(horizontalSizeClass: traitCollection.horizontalSizeClass)
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,9 +111,13 @@ extension SceneRootSplitViewController {
             .map { $0.sideBarItem }
             .eraseToAnyPublisher()
         sideBarController = SceneRootSideBarController(sideBarItem: sideBarItem)
-        addChild(sideBarController)
         setViewController(sideBarController, for: .primary)
         sideBarController.delegate = self
+
+        setViewController(compactBaseViewController, for: .compact)
+        setViewController(secondaryBaseViewController, for: .secondary)
+
+        delegate = self
 
         viewHierarchy.layout
             .sink { [weak self] layout in self?.apply(layout: layout) }
@@ -130,14 +127,47 @@ extension SceneRootSplitViewController {
     private func apply(layout: SceneRootViewLayout) {
         switch layout {
         case let .compact(viewHierarchy):
-            setViewController(viewHierarchy.tabBarController, for: .compact)
-            setViewController(nil, for: .secondary)
+            secondaryBaseViewController.children.forEach {
+                ($0 as? UINavigationController)?.setViewControllers([], animated: false)
+                $0.view.removeFromSuperview()
+                $0.removeFromParent()
+            }
+
+            let tabBarController = viewHierarchy.tabBarController
+            compactBaseViewController.addChild(tabBarController)
+            compactBaseViewController.view.addSubview(tabBarController.view)
+            tabBarController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate(tabBarController.view.constraints(fittingIn: compactBaseViewController.view))
 
         case let .split(viewHierarchy):
-            setViewController(nil, for: .secondary)
-            setViewController(viewHierarchy.currentDetailViewController(), for: .secondary)
-            setViewController(nil, for: .compact)
+            compactBaseViewController.children.forEach {
+                ($0 as? UITabBarController)?.setViewControllers([], animated: false)
+                $0.view.removeFromSuperview()
+                $0.removeFromParent()
+            }
+            secondaryBaseViewController.children.forEach {
+                $0.view.removeFromSuperview()
+                $0.removeFromParent()
+            }
+
+            let detailViewController = viewHierarchy.currentDetailViewController()
+            secondaryBaseViewController.addChild(detailViewController)
+            secondaryBaseViewController.view.addSubview(detailViewController.view)
+            detailViewController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate(detailViewController.view.constraints(fittingIn: secondaryBaseViewController.view))
         }
+    }
+}
+
+extension SceneRootSplitViewController: UISplitViewControllerDelegate {
+    func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+        viewHierarchy.apply(horizontalSizeClass: .compact)
+        return .compact
+    }
+
+    func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
+        guard column == .secondary else { return }
+        viewHierarchy.apply(horizontalSizeClass: .regular)
     }
 }
 
