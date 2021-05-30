@@ -39,7 +39,7 @@ class TagCollectionViewController: UIViewController {
     // MARK: State Restoration
 
     private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
-    private var previewingAlert: UIViewController?
+    private var presentingAlert: UIViewController?
 
     // MARK: - Initializers
 
@@ -197,7 +197,7 @@ extension TagCollectionViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
-        previewingAlert = alert
+        presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -224,7 +224,7 @@ extension TagCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
-        previewingAlert = alert
+        presentingAlert = alert
         present(alert, animated: true, completion: nil)
     }
 
@@ -485,7 +485,7 @@ extension TagCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        previewingAlert?.dismiss(animated: false, completion: nil)
+        presentingAlert?.dismiss(animated: false, completion: nil)
         tagAdditionAlert.dismiss(animated: false, completion: nil)
         tagEditAlert.dismiss(animated: false, completion: nil)
 

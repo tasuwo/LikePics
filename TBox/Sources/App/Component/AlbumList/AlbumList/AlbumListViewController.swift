@@ -41,7 +41,7 @@ class AlbumListViewController: UIViewController {
     // MARK: State Restoration
 
     private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
-    private var previewingAlert: UIViewController?
+    private var presentingAlert: UIViewController?
 
     // MARK: - Initializers
 
@@ -189,7 +189,7 @@ extension AlbumListViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
-        previewingAlert = alert
+        presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -219,7 +219,7 @@ extension AlbumListViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
-        previewingAlert = alert
+        presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -534,7 +534,7 @@ extension AlbumListViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        previewingAlert?.dismiss(animated: false, completion: nil)
+        presentingAlert?.dismiss(animated: false, completion: nil)
         albumAdditionAlert.dismiss(animated: false, completion: nil)
         albumEditAlert.dismiss(animated: false, completion: nil)
 

@@ -55,7 +55,7 @@ class ClipCollectionViewController: UIViewController {
     // MARK: State Restoration
 
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
-    private var previewingAlert: UIViewController?
+    private var presentingAlert: UIViewController?
 
     // MARK: - Initializers
 
@@ -293,7 +293,7 @@ extension ClipCollectionViewController {
         alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         })
-        self.previewingAlert = alert
+        self.presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -319,7 +319,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
-        self.previewingAlert = alert
+        self.presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -346,7 +346,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
-        self.previewingAlert = alert
+        self.presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -373,7 +373,7 @@ extension ClipCollectionViewController {
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
 
-        self.previewingAlert = alert
+        self.presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -401,7 +401,7 @@ extension ClipCollectionViewController {
             }
         }
 
-        self.previewingAlert = controller
+        self.presentingAlert = controller
         self.present(controller, animated: true, completion: nil)
     }
 
@@ -838,8 +838,8 @@ extension ClipCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        previewingAlert?.dismiss(animated: false, completion: nil)
-        toolBarController.previewingAlert?.dismiss(animated: false, completion: nil)
+        presentingAlert?.dismiss(animated: false, completion: nil)
+        toolBarController.presentingAlert?.dismiss(animated: false, completion: nil)
         return ClipCollectionViewController(state: rootStore.stateValue,
                                             dependency: rootStore.dependency,
                                             thumbnailLoader: thumbnailLoader,

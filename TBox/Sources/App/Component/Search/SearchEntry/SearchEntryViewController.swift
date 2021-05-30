@@ -34,7 +34,7 @@ class SearchEntryViewController: UIViewController {
     // MARK: State Restoration
 
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
-    private var previewingAlert: UIViewController?
+    private var presentingAlert: UIViewController?
 
     // MARK: - Initializers
 
@@ -175,7 +175,7 @@ extension SearchEntryViewController {
         alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
             self?.store.execute(.alertDismissed)
         }))
-        previewingAlert = alert
+        presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -255,7 +255,7 @@ extension SearchEntryViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        previewingAlert?.dismiss(animated: false, completion: nil)
+        presentingAlert?.dismiss(animated: false, completion: nil)
         return SearchEntryViewController(state: rootStore.stateValue,
                                          dependency: rootStore.dependency,
                                          temporaryThumbnailLoader: resultsController.thumbnailLoader)

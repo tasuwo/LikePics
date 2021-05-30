@@ -25,7 +25,7 @@ class SettingsViewController: UITableViewController {
     // MARK: State Restoration
 
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
-    private var previewingAlert: UIViewController?
+    private var presentingAlert: UIViewController?
 
     // MARK: - View Life-Cycle Methods
 
@@ -133,7 +133,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
-        previewingAlert = alertController
+        presentingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -149,7 +149,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOffAction)
-        previewingAlert = alertController
+        presentingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -165,7 +165,7 @@ extension SettingsViewController {
         }
         alertController.addAction(okAction)
         alertController.addAction(turnOnAction)
-        previewingAlert = alertController
+        presentingAlert = alertController
         self.present(alertController, animated: true, completion: nil)
     }
 
@@ -191,7 +191,7 @@ extension SettingsViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        previewingAlert?.dismiss(animated: false, completion: nil)
+        presentingAlert?.dismiss(animated: false, completion: nil)
 
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
 

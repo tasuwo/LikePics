@@ -37,7 +37,7 @@ class ClipCollectionToolBarController {
 
     // MARK: State Restoration
 
-    private(set) var previewingAlert: UIViewController?
+    private(set) var presentingAlert: UIViewController?
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: - Initializers
@@ -129,7 +129,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = addItem
 
-        previewingAlert = alert
+        presentingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -150,7 +150,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = changeVisibilityItem
 
-        previewingAlert = alert
+        presentingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -169,7 +169,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
-        previewingAlert = alert
+        presentingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -190,7 +190,7 @@ extension ClipCollectionToolBarController {
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
-        previewingAlert = alert
+        presentingAlert = alert
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -210,7 +210,7 @@ extension ClipCollectionToolBarController {
             }
         }
 
-        previewingAlert = controller
+        presentingAlert = controller
         alertHostingViewController?.present(controller, animated: true, completion: nil)
     }
 }
