@@ -61,6 +61,13 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: - View Life-Cycle Methods
 
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+
+        guard newCollection.horizontalSizeClass == .regular else { return }
+        viewHierarchy?.apply(horizontalSizeClass: .regular)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -163,11 +170,6 @@ extension SceneRootSplitViewController: UISplitViewControllerDelegate {
     func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
         viewHierarchy.apply(horizontalSizeClass: .compact)
         return .compact
-    }
-
-    func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
-        guard column == .secondary else { return }
-        viewHierarchy.apply(horizontalSizeClass: .regular)
     }
 }
 
