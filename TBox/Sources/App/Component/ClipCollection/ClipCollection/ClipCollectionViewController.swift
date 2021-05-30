@@ -63,24 +63,14 @@ class ClipCollectionViewController: UIViewController {
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
-
-        let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
-        self.rootStore = rootStore
+        self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
         self.store = rootStore
             .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
             .eraseToAnyStoring()
 
         super.init(nibName: nil, bundle: nil)
 
-        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
-            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
-            .eraseToAnyStoring()
-        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
-
-        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
-            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
-            .eraseToAnyStoring()
-        toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
+        configureComponents()
     }
 
     init(rootStore: RootStore,
@@ -95,7 +85,6 @@ class ClipCollectionViewController: UIViewController {
         self.thumbnailLoader = thumbnailLoader
         self.menuBuilder = menuBuilder
         self.imageQueryService = imageQueryService
-
         self.rootStore = rootStore
         self.store = rootStore
             .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
@@ -103,15 +92,7 @@ class ClipCollectionViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
-            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
-            .eraseToAnyStoring()
-        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
-
-        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
-            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
-            .eraseToAnyStoring()
-        toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
+        configureComponents()
     }
 
     @available(*, unavailable)
@@ -534,6 +515,18 @@ extension ClipCollectionViewController {
 // MARK: - Configuration
 
 extension ClipCollectionViewController {
+    private func configureComponents() {
+        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
+            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
+            .eraseToAnyStoring()
+        navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
+
+        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
+            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
+            .eraseToAnyStoring()
+        toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
+    }
+
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
