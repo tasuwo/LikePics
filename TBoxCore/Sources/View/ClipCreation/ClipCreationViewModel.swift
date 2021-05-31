@@ -397,6 +397,8 @@ extension ClipCreationViewModel {
     // MARK: Load Images
 
     private func fetchImages(for selections: [(index: Int, source: ImageSource)]) -> AnyPublisher<[ClipItemSource], DownloadError> {
+        // TODO: 全画像の合計が 120MB を超えてしまう恐れがあるので、データを遅延して読み込む
+
         let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
             .map { [weak self] selection in
                 guard let self = self else {
