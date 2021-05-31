@@ -116,6 +116,7 @@
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CAE55DD26611EE700839921 /* HasNop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAE55DC26611EE700839921 /* HasNop.swift */; };
+		2CB51FB726650868004DECCA /* SceneRootSideBarLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FB626650868004DECCA /* SceneRootSideBarLayout.swift */; };
 		2CC305652661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */; };
 		2CC305682661DFE500DEE93A /* Restorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305672661DFE500DEE93A /* Restorable.swift */; };
 		2CC3056D2661F1C100DEE93A /* TabBarViewHierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */; };
@@ -1117,6 +1118,7 @@
 		2C1A1011F5093268C2A2B51F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CAE55DC26611EE700839921 /* HasNop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasNop.swift; sourceTree = "<group>"; };
+		2CB51FB626650868004DECCA /* SceneRootSideBarLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootSideBarLayout.swift; sourceTree = "<group>"; };
 		2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewLayoutProvider.swift; sourceTree = "<group>"; };
 		2CC305672661DFE500DEE93A /* Restorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restorable.swift; sourceTree = "<group>"; };
 		2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewHierarchy.swift; sourceTree = "<group>"; };
@@ -3590,6 +3592,7 @@
 			isa = PBXGroup;
 			children = (
 				E542E756A6B96D8053B51522 /* SceneRootSideBarController.swift */,
+				2CB51FB626650868004DECCA /* SceneRootSideBarLayout.swift */,
 				51E1F807D16168CB5DE5D1DC /* ValueObject */,
 			);
 			path = SideBar;
@@ -5508,6 +5511,7 @@
 				5E4F7BFB9FBA23B206946537 /* String+IsUrlConvertible.swift in Sources */,
 				2CC305752662A1DB00DEE93A /* SceneRootViewLayout.swift in Sources */,
 				987323C69EED3508BF7AF62D /* String.swift in Sources */,
+				2CB51FB726650868004DECCA /* SceneRootSideBarLayout.swift in Sources */,
 				DD6F52DDE06E655DF0FFBB80 /* TagCollection.swift in Sources */,
 				E9098378F00230E584D7ACC7 /* TagCollectionBrickworkLayout.swift in Sources */,
 				F7F1F28808B94E519175BC58 /* TagCollectionMenuBuilder.swift in Sources */,

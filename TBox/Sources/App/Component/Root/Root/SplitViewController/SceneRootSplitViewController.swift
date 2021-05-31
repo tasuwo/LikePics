@@ -176,7 +176,7 @@ extension SceneRootSplitViewController: UISplitViewControllerDelegate {
 extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
     // MARK: - SceneRootSideBarControllerDelegate
 
-    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item) {
+    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRoot.SideBarItem) {
         viewHierarchy.select(item)
     }
 }

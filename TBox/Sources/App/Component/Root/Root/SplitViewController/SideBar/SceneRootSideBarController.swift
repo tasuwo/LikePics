@@ -6,28 +6,23 @@ import Combine
 import UIKit
 
 protocol SceneRootSideBarControllerDelegate: AnyObject {
-    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRootSideBarController.Item)
+    func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRoot.SideBarItem)
 }
 
 class SceneRootSideBarController: UIViewController {
+    typealias Layout = SceneRootSideBarLayout
     typealias Factory = ViewControllerFactory
-
-    enum Section: Int {
-        case main
-    }
-
-    typealias Item = SceneRoot.SideBarItem
 
     // MARK: - Properties
 
     // MARK: View
 
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: Layout.DataSource!
 
     // MARK: Store
 
-    private let sideBarItem: AnyPublisher<Item, Never>
+    private let sideBarItem: AnyPublisher<Layout.Item, Never>
     private var subscription: Set<AnyCancellable> = .init()
 
     // MARK: Delegate
@@ -36,7 +31,7 @@ class SceneRootSideBarController: UIViewController {
 
     // MARK: - Lifecycle
 
-    init(sideBarItem: AnyPublisher<Item, Never>) {
+    init(sideBarItem: AnyPublisher<Layout.Item, Never>) {
         self.sideBarItem = sideBarItem
         super.init(nibName: nil, bundle: nil)
     }
@@ -49,10 +44,7 @@ class SceneRootSideBarController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "LikePics"
-        navigationController?.navigationBar.prefersLargeTitles = true
-
-        configureHierarchy()
+        configureViewHierarchy()
         configureDataSource()
 
         bind(to: sideBarItem)
@@ -62,7 +54,7 @@ class SceneRootSideBarController: UIViewController {
 // MARK: - Bind
 
 extension SceneRootSideBarController {
-    private func bind(to sideBarItem: AnyPublisher<Item, Never>) {
+    private func bind(to sideBarItem: AnyPublisher<Layout.Item, Never>) {
         sideBarItem
             .sink { [weak self] item in
                 self?.collectionView.selectItem(at: IndexPath(row: item.rawValue, section: 0),
@@ -73,49 +65,31 @@ extension SceneRootSideBarController {
     }
 }
 
-// MARK: - Layout
+// MARK: - Configuration
 
 extension SceneRootSideBarController {
-    private func createLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
-            var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
-            configuration.backgroundColor = Asset.Color.backgroundClient.color
-            return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
-        }
-    }
-}
+    private func configureViewHierarchy() {
+        navigationItem.title = "LikePics"
+        navigationController?.navigationBar.prefersLargeTitles = true
 
-extension SceneRootSideBarController {
-    private func configureHierarchy() {
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
-        collectionView.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.backgroundClient.color
+
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
+        collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = false
         view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        collectionView.delegate = self
+        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
     }
 
     private func configureDataSource() {
-        let registration: UICollectionView.CellRegistration<UICollectionViewListCell, Item> = .init { cell, _, item in
-            var contentConfiguration = UIListContentConfiguration.sidebarCell()
-            contentConfiguration.image = item.image
-            contentConfiguration.text = item.title
-            cell.contentConfiguration = contentConfiguration
-        }
+        collectionView.delegate = self
+        dataSource = Layout.configureDataSource(collectionView: collectionView)
 
-        dataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
-            return collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: item)
-        }
-        collectionView.dataSource = dataSource
-
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        var snapshot = Layout.Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(Item.allCases)
+        snapshot.appendItems(SceneRoot.SideBarItem.allCases)
         dataSource.apply(snapshot)
     }
 }
