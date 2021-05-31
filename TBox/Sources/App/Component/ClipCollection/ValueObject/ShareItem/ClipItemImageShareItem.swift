@@ -15,12 +15,10 @@ class ClipItemImageShareItem: UIActivityItemProvider {
     // 画像データはCoreDataから直接読み出す
     // アプリから ActivityController に渡す前に全ての画像をロードすると遅くなる、かつメモリ不足になる恐れがあるので、遅延して読み込ませる
     override var item: Any {
-        guard let data = try? imageQueryService.read(having: imageId),
-              let image = UIImage(data: data)
-        else {
+        guard let data = try? imageQueryService.read(having: imageId) else {
             return super.item
         }
-        return image
+        return data
     }
 
     // MARK: - Initializers
