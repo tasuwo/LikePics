@@ -8,6 +8,7 @@ import CoreGraphics
 public struct ImageSource: Hashable {
     enum Value: Hashable {
         case urlSet(WebImageUrlSet)
+        case fileUrl(URL)
         case imageProvider(ImageProvider)
     }
 
@@ -19,6 +20,11 @@ public struct ImageSource: Hashable {
     init(urlSet: WebImageUrlSet) {
         self.identifier = UUID()
         self.value = .urlSet(urlSet)
+    }
+
+    init(fileUrl: URL) {
+        self.identifier = UUID()
+        self.value = .fileUrl(fileUrl)
     }
 
     init(provider: ImageProvider) {
@@ -65,6 +71,9 @@ extension ImageSource.Value {
         switch self {
         case let .urlSet(set):
             hasher.combine(set)
+
+        case let .fileUrl(url):
+            hasher.combine(url)
 
         case .imageProvider:
             // FIXME:

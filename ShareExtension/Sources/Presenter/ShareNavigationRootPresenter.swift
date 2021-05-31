@@ -9,7 +9,7 @@ import UIKit
 protocol ShareNavigationViewProtocol: AnyObject {
     func show(errorMessage: String)
     func presentClipTargetSelectionView(by url: URL)
-    func presentClipTargetSelectionView(by providers: [ImageProvider])
+    func presentClipTargetSelectionView(by providers: [ImageProvider], fileUrls: [URL])
 }
 
 class ShareNavigationRootPresenter {
@@ -46,13 +46,14 @@ class ShareNavigationRootPresenter {
                     self?.view?.presentClipTargetSelectionView(by: url)
                 } else {
                     let providers = sources.compactMap { $0?.imageProvider }
+                    let fileUrls = sources.compactMap { $0?.fileUrl }
 
-                    guard providers.isEmpty == false else {
+                    if providers.isEmpty, fileUrls.isEmpty {
                         self?.view?.show(errorMessage: L10n.errorUnknown)
                         return
                     }
 
-                    self?.view?.presentClipTargetSelectionView(by: providers)
+                    self?.view?.presentClipTargetSelectionView(by: providers, fileUrls: fileUrls)
                 }
             }
             .store(in: &subscriptions)

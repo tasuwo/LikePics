@@ -34,7 +34,7 @@ class ShareNavigationRootViewController: UIViewController {
         self.indicator.hidesWhenStopped = true
         self.indicator.startAnimating()
 
-        // swiftlint:disable:next force_unwrap
+        // swiftlint:disable:next force_unwrapping
         self.presenter.resolveUrl(from: extensionContext!)
     }
 }
@@ -61,8 +61,8 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
         self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(webUrl: url, delegate: self), animated: true)
     }
 
-    func presentClipTargetSelectionView(by providers: [ImageProvider]) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(imageProviders: providers, delegate: self), animated: true)
+    func presentClipTargetSelectionView(by providers: [ImageProvider], fileUrls: [URL]) {
+        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(imageProviders: providers, fileUrls: fileUrls, delegate: self), animated: true)
     }
 }
 

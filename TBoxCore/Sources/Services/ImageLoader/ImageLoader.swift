@@ -50,6 +50,15 @@ extension ImageLoader: ImageLoaderProtocol {
                 }
             }
 
+        case let .fileUrl(url):
+            return Future { promise in
+                guard let data = try? Data(contentsOf: url) else {
+                    promise(.failure(.internalError))
+                    return
+                }
+                promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, data: data)))
+            }
+
         case let .urlSet(urlSet):
             return Future { [weak self] promise in
                 guard let self = self else {

@@ -19,6 +19,16 @@ enum ImageSource {
         }
     }
 
+    var fileUrl: URL? {
+        switch self {
+        case let .fileUrl(url):
+            return url
+
+        default:
+            return nil
+        }
+    }
+
     var imageProvider: ImageProvider? {
         switch self {
         case let .data(provider):

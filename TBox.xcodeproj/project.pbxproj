@@ -86,7 +86,7 @@
 		1D16CF3F7FD639805F59A6B1 /* TagCommandServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76136EE811C147BA809E0882 /* TagCommandServiceProtocol.swift */; };
 		1D1CCC03310D0869DD922542 /* ConsoleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40A0B3B749A25936D86321A /* ConsoleLog.swift */; };
 		1DE1E536C18001CD1583915B /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0448B038F051A3A11EE67748 /* DependencyContainer.swift */; };
-		1E00708D54FCA1EDDFD3884B /* RawImageSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AB2314DEAD57BC4739AD90 /* RawImageSourceProvider.swift */; };
+		1E00708D54FCA1EDDFD3884B /* LocalImageSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AB2314DEAD57BC4739AD90 /* LocalImageSourceProvider.swift */; };
 		1EC9009B0B36445FD8F57DC5 /* ClipEditViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C5035A6CF8EDB5A5407A5 /* ClipEditViewAction.swift */; };
 		1F611A0F8695F6CC73B26E68 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DDB7BB45E0D94D9C99E55355 /* Model.xcdatamodeld */; };
 		1F6CD6E2FFDE5CDA805B475F /* TemporaryImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99213A4F1632DDE566E6B1A /* TemporaryImageStorage.swift */; };
@@ -1209,7 +1209,7 @@
 		51332A124908FF66C4E72FE8 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		515FFDE7CAEFE6B27D101A93 /* Ordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ordered.swift; sourceTree = "<group>"; };
 		51A9AC228584B58A68941657 /* CloudAvailabilityServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilityServiceProtocol.swift; sourceTree = "<group>"; };
-		51AB2314DEAD57BC4739AD90 /* RawImageSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawImageSourceProvider.swift; sourceTree = "<group>"; };
+		51AB2314DEAD57BC4739AD90 /* LocalImageSourceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageSourceProvider.swift; sourceTree = "<group>"; };
 		51BA42C62E0EE823A4425F51 /* UIPasteboard+Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIPasteboard+Pasteboard.swift"; sourceTree = "<group>"; };
 		52A66F1C2E99224D8FAB6222 /* ImageNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNameResolver.swift; sourceTree = "<group>"; };
 		53044ABF306C21BC79CC9AC3 /* ClipCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationViewController.swift; sourceTree = "<group>"; };
@@ -4185,7 +4185,7 @@
 			children = (
 				22472539E0E64B61CB29C151 /* ImageSourceProvider.swift */,
 				50A9994B8C1887601F859A8C /* ImageSourceProviderError.swift */,
-				51AB2314DEAD57BC4739AD90 /* RawImageSourceProvider.swift */,
+				51AB2314DEAD57BC4739AD90 /* LocalImageSourceProvider.swift */,
 				F8E91FE59F944AB89E91057F /* WebImageSourceProvider.swift */,
 			);
 			path = ImageSourceProvider;
@@ -5010,7 +5010,7 @@
 				AE6045F66BCDD62FDD5C7226 /* ImageSourceProvider.swift in Sources */,
 				28754DBDA2AFC607F39A031B /* ImageSourceProviderError.swift in Sources */,
 				497EAD7D66C0FDA8FA153AEB /* OnMainThread.swift in Sources */,
-				1E00708D54FCA1EDDFD3884B /* RawImageSourceProvider.swift in Sources */,
+				1E00708D54FCA1EDDFD3884B /* LocalImageSourceProvider.swift in Sources */,
 				E178837093900FBCBA9BD88E /* String.swift in Sources */,
 				4CD9C83C4C7E3AF473C1B8B2 /* TagSelectionViewController.swift in Sources */,
 				FC6200EF0EC81870120A545B /* TagSelectionViewModel.swift in Sources */,

@@ -13,7 +13,9 @@ import UIKit
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider], delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider],
+                                                fileUrls: [URL],
+                                                delegate: ClipCreationDelegate) -> ClipCreationViewController
 }
 
 class DependencyContainer {
@@ -78,10 +80,13 @@ extension DependencyContainer: ViewControllerFactory {
                                           delegate: delegate)
     }
 
-    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider], delegate: ClipCreationDelegate) -> ClipCreationViewController {
+    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider],
+                                                fileUrls: [URL],
+                                                delegate: ClipCreationDelegate) -> ClipCreationViewController
+    {
         let viewModel = ClipCreationViewModel(url: nil,
                                               clipStore: self.clipStore,
-                                              provider: RawImageSourceProvider(providers: imageProviders),
+                                              provider: LocalImageSourceProvider(providers: imageProviders, fileUrls: fileUrls),
                                               configuration: .rawImage)
         return ClipCreationViewController(factory: self,
                                           viewModel: viewModel,

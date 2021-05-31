@@ -30,6 +30,12 @@ extension ImageSourceLoader: OriginalImageLoader {
 
             return result
 
+        case let .fileUrl(url):
+            guard let data = try? Data(contentsOf: url) else {
+                return nil
+            }
+            return data
+
         case let .urlSet(urlSet):
             let semaphore = DispatchSemaphore(value: 0)
 

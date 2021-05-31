@@ -5,18 +5,22 @@
 import Combine
 import UIKit
 
-public class RawImageSourceProvider {
+public class LocalImageSourceProvider {
     public var viewDidLoad: PassthroughSubject<UIView, Never> = .init()
     private let providers: [ImageProvider]
+    private let fileUrls: [URL]
 
     // MARK: - Lifecycle
 
-    public init(providers: [ImageProvider]) {
+    public init(providers: [ImageProvider],
+                fileUrls: [URL])
+    {
         self.providers = providers
+        self.fileUrls = fileUrls
     }
 }
 
-extension RawImageSourceProvider: ImageSourceProvider {
+extension LocalImageSourceProvider: ImageSourceProvider {
     // MARK: - ImageSourceProvider
 
     public func resolveSources() -> Future<[ImageSource], ImageSourceProviderError> {
@@ -25,7 +29,10 @@ extension RawImageSourceProvider: ImageSourceProvider {
                 promise(.failure(.internalError))
                 return
             }
-            promise(.success(self.providers.map({ ImageSource(provider: $0) })))
+
+            let providerSources = self.providers.map { ImageSource(provider: $0) }
+            let fileSources = self.fileUrls.map { ImageSource(fileUrl: $0) }
+            promise(.success(providerSources + fileSources))
         }
     }
 }
