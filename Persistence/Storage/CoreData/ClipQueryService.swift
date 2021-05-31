@@ -197,6 +197,23 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
+    public func queryAllListingClips() -> Result<ListingClipListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
+        do {
+            let factory: CoreDataListingClipListQuery.RequestFactory = {
+                let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
+                return request
+            }
+            let query = try CoreDataListingClipListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
         assert(Thread.isMainThread)
 

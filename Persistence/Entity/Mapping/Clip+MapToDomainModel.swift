@@ -26,3 +26,14 @@ extension Persistence.Clip {
                            updatedDate: updatedDate)
     }
 }
+
+extension Persistence.Clip {
+    func map(to type: Domain.ListingClip.Type) -> Domain.ListingClip? {
+        guard let id = self.id else {
+            return nil
+        }
+        return Domain.ListingClip(id: id,
+                                  itemsCount: Int(self.itemsCount),
+                                  isHidden: self.isHidden)
+    }
+}

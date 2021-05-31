@@ -120,6 +120,8 @@
 		2CB51FB926652D23004DECCA /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FB826652D23004DECCA /* ImageProvider.swift */; };
 		2CB51FBB26652DD0004DECCA /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FBA26652DD0004DECCA /* ImageProvider.swift */; };
 		2CB51FBD26652F53004DECCA /* ImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FBC26652F53004DECCA /* ImageSource.swift */; };
+		2CB51FC126653EC8004DECCA /* ListingClipListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FC026653EC8004DECCA /* ListingClipListQuery.swift */; };
+		2CB51FC326653F78004DECCA /* CoreDataListingClipListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB51FC226653F78004DECCA /* CoreDataListingClipListQuery.swift */; };
 		2CC305652661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */; };
 		2CC305682661DFE500DEE93A /* Restorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC305672661DFE500DEE93A /* Restorable.swift */; };
 		2CC3056D2661F1C100DEE93A /* TabBarViewHierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */; };
@@ -1125,6 +1127,8 @@
 		2CB51FB826652D23004DECCA /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		2CB51FBA26652DD0004DECCA /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		2CB51FBC26652F53004DECCA /* ImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSource.swift; sourceTree = "<group>"; };
+		2CB51FC026653EC8004DECCA /* ListingClipListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingClipListQuery.swift; sourceTree = "<group>"; };
+		2CB51FC226653F78004DECCA /* CoreDataListingClipListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataListingClipListQuery.swift; sourceTree = "<group>"; };
 		2CC305642661DE7E00DEE93A /* SceneRootViewLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewLayoutProvider.swift; sourceTree = "<group>"; };
 		2CC305672661DFE500DEE93A /* Restorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restorable.swift; sourceTree = "<group>"; };
 		2CC3056C2661F1C100DEE93A /* TabBarViewHierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewHierarchy.swift; sourceTree = "<group>"; };
@@ -2926,6 +2930,7 @@
 				C529625DFBB7E6BC15444B1D /* CoreDataTagListQuery.swift */,
 				5BBCC9255BBC28DDE3327D4A /* CoreDataTagQuery.swift */,
 				7E80D1379F9534E49A7CBE17 /* ViewContextObserver.swift */,
+				2CB51FC226653F78004DECCA /* CoreDataListingClipListQuery.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -3924,6 +3929,7 @@
 				A799901A61270D5E3DBF455A /* ClipQuery.swift */,
 				3C9B37B3F2AF7ABEDF91023C /* TagListQuery.swift */,
 				024B3E569F9AA527507C8CD5 /* TagQuery.swift */,
+				2CB51FC026653EC8004DECCA /* ListingClipListQuery.swift */,
 			);
 			path = Query;
 			sourceTree = "<group>";
@@ -5179,6 +5185,7 @@
 				1D16CF3F7FD639805F59A6B1 /* TagCommandServiceProtocol.swift in Sources */,
 				E85517E51CA51C56DB4A070F /* TagListQuery.swift in Sources */,
 				51603601C53B21E0F72A3787 /* TagQuery.swift in Sources */,
+				2CB51FC126653EC8004DECCA /* ListingClipListQuery.swift in Sources */,
 				52FC486CBA1E5EA8A2F45266 /* TagQueryServiceProtocol.swift in Sources */,
 				77BE35A393B6B6F5DFB29CDE /* TemporariesPersistService.swift in Sources */,
 				05281DB7C61FC808CBE862A9 /* TemporariesPersistServiceProtocol.swift in Sources */,
@@ -5245,6 +5252,7 @@
 				A9DD479CCFEB5E1328AEF8E8 /* ClipQueryService.swift in Sources */,
 				97AFBFC5D89BF5A2823940AB /* ClipSearchHistoryService.swift in Sources */,
 				F69635F74FAC50667D23AC3A /* ClipSearchQuery+NSPredicate.swift in Sources */,
+				2CB51FC326653F78004DECCA /* CoreDataListingClipListQuery.swift in Sources */,
 				D45E6F25B3A1746D7FF1D1D8 /* ClipSearchSettingService.swift in Sources */,
 				E8E6379B10B934041AE6AB3C /* ClipSearchSort+NSSortDescriptor.swift in Sources */,
 				A499BBA74D7B7EA41E8DC0CB /* ClipStorage.swift in Sources */,
