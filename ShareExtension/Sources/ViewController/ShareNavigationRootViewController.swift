@@ -34,7 +34,8 @@ class ShareNavigationRootViewController: UIViewController {
         self.indicator.hidesWhenStopped = true
         self.indicator.startAnimating()
 
-        self.presenter.resolveUrl(from: self.extensionContext)
+        // swiftlint:disable:next force_unwrap
+        self.presenter.resolveUrl(from: extensionContext!)
     }
 }
 
