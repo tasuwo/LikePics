@@ -290,7 +290,7 @@ extension AlbumListViewController {
 
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = L10n.placeholderSearchTag
+        searchController.searchBar.placeholder = L10n.placeholderSearchAlbum
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         definesPresentationContext = true
