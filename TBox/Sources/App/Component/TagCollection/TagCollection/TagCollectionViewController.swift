@@ -247,6 +247,9 @@ extension TagCollectionViewController {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        // HACK: UISVCでSearchControllerが非表示になってしまうことがあるため、
+        //       応急処置としてスクロール可能にしておく
+        collectionView.alwaysBounceVertical = true
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view.safeAreaLayoutGuide))
 

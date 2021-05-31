@@ -246,6 +246,9 @@ extension AlbumListViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.allowsSelectionDuringEditing = true
         collectionView.allowsMultipleSelectionDuringEditing = true
+        // HACK: UISVCでSearchControllerが非表示になってしまうことがあるため、
+        //       応急処置としてスクロール可能にしておく
+        collectionView.alwaysBounceVertical = true
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
 
