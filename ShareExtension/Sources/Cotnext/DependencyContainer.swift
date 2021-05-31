@@ -12,8 +12,8 @@ import UIKit
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider], delegate: ClipCreationDelegate) -> ClipCreationViewController
 }
 
 class DependencyContainer {
@@ -67,10 +67,10 @@ extension DependencyContainer: ViewControllerFactory {
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
-    func makeClipTargetCollectionViewController(url: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
-        let viewModel = ClipCreationViewModel(url: url,
+    func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
+        let viewModel = ClipCreationViewModel(url: webUrl,
                                               clipStore: self.clipStore,
-                                              provider: WebImageSourceProvider(url: url),
+                                              provider: WebImageSourceProvider(url: webUrl),
                                               configuration: .webImage)
         return ClipCreationViewController(factory: self,
                                           viewModel: viewModel,
@@ -78,10 +78,10 @@ extension DependencyContainer: ViewControllerFactory {
                                           delegate: delegate)
     }
 
-    func makeClipTargetCollectionViewController(data: [Data], delegate: ClipCreationDelegate) -> ClipCreationViewController {
+    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider], delegate: ClipCreationDelegate) -> ClipCreationViewController {
         let viewModel = ClipCreationViewModel(url: nil,
                                               clipStore: self.clipStore,
-                                              provider: RawImageSourceProvider(imageDataSet: data),
+                                              provider: RawImageSourceProvider(providers: imageProviders),
                                               configuration: .rawImage)
         return ClipCreationViewController(factory: self,
                                           viewModel: viewModel,

@@ -15,8 +15,20 @@ extension ImageSourceLoader: OriginalImageLoader {
         guard let source = request as? ImageSource else { return nil }
 
         switch source.value {
-        case let .rawData(data):
-            return data
+        case let .imageProvider(provider):
+            let semaphore = DispatchSemaphore(value: 0)
+
+            var result: Data?
+            provider.load { data in
+                result = data
+                semaphore.signal()
+            }
+
+            if semaphore.wait(timeout: .now() + 5) == .timedOut {
+                return nil
+            }
+
+            return result
 
         case let .urlSet(urlSet):
             let semaphore = DispatchSemaphore(value: 0)
@@ -28,7 +40,7 @@ extension ImageSourceLoader: OriginalImageLoader {
             }
             task.resume()
 
-            if semaphore.wait(timeout: .now() + 15) == .timedOut {
+            if semaphore.wait(timeout: .now() + 5) == .timedOut {
                 return nil
             }
 

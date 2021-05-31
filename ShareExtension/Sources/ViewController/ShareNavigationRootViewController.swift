@@ -58,11 +58,11 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
     }
 
     func presentClipTargetSelectionView(by url: URL) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(url: url, delegate: self), animated: true)
+        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(webUrl: url, delegate: self), animated: true)
     }
 
-    func presentClipTargetSelectionView(by imageData: [Data]) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(data: imageData, delegate: self), animated: true)
+    func presentClipTargetSelectionView(by providers: [ImageProvider]) {
+        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(imageProviders: providers, delegate: self), animated: true)
     }
 }
 

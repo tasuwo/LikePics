@@ -7,12 +7,12 @@ import UIKit
 
 public class RawImageSourceProvider {
     public var viewDidLoad: PassthroughSubject<UIView, Never> = .init()
-    private let imageDataSet: [Data]
+    private let providers: [ImageProvider]
 
     // MARK: - Lifecycle
 
-    public init(imageDataSet: [Data]) {
-        self.imageDataSet = imageDataSet
+    public init(providers: [ImageProvider]) {
+        self.providers = providers
     }
 }
 
@@ -25,7 +25,7 @@ extension RawImageSourceProvider: ImageSourceProvider {
                 promise(.failure(.internalError))
                 return
             }
-            promise(.success(self.imageDataSet.map({ ImageSource(rawData: $0) })))
+            promise(.success(self.providers.map({ ImageSource(provider: $0) })))
         }
     }
 }

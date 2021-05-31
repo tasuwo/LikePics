@@ -8,7 +8,7 @@ import CoreGraphics
 public struct ImageSource: Hashable {
     enum Value: Hashable {
         case urlSet(WebImageUrlSet)
-        case rawData(Data)
+        case imageProvider(ImageProvider)
     }
 
     let identifier: UUID
@@ -21,28 +21,54 @@ public struct ImageSource: Hashable {
         self.value = .urlSet(urlSet)
     }
 
-    init(rawData: Data) {
+    init(provider: ImageProvider) {
         self.identifier = UUID()
-        self.value = .rawData(rawData)
+        self.value = .imageProvider(provider)
     }
 
     // MARK: - Methods
 
-    func resolveSize() -> CGSize? {
+    var isValid: Bool {
         switch value {
-        case let .rawData(data):
-            return ImageUtility.resolveSize(for: data)
-
         case let .urlSet(urlSet):
-            return ImageUtility.resolveSize(for: urlSet.url)
+            guard let size = ImageUtility.resolveSize(for: urlSet.url) else { return false }
+            return size.height != 0
+                && size.width != 0
+                && size.height > 10
+                && size.width > 10
+
+        default:
+            return true
+        }
+    }
+}
+
+extension ImageSource.Value {
+    // MARK: - Equatable
+
+    static func == (lhs: ImageSource.Value, rhs: ImageSource.Value) -> Bool {
+        switch (lhs, rhs) {
+        case let (.urlSet(lhset), .urlSet(rhset)):
+            return lhset == rhset
+
+        case let (.imageProvider(lhprovider), .imageProvider(rhprovider)):
+            return lhprovider === rhprovider
+
+        default:
+            return false
         }
     }
 
-    var isValid: Bool {
-        guard let size = self.resolveSize() else { return false }
-        return size.height != 0
-            && size.width != 0
-            && size.height > 10
-            && size.width > 10
+    // MARK: - Hashable
+
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .urlSet(set):
+            hasher.combine(set)
+
+        case .imageProvider:
+            // FIXME:
+            return
+        }
     }
 }

@@ -18,4 +18,14 @@ enum ImageSource {
             return false
         }
     }
+
+    var imageProvider: ImageProvider? {
+        switch self {
+        case let .data(provider):
+            return provider
+
+        default:
+            return nil
+        }
+    }
 }

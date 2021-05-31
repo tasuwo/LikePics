@@ -39,9 +39,15 @@ extension ImageLoader: ImageLoaderProtocol {
 
     public func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError> {
         switch source.value {
-        case let .rawData(data):
+        case let .imageProvider(provider):
             return Future { promise in
-                promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, data: data)))
+                provider.load { data in
+                    guard let data = data else {
+                        promise(.failure(.internalError))
+                        return
+                    }
+                    promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, data: data)))
+                }
             }
 
         case let .urlSet(urlSet):
