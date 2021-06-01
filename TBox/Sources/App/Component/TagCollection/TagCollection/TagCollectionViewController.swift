@@ -105,8 +105,6 @@ class TagCollectionViewController: UIViewController {
         configureEmptyMessageView()
 
         bind(to: store)
-
-        store.execute(.viewDidLoad)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -114,6 +112,12 @@ class TagCollectionViewController: UIViewController {
 
         updateUserActivity(store.stateValue)
         viewDidAppeared.send(true)
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        store.execute(.viewWillLayoutSubviews)
     }
 }
 
@@ -488,11 +492,17 @@ extension TagCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
+        var nextState = store.stateValue
+        nextState.isPreparedQueryEffects = false
+
+        let nextTags = nextState.tags.updated(entities: [:])
+        nextState.tags = nextTags
+
         presentingAlert?.dismiss(animated: false, completion: nil)
         tagAdditionAlert.dismiss(animated: false, completion: nil)
         tagEditAlert.dismiss(animated: false, completion: nil)
 
-        return TagCollectionViewController(state: store.stateValue,
+        return TagCollectionViewController(state: nextState,
                                            tagAdditionAlertState: tagAdditionAlert.store.stateValue,
                                            tagEditAlertState: tagEditAlert.store.stateValue,
                                            dependency: store.dependency,

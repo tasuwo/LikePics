@@ -30,6 +30,8 @@ struct ClipCollectionState: Equatable {
 
     var clips: EntityCollectionSnapshot<Clip>
 
+    var isPreparedQueryEffects: Bool
+
     var isEmptyMessageViewDisplaying: Bool
     var isCollectionViewDisplaying: Bool
 
@@ -48,6 +50,7 @@ extension ClipCollectionState {
         layout = .waterfall
         operation = .none
         clips = .init()
+        isPreparedQueryEffects = false
         isEmptyMessageViewDisplaying = false
         isCollectionViewDisplaying = false
         alert = nil

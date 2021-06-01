@@ -38,6 +38,7 @@ extension ClipCollectionViewRootState {
             .updated(filteredIds: .init())
         state.clipCollectionState.alert = nil
         state.clipCollectionState.modal = nil
+        state.clipCollectionState.isPreparedQueryEffects = false
         return state
     }
 }

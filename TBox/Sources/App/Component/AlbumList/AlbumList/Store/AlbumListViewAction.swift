@@ -8,7 +8,7 @@ import ForestKit
 enum AlbumListViewAction: Action {
     // MARK: View Life-Cycle
 
-    case viewDidLoad
+    case viewWillLayoutSubviews
 
     // MARK: State Observation
 

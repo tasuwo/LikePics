@@ -23,8 +23,10 @@ struct ClipCollectionReducer: Reducer {
         switch action {
         // MARK: View Life-Cycle
 
-        case .viewDidLoad:
-            return Self.prepare(state: state, dependency: dependency)
+        case .viewWillLayoutSubviews:
+            guard !nextState.isPreparedQueryEffects else { return (nextState, .none) }
+            nextState.isPreparedQueryEffects = true
+            return Self.prepare(state: nextState, dependency: dependency)
 
         // MARK: State Observation
 

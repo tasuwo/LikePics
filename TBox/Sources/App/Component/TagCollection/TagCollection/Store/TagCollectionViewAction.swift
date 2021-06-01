@@ -8,7 +8,7 @@ import ForestKit
 enum TagCollectionViewAction {
     // MARK: View Life-Cycle
 
-    case viewDidLoad
+    case viewWillLayoutSubviews
 
     // MARK: State Observation
 

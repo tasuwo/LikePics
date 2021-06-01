@@ -17,6 +17,8 @@ struct AlbumListViewState: Equatable, Codable {
     var searchStorage: SearchableStorage<Album>
     var albums: EntityCollectionSnapshot<Album>
 
+    var isPreparedQueryEffects: Bool
+
     var isEditing: Bool
     var isEmptyMessageViewDisplaying: Bool
     var isCollectionViewDisplaying: Bool
@@ -33,6 +35,8 @@ extension AlbumListViewState {
         searchQuery = ""
         searchStorage = .init()
         albums = .init()
+
+        isPreparedQueryEffects = false
 
         isEditing = false
         isEmptyMessageViewDisplaying = false
@@ -81,6 +85,7 @@ extension AlbumListViewState {
             .updated(entities: [:])
             .updated(filteredIds: .init())
         state.alert = nil
+        state.isPreparedQueryEffects = false
         return state
     }
 }

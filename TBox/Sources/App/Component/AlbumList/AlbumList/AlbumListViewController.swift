@@ -83,8 +83,6 @@ class AlbumListViewController: UIViewController {
         configureEmptyMessageView()
 
         bind(to: store)
-
-        store.execute(.viewDidLoad)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -92,6 +90,12 @@ class AlbumListViewController: UIViewController {
 
         updateUserActivity(store.stateValue)
         viewDidAppeared.send(true)
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        store.execute(.viewWillLayoutSubviews)
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -537,11 +541,17 @@ extension AlbumListViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
+        var nextState = store.stateValue
+        nextState.isPreparedQueryEffects = false
+
+        let nextAlbums = nextState.albums.updated(entities: [:])
+        nextState.albums = nextAlbums
+
         presentingAlert?.dismiss(animated: false, completion: nil)
         albumAdditionAlert.dismiss(animated: false, completion: nil)
         albumEditAlert.dismiss(animated: false, completion: nil)
 
-        return AlbumListViewController(state: store.stateValue,
+        return AlbumListViewController(state: nextState,
                                        albumAdditionAlertState: albumAdditionAlert.store.stateValue,
                                        albumEditAlertState: albumEditAlert.store.stateValue,
                                        dependency: store.dependency,

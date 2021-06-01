@@ -17,6 +17,8 @@ struct TagCollectionViewState: Equatable {
     var searchQuery: String
     var searchStorage: SearchableStorage<Tag>
 
+    var isPreparedQueryEffects: Bool
+
     var isCollectionViewHidden: Bool
     var isEmptyMessageViewHidden: Bool
     var isSearchBarEnabled: Bool
@@ -30,6 +32,8 @@ extension TagCollectionViewState {
         tags = .init()
         searchQuery = ""
         searchStorage = .init()
+
+        isPreparedQueryEffects = false
 
         isCollectionViewHidden = true
         isEmptyMessageViewHidden = true
@@ -54,6 +58,7 @@ extension TagCollectionViewState {
             .updated(filteredIds: .init())
         state.searchStorage = .init()
         state.alert = nil
+        state.isPreparedQueryEffects = false
         return state
     }
 }

@@ -106,8 +106,6 @@ class ClipCollectionViewController: UIViewController {
 
         bind(to: rootStore)
         bind(to: store)
-
-        store.execute(.viewDidLoad)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -122,6 +120,12 @@ class ClipCollectionViewController: UIViewController {
         viewDidAppeared.send(true)
 
         toolBarController.viewDidAppear()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        store.execute(.viewWillLayoutSubviews)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -838,9 +842,16 @@ extension ClipCollectionViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
+        var nextState = rootStore.stateValue
+        nextState.clipCollectionState.isPreparedQueryEffects = false
+
+        let nextClips = nextState.clipCollectionState.clips.updated(entities: [:])
+        nextState.clipCollectionState.clips = nextClips
+
         presentingAlert?.dismiss(animated: false, completion: nil)
         toolBarController.presentingAlert?.dismiss(animated: false, completion: nil)
-        return ClipCollectionViewController(state: rootStore.stateValue,
+
+        return ClipCollectionViewController(state: nextState,
                                             dependency: rootStore.dependency,
                                             thumbnailLoader: thumbnailLoader,
                                             menuBuilder: menuBuilder)

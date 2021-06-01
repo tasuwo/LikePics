@@ -26,8 +26,10 @@ struct TagCollectionViewReducer: Reducer {
         switch action {
         // MARK: View Life-Cycle
 
-        case .viewDidLoad:
-            return Self.prepareQueryEffects(state, dependency)
+        case .viewWillLayoutSubviews:
+            guard !nextState.isPreparedQueryEffects else { return (nextState, .none) }
+            nextState.isPreparedQueryEffects = true
+            return Self.prepareQueryEffects(nextState, dependency)
 
         // MARK: State Observation
 
