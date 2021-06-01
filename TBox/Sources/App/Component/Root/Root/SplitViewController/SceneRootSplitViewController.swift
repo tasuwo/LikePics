@@ -146,6 +146,12 @@ extension SceneRootSplitViewController {
             tabBarController.view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate(tabBarController.view.constraints(fittingIn: compactBaseViewController.view))
 
+            // HACK: 画面によってはviewWillLayoutSubviewsにてデータを遅延ロードしている
+            //       レイアウト切り替え後の最前面のViewはこのロードを強制的に実施させる
+            //       たとえば、PreviewのDismiss時のアニメーションの際など、最前面のViewにデータが読み込まれていないと
+            //       上手く画面遷移アニメーションが働かないケースがあるためのworkaround
+            tabBarController.selectedViewController?.view.layoutIfNeeded()
+
         case let .split(viewHierarchy):
             compactBaseViewController.children.forEach {
                 ($0 as? UITabBarController)?.setViewControllers([], animated: false)
@@ -162,6 +168,12 @@ extension SceneRootSplitViewController {
             secondaryBaseViewController.view.addSubview(detailViewController.view)
             detailViewController.view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate(detailViewController.view.constraints(fittingIn: secondaryBaseViewController.view))
+
+            // HACK: 画面によってはviewWillLayoutSubviewsにてデータを遅延ロードしている
+            //       レイアウト切り替え後の最前面のViewはこのロードを強制的に実施させる
+            //       たとえば、PreviewのDismiss時のアニメーションの際など、最前面のViewにデータが読み込まれていないと
+            //       上手く画面遷移アニメーションが働かないケースがあるためのworkaround
+            detailViewController.view.layoutIfNeeded()
         }
     }
 }
