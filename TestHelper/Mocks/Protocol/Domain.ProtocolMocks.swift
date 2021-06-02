@@ -324,6 +324,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
         fatalError("queryAllClipsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var queryAllListingClipsCallCount = 0
+    public var queryAllListingClipsHandler: (() -> (Result<ListingClipListQuery, ClipStorageError>))?
+    public func queryAllListingClips() -> Result<ListingClipListQuery, ClipStorageError> {
+        queryAllListingClipsCallCount += 1
+        if let queryAllListingClipsHandler = queryAllListingClipsHandler {
+            return queryAllListingClipsHandler()
+        }
+        fatalError("queryAllListingClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var queryUncategorizedClipsCallCount = 0
     public var queryUncategorizedClipsHandler: (() -> (Result<ClipListQuery, ClipStorageError>))?
     public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
@@ -1214,6 +1224,20 @@ public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProto
         if let setHandler = setHandler {
             setHandler(lastLoggedInCloudAccountId)
         }
+    }
+}
+
+public class ListingClipListQueryMock: ListingClipListQuery {
+    public init() { }
+    public init(clips: CurrentValueSubject<[ListingClip], Error>) {
+        self._clips = clips
+    }
+
+    public private(set) var clipsSetCallCount = 0
+    private var _clips: CurrentValueSubject<[ListingClip], Error>! { didSet { clipsSetCallCount += 1 } }
+    public var clips: CurrentValueSubject<[ListingClip], Error> {
+        get { return _clips }
+        set { _clips = newValue }
     }
 }
 
