@@ -19,38 +19,107 @@ class TBoxUITests: XCTestCase {
 
     func testExample() throws {
         let app = XCUIApplication()
+        let device = XCUIDevice.shared
 
-        let tabBar = app.tabBars["SceneRootTabBarController.tabBar"]
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            device.orientation = .portrait
 
-        tabBar
-            .buttons["SceneRootTabBarController.tabBarItem.top"]
-            .tap()
-        snapshot("01_Home")
+            let tabBar = app.tabBars["SceneRootTabBarController.tabBar"]
 
-        tabBar
-            .buttons["SceneRootTabBarController.tabBarItem.search"]
-            .tap()
+            tabBar
+                .buttons["SceneRoot.TabBarItem.top"]
+                .tap()
+            snapshot("01_Home")
 
-        tabBar
-            .buttons["SceneRootTabBarController.tabBarItem.tag"]
-            .tap()
-        snapshot("02_Tag")
+            tabBar
+                .buttons["SceneRoot.TabBarItem.tag"]
+                .tap()
+            snapshot("03_Tag")
 
-        tabBar
-            .buttons["SceneRootTabBarController.tabBarItem.album"]
-            .tap()
-        snapshot("03_Album")
+            tabBar
+                .buttons["SceneRoot.TabBarItem.album"]
+                .tap()
+            snapshot("04_Album")
 
-        tabBar
-            .buttons["SceneRootTabBarController.tabBarItem.top"]
-            .tap()
-        app.collectionViews
-            .children(matching: .any)
-            .element(boundBy: 0)
-            .tap()
-        app.navigationBars["LikePics.ClipPreviewPageView"]
-            .buttons["ClipPreviewPageBarController.infoItem"]
-            .tap()
-        snapshot("04_Info")
+            tabBar
+                .buttons["SceneRoot.TabBarItem.top"]
+                .tap()
+            app.collectionViews["ClipCollectionViewController.collectionView"]
+                .children(matching: .cell)
+                .element(boundBy: 0)
+                .tap()
+            app.navigationBars["LikePics.ClipPreviewPageView"]
+                .buttons["ClipPreviewPageBarController.infoItem"]
+                .tap()
+            snapshot("02_Info")
+        } else {
+            device.orientation = .portrait
+
+
+            let sideBar = app.collectionViews["SceneRootSideBarController.collectionView"]
+
+            app.navigationBars
+                .buttons
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .children(matching: .cell)
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .coordinate(withNormalizedOffset: .init(dx: 1, dy: 0.5))
+                .withOffset(.init(dx: 10, dy: 0))
+                .tap()
+            snapshot("01_Home")
+
+            app.navigationBars
+                .buttons
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .children(matching: .cell)
+                .element(boundBy: 2)
+                .tap()
+            sideBar
+                .coordinate(withNormalizedOffset: .init(dx: 1, dy: 0.5))
+                .withOffset(.init(dx: 10, dy: 0))
+                .tap()
+            snapshot("03_Tag")
+
+            app.navigationBars
+                .buttons
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .children(matching: .cell)
+                .element(boundBy: 3)
+                .tap()
+            sideBar
+                .coordinate(withNormalizedOffset: .init(dx: 1, dy: 0.5))
+                .withOffset(.init(dx: 10, dy: 0))
+                .tap()
+            snapshot("04_Album")
+
+            app.navigationBars
+                .buttons
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .children(matching: .cell)
+                .element(boundBy: 0)
+                .tap()
+            sideBar
+                .coordinate(withNormalizedOffset: .init(dx: 1, dy: 0.5))
+                .withOffset(.init(dx: 10, dy: 0))
+                .tap()
+            app.collectionViews["ClipCollectionViewController.collectionView"]
+                .children(matching: .cell)
+                .element(boundBy: 0)
+                .tap()
+            app.navigationBars["LikePics.ClipPreviewPageView"]
+                .buttons["ClipPreviewPageBarController.infoItem"]
+                .tap()
+            snapshot("02_Info")
+        }
     }
 }

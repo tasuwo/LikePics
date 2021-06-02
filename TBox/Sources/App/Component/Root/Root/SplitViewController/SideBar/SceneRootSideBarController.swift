@@ -75,6 +75,7 @@ extension SceneRootSideBarController {
         view.backgroundColor = Asset.Color.backgroundClient.color
 
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
+        collectionView.accessibilityIdentifier = "SceneRootSideBarController.collectionView"
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true

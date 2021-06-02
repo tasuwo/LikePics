@@ -113,20 +113,11 @@ extension SceneRootTabBarController {
 
         self.tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
 
-        topClipsListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemHome, image: UIImage(systemName: "house"), tag: 0)
-        topClipsListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.top"
-
-        searchEntryViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSearch, image: UIImage(systemName: "magnifyingglass"), tag: 2)
-        searchEntryViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.search"
-
-        tagListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemTag, image: UIImage(systemName: "tag"), tag: 3)
-        tagListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.tag"
-
-        albumListViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemAlbum, image: UIImage(systemName: "square.stack"), tag: 4)
-        albumListViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.album"
-
-        settingsViewController.tabBarItem = UITabBarItem(title: L10n.appRootTabItemSettings, image: UIImage(systemName: "gear"), tag: 5)
-        settingsViewController.tabBarItem.accessibilityIdentifier = "SceneRootTabBarController.tabBarItem.setting"
+        topClipsListViewController.tabBarItem = SceneRoot.TabBarItem.top.tabBarItem
+        searchEntryViewController.tabBarItem = SceneRoot.TabBarItem.search.tabBarItem
+        tagListViewController.tabBarItem = SceneRoot.TabBarItem.tags.tabBarItem
+        albumListViewController.tabBarItem = SceneRoot.TabBarItem.albums.tabBarItem
+        settingsViewController.tabBarItem = SceneRoot.TabBarItem.setting.tabBarItem
 
         self.viewControllers = [
             UINavigationController(rootViewController: topClipsListViewController),

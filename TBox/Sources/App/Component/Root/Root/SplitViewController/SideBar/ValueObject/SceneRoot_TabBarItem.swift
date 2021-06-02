@@ -71,19 +71,19 @@ extension SceneRoot {
         var accessibilityIdentifier: String {
             switch self {
             case .top:
-                return "SceneRootTabBarController.tabBarItem.top"
+                return "SceneRoot.TabBarItem.top"
 
             case .search:
-                return "SceneRootTabBarController.tabBarItem.search"
+                return "SceneRoot.TabBarItem.search"
 
             case .tags:
-                return "SceneRootTabBarController.tabBarItem.tag"
+                return "SceneRoot.TabBarItem.tag"
 
             case .albums:
-                return "SceneRootTabBarController.tabBarItem.album"
+                return "SceneRoot.TabBarItem.album"
 
             case .setting:
-                return "SceneRootTabBarController.tabBarItem.setting"
+                return "SceneRoot.TabBarItem.setting"
             }
         }
 

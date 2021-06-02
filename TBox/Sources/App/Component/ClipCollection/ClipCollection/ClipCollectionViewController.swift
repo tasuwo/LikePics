@@ -538,6 +538,7 @@ extension ClipCollectionViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.allowsSelectionDuringEditing = true
         collectionView.allowsMultipleSelectionDuringEditing = true
+        collectionView.accessibilityIdentifier = "ClipCollectionViewController.collectionView"
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
 
