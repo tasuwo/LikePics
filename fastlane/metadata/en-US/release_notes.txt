@@ -1,4 +1,4 @@
-- You can select dark/dark theme.
+- Display sidebar in iPad.
 
-- Fixed a bug that failed to add a clip to album from long press menu.
-- Change some long press menu items.
+- Fixed an issue that failed to share images from some other apps.
+- Fixed a crash that sometimes occured when share image from LikePics to other apps.

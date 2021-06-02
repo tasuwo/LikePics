@@ -21,7 +21,6 @@ options:
       - Smoothie
       - ForestKit
 attributes:
-  LastUpgradeVersion: '1250'
   ORGANIZATIONNAME: Tasuku Tozawa
 configs:
   Debug: debug
@@ -132,7 +131,7 @@ schemes:
         - CommonTests
 settings:
   base:
-    APP_VERSION: 2.5
+    APP_VERSION: 2.6
     BUILD_NUMBER: 1
     ALWAYS_SEARCH_USER_PATHS: NO
     CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
