@@ -14,7 +14,7 @@ public class ClipCommandService {
     let lock: NSRecursiveLock
     let logger: Loggable
 
-    private(set) var isTransporting: Bool = false
+    private(set) var isTransporting = false
 
     // MARK: - Lifecycle
 
