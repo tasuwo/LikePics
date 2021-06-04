@@ -53,19 +53,20 @@ class ClipInformationViewCacheController {
 
 extension ClipInformationViewCacheController {
     private func bind(to store: Store) {
-        store.state.sink { [weak self] state in
-            guard let self = self else { return }
-
-            guard state.isInvalidated == false else {
+        store.state
+            .bind(\.isInvalidated) { [weak self] isInvalidated in
+                guard isInvalidated == true, let self = self else { return }
                 self.delegate?.didInvalidateCache(self)
-                return
             }
+            .store(in: &subscriptions)
 
-            DispatchQueue.global().async {
-                self.informationView.setInfo(Layout.Information(state), animated: false)
+        store.state
+            .removeDuplicates()
+            .receive(on: DispatchQueue.global())
+            .sink { [weak self] state in
+                self?.informationView.setInfo(Layout.Information(state), animated: false)
             }
-        }
-        .store(in: &subscriptions)
+            .store(in: &subscriptions)
     }
 }
 
