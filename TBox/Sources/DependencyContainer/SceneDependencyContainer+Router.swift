@@ -50,6 +50,27 @@ extension SceneDependencyContainer {
 
         return isModal(id, topViewController)
     }
+
+    private func dismissAllModals() {
+        guard let detailViewController = rootViewController?.currentViewController else { return }
+
+        var topViewController = detailViewController
+        while let presentedViewController = topViewController.presentedViewController {
+            topViewController = presentedViewController
+        }
+
+        if topViewController == detailViewController { return }
+        dismiss(topViewController, until: detailViewController)
+    }
+
+    private func dismiss(_ viewController: UIViewController?, until rootViewController: UIViewController) {
+        let presentingViewController = viewController?.presentingViewController
+        viewController?.dismiss(animated: true, completion: {
+            if viewController === rootViewController { return }
+            guard let viewController = presentingViewController else { return }
+            self.dismiss(viewController, until: rootViewController)
+        })
+    }
 }
 
 extension SceneDependencyContainer: Router {
