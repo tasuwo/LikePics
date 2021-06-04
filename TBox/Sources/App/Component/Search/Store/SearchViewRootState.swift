@@ -23,21 +23,8 @@ extension SearchViewRootState {
 }
 
 extension SearchViewRootState {
-    static let entryConverter: StateConverter<Self, SearchEntryViewState> = .init {
-        $0.entryState
-    } merge: { state, parent in
-        var nextParent = parent
-        nextParent.entryState = state
-        return nextParent
-    }
-
-    static let resultConverter: StateConverter<Self, SearchResultViewState> = .init {
-        $0.resultState
-    } merge: { state, parent in
-        var nextParent = parent
-        nextParent.resultState = state
-        return nextParent
-    }
+    static let entryMapping: StateMapping<Self, SearchEntryViewState> = .init(keyPath: \.entryState)
+    static let resultMapping: StateMapping<Self, SearchResultViewState> = .init(keyPath: \.resultState)
 }
 
 extension SearchViewRootState {

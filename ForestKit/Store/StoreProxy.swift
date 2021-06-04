@@ -5,53 +5,64 @@
 import Combine
 
 public class StoreProxy<
-    State: Equatable,
-    Action: ForestKit.Action,
+    ChildState: Equatable,
+    ChildAction: ForestKit.Action,
     Dependency,
-    RootState: Equatable,
-    RootAction: ForestKit.Action,
-    RootDependency
+    ParentState: Equatable,
+    ParentAction: ForestKit.Action,
+    ParentDependency
 > {
-    private let store: Store<RootState, RootAction, RootDependency>
-    private let stateConverter: StateConverter<RootState, State>
-    private let actionConverter: ActionConverter<RootAction, Action>
+    private let store: Store<ParentState, ParentAction, ParentDependency>
+    private let stateMapping: StateMapping<ParentState, ChildState>
+    private let actionMapping: ActionMapping<ParentAction, ChildAction>
 
     public init(
-        store: Store<RootState, RootAction, RootDependency>,
-        stateConverter: StateConverter<RootState, State>,
-        actionConverter: ActionConverter<RootAction, Action>
+        store: Store<ParentState, ParentAction, ParentDependency>,
+        stateMapping: StateMapping<ParentState, ChildState>,
+        actionMapping: ActionMapping<ParentAction, ChildAction>
     ) {
         self.store = store
-        self.stateConverter = stateConverter
-        self.actionConverter = actionConverter
+        self.stateMapping = stateMapping
+        self.actionMapping = actionMapping
     }
 }
 
 extension StoreProxy: Storing {
     // MARK: - Storing
 
-    public var stateValue: State {
-        stateConverter.extract(from: store.stateValue)
+    public var stateValue: ChildState {
+        stateMapping.get(store.stateValue)
     }
 
-    public var state: AnyPublisher<State, Never> {
+    public var state: AnyPublisher<ChildState, Never> {
         store.state
-            .map { [stateConverter] state in stateConverter.extract(from: state) }
+            .map { [stateMapping] state in stateMapping.get(state) }
             .eraseToAnyPublisher()
     }
 
-    public func execute(_ action: Action) {
-        store.execute(actionConverter.convert(action))
+    public func execute(_ action: ChildAction) {
+        store.execute(actionMapping.build(action))
     }
 }
 
 public extension Store {
-    func proxy<CS: Equatable, CA: ForestKit.Action, CD>(
-        _ stateConverter: StateConverter<State, CS>,
-        _ actionConverter: ActionConverter<Action, CA>
-    ) -> StoreProxy<CS, CA, CD, State, Action, Dependency> {
+    func proxy<
+        ChildState: Equatable,
+        ChildAction: ForestKit.Action,
+        ChildDependency
+    >(
+        _ stateMapping: StateMapping<State, ChildState>,
+        _ actionMapping: ActionMapping<Action, ChildAction>
+    ) -> StoreProxy<
+        ChildState,
+        ChildAction,
+        ChildDependency,
+        State,
+        Action,
+        Dependency
+    > {
         return .init(store: self,
-                     stateConverter: stateConverter,
-                     actionConverter: actionConverter)
+                     stateMapping: stateMapping,
+                     actionMapping: actionMapping)
     }
 }

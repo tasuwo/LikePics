@@ -44,43 +44,38 @@ extension ClipCollectionViewRootState {
 }
 
 extension ClipCollectionViewRootState {
-    static let clipCollectionConverter: StateConverter<Self, ClipCollectionState> = .init { parent in
-        parent.clipCollectionState
-    } merge: { state, parent in
-        var nextParent = parent
-        nextParent.clipCollectionState = state
-        return nextParent
-    }
+    static let clipsMapping: StateMapping<Self, ClipCollectionState> = .init(keyPath: \Self.clipCollectionState)
 
-    static let navigationBarConverter: StateConverter<Self, ClipCollectionNavigationBarState> = .init { parent in
-        .init(source: parent.clipCollectionState.source,
-              layout: parent.clipCollectionState.layout,
-              operation: parent.clipCollectionState.operation,
-              rightItems: parent.navigationBarRightItems,
-              leftItems: parent.navigationBarLeftItems,
-              clipCount: parent.clipCollectionState.clips._filteredIds.count,
-              selectionCount: parent.clipCollectionState.clips._selectedIds.count)
-    } merge: { state, parent in
-        var nextParent = parent
-        nextParent.navigationBarRightItems = state.rightItems
-        nextParent.navigationBarLeftItems = state.leftItems
-        return nextParent
-    }
+    static let navigationBarMapping: StateMapping<Self, ClipCollectionNavigationBarState> = .init(get: { parent in
+                                                                                                      .init(source: parent.clipCollectionState.source,
+                                                                                                            layout: parent.clipCollectionState.layout,
+                                                                                                            operation: parent.clipCollectionState.operation,
+                                                                                                            rightItems: parent.navigationBarRightItems,
+                                                                                                            leftItems: parent.navigationBarLeftItems,
+                                                                                                            clipCount: parent.clipCollectionState.clips._filteredIds.count,
+                                                                                                            selectionCount: parent.clipCollectionState.clips._selectedIds.count)
+                                                                                                  },
+                                                                                                  set: { state, parent in
+                                                                                                      var nextParent = parent
+                                                                                                      nextParent.navigationBarRightItems = state.rightItems
+                                                                                                      nextParent.navigationBarLeftItems = state.leftItems
+                                                                                                      return nextParent
+                                                                                                  })
 
-    static let toolBarConverter: StateConverter<Self, ClipCollectionToolBarState> = .init { parent in
+    static let toolBarMapping: StateMapping<Self, ClipCollectionToolBarState> = .init(get: { parent in
         .init(source: parent.clipCollectionState.source,
               operation: parent.clipCollectionState.operation,
               items: parent.toolBarItems,
               isHidden: parent.isToolBarHidden,
               parentState: parent.clipCollectionState,
               alert: parent.toolBarAlert)
-    } merge: { state, parent in
+    }, set: { state, parent in
         var nextParent = parent
         nextParent.toolBarItems = state.items
         nextParent.isToolBarHidden = state.isHidden
         nextParent.toolBarAlert = state.alert
         return nextParent
-    }
+    })
 }
 
 // MARK: - Codable

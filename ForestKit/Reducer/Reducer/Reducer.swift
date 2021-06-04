@@ -12,6 +12,6 @@ public protocol Reducer {
 
 public extension Reducer {
     func eraseToAnyReducer() -> AnyReducer<Action, State, Dependency> {
-        return .init(reducer: self)
+        return .init(self)
     }
 }

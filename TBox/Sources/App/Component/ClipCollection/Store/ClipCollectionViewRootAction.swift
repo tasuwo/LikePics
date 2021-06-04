@@ -11,7 +11,9 @@ enum ClipCollectionViewRootAction: Action {
 }
 
 extension ClipCollectionViewRootAction {
-    static let clipCollectionConverter: ActionConverter<Self, ClipCollectionAction> = .init {
+    static let clipsMapping: ActionMapping<Self, ClipCollectionAction> = .init(build: {
+        .clipCollection($0)
+    }, get: {
         switch $0 {
         case let .clipCollection(action):
             return action
@@ -24,21 +26,19 @@ extension ClipCollectionViewRootAction {
             guard let event = action.mapToEvent() else { return nil }
             return .navigationBarEventOccurred(event)
         }
-    } convert: {
-        .clipCollection($0)
-    }
+    })
 
-    static let toolBarConverter: ActionConverter<Self, ClipCollectionToolBarAction> = .init {
-        guard case let .toolBar(action) = $0 else { return nil }; return action
-    } convert: {
+    static let toolBarMapping: ActionMapping<Self, ClipCollectionToolBarAction> = .init(build: {
         .toolBar($0)
-    }
+    }, get: {
+        guard case let .toolBar(action) = $0 else { return nil }; return action
+    })
 
-    static let navigationBarConverter: ActionConverter<Self, ClipCollectionNavigationBarAction> = .init {
-        guard case let .navigationBar(action) = $0 else { return nil }; return action
-    } convert: {
+    static let navigationBarMapping: ActionMapping<Self, ClipCollectionNavigationBarAction> = .init(build: {
         .navigationBar($0)
-    }
+    }, get: {
+        guard case let .navigationBar(action) = $0 else { return nil }; return action
+    })
 }
 
 private extension ClipCollectionNavigationBarAction {

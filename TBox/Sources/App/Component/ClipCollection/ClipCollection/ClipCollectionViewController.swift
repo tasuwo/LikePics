@@ -70,7 +70,7 @@ class ClipCollectionViewController: UIViewController {
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
         self.store = rootStore
-            .proxy(RootState.clipCollectionConverter, RootAction.clipCollectionConverter)
+            .proxy(RootState.clipsMapping, RootAction.clipsMapping)
             .eraseToAnyStoring()
 
         super.init(nibName: nil, bundle: nil)
@@ -142,12 +142,12 @@ class ClipCollectionViewController: UIViewController {
 extension ClipCollectionViewController {
     private func bind(to store: RootStore) {
         store.state
-            .removeDuplicates(by: RootState.toolBarConverter.hasEqualChild(_:_:))
+            .removeDuplicates(by: { RootState.toolBarMapping.get($0) == RootState.toolBarMapping.get($1) })
             .sink { [weak self] _ in self?.toolBarController.store.execute(.stateChanged) }
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: RootState.navigationBarConverter.hasEqualChild(_:_:))
+            .removeDuplicates(by: { RootState.navigationBarMapping.get($0) == RootState.navigationBarMapping.get($1) })
             .sink { [weak self] _ in self?.navigationBarController.store.execute(.stateChanged) }
             .store(in: &subscriptions)
 
@@ -517,12 +517,12 @@ extension ClipCollectionViewController {
 extension ClipCollectionViewController {
     private func configureComponents() {
         let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
-            .proxy(RootState.navigationBarConverter, RootAction.navigationBarConverter)
+            .proxy(RootState.navigationBarMapping, RootAction.navigationBarMapping)
             .eraseToAnyStoring()
         navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
 
         let toolBarStore: ClipCollectionToolBarController.Store = rootStore
-            .proxy(RootState.toolBarConverter, RootAction.toolBarConverter)
+            .proxy(RootState.toolBarMapping, RootAction.toolBarMapping)
             .eraseToAnyStoring()
         toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
     }

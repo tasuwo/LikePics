@@ -38,42 +38,35 @@ extension ClipPreviewPageViewRootState {
 }
 
 extension ClipPreviewPageViewRootState {
-    static let pageConverter: StateConverter<Self, ClipPreviewPageViewState> = .init { parent in
-        parent.pageViewState
-    } merge: { state, parent in
-        var nextState = parent
-        nextState.pageViewState = state
-        return nextState
-    }
+    static let pageMapping: StateMapping<Self, ClipPreviewPageViewState> = .init(keyPath: \.pageViewState)
 
-    static let barConverter: StateConverter<Self, ClipPreviewPageBarState> = .init { parent in
-        .init(parentState: parent.pageViewState,
-              isVerticalSizeClassCompact: parent.isVerticalSizeClassCompact,
-              leftBarButtonItems: parent.navigationBarLeftItems,
-              rightBarButtonItems: parent.navigationBarRightItems,
-              toolBarItems: parent.toolBarItems,
-              isFullscreen: parent.isFullscreen,
-              isNavigationBarHidden: parent.isNavigationBarHidden,
-              isToolBarHidden: parent.isToolBarHidden,
-              alert: parent.barAlert)
-    } merge: { state, parent in
-        var nextState = parent
-        nextState.isVerticalSizeClassCompact = state.isVerticalSizeClassCompact
-        nextState.navigationBarLeftItems = state.leftBarButtonItems
-        nextState.navigationBarRightItems = state.rightBarButtonItems
-        nextState.toolBarItems = state.toolBarItems
-        nextState.isFullscreen = state.isFullscreen
-        nextState.isNavigationBarHidden = state.isNavigationBarHidden
-        nextState.isToolBarHidden = state.isToolBarHidden
-        nextState.barAlert = state.alert
+    static let barMapping: StateMapping<Self, ClipPreviewPageBarState> = .init(get: {
+        .init(parentState: $0.pageViewState,
+              isVerticalSizeClassCompact: $0.isVerticalSizeClassCompact,
+              leftBarButtonItems: $0.navigationBarLeftItems,
+              rightBarButtonItems: $0.navigationBarRightItems,
+              toolBarItems: $0.toolBarItems,
+              isFullscreen: $0.isFullscreen,
+              isNavigationBarHidden: $0.isNavigationBarHidden,
+              isToolBarHidden: $0.isToolBarHidden,
+              alert: $0.barAlert)
+    }, set: {
+        var nextState = $1
+        nextState.isVerticalSizeClassCompact = $0.isVerticalSizeClassCompact
+        nextState.navigationBarLeftItems = $0.leftBarButtonItems
+        nextState.navigationBarRightItems = $0.rightBarButtonItems
+        nextState.toolBarItems = $0.toolBarItems
+        nextState.isFullscreen = $0.isFullscreen
+        nextState.isNavigationBarHidden = $0.isNavigationBarHidden
+        nextState.isToolBarHidden = $0.isToolBarHidden
+        nextState.barAlert = $0.alert
         return nextState
-    }
+    })
 
-    static let cacheConverter: StateConverter<Self, ClipPreviewPageViewCacheState> = .init { parent in
-        .init(clipId: parent.pageViewState.clipId,
-              itemId: parent.pageViewState.currentItem?.id)
-    } merge: { _, parent in
+    static let cacheMapping: StateMapping<Self, ClipPreviewPageViewCacheState> = .init(get: {
+        .init(clipId: $0.pageViewState.clipId, itemId: $0.pageViewState.currentItem?.id)
+    }, set: {
         // Read only
-        return parent
-    }
+        return $1
+    })
 }

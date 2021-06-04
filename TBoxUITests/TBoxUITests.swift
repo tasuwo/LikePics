@@ -55,7 +55,6 @@ class TBoxUITests: XCTestCase {
         } else {
             device.orientation = .portrait
 
-
             let sideBar = app.collectionViews["SceneRootSideBarController.collectionView"]
 
             app.navigationBars

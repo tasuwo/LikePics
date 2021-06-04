@@ -19,3 +19,17 @@ public extension Storing {
         return .init(self)
     }
 }
+
+public struct StoreProxy_<State: Equatable, Action: ForestKit.Action, Dependency> {
+    public let stateValue: State
+    public let state: AnyPublisher<State, Never>
+    let executeBlock: (Action) -> Void
+}
+
+extension StoreProxy_: Storing {
+    // MARK: - Storing
+
+    public func execute(_ action: Action) {
+        executeBlock(action)
+    }
+}

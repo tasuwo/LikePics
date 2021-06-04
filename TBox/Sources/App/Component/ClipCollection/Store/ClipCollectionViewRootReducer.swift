@@ -11,14 +11,8 @@ typealias ClipCollectionViewRootDependency = ClipCollectionDependency
 private typealias RootState = ClipCollectionViewRootState
 private typealias RootAction = ClipCollectionViewRootAction
 
-let clipCollectionViewRootReducer = MergeReducer<ClipCollectionViewRootState, ClipCollectionViewRootAction, ClipCollectionViewRootDependency>(
-    ClipCollectionReducer().upstream(RootState.clipCollectionConverter,
-                                     RootAction.clipCollectionConverter,
-                                     { $0 as ClipCollectionDependency }),
-    ClipCollectionNavigationBarReducer().upstream(RootState.navigationBarConverter,
-                                                  RootAction.navigationBarConverter,
-                                                  { $0 as ClipCollectionNavigationBarDependency }),
-    ClipCollectionToolBarReducer().upstream(RootState.toolBarConverter,
-                                            RootAction.toolBarConverter,
-                                            { $0 as ClipCollectionToolBarDependency })
+let clipCollectionViewRootReducer = combine(
+    contramap(RootAction.clipsMapping, RootState.clipsMapping, { $0 as ClipCollectionViewRootDependency })(ClipCollectionReducer()),
+    contramap(RootAction.navigationBarMapping, RootState.navigationBarMapping, { $0 })(ClipCollectionNavigationBarReducer()),
+    contramap(RootAction.toolBarMapping, RootState.toolBarMapping, { $0 })(ClipCollectionToolBarReducer())
 )

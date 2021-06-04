@@ -11,7 +11,9 @@ enum ClipPreviewPageViewRootAction: Action {
 }
 
 extension ClipPreviewPageViewRootAction {
-    static let pageConverter: ActionConverter<Self, ClipPreviewPageViewAction> = .init {
+    static let pageMapping: ActionMapping<Self, ClipPreviewPageViewAction> = .init(build: {
+        .page($0)
+    }, get: {
         switch $0 {
         case let .page(action):
             return action
@@ -23,21 +25,19 @@ extension ClipPreviewPageViewRootAction {
         default:
             return nil
         }
-    } convert: {
-        .page($0)
-    }
+    })
 
-    static let barConverter: ActionConverter<Self, ClipPreviewPageBarAction> = .init {
-        guard case let .bar(action) = $0 else { return nil }; return action
-    } convert: {
+    static let barMapping: ActionMapping<Self, ClipPreviewPageBarAction> = .init(build: {
         .bar($0)
-    }
+    }, get: {
+        guard case let .bar(action) = $0 else { return nil }; return action
+    })
 
-    static let cacheConverter: ActionConverter<Self, ClipPreviewPageViewCacheAction> = .init {
-        guard case let .cache(action) = $0 else { return nil }; return action
-    } convert: {
+    static let cacheMapping: ActionMapping<Self, ClipPreviewPageViewCacheAction> = .init(build: {
         .cache($0)
-    }
+    }, get: {
+        guard case let .cache(action) = $0 else { return nil }; return action
+    })
 }
 
 private extension ClipPreviewPageBarAction {

@@ -44,10 +44,10 @@ class SearchEntryViewController: UIViewController {
     {
         rootStore = ForestKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
         store = rootStore
-            .proxy(SearchViewRootState.entryConverter, SearchViewRootAction.entryConverter)
+            .proxy(SearchViewRootState.entryMapping, SearchViewRootAction.entryMapping)
             .eraseToAnyStoring()
         let resultStore: SearchResultViewController.Store = rootStore
-            .proxy(SearchViewRootState.resultConverter, SearchViewRootAction.resultConverter)
+            .proxy(SearchViewRootState.resultMapping, SearchViewRootAction.resultMapping)
             .eraseToAnyStoring()
         resultsController = SearchResultViewController(store: resultStore,
                                                        thumbnailLoader: temporaryThumbnailLoader)

@@ -74,13 +74,13 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.rootStore = rootStore
 
         self.store = rootStore
-            .proxy(RootState.pageConverter, RootAction.pageConverter)
+            .proxy(RootState.pageMapping, RootAction.pageMapping)
             .eraseToAnyStoring()
         self.cacheStore = rootStore
-            .proxy(RootState.cacheConverter, RootAction.cacheConverter)
+            .proxy(RootState.cacheMapping, RootAction.cacheMapping)
             .eraseToAnyStoring()
         let barStore: ClipPreviewPageBarController.Store = rootStore
-            .proxy(RootState.barConverter, RootAction.barConverter)
+            .proxy(RootState.barMapping, RootAction.barMapping)
             .eraseToAnyStoring()
         self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
 

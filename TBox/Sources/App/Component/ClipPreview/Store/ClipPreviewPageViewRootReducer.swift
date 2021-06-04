@@ -11,14 +11,8 @@ typealias ClipPreviewPageViewRootDependency = ClipPreviewPageViewDependency
 private typealias RootState = ClipPreviewPageViewRootState
 private typealias RootAction = ClipPreviewPageViewRootAction
 
-let clipPreviewPageViewRootReducer = MergeReducer<ClipPreviewPageViewRootState, ClipPreviewPageViewRootAction, ClipPreviewPageViewRootDependency>(
-    ClipPreviewPageViewReducer().upstream(RootState.pageConverter,
-                                          RootAction.pageConverter,
-                                          { $0 as ClipPreviewPageViewDependency }),
-    ClipPreviewPageBarReducer().upstream(RootState.barConverter,
-                                         RootAction.barConverter,
-                                         { $0 as ClipPreviewPageBarDependency }),
-    ClipPreviewPageViewCacheReducer().upstream(RootState.cacheConverter,
-                                               RootAction.cacheConverter,
-                                               { $0 as ClipPreviewPageViewCacheDependency })
+let clipPreviewPageViewRootReducer = combine(
+    contramap(RootAction.pageMapping, RootState.pageMapping, { $0 as ClipPreviewPageViewRootDependency })(ClipPreviewPageViewReducer()),
+    contramap(RootAction.barMapping, RootState.barMapping, { $0 })(ClipPreviewPageBarReducer()),
+    contramap(RootAction.cacheMapping, RootState.cacheMapping, { $0 })(ClipPreviewPageViewCacheReducer())
 )
