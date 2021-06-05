@@ -40,4 +40,15 @@ extension SceneRootViewLayoutProvider {
         guard let nextViewHierarchy = viewHierarchy.selecting(sideBarItem) else { return }
         _layout.send(.split(nextViewHierarchy))
     }
+
+    func select(_ barItem: SceneRoot.BarItem) {
+        switch _layout.value {
+        case let .compact(viewHierarchy):
+            viewHierarchy.tabBarController.selectedIndex = barItem.tabBarItem.rawValue
+
+        case let .split(viewHierarchy):
+            guard let nextViewHierarchy = viewHierarchy.selecting(barItem.sideBarItem) else { return }
+            _layout.send(.split(nextViewHierarchy))
+        }
+    }
 }

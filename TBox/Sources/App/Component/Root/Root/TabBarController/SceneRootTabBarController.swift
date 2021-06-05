@@ -156,4 +156,8 @@ extension SceneRootTabBarController: SceneRootViewController {
     // MARK: - SceneRootViewController
 
     var currentViewController: UIViewController? { selectedViewController }
+
+    func select(_ barItem: SceneRoot.BarItem) {
+        selectedIndex = barItem.tabBarItem.rawValue
+    }
 }

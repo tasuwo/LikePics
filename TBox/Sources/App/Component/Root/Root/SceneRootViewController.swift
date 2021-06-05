@@ -8,4 +8,5 @@ import UIKit
 
 protocol SceneRootViewController: UIViewController, CloudStackLoaderObserver, ClipPreviewPresentingAnimatorDataSource {
     var currentViewController: UIViewController? { get }
+    func select(_ barItem: SceneRoot.BarItem)
 }

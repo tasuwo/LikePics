@@ -113,6 +113,7 @@
 		2AF3BF524C5C0DF7872B6AAE /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3860BAD4270FF2068B9E8BEA /* TemporaryImageStorageProtocol.swift */; };
 		2BCB1AE8F77B23C950555A79 /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FA45AE3B7889A43CDB98EF /* WebImageProvidingService.swift */; };
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C4BBBE7266B0DF8005B2989 /* SceneRoot_BarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4BBBE6266B0DF8005B2989 /* SceneRoot_BarItem.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CE002AD2669A74B00ABEB69 /* Prism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE002AC2669A74B00ABEB69 /* Prism.swift */; };
 		2CE002AF2669A7A500ABEB69 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE002AE2669A7A500ABEB69 /* Lens.swift */; };
@@ -1119,6 +1120,7 @@
 		2AAC5BC9C185604B92D45004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C1A1011F5093268C2A2B51F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		2C4BBBE6266B0DF8005B2989 /* SceneRoot_BarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRoot_BarItem.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2CE002AC2669A74B00ABEB69 /* Prism.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prism.swift; sourceTree = "<group>"; };
 		2CE002AE2669A7A500ABEB69 /* Lens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lens.swift; sourceTree = "<group>"; };
@@ -2530,6 +2532,7 @@
 		51E1F807D16168CB5DE5D1DC /* ValueObject */ = {
 			isa = PBXGroup;
 			children = (
+				2C4BBBE6266B0DF8005B2989 /* SceneRoot_BarItem.swift */,
 				CC6DA607F68FC4CF84304E7A /* SceneRoot_SideBarItem.swift */,
 				972C69A3BACA7E1348F7089E /* SceneRoot_TabBarItem.swift */,
 				B456FC25973400EC8BC2688A /* SceneRoot.swift */,
@@ -3365,6 +3368,7 @@
 				BC9A423AC6A6F384E2B3325B /* SceneRootViewController+ClipPreviewPresentingAnimatorDataSource.swift */,
 				663AFC4B83B50D270E00C5D6 /* SplitViewController */,
 				218AF4EDE39B8455F4883D8A /* TabBarController */,
+				51E1F807D16168CB5DE5D1DC /* ValueObject */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -3611,7 +3615,6 @@
 			children = (
 				E542E756A6B96D8053B51522 /* SceneRootSideBarController.swift */,
 				0808DC18F56EB7F08CE172AC /* SceneRootSideBarLayout.swift */,
-				51E1F807D16168CB5DE5D1DC /* ValueObject */,
 			);
 			path = SideBar;
 			sourceTree = "<group>";
@@ -5466,6 +5469,7 @@
 				2A29803128C23B7C2D84E311 /* ClipSearchQuery+Display.swift in Sources */,
 				94402618AB1B3CD4A4A44F7C /* ClipSearchToken+Display.swift in Sources */,
 				6EAAB2001BF254F3C4E0DF31 /* ClipsIntegrityValidatorAction.swift in Sources */,
+				2C4BBBE7266B0DF8005B2989 /* SceneRoot_BarItem.swift in Sources */,
 				BD84F26C8FDC5EAFD43D000A /* ClipsIntegrityValidatorReducer.swift in Sources */,
 				B0C2D399A793D61DC728CBDE /* ClipsIntegrityValidatorState.swift in Sources */,
 				C0AC1B9FFE46DC877F1011B5 /* DependencyContainer.swift in Sources */,

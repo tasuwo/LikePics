@@ -23,9 +23,9 @@ class SceneRootSplitViewController: UISplitViewController {
     private var sideBarController: SceneRootSideBarController!
     private let compactBaseViewController = UIViewController()
     private let secondaryBaseViewController = UIViewController()
-    private var viewHierarchy: SceneRootViewLayoutProvider!
+    private var layoutProvider: SceneRootViewLayoutProvider!
 
-    var currentDetailViewController: UIViewController? { viewHierarchy.currentTopViewController }
+    var currentDetailViewController: UIViewController? { layoutProvider.currentTopViewController }
 
     private var _loadingView: UIView?
     private var _loadingLabel: UILabel?
@@ -65,7 +65,7 @@ class SceneRootSplitViewController: UISplitViewController {
         super.willTransition(to: newCollection, with: coordinator)
 
         guard newCollection.horizontalSizeClass == .regular else { return }
-        viewHierarchy?.apply(horizontalSizeClass: .regular)
+        layoutProvider?.apply(horizontalSizeClass: .regular)
     }
 
     override func viewDidLoad() {
@@ -110,11 +110,11 @@ extension SceneRootSplitViewController {
 
 extension SceneRootSplitViewController {
     private func configureViewHierarchy() {
-        viewHierarchy = SceneRootViewLayoutProvider(horizontalSizeClass: traitCollection.horizontalSizeClass,
-                                                    intent: intent,
-                                                    factory: factory)
+        layoutProvider = SceneRootViewLayoutProvider(horizontalSizeClass: traitCollection.horizontalSizeClass,
+                                                     intent: intent,
+                                                     factory: factory)
 
-        let sideBarItem = viewHierarchy.layout
+        let sideBarItem = layoutProvider.layout
             .map { $0.sideBarItem }
             .eraseToAnyPublisher()
         sideBarController = SceneRootSideBarController(sideBarItem: sideBarItem)
@@ -126,7 +126,7 @@ extension SceneRootSplitViewController {
 
         delegate = self
 
-        viewHierarchy.layout
+        layoutProvider.layout
             .sink { [weak self] layout in self?.apply(layout: layout) }
             .store(in: &subscriptions)
     }
@@ -180,7 +180,7 @@ extension SceneRootSplitViewController {
 
 extension SceneRootSplitViewController: UISplitViewControllerDelegate {
     func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-        viewHierarchy.apply(horizontalSizeClass: .compact)
+        layoutProvider.apply(horizontalSizeClass: .compact)
         return .compact
     }
 }
@@ -189,7 +189,7 @@ extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
     // MARK: - SceneRootSideBarControllerDelegate
 
     func appRootSideBarController(_ controller: SceneRootSideBarController, didSelect item: SceneRoot.SideBarItem) {
-        viewHierarchy.select(item)
+        layoutProvider.select(item)
     }
 }
 
@@ -241,4 +241,8 @@ extension SceneRootSplitViewController: SceneRootViewController {
     // MARK: - SceneRootViewController
 
     var currentViewController: UIViewController? { currentDetailViewController }
+
+    func select(_ barItem: SceneRoot.BarItem) {
+        layoutProvider.select(barItem)
+    }
 }
