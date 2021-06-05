@@ -23,6 +23,8 @@ extension ImageProvider: TBoxCore.ImageProvider {
                 completion(data)
             } else if let image = data as? UIImage {
                 completion(image.pngData())
+            } else if let url = data as? URL, let imageData = try? Data(contentsOf: url) {
+                completion(imageData)
             } else {
                 completion(nil)
             }
