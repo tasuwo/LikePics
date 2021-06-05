@@ -41,4 +41,6 @@ protocol Router {
 
     @discardableResult
     func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool
+
+    func routeToClipCollectionView(for tag: Tag)
 }

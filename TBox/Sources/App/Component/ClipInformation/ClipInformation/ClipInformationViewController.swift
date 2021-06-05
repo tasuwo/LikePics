@@ -269,7 +269,7 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
         store.execute(.tagAdditionButtonTapped)
     }
 
-    func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag, at placement: UIView) {
+    func clipInformationView(_ view: ClipInformationView, didTapDeleteButtonForTag tag: Tag, at placement: UIView) {
         store.execute(.tagRemoveButtonTapped(tag.identity))
     }
 
@@ -291,6 +291,10 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
     func clipInformationView(_ view: ClipInformationView, startEditingSiteUrl url: URL?) {
         store.execute(.siteUrlEditButtonTapped)
+    }
+
+    func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag) {
+        store.execute(.tagTapped(tag))
     }
 }
 

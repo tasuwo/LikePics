@@ -137,11 +137,33 @@ extension ClipInformationView: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return false
+        switch collectionViewDataSource.itemIdentifier(for: indexPath) {
+        case .tag:
+            return true
+
+        default:
+            return false
+        }
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
+        switch collectionViewDataSource.itemIdentifier(for: indexPath) {
+        case .tag:
+            return true
+
+        default:
+            return false
+        }
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionViewDataSource.itemIdentifier(for: indexPath) {
+        case let .tag(tag):
+            delegate?.clipInformationView(self, didSelectTag: tag)
+
+        default:
+            break
+        }
     }
 }
 
@@ -196,7 +218,7 @@ extension ClipInformationView: ClipInformationLayoutDelegate {
         guard let indexPath = self.collectionView.indexPath(for: cell),
               case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-        self.delegate?.clipInformationView(self, didSelectTag: tag, at: cell)
+        self.delegate?.clipInformationView(self, didTapDeleteButtonForTag: tag, at: cell)
     }
 
     func didTapSiteUrl(_ cell: UICollectionViewCell, url: URL) {

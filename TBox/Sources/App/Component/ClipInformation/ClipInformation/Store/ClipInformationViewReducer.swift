@@ -97,6 +97,10 @@ struct ClipInformationViewReducer: Reducer {
             if let url = url { dependency.pasteboard.set(url.absoluteString) }
             return (nextState, .none)
 
+        case let .tagTapped(tag):
+            dependency.router.routeToClipCollectionView(for: tag)
+            return (nextState, .none)
+
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):

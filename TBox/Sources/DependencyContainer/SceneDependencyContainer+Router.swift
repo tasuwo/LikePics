@@ -51,24 +51,44 @@ extension SceneDependencyContainer {
         return isModal(id, topViewController)
     }
 
-    private func dismissAllModals() {
-        guard let detailViewController = rootViewController?.currentViewController else { return }
+    private func dismissAllModals(_ completion: @escaping (Bool) -> Void) {
+        guard let detailViewController = rootViewController?.currentViewController else {
+            completion(false)
+            return
+        }
 
         var topViewController = detailViewController
         while let presentedViewController = topViewController.presentedViewController {
             topViewController = presentedViewController
         }
 
-        if topViewController == detailViewController { return }
-        dismiss(topViewController, until: detailViewController)
+        if topViewController == detailViewController {
+            completion(true)
+            return
+        }
+
+        dismiss(topViewController, until: detailViewController) {
+            completion(true)
+        }
     }
 
-    private func dismiss(_ viewController: UIViewController?, until rootViewController: UIViewController) {
+    private func dismiss(_ viewController: UIViewController?,
+                         until rootViewController: UIViewController,
+                         completion: @escaping () -> Void)
+    {
         let presentingViewController = viewController?.presentingViewController
         viewController?.dismiss(animated: true, completion: {
-            if viewController === rootViewController { return }
-            guard let viewController = presentingViewController else { return }
-            self.dismiss(viewController, until: rootViewController)
+            if viewController === rootViewController {
+                completion()
+                return
+            }
+
+            guard let viewController = presentingViewController else {
+                completion()
+                return
+            }
+
+            self.dismiss(viewController, until: rootViewController, completion: completion)
         })
     }
 }
@@ -233,5 +253,21 @@ extension SceneDependencyContainer: Router {
         topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
+    }
+
+    func routeToClipCollectionView(for tag: Tag) {
+        guard let rootViewController = rootViewController else { return }
+        dismissAllModals { isSucceeded in
+            guard isSucceeded else { return }
+
+            rootViewController.select(.tags)
+
+            guard let rootViewController = self.topViewController else { return }
+            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                _ = self.showClipCollectionView(for: tag)
+            })
+        }
     }
 }
