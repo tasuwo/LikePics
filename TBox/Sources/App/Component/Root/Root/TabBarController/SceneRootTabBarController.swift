@@ -97,86 +97,14 @@ extension SceneRootTabBarController {
 
 extension SceneRootTabBarController {
     private func configureTabBar() {
-        let topClipsListViewController: UIViewController & ViewLazyPresentable
-        if let homeViewState = intent?.homeViewState {
-            topClipsListViewController = self.factory.makeClipCollectionViewController(homeViewState)
-        } else {
-            topClipsListViewController = self.factory.makeClipCollectionViewController(from: .all)
+        tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
+
+        let viewControllers = SceneRoot.TabBarItem.allCases.map {
+            $0.makeViewController(from: intent, by: factory)
         }
-        // swiftlint:disable:next force_unwrapping
-        let tagListViewController = self.factory.makeTagCollectionViewController(intent?.tagCollectionViewState)!
-        // swiftlint:disable:next force_unwrapping
-        let albumListViewController = self.factory.makeAlbumListViewController(intent?.albumLitViewState)!
-        // swiftlint:disable:next force_unwrapping
-        let searchEntryViewController = self.factory.makeSearchViewController(intent?.searchViewState)!
-        let settingsViewController = self.factory.makeSettingsViewController(intent?.settingsViewState)
 
-        self.tabBar.accessibilityIdentifier = "SceneRootTabBarController.tabBar"
-
-        topClipsListViewController.tabBarItem = SceneRoot.TabBarItem.top.tabBarItem
-        searchEntryViewController.tabBarItem = SceneRoot.TabBarItem.search.tabBarItem
-        tagListViewController.tabBarItem = SceneRoot.TabBarItem.tags.tabBarItem
-        albumListViewController.tabBarItem = SceneRoot.TabBarItem.albums.tabBarItem
-        settingsViewController.tabBarItem = SceneRoot.TabBarItem.setting.tabBarItem
-
-        self.viewControllers = [
-            UINavigationController(rootViewController: topClipsListViewController),
-            searchEntryViewController,
-            tagListViewController,
-            albumListViewController,
-            settingsViewController
-        ]
-
-        switch self.intent {
-        case let .clips(state, preview: clipId):
-            let topViewController: UIViewController & ViewLazyPresentable
-
-            switch state.clipCollectionState.source {
-            case .all:
-                topViewController = topClipsListViewController
-                selectedIndex = 0
-
-            case let .search(query):
-                selectedIndex = 1
-                topViewController = factory.makeClipCollectionViewController(from: .search(query))
-                searchEntryViewController.show(topViewController, sender: nil)
-
-            case .uncategorized:
-                selectedIndex = 2
-                topViewController = factory.makeClipCollectionViewController(from: .uncategorized)
-                tagListViewController.show(topViewController, sender: nil)
-
-            case let .tag(tag):
-                selectedIndex = 2
-                topViewController = factory.makeClipCollectionViewController(from: .tag(tag))
-                tagListViewController.show(topViewController, sender: nil)
-
-            case let .album(albumId):
-                selectedIndex = 3
-                topViewController = factory.makeClipCollectionViewController(from: .album(albumId))
-                albumListViewController.show(topViewController, sender: nil)
-            }
-
-            if let clipId = clipId {
-                let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId)
-                topViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
-            }
-
-        case .search:
-            selectedIndex = 1
-
-        case .tags:
-            selectedIndex = 2
-
-        case .albums:
-            selectedIndex = 3
-
-        case .setting:
-            selectedIndex = 4
-
-        default:
-            break
-        }
+        setViewControllers(viewControllers, animated: false)
+        selectedIndex = (intent?.selectedTabBarItem ?? .top).rawValue
     }
 }
 
