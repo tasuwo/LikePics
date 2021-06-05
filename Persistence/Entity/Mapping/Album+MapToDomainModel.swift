@@ -29,3 +29,21 @@ extension Persistence.Album {
                             updatedDate: updateDate)
     }
 }
+
+extension Persistence.Album {
+    func map(to: Domain.ListingAlbum.Type) -> Domain.ListingAlbum? {
+        guard let id = self.id,
+              let title = self.title,
+              let createdDate = self.createdDate,
+              let updateDate = self.updatedDate
+        else {
+            return nil
+        }
+
+        return Domain.ListingAlbum(id: id,
+                                   title: title,
+                                   isHidden: self.isHidden,
+                                   registeredDate: createdDate,
+                                   updatedDate: updateDate)
+    }
+}
