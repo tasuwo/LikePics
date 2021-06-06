@@ -41,6 +41,10 @@ class TagCollectionViewController: UIViewController {
     private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
+    // MARK: Cache
+
+    private var cellSizeCaches: [IndexPath: CGSize] = [:]
+
     // MARK: - Initializers
 
     init(state: TagCollectionViewState,
@@ -72,6 +76,7 @@ class TagCollectionViewController: UIViewController {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            cellSizeCaches = [:]
             collectionView.collectionViewLayout.invalidateLayout()
         }
     }
@@ -323,16 +328,22 @@ extension TagCollectionViewController: UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDelegateFlowLayout
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let cache = cellSizeCaches[indexPath] { return cache }
+
         switch dataSource.itemIdentifier(for: indexPath) {
         case .uncategorized:
-            return UncategorizedCell.preferredSize()
+            let size = UncategorizedCell.preferredSize()
+            cellSizeCaches[indexPath] = size
+            return size
 
         case let .tag(item):
-            return TagCollectionViewCell.preferredSize(title: item.tag.name,
-                                                       clipCount: item.tag.clipCount,
-                                                       isHidden: item.tag.isHidden,
-                                                       visibleCountIfPossible: item.displayCount,
-                                                       visibleDeleteButton: false)
+            let size = TagCollectionViewCell.preferredSize(title: item.tag.name,
+                                                           clipCount: item.tag.clipCount,
+                                                           isHidden: item.tag.isHidden,
+                                                           visibleCountIfPossible: item.displayCount,
+                                                           visibleDeleteButton: false)
+            cellSizeCaches[indexPath] = size
+            return size
 
         default:
             return .zero
