@@ -99,9 +99,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="8yL-J5-f6z" secondAttribute="bottom" constant="8" id="4kV-Lq-OqQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="8yL-J5-f6z" secondAttribute="bottom" priority="999" constant="8" id="4kV-Lq-OqQ"/>
                                     <constraint firstItem="8yL-J5-f6z" firstAttribute="leading" secondItem="bGi-OV-WPW" secondAttribute="leading" constant="12" id="59b-Wa-yFV"/>
-                                    <constraint firstAttribute="trailing" secondItem="8yL-J5-f6z" secondAttribute="trailing" constant="12" id="KQ9-9F-35J"/>
+                                    <constraint firstAttribute="trailing" secondItem="8yL-J5-f6z" secondAttribute="trailing" priority="999" constant="12" id="KQ9-9F-35J"/>
                                     <constraint firstItem="8yL-J5-f6z" firstAttribute="top" secondItem="bGi-OV-WPW" secondAttribute="top" constant="8" id="b8N-e2-QJc"/>
                                 </constraints>
                             </view>
