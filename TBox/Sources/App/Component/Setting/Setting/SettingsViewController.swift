@@ -187,6 +187,10 @@ extension SettingsViewController {
             show(UserInterfaceStyleSelectionViewController(), sender: nil)
         }
     }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = Asset.Color.secondaryBackground.color
+    }
 }
 
 extension SettingsViewController: Restorable {

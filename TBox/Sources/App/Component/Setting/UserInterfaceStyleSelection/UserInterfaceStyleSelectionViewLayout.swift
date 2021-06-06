@@ -93,6 +93,10 @@ extension UserInterfaceStyleSelectionViewLayout {
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = item.title
             cell.contentConfiguration = contentConfiguration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 }
