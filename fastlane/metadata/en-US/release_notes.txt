@@ -1,4 +1,6 @@
-- Display sidebar in iPad.
+- Display related albums on an image information view.
+- You can transition to related tags/albums view by selecting an album or tag on an image information view.
 
 - Fixed an issue that failed to share images from some other apps.
-- Fixed a crash that sometimes occured when share image from LikePics to other apps.
+- Improve rendering performance on some views.
+- Redesign
