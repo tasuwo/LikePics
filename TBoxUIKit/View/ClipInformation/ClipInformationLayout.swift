@@ -34,11 +34,17 @@ public enum ClipInformationLayout {
     }
 
     struct Info: Equatable, Hashable {
+        enum Parent {
+            case item
+            case clip
+        }
+
         enum Accessory: Equatable, Hashable {
             case label(title: String)
             case `switch`(isOn: Bool)
         }
 
+        let parent: Parent
         let title: String
         let accessory: Accessory
     }
@@ -156,20 +162,23 @@ extension ClipInformationLayout {
             guard let dataSize = clipItem?.imageDataSize else { return "-" }
             return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemSize,
+        items.append(.meta(.init(parent: .item,
+                                 title: L10n.clipInformationViewLabelClipItemSize,
                                  accessory: .label(title: size))))
 
         let registeredDate: String = {
             guard let date = clipItem?.registeredDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+        items.append(.meta(.init(parent: .item,
+                                 title: L10n.clipInformationViewLabelClipItemRegisteredDate,
                                  accessory: .label(title: registeredDate))))
         let updatedDate: String = {
             guard let date = clipItem?.updatedDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+        items.append(.meta(.init(parent: .item,
+                                 title: L10n.clipInformationViewLabelClipItemUpdatedDate,
                                  accessory: .label(title: updatedDate))))
 
         return items
@@ -178,30 +187,35 @@ extension ClipInformationLayout {
     private static func createCells(for clip: Clip?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
+        items.append(.meta(.init(parent: .clip,
+                                 title: L10n.clipInformationViewLabelClipHide,
                                  accessory: .switch(isOn: clip?.isHidden ?? false))))
 
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipPageNumber,
+        items.append(.meta(.init(parent: .clip,
+                                 title: L10n.clipInformationViewLabelClipPageNumber,
                                  accessory: .label(title: "\(clip?.items.count ?? 0)"))))
 
         let size: String = {
             guard let dataSize = clip?.dataSize else { return "-" }
             return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipSize,
+        items.append(.meta(.init(parent: .clip,
+                                 title: L10n.clipInformationViewLabelClipSize,
                                  accessory: .label(title: size))))
 
         let registeredDate: String = {
             guard let date = clip?.registeredDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipRegisteredDate,
+        items.append(.meta(.init(parent: .clip,
+                                 title: L10n.clipInformationViewLabelClipRegisteredDate,
                                  accessory: .label(title: registeredDate))))
         let updatedDate: String = {
             guard let date = clip?.updatedDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipUpdatedDate,
+        items.append(.meta(.init(parent: .clip,
+                                 title: L10n.clipInformationViewLabelClipUpdatedDate,
                                  accessory: .label(title: updatedDate))))
 
         return items
