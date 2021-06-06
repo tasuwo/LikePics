@@ -145,10 +145,10 @@ extension ClipInformationLayout {
     private static func createCells(for clipItem: ClipItem?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
+        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemImageUrl,
                                 url: clipItem?.imageUrl,
                                 isEditable: false)))
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipUrl,
+        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
                                 url: clipItem?.url,
                                 isEditable: true)))
 
@@ -178,7 +178,10 @@ extension ClipInformationLayout {
     private static func createCells(for clip: Clip?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.meta(.init(title: "ページ数",
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
+                                 accessory: .switch(isOn: clip?.isHidden ?? false))))
+
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipPageNumber,
                                  accessory: .label(title: "\(clip?.items.count ?? 0)"))))
 
         let size: String = {
@@ -188,20 +191,17 @@ extension ClipInformationLayout {
         items.append(.meta(.init(title: L10n.clipInformationViewLabelClipSize,
                                  accessory: .label(title: size))))
 
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
-                                 accessory: .switch(isOn: clip?.isHidden ?? false))))
-
         let registeredDate: String = {
             guard let date = clip?.registeredDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipRegisteredDate,
                                  accessory: .label(title: registeredDate))))
         let updatedDate: String = {
             guard let date = clip?.updatedDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipUpdatedDate,
                                  accessory: .label(title: updatedDate))))
 
         return items
@@ -273,16 +273,16 @@ extension ClipInformationLayout {
             let title: String = {
                 switch Section(rawValue: indexPath.section) {
                 case .itemInfo:
-                    return "この画像の情報"
+                    return L10n.clipInformationViewSectionLabelClipItemInfo
 
                 case .clipInfo:
-                    return "所属するクリップの情報"
+                    return L10n.clipInformationViewSectionLabelClipInfo
 
                 case .tags:
-                    return "タグ"
+                    return L10n.clipInformationViewSectionLabelTags
 
                 case .albums:
-                    return "アルバム"
+                    return L10n.clipInformationViewSectionLabelAlbums
 
                 case .none:
                     return ""
@@ -294,7 +294,7 @@ extension ClipInformationLayout {
             switch Section(rawValue: indexPath.section) {
             case .tags:
                 view.setRightItems([
-                    .init(title: "タグを追加する",
+                    .init(title: L10n.clipInformationViewLabelTagAddition,
                           action: UIAction(handler: { _ in tagAdditionHandler() }),
                           style: .callout,
                           insets: .zero)
@@ -302,7 +302,7 @@ extension ClipInformationLayout {
 
             case .albums:
                 view.setRightItems([
-                    .init(title: "アルバムへ追加する",
+                    .init(title: L10n.clipInformationViewLabelAlbumAddition,
                           action: UIAction(handler: { _ in albumAdditionHandler() }),
                           style: .callout,
                           insets: .zero)
@@ -378,7 +378,7 @@ extension ClipInformationLayout {
             cell.backgroundColor = Asset.Color.secondaryBackground.color
 
             cell.title = setting.title
-            cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipEditUrl) : nil
+            cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipItemEditUrl) : nil
             cell.setTextStyle(.callout)
 
             if let url = setting.url {

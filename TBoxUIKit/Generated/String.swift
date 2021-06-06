@@ -25,36 +25,42 @@ internal enum L10n {
     internal static let clipInformationViewContextMenuOpen = L10n.tr("Localizable", "clip_information_view_context_menu_open")
     /// 画像のURL
     internal static let clipInformationViewImageUrlTitle = L10n.tr("Localizable", "clip_information_view_image_url_title")
-    /// 編集
-    internal static let clipInformationViewLabelClipEditUrl = L10n.tr("Localizable", "clip_information_view_label_clip_edit_url")
+    /// アルバムへ追加する
+    internal static let clipInformationViewLabelAlbumAddition = L10n.tr("Localizable", "clip_information_view_label_album_addition")
     /// 隠す
     internal static let clipInformationViewLabelClipHide = L10n.tr("Localizable", "clip_information_view_label_clip_hide")
+    /// 編集
+    internal static let clipInformationViewLabelClipItemEditUrl = L10n.tr("Localizable", "clip_information_view_label_clip_item_edit_url")
+    /// 画像のURL
+    internal static let clipInformationViewLabelClipItemImageUrl = L10n.tr("Localizable", "clip_information_view_label_clip_item_image_url")
     /// なし
     internal static let clipInformationViewLabelClipItemNoUrl = L10n.tr("Localizable", "clip_information_view_label_clip_item_no_url")
-    /// 登録日
+    /// 作成日
     internal static let clipInformationViewLabelClipItemRegisteredDate = L10n.tr("Localizable", "clip_information_view_label_clip_item_registered_date")
     /// サイズ
     internal static let clipInformationViewLabelClipItemSize = L10n.tr("Localizable", "clip_information_view_label_clip_item_size")
     /// 更新日
     internal static let clipInformationViewLabelClipItemUpdatedDate = L10n.tr("Localizable", "clip_information_view_label_clip_item_updated_date")
-    /// 画像のURL
+    /// サイトのURL
     internal static let clipInformationViewLabelClipItemUrl = L10n.tr("Localizable", "clip_information_view_label_clip_item_url")
-    /// 登録日
+    /// ページ数
+    internal static let clipInformationViewLabelClipPageNumber = L10n.tr("Localizable", "clip_information_view_label_clip_page_number")
+    /// 作成日
     internal static let clipInformationViewLabelClipRegisteredDate = L10n.tr("Localizable", "clip_information_view_label_clip_registered_date")
-    /// 全体のサイズ
+    /// サイズ
     internal static let clipInformationViewLabelClipSize = L10n.tr("Localizable", "clip_information_view_label_clip_size")
     /// 更新日
     internal static let clipInformationViewLabelClipUpdatedDate = L10n.tr("Localizable", "clip_information_view_label_clip_updated_date")
-    /// サイトのURL
-    internal static let clipInformationViewLabelClipUrl = L10n.tr("Localizable", "clip_information_view_label_clip_url")
     /// タグを追加する
     internal static let clipInformationViewLabelTagAddition = L10n.tr("Localizable", "clip_information_view_label_tag_addition")
-    /// このクリップの情報
-    internal static let clipInformationViewSectionLabelClip = L10n.tr("Localizable", "clip_information_view_section_label_clip")
-    /// この画像の情報
-    internal static let clipInformationViewSectionLabelClipItem = L10n.tr("Localizable", "clip_information_view_section_label_clip_item")
+    /// アルバム
+    internal static let clipInformationViewSectionLabelAlbums = L10n.tr("Localizable", "clip_information_view_section_label_albums")
+    /// クリップの情報
+    internal static let clipInformationViewSectionLabelClipInfo = L10n.tr("Localizable", "clip_information_view_section_label_clip_info")
+    /// このページの情報
+    internal static let clipInformationViewSectionLabelClipItemInfo = L10n.tr("Localizable", "clip_information_view_section_label_clip_item_info")
     /// タグ
-    internal static let clipInformationViewSectionLabelTag = L10n.tr("Localizable", "clip_information_view_section_label_tag")
+    internal static let clipInformationViewSectionLabelTags = L10n.tr("Localizable", "clip_information_view_section_label_tags")
     /// サイトのURL
     internal static let clipInformationViewSiteUrlTitle = L10n.tr("Localizable", "clip_information_view_site_url_title")
     /// サイトURL

@@ -11,22 +11,25 @@
 "clip_information_view_context_menu_open" = "開く";
 "clip_information_view_context_menu_copy" = "コピー";
 
-"clip_information_view_section_label_tag" = "タグ";
-"clip_information_view_section_label_clip" = "このクリップの情報";
-"clip_information_view_section_label_clip_item" = "この画像の情報";
+"clip_information_view_section_label_tags" = "タグ";
+"clip_information_view_section_label_albums" = "アルバム";
+"clip_information_view_section_label_clip_item_info" = "このページの情報";
+"clip_information_view_section_label_clip_info" = "クリップの情報";
 
-"clip_information_view_label_clip_edit_url" = "編集";
-"clip_information_view_label_clip_url" = "サイトのURL";
+"clip_information_view_label_clip_page_number" = "ページ数";
 "clip_information_view_label_clip_hide" = "隠す";
-"clip_information_view_label_clip_registered_date" = "登録日";
+"clip_information_view_label_clip_registered_date" = "作成日";
 "clip_information_view_label_clip_updated_date" = "更新日";
-"clip_information_view_label_clip_size" = "全体のサイズ";
+"clip_information_view_label_clip_size" = "サイズ";
 "clip_information_view_label_tag_addition" = "タグを追加する";
+"clip_information_view_label_album_addition" = "アルバムへ追加する";
 
-"clip_information_view_label_clip_item_url" = "画像のURL";
+"clip_information_view_label_clip_item_url" = "サイトのURL";
+"clip_information_view_label_clip_item_edit_url" = "編集";
+"clip_information_view_label_clip_item_image_url" = "画像のURL";
 "clip_information_view_label_clip_item_no_url" = "なし";
 "clip_information_view_label_clip_item_size" = "サイズ";
-"clip_information_view_label_clip_item_registered_date" = "登録日";
+"clip_information_view_label_clip_item_registered_date" = "作成日";
 "clip_information_view_label_clip_item_updated_date" = "更新日";
 
 "uncategorized_cell_title" = "未分類のクリップを閲覧する";

@@ -11,19 +11,22 @@
 "clip_information_view_context_menu_open" = "Open";
 "clip_information_view_context_menu_copy" = "Copy";
 
-"clip_information_view_section_label_tag" = "Tags";
-"clip_information_view_section_label_clip" = "This Clip Info";
-"clip_information_view_section_label_clip_item" = "This Image Info";
+"clip_information_view_section_label_tags" = "Tags";
+"clip_information_view_section_label_albums" = "Albums";
+"clip_information_view_section_label_clip_item_info" = "This Page Info";
+"clip_information_view_section_label_clip_info" = "Clip Info";
 
-"clip_information_view_label_clip_edit_url" = "Edit";
-"clip_information_view_label_clip_url" = "Web Site URL";
+"clip_information_view_label_clip_page_number" = "Number of Pages";
 "clip_information_view_label_clip_hide" = "Hidden";
 "clip_information_view_label_clip_registered_date" = "Created";
 "clip_information_view_label_clip_updated_date" = "Modified";
-"clip_information_view_label_clip_size" = "Clip Size";
+"clip_information_view_label_clip_size" = "Size";
 "clip_information_view_label_tag_addition" = "Add Tags";
+"clip_information_view_label_album_addition" = "Add to album";
 
-"clip_information_view_label_clip_item_url" = "Image URL";
+"clip_information_view_label_clip_item_url" = "Web Site URL";
+"clip_information_view_label_clip_item_edit_url" = "Edit";
+"clip_information_view_label_clip_item_image_url" = "Image URL";
 "clip_information_view_label_clip_item_no_url" = "No URL";
 "clip_information_view_label_clip_item_size" = "Size";
 "clip_information_view_label_clip_item_registered_date" = "Created";
