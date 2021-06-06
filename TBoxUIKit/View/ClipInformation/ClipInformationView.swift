@@ -151,6 +151,9 @@ extension ClipInformationView: UICollectionViewDelegate {
         case .tag:
             return true
 
+        case .album:
+            return true
+
         default:
             return false
         }
@@ -159,6 +162,9 @@ extension ClipInformationView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         switch collectionViewDataSource.itemIdentifier(for: indexPath) {
         case .tag:
+            return true
+
+        case .album:
             return true
 
         default:
@@ -170,6 +176,9 @@ extension ClipInformationView: UICollectionViewDelegate {
         switch collectionViewDataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
             delegate?.clipInformationView(self, didSelectTag: tag)
+
+        case let .album(album):
+            delegate?.clipInformationView(self, didSelectAlbum: album)
 
         default:
             break

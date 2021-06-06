@@ -109,6 +109,10 @@ struct ClipInformationViewReducer: Reducer {
             dependency.router.routeToClipCollectionView(for: tag)
             return (nextState, .none)
 
+        case let .albumTapped(album):
+            dependency.router.routeToClipCollectionView(forAlbumId: album.identity)
+            return (nextState, .none)
+
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):

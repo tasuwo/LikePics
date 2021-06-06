@@ -270,4 +270,20 @@ extension SceneDependencyContainer: Router {
             })
         }
     }
+
+    func routeToClipCollectionView(forAlbumId albumId: Album.Identity) {
+        guard let rootViewController = rootViewController else { return }
+        dismissAllModals { isSucceeded in
+            guard isSucceeded else { return }
+
+            rootViewController.select(.albums)
+
+            guard let rootViewController = self.topViewController else { return }
+            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                _ = self.showClipCollectionView(for: albumId)
+            })
+        }
+    }
 }

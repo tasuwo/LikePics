@@ -325,6 +325,10 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
     func clipInformationView(_ view: ClipInformationView, didSelectTag tag: Tag) {
         store.execute(.tagTapped(tag))
     }
+
+    func clipInformationView(_ view: ClipInformationView, didSelectAlbum album: ListingAlbum) {
+        store.execute(.albumTapped(album))
+    }
 }
 
 extension ClipInformationViewController: TextEditAlertDelegate {

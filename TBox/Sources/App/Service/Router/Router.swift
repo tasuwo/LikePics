@@ -43,4 +43,6 @@ protocol Router {
     func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool
 
     func routeToClipCollectionView(for tag: Tag)
+
+    func routeToClipCollectionView(forAlbumId albumId: Album.Identity)
 }
