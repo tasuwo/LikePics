@@ -150,16 +150,17 @@ class ClipInformationViewController: UIViewController {
 extension ClipInformationViewController {
     private func bind(to store: Store) {
         store.state
+            // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
+            .filter { $0.isSuspendedCollectionViewUpdate == false }
             .removeDuplicates(by: {
                 $0.clip == $1.clip
                     && $0.tags.filteredOrderedEntities() == $1.tags.filteredOrderedEntities()
+                    && $0.albums.filteredOrderedEntities() == $1.albums.filteredOrderedEntities()
                     && $0.item == $1.item
             })
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
             .receive(on: snapshotQueue)
             .sink { [weak self] state in
-                // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
-                guard state.isSuspendedCollectionViewUpdate == false else { return }
                 let information = Layout.Information(clip: state.clip,
                                                      tags: state.tags.orderedFilteredEntities(),
                                                      albums: state.albums.orderedFilteredEntities(),

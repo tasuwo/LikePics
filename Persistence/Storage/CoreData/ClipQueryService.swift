@@ -323,10 +323,10 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         assert(Thread.isMainThread)
 
         do {
-            let factory: CoreDataAlbumListQuery.RequestFactory = {
-                let request: NSFetchRequest<Album> = Album.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(keyPath: \Clip.createdDate, ascending: false)]
-                request.predicate = NSPredicate(format: "SUBQUERY(items, $item, $item.clip.id == %@).@count > 0", id as CVarArg)
+            let factory: CoreDataListingAlbumListQuery.RequestFactory = {
+                let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.index, ascending: false)]
+                request.predicate = NSPredicate(format: "clip.id == %@", id as CVarArg)
                 return request
             }
             let query = try CoreDataListingAlbumListQuery(requestFactory: factory, context: context)
