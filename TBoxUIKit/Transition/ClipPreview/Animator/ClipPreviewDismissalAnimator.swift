@@ -6,7 +6,7 @@ import Common
 import UIKit
 
 class ClipPreviewDismissalAnimator: NSObject {
-    static let transitionDuration: TimeInterval = 0.2
+    static let transitionDuration: TimeInterval = 0.15
 
     private weak var delegate: ClipPreviewAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
