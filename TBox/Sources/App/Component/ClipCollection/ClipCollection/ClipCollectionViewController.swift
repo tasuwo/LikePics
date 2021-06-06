@@ -528,7 +528,7 @@ extension ClipCollectionViewController {
     }
 
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         let layout = Layout.createLayout(store.stateValue.layout.toRequest(delegate: self))
         collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: layout)

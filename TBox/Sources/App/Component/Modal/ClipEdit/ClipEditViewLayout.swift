@@ -85,7 +85,7 @@ extension ClipEditViewLayout {
 
             case .meta:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                configuration.backgroundColor = Asset.Color.backgroundClient.color
+                configuration.backgroundColor = Asset.Color.background.color
                 return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .clipItem:
@@ -93,7 +93,7 @@ extension ClipEditViewLayout {
 
             case .footer:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                configuration.backgroundColor = Asset.Color.backgroundClient.color
+                configuration.backgroundColor = Asset.Color.background.color
                 return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .none:
@@ -122,7 +122,7 @@ extension ClipEditViewLayout {
 
     private static func createItemLayoutSection(delegate: ClipEditViewDelegate, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        configuration.backgroundColor = Asset.Color.backgroundClient.color
+        configuration.backgroundColor = Asset.Color.background.color
         configuration.trailingSwipeActionsConfigurationProvider = { [weak delegate] indexPath in
             return delegate?.trailingSwipeAction(indexPath: indexPath)
         }
@@ -239,7 +239,7 @@ extension ClipEditViewLayout {
             }
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
     }
@@ -253,7 +253,7 @@ extension ClipEditViewLayout {
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
     }
@@ -272,7 +272,7 @@ extension ClipEditViewLayout {
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
 
             cell.accessories = [
@@ -303,7 +303,7 @@ extension ClipEditViewLayout {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { headerView, _, _ in
             let selectButton = UIButton()
             selectButton.setTitle(L10n.clipEditViewMultiselectSelect, for: .normal)
-            selectButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            selectButton.setTitleColor(Asset.Color.likePicsRed.color, for: .normal)
             let selectButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: selectButton,
                                                                                     placement: .trailing(displayed: .whenNotEditing))
             selectButton.addAction(.init(handler: { [weak proxy] _ in
@@ -312,7 +312,7 @@ extension ClipEditViewLayout {
 
             let cancelButton = UIButton()
             cancelButton.setTitle(L10n.clipEditViewMultiselectCancel, for: .normal)
-            cancelButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            cancelButton.setTitleColor(Asset.Color.likePicsRed.color, for: .normal)
             let cancelButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: cancelButton,
                                                                                     placement: .trailing(displayed: .whenEditing))
             cancelButton.addAction(.init(handler: { [weak proxy] _ in
@@ -321,7 +321,7 @@ extension ClipEditViewLayout {
 
             let editSiteUrlsButton = UIButton()
             editSiteUrlsButton.setTitle(L10n.clipEditViewMultiselectEditUrl, for: .normal)
-            editSiteUrlsButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            editSiteUrlsButton.setTitleColor(Asset.Color.likePicsRed.color, for: .normal)
             let editSiteUrlsButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: editSiteUrlsButton,
                                                                                           placement: .leading(displayed: .whenEditing))
             editSiteUrlsButton.addAction(.init(handler: { [weak proxy] _ in

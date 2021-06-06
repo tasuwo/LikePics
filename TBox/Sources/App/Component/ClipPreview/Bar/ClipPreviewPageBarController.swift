@@ -5,6 +5,7 @@
 import Combine
 import Domain
 import ForestKit
+import TBoxUIKit
 import UIKit
 
 class ClipPreviewPageBarController {
@@ -113,7 +114,7 @@ extension ClipPreviewPageBarController {
 
     private func updateBackground(isFullscreen: Bool) {
         UIView.animate(withDuration: 0.2) {
-            self.barHostingViewController?.parent?.view.backgroundColor = isFullscreen ? .black : Asset.Color.backgroundClient.color
+            self.barHostingViewController?.parent?.view.backgroundColor = isFullscreen ? .black : Asset.Color.background.color
         }
     }
 

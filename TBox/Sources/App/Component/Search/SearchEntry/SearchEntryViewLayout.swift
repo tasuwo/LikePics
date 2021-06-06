@@ -136,7 +136,7 @@ extension SearchEntryViewLayout {
                                        isDisplaySettingHidden: history.isSomeItemsHidden)
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
     }

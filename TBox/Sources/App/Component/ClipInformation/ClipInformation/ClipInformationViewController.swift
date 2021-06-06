@@ -271,7 +271,7 @@ extension ClipInformationViewController {
 
 extension ClipInformationViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        // view.backgroundColor = Ass
 
         informationView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(informationView)

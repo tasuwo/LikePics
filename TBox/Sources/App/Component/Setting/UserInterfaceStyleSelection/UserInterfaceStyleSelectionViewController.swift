@@ -5,6 +5,7 @@
 import Combine
 import Domain
 import Persistence
+import TBoxUIKit
 import UIKit
 
 class UserInterfaceStyleSelectionViewController: UIViewController {
@@ -75,7 +76,7 @@ extension UserInterfaceStyleSelectionViewController {
 
 extension UserInterfaceStyleSelectionViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear

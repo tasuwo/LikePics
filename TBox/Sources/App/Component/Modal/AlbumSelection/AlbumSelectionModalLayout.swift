@@ -26,7 +26,7 @@ extension AlbumSelectionModalLayout {
             switch Section(rawValue: sectionIndex) {
             case .main:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
-                configuration.backgroundColor = Asset.Color.backgroundClient.color
+                configuration.backgroundColor = Asset.Color.background.color
                 return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .none:

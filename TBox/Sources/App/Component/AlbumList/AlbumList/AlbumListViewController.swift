@@ -241,7 +241,7 @@ extension AlbumListViewController {
 
 extension AlbumListViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = ClipCollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear

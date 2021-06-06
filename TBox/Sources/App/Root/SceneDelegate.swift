@@ -11,6 +11,7 @@ import Common
 import Domain
 import ForestKit
 import Persistence
+import TBoxUIKit
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -48,8 +49,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func setupAppearance() {
-        UISwitch.appearance().onTintColor = Asset.Color.likePicsSwitchClient.color
-        self.window?.tintColor = Asset.Color.likePicsRedClient.color
+        UISwitch.appearance().onTintColor = Asset.Color.likePicsSwitch.color
+        self.window?.tintColor = Asset.Color.likePicsRed.color
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

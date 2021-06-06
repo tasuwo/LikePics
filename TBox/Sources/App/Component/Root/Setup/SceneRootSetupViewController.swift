@@ -3,6 +3,7 @@
 //
 
 import Domain
+import TBoxUIKit
 import UIKit
 
 protocol MainAppLauncher: AnyObject {
@@ -44,7 +45,7 @@ class SceneRootSetupViewController: UIViewController {
     }
 
     private func setupAppearance() {
-        self.view.backgroundColor = Asset.Color.backgroundClient.color
+        self.view.backgroundColor = Asset.Color.background.color
 
         self.view.addSubview(self.indicator)
         self.indicator.translatesAutoresizingMaskIntoConstraints = false

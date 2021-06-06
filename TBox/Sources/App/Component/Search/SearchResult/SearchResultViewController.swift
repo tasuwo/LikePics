@@ -157,7 +157,7 @@ extension SearchResultViewController {
 
 extension SearchResultViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         let provider: () -> Layout.DataSource? = { [weak self] in return self?.dataSource }
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout(provider))

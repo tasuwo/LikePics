@@ -53,7 +53,7 @@ extension ClipMergeViewLayout {
 
             case .clip:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                configuration.backgroundColor = Asset.Color.backgroundClient.color
+                configuration.backgroundColor = Asset.Color.background.color
                 return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .none:
@@ -160,7 +160,7 @@ extension ClipMergeViewLayout {
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
 
             cell.accessories = [.reorder(displayed: .always)]

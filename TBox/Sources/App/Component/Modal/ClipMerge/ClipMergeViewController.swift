@@ -154,7 +154,7 @@ extension ClipMergeViewController {
 
 extension ClipMergeViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

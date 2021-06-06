@@ -4,6 +4,7 @@
 
 import Combine
 import ForestKit
+import TBoxUIKit
 import UIKit
 
 class SettingsViewController: UITableViewController {
@@ -33,6 +34,7 @@ class SettingsViewController: UITableViewController {
         super.viewDidLoad()
 
         title = L10n.settingViewTitle
+        view.backgroundColor = Asset.Color.background.color
 
         bind(to: store)
 

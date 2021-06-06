@@ -3,6 +3,7 @@
 //
 
 import Domain
+import TBoxUIKit
 import UIKit
 
 enum UserInterfaceStyleSelectionViewLayout {
@@ -71,7 +72,7 @@ extension UserInterfaceStyleSelectionViewLayout {
 
     private static func createLayoutSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        configuration.backgroundColor = Asset.Color.backgroundClient.color
+        configuration.backgroundColor = Asset.Color.background.color
         return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
     }
 }

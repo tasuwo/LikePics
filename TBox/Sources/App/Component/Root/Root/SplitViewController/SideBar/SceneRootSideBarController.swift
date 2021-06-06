@@ -3,6 +3,7 @@
 //
 
 import Combine
+import TBoxUIKit
 import UIKit
 
 protocol SceneRootSideBarControllerDelegate: AnyObject {
@@ -72,7 +73,7 @@ extension SceneRootSideBarController {
         navigationItem.title = "LikePics"
         navigationController?.navigationBar.prefersLargeTitles = true
 
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
         collectionView.accessibilityIdentifier = "SceneRootSideBarController.collectionView"

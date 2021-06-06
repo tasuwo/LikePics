@@ -143,7 +143,7 @@ extension SearchResultViewLayout {
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackgroundClient.color
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
     }
@@ -154,7 +154,7 @@ extension SearchResultViewLayout {
             seeAllButton.titleLabel?.font = .preferredFont(forTextStyle: .callout)
             seeAllButton.titleLabel?.adjustsFontForContentSizeCategory = true
             seeAllButton.setTitle(L10n.searchResultSeeAllButton, for: .normal)
-            seeAllButton.setTitleColor(Asset.Color.likePicsRedClient.color, for: .normal)
+            seeAllButton.setTitleColor(Asset.Color.likePicsRed.color, for: .normal)
             seeAllButton.addAction(.init(handler: { _ in seeAllButtonHandler() }), for: .touchUpInside)
 
             let seeMoreButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: seeAllButton,

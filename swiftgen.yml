@@ -28,10 +28,3 @@ xcassets:
           params:
             forceProvidesNamespaces: true
             publicAccess: true
-    - inputs:
-        - TBox/Resources/Assets.xcassets
-      outputs:
-        - templateName: swift5
-          output: TBox/Sources/Generated/AssetCatalog.swift
-          params:
-            forceProvidesNamespaces: true

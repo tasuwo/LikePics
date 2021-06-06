@@ -6,6 +6,7 @@ import Combine
 import Domain
 import ForestKit
 import Smoothie
+import TBoxUIKit
 import UIKit
 
 class SearchEntryViewController: UIViewController {
@@ -137,7 +138,7 @@ extension SearchEntryViewController {
 
     // MARK: Snapshot
 
-    private func applySnapshot(searchHistories: [ClipSearchHistory], isSomeItemsHidden: Bool) {
+    private func applySnapshot(searchHistories: [Domain.ClipSearchHistory], isSomeItemsHidden: Bool) {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.main])
@@ -184,7 +185,7 @@ extension SearchEntryViewController {
 
 extension SearchEntryViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         let layout = Layout.createLayout(historyDeletionHandler: { [weak self] indexPath -> UISwipeActionsConfiguration? in
             guard let self = self else { return nil }

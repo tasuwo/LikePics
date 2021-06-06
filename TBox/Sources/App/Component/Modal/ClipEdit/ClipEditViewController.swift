@@ -243,7 +243,7 @@ extension ClipEditViewController {
 
 extension ClipEditViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout(delegate: self))
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

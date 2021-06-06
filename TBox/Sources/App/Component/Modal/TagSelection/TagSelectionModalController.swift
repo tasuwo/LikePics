@@ -164,7 +164,7 @@ extension TagSelectionModalController {
 
 extension TagSelectionModalController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         searchBar = UISearchBar()
         searchBar.backgroundColor = .clear
@@ -208,7 +208,7 @@ extension TagSelectionModalController {
         searchBar.delegate = self
         searchBar.showsCancelButton = false
         searchBar.placeholder = L10n.placeholderSearchTag
-        searchBar.backgroundColor = Asset.Color.backgroundClient.color
+        searchBar.backgroundColor = Asset.Color.background.color
     }
 
     private func configureNavigationBar() {

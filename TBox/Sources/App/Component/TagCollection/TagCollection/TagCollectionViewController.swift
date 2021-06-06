@@ -246,7 +246,7 @@ extension TagCollectionViewController {
 
 extension TagCollectionViewController {
     private func configureViewHierarchy() {
-        view.backgroundColor = Asset.Color.backgroundClient.color
+        view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear

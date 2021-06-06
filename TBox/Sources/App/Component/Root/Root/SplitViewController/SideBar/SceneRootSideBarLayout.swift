@@ -22,7 +22,7 @@ extension SceneRootSideBarLayout {
     static func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
             var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
-            configuration.backgroundColor = Asset.Color.backgroundClient.color
+            configuration.backgroundColor = Asset.Color.background.color
             return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
         }
     }

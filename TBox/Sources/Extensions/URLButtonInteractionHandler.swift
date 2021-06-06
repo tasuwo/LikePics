@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import TBoxUIKit
 import UIKit
 
 class URLButtonInteractionHandler: NSObject {
@@ -43,7 +44,7 @@ extension URLButtonInteractionHandler: UIContextMenuInteractionDelegate {
 
         let label = UILabel()
         label.text = url.absoluteString
-        label.textColor = Asset.Color.likePicsRedClient.color
+        label.textColor = Asset.Color.likePicsRed.color
         label.textAlignment = .center
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
