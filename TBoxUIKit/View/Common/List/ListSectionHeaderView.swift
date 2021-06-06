@@ -7,7 +7,7 @@ import UIKit
 public struct ListSectionHeaderRightItem {
     let title: String
     let action: UIAction
-    let style: UIFont.TextStyle
+    let font: UIFont
     let insets: UIEdgeInsets
 }
 
@@ -55,7 +55,7 @@ public extension ListSectionHeaderView {
             button.contentEdgeInsets = $0.insets
 
             button.titleLabel?.adjustsFontForContentSizeCategory = true
-            button.titleLabel?.font = UIFont.preferredFont(forTextStyle: $0.style)
+            button.titleLabel?.font = $0.font
 
             return button
         }

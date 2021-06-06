@@ -238,6 +238,8 @@ extension ClipInformationLayout {
         weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
+    static var font = UIFont.preferredFont(forTextStyle: .callout)
+
     static func makeDataSource(for collectionView: UICollectionView,
                                tagAdditionHandler: @escaping () -> Void,
                                albumAdditionHandler: @escaping () -> Void) -> (DataSource, Proxy)
@@ -310,7 +312,7 @@ extension ClipInformationLayout {
                 view.setRightItems([
                     .init(title: L10n.clipInformationViewLabelTagAddition,
                           action: UIAction(handler: { _ in tagAdditionHandler() }),
-                          style: .callout,
+                          font: Self.font,
                           insets: .zero)
                 ])
 
@@ -318,7 +320,7 @@ extension ClipInformationLayout {
                 view.setRightItems([
                     .init(title: L10n.clipInformationViewLabelAlbumAddition,
                           action: UIAction(handler: { _ in albumAdditionHandler() }),
-                          style: .callout,
+                          font: Self.font,
                           insets: .zero)
                 ])
 
@@ -344,7 +346,7 @@ extension ClipInformationLayout {
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = album.title
             contentConfiguration.textProperties.color = Asset.Color.likePicsRed.color
-            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: .callout)
+            contentConfiguration.textProperties.font = Self.font
             cell.contentConfiguration = contentConfiguration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
@@ -357,16 +359,12 @@ extension ClipInformationLayout {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = info.title
-            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: .callout)
+            contentConfiguration.textProperties.font = Self.font
             cell.contentConfiguration = contentConfiguration
 
             switch info.accessory {
             case let .label(title: title):
-                cell.accessories = [
-                    .label(text: title,
-                           displayed: .always,
-                           options: .init(font: .preferredFont(forTextStyle: .callout)))
-                ]
+                cell.accessories = [.label(text: title, displayed: .always, options: .init(font: Self.font))]
 
             case let .switch(isOn: isOn):
                 // swiftlint:disable:next identifier_name
@@ -381,7 +379,7 @@ extension ClipInformationLayout {
                 cell.accessories = [.customView(configuration: configuration)]
             }
 
-            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()
             backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
             cell.backgroundConfiguration = backgroundConfiguration
         }
@@ -391,9 +389,9 @@ extension ClipInformationLayout {
         return UICollectionView.CellRegistration<ListCell, UrlSetting>(cellNib: ListCell.nib) { cell, _, setting in
             cell.backgroundColor = Asset.Color.secondaryBackground.color
 
+            cell.setFont(Self.font)
             cell.title = setting.title
             cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipItemEditUrl) : nil
-            cell.setTextStyle(.callout)
 
             if let url = setting.url {
                 cell.bottomAccessoryType = .button(title: url.absoluteString)

@@ -91,7 +91,7 @@ public class ListCell: UICollectionViewCell {
 
     // MARK: - Methods
 
-    public func setTextStyle(_ style: UIFont.TextStyle) {
+    public func setFont(_ font: UIFont) {
         [
             self.titleLabel,
             self.rightAccessoryLabel,
@@ -100,7 +100,7 @@ public class ListCell: UICollectionViewCell {
             self.bottomAccessoryLabel
         ].forEach {
             $0?.adjustsFontForContentSizeCategory = true
-            $0?.font = UIFont.preferredFont(forTextStyle: style)
+            $0?.font = font
         }
     }
 
