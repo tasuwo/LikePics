@@ -77,6 +77,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
     @IBOutlet var deleteButtonContainer: UIView!
     @IBOutlet var hashTagContainer: UIView!
 
+    @IBOutlet var separatorView: UIView!
+
     @IBOutlet var labelMaxWidthConstraint: NSLayoutConstraint!
     @IBOutlet var deleteButtonWidthConstraint: NSLayoutConstraint!
 
@@ -100,7 +102,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            self.layer.borderColor = UIColor.systemGray3.cgColor
+            updateColors()
         }
     }
 
@@ -116,17 +118,19 @@ public class TagCollectionViewCell: UICollectionViewCell {
         self.checkMarkIcon.tintColor = .white
         self.hiddenIcon.tintColor = UIColor.label.withAlphaComponent(0.8)
 
+        separatorView.backgroundColor = UIColor.systemGray3
+
         self.updateRadius()
         self.updateColors()
         self.updateAppearance()
     }
 
     func updateRadius() {
-        self.layer.cornerRadius = self.bounds.size.height / 4
+        self.layer.cornerRadius = self.bounds.size.height / 2
     }
 
     func updateColors() {
-        self.layer.borderColor = UIColor.systemGray3.cgColor
+        self.layer.borderColor = Asset.Color.tagSeparator.color.cgColor
     }
 
     public func updateAppearance() {
@@ -145,7 +149,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
 
         default:
             self.contentView.backgroundColor = Asset.Color.secondaryBackground.color
-            self.layer.borderWidth = 1
+            self.layer.borderWidth = 0.8
 
             self.hiddenIconContainer.isHidden = isHiddenTag ? false : true
             self.checkMarkContainer.isHidden = true
@@ -189,7 +193,7 @@ public class TagCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.sizeToFit()
 
-        var width = label.frame.width + 18 + 16
+        var width = label.frame.width + 18 + 24
         if visibleDeleteButton {
             width += 44 + 1
         }

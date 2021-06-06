@@ -24,6 +24,7 @@ public enum Asset {
         public static let likePicsRed = ColorAsset(name: "like_pics_red")
         public static let likePicsSwitch = ColorAsset(name: "like_pics_switch")
         public static let secondaryBackground = ColorAsset(name: "secondary_background")
+        public static let tagSeparator = ColorAsset(name: "tag_separator")
     }
 }
 

@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="198" height="41"/>
                                 <subviews>
                                     <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yL-J5-f6z">
-                                        <rect key="frame" x="8" y="8" width="182" height="25"/>
+                                        <rect key="frame" x="12" y="8" width="174" height="25"/>
                                         <subviews>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="155-GE-BhI" userLabel="Hidden Icon Container">
                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="25"/>
@@ -85,7 +85,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fh-Rx-y2S">
-                                                <rect key="frame" x="54" y="0.0" width="128" height="25"/>
+                                                <rect key="frame" x="54" y="0.0" width="120" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="JeL-3r-GbZ"/>
                                                 </constraints>
@@ -100,8 +100,8 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="8yL-J5-f6z" secondAttribute="bottom" constant="8" id="4kV-Lq-OqQ"/>
-                                    <constraint firstItem="8yL-J5-f6z" firstAttribute="leading" secondItem="bGi-OV-WPW" secondAttribute="leading" constant="8" id="59b-Wa-yFV"/>
-                                    <constraint firstAttribute="trailing" secondItem="8yL-J5-f6z" secondAttribute="trailing" constant="8" id="KQ9-9F-35J"/>
+                                    <constraint firstItem="8yL-J5-f6z" firstAttribute="leading" secondItem="bGi-OV-WPW" secondAttribute="leading" constant="12" id="59b-Wa-yFV"/>
+                                    <constraint firstAttribute="trailing" secondItem="8yL-J5-f6z" secondAttribute="trailing" constant="12" id="KQ9-9F-35J"/>
                                     <constraint firstItem="8yL-J5-f6z" firstAttribute="top" secondItem="bGi-OV-WPW" secondAttribute="top" constant="8" id="b8N-e2-QJc"/>
                                 </constraints>
                             </view>
@@ -109,8 +109,8 @@
                                 <rect key="frame" x="198" y="0.0" width="44" height="41"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmd-1C-BuX" userLabel="Separator">
-                                        <rect key="frame" x="0.0" y="0.0" width="1" height="41"/>
-                                        <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                        <rect key="frame" x="0.0" y="8" width="1" height="25"/>
+                                        <color key="backgroundColor" systemColor="separatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="1" id="8rY-ZY-JNS"/>
                                         </constraints>
@@ -130,11 +130,11 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="7PG-Ds-8Lx" firstAttribute="centerY" secondItem="j6Q-YR-0Lx" secondAttribute="centerY" id="Bcu-53-vUx"/>
-                                    <constraint firstAttribute="bottom" secondItem="hmd-1C-BuX" secondAttribute="bottom" priority="999" id="cos-HW-nNA"/>
+                                    <constraint firstAttribute="bottom" secondItem="hmd-1C-BuX" secondAttribute="bottom" priority="999" constant="8" id="cos-HW-nNA"/>
                                     <constraint firstItem="hmd-1C-BuX" firstAttribute="leading" secondItem="j6Q-YR-0Lx" secondAttribute="leading" id="j4c-4y-HaL"/>
                                     <constraint firstAttribute="trailing" secondItem="7PG-Ds-8Lx" secondAttribute="trailing" priority="999" id="jQr-fN-aR1"/>
                                     <constraint firstItem="7PG-Ds-8Lx" firstAttribute="leading" secondItem="j6Q-YR-0Lx" secondAttribute="leading" id="ohq-Bm-0Ck"/>
-                                    <constraint firstItem="hmd-1C-BuX" firstAttribute="top" secondItem="j6Q-YR-0Lx" secondAttribute="top" id="zGn-Wb-lNA"/>
+                                    <constraint firstItem="hmd-1C-BuX" firstAttribute="top" secondItem="j6Q-YR-0Lx" secondAttribute="top" constant="8" id="zGn-Wb-lNA"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -160,6 +160,7 @@
                 <outlet property="hiddenIcon" destination="Hk0-j3-SEW" id="cAK-0e-Kh6"/>
                 <outlet property="hiddenIconContainer" destination="155-GE-BhI" id="6d1-Xm-VPB"/>
                 <outlet property="labelMaxWidthConstraint" destination="JeL-3r-GbZ" id="7We-A1-m5C"/>
+                <outlet property="separatorView" destination="hmd-1C-BuX" id="6RS-Gy-wB7"/>
                 <outlet property="titleLabel" destination="6fh-Rx-y2S" id="T3H-Kd-y8b"/>
             </connections>
             <point key="canvasLocation" x="163.768115942029" y="63.28125"/>
@@ -170,10 +171,10 @@
         <image name="eye.slash" catalog="system" width="128" height="86"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <namedColor name="secondary_background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.99215686274509807" green="0.99215686274509807" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemGray3Color">
-            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
