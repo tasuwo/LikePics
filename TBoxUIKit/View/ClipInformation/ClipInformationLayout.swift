@@ -317,8 +317,13 @@ extension ClipInformationLayout {
         return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> { cell, _, album in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = album.title
+            contentConfiguration.textProperties.color = Asset.Color.likePicsRed.color
             contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: .callout)
             cell.contentConfiguration = contentConfiguration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 
