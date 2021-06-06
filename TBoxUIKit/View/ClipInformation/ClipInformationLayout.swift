@@ -221,7 +221,8 @@ extension ClipInformationLayout {
     }
 
     static func makeDataSource(for collectionView: UICollectionView,
-                               tagAdditionHandler: @escaping () -> Void) -> (DataSource, Proxy)
+                               tagAdditionHandler: @escaping () -> Void,
+                               albumAdditionHandler: @escaping () -> Void) -> (DataSource, Proxy)
     {
         let proxy = Proxy()
 
@@ -246,7 +247,8 @@ extension ClipInformationLayout {
             }
         }
 
-        let headerRegistration = configureHeader(tagAdditionHandler: tagAdditionHandler)
+        let headerRegistration = configureHeader(tagAdditionHandler: tagAdditionHandler,
+                                                 albumAdditionHandler: albumAdditionHandler)
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch ElementKind(rawValue: elementKind) {
             case .header:
@@ -260,7 +262,9 @@ extension ClipInformationLayout {
         return (dataSource, proxy)
     }
 
-    private static func configureHeader(tagAdditionHandler: @escaping () -> Void) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
+    private static func configureHeader(tagAdditionHandler: @escaping () -> Void,
+                                        albumAdditionHandler: @escaping () -> Void) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView>
+    {
         return .init(elementKind: ElementKind.header.rawValue) { view, _, indexPath in
             let title: String = {
                 switch Section(rawValue: indexPath.section) {
@@ -283,14 +287,24 @@ extension ClipInformationLayout {
             view.title = title
             view.setTitleTextStyle(.headline)
 
-            if Section(rawValue: indexPath.section) == .tags {
+            switch Section(rawValue: indexPath.section) {
+            case .tags:
                 view.setRightItems([
                     .init(title: "タグを追加する",
                           action: UIAction(handler: { _ in tagAdditionHandler() }),
                           style: .callout,
                           insets: .zero)
                 ])
-            } else {
+
+            case .albums:
+                view.setRightItems([
+                    .init(title: "アルバムへ追加する",
+                          action: UIAction(handler: { _ in albumAdditionHandler() }),
+                          style: .callout,
+                          insets: .zero)
+                ])
+
+            default:
                 view.setRightItems([])
             }
         }

@@ -213,10 +213,15 @@ extension ClipInformationViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
+    // MARK: Modal
+
     private func presentModalIfNeeded(for modal: ClipInformationViewState.Modal?) {
         switch modal {
         case let .tagSelection(id: id, tagIds: tagIds):
             presentTagSelectionModal(id: id, selections: tagIds)
+
+        case let .albumSelection(id: id):
+            presentAlbumSelectionModal(id: id)
 
         case .none:
             break
@@ -237,6 +242,23 @@ extension ClipInformationViewController {
             }
 
         if router.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentAlbumSelectionModal(id: UUID) {
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .albumSelectionModal)
+            .sink { [weak self] notification in
+                let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
+                self?.store.execute(.albumSelected(albumId))
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        if router.showAlbumSelectionModal(id: id) == false {
             modalSubscription?.cancel()
             modalSubscription = nil
             store.execute(.modalCompleted(false))
@@ -270,6 +292,10 @@ extension ClipInformationViewController: ClipInformationViewDelegate {
 
     func didTapAddTagButton(_ view: ClipInformationView) {
         store.execute(.tagAdditionButtonTapped)
+    }
+
+    func didTapAddToAlbumButton(_ view: ClipInformationView) {
+        store.execute(.albumAdditionButtonTapped)
     }
 
     func clipInformationView(_ view: ClipInformationView, didTapDeleteButtonForTag tag: Tag, at placement: UIView) {

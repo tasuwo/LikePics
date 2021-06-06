@@ -33,6 +33,7 @@ enum ClipInformationViewAction: Action {
     // MARK: Control
 
     case tagAdditionButtonTapped
+    case albumAdditionButtonTapped
     case tagRemoveButtonTapped(Tag.Identity)
     case siteUrlEditButtonTapped
     case hidedClip
@@ -44,6 +45,7 @@ enum ClipInformationViewAction: Action {
     // MARK: Modal Completion
 
     case tagsSelected(Set<Tag.Identity>?)
+    case albumSelected(Album.Identity?)
     case modalCompleted(Bool)
 
     // MARK: Alert Completion

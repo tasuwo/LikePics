@@ -71,6 +71,10 @@ struct ClipInformationViewReducer: Reducer {
             nextState.modal = .tagSelection(id: UUID(), tagIds: state.tags._filteredIds)
             return (nextState, .none)
 
+        case .albumAdditionButtonTapped:
+            nextState.modal = .albumSelection(id: UUID())
+            return (nextState, .none)
+
         case let .tagRemoveButtonTapped(tagId):
             if case .failure = dependency.clipCommandService.updateClips(having: [state.clipId], byDeletingTagsHaving: [tagId]) {
                 nextState.alert = .error(L10n.clipInformationErrorAtRemoveTags)
@@ -113,6 +117,19 @@ struct ClipInformationViewReducer: Reducer {
             guard let tagIds = tagIds else { return (nextState, .none) }
 
             switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.failedToUpdateClip)
+            }
+            return (nextState, .none)
+
+        case let .albumSelected(albumId):
+            nextState.modal = nil
+
+            guard let albumId = albumId else { return (nextState, .none) }
+
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [nextState.clipId]) {
             case .success: ()
 
             case .failure:

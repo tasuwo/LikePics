@@ -12,6 +12,7 @@ struct ClipInformationViewState: Equatable {
 
     enum Modal: Equatable {
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
+        case albumSelection(id: UUID)
     }
 
     let clipId: Clip.Identity

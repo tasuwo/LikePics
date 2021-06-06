@@ -99,6 +99,10 @@ public class ClipInformationView: UIView {
             tagAdditionHandler: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.didTapAddTagButton(self)
+            },
+            albumAdditionHandler: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.didTapAddToAlbumButton(self)
             }
         )
 

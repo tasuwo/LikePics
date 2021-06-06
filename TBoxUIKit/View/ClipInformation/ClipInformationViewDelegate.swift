@@ -7,6 +7,7 @@ import UIKit
 
 public protocol ClipInformationViewDelegate: AnyObject {
     func didTapAddTagButton(_ view: ClipInformationView)
+    func didTapAddToAlbumButton(_ view: ClipInformationView)
     func clipInformationView(_ view: ClipInformationView, didTapDeleteButtonForTag tag: Tag, at placement: UIView)
     func clipInformationView(_ view: ClipInformationView, shouldOpen url: URL)
     func clipInformationView(_ view: ClipInformationView, shouldCopy url: URL)
