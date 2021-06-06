@@ -16,7 +16,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public static let secondaryStickingOutMargin: CGFloat = 20
     public static let tertiaryStickingOutMargin: CGFloat = 15
-    public static let cornerRadius: CGFloat = 10
+    public static let cornerRadius: CGFloat = 16
 
     public var identifier: String?
     public var onReuse: ((String?) -> Void)?
@@ -107,6 +107,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     static func setupAppearance(imageView: UIImageView) {
         imageView.layer.cornerRadius = Self.cornerRadius
+        imageView.layer.cornerCurve = .continuous
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
     }
@@ -123,6 +124,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         clipsToBounds = true
         layer.masksToBounds = true
         layer.cornerRadius = Self.cornerRadius
+        layer.cornerCurve = .continuous
 
         updateOverallOverlayView()
     }
@@ -169,6 +171,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
         animatingImageView.layer.cornerRadius = Self.cornerRadius
+        animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.frame = toSingle ? primaryThumbnailView.frame : overallThumbnailView.frame
         addSubview(animatingImageView)
 

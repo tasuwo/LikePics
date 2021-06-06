@@ -130,6 +130,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                                       y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2))
         animatingImageView.center = nextAnchorPoint
         animatingImageView.layer.cornerRadius = cornerRadius
+        animatingImageView.layer.cornerCurve = .continuous
 
         transitionContext.updateInteractiveTransition(1 - scale)
 

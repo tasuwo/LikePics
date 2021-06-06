@@ -9,8 +9,8 @@ protocol ClipCollectionWaterfallLayoutDelegate: AnyObject {
 }
 
 class ClipCollectionWaterfallLayout: UICollectionViewLayout {
-    private static let contentPadding: CGFloat = 8
-    private static let cellPadding: CGFloat = 8
+    private static let contentPadding: CGFloat = 10
+    private static let cellPadding: CGFloat = 10
     private static let defaultContentHeight: CGFloat = 180
 
     weak var delegate: ClipCollectionWaterfallLayoutDelegate?
