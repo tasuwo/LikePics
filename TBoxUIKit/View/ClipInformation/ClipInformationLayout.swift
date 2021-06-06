@@ -79,12 +79,6 @@ extension ClipInformationLayout {
                 return createPlainLayoutSection(environment: environment)
             }
         }
-
-        let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        configuration.contentInsetsReference = .safeArea
-        configuration.interSectionSpacing = 0
-        layout.configuration = configuration
-
         return layout
     }
 
@@ -97,11 +91,11 @@ extension ClipInformationLayout {
                                                heightDimension: .estimated(32))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
-        group.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
+        group.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
+        section.contentInsets = .init(top: 16, leading: 0, bottom: 16, trailing: 0)
 
         let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(44))
