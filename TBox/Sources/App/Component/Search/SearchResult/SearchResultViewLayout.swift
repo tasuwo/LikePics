@@ -87,11 +87,11 @@ extension SearchResultViewLayout {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .fractionalWidth(1 / CGFloat(count)))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
-        group.interItemSpacing = .fixed(8)
+        group.interItemSpacing = .fixed(12)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+        section.interGroupSpacing = CGFloat(12)
+        section.contentInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 12)
 
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
         section.boundarySupplementaryItems = [

@@ -6,7 +6,7 @@ import Smoothie
 import UIKit
 
 public class SearchResultClipCell: UICollectionViewCell {
-    public static let imageCornerRadius: CGFloat = 6
+    public static let imageCornerRadius: CGFloat = 12
 
     public static var nib: UINib {
         return UINib(nibName: "SearchResultClipCell", bundle: Bundle(for: Self.self))
@@ -40,6 +40,7 @@ public class SearchResultClipCell: UICollectionViewCell {
         self.clipsToBounds = true
         self.layer.masksToBounds = true
         self.layer.cornerRadius = Self.imageCornerRadius
+        self.layer.cornerCurve = .continuous
     }
 }
 
