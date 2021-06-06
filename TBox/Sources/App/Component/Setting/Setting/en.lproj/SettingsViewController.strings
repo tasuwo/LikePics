@@ -15,7 +15,7 @@
 "R8c-8b-MTp.headerTitle" = "Display Setting";
 
 /* Class = "UILabel"; text = "テーマ"; ObjectID = "Yh3-te-Ylx"; */
-"Yh3-te-Ylx.text" = "テーマ";
+"Yh3-te-Ylx.text" = "Theme";
 
 /* Class = "UILabel"; text = "iCloudで同期する"; ObjectID = "fFY-Xv-c8Z"; */
 "fFY-Xv-c8Z.text" = "iCloud Sync";
