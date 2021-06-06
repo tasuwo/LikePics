@@ -97,11 +97,11 @@ extension ClipInformationLayout {
                                                heightDimension: .estimated(32))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
-        group.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
+        group.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = CGFloat(16)
-        section.contentInsets = .init(top: 16, leading: 0, bottom: 16, trailing: 0)
+        section.interGroupSpacing = CGFloat(12)
+        section.contentInsets = .init(top: 16, leading: 0, bottom: 0, trailing: 0)
 
         let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(44))
