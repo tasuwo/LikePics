@@ -60,6 +60,7 @@ struct ClipInformationViewReducer: Reducer {
         case .failedToLoadClip,
              .failedToLoadClipItem,
              .failedToLoadTags,
+             .failedToLoadAlbums,
              .failedToLoadSetting:
             nextState.isDismissed = true
             return (nextState, .none)
@@ -194,8 +195,8 @@ extension ClipInformationViewReducer {
         }
         let albumsStream = albumsQuery.albums
             .map { Action.albumsUpdated($0) as Action? }
-            .catch { _ in Just(Action.failedToLoadTags) }
-        let albumsQueryEffect = Effect(albumsStream, underlying: albumsQuery, completeWith: .failedToLoadTags)
+            .catch { _ in Just(Action.failedToLoadAlbums) }
+        let albumsQueryEffect = Effect(albumsStream, underlying: albumsQuery, completeWith: .failedToLoadAlbums)
 
         let settingStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }

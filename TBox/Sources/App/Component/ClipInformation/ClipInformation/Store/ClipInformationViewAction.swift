@@ -22,8 +22,10 @@ enum ClipInformationViewAction: Action {
     case failedToLoadClipItem
 
     case tagsUpdated([Tag])
-    case albumsUpdated([ListingAlbum])
     case failedToLoadTags
+
+    case albumsUpdated([ListingAlbum])
+    case failedToLoadAlbums
 
     case settingUpdated(isSomeItemsHidden: Bool)
     case failedToLoadSetting

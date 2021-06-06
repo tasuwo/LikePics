@@ -33,12 +33,16 @@ struct ClipInformationViewCacheReducer: Reducer {
         case let .tagsUpdated(tags):
             return (Self.performFilter(tags: tags, previousState: state), .none)
 
+        case let .albumsUpdated(albums):
+            return (Self.performFilter(albums: albums, previousState: state), .none)
+
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case .failedToLoadClip,
              .failedToLoadClipItem,
              .failedToLoadTags,
+             .failedToLoadAlbums,
              .failedToLoadSetting:
             nextState.isInvalidated = true
             return (nextState, .none)
@@ -95,6 +99,19 @@ extension ClipInformationViewCacheReducer {
             .catch { _ in Just(Action.failedToLoadTags) }
         let tagsQueryEffect = Effect(tagsStream, underlying: tagsQuery, completeWith: .failedToLoadTags)
 
+        let albumsQuery: ListingAlbumListQuery
+        switch dependency.clipQueryService.queryAlbums(containingClipHavingClipId: clipId) {
+        case let .success(result):
+            albumsQuery = result
+
+        case let .failure(error):
+            fatalError("Failed to load tags: \(error.localizedDescription)")
+        }
+        let albumsStream = albumsQuery.albums
+            .map { Action.albumsUpdated($0) as Action? }
+            .catch { _ in Just(Action.failedToLoadAlbums) }
+        let albumsQueryEffect = Effect(albumsStream, underlying: albumsQuery, completeWith: .failedToLoadAlbums)
+
         let settingStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingEffect = Effect(settingStream, completeWith: .failedToLoadSetting)
@@ -104,10 +121,11 @@ extension ClipInformationViewCacheReducer {
         let nextState = performFilter(clip: clipQuery.clip.value,
                                       item: clipItemQuery.clipItem.value,
                                       tags: tagsQuery.tags.value,
+                                      albums: albumsQuery.albums.value,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
                                       previousState: state)
 
-        return (nextState, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect, settingEffect])
+        return (nextState, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect, albumsQueryEffect, settingEffect])
     }
 }
 
@@ -118,6 +136,7 @@ extension ClipInformationViewCacheReducer {
         performFilter(clip: clip,
                       item: previousState.item,
                       tags: previousState.tags.orderedEntities(),
+                      albums: previousState.albums.orderedEntities(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -126,6 +145,7 @@ extension ClipInformationViewCacheReducer {
         performFilter(clip: previousState.clip,
                       item: item,
                       tags: previousState.tags.orderedEntities(),
+                      albums: previousState.albums.orderedEntities(),
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -134,6 +154,16 @@ extension ClipInformationViewCacheReducer {
         performFilter(clip: previousState.clip,
                       item: previousState.item,
                       tags: tags,
+                      albums: previousState.albums.orderedEntities(),
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      previousState: previousState)
+    }
+
+    private static func performFilter(albums: [ListingAlbum], previousState: State) -> State {
+        performFilter(clip: previousState.clip,
+                      item: previousState.item,
+                      tags: previousState.tags.orderedEntities(),
+                      albums: albums,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -142,13 +172,16 @@ extension ClipInformationViewCacheReducer {
         performFilter(clip: previousState.clip,
                       item: previousState.item,
                       tags: previousState.tags.orderedEntities(),
+                      albums: previousState.albums.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
 
+    // swiftlint:disable:next function_parameter_count
     private static func performFilter(clip: Clip?,
                                       item: ClipItem?,
                                       tags: [Tag],
+                                      albums: [ListingAlbum],
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
@@ -157,12 +190,18 @@ extension ClipInformationViewCacheReducer {
         let filteredTagIds = tags
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
+        let filteredAlbumIds = albums
+            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
+            .map { $0.id }
 
         nextState.clip = clip
         nextState.item = item
         nextState.tags = nextState.tags
             .updated(entities: tags.indexed())
             .updated(filteredIds: Set(filteredTagIds))
+        nextState.albums = nextState.albums
+            .updated(entities: albums.indexed())
+            .updated(filteredIds: Set(filteredAlbumIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState

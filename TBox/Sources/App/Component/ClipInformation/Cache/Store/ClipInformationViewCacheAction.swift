@@ -21,6 +21,9 @@ enum ClipInformationViewCacheAction: Action {
     case tagsUpdated([Tag])
     case failedToLoadTags
 
+    case albumsUpdated([ListingAlbum])
+    case failedToLoadAlbums
+
     case settingUpdated(isSomeItemsHidden: Bool)
     case failedToLoadSetting
 }

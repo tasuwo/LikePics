@@ -61,6 +61,7 @@ extension ClipInformationViewCacheController {
             .store(in: &subscriptions)
 
         store.state
+            .dropFirst()
             .removeDuplicates()
             .receive(on: DispatchQueue.global())
             .sink { [weak self] state in
