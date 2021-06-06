@@ -160,7 +160,10 @@ extension ClipInformationViewController {
             .sink { [weak self] state in
                 // インタラクティブな画面遷移中に更新が入ると操作が引っかかるので、必要に応じて更新を一時停止する
                 guard state.isSuspendedCollectionViewUpdate == false else { return }
-                let information = Layout.Information(clip: state.clip, tags: state.tags.orderedFilteredEntities(), item: state.item)
+                let information = Layout.Information(clip: state.clip,
+                                                     tags: state.tags.orderedFilteredEntities(),
+                                                     albums: state.albums.orderedFilteredEntities(),
+                                                     item: state.item)
                 self?.informationView.setInfo(information, animated: state.shouldCollectionViewUpdateWithAnimation)
             }
             .store(in: &subscriptions)

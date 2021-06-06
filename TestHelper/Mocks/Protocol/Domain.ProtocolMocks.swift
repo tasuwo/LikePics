@@ -394,6 +394,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
         fatalError("queryAlbumHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var queryAlbumsCallCount = 0
+    public var queryAlbumsHandler: ((Clip.Identity) -> (Result<ListingAlbumListQuery, ClipStorageError>))?
+    public func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumListQuery, ClipStorageError> {
+        queryAlbumsCallCount += 1
+        if let queryAlbumsHandler = queryAlbumsHandler {
+            return queryAlbumsHandler(id)
+        }
+        fatalError("queryAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var queryAllAlbumsCallCount = 0
     public var queryAllAlbumsHandler: (() -> (Result<AlbumListQuery, ClipStorageError>))?
     public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
@@ -1224,6 +1234,20 @@ public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProto
         if let setHandler = setHandler {
             setHandler(lastLoggedInCloudAccountId)
         }
+    }
+}
+
+public class ListingAlbumListQueryMock: ListingAlbumListQuery {
+    public init() { }
+    public init(albums: CurrentValueSubject<[ListingAlbum], Error>) {
+        self._albums = albums
+    }
+
+    public private(set) var albumsSetCallCount = 0
+    private var _albums: CurrentValueSubject<[ListingAlbum], Error>! { didSet { albumsSetCallCount += 1 } }
+    public var albums: CurrentValueSubject<[ListingAlbum], Error> {
+        get { return _albums }
+        set { _albums = newValue }
     }
 }
 

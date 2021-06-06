@@ -89,11 +89,7 @@ extension ClipInformationViewCacheController: ClipInformationViewCaching {
 
     func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity) {
         stopUpdating()
-        store = Store(initialState: .init(clip: nil,
-                                          tags: .init(),
-                                          item: nil,
-                                          isSomeItemsHidden: true,
-                                          isInvalidated: false),
+        store = Store(initialState: .init(isSomeItemsHidden: true),
                       dependency: dependency,
                       reducer: ClipInformationViewCacheReducer())
         bind(to: store)
@@ -121,6 +117,9 @@ extension ClipInformationViewCacheController: ClipInformationViewCaching {
 
 extension ClipInformationLayout.Information {
     init(_ state: ClipInformationViewCacheState) {
-        self.init(clip: state.clip, tags: state.tags.orderedFilteredEntities(), item: state.item)
+        self.init(clip: state.clip,
+                  tags: state.tags.orderedFilteredEntities(),
+                  albums: state.albums.orderedFilteredEntities(),
+                  item: state.item)
     }
 }

@@ -17,15 +17,22 @@ public enum ClipInformationLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
 
     enum Section: Int {
-        case tag
-        case info
+        case itemInfo
+        case clipInfo
+        case tags
+        case albums
     }
 
     enum Item: Hashable, Equatable {
         case tagAddition
         case tag(Tag)
+        case album(ListingAlbum)
         case meta(Info)
         case url(UrlSetting)
+    }
+
+    enum ElementKind: String {
+        case header
     }
 
     struct Info: Equatable, Hashable {
@@ -49,11 +56,13 @@ public enum ClipInformationLayout {
     public struct Information: Equatable {
         public let clip: Clip?
         public let tags: [Tag]
+        public let albums: [ListingAlbum]
         public let item: ClipItem?
 
-        public init(clip: Clip?, tags: [Tag], item: ClipItem?) {
+        public init(clip: Clip?, tags: [Tag], albums: [ListingAlbum], item: ClipItem?) {
             self.clip = clip
             self.tags = tags
+            self.albums = albums
             self.item = item
         }
     }
@@ -65,18 +74,19 @@ extension ClipInformationLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
-            case .tag:
-                return self.createTagsLayoutSection()
+            case .tags:
+                return createTagsLayoutSection()
 
-            case .info:
-                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                configuration.backgroundColor = Asset.Color.background.color
-                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
-
-            case .none:
-                return nil
+            default:
+                return createPlainLayoutSection(environment: environment)
             }
         }
+
+        let configuration = UICollectionViewCompositionalLayoutConfiguration()
+        configuration.contentInsetsReference = .safeArea
+        configuration.interSectionSpacing = 0
+        layout.configuration = configuration
+
         return layout
     }
 
@@ -89,10 +99,31 @@ extension ClipInformationLayout {
                                                heightDimension: .estimated(32))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
+        group.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
-        section.contentInsets = .init(top: 30, leading: 20, bottom: 10, trailing: 20)
+        section.contentInsets = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
+
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(44))
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
+        ]
+
+        return section
+    }
+
+    private static func createPlainLayoutSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
+        configuration.backgroundColor = .clear
+        let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(44))
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
+        ]
 
         return section
     }
@@ -103,14 +134,22 @@ extension ClipInformationLayout {
 extension ClipInformationLayout {
     static func makeSnapshot(for info: Information?) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.tag])
+        snapshot.appendSections([.itemInfo])
+        snapshot.appendItems(self.createCells(for: info?.item))
+
+        snapshot.appendSections([.clipInfo])
+        snapshot.appendItems(self.createCells(for: info?.clip))
+
+        snapshot.appendSections([.tags])
         snapshot.appendItems([.tagAddition] + (info?.tags.map({ .tag($0) }) ?? []))
-        snapshot.appendSections([.info])
-        snapshot.appendItems(self.createCells(for: info?.item, clip: info?.clip))
+
+        snapshot.appendSections([.albums])
+        snapshot.appendItems(info?.albums.map({ .album($0) }) ?? [])
+
         return snapshot
     }
 
-    private static func createCells(for clipItem: ClipItem?, clip: Clip?) -> [Item] {
+    private static func createCells(for clipItem: ClipItem?) -> [Item] {
         var items: [Item] = []
 
         items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
@@ -119,15 +158,13 @@ extension ClipInformationLayout {
         items.append(.url(.init(title: L10n.clipInformationViewLabelClipUrl,
                                 url: clipItem?.url,
                                 isEditable: true)))
+
         let size: String = {
             guard let dataSize = clipItem?.imageDataSize else { return "-" }
             return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
         }()
         items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemSize,
                                  accessory: .label(title: size))))
-
-        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
-                                 accessory: .switch(isOn: clip?.isHidden ?? false))))
 
         let registeredDate: String = {
             guard let date = clipItem?.registeredDate else { return "-" }
@@ -137,6 +174,35 @@ extension ClipInformationLayout {
                                  accessory: .label(title: registeredDate))))
         let updatedDate: String = {
             guard let date = clipItem?.updatedDate else { return "-" }
+            return self.format(date)
+        }()
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+                                 accessory: .label(title: updatedDate))))
+
+        return items
+    }
+
+    private static func createCells(for clip: Clip?) -> [Item] {
+        var items: [Item] = []
+
+        let size: String = {
+            guard let dataSize = clip?.dataSize else { return "-" }
+            return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
+        }()
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipSize,
+                                 accessory: .label(title: size))))
+
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipHide,
+                                 accessory: .switch(isOn: clip?.isHidden ?? false))))
+
+        let registeredDate: String = {
+            guard let date = clip?.registeredDate else { return "-" }
+            return self.format(date)
+        }()
+        items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+                                 accessory: .label(title: registeredDate))))
+        let updatedDate: String = {
+            guard let date = clip?.updatedDate else { return "-" }
             return self.format(date)
         }()
         items.append(.meta(.init(title: L10n.clipInformationViewLabelClipItemUpdatedDate,
@@ -167,6 +233,7 @@ extension ClipInformationLayout {
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let albumCellRegistration = self.configureAlbumCell()
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
         let urlCellRegistration = self.configureUrlCell(proxy: proxy)
 
@@ -178,6 +245,9 @@ extension ClipInformationLayout {
             case let .tag(tag):
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
 
+            case let .album(album):
+                return collectionView.dequeueConfiguredReusableCell(using: albumCellRegistration, for: indexPath, item: album)
+
             case let .meta(meta):
                 return collectionView.dequeueConfiguredReusableCell(using: metaCellRegistration, for: indexPath, item: meta)
 
@@ -185,7 +255,43 @@ extension ClipInformationLayout {
                 return collectionView.dequeueConfiguredReusableCell(using: urlCellRegistration, for: indexPath, item: setting)
             }
         }
+
+        let headerRegistration = self.configureHeader()
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            switch ElementKind(rawValue: elementKind) {
+            case .header:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+
+            default:
+                return nil
+            }
+        }
+
         return (dataSource, proxy)
+    }
+
+    private static func configureHeader() -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
+        return .init(elementKind: ElementKind.header.rawValue) { view, _, indexPath in
+            let title: String = {
+                switch Section(rawValue: indexPath.section) {
+                case .itemInfo:
+                    return "この画像の情報"
+
+                case .clipInfo:
+                    return "所属するクリップの情報"
+
+                case .tags:
+                    return "タグ"
+
+                case .albums:
+                    return "アルバム"
+
+                case .none:
+                    return ""
+                }
+            }()
+            view.title = title
+        }
     }
 
     private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
@@ -203,6 +309,14 @@ extension ClipInformationLayout {
             cell.visibleDeleteButton = true
             cell.delegate = delegate
             cell.isHiddenTag = tag.isHidden
+        }
+    }
+
+    private static func configureAlbumCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> { cell, _, album in
+            var contentConfiguration = UIListContentConfiguration.valueCell()
+            contentConfiguration.text = album.title
+            cell.contentConfiguration = contentConfiguration
         }
     }
 
