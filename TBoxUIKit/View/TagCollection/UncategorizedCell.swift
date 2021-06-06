@@ -42,7 +42,7 @@ public class UncategorizedCell: UICollectionViewCell {
         label.sizeToFit()
 
         let width = label.frame.width
-        let height = label.frame.height + 32
+        let height = label.frame.height + 16
 
         return .init(width: width, height: height)
     }

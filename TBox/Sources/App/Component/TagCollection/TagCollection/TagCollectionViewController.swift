@@ -43,7 +43,8 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: Cache
 
-    private var cellSizeCaches: [IndexPath: CGSize] = [:]
+    private var cellHeightCache: CGFloat?
+    private var cellWidthCaches: [Layout.Item.ListingTag: CGFloat] = [:]
 
     // MARK: - Initializers
 
@@ -76,7 +77,8 @@ class TagCollectionViewController: UIViewController {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
-            cellSizeCaches = [:]
+            cellHeightCache = nil
+            cellWidthCaches = [:]
             collectionView.collectionViewLayout.invalidateLayout()
         }
     }
@@ -253,7 +255,7 @@ extension TagCollectionViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.background.color
 
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout(delegate: self))
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         // HACK: UISVCでSearchControllerが非表示になってしまうことがあるため、
@@ -321,41 +323,6 @@ extension TagCollectionViewController: UICollectionViewDelegate {
 
         default: () // NOP
         }
-    }
-}
-
-extension TagCollectionViewController: UICollectionViewDelegateFlowLayout {
-    // MARK: - UICollectionViewDelegateFlowLayout
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if let cache = cellSizeCaches[indexPath] { return cache }
-
-        switch dataSource.itemIdentifier(for: indexPath) {
-        case .uncategorized:
-            let size = UncategorizedCell.preferredSize()
-            cellSizeCaches[indexPath] = size
-            return size
-
-        case let .tag(item):
-            let size = TagCollectionViewCell.preferredSize(title: item.tag.name,
-                                                           clipCount: item.tag.clipCount,
-                                                           isHidden: item.tag.isHidden,
-                                                           visibleCountIfPossible: item.displayCount,
-                                                           visibleDeleteButton: false)
-            cellSizeCaches[indexPath] = size
-            return size
-
-        default:
-            return .zero
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 12.0
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8.0
     }
 }
 
@@ -496,6 +463,44 @@ extension TagCollectionViewController: TextEditAlertDelegate {
 
     func textEditAlertDidCancel(_ id: UUID) {
         store.execute(.alertDismissed)
+    }
+}
+
+extension TagCollectionViewController: NewTagCollectionBrickworkLayoutDelegate {
+    // MARK: - NewTagCollectionBrickworkLayoutDelegate
+
+    func heightOfUncategorizedCell(_ collectionView: UICollectionView) -> CGFloat {
+        return UncategorizedCell.preferredSize().height
+    }
+
+    func heightOfTagCell(_ collectionView: UICollectionView) -> CGFloat {
+        if let height = cellHeightCache {
+            return height
+        }
+
+        let size = TagCollectionViewCell.preferredSize(title: "X", // 計算用に適当な文字を渡しておく
+                                                       clipCount: nil,
+                                                       isHidden: false,
+                                                       visibleCountIfPossible: false,
+                                                       visibleDeleteButton: false)
+        cellHeightCache = size.height
+        return size.height
+    }
+
+    func collectionView(_ collectionView: UICollectionView, widthAtIndexPath indexPath: IndexPath) -> CGFloat {
+        guard case let .tag(listingTag) = dataSource.itemIdentifier(for: indexPath) else { return .zero }
+
+        if let width = cellWidthCaches[listingTag] {
+            return width
+        }
+
+        let size = TagCollectionViewCell.preferredSize(title: listingTag.tag.name,
+                                                       clipCount: listingTag.tag.clipCount,
+                                                       isHidden: listingTag.tag.isHidden,
+                                                       visibleCountIfPossible: listingTag.displayCount,
+                                                       visibleDeleteButton: false)
+        cellWidthCaches[listingTag] = size.width
+        return size.width
     }
 }
 

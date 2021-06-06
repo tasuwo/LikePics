@@ -57,9 +57,9 @@ enum TagCollectionViewLayout {
 // MARK: - Layout
 
 extension TagCollectionViewLayout {
-    static func createLayout() -> UICollectionViewLayout {
-        let layout = TagCollectionBrickworkLayout()
-        layout.sectionInset = .init(top: 0, left: 12, bottom: 12, right: 12)
+    static func createLayout(delegate: NewTagCollectionBrickworkLayoutDelegate) -> UICollectionViewLayout {
+        let layout = NewTagCollectionBrickworkLayout()
+        layout.delegate = delegate
         // 計算コストが高く描画がカクつくので、あえて利用しない
         // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         return layout
