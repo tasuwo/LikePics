@@ -33,36 +33,27 @@ struct ClipPreviewPageViewReducer: Reducer {
         case let .pageChanged(index: index):
             nextState.pageChange = nil
             nextState.currentIndex = index
-            nextState.currentPreloadTargets().forEach {
-                dependency.previewLoader.preloadPreview(imageId: $0)
-            }
-            return (nextState, .none)
+            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
 
         case let .clipUpdated(clip):
-            defer {
-                nextState.currentPreloadTargets().forEach {
-                    dependency.previewLoader.preloadPreview(imageId: $0)
-                }
-            }
-
             guard !clip.items.isEmpty else {
                 nextState.isDismissed = true
-                return (nextState, .none)
+                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
             }
 
             nextState.items = clip.items.sorted(by: { $0.clipIndex < $1.clipIndex })
 
             guard let previousItemId = state.currentItem?.id else {
                 nextState.currentIndex = 0
-                return (nextState, .none)
+                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
             }
 
             if let newIndex = nextState.items.firstIndex(where: { $0.id == previousItemId }) {
                 nextState.currentIndex = newIndex
-                return (nextState, .none)
+                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
             } else {
                 nextState.currentIndex = 0
-                return (nextState, .none)
+                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
             }
 
         case .failedToLoadClip:
@@ -220,12 +211,6 @@ extension ClipPreviewPageViewReducer {
                 return (nextState, .none)
             }
 
-            defer {
-                nextState.currentPreloadTargets().forEach {
-                    dependency.previewLoader.preloadPreview(imageId: $0)
-                }
-            }
-
             switch dependency.clipCommandService.deleteClipItem(item) {
             case .success:
                 nextState.items = nextState.items.filter({ $0.id != item.id })
@@ -250,7 +235,26 @@ extension ClipPreviewPageViewReducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
             }
-            return (nextState, .none)
+            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
         }
+    }
+}
+
+// MARK: - Preload
+
+extension ClipPreviewPageViewReducer {
+    private static func preloadEffect(state: State, dependency: Dependency) -> Effect<Action> {
+        let stream = Deferred {
+            Future<Action?, Never> { promise in
+                state.currentPreloadTargets().forEach {
+                    dependency.previewLoader.preloadPreview(imageId: $0)
+                    promise(.success(nil))
+                }
+            }
+        }
+        return Effect(stream)
+            // アニメーション中に画像が再読み込みされるとアニメーションがかくつくので、
+            // あえて読み込みを遅延させる
+            .delay(for: 0.3, scheduler: DispatchQueue.global())
     }
 }

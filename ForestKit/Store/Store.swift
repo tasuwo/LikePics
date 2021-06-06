@@ -74,6 +74,7 @@ public class Store<State: Equatable, Action: ForestKit.Action, Dependency>: Stor
         }
 
         let cancellable = effect.upstream
+            .subscribe(on: DispatchQueue.global())
             .sink { [weak self, weak effect] _ in
                 guard let self = self else { return }
 

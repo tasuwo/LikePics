@@ -41,23 +41,31 @@ extension ClipPreviewViewReducer {
     private static func readPreview(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         var nextState = state
 
-        if let preview = dependency.previewLoader.readCache(forImageId: state.imageId) {
-            nextState.source = .image(preview)
-            return (nextState, [])
-        }
-
         if let preview = dependency.previewLoader.readThumbnail(forItemId: state.itemId) {
             nextState.source = .thumbnail(preview, originalSize: state.imageSize)
             nextState.isDisplayingLoadingIndicator = true
             nextState.isUserInteractionEnabled = false
             let stream = Deferred {
                 Future<Action?, Never> { promise in
-                    dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
-                        promise(.success(.imageLoaded(image)))
+                    if let preview = dependency.previewLoader.readCache(forImageId: state.imageId) {
+                        promise(.success(.imageLoaded(preview)))
+                    } else {
+                        dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in
+                            promise(.success(.imageLoaded(image)))
+                        }
                     }
                 }
             }
-            return (nextState, [Effect(stream)])
+            let effect = Effect(stream)
+                // アニメーション中に画像が再読み込みされるとアニメーションがかくつくので、
+                // あえて読み込みを遅延させる
+                .delay(for: 0.3, scheduler: DispatchQueue.global())
+            return (nextState, [effect])
+        }
+
+        if let preview = dependency.previewLoader.readCache(forImageId: state.imageId) {
+            nextState.source = .image(preview)
+            return (nextState, [])
         }
 
         nextState.isDisplayingLoadingIndicator = true
