@@ -91,6 +91,19 @@ public class ListCell: UICollectionViewCell {
 
     // MARK: - Methods
 
+    public func setTextStyle(_ style: UIFont.TextStyle) {
+        [
+            self.titleLabel,
+            self.rightAccessoryLabel,
+            self.rightAccessoryButton.titleLabel,
+            self.bottomAccessoryButton.titleLabel,
+            self.bottomAccessoryLabel
+        ].forEach {
+            $0?.adjustsFontForContentSizeCategory = true
+            $0?.font = UIFont.preferredFont(forTextStyle: style)
+        }
+    }
+
     private func setupAppearance() {
         [
             self.titleLabel,

@@ -7,6 +7,7 @@ import UIKit
 public struct ListSectionHeaderRightItem {
     let title: String
     let action: UIAction
+    let style: UIFont.TextStyle
     let insets: UIEdgeInsets
 }
 
@@ -40,17 +41,21 @@ public class ListSectionHeaderView: UICollectionReusableView {
 // MARK: - Methods
 
 public extension ListSectionHeaderView {
+    func setTitleTextStyle(_ style: UIFont.TextStyle) {
+        let metrics = UIFontMetrics(forTextStyle: style)
+        let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .bold)
+        label.font = metrics.scaledFont(for: font)
+    }
+
     func setRightItems(_ items: [ListSectionHeaderRightItem]) {
         let buttons: [UIButton] = items.map {
             let button = UIButton(type: .system, primaryAction: $0.action)
             button.setTitle($0.title, for: .normal)
             button.contentEdgeInsets = $0.insets
 
-            let metrics = UIFontMetrics(forTextStyle: .body)
-            let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
-            let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .regular)
             button.titleLabel?.adjustsFontForContentSizeCategory = true
-            button.titleLabel?.font = metrics.scaledFont(for: font)
+            button.titleLabel?.font = UIFont.preferredFont(forTextStyle: $0.style)
 
             return button
         }

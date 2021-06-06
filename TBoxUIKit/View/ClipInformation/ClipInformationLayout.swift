@@ -287,11 +287,13 @@ extension ClipInformationLayout {
                 }
             }()
             view.title = title
+            view.setTitleTextStyle(.headline)
 
             if Section(rawValue: indexPath.section) == .tags {
                 view.setRightItems([
                     .init(title: "タグを追加する",
                           action: UIAction(handler: { _ in tagAdditionHandler() }),
+                          style: .callout,
                           insets: .zero)
                 ])
             } else {
@@ -315,6 +317,7 @@ extension ClipInformationLayout {
         return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> { cell, _, album in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = album.title
+            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: .callout)
             cell.contentConfiguration = contentConfiguration
         }
     }
@@ -323,11 +326,16 @@ extension ClipInformationLayout {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = info.title
+            contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: .callout)
             cell.contentConfiguration = contentConfiguration
 
             switch info.accessory {
             case let .label(title: title):
-                cell.accessories = [.label(text: title)]
+                cell.accessories = [
+                    .label(text: title,
+                           displayed: .always,
+                           options: .init(font: .preferredFont(forTextStyle: .callout)))
+                ]
 
             case let .switch(isOn: isOn):
                 // swiftlint:disable:next identifier_name
@@ -354,6 +362,7 @@ extension ClipInformationLayout {
 
             cell.title = setting.title
             cell.rightAccessoryType = setting.isEditable ? .button(title: L10n.clipInformationViewLabelClipEditUrl) : nil
+            cell.setTextStyle(.callout)
 
             if let url = setting.url {
                 cell.bottomAccessoryType = .button(title: url.absoluteString)
