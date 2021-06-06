@@ -16,10 +16,10 @@ public enum ClipInformationLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
 
     enum Section: Int {
-        case itemInfo
-        case clipInfo
         case tags
         case albums
+        case itemInfo
+        case clipInfo
     }
 
     enum Item: Hashable, Equatable {
@@ -126,17 +126,18 @@ extension ClipInformationLayout {
 extension ClipInformationLayout {
     static func makeSnapshot(for info: Information?) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.itemInfo])
-        snapshot.appendItems(self.createCells(for: info?.item))
-
-        snapshot.appendSections([.clipInfo])
-        snapshot.appendItems(self.createCells(for: info?.clip))
 
         snapshot.appendSections([.tags])
         snapshot.appendItems(info?.tags.map({ .tag($0) }) ?? [])
 
         snapshot.appendSections([.albums])
         snapshot.appendItems(info?.albums.map({ .album($0) }) ?? [])
+
+        snapshot.appendSections([.itemInfo])
+        snapshot.appendItems(self.createCells(for: info?.item))
+
+        snapshot.appendSections([.clipInfo])
+        snapshot.appendItems(self.createCells(for: info?.clip))
 
         return snapshot
     }
@@ -176,6 +177,9 @@ extension ClipInformationLayout {
 
     private static func createCells(for clip: Clip?) -> [Item] {
         var items: [Item] = []
+
+        items.append(.meta(.init(title: "ページ数",
+                                 accessory: .label(title: "\(clip?.items.count ?? 0)"))))
 
         let size: String = {
             guard let dataSize = clip?.dataSize else { return "-" }
