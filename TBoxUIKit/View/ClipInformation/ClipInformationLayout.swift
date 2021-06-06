@@ -7,7 +7,6 @@ import UIKit
 
 protocol ClipInformationLayoutDelegate: AnyObject {
     func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
-    func didTapTagAdditionButton(_ cell: UICollectionViewCell)
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
     func didTapSiteUrl(_ cell: UICollectionViewCell, url: URL)
     func didTapSiteUrlEditButton(_ cell: UICollectionViewCell, url: URL?)
@@ -24,7 +23,6 @@ public enum ClipInformationLayout {
     }
 
     enum Item: Hashable, Equatable {
-        case tagAddition
         case tag(Tag)
         case album(ListingAlbum)
         case meta(Info)
@@ -141,7 +139,7 @@ extension ClipInformationLayout {
         snapshot.appendItems(self.createCells(for: info?.clip))
 
         snapshot.appendSections([.tags])
-        snapshot.appendItems([.tagAddition] + (info?.tags.map({ .tag($0) }) ?? []))
+        snapshot.appendItems(info?.tags.map({ .tag($0) }) ?? [])
 
         snapshot.appendSections([.albums])
         snapshot.appendItems(info?.albums.map({ .album($0) }) ?? [])
@@ -228,10 +226,11 @@ extension ClipInformationLayout {
         weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
-    static func makeDataSource(for collectionView: UICollectionView) -> (DataSource, Proxy) {
+    static func makeDataSource(for collectionView: UICollectionView,
+                               tagAdditionHandler: @escaping () -> Void) -> (DataSource, Proxy)
+    {
         let proxy = Proxy()
 
-        let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let albumCellRegistration = self.configureAlbumCell()
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
@@ -239,9 +238,6 @@ extension ClipInformationLayout {
 
         let dataSource: DataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch item {
-            case .tagAddition:
-                return collectionView.dequeueConfiguredReusableCell(using: tagAdditionCellRegistration, for: indexPath, item: ())
-
             case let .tag(tag):
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
 
@@ -256,7 +252,7 @@ extension ClipInformationLayout {
             }
         }
 
-        let headerRegistration = self.configureHeader()
+        let headerRegistration = configureHeader(tagAdditionHandler: tagAdditionHandler)
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch ElementKind(rawValue: elementKind) {
             case .header:
@@ -270,7 +266,7 @@ extension ClipInformationLayout {
         return (dataSource, proxy)
     }
 
-    private static func configureHeader() -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
+    private static func configureHeader(tagAdditionHandler: @escaping () -> Void) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
         return .init(elementKind: ElementKind.header.rawValue) { view, _, indexPath in
             let title: String = {
                 switch Section(rawValue: indexPath.section) {
@@ -291,13 +287,16 @@ extension ClipInformationLayout {
                 }
             }()
             view.title = title
-        }
-    }
 
-    private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
-        return UICollectionView.CellRegistration<ButtonCell, Void>(cellNib: ButtonCell.nib) { [weak delegate] cell, _, _ in
-            cell.title = L10n.clipInformationViewLabelTagAddition
-            cell.delegate = delegate
+            if Section(rawValue: indexPath.section) == .tags {
+                view.setRightItems([
+                    .init(title: "タグを追加する",
+                          action: UIAction(handler: { _ in tagAdditionHandler() }),
+                          insets: .zero)
+                ])
+            } else {
+                view.setRightItems([])
+            }
         }
     }
 
@@ -369,14 +368,6 @@ extension ClipInformationLayout {
 }
 
 // MARK: - Proxy DataSource Delegate
-
-extension ClipInformationLayout.Proxy: ButtonCellDelegate {
-    // MARK: - ButtonCellDelegate
-
-    func didTap(_ cell: ButtonCell) {
-        self.delegate?.didTapTagAdditionButton(cell)
-    }
-}
 
 extension ClipInformationLayout.Proxy: TagCollectionViewCellDelegate {
     // MARK: - TagCollectionViewCellDelegate

@@ -4,8 +4,16 @@
 
 import UIKit
 
+public struct ListSectionHeaderRightItem {
+    let title: String
+    let action: UIAction
+    let insets: UIEdgeInsets
+}
+
 public class ListSectionHeaderView: UICollectionReusableView {
-    let label = UILabel()
+    private let label = UILabel()
+    private let rightItemsStackView = UIStackView()
+    private var rightItems: [ListSectionHeaderRightItem] = []
 
     public var title: String {
         get {
@@ -29,22 +37,61 @@ public class ListSectionHeaderView: UICollectionReusableView {
     }
 }
 
+// MARK: - Methods
+
+public extension ListSectionHeaderView {
+    func setRightItems(_ items: [ListSectionHeaderRightItem]) {
+        let buttons: [UIButton] = items.map {
+            let button = UIButton(type: .system, primaryAction: $0.action)
+            button.setTitle($0.title, for: .normal)
+            button.contentEdgeInsets = $0.insets
+
+            let metrics = UIFontMetrics(forTextStyle: .body)
+            let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+            let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .regular)
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+            button.titleLabel?.font = metrics.scaledFont(for: font)
+
+            return button
+        }
+
+        rightItemsStackView.arrangedSubviews.forEach {
+            rightItemsStackView.removeArrangedSubview($0)
+            NSLayoutConstraint.deactivate($0.constraints)
+            $0.removeFromSuperview()
+        }
+        buttons.forEach {
+            rightItemsStackView.addArrangedSubview($0)
+        }
+    }
+}
+
+// MARK: - Configuration
+
 extension ListSectionHeaderView {
     private func configureViewHierarchy() {
         addSubview(label)
-
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            label.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0)
-        ])
 
         let metrics = UIFontMetrics(forTextStyle: .title2)
         let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
         let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .bold)
         label.font = metrics.scaledFont(for: font)
+
+        addSubview(rightItemsStackView)
+        rightItemsStackView.alignment = .fill
+        rightItemsStackView.axis = .horizontal
+        rightItemsStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: rightItemsStackView.leadingAnchor, constant: -16),
+            label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            rightItemsStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            rightItemsStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            rightItemsStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        ])
     }
 }

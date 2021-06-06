@@ -94,7 +94,13 @@ public class ClipInformationView: UIView {
         self.collectionView.collectionViewLayout = Factory.createLayout()
         self.collectionView.delegate = self
 
-        let (dataSource, proxy) = Factory.makeDataSource(for: collectionView)
+        let (dataSource, proxy) = Factory.makeDataSource(
+            for: collectionView,
+            tagAdditionHandler: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.didTapAddTagButton(self)
+            }
+        )
 
         self.collectionViewDataSource = dataSource
         self.proxy = proxy
@@ -208,10 +214,6 @@ extension ClipInformationView: ClipInformationLayoutDelegate {
 
     func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
         self.delegate?.clipInformationView(self, shouldHide: isOn)
-    }
-
-    func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
-        self.delegate?.didTapAddTagButton(self)
     }
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
