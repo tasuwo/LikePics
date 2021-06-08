@@ -103,6 +103,7 @@
 		24E89CA28CDFB473774CA4D7 /* SearchEntryViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CD8F2EED5D0D1D1FA7E7A /* SearchEntryViewReducer.swift */; };
 		2509C53E1C31F4E415C64B27 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDDF5686A2117A614349EA51 /* Quick.xcframework */; };
 		25652253EA6DCBA0A4169DEE /* ListingAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638422FB9955639F556F3888 /* ListingAlbumListQuery.swift */; };
+		259E5E230BD68C9C2D007CC4 /* ForestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBEFC2434B438E31C45125D4 /* ForestKit.framework */; };
 		25CA37E740A81BEA5C11334D /* ClipEditViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA61A6F4D632F9F31111DA1 /* ClipEditViewReducer.swift */; };
 		26EA3BBA65834F152894E7B1 /* TagSelectionModalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC734A371A52DC2616C2ED /* TagSelectionModalState.swift */; };
 		27964E97FFAC01138B654609 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 1222AE9538128346E33A7520 /* Common.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -784,6 +785,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8BC391639179DFD785A9808;
 			remoteInfo = TBoxUIKit;
+		};
+		7DC78A1171BCA1922147FF58 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D45DA14BF94D1093D760D7E4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B7066926D2D0D34D069644E9;
+			remoteInfo = ForestKit;
 		};
 		7E199DED636A1780E4FBCEFA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1705,6 +1713,7 @@
 				B03B78510F451588E4525291 /* Domain.framework in Frameworks */,
 				8F460F2BE425A39C952FE886 /* TBoxUIKit.framework in Frameworks */,
 				97821C9A18743C4AFEE21A37 /* Common.framework in Frameworks */,
+				259E5E230BD68C9C2D007CC4 /* ForestKit.framework in Frameworks */,
 				EBD5AD6CA9589DFBA8E21E34 /* Erik.xcframework in Frameworks */,
 				047F9D016E3D1DC8802C67D0 /* Kanna.xcframework in Frameworks */,
 				DCE9F6314D64965D5F37A384 /* BrightFutures.xcframework in Frameworks */,
@@ -4476,6 +4485,7 @@
 				20A5D86A9A10B354A364827A /* PBXTargetDependency */,
 				7497662E1E994AF7CFCEA837 /* PBXTargetDependency */,
 				EB1AD41811A21AFF4E60F152 /* PBXTargetDependency */,
+				0C182D5336D7D8B69F6E3DA9 /* PBXTargetDependency */,
 			);
 			name = TBoxCore;
 			productName = TBoxCore;
@@ -5620,6 +5630,11 @@
 			isa = PBXTargetDependency;
 			target = D38CABC12564862DE56E7149 /* Common */;
 			targetProxy = 1DD5F27BB55A2B24D066BA86 /* PBXContainerItemProxy */;
+		};
+		0C182D5336D7D8B69F6E3DA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B7066926D2D0D34D069644E9 /* ForestKit */;
+			targetProxy = 7DC78A1171BCA1922147FF58 /* PBXContainerItemProxy */;
 		};
 		129D2E4B9A45648E8285A3FA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

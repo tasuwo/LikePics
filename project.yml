@@ -473,6 +473,7 @@ targets:
       - target: Domain
       - target: TBoxUIKit
       - target: Common
+      - target: ForestKit
       - framework: Carthage/Build/Erik.xcframework
       - framework: Carthage/Build/Kanna.xcframework
       - framework: Carthage/Build/BrightFutures.xcframework
