@@ -4,9 +4,10 @@
 
 import Common
 import CoreGraphics
+import Domain
 
 public struct ImageSource: Hashable {
-    enum Value: Hashable {
+    enum Value {
         case urlSet(WebImageUrlSet)
         case fileUrl(URL)
         case imageProvider(ImageProvider)
@@ -49,35 +50,16 @@ public struct ImageSource: Hashable {
     }
 }
 
-extension ImageSource.Value {
+public extension ImageSource {
     // MARK: - Equatable
 
-    static func == (lhs: ImageSource.Value, rhs: ImageSource.Value) -> Bool {
-        switch (lhs, rhs) {
-        case let (.urlSet(lhset), .urlSet(rhset)):
-            return lhset == rhset
-
-        case let (.imageProvider(lhprovider), .imageProvider(rhprovider)):
-            return lhprovider === rhprovider
-
-        default:
-            return false
-        }
+    static func == (lhs: ImageSource, rhs: ImageSource) -> Bool {
+        return lhs.identifier == rhs.identifier
     }
 
     // MARK: - Hashable
 
     func hash(into hasher: inout Hasher) {
-        switch self {
-        case let .urlSet(set):
-            hasher.combine(set)
-
-        case let .fileUrl(url):
-            hasher.combine(url)
-
-        case .imageProvider:
-            // FIXME:
-            return
-        }
+        hasher.combine(identifier)
     }
 }

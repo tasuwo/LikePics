@@ -13,6 +13,10 @@ public protocol ImageLoaderProtocol {
 public class ImageLoader {
     private var subscriptions = Set<AnyCancellable>()
 
+    // MARK: - Initializers
+
+    public init() {}
+
     // MARK: - Methods
 
     private static func fetchImage(for url: URL) -> AnyPublisher<ImageLoaderResult, ImageLoaderError> {

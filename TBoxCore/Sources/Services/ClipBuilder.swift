@@ -4,29 +4,33 @@
 
 import Domain
 
-protocol ClipBuildable {
+public protocol ClipBuildable {
     func build(url: URL?, hidesClip: Bool, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
 }
 
-struct ClipBuilder {
+public struct ClipBuilder {
     private let currentDateResolver: () -> Date
     private let uuidIssuer: () -> UUID
 
-    init(currentDateResolver: @escaping () -> Date,
-         uuidIssuer: @escaping () -> UUID)
+    public init(currentDateResolver: @escaping () -> Date,
+                uuidIssuer: @escaping () -> UUID)
     {
         self.currentDateResolver = currentDateResolver
         self.uuidIssuer = uuidIssuer
+    }
+
+    public init() {
+        self.init(currentDateResolver: { Date() }, uuidIssuer: { UUID() })
     }
 }
 
 extension ClipBuilder: ClipBuildable {
     // MARK: - ClipBuildable
 
-    func build(url: URL?,
-               hidesClip: Bool,
-               sources: [ClipItemSource],
-               tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    public func build(url: URL?,
+                      hidesClip: Bool,
+                      sources: [ClipItemSource],
+                      tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
     {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
