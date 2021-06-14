@@ -15,12 +15,6 @@ public protocol ClipCreationDelegate: AnyObject {
     func didFinish(_ viewController: ClipCreationViewController)
 }
 
-protocol SelectableImageCellDataSource {
-    var url: URL { get }
-    var height: CGFloat { get }
-    var width: CGFloat { get }
-}
-
 public class ClipCreationViewController: UIViewController {
     // MARK: - Type Aliases
 
