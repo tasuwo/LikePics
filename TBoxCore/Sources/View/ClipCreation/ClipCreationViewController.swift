@@ -65,7 +65,7 @@ public class ClipCreationViewController: UIViewController {
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.ClipCreationViewController", qos: .userInteractive)
     private weak var delegate: ClipCreationDelegate?
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
     public init(factory: ViewControllerFactory,
                 state: ClipCreationViewState,
@@ -85,6 +85,8 @@ public class ClipCreationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - View Life-Cycle Methods
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -95,6 +97,18 @@ public class ClipCreationViewController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    // MARK: - IBActions
+
+    @objc
+    private func saveAction() {
+        store.execute(.saveImages)
+    }
+
+    @objc
+    private func reloadAction() {
+        store.execute(.viewDidLoad)
+    }
 }
 
 extension ClipCreationViewController {
@@ -103,9 +117,8 @@ extension ClipCreationViewController {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 let snapshot = self.makeSnapshot(state)
-                self.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self.applySelection(state)
-                }
+                self.dataSource.apply(snapshot)
+                self.applySelection(state)
             }
             .store(in: &subscriptions)
 
@@ -132,8 +145,9 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.displayReloadButton) { [weak self] _ in
-                self?.navigationItem.leftBarButtonItems = [self?.itemReload].compactMap { $0 }
+            .bind(\.displayReloadButton) { [weak self] displayReloadButton in
+                guard let self = self else { return }
+                self.navigationItem.leftBarButtonItems = displayReloadButton ? [self.itemReload] : []
             }
             .store(in: &subscriptions)
 
@@ -282,16 +296,6 @@ extension ClipCreationViewController {
         proxy.delegate = self
         self.proxy = proxy
     }
-
-    @objc
-    private func saveAction() {
-        store.execute(.saveImages)
-    }
-
-    @objc
-    private func reloadAction() {
-        store.execute(.viewDidLoad)
-    }
 }
 
 extension ClipCreationViewController: ImageSourcesProvider {
@@ -312,11 +316,6 @@ extension ClipCreationViewController: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        guard case .image = Layout.Section(rawValue: indexPath.section) else { return false }
-        return true
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         guard case .image = Layout.Section(rawValue: indexPath.section) else { return false }
         return true
     }
@@ -356,10 +355,6 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
     }
 
     public func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
-        self.startUrlEditing()
-    }
-
-    private func startUrlEditing() {
         if let url = store.stateValue.url {
             self.editUrlAlertContainer.present(
                 withText: url.absoluteString,
@@ -389,20 +384,13 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
 
     public func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
-              let section = Layout.Section(rawValue: indexPath.section) else { return }
-        switch section {
-        case .tag:
-            self.presentTagSelectionView()
-
-        default:
-            return
-        }
+              case .tag = Layout.Section(rawValue: indexPath.section) else { return }
+        self.presentTagSelectionView()
     }
 
     public func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-              let item = self.dataSource.itemIdentifier(for: indexPath),
-              case let .tag(tag) = item
+              case let .tag(tag) = self.dataSource.itemIdentifier(for: indexPath)
         else {
             return
         }
@@ -410,13 +398,9 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
     }
 
     private func presentTagSelectionView() {
-        guard let parent = self.parent else {
-            return
-        }
+        guard let parent = self.parent else { return }
         let selectedTags = Set(store.stateValue.tags.filteredEntities().map { $0.id })
-        guard let nextVC = factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else {
-            return
-        }
+        guard let nextVC = factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else { return }
         parent.present(nextVC, animated: true, completion: nil)
     }
 }
