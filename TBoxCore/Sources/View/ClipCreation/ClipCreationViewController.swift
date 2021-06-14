@@ -171,11 +171,35 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.isDismissed) { [weak self] _ in
-                guard let self = self else { return }
+            .bind(\.alert) { [weak self] alert in self?.presentAlertIfNeeded(for: alert) }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.isDismissed) { [weak self] isDismissed in
+                guard let self = self, isDismissed else { return }
                 self.delegate?.didFinish(self)
             }
             .store(in: &subscriptions)
+    }
+
+    // MARK: Alert
+
+    private func presentAlertIfNeeded(for alert: ClipCreationViewState.Alert?) {
+        switch alert {
+        case let .error(title: title, message: message):
+            presentErrorMessageAlertIfNeeded(title: title, message: message)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentErrorMessageAlertIfNeeded(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
+        self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: Snapshot

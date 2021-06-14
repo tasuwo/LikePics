@@ -15,9 +15,14 @@ public struct ClipCreationViewState: Equatable {
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
     }
 
+    enum Alert: Equatable {
+        case error(title: String, message: String)
+    }
+
     enum DisplayState: Equatable {
         case loading
         case loaded
+        case saving
         case error(title: String, message: String)
     }
 
@@ -35,6 +40,7 @@ public struct ClipCreationViewState: Equatable {
     var isDismissed: Bool
 
     var modal: Modal?
+    var alert: Alert?
 }
 
 public extension ClipCreationViewState {
@@ -48,13 +54,14 @@ public extension ClipCreationViewState {
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false
         self.modal = nil
+        self.alert = nil
     }
 }
 
 extension ClipCreationViewState {
     var isLoading: Bool {
         switch displayState {
-        case .loading:
+        case .loading, .saving:
             return true
 
         default:
@@ -94,7 +101,7 @@ extension ClipCreationViewState {
 
     var isCollectionViewHidden: Bool {
         switch displayState {
-        case .loaded:
+        case .loaded, .saving:
             return false
 
         default:

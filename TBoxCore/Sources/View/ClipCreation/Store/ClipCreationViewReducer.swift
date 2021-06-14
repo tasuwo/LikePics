@@ -57,8 +57,17 @@ struct ClipCreationViewReducer: Reducer {
             // TODO: 必要であれば選択する
             return (nextState, .none)
 
+        case .imagesSaved:
+            nextState.isDismissed = true
+            return (nextState, .none)
+
         case let .failedToLoadImages(error):
             nextState.displayState = .error(title: error.displayTitle, message: error.displayMessage)
+            return (nextState, .none)
+
+        case let .failedToSaveImages(error):
+            nextState.alert = .error(title: error.displayTitle, message: error.displayMessage)
+            nextState.displayState = .loaded
             return (nextState, .none)
 
         case let .settingsUpdated(isSomeItemsHidden: isSomeItemsHidden):
@@ -70,8 +79,7 @@ struct ClipCreationViewReducer: Reducer {
             return Self.loadImages(nextState, dependency)
 
         case .saveImages:
-            // TODO:
-            return (nextState, .none)
+            return Self.saveImages(nextState, dependency)
 
         case let .editedUrl(url):
             nextState.url = url
@@ -104,6 +112,12 @@ struct ClipCreationViewReducer: Reducer {
 
         case .modalCompleted:
             nextState.modal = nil
+            return (nextState, .none)
+
+        // MARK: Alert Completion
+
+        case .alertDismissed:
+            nextState.alert = nil
             return (nextState, .none)
         }
     }
@@ -151,6 +165,40 @@ extension ClipCreationViewReducer {
     }
 }
 
+private extension ImageSourceProviderError {
+    var displayTitle: String {
+        switch self {
+        case .notFound:
+            return L10n.clipCreationViewLoadingErrorNotFoundTitle
+
+        case .networkError:
+            return L10n.clipCreationViewLoadingErrorConnectionTitle
+
+        case .internalError:
+            return L10n.clipCreationViewLoadingErrorInternalTitle
+
+        case .timeout:
+            return L10n.clipCreationViewLoadingErrorTimeoutTitle
+        }
+    }
+
+    var displayMessage: String {
+        switch self {
+        case .notFound:
+            return L10n.clipCreationViewLoadingErrorNotFoundMessage
+
+        case .networkError:
+            return L10n.clipCreationViewLoadingErrorConnectionMessage
+
+        case .internalError:
+            return L10n.clipCreationViewLoadingErrorInternalMessage
+
+        case .timeout:
+            return L10n.clipCreationViewLoadingErrorTimeoutMessage
+        }
+    }
+}
+
 // MARK: - Filter
 
 extension ClipCreationViewReducer {
@@ -182,5 +230,111 @@ extension ClipCreationViewReducer {
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
+    }
+}
+
+// MARK: - Save
+
+extension ClipCreationViewReducer {
+    enum DownloadError: Error {
+        case failedToSave(ClipStorageError)
+        case failedToDownloadImage(ImageLoaderError)
+        case failedToCreateClipItemSource(ClipItemSource.InitializeError)
+        case internalError
+    }
+
+    static func saveImages(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
+        var nextState = state
+
+        nextState.displayState = .saving
+
+        let selections = state.imageSources.selections
+            .compactMap { state.imageSources.imageSourceById[$0] }
+            .enumerated()
+            .reduce(into: [(Int, ImageSource)]()) { $0.append(($1.offset, $1.element)) }
+
+        let stream = self.fetchImages(for: selections, dependency: dependency)
+            .flatMap { [dependency] sources -> AnyPublisher<Action?, DownloadError> in
+                return Self.save(url: state.url,
+                                 shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
+                                 tagIds: Array(state.tags._filteredIds),
+                                 sources: sources,
+                                 dependency: dependency)
+                    .publisher
+                    .eraseToAnyPublisher()
+            }
+            .catch { error -> AnyPublisher<Action?, Never> in
+                return Just(Action.failedToSaveImages(error))
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+        let effect = Effect(stream)
+
+        return (nextState, [effect])
+    }
+
+    private static func fetchImages(for selections: [(index: Int, source: ImageSource)], dependency: Dependency) -> AnyPublisher<[ClipItemSource], DownloadError> {
+        // TODO: 全画像の合計が 120MB を超えてしまう恐れがあるので、データを遅延して読み込む
+
+        let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
+            .map { [dependency] selection in
+                return dependency.imageLoader.load(from: selection.source)
+                    .mapError { DownloadError.failedToDownloadImage($0) }
+                    .tryMap { try ClipItemSource(index: selection.index, result: $0) }
+                    .mapError { err in
+                        if let error = err as? DownloadError {
+                            return error
+                        } else if let error = err as? ClipItemSource.InitializeError {
+                            return DownloadError.failedToCreateClipItemSource(error)
+                        } else {
+                            return DownloadError.internalError
+                        }
+                    }
+                    .eraseToAnyPublisher()
+            }
+        return Publishers.MergeMany(publishers)
+            .collect()
+            .eraseToAnyPublisher()
+    }
+
+    private static func save(url: URL?,
+                             shouldSaveAsHiddenItem: Bool,
+                             tagIds: [Tag.Identity],
+                             sources: [ClipItemSource],
+                             dependency: Dependency) -> Result<Action?, DownloadError>
+    {
+        let result = dependency.clipBuilder.build(url: url,
+                                                  hidesClip: shouldSaveAsHiddenItem,
+                                                  sources: sources,
+                                                  tagIds: tagIds)
+        switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
+        case .success:
+            return .success(.imagesSaved)
+
+        case let .failure(error):
+            return .failure(.failedToSave(error))
+        }
+    }
+}
+
+private extension ClipCreationViewReducer.DownloadError {
+    var displayTitle: String {
+        switch self {
+        case .failedToDownloadImage:
+            return L10n.clipCreationViewDownloadErrorFailedToDownloadTitle
+
+        default:
+            return L10n.clipCreationViewDownloadErrorFailedToSaveTitle
+        }
+    }
+
+    var displayMessage: String {
+        switch self {
+        case .failedToDownloadImage:
+            return L10n.clipCreationViewDownloadErrorFailedToDownloadBody
+
+        default:
+            return L10n.clipCreationViewDownloadErrorFailedToSaveBody
+        }
     }
 }

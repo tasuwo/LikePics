@@ -13,7 +13,9 @@ enum ClipCreationViewAction: Action {
     // MARK: State Observer
 
     case imagesLoaded([ImageSource])
+    case imagesSaved
     case failedToLoadImages(ImageSourceProviderError)
+    case failedToSaveImages(ClipCreationViewReducer.DownloadError)
     case settingsUpdated(isSomeItemsHidden: Bool)
 
     // MARK: Control
@@ -30,4 +32,8 @@ enum ClipCreationViewAction: Action {
 
     case tagsSelected([Tag]?)
     case modalCompleted(Bool)
+
+    // MARK: Alert Completion
+
+    case alertDismissed
 }
