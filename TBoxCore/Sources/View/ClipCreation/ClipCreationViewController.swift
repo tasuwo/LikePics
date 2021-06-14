@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
@@ -24,8 +25,8 @@ public class ClipCreationViewController: UIViewController {
     // MARK: - Type Aliases
 
     typealias Factory = ViewControllerFactory
-    typealias Dependency = ClipCreationViewModelType
     typealias Layout = ClipCreationViewLayout
+    typealias Store = ForestKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
 
     // MARK: - Properties
 
@@ -33,16 +34,7 @@ public class ClipCreationViewController: UIViewController {
 
     private let factory: Factory
 
-    // MARK: Dependency
-
-    private let viewModel: Dependency
-
-    // MARK: IBOutlets
-
-    @IBOutlet var overlayView: UIView!
-    @IBOutlet var indicator: UIActivityIndicatorView!
-
-    // MARK: Views
+    // MARK: View
 
     private lazy var addUrlAlertContainer = TextEditAlert(
         configuration: .init(title: L10n.clipCreationViewAlertForAddUrlTitle,
@@ -62,6 +54,8 @@ public class ClipCreationViewController: UIViewController {
                                                   target: self,
                                                   action: #selector(reloadAction))
     private let emptyMessageView = EmptyMessageView()
+    private let overlayView = UIView()
+    private let indicator = UIActivityIndicatorView()
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
     private var proxy: Layout.Proxy!
@@ -70,24 +64,26 @@ public class ClipCreationViewController: UIViewController {
 
     private let thumbnailLoader: ThumbnailLoaderProtocol
 
-    // MARK: States
+    // MARK: Store/Subscription
 
-    private var subscriptions = Set<AnyCancellable>()
-    private weak var delegate: ClipCreationDelegate?
+    private var store: Store
+    private var subscriptions: Set<AnyCancellable> = .init()
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.ClipCreationViewController", qos: .userInteractive)
+    private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Lifecycle
 
     public init(factory: ViewControllerFactory,
-                viewModel: ClipCreationViewModelType,
+                state: ClipCreationViewState,
+                dependency: ClipCreationViewDependency,
                 thumbnailLoader: ThumbnailLoaderProtocol,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory
-        self.viewModel = viewModel
+        self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
         self.thumbnailLoader = thumbnailLoader
         self.delegate = delegate
-        super.init(nibName: "ClipCreationViewController", bundle: Bundle(for: Self.self))
+        super.init(nibName: nil, bundle: nil)
     }
 
     @available(*, unavailable)
@@ -98,193 +94,188 @@ public class ClipCreationViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupAppearance()
-        self.setupCollectionView()
-        self.setupNavigationBar()
-        self.setupEmptyMessage()
+        configureViewHierarchy()
+        configureDataSource()
 
-        view.bringSubviewToFront(overlayView)
+        bind(to: store)
 
-        self.bind(to: viewModel)
-
-        self.viewModel.inputs.viewLoaded.send(self.view)
-        self.viewModel.inputs.loadImages.send(())
+        store.execute(.viewDidLoad)
     }
+}
 
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+extension ClipCreationViewController {
+    private func bind(to store: Store) {
+        store.state
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                let snapshot = self.makeSnapshot(state)
+                self.dataSource.apply(snapshot)
+            }
+            .store(in: &subscriptions)
 
-        self.viewModel.inputs.viewDidAppear.send(())
-    }
-
-    // MARK: - Methods
-
-    private func setupAppearance() {
-        self.view.backgroundColor = Asset.Color.background.color
-        self.navigationItem.hidesBackButton = true
-    }
-
-    // MARK: Bind
-
-    private func bind(to dependency: Dependency) {
-        dependency.outputs.isLoading
-            .combineLatest(dependency.outputs.displayCollectionView)
-            .sink { [weak self] isLoading, displayCollectionView in
-                self?.overlayView.backgroundColor = displayCollectionView
-                    ? UIColor.black.withAlphaComponent(0.4)
-                    : .clear
+        store.state
+            .bind(\.isLoading) { [weak self] isLoading in
                 if isLoading {
                     self?.indicator.startAnimating()
-                    self?.overlayView.isHidden = false
                 } else {
                     self?.indicator.stopAnimating()
-                    self?.overlayView.isHidden = true
                 }
             }
-            .store(in: &self.subscriptions)
+            .store(in: &subscriptions)
 
-        dependency.outputs.isReloadItemEnabled
-            .assign(to: \.isEnabled, on: self.itemReload)
-            .store(in: &self.subscriptions)
+        store.state
+            .bind(\.isOverlayHidden, to: \.isHidden, on: overlayView)
+            .store(in: &subscriptions)
 
-        dependency.outputs.isDoneItemEnabled
-            .assign(to: \.isEnabled, on: self.itemDone)
-            .store(in: &self.subscriptions)
+        store.state
+            .bind(\.isReloadItemEnabled, to: \.isEnabled, on: itemReload)
+            .store(in: &subscriptions)
 
-        dependency.outputs.displayReloadButton
-            .map { [weak self] display in display ? self?.itemReload : nil }
-            .map { [$0].compactMap { $0 } }
-            .assign(to: \.leftBarButtonItems, on: self.navigationItem)
-            .store(in: &self.subscriptions)
+        store.state
+            .bind(\.isDoneItemEnabled, to: \.isEnabled, on: itemDone)
+            .store(in: &subscriptions)
 
-        dependency.outputs.displayCollectionView
-            .map { !$0 }
-            .assign(to: \.isHidden, on: self.collectionView)
-            .store(in: &self.subscriptions)
-
-        dependency.outputs.displayEmptyMessage
-            .map { $0 ? 1 : 0 }
-            .assign(to: \.alpha, on: self.emptyMessageView)
-            .store(in: &self.subscriptions)
-
-        dependency.outputs.applySnapshot
-            .receive(on: clipsUpdateQueue)
-            .sink { [weak self] snapshot in
-                self?.dataSource.apply(snapshot, animatingDifferences: true) {
-                    guard let self = self else { return }
-                    self.apply(indices: self.viewModel.outputs.selectedIndices.value)
-                }
+        store.state
+            .bind(\.displayReloadButton) { [weak self] _ in
+                self?.navigationItem.leftBarButtonItems = [self?.itemReload].compactMap { $0 }
             }
-            .store(in: &self.subscriptions)
+            .store(in: &subscriptions)
 
-        dependency.outputs.selectedIndices
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] indices in self?.apply(indices: indices) }
-            .store(in: &self.subscriptions)
+        store.state
+            .bind(\.isCollectionViewHidden, to: \.isHidden, on: collectionView)
+            .store(in: &subscriptions)
 
-        dependency.outputs.emptyErrorTitle
-            .assign(to: \.title, on: self.emptyMessageView)
-            .store(in: &self.subscriptions)
-        dependency.outputs.emptyErrorMessage
-            .assign(to: \.message, on: self.emptyMessageView)
-            .store(in: &self.subscriptions)
+        store.state
+            .bind(\.emptyMessageViewTitle, to: \.title, on: emptyMessageView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.emptyMessageViewMessage, to: \.message, on: emptyMessageView)
+            .store(in: &subscriptions)
+        store.state
+            .bind(\.emptyMessageViewAlpha, to: \.alpha, on: emptyMessageView)
+            .store(in: &subscriptions)
 
-        dependency.outputs.displayAlert
-            .sink { [weak self] title, message in
-                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(.init(title: L10n.confirmAlertOk, style: .default, handler: nil))
-                self?.present(alert, animated: true, completion: nil)
+        store.state
+            .removeDuplicates(by: \.imageSources.selections)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                state.imageSources
+                    .selections
+                    .enumerated()
+                    .forEach { index, id in
+                        guard let indexPath = self.dataSource.indexPath(for: .image(id)),
+                              let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
+                        cell.selectionOrder = index + 1
+                    }
             }
-            .store(in: &self.subscriptions)
+            .store(in: &subscriptions)
 
-        dependency.outputs.didFinish
-            .sink { [weak self] _ in
+        store.state
+            .bind(\.isDismissed) { [weak self] _ in
                 guard let self = self else { return }
                 self.delegate?.didFinish(self)
             }
-            .store(in: &self.subscriptions)
+            .store(in: &subscriptions)
     }
 
-    private func apply(indices: [Int]) {
-        let indexPaths = indices.map { IndexPath(row: $0, section: Layout.Section.image.rawValue) }
-        let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems ?? []
+    // MARK: Snapshot
 
-        // 足りない分を選択する
-        Set(indexPaths).subtracting(selectedIndexPaths)
-            .forEach { self.collectionView.selectItem(at: $0, animated: false, scrollPosition: []) }
+    private func makeSnapshot(_ state: ClipCreationViewState) -> Layout.Snapshot {
+        var snapshot = Layout.Snapshot()
+        snapshot.appendSections([.tag])
+        snapshot.appendItems([Layout.Item.tagAddition] + state.tags.orderedFilteredEntities().map({ Layout.Item.tag($0) }))
 
-        // 並び順を更新する
-        indexPaths.enumerated().forEach { idx, indexPath in
-            guard let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
-            cell.selectionOrder = idx + 1
+        snapshot.appendSections([.meta])
+        snapshot.appendItems([
+            .meta(.init(title: L10n.clipCreationViewMetaUrlTitle,
+                        secondaryTitle: state.url?.absoluteString ?? L10n.clipCreationViewMetaUrlNo,
+                        accessory: .button(title: L10n.clipCreationViewMetaUrlEdit))),
+            .meta(.init(title: L10n.clipMetaShouldHides,
+                        secondaryTitle: nil,
+                        accessory: .switch(isOn: state.shouldSaveAsHiddenItem)))
+        ])
+
+        snapshot.appendSections([.image])
+        snapshot.appendItems(state.imageSources.order.map({ Layout.Item.image($0) }))
+
+        return snapshot
+    }
+}
+
+// MARK: - Configuration
+
+extension ClipCreationViewController {
+    private func configureViewHierarchy() {
+        view.backgroundColor = Asset.Color.background.color
+
+        navigationItem.hidesBackButton = true
+        navigationItem.title = L10n.clipCreationViewTitle
+        [itemReload, itemDone].forEach {
+            $0.setTitleTextAttributes([.foregroundColor: UIColor.lightGray], for: .disabled)
+            $0.isEnabled = false
         }
+        navigationItem.setRightBarButton(itemDone, animated: true)
 
-        // 余剰な部分を選択解除する
-        selectedIndexPaths
-            .filter { !indices.contains($0.row) }
-            .forEach { self.collectionView.deselectItem(at: $0, animated: false) }
-    }
-
-    // MARK: CollectionView
-
-    private func setupCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds,
-                                          collectionViewLayout: Layout.createLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = Asset.Color.background.color
         collectionView.contentInsetAdjustmentBehavior = .always
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         collectionView.delegate = self
         collectionView.isHidden = true
-
         view.addSubview(collectionView)
+        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
 
+        emptyMessageView.title = nil
+        emptyMessageView.message = nil
+        emptyMessageView.actionButtonTitle = L10n.clipCreationViewLoadingErrorAction
+        emptyMessageView.delegate = self
+        emptyMessageView.alpha = 0
+        emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyMessageView)
+        NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
+
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(overlayView)
+        NSLayoutConstraint.activate(overlayView.constraints(fittingIn: view))
+
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.style = .large
+        overlayView.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor)
+        ])
+    }
+
+    private func configureDataSource() {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
-                                                             thumbnailLoader: self.thumbnailLoader,
-                                                             outputs: viewModel.outputs)
+                                                             imageSourcesProvider: self,
+                                                             thumbnailLoader: thumbnailLoader)
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy
     }
 
-    // MARK: NavigationBar
-
-    private func setupNavigationBar() {
-        self.navigationItem.title = L10n.clipCreationViewTitle
-
-        [self.itemReload, self.itemDone].forEach {
-            $0.setTitleTextAttributes([.foregroundColor: UIColor.lightGray], for: .disabled)
-            $0.isEnabled = false
-        }
-
-        self.navigationItem.setRightBarButton(self.itemDone, animated: true)
-    }
-
     @objc
     private func saveAction() {
-        self.viewModel.inputs.saveImages.send(())
+        store.execute(.saveImages)
     }
 
     @objc
     private func reloadAction() {
-        self.viewModel.inputs.loadImages.send(())
+        store.execute(.viewDidLoad)
     }
+}
 
-    // MARK: EmptyMessage
+extension ClipCreationViewController: ImageSourcesProvider {
+    // MARK: ImageSourcesProvider
 
-    private func setupEmptyMessage() {
-        self.view.addSubview(self.emptyMessageView)
-
-        self.emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(self.emptyMessageView.constraints(fittingIn: self.view.safeAreaLayoutGuide))
-
-        self.emptyMessageView.title = nil
-        self.emptyMessageView.message = nil
-        self.emptyMessageView.actionButtonTitle = L10n.clipCreationViewLoadingErrorAction
-        self.emptyMessageView.delegate = self
-
-        self.emptyMessageView.alpha = 0
+    public var imageSources: [UUID: ImageSource] { store.stateValue.imageSources.imageSourceById }
+    public func selectionOrder(of id: UUID) -> Int? {
+        return store.stateValue.imageSources.selections.firstIndex(of: id)
     }
 }
 
@@ -307,13 +298,13 @@ extension ClipCreationViewController: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard case .image = Layout.Section(rawValue: indexPath.section) else { return }
-        self.viewModel.inputs.selectedImage.send(indexPath.row)
+        guard case let .image(imageSourceId) = dataSource.itemIdentifier(for: indexPath) else { return }
+        store.execute(.selected(imageSourceId))
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard case .image = Layout.Section(rawValue: indexPath.section) else { return }
-        self.viewModel.inputs.deselectedImage.send(indexPath.row)
+        guard case let .image(imageSourceId) = dataSource.itemIdentifier(for: indexPath) else { return }
+        store.execute(.deselected(imageSourceId))
     }
 }
 
@@ -321,7 +312,7 @@ extension ClipCreationViewController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
     public func didTapActionButton(_ view: EmptyMessageView) {
-        self.viewModel.inputs.loadImages.send(())
+        store.execute(.loadImages)
     }
 }
 
@@ -329,7 +320,7 @@ extension ClipCreationViewController: TagSelectionViewControllerDelegate {
     // MARK: - TagSelectionViewControllerDelegate
 
     public func didSelectTags(tags: [Tag]) {
-        self.viewModel.inputs.replacedTags.send(tags)
+        store.execute(.tagsSelected(tags))
     }
 }
 
@@ -337,7 +328,7 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
     // MARK: - ClipCreationViewDelegate
 
     public func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
-        self.viewModel.inputs.hidingUpdated.send(isOn)
+        store.execute(.shouldSaveAsHiddenItem(isOn))
     }
 
     public func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
@@ -345,7 +336,7 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
     }
 
     private func startUrlEditing() {
-        if let url = viewModel.outputs.url {
+        if let url = store.stateValue.url {
             self.editUrlAlertContainer.present(
                 withText: url.absoluteString,
                 on: self,
@@ -354,7 +345,7 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
                     return text.isEmpty || URL(string: text) != nil
                 }, completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
-                    self?.viewModel.inputs.urlEdited.send(URL(string: text))
+                    self?.store.execute(.editedUrl(URL(string: text)))
                 }
             )
         } else {
@@ -366,7 +357,7 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
                     return text.isEmpty || URL(string: text) != nil
                 }, completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
-                    self?.viewModel.inputs.urlEdited.send(URL(string: text))
+                    self?.store.execute(.editedUrl(URL(string: text)))
                 }
             )
         }
@@ -391,15 +382,15 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
         else {
             return
         }
-        self.viewModel.inputs.deletedTag.send(tag)
+        store.execute(.tagRemoveButtonTapped(tag.id))
     }
 
     private func presentTagSelectionView() {
         guard let parent = self.parent else {
             return
         }
-        let selectedTags = Set(self.viewModel.outputs.tags.value.map({ $0.identity }))
-        guard let nextVC = self.factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else {
+        let selectedTags = Set(store.stateValue.tags.filteredEntities().map { $0.id })
+        guard let nextVC = factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else {
             return
         }
         parent.present(nextVC, animated: true, completion: nil)

@@ -26,10 +26,6 @@ enum ClipCreationViewAction: Action {
     case selected(UUID)
     case deselected(UUID)
 
-    // MARK: Alert Completion
-
-    case alertDismissed
-
     // MARK: Modal Completion
 
     case tagsSelected([Tag]?)

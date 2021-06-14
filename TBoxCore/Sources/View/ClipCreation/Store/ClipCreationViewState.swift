@@ -11,29 +11,29 @@ public struct ClipCreationViewState: Equatable {
         case rawImage
     }
 
-    enum Alert: Equatable {
-        case error(title: String, body: String)
-    }
-
     enum Modal: Equatable {
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
+    }
+
+    enum DisplayState: Equatable {
+        case loading
+        case loaded
+        case error(title: String, message: String)
     }
 
     let source: Source
 
     var url: URL?
     var tags: EntityCollectionSnapshot<Tag>
-    var imageSources: EntityCollectionSnapshot<ImageSource>
+    var imageSources: ImageSourcesSnapshot
     var shouldSaveAsHiddenItem: Bool
 
-    var isLoading: Bool
-    var isEmptyMessageViewHidden: Bool
-    var isCollectionViewHidden: Bool
+    var displayState: DisplayState
+
     var isSomeItemsHidden: Bool
 
     var isDismissed: Bool
 
-    var alert: Alert?
     var modal: Modal?
 }
 
@@ -42,23 +42,69 @@ public extension ClipCreationViewState {
         self.source = source
         self.url = url
         self.tags = .init()
-        self.imageSources = .init()
+        self.imageSources = .init(order: [], selections: [], imageSourceById: [:])
         self.shouldSaveAsHiddenItem = false
-        self.isLoading = true
-        self.isEmptyMessageViewHidden = true
-        self.isCollectionViewHidden = true
+        self.displayState = .loading
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false
-        self.alert = nil
         self.modal = nil
     }
 }
 
 extension ClipCreationViewState {
+    var isLoading: Bool {
+        switch displayState {
+        case .loading:
+            return true
+
+        default:
+            return false
+        }
+    }
+
+    var emptyMessageViewAlpha: CGFloat {
+        switch displayState {
+        case .error:
+            return 1
+
+        default:
+            return 0
+        }
+    }
+
+    var emptyMessageViewTitle: String? {
+        switch displayState {
+        case let .error(title: title, message: _):
+            return title
+
+        default:
+            return nil
+        }
+    }
+
+    var emptyMessageViewMessage: String? {
+        switch displayState {
+        case let .error(title: _, message: message):
+            return message
+
+        default:
+            return nil
+        }
+    }
+
+    var isCollectionViewHidden: Bool {
+        switch displayState {
+        case .loaded:
+            return false
+
+        default:
+            return true
+        }
+    }
+
     var isOverlayHidden: Bool { !isLoading }
     var isReloadItemEnabled: Bool { !isLoading }
     var isDoneItemEnabled: Bool { !isLoading }
-    var emptyMessageViewAlpha: CGFloat { isEmptyMessageViewHidden ? 0 : 1 }
     var displayReloadButton: Bool {
         switch source {
         case .webImage:

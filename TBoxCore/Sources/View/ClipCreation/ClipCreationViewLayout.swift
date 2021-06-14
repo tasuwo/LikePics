@@ -15,6 +15,11 @@ public protocol ClipCreationViewDelegate: AnyObject {
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
 }
 
+public protocol ImageSourcesProvider: AnyObject {
+    var imageSources: [UUID: ImageSource] { get }
+    func selectionOrder(of id: UUID) -> Int?
+}
+
 public enum ClipCreationViewLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     public typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
@@ -29,7 +34,7 @@ public enum ClipCreationViewLayout {
         case tagAddition
         case tag(Tag)
         case meta(Info)
-        case image(ImageSource)
+        case image(UUID)
     }
 
     public struct Info: Equatable, Hashable {
@@ -47,24 +52,6 @@ public enum ClipCreationViewLayout {
 // MARK: - Layout
 
 extension ClipCreationViewLayout {
-    static func predictCellSize(for collectionView: UICollectionView) -> CGSize {
-        let numberOfColumns: CGFloat = {
-            switch collectionView.traitCollection.horizontalSizeClass {
-            case .compact:
-                return 2
-
-            case .regular, .unspecified:
-                return 3
-
-            @unknown default:
-                return 3
-            }
-        }()
-        let totalSpaceSize: CGFloat = 16 * 2 + (numberOfColumns - 1) * 16
-        let width = (collectionView.bounds.size.width - totalSpaceSize) / numberOfColumns
-        return CGSize(width: width, height: width)
-    }
-
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
@@ -141,15 +128,15 @@ extension ClipCreationViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: Smoothie.ThumbnailLoaderProtocol,
-                                    outputs: ClipCreationViewModelOutputs) -> (Proxy, DataSource)
+                                    imageSourcesProvider: ImageSourcesProvider,
+                                    thumbnailLoader: Smoothie.ThumbnailLoaderProtocol) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
-        let imageCellRegistration = self.configureImageCell(thumbnailLoader: thumbnailLoader, outputs: outputs)
+        let imageCellRegistration = self.configureImageCell(imageSourcesProvider: imageSourcesProvider, thumbnailLoader: thumbnailLoader)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -227,28 +214,31 @@ extension ClipCreationViewLayout {
         }
     }
 
-    private static func configureImageCell(thumbnailLoader: ThumbnailLoaderProtocol,
-                                           outputs: ClipCreationViewModelOutputs) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>
+    private static func configureImageCell(imageSourcesProvider: ImageSourcesProvider,
+                                           thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
     {
-        return UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, ImageSource>(cellNib: ClipSelectionCollectionViewCell.nib) { [weak thumbnailLoader, weak outputs] cell, indexPath, source in
+        return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak imageSourcesProvider, weak thumbnailLoader] cell, _, imageSourceId in
+            guard let imageSourcesProvider = imageSourcesProvider,
+                  let imageSource = imageSourcesProvider.imageSources[imageSourceId] else { return }
+
             let requestId = UUID().uuidString
             cell.identifier = requestId
             cell.image = nil
 
             // Note: サイズ取得をこのタイミングで行うと重いため、行わない
             let size = cell.calcThumbnailPointSize(originalPixelSize: nil)
-            let info = ThumbnailConfig(cacheKey: "clip-creation-\(source.identifier.uuidString)",
+            let info = ThumbnailConfig(cacheKey: "clip-creation-\(imageSourceId.uuidString)",
                                        size: size,
                                        scale: cell.traitCollection.displayScale)
             let request = ThumbnailRequest(requestId: requestId,
-                                           originalImageRequest: source,
+                                           originalImageRequest: imageSource,
                                            config: info)
             thumbnailLoader?.load(request, observer: cell)
 
             // モデルにIndexを含めることも検討したが、選択状態更新毎にDataSourceを更新させると見た目がイマイチだったため、
             // selectionOrderについてはPushではなくPull方式を取る
-            if let indexInSelection = outputs?.selectedIndices.value.firstIndex(of: indexPath.row) {
-                cell.selectionOrder = indexInSelection + 1
+            if let index = imageSourcesProvider.selectionOrder(of: imageSourceId) {
+                cell.selectionOrder = index + 1
             }
         }
     }

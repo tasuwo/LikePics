@@ -51,16 +51,14 @@ struct ClipCreationViewReducer: Reducer {
         // MARK: State Observation
 
         case let .imagesLoaded(imageSources):
-            nextState.imageSources = nextState.imageSources
-                .updated(entities: imageSources.indexed())
-            nextState.isLoading = false
+            nextState.imageSources = .init(imageSources)
+            nextState.displayState = .loaded
+
             // TODO: 必要であれば選択する
             return (nextState, .none)
 
         case let .failedToLoadImages(error):
-            nextState.alert = .error(title: error.displayTitle,
-                                     body: error.displayMessage)
-            nextState.isLoading = false
+            nextState.displayState = .error(title: error.displayTitle, message: error.displayMessage)
             return (nextState, .none)
 
         case let .settingsUpdated(isSomeItemsHidden: isSomeItemsHidden):
@@ -88,20 +86,11 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case let .selected(id):
-            let newSelections = state.imageSources._selectedIds.union(Set([id]))
-            nextState.imageSources = state.imageSources.updated(selectedIds: newSelections)
+            nextState.imageSources = state.imageSources.selected(id)
             return (nextState, .none)
 
         case let .deselected(id):
-            guard state.imageSources._selectedIds.contains(id) else { return (state, .none) }
-            let newSelections = state.imageSources._selectedIds.subtracting(Set([id]))
-            nextState.imageSources = nextState.imageSources.updated(selectedIds: newSelections)
-            return (nextState, .none)
-
-        // MARK: Alert Completion
-
-        case .alertDismissed:
-            nextState.alert = nil
+            nextState.imageSources = state.imageSources.deselected(id)
             return (nextState, .none)
 
         // MARK: Modal Completion
@@ -130,6 +119,8 @@ extension ClipCreationViewReducer {
             .map { Action.settingsUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
+        nextState.isSomeItemsHidden = !dependency.userSettingsStorage.readShowHiddenItems()
+
         return (nextState, [settingsEffect])
     }
 }
@@ -140,7 +131,7 @@ extension ClipCreationViewReducer {
     static func loadImages(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         var nextState = state
 
-        nextState.isLoading = true
+        nextState.displayState = .loading
 
         let stream = Deferred { dependency.imageSourceProvider.resolveSources() }
             .map { sources in sources.filter { $0.isValid } }

@@ -70,12 +70,23 @@ extension DependencyContainer: ViewControllerFactory {
     }
 
     func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
-        let viewModel = ClipCreationViewModel(url: webUrl,
-                                              clipStore: self.clipStore,
-                                              provider: WebImageSourceProvider(url: webUrl),
-                                              configuration: .webImage)
+        struct Dependency: ClipCreationViewDependency {
+            var clipBuilder: ClipBuildable
+            var clipStore: ClipStorable
+            var imageLoader: ImageLoaderProtocol
+            var imageSourceProvider: ImageSourceProvider
+            var userSettingsStorage: UserSettingsStorageProtocol
+        }
+        let dependency = Dependency(clipBuilder: ClipBuilder(),
+                                    clipStore: clipStore,
+                                    imageLoader: ImageLoader(),
+                                    imageSourceProvider: WebImageSourceProvider(url: webUrl),
+                                    userSettingsStorage: userSettingsStorage)
         return ClipCreationViewController(factory: self,
-                                          viewModel: viewModel,
+                                          state: .init(source: .webImage,
+                                                       url: webUrl,
+                                                       isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
+                                          dependency: dependency,
                                           thumbnailLoader: thumbnailLoader,
                                           delegate: delegate)
     }
@@ -84,12 +95,23 @@ extension DependencyContainer: ViewControllerFactory {
                                                 fileUrls: [URL],
                                                 delegate: ClipCreationDelegate) -> ClipCreationViewController
     {
-        let viewModel = ClipCreationViewModel(url: nil,
-                                              clipStore: self.clipStore,
-                                              provider: LocalImageSourceProvider(providers: imageProviders, fileUrls: fileUrls),
-                                              configuration: .rawImage)
+        struct Dependency: ClipCreationViewDependency {
+            var clipBuilder: ClipBuildable
+            var clipStore: ClipStorable
+            var imageLoader: ImageLoaderProtocol
+            var imageSourceProvider: ImageSourceProvider
+            var userSettingsStorage: UserSettingsStorageProtocol
+        }
+        let dependency = Dependency(clipBuilder: ClipBuilder(),
+                                    clipStore: clipStore,
+                                    imageLoader: ImageLoader(),
+                                    imageSourceProvider: LocalImageSourceProvider(providers: imageProviders, fileUrls: fileUrls),
+                                    userSettingsStorage: userSettingsStorage)
         return ClipCreationViewController(factory: self,
-                                          viewModel: viewModel,
+                                          state: .init(source: .rawImage,
+                                                       url: nil,
+                                                       isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
+                                          dependency: dependency,
                                           thumbnailLoader: thumbnailLoader,
                                           delegate: delegate)
     }

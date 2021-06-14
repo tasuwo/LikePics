@@ -211,7 +211,7 @@ extension ClipCreationViewModel {
         ])
 
         snapshot.appendSections([.image])
-        snapshot.appendItems(images.map({ Layout.Item.image($0) }))
+        snapshot.appendItems(images.map({ Layout.Item.image($0.identifier) }))
         return snapshot
     }
 }
