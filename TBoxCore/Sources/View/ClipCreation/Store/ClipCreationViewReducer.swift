@@ -51,10 +51,8 @@ struct ClipCreationViewReducer: Reducer {
         // MARK: State Observation
 
         case let .imagesLoaded(imageSources):
-            nextState.imageSources = .init(imageSources)
+            nextState.imageSources = .init(imageSources, selectAll: state.source.fromLocal)
             nextState.displayState = .loaded
-
-            // TODO: 必要であれば選択する
             return (nextState, .none)
 
         case .imagesSaved:
@@ -94,10 +92,12 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case let .selected(id):
+            guard !state.imageSources.selections.contains(id) else { return (nextState, .none) }
             nextState.imageSources = state.imageSources.selected(id)
             return (nextState, .none)
 
         case let .deselected(id):
+            guard state.imageSources.selections.contains(id) else { return (nextState, .none) }
             nextState.imageSources = state.imageSources.deselected(id)
             return (nextState, .none)
 

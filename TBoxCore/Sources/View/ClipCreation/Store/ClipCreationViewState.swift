@@ -8,7 +8,17 @@ import Domain
 public struct ClipCreationViewState: Equatable {
     public enum Source: Equatable {
         case webImage
-        case rawImage
+        case localImage
+
+        var fromLocal: Bool {
+            switch self {
+            case .localImage:
+                return true
+
+            case .webImage:
+                return false
+            }
+        }
     }
 
     enum Modal: Equatable {
@@ -117,7 +127,7 @@ extension ClipCreationViewState {
         case .webImage:
             return true
 
-        case .rawImage:
+        case .localImage:
             return false
         }
     }

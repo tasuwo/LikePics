@@ -109,7 +109,9 @@ extension ClipCreationViewController {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 let snapshot = self.makeSnapshot(state)
-                self.dataSource.apply(snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self.applySelection(state)
+                }
             }
             .store(in: &subscriptions)
 
@@ -157,17 +159,7 @@ extension ClipCreationViewController {
 
         store.state
             .removeDuplicates(by: \.imageSources.selections)
-            .sink { [weak self] state in
-                guard let self = self else { return }
-                state.imageSources
-                    .selections
-                    .enumerated()
-                    .forEach { index, id in
-                        guard let indexPath = self.dataSource.indexPath(for: .image(id)),
-                              let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
-                        cell.selectionOrder = index + 1
-                    }
-            }
+            .sink { [weak self] state in self?.applySelection(state) }
             .store(in: &subscriptions)
 
         store.state
@@ -223,6 +215,20 @@ extension ClipCreationViewController {
         snapshot.appendItems(state.imageSources.order.map({ Layout.Item.image($0) }))
 
         return snapshot
+    }
+
+    // MARK: Selection
+
+    private func applySelection(_ state: ClipCreationViewState) {
+        state.imageSources
+            .selections
+            .enumerated()
+            .forEach { index, id in
+                guard let indexPath = self.dataSource.indexPath(for: .image(id)),
+                      let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
+                self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                cell.selectionOrder = index + 1
+            }
     }
 }
 

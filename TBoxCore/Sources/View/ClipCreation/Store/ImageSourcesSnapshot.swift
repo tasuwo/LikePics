@@ -15,9 +15,9 @@ struct ImageSourcesSnapshot: Equatable {
         self.imageSourceById = imageSourceById
     }
 
-    init(_ imageSources: [ImageSource]) {
+    init(_ imageSources: [ImageSource], selectAll: Bool) {
         self.order = imageSources.map { $0.identifier }
-        self.selections = []
+        self.selections = selectAll ? imageSources.map { $0.identifier } : []
         self.imageSourceById = imageSources.reduce(into: [UUID: ImageSource](), { $0[$1.identifier] = $1 })
     }
 

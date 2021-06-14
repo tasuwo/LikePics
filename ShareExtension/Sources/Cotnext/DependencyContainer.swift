@@ -108,7 +108,7 @@ extension DependencyContainer: ViewControllerFactory {
                                     imageSourceProvider: LocalImageSourceProvider(providers: imageProviders, fileUrls: fileUrls),
                                     userSettingsStorage: userSettingsStorage)
         return ClipCreationViewController(factory: self,
-                                          state: .init(source: .rawImage,
+                                          state: .init(source: .localImage,
                                                        url: nil,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
