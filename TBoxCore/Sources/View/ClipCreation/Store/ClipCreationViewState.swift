@@ -122,15 +122,7 @@ extension ClipCreationViewState {
     }
 
     var isOverlayHidden: Bool { !isLoading }
-    var isReloadItemEnabled: Bool { !isLoading }
+    var isReloadItemEnabled: Bool { !isLoading && !source.fromLocal }
     var isDoneItemEnabled: Bool { !isLoading && !imageSources.selections.isEmpty }
-    var displayReloadButton: Bool {
-        switch source {
-        case .webImage:
-            return true
-
-        case .localImage:
-            return false
-        }
-    }
+    var displayReloadButton: Bool { !source.fromLocal }
 }
