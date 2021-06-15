@@ -255,21 +255,18 @@ extension ClipCreationViewController {
         navigationItem.setRightBarButton(itemDone, animated: true)
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = Asset.Color.background.color
-        collectionView.contentInsetAdjustmentBehavior = .always
+        collectionView.backgroundColor = .clear
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         collectionView.delegate = self
-        collectionView.isHidden = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
+        NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view.safeAreaLayoutGuide))
 
         emptyMessageView.title = nil
         emptyMessageView.message = nil
         emptyMessageView.actionButtonTitle = L10n.clipCreationViewLoadingErrorAction
         emptyMessageView.delegate = self
-        emptyMessageView.alpha = 0
         emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyMessageView)
         NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
