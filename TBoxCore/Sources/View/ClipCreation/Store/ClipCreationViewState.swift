@@ -42,6 +42,7 @@ public struct ClipCreationViewState: Equatable {
     var tags: EntityCollectionSnapshot<Tag>
     var imageSources: ImageSourcesSnapshot
     var shouldSaveAsHiddenItem: Bool
+    var shouldSaveAsClip: Bool
 
     var displayState: DisplayState
 
@@ -60,6 +61,7 @@ public extension ClipCreationViewState {
         self.tags = .init()
         self.imageSources = .init(order: [], selections: [], imageSourceById: [:])
         self.shouldSaveAsHiddenItem = false
+        self.shouldSaveAsClip = true
         self.displayState = .loading
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false

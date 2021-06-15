@@ -56,6 +56,8 @@
 // MARK: - Clip Meta
 
 "clip_meta_should_hides" = "Hide saved images";
+"clip_meta_should_clip" = "Save as clip";
+"clip_meta_should_clip_description" = "Save multiple images in a single clip in the selected order.";
 
 // MARK: - Placeholder
 

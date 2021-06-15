@@ -10,14 +10,15 @@ import UIKit
 
 public protocol ClipCreationViewDelegate: AnyObject {
     func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath)
-    func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
+    func didSwitch(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
     func didTapTagAdditionButton(_ cell: UICollectionViewCell)
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
 }
 
-public protocol ImageSourcesProvider: AnyObject {
+public protocol ClipSelectionCollectionViewCellDataSource: AnyObject {
     var imageSources: [UUID: ImageSource] { get }
     func selectionOrder(of id: UUID) -> Int?
+    func shouldSaveAsClip() -> Bool
 }
 
 public enum ClipCreationViewLayout {
@@ -128,7 +129,7 @@ extension ClipCreationViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    imageSourcesProvider: ImageSourcesProvider,
+                                    cellDataSource: ClipSelectionCollectionViewCellDataSource,
                                     thumbnailLoader: Smoothie.ThumbnailLoaderProtocol) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
@@ -136,7 +137,7 @@ extension ClipCreationViewLayout {
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
-        let imageCellRegistration = self.configureImageCell(imageSourcesProvider: imageSourcesProvider, thumbnailLoader: thumbnailLoader)
+        let imageCellRegistration = self.configureImageCell(dataSource: cellDataSource, thumbnailLoader: thumbnailLoader)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -180,6 +181,7 @@ extension ClipCreationViewLayout {
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = info.title
             contentConfiguration.secondaryText = info.secondaryTitle
+            contentConfiguration.secondaryTextProperties.font = .preferredFont(forTextStyle: .caption1)
             cell.contentConfiguration = contentConfiguration
 
             switch info.accessory {
@@ -214,16 +216,16 @@ extension ClipCreationViewLayout {
         }
     }
 
-    private static func configureImageCell(imageSourcesProvider: ImageSourcesProvider,
+    private static func configureImageCell(dataSource: ClipSelectionCollectionViewCellDataSource,
                                            thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
     {
-        return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak imageSourcesProvider, weak thumbnailLoader] cell, _, imageSourceId in
-            guard let imageSourcesProvider = imageSourcesProvider,
-                  let imageSource = imageSourcesProvider.imageSources[imageSourceId] else { return }
+        return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak dataSource, weak thumbnailLoader] cell, _, imageSourceId in
+            guard let dataSource = dataSource,
+                  let imageSource = dataSource.imageSources[imageSourceId] else { return }
 
             let requestId = UUID().uuidString
             cell.identifier = requestId
-            cell.image = nil
+            cell.displaySelectionOrder = dataSource.shouldSaveAsClip()
 
             // Note: サイズ取得をこのタイミングで行うと重いため、行わない
             let size = cell.calcThumbnailPointSize(originalPixelSize: nil)
@@ -237,7 +239,7 @@ extension ClipCreationViewLayout {
 
             // モデルにIndexを含めることも検討したが、選択状態更新毎にDataSourceを更新させると見た目がイマイチだったため、
             // selectionOrderについてはPushではなくPull方式を取る
-            if let index = imageSourcesProvider.selectionOrder(of: imageSourceId) {
+            if let index = dataSource.selectionOrder(of: imageSourceId) {
                 cell.selectionOrder = index + 1
             }
         }
@@ -248,7 +250,7 @@ extension ClipCreationViewLayout {
 
 extension ClipCreationViewLayout.Proxy {
     func didSwitchInfo(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
-        self.delegate?.didSwitchHiding(cell, at: indexPath, isOn: isOn)
+        self.delegate?.didSwitch(cell, at: indexPath, isOn: isOn)
     }
 
     func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {

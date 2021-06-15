@@ -87,6 +87,10 @@ struct ClipCreationViewReducer: Reducer {
             nextState.shouldSaveAsHiddenItem = shouldHide
             return (nextState, .none)
 
+        case let .shouldSaveAsClip(isOn):
+            nextState.shouldSaveAsClip = isOn
+            return (nextState, .none)
+
         case let .tagRemoveButtonTapped(tagId):
             nextState.tags = nextState.tags.removingEntity(having: tagId)
             return (nextState, .none)
@@ -256,6 +260,7 @@ extension ClipCreationViewReducer {
         let stream = self.fetchImages(for: selections, dependency: dependency)
             .flatMap { [dependency] sources -> AnyPublisher<Action?, DownloadError> in
                 return Self.save(url: state.url,
+                                 shouldSaveAsClip: state.shouldSaveAsClip,
                                  shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
                                  tagIds: Array(state.tags._filteredIds),
                                  sources: sources,
@@ -297,22 +302,40 @@ extension ClipCreationViewReducer {
             .eraseToAnyPublisher()
     }
 
+    // swiftlint:disable:next function_parameter_count
     private static func save(url: URL?,
+                             shouldSaveAsClip: Bool,
                              shouldSaveAsHiddenItem: Bool,
                              tagIds: [Tag.Identity],
                              sources: [ClipItemSource],
                              dependency: Dependency) -> Result<Action?, DownloadError>
     {
-        let result = dependency.clipBuilder.build(url: url,
-                                                  hidesClip: shouldSaveAsHiddenItem,
-                                                  sources: sources,
-                                                  tagIds: tagIds)
-        switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
-        case .success:
-            return .success(.imagesSaved)
+        if shouldSaveAsClip {
+            let result = dependency.clipBuilder.build(url: url,
+                                                      hidesClip: shouldSaveAsHiddenItem,
+                                                      sources: sources,
+                                                      tagIds: tagIds)
+            switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
+            case .success:
+                return .success(.imagesSaved)
 
-        case let .failure(error):
-            return .failure(.failedToSave(error))
+            case let .failure(error):
+                return .failure(.failedToSave(error))
+            }
+        } else {
+            var results: [Result<Clip.Identity, ClipStorageError>] = []
+            for source in sources {
+                let result = dependency.clipBuilder.build(url: url,
+                                                          hidesClip: shouldSaveAsHiddenItem,
+                                                          sources: [source],
+                                                          tagIds: tagIds)
+                results.append(dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false))
+            }
+            if let firstError = results.compactMap({ $0.failureValue }).first {
+                return .failure(.failedToSave(firstError))
+            } else {
+                return .success(.imagesSaved)
+            }
         }
     }
 }

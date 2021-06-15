@@ -123,6 +123,14 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.shouldSaveAsClip) { [weak self] shouldSaveAsClip in
+                self?.collectionView.visibleCells
+                    .compactMap { $0 as? ClipSelectionCollectionViewCell }
+                    .forEach { $0.displaySelectionOrder = shouldSaveAsClip }
+            }
+            .store(in: &subscriptions)
+
+        store.state
             .bind(\.isLoading) { [weak self] isLoading in
                 if isLoading {
                     self?.indicator.startAnimating()
@@ -214,6 +222,9 @@ extension ClipCreationViewController {
             .meta(.init(title: L10n.clipCreationViewMetaUrlTitle,
                         secondaryTitle: state.url?.absoluteString ?? L10n.clipCreationViewMetaUrlNo,
                         accessory: .button(title: L10n.clipCreationViewMetaUrlEdit))),
+            .meta(.init(title: L10n.clipMetaShouldClip,
+                        secondaryTitle: L10n.clipMetaShouldClipDescription,
+                        accessory: .switch(isOn: state.shouldSaveAsClip))),
             .meta(.init(title: L10n.clipMetaShouldHides,
                         secondaryTitle: nil,
                         accessory: .switch(isOn: state.shouldSaveAsHiddenItem)))
@@ -287,7 +298,7 @@ extension ClipCreationViewController {
 
     private func configureDataSource() {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
-                                                             imageSourcesProvider: self,
+                                                             cellDataSource: self,
                                                              thumbnailLoader: thumbnailLoader)
         self.dataSource = dataSource
         proxy.delegate = self
@@ -295,12 +306,17 @@ extension ClipCreationViewController {
     }
 }
 
-extension ClipCreationViewController: ImageSourcesProvider {
-    // MARK: ImageSourcesProvider
+extension ClipCreationViewController: ClipSelectionCollectionViewCellDataSource {
+    // MARK: ClipSelectionCollectionViewCellDataSource
 
     public var imageSources: [UUID: ImageSource] { store.stateValue.imageSources.imageSourceById }
+
     public func selectionOrder(of id: UUID) -> Int? {
         return store.stateValue.imageSources.selections.firstIndex(of: id)
+    }
+
+    public func shouldSaveAsClip() -> Bool {
+        return store.stateValue.shouldSaveAsClip
     }
 }
 
@@ -347,8 +363,18 @@ extension ClipCreationViewController: TagSelectionViewControllerDelegate {
 extension ClipCreationViewController: ClipCreationViewDelegate {
     // MARK: - ClipCreationViewDelegate
 
-    public func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
-        store.execute(.shouldSaveAsHiddenItem(isOn))
+    public func didSwitch(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        guard case let .meta(info) = dataSource.itemIdentifier(for: indexPath) else { return }
+        switch info.title {
+        case L10n.clipMetaShouldHides:
+            store.execute(.shouldSaveAsHiddenItem(isOn))
+
+        case L10n.clipMetaShouldClip:
+            store.execute(.shouldSaveAsClip(isOn))
+
+        default:
+            break
+        }
     }
 
     public func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {

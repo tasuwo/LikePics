@@ -60,6 +60,10 @@ internal enum L10n {
     internal static let clipCreationViewTitle = L10n.tr("Localizable", "clip_creation_view_title")
     /// 画像取得元のURLを追加する
     internal static let clipCreationViewUrlAdditionCellTitle = L10n.tr("Localizable", "clip_creation_view_url_addition_cell_title")
+    /// 画像をクリップにまとめる
+    internal static let clipMetaShouldClip = L10n.tr("Localizable", "clip_meta_should_clip")
+    /// 複数の画像を選択順に1枚のクリップにまとめることができます
+    internal static let clipMetaShouldClipDescription = L10n.tr("Localizable", "clip_meta_should_clip_description")
     /// 保存した画像を隠す
     internal static let clipMetaShouldHides = L10n.tr("Localizable", "clip_meta_should_hides")
     /// OK

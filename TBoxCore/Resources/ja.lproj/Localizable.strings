@@ -56,6 +56,8 @@
 // MARK: - Clip Meta
 
 "clip_meta_should_hides" = "保存した画像を隠す";
+"clip_meta_should_clip" = "画像をクリップにまとめる";
+"clip_meta_should_clip_description" = "複数の画像を選択順に1枚のクリップにまとめることができます";
 
 // MARK: - Placeholder
 

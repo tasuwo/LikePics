@@ -12,20 +12,6 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     }
 
     public var identifier: String?
-    public var image: UIImage? {
-        didSet {
-            guard let image = self.image else {
-                self.imageView.image = nil
-                return
-            }
-            UIView.transition(with: self.imageView,
-                              duration: 0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { self.imageView.image = image },
-                              completion: nil)
-        }
-    }
-
     public var selectionOrder: Int? {
         didSet {
             if let order = selectionOrder {
@@ -33,6 +19,12 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
             } else {
                 self.selectionOrderLabel.text = nil
             }
+            self.updateSelectionOrderAppearance()
+        }
+    }
+
+    public var displaySelectionOrder = true {
+        didSet {
             self.updateSelectionOrderAppearance()
         }
     }
@@ -48,6 +40,7 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     @IBOutlet var overlayView: UIView!
     @IBOutlet var selectionOrderLabel: UILabel!
     @IBOutlet var selectionOrderLabelContainer: UIView!
+    @IBOutlet var selectionMarkContainer: UIView!
 
     // MARK: - Methods
 
@@ -56,16 +49,31 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         self.setupAppearance()
     }
 
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+    }
+
     private func setupAppearance() {
-        self.layer.cornerRadius = 10
-        self.selectionOrderLabelContainer.layer.borderWidth = 2.25
-        self.selectionOrderLabelContainer.layer.borderColor = UIColor.white.cgColor
-        self.overlayView.isHidden = true
-        self.selectionOrderLabel.isHidden = true
+        layer.cornerRadius = 10
+        selectionOrderLabelContainer.layer.borderWidth = 2.25
+        selectionOrderLabelContainer.layer.borderColor = UIColor.white.cgColor
+        selectionMarkContainer.backgroundColor = .white
+        selectionMarkContainer.layer.cornerRadius = selectionMarkContainer.bounds.width / 2.0
+        overlayView.isHidden = true
+        selectionOrderLabel.isHidden = true
     }
 
     private func updateSelectionOrderAppearance() {
-        self.selectionOrderLabel.isHidden = !self.isSelected && self.selectionOrder != nil
+        if displaySelectionOrder {
+            selectionOrderLabel.isHidden = !self.isSelected && self.selectionOrder != nil
+
+            selectionMarkContainer.isHidden = true
+            selectionOrderLabelContainer.isHidden = !self.isSelected
+        } else {
+            selectionMarkContainer.isHidden = !self.isSelected
+            selectionOrderLabelContainer.isHidden = true
+        }
     }
 }
 
@@ -75,21 +83,25 @@ extension ClipSelectionCollectionViewCell: ThumbnailLoadObserver {
     public func didStartLoading(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            self.image = nil
+            self.imageView.image = nil
         }
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            self.image = image
+            UIView.transition(with: self.imageView,
+                              duration: 0.2,
+                              options: .transitionCrossDissolve,
+                              animations: { self.imageView.image = image },
+                              completion: nil)
         }
     }
 
     public func didFailedToLoad(_ request: ThumbnailRequest) {
         DispatchQueue.main.async {
             guard self.identifier == request.requestId else { return }
-            self.image = nil
+            self.imageView.image = nil
         }
     }
 }
