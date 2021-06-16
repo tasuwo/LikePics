@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -120,7 +120,6 @@
 		2AF3BF524C5C0DF7872B6AAE /* TemporaryImageStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3860BAD4270FF2068B9E8BEA /* TemporaryImageStorageProtocol.swift */; };
 		2BCB1AE8F77B23C950555A79 /* WebImageProvidingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FA45AE3B7889A43CDB98EF /* WebImageProvidingService.swift */; };
 		2C3921ED684E00FC399EF6E4 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2C80B9312677B02700FB0BEF /* ImageSourcesSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C80B9302677B02700FB0BEF /* ImageSourcesSnapshot.swift */; };
 		2C8576CD58490AE11EEE13FB /* ClipInformationInteractivePresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAE21B1D173DC69DA0E2545 /* ClipInformationInteractivePresentationAnimator.swift */; };
 		2CF798E9AA8CD17482922B52 /* TextEditAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8EB73E5E48D51233A69439 /* TextEditAlert.swift */; };
 		2D47A8F1368B590CF11FD66F /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828ABA17BB3CC4E2BBD85856 /* ImageProvider.swift */; };
@@ -284,6 +283,7 @@
 		6CFE0BA8962BF129112B4A79 /* TagSelectionModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F5BC86195DDB88A9CB770B /* TagSelectionModalController.swift */; };
 		6D17A79F521B8031050DD48E /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0FAB7BDC99B059C8469BC9 /* Reducer.swift */; };
 		6D56FAAE47512DC997BDD7AC /* TBoxUIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32ADFFBFAF3B4AB2E05B7BD5 /* TBoxUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6E8818C1C2CC5D1FCAE921FC /* ImageSourcesSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6C6697E08E3A0922E6F15 /* ImageSourcesSnapshot.swift */; };
 		6EAAB2001BF254F3C4E0DF31 /* ClipsIntegrityValidatorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B2A69BEBB097D96AFD08C /* ClipsIntegrityValidatorAction.swift */; };
 		6EB0904763D1E6F212DD4EDD /* ConsoleLog_Scope+Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A961F191D4B4ADD69E5B89 /* ConsoleLog_Scope+Transition.swift */; };
 		6F1C4295343DB07A86B1D3DC /* ListSectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04301BE64727056C16CB684 /* ListSectionHeaderCell.swift */; };
@@ -1137,13 +1137,12 @@
 		272C32D585E8121EFF79DAD5 /* HasClipInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasClipInformationTransitioningController.swift; sourceTree = "<group>"; };
 		27B82A976AFED982222939E4 /* ClipInformationLayoutHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipInformationLayoutHeader.swift; sourceTree = "<group>"; };
 		28A4C935A79A2FC77FE00ED9 /* TemporaryClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorageProtocol.swift; sourceTree = "<group>"; };
-		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = TBox.app; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29E9DF2025D5268F1A653546 /* CloudAvailabilitySpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilitySpec.swift; sourceTree = "<group>"; };
 		2A0BCA2BD3E3FC1957AB0A13 /* SceneRoot_BarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRoot_BarItem.swift; sourceTree = "<group>"; };
 		2AAC5BC9C185604B92D45004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C17BCDD38EFCB9DE120ABF2 /* TBoxUIKit.ProtocolMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBoxUIKit.ProtocolMocks.swift; sourceTree = "<group>"; };
 		2C1A1011F5093268C2A2B51F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		2C80B9302677B02700FB0BEF /* ImageSourcesSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourcesSnapshot.swift; sourceTree = "<group>"; };
 		2CA58E2555C56FE19D2770DA /* ClipCollectionNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionNavigationBarReducer.swift; sourceTree = "<group>"; };
 		2D77435F6E8E115402226FFD /* ClipSearchHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryService.swift; sourceTree = "<group>"; };
 		2EA95B1E82FA0198AB863F37 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
@@ -1530,6 +1529,7 @@
 		CF879DA732B6A34655F50FF7 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		CFB536D95146E780E5023193 /* TextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		D04301BE64727056C16CB684 /* ListSectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSectionHeaderCell.swift; sourceTree = "<group>"; };
+		D0A6C6697E08E3A0922E6F15 /* ImageSourcesSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourcesSnapshot.swift; sourceTree = "<group>"; };
 		D1120697076157CC96C9F43C /* RealmReferenceTagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmReferenceTagListQuery.swift; sourceTree = "<group>"; };
 		D28F3962B4D6757D6C7EE8EE /* Domain.AutoDefaultValue.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.AutoDefaultValue.generated.swift; sourceTree = "<group>"; };
 		D420FE766EB94649D4CAF311 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
@@ -3550,7 +3550,7 @@
 				18B5CB957325E83107846BA2 /* ClipCreationViewAction.swift */,
 				E22CBBDEE2909E8C602AEE73 /* ClipCreationViewReducer.swift */,
 				066F302D38B9F0CD29746610 /* ClipCreationViewState.swift */,
-				2C80B9302677B02700FB0BEF /* ImageSourcesSnapshot.swift */,
+				D0A6C6697E08E3A0922E6F15 /* ImageSourcesSnapshot.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -5073,12 +5073,12 @@
 				11507C234362C3DA41EC9ACC /* ImageSourceLoader.swift in Sources */,
 				AE6045F66BCDD62FDD5C7226 /* ImageSourceProvider.swift in Sources */,
 				28754DBDA2AFC607F39A031B /* ImageSourceProviderError.swift in Sources */,
+				6E8818C1C2CC5D1FCAE921FC /* ImageSourcesSnapshot.swift in Sources */,
 				E1F5F5B29F12637FDA2BBF81 /* LocalImageSourceProvider.swift in Sources */,
 				497EAD7D66C0FDA8FA153AEB /* OnMainThread.swift in Sources */,
 				E178837093900FBCBA9BD88E /* String.swift in Sources */,
 				4CD9C83C4C7E3AF473C1B8B2 /* TagSelectionViewController.swift in Sources */,
 				FC6200EF0EC81870120A545B /* TagSelectionViewModel.swift in Sources */,
-				2C80B9312677B02700FB0BEF /* ImageSourcesSnapshot.swift in Sources */,
 				FBF1B91A314A25A03FB3DFF9 /* TransferringClip.swift in Sources */,
 				5B755DA16C6CAD11BD8C4125 /* ViewControllerFactory.swift in Sources */,
 				EACA7F1EC21203A698C3ACEF /* WebImageProvider.swift in Sources */,
@@ -6143,7 +6143,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox;
 				APP_NAME = LikePics;
-				APP_VERSION = 2.7;
+				APP_VERSION = 2.8;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -6828,7 +6828,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox.dev;
 				APP_NAME = LikePicsDev;
-				APP_VERSION = 2.7;
+				APP_VERSION = 2.8;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -7342,7 +7342,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox.dev;
 				APP_NAME = LikePicsDev;
-				APP_VERSION = 2.7;
+				APP_VERSION = 2.8;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -7686,7 +7686,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox;
 				APP_NAME = LikePics;
-				APP_VERSION = 2.7;
+				APP_VERSION = 2.8;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;

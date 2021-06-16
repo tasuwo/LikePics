@@ -1,6 +1,1 @@
-- Display related albums on an image information view.
-- You can transition to related tags/albums view by selecting an album or tag on an image information view.
-
-- Fixed an issue that failed to share images from some other apps.
-- Improve rendering performance on some views.
-- Redesign
+- You can choose to save multiple images as are or save these in a single clip.
