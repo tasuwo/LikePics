@@ -61,7 +61,7 @@ public extension ClipCreationViewState {
         self.tags = .init()
         self.imageSources = .init(order: [], selections: [], imageSourceById: [:])
         self.shouldSaveAsHiddenItem = false
-        self.shouldSaveAsClip = true
+        self.shouldSaveAsClip = false
         self.displayState = .loading
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false
