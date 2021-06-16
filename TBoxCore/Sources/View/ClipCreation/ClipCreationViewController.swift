@@ -114,11 +114,15 @@ public class ClipCreationViewController: UIViewController {
 extension ClipCreationViewController {
     private func bind(to store: Store) {
         store.state
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
+            .receive(on: clipsUpdateQueue)
             .sink { [weak self] state in
                 guard let self = self else { return }
                 let snapshot = self.makeSnapshot(state)
                 self.dataSource.apply(snapshot)
-                self.applySelection(state)
+                DispatchQueue.main.async {
+                    self.applySelection(state)
+                }
             }
             .store(in: &subscriptions)
 
