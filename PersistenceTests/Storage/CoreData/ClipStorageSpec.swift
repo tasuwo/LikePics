@@ -1244,8 +1244,8 @@ class ClipStorageSpec: QuickSpec {
                 }
                 it("重複したタグのIDが返ってくる") {
                     expect(results).to(equal([
-                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53"),
-                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")
+                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")!
                     ]))
                 }
                 it("重複したタグが削除される") {

@@ -184,6 +184,9 @@ settings:
     SDKROOT: iphoneos
     SWIFT_VERSION: 5.0
     TARGETED_DEVICE_FAMILY: "1,2"
+    # Realmがarm64対応するまでのworkaround
+    # https://github.com/realm/realm-cocoa/pull/7158
+    EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
   configs:
     Debug:
       APP_GROUP: group.net.tasuwo.TBox

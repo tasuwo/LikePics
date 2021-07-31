@@ -5988,8 +5988,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6040,8 +6039,7 @@
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6181,6 +6179,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6219,9 +6218,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -6281,9 +6278,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -6309,8 +6304,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6335,8 +6329,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6395,8 +6388,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -6422,8 +6414,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6448,8 +6439,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6499,8 +6489,7 @@
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6579,8 +6568,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6610,8 +6598,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -6666,8 +6653,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6697,8 +6683,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -6778,8 +6763,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6804,8 +6788,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6865,6 +6848,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6925,11 +6909,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6971,8 +6951,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -6997,8 +6976,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7023,8 +7001,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7108,9 +7085,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -7165,8 +7140,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7191,8 +7165,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7291,8 +7264,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = PersistenceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7380,6 +7352,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -7414,8 +7387,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7439,8 +7411,7 @@
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7521,8 +7492,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = DomainTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7546,8 +7516,7 @@
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7577,8 +7546,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = Persistence/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -7635,11 +7603,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7662,8 +7626,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7723,6 +7686,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -7784,11 +7748,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7811,8 +7771,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = CommonTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7839,11 +7798,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
-					"\"Carthage/Build/Realm.xcframework/**\"",
-					"\"Carthage/Build/RealmSwift.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBox/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -7871,9 +7826,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/BrightFutures.xcframework/**\"",
-					"\"Carthage/Build/Erik.xcframework/**\"",
-					"\"Carthage/Build/Kanna.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -7899,8 +7852,7 @@
 				DEVELOPMENT_TEAM = RY2377PP7S;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"Carthage/Build/Nimble.xcframework/**\"",
-					"\"Carthage/Build/Quick.xcframework/**\"",
+					"\"Carthage/Build\"",
 				);
 				INFOPLIST_FILE = TBoxUIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
