@@ -2,23 +2,29 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G80" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Album" representedClassName="Persistence.Album" syncable="YES">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES" versionHashModifier="1"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlbumItem" inverseName="album" inverseEntity="AlbumItem"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="AlbumItem" representedClassName="Persistence.AlbumItem" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO" versionHashModifier="1"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="items" inverseEntity="Album"/>
         <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="albumItem" inverseEntity="Clip"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="Clip" representedClassName="Persistence.Clip" syncable="YES">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionText" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES" versionHashModifier="1"/>
         <attribute name="imagesSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="itemsCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="clipItems.@count" usesScalarValueType="YES"/>
@@ -26,11 +32,14 @@
         <relationship name="albumItem" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlbumItem" inverseName="clip" inverseEntity="AlbumItem"/>
         <relationship name="clipItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ClipItem" inverseName="clip" inverseEntity="ClipItem"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="clips" inverseEntity="Tag"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="ClipItem" representedClassName="Persistence.Item" syncable="YES">
         <attribute name="clipId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO" versionHashModifier="1"/>
         <attribute name="imageFileName" attributeType="String" defaultValueString=""/>
         <attribute name="imageHeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="imageId" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
@@ -41,17 +50,26 @@
         <attribute name="siteUrl" optional="YES" attributeType="URI"/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="clipItems" inverseEntity="Clip"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="Image" representedClassName="Persistence.Image" syncable="YES">
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO" versionHashModifier="1"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
-    <entity name="Tag" representedClassName="Persistence.Tag" syncable="YES">
+    <entity name="Tag" representedClassName="Persistence.Tag" versionHashModifier="1" syncable="YES">
         <attribute name="clipCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="clips.@count" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <relationship name="clips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Clip" inverseName="tags" inverseEntity="Clip"/>
+        <fetchIndex name="byId">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <elements>
         <element name="Album" positionX="-835.342529296875" positionY="-113.688232421875" width="128" height="134"/>
