@@ -26,6 +26,7 @@ profile
 Pods/*
 
 ## Carthage
+Carthage/*.xcconfig
 Carthage/Checkouts
 Carthage/Build/
 
