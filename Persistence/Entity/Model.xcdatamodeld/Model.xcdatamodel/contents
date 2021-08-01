@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E241" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Album" representedClassName="Persistence.Album" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G80" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Album" representedClassName="Persistence.Album" syncable="YES">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -9,13 +9,13 @@
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlbumItem" inverseName="album" inverseEntity="AlbumItem"/>
     </entity>
-    <entity name="AlbumItem" representedClassName="AlbumItem" syncable="YES" codeGenerationType="class">
+    <entity name="AlbumItem" representedClassName="Persistence.AlbumItem" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="items" inverseEntity="Album"/>
         <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="albumItem" inverseEntity="Clip"/>
     </entity>
-    <entity name="Clip" representedClassName="Persistence.Clip" syncable="YES" codeGenerationType="class">
+    <entity name="Clip" representedClassName="Persistence.Clip" syncable="YES">
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionText" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="YES"/>
@@ -27,7 +27,7 @@
         <relationship name="clipItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ClipItem" inverseName="clip" inverseEntity="ClipItem"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="clips" inverseEntity="Tag"/>
     </entity>
-    <entity name="ClipItem" representedClassName="Persistence.Item" syncable="YES" codeGenerationType="class">
+    <entity name="ClipItem" representedClassName="Persistence.Item" syncable="YES">
         <attribute name="clipId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -42,11 +42,11 @@
         <attribute name="updatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="clip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="clipItems" inverseEntity="Clip"/>
     </entity>
-    <entity name="Image" representedClassName="Image" syncable="YES" codeGenerationType="class">
+    <entity name="Image" representedClassName="Persistence.Image" syncable="YES">
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="" usesScalarValueType="NO"/>
     </entity>
-    <entity name="Tag" representedClassName="Persistence.Tag" syncable="YES" codeGenerationType="class">
+    <entity name="Tag" representedClassName="Persistence.Tag" syncable="YES">
         <attribute name="clipCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="clips.@count" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isHidden" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -55,7 +55,7 @@
     </entity>
     <elements>
         <element name="Album" positionX="-835.342529296875" positionY="-113.688232421875" width="128" height="134"/>
-        <element name="AlbumItem" positionX="-835.949951171875" positionY="66.85919189453125" width="128" height="103"/>
+        <element name="AlbumItem" positionX="-835.949951171875" positionY="66.85919189453125" width="128" height="89"/>
         <element name="Clip" positionX="-651.5457763671875" positionY="-33.1494140625" width="128" height="179"/>
         <element name="ClipItem" positionX="-449.522216796875" positionY="-108.0613098144532" width="128" height="224"/>
         <element name="Image" positionX="-835.87353515625" positionY="187.7873535156249" width="128" height="59"/>
