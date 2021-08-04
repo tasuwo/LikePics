@@ -38,10 +38,12 @@ struct ClipItemGrid: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             LazyVGrid(columns: layout, alignment: .center, spacing: Self.spacing) {
-                ForEach(clipItems, id: \.id) { item in
+                ForEach(Array(zip(clipItems.indices, clipItems)), id: \.0) { index, item in
                     ClipItemCell(image: Self.imageWithColor(color: .red, size: .init(width: 100, height: 100)),
                                  fileName: item.imageFileName,
-                                 dataSize: item.imageDataSize)
+                                 dataSize: item.imageDataSize,
+                                 page: index,
+                                 numberOfPage: clipItems.count)
                 }
             }
             .padding(.all, Self.spacing)

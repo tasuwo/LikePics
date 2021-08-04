@@ -8,6 +8,8 @@ struct ClipItemCell: View {
     let image: UIImage
     let fileName: String
     let dataSize: Int
+    let page: Int
+    let numberOfPage: Int
 
     var displayFileName: String {
         fileName.isEmpty ? L10n.clipItemCellNoTitle : fileName
@@ -19,10 +21,17 @@ struct ClipItemCell: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            ZStack {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+                Color.clear
+                    .frame(width: .infinity, height: .infinity, alignment: .center)
+                    .overlay(ClipItemCellOverlay(page: page, numberOfPage: numberOfPage),
+                             alignment: .bottomTrailing)
+            }
             Text(displayFileName)
                 .font(.caption)
                 .foregroundColor(.primary)
@@ -50,12 +59,16 @@ struct ClipItemCell_Previews: PreviewProvider {
         HStack {
             ClipItemCell(image: imageWithColor(color: .red, size: .init(width: 10, height: 10)),
                          fileName: "Hoge",
-                         dataSize: 1024)
+                         dataSize: 1024,
+                         page: 1,
+                         numberOfPage: 100)
                 .frame(width: 100, height: 100)
 
             ClipItemCell(image: imageWithColor(color: .blue, size: .init(width: 10, height: 20)),
                          fileName: "",
-                         dataSize: 1024)
+                         dataSize: 1024,
+                         page: 1,
+                         numberOfPage: 100)
                 .frame(width: 100, height: 100)
         }
     }
