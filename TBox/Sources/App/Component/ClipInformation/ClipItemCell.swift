@@ -6,11 +6,11 @@ import SwiftUI
 
 struct ClipItemCell: View {
     let image: UIImage
-    let fileName: String?
+    let fileName: String
     let dataSize: Int
 
     var displayFileName: String {
-        fileName ?? L10n.clipItemCellNoTitle
+        fileName.isEmpty ? L10n.clipItemCellNoTitle : fileName
     }
 
     var displayDataSize: String {
@@ -54,7 +54,7 @@ struct ClipItemCell_Previews: PreviewProvider {
                 .frame(width: 100, height: 100)
 
             ClipItemCell(image: imageWithColor(color: .blue, size: .init(width: 10, height: 20)),
-                         fileName: nil,
+                         fileName: "",
                          dataSize: 1024)
                 .frame(width: 100, height: 100)
         }
