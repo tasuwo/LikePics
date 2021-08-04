@@ -182,6 +182,8 @@
 "settings_interface_style_dark" = "Dark";
 "settings_interface_style_unspecified" = "Unspecified";
 
+"clip_item_cell_no_title" = "No Title";
+
 "url_context_menu_open" = "Open";
 "url_context_menu_copy" = "Copy";
 

@@ -9,7 +9,7 @@ public protocol ThumbnailPresentable {
     func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize
 }
 
-extension ThumbnailPresentable {
+public extension ThumbnailPresentable {
     func shouldInvalidate(thumbnail: UIImage,
                           originalImageSize: CGSize?,
                           displayScale: CGFloat) -> Bool

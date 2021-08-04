@@ -26,11 +26,11 @@ name: SwiftLint, nameSpecified:
 body: The MIT License (MIT…
 version: 0.43.1
 
-name: BrightFutures, nameSpecified: , owner: Thomvis, version: 8.0.1
+name: BrightFutures, nameSpecified: , owner: Thomvis, version: 8.1.0
 
 name: Erik, nameSpecified: , owner: phimage, version: 5.1.0
 
-name: Kanna, nameSpecified: , owner: tid-kijyun, version: 5.2.4
+name: Kanna, nameSpecified: , owner: tid-kijyun, version: 5.2.6
 
 name: realm-cocoa, nameSpecified: , owner: realm, version: v10.7.5
 

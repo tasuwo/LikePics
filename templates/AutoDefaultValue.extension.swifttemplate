@@ -4,8 +4,6 @@ enum DefaultValueSettings {
     static let simpleMappings: [String:String] = [
         "Date":"Date(timeIntervalSince1970: 0)",
         "URL":"URL(string: \"https://xxx.xxxx.xx\")!",
-        "UUID":"UUID()",
-        "Clip.Identity":"UUID()",
         // Please add extra default value mappings
     ]
 
