@@ -139,20 +139,20 @@ extension SceneDependencyContainer: Router {
 
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
-                                 clipInformationViewCache: ClipInformationViewCaching,
-                                 transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
+                                 clipInformationViewCache: ClipItemInformationViewCaching,
+                                 transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
     {
-        let state = ClipInformationViewState(clipId: clipId,
-                                             itemId: itemId,
-                                             isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let state = ClipItemInformationViewState(clipId: clipId,
+                                                 itemId: itemId,
+                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
                                                        message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
-        let viewController = ClipInformationViewController(state: state,
-                                                           siteUrlEditAlertState: siteUrlEditAlertState,
-                                                           dependency: self,
-                                                           clipInformationViewCache: clipInformationViewCache,
-                                                           transitioningController: transitioningController)
+        let viewController = ClipItemInformationViewController(state: state,
+                                                               siteUrlEditAlertState: siteUrlEditAlertState,
+                                                               dependency: self,
+                                                               clipInformationViewCache: clipInformationViewCache,
+                                                               transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 

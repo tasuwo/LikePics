@@ -59,26 +59,26 @@ extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSourc
     }
 }
 
-extension ClipPreviewNavigationController: ClipInformationPresentingAnimatorDataSource {
-    // MARK: - ClipInformationPresentingAnimatorDataSource
+extension ClipPreviewNavigationController: ClipItemInformationPresentingAnimatorDataSource {
+    // MARK: - ClipItemInformationPresentingAnimatorDataSource
 
-    func animatingPreviewView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
+    func animatingPreviewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
         return pageViewController?.animatingPreviewView(animator)
     }
 
-    func baseView(_ animator: ClipInformationAnimator) -> UIView? {
+    func baseView(_ animator: ClipItemInformationAnimator) -> UIView? {
         return pageViewController?.baseView(animator)
     }
 
-    func componentsOverBaseView(_ animator: ClipInformationAnimator) -> [UIView] {
+    func componentsOverBaseView(_ animator: ClipItemInformationAnimator) -> [UIView] {
         return pageViewController?.componentsOverBaseView(animator) ?? []
     }
 
-    func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
-        return pageViewController?.clipInformationAnimator(animator, imageFrameOnContainerView: containerView) ?? .zero
+    func clipItemInformationAnimator(_ animator: ClipItemInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        return pageViewController?.clipItemInformationAnimator(animator, imageFrameOnContainerView: containerView) ?? .zero
     }
 
-    func set(_ animator: ClipInformationAnimator, isUserInteractionEnabled: Bool) {
+    func set(_ animator: ClipItemInformationAnimator, isUserInteractionEnabled: Bool) {
         pageViewController?.set(animator, isUserInteractionEnabled: isUserInteractionEnabled)
     }
 }

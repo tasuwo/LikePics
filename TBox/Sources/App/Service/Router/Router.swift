@@ -27,8 +27,8 @@ protocol Router {
     @discardableResult
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
-                                 clipInformationViewCache: ClipInformationViewCaching,
-                                 transitioningController: ClipInformationTransitioningControllerProtocol) -> Bool
+                                 clipInformationViewCache: ClipItemInformationViewCaching,
+                                 transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool

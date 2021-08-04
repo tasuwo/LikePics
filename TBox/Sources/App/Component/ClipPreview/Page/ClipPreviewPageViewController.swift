@@ -38,7 +38,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: Component
 
     private var barController: ClipPreviewPageBarController!
-    private let cacheController: ClipInformationViewCacheController
+    private let cacheController: ClipItemInformationViewCacheController
 
     // MARK: Service
 
@@ -61,13 +61,13 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: - Initializers
 
     init(state: ClipPreviewPageViewRootState,
-         cacheController: ClipInformationViewCacheController,
+         cacheController: ClipItemInformationViewCacheController,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
          transitionController: ClipPreviewPageTransitionControllerType)
     {
         struct CacheDependency: ClipPreviewPageViewCacheDependency {
-            weak var informationViewCache: ClipInformationViewCaching?
+            weak var informationViewCache: ClipItemInformationViewCaching?
         }
 
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
@@ -390,41 +390,41 @@ extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource 
     }
 }
 
-extension ClipPreviewPageViewController: ClipInformationPresentingAnimatorDataSource {
-    // MARK: - ClipInformationPresentingAnimatorDataSource
+extension ClipPreviewPageViewController: ClipItemInformationPresentingAnimatorDataSource {
+    // MARK: - ClipItemInformationPresentingAnimatorDataSource
 
-    func animatingPreviewView(_ animator: ClipInformationAnimator) -> ClipPreviewView? {
+    func animatingPreviewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }
 
-    func baseView(_ animator: ClipInformationAnimator) -> UIView? {
+    func baseView(_ animator: ClipItemInformationAnimator) -> UIView? {
         return view
     }
 
-    func componentsOverBaseView(_ animator: ClipInformationAnimator) -> [UIView] {
+    func componentsOverBaseView(_ animator: ClipItemInformationAnimator) -> [UIView] {
         return ([navigationController?.navigationBar, navigationController?.toolbar] as [UIView?]).compactMap { $0 }
     }
 
-    func clipInformationAnimator(_ animator: ClipInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+    func clipItemInformationAnimator(_ animator: ClipItemInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
         view.layoutIfNeeded()
         guard let pageView = currentViewController?.previewView else { return .zero }
         return pageView.convert(pageView.initialImageFrame, to: containerView)
     }
 
-    func set(_ animator: ClipInformationAnimator, isUserInteractionEnabled: Bool) {
+    func set(_ animator: ClipItemInformationAnimator, isUserInteractionEnabled: Bool) {
         view.isUserInteractionEnabled = isUserInteractionEnabled
     }
 }
 
-extension ClipPreviewPageViewController: ClipInformationViewDataSource {
-    // MARK: - ClipInformationViewDataSource
+extension ClipPreviewPageViewController: ClipItemInformationViewDataSource {
+    // MARK: - ClipItemInformationViewDataSource
 
-    func previewImage(_ view: ClipInformationView) -> UIImage? {
+    func previewImage(_ view: ClipItemInformationView) -> UIImage? {
         return self.currentViewController?.previewView.image
     }
 
-    func previewPageBounds(_ view: ClipInformationView) -> CGRect {
+    func previewPageBounds(_ view: ClipItemInformationView) -> CGRect {
         return self.currentViewController?.previewView.bounds ?? .zero
     }
 }

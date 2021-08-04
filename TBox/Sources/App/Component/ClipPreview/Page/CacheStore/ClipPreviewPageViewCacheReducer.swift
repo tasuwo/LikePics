@@ -4,7 +4,7 @@
 
 import ForestKit
 
-typealias ClipPreviewPageViewCacheDependency = HasClipInformationViewCaching
+typealias ClipPreviewPageViewCacheDependency = HasClipItemInformationViewCaching
 
 struct ClipPreviewPageViewCacheReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewCacheDependency

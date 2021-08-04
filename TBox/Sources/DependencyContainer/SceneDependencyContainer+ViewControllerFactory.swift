@@ -120,26 +120,26 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let router: Router
             let clipCommandService: ClipCommandServiceProtocol
             let clipQueryService: ClipQueryServiceProtocol
-            let clipInformationTransitioningController: ClipInformationTransitioningController?
+            let clipItemInformationTransitioningController: ClipItemInformationTransitioningController?
             let imageQueryService: ImageQueryServiceProtocol
-            let informationViewCache: ClipInformationViewCaching?
+            let informationViewCache: ClipItemInformationViewCaching?
             let previewLoader: PreviewLoader
             let transitionLock: TransitionLock
         }
 
-        let informationViewCacheState = ClipInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let informationViewCacheController = ClipInformationViewCacheController(state: informationViewCacheState,
-                                                                                dependency: self)
+        let informationViewCacheState = ClipItemInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let informationViewCacheController = ClipItemInformationViewCacheController(state: informationViewCacheState,
+                                                                                    dependency: self)
 
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let informationTransitionController = ClipInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
         let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
         let dependency = Dependency(router: self,
                                     clipCommandService: container._clipCommandService,
                                     clipQueryService: container._clipQueryService,
-                                    clipInformationTransitioningController: informationTransitionController,
+                                    clipItemInformationTransitioningController: informationTransitionController,
                                     imageQueryService: container._imageQueryService,
                                     informationViewCache: informationViewCacheController,
                                     previewLoader: container._previewLoader,

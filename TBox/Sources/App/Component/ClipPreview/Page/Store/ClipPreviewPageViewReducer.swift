@@ -9,8 +9,8 @@ import ForestKit
 typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
-    & HasClipInformationTransitioningController
-    & HasClipInformationViewCaching
+    & HasClipItemInformationTransitioningController
+    & HasClipItemInformationViewCaching
     & HasPreviewLoader
     & HasTransitionLock
 
@@ -65,7 +65,7 @@ struct ClipPreviewPageViewReducer: Reducer {
         case .clipInformationViewPresented:
             if let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
-               let transitioningController = dependency.clipInformationTransitioningController
+               let transitioningController = dependency.clipItemInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: state.clipId,
                                                           itemId: currentItemId,
@@ -163,7 +163,7 @@ extension ClipPreviewPageViewReducer {
         case .infoRequested:
             if let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
-               let transitioningController = dependency.clipInformationTransitioningController
+               let transitioningController = dependency.clipItemInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: state.clipId,
                                                           itemId: currentItemId,
