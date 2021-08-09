@@ -63,6 +63,8 @@ internal enum L10n {
     internal static let clipInformationViewSectionLabelTags = L10n.tr("Localizable", "clip_information_view_section_label_tags")
     /// サイトのURL
     internal static let clipInformationViewSiteUrlTitle = L10n.tr("Localizable", "clip_information_view_site_url_title")
+    /// 無題
+    internal static let clipItemCellNoTitle = L10n.tr("Localizable", "clip_item_cell_no_title")
     /// サイトURL
     internal static let clipItemEditContentViewSiteTitle = L10n.tr("Localizable", "clip_item_edit_content_view_site_title")
     /// 編集
