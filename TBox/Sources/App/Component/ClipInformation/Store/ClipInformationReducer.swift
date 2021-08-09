@@ -7,6 +7,7 @@ import Domain
 import ForestKit
 
 typealias ClipInformationDependency = HasClipQueryService
+    & HasClipCommandService
     & HasUserSettingStorage
 
 struct ClipInformationReducer: Reducer {
@@ -44,6 +45,29 @@ struct ClipInformationReducer: Reducer {
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+
+        // MARK: Operation
+
+        case let .reordered(itemIds):
+            let stream = Deferred {
+                Future<Action?, Never> { promise in
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
+                        switch dependency.clipCommandService.updateClip(having: state.clip.id, byReorderingItemsHaving: itemIds) {
+                        case .success:
+                            promise(.success(nil))
+
+                        case .failure:
+                            // TODO:
+                            promise(.success(nil))
+                        }
+                    }
+                }
+            }
+            let newValues = itemIds
+                .compactMap { state.items.entity(having: $0) }
+                .indexed()
+            nextState.items = state.items.updated(entities: newValues)
+            return (nextState, [Effect(stream)])
         }
     }
 }
@@ -141,6 +165,18 @@ extension ClipInformationReducer {
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
+    }
+}
+
+extension ClipInformationReducer {
+    private static func performReorder(originals: [ClipItem.Identity], request: [ClipItem.Identity]) -> [ClipItem.Identity] {
+        var index = 0
+        return originals
+            .map { original in
+                guard request.contains(original) else { return original }
+                index += 1
+                return request[index - 1]
+            }
     }
 }
 

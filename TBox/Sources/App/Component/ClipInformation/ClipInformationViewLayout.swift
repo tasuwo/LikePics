@@ -43,9 +43,9 @@ enum ClipInformationViewLayout {
 }
 
 extension ClipInformationViewLayout.Item {
-    init(_ item: ClipItem) {
+    init(_ item: ClipItem, at index: Int) {
         itemId = item.id
-        order = item.clipIndex + 1
+        order = index
         imageId = item.imageId
         imageFileName = item.imageFileName
         imageSize = item.imageSize.cgSize
@@ -114,7 +114,7 @@ extension ClipInformationViewLayout {
             cell.contentConfiguration = configuration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
-            backgroundConfiguration.backgroundColor = Asset.Color.background.color
+            backgroundConfiguration.backgroundColor = .clear
             cell.backgroundConfiguration = backgroundConfiguration
 
             let requestId = UUID().uuidString

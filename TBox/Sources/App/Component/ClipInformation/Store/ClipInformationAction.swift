@@ -17,4 +17,8 @@ enum ClipInformationAction: Action {
     case itemsUpdated([ClipItem])
     case tagsUpdated([Tag])
     case settingUpdated(isSomeItemsHidden: Bool)
+
+    // MARK: Operation
+
+    case reordered([ClipItem.Identity])
 }

@@ -52,6 +52,7 @@ class ClipInformationViewController: UIViewController {
 
         configureViewHierarchy()
         configureDataSource()
+        configureReorder()
 
         bind(to: store)
 
@@ -64,6 +65,10 @@ class ClipInformationViewController: UIViewController {
 extension ClipInformationViewController {
     func bind(to store: Store) {
         store.state
+            .removeDuplicates(by: {
+                $0.items.filteredOrderedEntities() == $1.items.filteredOrderedEntities()
+            })
+            .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
@@ -79,7 +84,7 @@ extension ClipInformationViewController {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.main])
-        snapshot.appendItems(items.map { Layout.Item($0) })
+        snapshot.appendItems(zip(items.indices, items).map { Layout.Item($1, at: $0 + 1) })
 
         return snapshot
     }
@@ -107,7 +112,9 @@ extension ClipInformationViewController {
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear
+        collectionView.allowsSelection = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
 
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
@@ -116,6 +123,17 @@ extension ClipInformationViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView, thumbnailLoader)
+    }
+
+    private func configureReorder() {
+        collectionView.dragInteractionEnabled = true
+        dataSource.reorderingHandlers.canReorderItem = { _ in true }
+        dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            let itemIds = transaction.finalSnapshot.itemIdentifiers.map { $0.itemId }
+            self?.store.execute(.reordered(itemIds))
+        }
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
     }
 }
 
@@ -132,5 +150,72 @@ extension ClipInformationViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // TODO:
+    }
+}
+
+extension ClipInformationViewController {
+    // MARK: - UICollectionViewDelegate (Context Menu)
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                          previewProvider: nil,
+                                          actionProvider: nil) // TODO:
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        return self.makeTargetedPreview(for: configuration, collectionView: collectionView)
+    }
+
+    private func makeTargetedPreview(for configuration: UIContextMenuConfiguration, collectionView: UICollectionView) -> UITargetedPreview? {
+        guard let identifier = configuration.identifier as? NSIndexPath else { return nil }
+        guard let cell = collectionView.cellForItem(at: identifier as IndexPath) else { return nil }
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        parameters.shadowPath = UIBezierPath()
+        return UITargetedPreview(view: cell, parameters: parameters)
+    }
+}
+
+extension ClipInformationViewController: UICollectionViewDragDelegate {
+    // MARK: - UICollectionViewDragDelegate
+
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
+        let provider = NSItemProvider(object: item.itemId.uuidString as NSString)
+        let dragItem = UIDragItem(itemProvider: provider)
+        return [dragItem]
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+}
+
+extension ClipInformationViewController: UICollectionViewDropDelegate {
+    // MARK: - UICollectionViewDropDelegate
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        // NOP
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
     }
 }
