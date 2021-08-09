@@ -4,12 +4,14 @@
 
 import Combine
 import Domain
+import ForestKit
 import Smoothie
 import TBoxUIKit
 import UIKit
 
 class ClipInformationViewController: UIViewController {
     typealias Layout = ClipInformationViewLayout
+    typealias Store = ForestKit.Store<ClipInformationState, ClipInformationAction, ClipInformationDependency>
 
     // MARK: - Properties
 
@@ -22,16 +24,18 @@ class ClipInformationViewController: UIViewController {
 
     private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
 
-    // MARK: Tmp
+    // MARK: Store
 
-    private let items: [ClipItem]
+    private var store: Store
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
 
-    init(items: [ClipItem],
+    init(state: ClipInformationState,
+         dependency: ClipInformationDependency,
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable)
     {
-        self.items = items
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipInformationReducer())
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
     }
@@ -49,19 +53,37 @@ class ClipInformationViewController: UIViewController {
         configureViewHierarchy()
         configureDataSource()
 
-        // TODO:
-        var snapshot = Layout.Snapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(items.map { Layout.Item($0) })
-        dataSource.apply(snapshot, animatingDifferences: true) {
-            self.updateCellAppearance()
-        }
+        bind(to: store)
+
+        store.execute(.viewDidLoad)
     }
 }
 
 // MARK: - Bind
 
 extension ClipInformationViewController {
+    func bind(to store: Store) {
+        store.state
+            .sink { [weak self] state in
+                let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
+                self?.dataSource.apply(snapshot, animatingDifferences: true) {
+                    self?.updateCellAppearance()
+                }
+            }
+            .store(in: &subscriptions)
+    }
+
+    // MARK: Snapshot
+
+    private static func createSnapshot(items: [ClipItem]) -> Layout.Snapshot {
+        var snapshot = Layout.Snapshot()
+
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items.map { Layout.Item($0) })
+
+        return snapshot
+    }
+
     // MARK: Appearance
 
     private func updateCellAppearance() {
@@ -71,8 +93,7 @@ extension ClipInformationViewController {
 
             guard var configuration = cell.contentConfiguration as? ClipItemContentConfiguration else { return }
             configuration.page = item.order
-            // TODO:
-            configuration.numberOfPage = 3
+            configuration.numberOfPage = store.stateValue.items._entities.count
             cell.contentConfiguration = configuration
         }
     }
