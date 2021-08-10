@@ -115,7 +115,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewPageViewController(for clipId: Clip.Identity) -> UIViewController {
+    func makeClipPreviewPageViewController(for clipId: Clip.Identity, at initialItem: ClipItem.Identity?) -> UIViewController {
         struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
             let router: Router
             let clipCommandService: ClipCommandServiceProtocol
@@ -145,7 +145,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     previewLoader: container._previewLoader,
                                     transitionLock: container.transitionLock)
 
-        let state = ClipPreviewPageViewRootState(clipId: clipId)
+        let state = ClipPreviewPageViewRootState(clipId: clipId, initialItem: initialItem)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,

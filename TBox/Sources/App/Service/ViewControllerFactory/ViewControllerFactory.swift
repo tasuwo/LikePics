@@ -14,6 +14,6 @@ protocol ViewControllerFactory {
     func makeAlbumListViewController(_ state: AlbumListViewState?) -> RestorableViewController?
     func makeSearchViewController(_ state: SearchViewRootState?) -> RestorableViewController?
     func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController
-    func makeClipPreviewPageViewController(for clipId: Clip.Identity) -> UIViewController
+    func makeClipPreviewPageViewController(for clipId: Clip.Identity, at initialItem: ClipItem.Identity?) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

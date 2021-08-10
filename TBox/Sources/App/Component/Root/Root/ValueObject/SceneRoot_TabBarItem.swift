@@ -123,7 +123,7 @@ extension SceneRoot {
                 viewController.show(clipCollectionViewController, sender: nil)
 
                 if let clipId = clipId {
-                    let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId)
+                    let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId, at: nil)
                     clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
                 }
             }

@@ -22,7 +22,7 @@ protocol Router {
     func showClipCollectionView(for albumId: Album.Identity) -> Bool
 
     @discardableResult
-    func showClipPreviewView(for clipId: Clip.Identity) -> Bool
+    func showClipPreviewView(for clipId: Clip.Identity, at initialItem: ClipItem.Identity?) -> Bool
 
     @discardableResult
     func showClipInformationView(clipId: Clip.Identity,

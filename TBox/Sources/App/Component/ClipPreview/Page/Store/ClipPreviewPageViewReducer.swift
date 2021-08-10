@@ -43,6 +43,14 @@ struct ClipPreviewPageViewReducer: Reducer {
 
             nextState.items = clip.items.sorted(by: { $0.clipIndex < $1.clipIndex })
 
+            if let initialItem = state.initialItem,
+               let newIndex = nextState.items.firstIndex(where: { $0.id == initialItem })
+            {
+                nextState.currentIndex = newIndex
+                nextState.initialItem = nil
+                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
+            }
+
             guard let previousItemId = state.currentItem?.id else {
                 nextState.currentIndex = 0
                 return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])

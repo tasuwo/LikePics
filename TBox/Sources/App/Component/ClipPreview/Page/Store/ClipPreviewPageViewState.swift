@@ -23,6 +23,7 @@ struct ClipPreviewPageViewState: Equatable {
     let clipId: Clip.Identity
 
     var currentIndex: Int?
+    var initialItem: ClipItem.Identity?
     var pageChange: PageChange?
     var items: [ClipItem]
 
@@ -33,8 +34,9 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
-    init(clipId: Clip.Identity) {
+    init(clipId: Clip.Identity, initialItem: ClipItem.Identity? = nil) {
         self.clipId = clipId
+        self.initialItem = initialItem
         currentIndex = nil
         items = []
         alert = nil

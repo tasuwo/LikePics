@@ -24,8 +24,8 @@ struct ClipPreviewPageViewRootState: Equatable {
 }
 
 extension ClipPreviewPageViewRootState {
-    init(clipId: Clip.Identity) {
-        pageViewState = ClipPreviewPageViewState(clipId: clipId)
+    init(clipId: Clip.Identity, initialItem: ClipItem.Identity?) {
+        pageViewState = ClipPreviewPageViewState(clipId: clipId, initialItem: initialItem)
         isVerticalSizeClassCompact = true
         navigationBarLeftItems = []
         navigationBarRightItems = []
