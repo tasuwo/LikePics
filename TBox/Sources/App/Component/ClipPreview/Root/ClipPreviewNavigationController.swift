@@ -46,6 +46,10 @@ extension ClipPreviewNavigationController: TBoxUIKit.ClipPreviewViewController {
         pageViewController?.previewingClipId
     }
 
+    var previewingClipItemId: ClipItem.Identity? {
+        pageViewController?.previewingClipItemId
+    }
+
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         return pageViewController?.animatingPreviewView(animator)
     }

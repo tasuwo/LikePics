@@ -371,6 +371,10 @@ extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
         store.stateValue.clipId
     }
 
+    var previewingClipItemId: ClipItem.Identity? {
+        store.stateValue.currentItem?.id ?? store.stateValue.initialItemId
+    }
+
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
