@@ -277,20 +277,20 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
         collectionView
     }
 
-    func previewingCell(for clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell? {
-        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == clipId }),
+    func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
+        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == id.clipId }),
               let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
 
         if needsScroll {
             // セルが画面外だとインスタンスを取り出せないので、表示する
-            displayPreviewingCell(for: clipId)
+            displayPreviewingCell(id: id)
         }
 
         return collectionView.cellForItem(at: indexPath) as? SearchResultClipCell
     }
 
-    func displayPreviewingCell(for clipId: Clip.Identity) {
-        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == clipId }),
+    func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier) {
+        guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == id.clipId }),
               let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
@@ -304,4 +304,6 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
         view.layoutIfNeeded()
         collectionView.layoutIfNeeded()
     }
+
+    var isDisplayablePrimaryThumbnailOnly: Bool { true }
 }

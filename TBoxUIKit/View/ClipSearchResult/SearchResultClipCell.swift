@@ -70,10 +70,10 @@ extension SearchResultClipCell: ThumbnailLoadObserver {
     }
 }
 
-extension SearchResultClipCell: ClipPreviewPresentingCell {
-    // MARK: - ClipPreviewPresentingCell
+extension SearchResultClipCell: ClipPreviewPresentableCell {
+    // MARK: - ClipPreviewPresentableCell
 
-    public func primaryThumbnailImageView() -> UIImageView { imageView }
+    public func thumbnail() -> UIImageView { imageView }
 }
 
 extension SearchResultClipCell: ThumbnailPresentable {

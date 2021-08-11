@@ -10,8 +10,9 @@ import UIKit
 protocol ClipPreviewPresentingViewController: UIViewController {
     var previewingCellCornerRadius: CGFloat { get }
     var previewingCollectionView: UICollectionView { get }
-    func previewingCell(for clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell?
-    func displayPreviewingCell(for clipId: Clip.Identity)
+    func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell?
+    func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier)
+    var isDisplayablePrimaryThumbnailOnly: Bool { get }
 }
 
 private extension SceneRootViewController {
@@ -38,17 +39,17 @@ private extension SceneRootViewController {
     }
 }
 
-// MARK: - ClipPreviewPresentingAnimatorDataSource
+// MARK: - ClipPreviewPresentableViewController
 
 extension SceneRootViewController where Self: UIViewController {
-    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell? {
+    func animatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
-        return viewController.previewingCell(for: clipId, needsScroll: needsScroll)
+        return viewController.previewingCell(id: id, needsScroll: needsScroll)
     }
 
-    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect {
+    func animatingCellFrame(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        guard let selectedCell = viewController.previewingCell(for: clipId, needsScroll: needsScroll) else { return .zero }
+        guard let selectedCell = viewController.previewingCell(id: id, needsScroll: needsScroll) else { return .zero }
         return viewController.previewingCollectionView.convert(selectedCell.frame, to: containerView)
     }
 
@@ -57,15 +58,15 @@ extension SceneRootViewController where Self: UIViewController {
         return viewController.previewingCellCornerRadius
     }
 
-    func displayAnimatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity) {
+    func displayAnimatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier) {
         guard let viewController = self.resolvePresentingViewController() else { return }
-        viewController.displayPreviewingCell(for: clipId)
+        viewController.displayPreviewingCell(id: id)
     }
 
-    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect {
+    func thumbnailFrame(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
         guard let viewController = self.resolvePresentingViewController() else { return .zero }
-        guard let selectedCell = viewController.previewingCell(for: clipId, needsScroll: needsScroll) else { return .zero }
-        let imageView = selectedCell.primaryThumbnailImageView()
+        guard let selectedCell = viewController.previewingCell(id: id, needsScroll: needsScroll) else { return .zero }
+        let imageView = selectedCell.thumbnail()
         return selectedCell.convert(imageView.frame, to: containerView)
     }
 
@@ -76,6 +77,11 @@ extension SceneRootViewController where Self: UIViewController {
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView] {
         let navigationBar = (self.currentViewController as? UINavigationController)?.navigationBar
         return ([navigationBar] as [UIView?]).compactMap { $0 }
+    }
+
+    func isDisplayablePrimaryThumbnailOnly(_ animator: ClipPreviewAnimator) -> Bool {
+        guard let viewController = self.resolvePresentingViewController() else { return false }
+        return viewController.isDisplayablePrimaryThumbnailOnly
     }
 
     private func calcCenteredFrame(for size: CGSize, on frame: CGRect) -> CGRect {

@@ -42,20 +42,12 @@ class ClipPreviewNavigationController: UINavigationController {
 extension ClipPreviewNavigationController: TBoxUIKit.ClipPreviewViewController {
     // MARK: - ClipPreviewViewController
 
-    var previewingClipId: Clip.Identity? {
-        pageViewController?.previewingClipId
-    }
-
-    var previewingClipItemId: ClipItem.Identity? {
-        pageViewController?.previewingClipItemId
+    func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
+        return pageViewController?.previewingClipItem(animator)
     }
 
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         return pageViewController?.animatingPreviewView(animator)
-    }
-
-    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool {
-        return pageViewController?.isCurrentItemPrimary(animator) == true
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {

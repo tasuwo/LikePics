@@ -33,15 +33,15 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         guard
             let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentableViewController & UIViewController),
             let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewViewController & UIViewController),
-            let previewingClipId = to.previewingClipId,
+            let previewingClipItem = to.previewingClipItem(self),
             let targetPreviewView = to.animatingPreviewView(self),
-            let selectedCell = from.animatingCell(self, clipId: previewingClipId, needsScroll: false)
+            let selectedCell = from.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: false)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
         }
 
-        let selectedImageView = selectedCell.primaryThumbnailImageView()
+        let selectedImageView = selectedCell.thumbnail()
         guard
             let selectedImage = selectedImageView.image
         else {
@@ -111,7 +111,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         animatingImageView.layer.cornerRadius = from.animatingCellCornerRadius(self)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
-        animatingImageView.frame = from.primaryThumbnailFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView)
+        animatingImageView.frame = from.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
         containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
         containerView.insertSubview(to.view, aboveSubview: animatingImageView)

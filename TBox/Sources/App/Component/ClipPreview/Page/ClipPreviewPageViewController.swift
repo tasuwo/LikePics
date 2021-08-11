@@ -367,6 +367,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
 extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
     // MARK: - ClipPreviewViewController
 
+    func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
+        guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
+        return .init(clipId: store.stateValue.clipId,
+                     itemId: itemId,
+                     isItemPrimary: store.stateValue.currentIndex == 0)
+    }
+
     var previewingClipId: Clip.Identity? {
         store.stateValue.clipId
     }
@@ -378,11 +385,6 @@ extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
-    }
-
-    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool {
-        view.layoutIfNeeded()
-        return store.stateValue.currentIndex == 0
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {

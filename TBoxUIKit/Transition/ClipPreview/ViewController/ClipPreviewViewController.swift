@@ -6,9 +6,7 @@ import Domain
 import UIKit
 
 public protocol ClipPreviewViewController {
-    var previewingClipId: Clip.Identity? { get }
-    var previewingClipItemId: ClipItem.Identity? { get }
+    func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem?
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView?
-    func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect
 }

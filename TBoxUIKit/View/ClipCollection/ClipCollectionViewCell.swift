@@ -292,10 +292,10 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     }
 }
 
-extension ClipCollectionViewCell: ClipPreviewPresentingCell {
-    // MARK: - ClipPreviewPresentingCell
+extension ClipCollectionViewCell: ClipPreviewPresentableCell {
+    // MARK: - ClipPreviewPresentableCell
 
-    public func primaryThumbnailImageView() -> UIImageView {
+    public func thumbnail() -> UIImageView {
         return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
     }
 }

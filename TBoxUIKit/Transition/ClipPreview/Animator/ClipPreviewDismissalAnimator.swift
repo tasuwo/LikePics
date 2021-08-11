@@ -37,8 +37,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let fromPreviewView = from.animatingPreviewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
-            let previewingClipId = from.previewingClipId,
-            let toCell = to.animatingCell(self, clipId: previewingClipId, needsScroll: true),
+            let previewingClipItem = from.previewingClipItem(self),
+            let toCell = to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -64,7 +64,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
         // Display Cell
 
-        to.displayAnimatingCell(self, clipId: previewingClipId)
+        to.displayAnimatingCell(self, id: previewingClipItem.cellIdentity)
 
         // Preprocess
 
@@ -113,13 +113,18 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             delay: 0,
             options: [.curveEaseIn]
         ) {
-            if from.isCurrentItemPrimary(self) {
-                let frame = to.primaryThumbnailFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView)
+            if previewingClipItem.isItemPrimary {
+                let frame = to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
                 animatingImageView.frame = frame
             } else {
-                let frame = to.animatingCellFrame(self, clipId: previewingClipId, needsScroll: false, on: containerView)
-                animatingImageView.frame = frame.scaled(0.2)
-                animatingImageView.alpha = 0
+                if to.isDisplayablePrimaryThumbnailOnly(self) {
+                    let frame = to.animatingCellFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
+                    animatingImageView.frame = frame.scaled(0.2)
+                    animatingImageView.alpha = 0
+                } else {
+                    let frame = to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
+                    animatingImageView.frame = frame
+                }
             }
 
             from.view.alpha = 0

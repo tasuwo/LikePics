@@ -5,16 +5,17 @@
 import Domain
 import UIKit
 
-public protocol ClipPreviewPresentingCell: UICollectionViewCell {
-    func primaryThumbnailImageView() -> UIImageView
+public protocol ClipPreviewPresentableCell: UICollectionViewCell {
+    func thumbnail() -> UIImageView
 }
 
 public protocol ClipPreviewPresentableViewController {
-    func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell?
-    func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect
+    func animatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell?
+    func animatingCellFrame(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect
     func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat
-    func displayAnimatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity)
-    func primaryThumbnailFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect
+    func displayAnimatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier)
+    func thumbnailFrame(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect
     func baseView(_ animator: ClipPreviewAnimator) -> UIView?
     func componentsOverBaseView(_ animator: ClipPreviewAnimator) -> [UIView]
+    func isDisplayablePrimaryThumbnailOnly(_ animator: ClipPreviewAnimator) -> Bool
 }
