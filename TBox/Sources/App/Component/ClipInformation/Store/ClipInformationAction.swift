@@ -22,4 +22,16 @@ enum ClipInformationAction: Action {
 
     case reordered([ClipItem.Identity])
     case selected(ClipItem.Identity)
+    case itemsReorderFailed
+
+    // MARK: Menu
+
+    case deleteMenuTapped(ClipItem.Identity)
+    case openImageUrlMenuTapped(ClipItem.Identity)
+    case copyImageUrlMenuTapped(ClipItem.Identity)
+
+    // MARK: Alert Completion
+
+    case alertDeleteConfirmed
+    case alertDismissed
 }

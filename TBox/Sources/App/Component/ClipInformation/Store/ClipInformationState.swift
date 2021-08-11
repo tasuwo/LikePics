@@ -5,6 +5,11 @@
 import Domain
 
 struct ClipInformationState: Equatable {
+    enum Alert: Equatable {
+        case deletion(ClipItem)
+        case error(String)
+    }
+
     struct EditingClip: Equatable {
         let id: Clip.Identity
         let dataSize: Int
@@ -17,6 +22,8 @@ struct ClipInformationState: Equatable {
     var isSomeItemsHidden: Bool
 
     var isDismissed: Bool
+
+    var alert: Alert?
 }
 
 extension ClipInformationState {

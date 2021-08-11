@@ -166,6 +166,11 @@
 "clip_information_view_alert_for_delete_tag_message" = "Are you sure you want to delete this tag?\nThe clips and images will not be deleted.";
 "clip_information_view_alert_for_delete_tag_action" = "Delete";
 
+"clip_information_alert_for_delete_action" = "Delete";
+"clip_information_context_menu_delete" = "Delete";
+"clip_information_context_menu_copy_image_url" = "Copy Image Url";
+"clip_information_context_menu_open_image_url" = "Open Image Url";
+
 "album_selection_view_title" = "Add to Album";
 "album_selection_view_empty_title" = "No Albums";
 "album_selection_view_empty_message" = "You can collect clips into an album";
@@ -226,6 +231,10 @@
 "clip_collection_error_at_share" = "Failed to share.";
 "clip_collection_error_at_purge" = "Failed to split images in the clip.";
 "clip_collection_error_at_reorder" = "Failed to reorder.";
+
+// MAKR: Clip Item
+
+"error_at_delete_clip_item" = "Failed to delete image.";
 
 // MARK: Clip Preview
 

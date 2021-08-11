@@ -10,6 +10,7 @@ typealias ClipInformationDependency = HasClipQueryService
     & HasClipCommandService
     & HasUserSettingStorage
     & HasRouter
+    & HasPasteboard
 
 struct ClipInformationReducer: Reducer {
     typealias Dependency = ClipInformationDependency
@@ -58,8 +59,7 @@ struct ClipInformationReducer: Reducer {
                             promise(.success(nil))
 
                         case .failure:
-                            // TODO:
-                            promise(.success(nil))
+                            promise(.success(.itemsReorderFailed))
                         }
                     }
                 }
@@ -72,6 +72,51 @@ struct ClipInformationReducer: Reducer {
 
         case let .selected(itemId):
             dependency.router.showClipPreviewView(for: state.clip.id, at: itemId)
+            return (nextState, .none)
+
+        case .itemsReorderFailed:
+            nextState.alert = .error(L10n.failedToUpdateClip)
+            return (nextState, .none)
+
+        // MARK: Menu
+
+        case let .deleteMenuTapped(itemId):
+            guard let item = state.items.entity(having: itemId) else { return (nextState, .none) }
+            nextState.alert = .deletion(item)
+            return (nextState, .none)
+
+        case let .copyImageUrlMenuTapped(itemId):
+            guard let item = state.items.entity(having: itemId),
+                  let imageUrl = item.imageUrl else { return (nextState, .none) }
+            dependency.pasteboard.set(imageUrl.absoluteString)
+            return (nextState, .none)
+
+        case let .openImageUrlMenuTapped(itemId):
+            guard let item = state.items.entity(having: itemId),
+                  let imageUrl = item.imageUrl else { return (nextState, .none) }
+            dependency.router.open(imageUrl)
+            return (nextState, .none)
+
+        // MARK: Alert Completion
+
+        case .alertDeleteConfirmed:
+            guard case let .deletion(storedItem) = state.alert,
+                  let item = state.items.entity(having: storedItem.id)
+            else {
+                nextState.alert = nil
+                return (nextState, .none)
+            }
+            switch dependency.clipCommandService.deleteClipItem(item) {
+            case .success:
+                nextState.alert = nil
+
+            case .failure:
+                nextState.alert = .error(L10n.errorAtDeleteClipItem)
+            }
+            return (nextState, .none)
+
+        case .alertDismissed:
+            nextState.alert = nil
             return (nextState, .none)
         }
     }

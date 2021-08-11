@@ -76,6 +76,10 @@ extension ClipInformationViewController {
                 }
             }
             .store(in: &subscriptions)
+
+        store.state
+            .bind(\.alert) { [weak self] in self?.presentAlertIfNeeded(for: $0) }
+            .store(in: &subscriptions)
     }
 
     // MARK: Snapshot
@@ -87,6 +91,55 @@ extension ClipInformationViewController {
         snapshot.appendItems(zip(items.indices, items).map { Layout.Item($1, at: $0 + 1) })
 
         return snapshot
+    }
+
+    // MARK: Alert
+
+    private func presentAlertIfNeeded(for alert: ClipInformationState.Alert?) {
+        switch alert {
+        case let .error(message):
+            presentErrorMessageAlertIfNeeded(message: message)
+
+        case let .deletion(item):
+            presentDeletionAlert(for: item)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentErrorMessageAlertIfNeeded(message: String?) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func presentDeletionAlert(for item: ClipItem) {
+        guard let indexPath = dataSource.indexPath(for: .init(item, at: 0)), // index は比較に利用されないので適当な値で埋める
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
+            store.execute(.alertDismissed)
+            return
+        }
+
+        let alert = UIAlertController(title: nil,
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
+
+        let title = L10n.clipInformationAlertForDeleteAction
+        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
+            self?.store.execute(.alertDeleteConfirmed)
+        }))
+        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }))
+
+        alert.popoverPresentationController?.sourceView = collectionView
+        alert.popoverPresentationController?.sourceRect = cell.frame
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: Appearance
@@ -158,10 +211,11 @@ extension ClipInformationViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
+        guard let item = dataSource.itemIdentifier(for: indexPath),
+              let clipItem = store.stateValue.items.entity(having: item.itemId) else { return nil }
         return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
                                           previewProvider: nil,
-                                          actionProvider: nil) // TODO:
+                                          actionProvider: makeActionProvider(for: clipItem, at: indexPath))
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -179,6 +233,40 @@ extension ClipInformationViewController {
         parameters.backgroundColor = .clear
         parameters.shadowPath = UIBezierPath()
         return UITargetedPreview(view: cell, parameters: parameters)
+    }
+
+    private func makeActionProvider(for clipItem: ClipItem, at indexPath: IndexPath) -> UIContextMenuActionProvider {
+        let items = ClipInformationMenuBuilder.build(for: clipItem).map {
+            makeElement(from: $0, for: clipItem, at: indexPath)
+        }
+        return { _ in
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: items)
+        }
+    }
+
+    private func makeElement(from item: ClipInformationMenuItem, for clipItem: ClipItem, at indexPath: IndexPath) -> UIMenuElement {
+        switch item {
+        case .delete:
+            return UIAction(title: L10n.clipInformationContextMenuDelete,
+                            image: UIImage(systemName: "trash.fill"),
+                            attributes: .destructive) { [weak self] _ in
+                self?.store.execute(.deleteMenuTapped(clipItem.id))
+            }
+
+        case .copyImageUrl:
+            return UIAction(title: L10n.clipInformationContextMenuCopyImageUrl,
+                            image: UIImage(systemName: "doc.on.doc"),
+                            attributes: []) { [weak self] _ in
+                self?.store.execute(.copyImageUrlMenuTapped(clipItem.id))
+            }
+
+        case .openImageUrl:
+            return UIAction(title: L10n.clipInformationContextMenuOpenImageUrl,
+                            image: UIImage(systemName: "globe"),
+                            attributes: []) { [weak self] _ in
+                self?.store.execute(.openImageUrlMenuTapped(clipItem.id))
+            }
+        }
     }
 }
 

@@ -152,6 +152,14 @@ internal enum L10n {
     internal static let clipEditViewMultiselectSelect = L10n.tr("Localizable", "clip_edit_view_multiselect_select")
     /// クリップを編集
     internal static let clipEditViewTitle = L10n.tr("Localizable", "clip_edit_view_title")
+    /// 削除
+    internal static let clipInformationAlertForDeleteAction = L10n.tr("Localizable", "clip_information_alert_for_delete_action")
+    /// 画像のURLをコピー
+    internal static let clipInformationContextMenuCopyImageUrl = L10n.tr("Localizable", "clip_information_context_menu_copy_image_url")
+    /// 削除
+    internal static let clipInformationContextMenuDelete = L10n.tr("Localizable", "clip_information_context_menu_delete")
+    /// 画像のURLを開く
+    internal static let clipInformationContextMenuOpenImageUrl = L10n.tr("Localizable", "clip_information_context_menu_open_image_url")
     /// 画像の読み込みに失敗しました
     internal static let clipInformationErrorAtReadClip = L10n.tr("Localizable", "clip_information_error_at_read_clip")
     /// タグの削除に失敗しました
@@ -281,6 +289,8 @@ internal enum L10n {
     internal static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// 保存
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
+    /// 画像の削除に失敗しました
+    internal static let errorAtDeleteClipItem = L10n.tr("Localizable", "error_at_delete_clip_item")
     /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
     internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
     /// iCloudアカウントが異なります

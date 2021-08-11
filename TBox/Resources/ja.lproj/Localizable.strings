@@ -166,6 +166,11 @@
 "clip_information_view_alert_for_delete_tag_message" = "このタグを削除しますか？\nクリップ及び画像は削除されません";
 "clip_information_view_alert_for_delete_tag_action" = "削除";
 
+"clip_information_alert_for_delete_action" = "削除";
+"clip_information_context_menu_delete" = "削除";
+"clip_information_context_menu_copy_image_url" = "画像のURLをコピー";
+"clip_information_context_menu_open_image_url" = "画像のURLを開く";
+
 "album_selection_view_title" = "アルバムへ追加";
 "album_selection_view_empty_title" = "アルバムがありません";
 "album_selection_view_empty_message" = "複数のクリップをアルバムにまとめることができます";
@@ -226,6 +231,10 @@
 "clip_collection_error_at_share" = "共有に失敗しました";
 "clip_collection_error_at_purge" = "クリップの分割に失敗しました";
 "clip_collection_error_at_reorder" = "並び替えに失敗しました";
+
+// MARK: Clip Item
+
+"error_at_delete_clip_item" = "画像の削除に失敗しました";
 
 // MARK: Clip Preview
 
