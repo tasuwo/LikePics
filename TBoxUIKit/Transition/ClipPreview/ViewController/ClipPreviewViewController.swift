@@ -5,7 +5,7 @@
 import Domain
 import UIKit
 
-public protocol ClipPreviewPresentedAnimatorDataSource {
+public protocol ClipPreviewViewController {
     var previewingClipId: Clip.Identity? { get }
     func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView?
     func isCurrentItemPrimary(_ animator: ClipPreviewAnimator) -> Bool

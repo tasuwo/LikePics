@@ -32,8 +32,8 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
             let fromPreviewView = from.animatingPreviewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,

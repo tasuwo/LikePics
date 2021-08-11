@@ -9,7 +9,7 @@ public protocol ClipPreviewPresentingCell: UICollectionViewCell {
     func primaryThumbnailImageView() -> UIImageView
 }
 
-public protocol ClipPreviewPresentingAnimatorDataSource {
+public protocol ClipPreviewPresentableViewController {
     func animatingCell(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool) -> ClipPreviewPresentingCell?
     func animatingCellFrame(_ animator: ClipPreviewAnimator, clipId: Clip.Identity, needsScroll: Bool, on containerView: UIView) -> CGRect
     func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat

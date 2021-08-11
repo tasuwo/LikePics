@@ -39,8 +39,8 @@ class ClipPreviewNavigationController: UINavigationController {
     }
 }
 
-extension ClipPreviewNavigationController: ClipPreviewPresentedAnimatorDataSource {
-    // MARK: - ClipPreviewPresentedAnimatorDataSource
+extension ClipPreviewNavigationController: TBoxUIKit.ClipPreviewViewController {
+    // MARK: - ClipPreviewViewController
 
     var previewingClipId: Clip.Identity? {
         pageViewController?.previewingClipId

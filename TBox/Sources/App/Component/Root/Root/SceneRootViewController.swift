@@ -6,7 +6,7 @@ import Domain
 import TBoxUIKit
 import UIKit
 
-protocol SceneRootViewController: UIViewController, CloudStackLoaderObserver, ClipPreviewPresentingAnimatorDataSource {
+protocol SceneRootViewController: UIViewController, CloudStackLoaderObserver, ClipPreviewPresentableViewController {
     var currentViewController: UIViewController? { get }
     func select(_ barItem: SceneRoot.BarItem)
 }

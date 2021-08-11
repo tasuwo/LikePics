@@ -364,8 +364,8 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension ClipPreviewPageViewController: ClipPreviewPresentedAnimatorDataSource {
-    // MARK: - ClipPreviewPresentedAnimatorDataSource
+extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
+    // MARK: - ClipPreviewViewController
 
     var previewingClipId: Clip.Identity? {
         store.stateValue.clipId

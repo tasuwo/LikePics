@@ -31,8 +31,8 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentableViewController & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewViewController & UIViewController),
             let previewingClipId = to.previewingClipId,
             let targetPreviewView = to.animatingPreviewView(self),
             let selectedCell = from.animatingCell(self, clipId: previewingClipId, needsScroll: false)

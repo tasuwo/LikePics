@@ -23,8 +23,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let dismissalType: DismissalType
         let currentCornerRadius: CGFloat
         let finalCornerRadius: CGFloat
-        let from: ClipPreviewPresentedAnimatorDataSource & UIViewController
-        let to: ClipPreviewPresentingAnimatorDataSource & UIViewController
+        let from: ClipPreviewViewController & UIViewController
+        let to: ClipPreviewPresentableViewController & UIViewController
         let innerContext: InnerContext
     }
 
@@ -96,8 +96,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let fromViewBackgroundView = innerContext.fromViewBackgroundView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
             let previewingClipId = from.previewingClipId
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
@@ -272,8 +272,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentingAnimatorDataSource & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
             let fromPreviewView = from.animatingPreviewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,

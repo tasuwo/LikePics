@@ -4,11 +4,11 @@
 
 import UIKit
 
-public typealias ClipPreviewPresentingViewController = ClipPreviewPresentingAnimatorDataSource & UIViewController
-public typealias ClipPreviewPresentedViewController = ClipPreviewPresentedAnimatorDataSource & UIViewController
+public typealias ClipPreviewPresentingViewController = ClipPreviewPresentableViewController & UIViewController
+public typealias ClipPreviewPresentedViewController = ClipPreviewViewController & UIViewController
 
 public protocol ClipPreviewTransitionViewControllerResolvable: AnyObject {
-    func resolvePresentingViewController(from baseViewController: UIViewController) -> ClipPreviewPresentingAnimatorDataSource?
+    func resolvePresentingViewController(from baseViewController: UIViewController) -> ClipPreviewPresentableViewController?
 
-    func resolvePresentedViewController(from baseViewController: UIViewController) -> ClipPreviewPresentedAnimatorDataSource?
+    func resolvePresentedViewController(from baseViewController: UIViewController) -> ClipPreviewViewController?
 }
