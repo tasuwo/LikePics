@@ -9,6 +9,7 @@ import ForestKit
 typealias ClipInformationDependency = HasClipQueryService
     & HasClipCommandService
     & HasUserSettingStorage
+    & HasRouter
 
 struct ClipInformationReducer: Reducer {
     typealias Dependency = ClipInformationDependency
@@ -68,6 +69,10 @@ struct ClipInformationReducer: Reducer {
                 .indexed()
             nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
+
+        case let .selected(itemId):
+            dependency.router.showClipPreviewView(for: state.clip.id, at: itemId)
+            return (nextState, .none)
         }
     }
 }

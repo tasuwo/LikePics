@@ -149,7 +149,8 @@ extension ClipInformationViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // TODO:
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        store.execute(.selected(item.itemId))
     }
 }
 
@@ -218,4 +219,44 @@ extension ClipInformationViewController: UICollectionViewDropDelegate {
         parameters.backgroundColor = .clear
         return parameters
     }
+}
+
+extension ClipInformationViewController: ClipPreviewPresentingViewController {
+    // MARK: - ClipPreviewPresentingViewController
+
+    var previewingCellCornerRadius: CGFloat {
+        return 8
+    }
+
+    var previewingCollectionView: UICollectionView { collectionView }
+
+    func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
+        guard let item = store.stateValue.items._entities[id.itemId],
+              let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return nil }
+
+        if needsScroll {
+            // セルが画面外だとインスタンスを取り出せないので、表示する
+            displayPreviewingCell(id: id)
+        }
+
+        return collectionView.cellForItem(at: indexPath) as? ClipItemCell
+    }
+
+    func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier) {
+        guard let item = store.stateValue.items._entities[id.itemId],
+              let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return }
+
+        // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
+        // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある
+        view.layoutIfNeeded()
+        collectionView.layoutIfNeeded()
+
+        collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+
+        // スクロール後に再描画しないと、セルの座標系が更新されない
+        view.layoutIfNeeded()
+        collectionView.layoutIfNeeded()
+    }
+
+    var isDisplayablePrimaryThumbnailOnly: Bool { false }
 }

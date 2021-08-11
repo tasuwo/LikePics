@@ -76,3 +76,10 @@ extension ClipItemCell: ThumbnailLoadObserver {
         }
     }
 }
+
+extension ClipItemCell: ClipPreviewPresentableCell {
+    public func thumbnail() -> UIImageView {
+        // swiftlint:disable:next force_unwrapping
+        (contentView as? ClipItemContentView)!.thumbnailImageView
+    }
+}

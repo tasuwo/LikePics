@@ -21,4 +21,5 @@ enum ClipInformationAction: Action {
     // MARK: Operation
 
     case reordered([ClipItem.Identity])
+    case selected(ClipItem.Identity)
 }

@@ -24,13 +24,13 @@ private extension SceneRootViewController {
         }
 
         if let navigationController = topViewController as? UINavigationController,
-           let viewController = navigationController.viewControllers.compactMap({ $0 as? ClipPreviewPresentingViewController }).first
+           let viewController = navigationController.viewControllers.compactMap({ $0 as? ClipPreviewPresentingViewController }).last
         {
             return viewController
         }
 
         if let navigationController = topViewController as? UINavigationController,
-           let entryViewController = navigationController.viewControllers.compactMap({ $0 as? SearchEntryViewController }).first
+           let entryViewController = navigationController.viewControllers.compactMap({ $0 as? SearchEntryViewController }).last
         {
             return entryViewController.resultsController
         }

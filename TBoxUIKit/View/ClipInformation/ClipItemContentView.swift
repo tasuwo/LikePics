@@ -12,13 +12,14 @@ public class ClipItemContentView: UIView {
     private var _configuration: ClipItemContentConfiguration!
 
     @IBOutlet private var baseView: UIView!
-    @IBOutlet private var thumbnailImageView: UIImageView!
     @IBOutlet private var pageNumberLabelContainer: UIView!
     @IBOutlet private var pageNumberLabel: UILabel!
     @IBOutlet private var fileNameLabel: UILabel!
     @IBOutlet private var dataSizeLabel: UILabel!
     @IBOutlet private var thumbnailWidthConstraint: NSLayoutConstraint!
     @IBOutlet private var thumbnailHeightConstraint: NSLayoutConstraint!
+
+    @IBOutlet var thumbnailImageView: UIImageView!
 
     private var thumbnailImageAspectConstraint: NSLayoutConstraint? {
         willSet {
