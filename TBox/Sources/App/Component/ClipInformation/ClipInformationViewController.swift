@@ -71,9 +71,8 @@ extension ClipInformationViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
-                self?.dataSource.apply(snapshot, animatingDifferences: true) {
-                    self?.updateCellAppearance()
-                }
+                self?.dataSource.apply(snapshot, animatingDifferences: true)
+                self?.updateCellAppearance()
             }
             .store(in: &subscriptions)
 
