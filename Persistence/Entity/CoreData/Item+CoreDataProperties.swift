@@ -7,7 +7,8 @@ import CoreData
 import Foundation
 
 public extension Item {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Item> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<Item> {
         return NSFetchRequest<Item>(entityName: "ClipItem")
     }
 

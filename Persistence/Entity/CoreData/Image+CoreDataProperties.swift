@@ -7,7 +7,8 @@ import CoreData
 import Foundation
 
 public extension Image {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Image> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<Image> {
         return NSFetchRequest<Image>(entityName: "Image")
     }
 

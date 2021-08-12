@@ -7,7 +7,8 @@ import CoreData
 import Foundation
 
 public extension Tag {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Tag> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<Tag> {
         return NSFetchRequest<Tag>(entityName: "Tag")
     }
 

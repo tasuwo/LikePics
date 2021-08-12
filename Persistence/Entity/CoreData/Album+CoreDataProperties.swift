@@ -7,7 +7,8 @@ import CoreData
 import Foundation
 
 public extension Album {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Album> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<Album> {
         return NSFetchRequest<Album>(entityName: "Album")
     }
 

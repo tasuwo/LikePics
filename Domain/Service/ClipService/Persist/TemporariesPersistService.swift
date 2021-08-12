@@ -14,7 +14,7 @@ public class TemporariesPersistService {
     let lock: NSRecursiveLock
     let logger: Loggable
 
-    private(set) var isRunning: Bool = false
+    private(set) var isRunning = false
 
     weak var observer: TemporariesPersistServiceObserver?
 

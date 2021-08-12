@@ -7,7 +7,8 @@ import CoreData
 import Foundation
 
 public extension Clip {
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Clip> {
+    @nonobjc
+    class func fetchRequest() -> NSFetchRequest<Clip> {
         return NSFetchRequest<Clip>(entityName: "Clip")
     }
 
