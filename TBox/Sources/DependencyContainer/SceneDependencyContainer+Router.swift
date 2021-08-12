@@ -162,6 +162,17 @@ extension SceneDependencyContainer: Router {
         return false
     }
 
+    func showClipIetmListView(clipId: Clip.Identity) -> Bool {
+        let state = ClipItemListState(clipId: clipId,
+                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let viewController = ClipItemListViewController(state: state,
+                                                        dependency: self,
+                                                        thumbnailLoader: container.temporaryThumbnailLoader)
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
+        detailViewController.present(viewController, animated: true, completion: nil)
+        return true
+    }
+
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
