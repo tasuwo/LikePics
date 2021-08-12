@@ -168,6 +168,10 @@ extension ClipPreviewPageViewReducer {
             nextState.isDismissed = true
             return (nextState, .none)
 
+        case .listed:
+            // TODO:
+            return (nextState, .none)
+
         case .infoRequested:
             if let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,

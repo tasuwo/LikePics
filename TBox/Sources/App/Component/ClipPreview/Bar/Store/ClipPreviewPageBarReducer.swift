@@ -39,6 +39,7 @@ struct ClipPreviewPageBarReducer: Reducer {
         // MARK: Bar Button
 
         case .backButtonTapped,
+             .listButtonTapped,
              .infoButtonTapped,
              .browseButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
@@ -116,7 +117,10 @@ private extension ClipPreviewPageBarState {
 
         if nextState.isToolBarHidden {
             nextState.toolBarItems = []
-            nextState.leftBarButtonItems = [.init(kind: .back, isEnabled: true)]
+            nextState.leftBarButtonItems = [
+                .init(kind: .back, isEnabled: true),
+                .init(kind: .list, isEnabled: true)
+            ]
             nextState.rightBarButtonItems = [
                 .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
                 .init(kind: .add, isEnabled: true),
@@ -130,7 +134,10 @@ private extension ClipPreviewPageBarState {
                 .init(kind: .share, isEnabled: true),
                 .init(kind: .delete, isEnabled: true)
             ]
-            nextState.leftBarButtonItems = [.init(kind: .back, isEnabled: true)]
+            nextState.leftBarButtonItems = [
+                .init(kind: .back, isEnabled: true),
+                .init(kind: .list, isEnabled: true)
+            ]
             nextState.rightBarButtonItems = [.init(kind: .info, isEnabled: true)]
         }
 

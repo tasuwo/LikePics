@@ -23,6 +23,7 @@ enum ClipPreviewPageBarAction: Action {
     case addButtonTapped
     case shareButtonTapped
     case deleteButtonTapped
+    case listButtonTapped
 
     // MARK: Alert Completion
 

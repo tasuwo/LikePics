@@ -26,6 +26,7 @@ class ClipPreviewPageBarController {
     private var shareItem: UIBarButtonItem!
     private var deleteItem: UIBarButtonItem!
     private var infoItem: UIBarButtonItem!
+    private var listItem: UIBarButtonItem!
     private var backItem: UIBarButtonItem!
 
     // MARK: Store
@@ -288,6 +289,14 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         infoItem.accessibilityIdentifier = "\(String(describing: Self.self)).infoItem"
+        listItem = UIBarButtonItem(
+            image: UIImage(systemName: "list.bullet"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.listButtonTapped)
+            }),
+            menu: nil
+        )
+        listItem.accessibilityIdentifier = "\(String(describing: Self.self)).listItem"
         backItem = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left",
                            withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
@@ -313,6 +322,9 @@ extension ClipPreviewPageBarController {
             switch item.kind {
             case .back:
                 return backItem
+
+            case .list:
+                return listItem
 
             case .browse:
                 return browseItem

@@ -16,6 +16,7 @@ struct ClipPreviewPageBarState: Equatable {
     struct Item: Equatable {
         enum Kind: Equatable {
             case back
+            case list
             case browse
             case add
             case share

@@ -4,6 +4,7 @@
 
 enum ClipPreviewPageBarEvent {
     case backed
+    case listed
     case infoRequested
     case browsed
     case addToAlbum
