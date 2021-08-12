@@ -9,9 +9,9 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-class ClipInformationViewController: UIViewController {
-    typealias Layout = ClipInformationViewLayout
-    typealias Store = ForestKit.Store<ClipInformationState, ClipInformationAction, ClipInformationDependency>
+class ClipItemListViewController: UIViewController {
+    typealias Layout = ClipItemListViewLayout
+    typealias Store = ForestKit.Store<ClipItemListState, ClipItemListAction, ClipItemListDependency>
 
     // MARK: - Properties
 
@@ -31,11 +31,11 @@ class ClipInformationViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipInformationState,
-         dependency: ClipInformationDependency,
+    init(state: ClipItemListState,
+         dependency: ClipItemListDependency,
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipInformationReducer())
+        self.store = .init(initialState: state, dependency: dependency, reducer: ClipItemListReducer())
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
     }
@@ -62,7 +62,7 @@ class ClipInformationViewController: UIViewController {
 
 // MARK: - Bind
 
-extension ClipInformationViewController {
+extension ClipItemListViewController {
     func bind(to store: Store) {
         store.state
             .removeDuplicates(by: {
@@ -94,7 +94,7 @@ extension ClipInformationViewController {
 
     // MARK: Alert
 
-    private func presentAlertIfNeeded(for alert: ClipInformationState.Alert?) {
+    private func presentAlertIfNeeded(for alert: ClipItemListState.Alert?) {
         switch alert {
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
@@ -158,7 +158,7 @@ extension ClipInformationViewController {
 
 // MARK: - Configuration
 
-extension ClipInformationViewController {
+extension ClipItemListViewController {
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.background.color
 
@@ -189,7 +189,7 @@ extension ClipInformationViewController {
     }
 }
 
-extension ClipInformationViewController: UICollectionViewDelegate {
+extension ClipItemListViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -206,7 +206,7 @@ extension ClipInformationViewController: UICollectionViewDelegate {
     }
 }
 
-extension ClipInformationViewController {
+extension ClipItemListViewController {
     // MARK: - UICollectionViewDelegate (Context Menu)
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -235,7 +235,7 @@ extension ClipInformationViewController {
     }
 
     private func makeActionProvider(for clipItem: ClipItem, at indexPath: IndexPath) -> UIContextMenuActionProvider {
-        let items = ClipInformationMenuBuilder.build(for: clipItem).map {
+        let items = ClipItemListMenuBuilder.build(for: clipItem).map {
             makeElement(from: $0, for: clipItem, at: indexPath)
         }
         return { _ in
@@ -243,7 +243,7 @@ extension ClipInformationViewController {
         }
     }
 
-    private func makeElement(from item: ClipInformationMenuItem, for clipItem: ClipItem, at indexPath: IndexPath) -> UIMenuElement {
+    private func makeElement(from item: ClipItemListMenuItem, for clipItem: ClipItem, at indexPath: IndexPath) -> UIMenuElement {
         switch item {
         case .delete:
             return UIAction(title: L10n.clipInformationContextMenuDelete,
@@ -269,7 +269,7 @@ extension ClipInformationViewController {
     }
 }
 
-extension ClipInformationViewController: UICollectionViewDragDelegate {
+extension ClipItemListViewController: UICollectionViewDragDelegate {
     // MARK: - UICollectionViewDragDelegate
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -286,7 +286,7 @@ extension ClipInformationViewController: UICollectionViewDragDelegate {
     }
 }
 
-extension ClipInformationViewController: UICollectionViewDropDelegate {
+extension ClipItemListViewController: UICollectionViewDropDelegate {
     // MARK: - UICollectionViewDropDelegate
 
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -308,7 +308,7 @@ extension ClipInformationViewController: UICollectionViewDropDelegate {
     }
 }
 
-extension ClipInformationViewController: ClipPreviewPresentingViewController {
+extension ClipItemListViewController: ClipPreviewPresentingViewController {
     // MARK: - ClipPreviewPresentingViewController
 
     var previewingCellCornerRadius: CGFloat {

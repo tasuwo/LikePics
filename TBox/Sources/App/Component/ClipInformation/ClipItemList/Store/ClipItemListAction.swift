@@ -5,7 +5,7 @@
 import Domain
 import ForestKit
 
-enum ClipInformationAction: Action {
+enum ClipItemListAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad

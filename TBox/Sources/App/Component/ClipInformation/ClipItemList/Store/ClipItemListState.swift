@@ -4,7 +4,7 @@
 
 import Domain
 
-struct ClipInformationState: Equatable {
+struct ClipItemListState: Equatable {
     enum Alert: Equatable {
         case deletion(ClipItem)
         case error(String)
@@ -26,7 +26,7 @@ struct ClipInformationState: Equatable {
     var alert: Alert?
 }
 
-extension ClipInformationState {
+extension ClipItemListState {
     init(clipId: Clip.Identity, isSomeItemsHidden: Bool) {
         // 初回は適当な値で埋めておく
         self.clip = .init(id: clipId, dataSize: 0, isHidden: false)

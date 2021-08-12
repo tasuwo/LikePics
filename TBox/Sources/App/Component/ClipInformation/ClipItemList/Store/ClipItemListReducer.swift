@@ -6,16 +6,16 @@ import Combine
 import Domain
 import ForestKit
 
-typealias ClipInformationDependency = HasClipQueryService
+typealias ClipItemListDependency = HasClipQueryService
     & HasClipCommandService
     & HasUserSettingStorage
     & HasRouter
     & HasPasteboard
 
-struct ClipInformationReducer: Reducer {
-    typealias Dependency = ClipInformationDependency
-    typealias State = ClipInformationState
-    typealias Action = ClipInformationAction
+struct ClipItemListReducer: Reducer {
+    typealias Dependency = ClipItemListDependency
+    typealias State = ClipItemListState
+    typealias Action = ClipItemListAction
 
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
@@ -124,7 +124,7 @@ struct ClipInformationReducer: Reducer {
 
 // MARK: - Preparation
 
-extension ClipInformationReducer {
+extension ClipItemListReducer {
     static func prepareQueryEffects(for id: Clip.Identity, state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         let clipQuery: ClipQuery
         switch dependency.clipQueryService.queryClip(having: id) {
@@ -182,7 +182,7 @@ extension ClipInformationReducer {
 
 // MARK: - Filter
 
-extension ClipInformationReducer {
+extension ClipItemListReducer {
     private static func performFilter(tags: [Tag],
                                       previousState: State) -> State
     {
@@ -218,7 +218,7 @@ extension ClipInformationReducer {
     }
 }
 
-extension ClipInformationReducer {
+extension ClipItemListReducer {
     private static func performReorder(originals: [ClipItem.Identity], request: [ClipItem.Identity]) -> [ClipItem.Identity] {
         var index = 0
         return originals
@@ -231,7 +231,7 @@ extension ClipInformationReducer {
 }
 
 private extension Clip {
-    func map(to: ClipInformationState.EditingClip.Type) -> ClipInformationState.EditingClip {
+    func map(to: ClipItemListState.EditingClip.Type) -> ClipItemListState.EditingClip {
         return .init(id: id,
                      dataSize: dataSize,
                      isHidden: isHidden)

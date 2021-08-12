@@ -7,7 +7,7 @@ import Smoothie
 import TBoxUIKit
 import UIKit
 
-enum ClipInformationViewLayout {
+enum ClipItemListViewLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     typealias SectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>
@@ -42,7 +42,7 @@ enum ClipInformationViewLayout {
     }
 }
 
-extension ClipInformationViewLayout.Item {
+extension ClipItemListViewLayout.Item {
     init(_ item: ClipItem, at index: Int) {
         itemId = item.id
         order = index
@@ -55,7 +55,7 @@ extension ClipInformationViewLayout.Item {
 
 // MARK: - Layout
 
-extension ClipInformationViewLayout {
+extension ClipItemListViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -92,7 +92,7 @@ extension ClipInformationViewLayout {
 
 // MARK: - DataSource
 
-extension ClipInformationViewLayout {
+extension ClipItemListViewLayout {
     static func configureDataSource(_ collectionView: UICollectionView,
                                     _ thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> DataSource
     {
