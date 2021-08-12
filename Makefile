@@ -1,6 +1,6 @@
 .PHONY: install
 install: ## ライブラリ群をインストールする
-	bundle exec pod install && ./carthage.sh update --use-xcframeworks --cache-builds --no-use-binaries --platform iOS
+	bundle exec pod install && ./carthage.sh bootstrap --use-xcframeworks --cache-builds --no-use-binaries --platform iOS
 
 .PHONY: generate
 generate: license_generate swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
