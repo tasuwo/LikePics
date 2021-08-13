@@ -118,12 +118,12 @@ private extension ClipPreviewPageBarState {
         if nextState.isToolBarHidden {
             nextState.toolBarItems = []
             nextState.leftBarButtonItems = [
-                .init(kind: .back, isEnabled: true),
-                .init(kind: .list, isEnabled: true)
+                .init(kind: .back, isEnabled: true)
             ]
             nextState.rightBarButtonItems = [
                 .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
                 .init(kind: .add, isEnabled: true),
+                .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
                 .init(kind: .delete, isEnabled: true)
             ]
@@ -131,12 +131,12 @@ private extension ClipPreviewPageBarState {
             nextState.toolBarItems = [
                 .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
                 .init(kind: .add, isEnabled: true),
+                .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
                 .init(kind: .delete, isEnabled: true)
             ]
             nextState.leftBarButtonItems = [
-                .init(kind: .back, isEnabled: true),
-                .init(kind: .list, isEnabled: true)
+                .init(kind: .back, isEnabled: true)
             ]
             nextState.rightBarButtonItems = [.init(kind: .info, isEnabled: true)]
         }
