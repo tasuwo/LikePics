@@ -19,6 +19,7 @@ struct ClipPreviewPageViewRootState: Equatable {
     var isFullscreen: Bool
     var isNavigationBarHidden: Bool
     var isToolBarHidden: Bool
+    var isPageCounterHidden: Bool
 
     var barAlert: ClipPreviewPageBarState.Alert?
 }
@@ -33,6 +34,7 @@ extension ClipPreviewPageViewRootState {
         isFullscreen = false
         isNavigationBarHidden = false
         isToolBarHidden = false
+        isPageCounterHidden = false
         barAlert = nil
     }
 }
@@ -49,7 +51,10 @@ extension ClipPreviewPageViewRootState {
               isFullscreen: $0.isFullscreen,
               isNavigationBarHidden: $0.isNavigationBarHidden,
               isToolBarHidden: $0.isToolBarHidden,
-              alert: $0.barAlert)
+              isPageCounterHidden: $0.isPageCounterHidden,
+              alert: $0.barAlert,
+              currentIndex: $0.pageViewState.currentIndex,
+              itemsCount: $0.pageViewState.items.count)
     }, set: {
         var nextState = $1
         nextState.isVerticalSizeClassCompact = $0.isVerticalSizeClassCompact
@@ -59,6 +64,7 @@ extension ClipPreviewPageViewRootState {
         nextState.isFullscreen = $0.isFullscreen
         nextState.isNavigationBarHidden = $0.isNavigationBarHidden
         nextState.isToolBarHidden = $0.isToolBarHidden
+        nextState.isPageCounterHidden = $0.isPageCounterHidden
         nextState.barAlert = $0.alert
         return nextState
     })

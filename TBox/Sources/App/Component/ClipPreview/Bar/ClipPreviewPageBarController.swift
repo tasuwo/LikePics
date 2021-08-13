@@ -18,6 +18,9 @@ class ClipPreviewPageBarController {
     weak var barHostingViewController: UIViewController?
     weak var alertHostingViewController: UIViewController?
 
+    private var pageLabelContainer: UIView!
+    private var pageLabel: UILabel!
+
     // MARK: Item
 
     private var flexibleItem: UIBarButtonItem!
@@ -60,6 +63,7 @@ class ClipPreviewPageBarController {
 
     func viewDidLoad() {
         configureBarButtons()
+        configurePageCounter()
 
         bind(to: store)
     }
@@ -75,7 +79,11 @@ extension ClipPreviewPageBarController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: { $0.isToolBarHidden == $1.isToolBarHidden && $0.isNavigationBarHidden == $1.isNavigationBarHidden })
+            .removeDuplicates(by: {
+                $0.isToolBarHidden == $1.isToolBarHidden
+                    && $0.isNavigationBarHidden == $1.isNavigationBarHidden
+                    && $0.isPageCounterHidden == $1.isPageCounterHidden
+            })
             // HACK: navigationController は ViewController が Hierarchy に乗らないと nil となってしまうこれを一瞬まつ
             .delay(for: 0.01, scheduler: RunLoop.main)
             .sink { [weak self] state in self?.updateBarAppearance(state: state) }
@@ -109,6 +117,25 @@ extension ClipPreviewPageBarController {
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
+
+        store.state
+            .removeDuplicates()
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                guard state.itemsCount > 1 else {
+                    self.pageLabelContainer.isHidden = true
+                    self.pageLabel.text = nil
+                    return
+                }
+                if let pageCount = state.pageCount {
+                    self.pageLabelContainer.isHidden = false
+                    self.pageLabel.text = pageCount
+                } else {
+                    self.pageLabelContainer.isHidden = true
+                    self.pageLabel.text = nil
+                }
+            }
+            .store(in: &subscriptions)
     }
 
     // MARK: Appearance
@@ -126,6 +153,7 @@ extension ClipPreviewPageBarController {
         UIView.transition(with: baseView, duration: 0.2, options: .transitionCrossDissolve) {
             self.barHostingViewController?.navigationController?.toolbar.isHidden = state.isToolBarHidden
             self.barHostingViewController?.navigationController?.navigationBar.isHidden = state.isNavigationBarHidden
+            self.pageLabelContainer.alpha = state.isPageCounterHidden ? 0 : 1
         }
     }
 
@@ -306,6 +334,43 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         backItem.accessibilityIdentifier = "\(String(describing: Self.self)).backItem"
+    }
+
+    private func configurePageCounter() {
+        guard let view = barHostingViewController?.view else { return }
+
+        let container = UIView()
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.layer.cornerRadius = 5
+        container.layer.cornerCurve = .continuous
+
+        let label = UILabel()
+
+        let metrics = UIFontMetrics(forTextStyle: .body)
+        let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .bold)
+        label.font = metrics.scaledFont(for: font)
+
+        label.textColor = UIColor.white.withAlphaComponent(0.8)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        container.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8)
+        ])
+
+        view.addSubview(container)
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+        ])
+
+        pageLabelContainer = container
+        pageLabel = label
     }
 }
 

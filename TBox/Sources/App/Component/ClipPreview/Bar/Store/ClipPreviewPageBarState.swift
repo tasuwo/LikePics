@@ -38,6 +38,17 @@ struct ClipPreviewPageBarState: Equatable {
     var isFullscreen: Bool
     var isNavigationBarHidden: Bool
     var isToolBarHidden: Bool
+    var isPageCounterHidden: Bool
 
     var alert: Alert?
+
+    let currentIndex: Int?
+    let itemsCount: Int
+}
+
+extension ClipPreviewPageBarState {
+    var pageCount: String? {
+        guard let index = currentIndex else { return nil }
+        return "\(index + 1)/\(itemsCount)"
+    }
 }

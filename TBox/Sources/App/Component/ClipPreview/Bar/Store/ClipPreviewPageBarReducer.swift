@@ -104,6 +104,7 @@ private extension ClipPreviewPageBarState {
         if nextState.isFullscreen {
             nextState.isToolBarHidden = true
             nextState.isNavigationBarHidden = true
+            nextState.isPageCounterHidden = true
             return nextState
         }
 
@@ -114,6 +115,7 @@ private extension ClipPreviewPageBarState {
 
         nextState.isToolBarHidden = isVerticalSizeClassCompact
         nextState.isNavigationBarHidden = false
+        nextState.isPageCounterHidden = false
 
         if nextState.isToolBarHidden {
             nextState.toolBarItems = []
