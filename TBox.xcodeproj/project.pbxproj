@@ -3843,13 +3843,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BDC8096D0AEB0FABED09C4E7 /* ClipInformation */ = {
+		BDC8096D0AEB0FABED09C4E7 /* ClipItemList */ = {
 			isa = PBXGroup;
 			children = (
 				0E37B978145255150969220C /* ClipItemList */,
 				541C739AC69A29BFE4DDD103 /* Menu */,
 			);
-			path = ClipInformation;
+			path = ClipItemList;
 			sourceTree = "<group>";
 		};
 		BE9E187EF783718E9F2AE668 /* Setting */ = {
@@ -4577,7 +4577,7 @@
 				06DFC92021F79461EF21FD61 /* AlbumList */,
 				3C5A13392A81ECFEE9F3AC8E /* Alert */,
 				ADC25B9218AA8DF9147872AC /* ClipCollection */,
-				BDC8096D0AEB0FABED09C4E7 /* ClipInformation */,
+				BDC8096D0AEB0FABED09C4E7 /* ClipItemList */,
 				23A7DE2439718BE5D9BE1F64 /* ClipItemInformation */,
 				95AFB96C7F494DCA68C7729B /* ClipPreview */,
 				39D2BAE1BE0AD0DEB181ED6A /* Modal */,
