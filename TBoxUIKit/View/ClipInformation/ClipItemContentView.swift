@@ -44,6 +44,19 @@ public class ClipItemContentView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Methods
+
+    public func calcImageFrame(size: CGSize) -> CGRect {
+        let imageArea = CGSize(width: bounds.size.width,
+                               height: bounds.size.width)
+        let scale = size.scale(fittingIn: imageArea)
+        let imageSize = CGSize(width: size.width * scale,
+                               height: size.height * scale)
+        return CGRect(origin: CGPoint(x: (imageArea.width - imageSize.width) / 2,
+                                      y: (imageArea.height - imageSize.height) / 2),
+                      size: imageSize)
+    }
 }
 
 extension ClipItemContentView: UIContentView {

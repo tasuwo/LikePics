@@ -83,3 +83,10 @@ extension ClipItemCell: ClipPreviewPresentableCell {
         (contentView as? ClipItemContentView)!.thumbnailImageView
     }
 }
+
+extension ClipItemCell: ClipItemListPresentingCell {
+    public func calcImageFrame(size: CGSize) -> CGRect {
+        // swiftlint:disable:next force_unwrapping
+        (contentView as? ClipItemContentView)!.calcImageFrame(size: size)
+    }
+}

@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipItemListPresentationAnimator: NSObject {
-    static let transitionDuration: TimeInterval = 0.15
+    static let transitionDuration: TimeInterval = 0.23
 
     private weak var delegate: ClipItemListAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
@@ -68,7 +68,8 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         // Preprocess
 
         from.view.backgroundColor = .clear
-        toCell.alpha = 0
+        // HACK: subViewが遅れて追加されるとalphaが効かないようなので、alphaではなくisHiddenを利用する
+        toCell.isHidden = true
         fromImageView.isHidden = true
         fromPreviewView.isLoadingIndicatorHidden = true
 
@@ -81,7 +82,7 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
             fromPreviewView.isLoadingIndicatorHidden = false
 
             UIView.animate(withDuration: 0.15, animations: {
-                toCell.alpha = 1
+                toCell.isHidden = false
             }, completion: { _ in
                 animatingImageView.alpha = 0
                 fromViewBackgroundView.removeFromSuperview()

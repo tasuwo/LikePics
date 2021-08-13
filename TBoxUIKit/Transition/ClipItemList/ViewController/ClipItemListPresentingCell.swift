@@ -6,4 +6,5 @@ import UIKit
 
 public protocol ClipItemListPresentingCell: UICollectionViewCell {
     func thumbnail() -> UIImageView
+    func calcImageFrame(size: CGSize) -> CGRect
 }

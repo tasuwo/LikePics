@@ -159,17 +159,23 @@ extension SceneDependencyContainer: Router {
         guard let topViewController = topViewController else { return false }
         topViewController.present(viewController, animated: true, completion: nil)
 
-        return false
+        return true
     }
 
-    func showClipItemListView(clipId: Clip.Identity) -> Bool {
+    func showClipItemListView(clipId: Clip.Identity,
+                              transitioningController: ClipItemListTransitionControllable) -> Bool
+    {
         let state = ClipItemListState(clipId: clipId,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let viewController = ClipItemListViewController(state: state,
                                                         dependency: self,
                                                         thumbnailLoader: container.temporaryThumbnailLoader)
-        guard let detailViewController = rootViewController?.currentViewController else { return false }
-        detailViewController.present(viewController, animated: true, completion: nil)
+        viewController.transitioningDelegate = transitioningController
+        viewController.modalPresentationStyle = .fullScreen
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(viewController, animated: true, completion: nil)
+
         return true
     }
 

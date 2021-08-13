@@ -55,6 +55,22 @@ extension ClipPreviewNavigationController: ClipPreviewPresenting {
     }
 }
 
+extension ClipPreviewNavigationController: ClipItemListPresentable {
+    // MARK: - ClipItemListPresentable
+
+    func previewingClipItem(_ animator: ClipItemListAnimator) -> PreviewingClipItem? {
+        return pageViewController?.previewingClipItem(animator)
+    }
+
+    func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {
+        return pageViewController?.previewView(animator)
+    }
+
+    func clipItemListAnimator(_ animator: ClipItemListAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        return pageViewController?.clipItemListAnimator(animator, imageFrameOnContainerView: containerView) ?? .zero
+    }
+}
+
 extension ClipPreviewNavigationController: ClipItemInformationPresentable {
     // MARK: - ClipItemInformationPresentable
 

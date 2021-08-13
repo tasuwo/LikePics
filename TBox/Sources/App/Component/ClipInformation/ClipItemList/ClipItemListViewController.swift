@@ -79,6 +79,13 @@ extension ClipItemListViewController {
         store.state
             .bind(\.alert) { [weak self] in self?.presentAlertIfNeeded(for: $0) }
             .store(in: &subscriptions)
+
+        store.state
+            .bind(\.isDismissed) { [weak self] isDismissed in
+                guard isDismissed else { return }
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
     }
 
     // MARK: Snapshot
@@ -308,28 +315,33 @@ extension ClipItemListViewController: UICollectionViewDropDelegate {
     }
 }
 
-extension ClipItemListViewController: ClipPreviewPresentingViewController {
-    // MARK: - ClipPreviewPresentingViewController
+extension ClipItemListViewController: ClipItemListPresenting {
+    // MARK: - ClipItemListPresenting
 
-    var previewingCellCornerRadius: CGFloat {
-        return 8
-    }
-
-    var previewingCollectionView: UICollectionView { collectionView }
-
-    func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
+    func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipItemListPresentingCell? {
         guard let item = store.stateValue.items._entities[id.itemId],
               let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return nil }
 
         if needsScroll {
             // セルが画面外だとインスタンスを取り出せないので、表示する
-            displayPreviewingCell(id: id)
+            displayAnimatingCell(animator, id: id)
         }
 
-        return collectionView.cellForItem(at: indexPath) as? ClipItemCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ClipItemCell
+
+        return cell
     }
 
-    func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier) {
+    func animatingCellFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
+        guard let selectedCell = animatingCell(animator, id: id, needsScroll: needsScroll) else { return .zero }
+        return view.convert(selectedCell.frame, to: containerView)
+    }
+
+    func animatingCellCornerRadius(_ animator: ClipItemListAnimator) -> CGFloat {
+        return 8
+    }
+
+    func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) {
         guard let item = store.stateValue.items._entities[id.itemId],
               let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return }
 
@@ -345,5 +357,17 @@ extension ClipItemListViewController: ClipPreviewPresentingViewController {
         collectionView.layoutIfNeeded()
     }
 
-    var isDisplayablePrimaryThumbnailOnly: Bool { false }
+    func thumbnailFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
+        guard let item = store.stateValue.items._entities[id.itemId] else { return .zero }
+        guard let selectedCell = animatingCell(animator, id: id, needsScroll: needsScroll) else { return .zero }
+        return selectedCell.convert(selectedCell.calcImageFrame(size: item.value.imageSize.cgSize), to: containerView)
+    }
+
+    func baseView(_ animator: ClipItemListAnimator) -> UIView? {
+        view
+    }
+
+    func componentsOverBaseView(_ animator: ClipItemListAnimator) -> [UIView] {
+        []
+    }
 }

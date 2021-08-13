@@ -70,8 +70,8 @@ struct ClipItemListReducer: Reducer {
             nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
 
-        case let .selected(itemId):
-            dependency.router.showClipPreviewView(for: state.clip.id, at: itemId)
+        case .selected:
+            nextState.isDismissed = true
             return (nextState, .none)
 
         case .itemsReorderFailed:

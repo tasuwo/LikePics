@@ -121,6 +121,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let clipCommandService: ClipCommandServiceProtocol
             let clipQueryService: ClipQueryServiceProtocol
             let clipItemInformationTransitioningController: ClipItemInformationTransitioningController?
+            let clipItemListTransitionController: ClipItemListTransitionControllable?
             let imageQueryService: ImageQueryServiceProtocol
             let informationViewCache: ClipItemInformationViewCaching?
             let previewLoader: PreviewLoader
@@ -133,6 +134,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
         let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let itemListTransitionController = ClipItemListTransitioningController(lock: container.transitionLock, logger: container.logger)
         let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
@@ -140,6 +142,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     clipCommandService: container._clipCommandService,
                                     clipQueryService: container._clipQueryService,
                                     clipItemInformationTransitioningController: informationTransitionController,
+                                    clipItemListTransitionController: itemListTransitionController,
                                     imageQueryService: container._imageQueryService,
                                     informationViewCache: informationViewCacheController,
                                     previewLoader: container._previewLoader,

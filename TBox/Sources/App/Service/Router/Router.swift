@@ -31,7 +31,8 @@ protocol Router {
                                  transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult
-    func showClipItemListView(clipId: Clip.Identity) -> Bool
+    func showClipItemListView(clipId: Clip.Identity,
+                              transitioningController: ClipItemListTransitionControllable) -> Bool
 
     @discardableResult
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool

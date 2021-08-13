@@ -5,7 +5,7 @@
 import Common
 import UIKit
 
-public protocol ClipItemListTransitionControllable {
+public protocol ClipItemListTransitionControllable: UIViewControllerTransitioningDelegate {
     func isLocked(by id: UUID) -> Bool
     @discardableResult
     func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool

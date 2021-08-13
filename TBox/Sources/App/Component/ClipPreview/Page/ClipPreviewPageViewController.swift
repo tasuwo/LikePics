@@ -374,20 +374,36 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
                      isItemPrimary: store.stateValue.currentIndex == 0)
     }
 
-    var previewingClipId: Clip.Identity? {
-        store.stateValue.clipId
-    }
-
-    var previewingClipItemId: ClipItem.Identity? {
-        store.stateValue.currentItem?.id ?? store.stateValue.initialItemId
-    }
-
     func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }
 
     func clipPreviewAnimator(_ animator: ClipPreviewAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        view.layoutIfNeeded()
+        guard let previewView = currentViewController?.previewView else { return .zero }
+        // HACK: SplitMode 時にサイズが合わない問題を修正
+        previewView.frame = containerView.frame
+        return previewView.convert(previewView.initialImageFrame, to: containerView)
+    }
+}
+
+extension ClipPreviewPageViewController: ClipItemListPresentable {
+    // MARK: - ClipItemListPresentable
+
+    func previewingClipItem(_ animator: ClipItemListAnimator) -> PreviewingClipItem? {
+        guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
+        return .init(clipId: store.stateValue.clipId,
+                     itemId: itemId,
+                     isItemPrimary: store.stateValue.currentIndex == 0)
+    }
+
+    func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {
+        view.layoutIfNeeded()
+        return currentViewController?.previewView
+    }
+
+    func clipItemListAnimator(_ animator: ClipItemListAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
         view.layoutIfNeeded()
         guard let previewView = currentViewController?.previewView else { return .zero }
         // HACK: SplitMode 時にサイズが合わない問題を修正

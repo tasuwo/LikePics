@@ -10,6 +10,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
     & HasClipItemInformationTransitioningController
+    & HasClipItemListTransitionController
     & HasClipItemInformationViewCaching
     & HasPreviewLoader
     & HasTransitionLock
@@ -169,7 +170,10 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .listed:
-            // TODO:
+            if let transitioningController = dependency.clipItemListTransitionController {
+                dependency.router.showClipItemListView(clipId: state.clipId,
+                                                       transitioningController: transitioningController)
+            }
             return (nextState, .none)
 
         case .infoRequested:
