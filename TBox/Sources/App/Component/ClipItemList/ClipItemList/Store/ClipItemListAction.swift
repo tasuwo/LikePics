@@ -23,6 +23,7 @@ enum ClipItemListAction: Action {
     case reordered([ClipItem.Identity])
     case selected(ClipItem.Identity)
     case itemsReorderFailed
+    case dismiss
 
     // MARK: Menu
 

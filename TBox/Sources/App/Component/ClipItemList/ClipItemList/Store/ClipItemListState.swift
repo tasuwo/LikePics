@@ -16,6 +16,8 @@ struct ClipItemListState: Equatable {
         let isHidden: Bool
     }
 
+    let id: UUID
+
     var clip: EditingClip
     var tags: EntityCollectionSnapshot<Tag>
     var items: EntityCollectionSnapshot<ClipItem>
@@ -27,7 +29,8 @@ struct ClipItemListState: Equatable {
 }
 
 extension ClipItemListState {
-    init(clipId: Clip.Identity, isSomeItemsHidden: Bool) {
+    init(id: UUID, clipId: Clip.Identity, isSomeItemsHidden: Bool) {
+        self.id = id
         // 初回は適当な値で埋めておく
         self.clip = .init(id: clipId, dataSize: 0, isHidden: false)
         self.tags = .init()

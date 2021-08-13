@@ -121,7 +121,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let clipCommandService: ClipCommandServiceProtocol
             let clipQueryService: ClipQueryServiceProtocol
             let clipItemInformationTransitioningController: ClipItemInformationTransitioningController?
-            let clipItemListTransitionController: ClipItemListTransitionControllable?
             let imageQueryService: ImageQueryServiceProtocol
             let informationViewCache: ClipItemInformationViewCaching?
             let previewLoader: PreviewLoader
@@ -142,7 +141,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     clipCommandService: container._clipCommandService,
                                     clipQueryService: container._clipQueryService,
                                     clipItemInformationTransitioningController: informationTransitionController,
-                                    clipItemListTransitionController: itemListTransitionController,
                                     imageQueryService: container._imageQueryService,
                                     informationViewCache: informationViewCacheController,
                                     previewLoader: container._previewLoader,
@@ -153,7 +151,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,
                                                            factory: self,
-                                                           transitionController: transitionController)
+                                                           transitionController: transitionController,
+                                                           itemListTransitionController: itemListTransitionController)
 
         transitionController.setup(baseViewController: viewController)
 

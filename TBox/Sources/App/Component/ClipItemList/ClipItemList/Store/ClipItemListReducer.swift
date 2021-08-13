@@ -11,6 +11,7 @@ typealias ClipItemListDependency = HasClipQueryService
     & HasUserSettingStorage
     & HasRouter
     & HasPasteboard
+    & HasModalNotificationCenter
 
 struct ClipItemListReducer: Reducer {
     typealias Dependency = ClipItemListDependency
@@ -70,12 +71,18 @@ struct ClipItemListReducer: Reducer {
             nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
 
-        case .selected:
-            nextState.isDismissed = true
-            return (nextState, .none)
+        case let .selected(itemId):
+            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
+            userInfo[.selectedPreviewItem] = itemId
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipItemList, userInfo: userInfo)
+            return (nextState, [Effect(value: .dismiss)])
 
         case .itemsReorderFailed:
             nextState.alert = .error(L10n.failedToUpdateClip)
+            return (nextState, .none)
+
+        case .dismiss:
+            nextState.isDismissed = true
             return (nextState, .none)
 
         // MARK: Menu
@@ -236,4 +243,14 @@ private extension Clip {
                      dataSize: dataSize,
                      isHidden: isHidden)
     }
+}
+
+// MARK: - ModalNotification
+
+extension ModalNotification.Name {
+    static let clipItemList = ModalNotification.Name("net.tasuwo.TBox.ClipItemListReducer.clipItemList")
+}
+
+extension ModalNotification.UserInfoKey {
+    static let selectedPreviewItem = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipItemListReducer.selectedPreviewItem")
 }

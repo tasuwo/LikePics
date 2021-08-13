@@ -28,6 +28,7 @@ enum ClipPreviewPageViewAction: Action {
 
     case tagsSelected(Set<Tag.Identity>?)
     case albumsSelected(Album.Identity?)
+    case itemRequested(ClipItem.Identity?)
     case modalCompleted(Bool)
 
     // MARK: Alert Completion

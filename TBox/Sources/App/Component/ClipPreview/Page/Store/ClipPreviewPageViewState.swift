@@ -11,6 +11,7 @@ struct ClipPreviewPageViewState: Equatable {
     }
 
     enum Modal: Equatable {
+        case clipItemList(id: UUID)
         case albumSelection(id: UUID)
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
     }
@@ -31,6 +32,7 @@ struct ClipPreviewPageViewState: Equatable {
     var modal: Modal?
 
     var isDismissed: Bool
+    var isPageAnimated: Bool
 }
 
 extension ClipPreviewPageViewState {
@@ -41,6 +43,7 @@ extension ClipPreviewPageViewState {
         items = []
         alert = nil
         isDismissed = false
+        isPageAnimated = true
     }
 }
 
@@ -126,6 +129,7 @@ extension ClipPreviewPageViewState.Alert: Codable {
 extension ClipPreviewPageViewState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection
+        case clipItemList
         case tagSelection
     }
 
@@ -137,6 +141,10 @@ extension ClipPreviewPageViewState.Modal: Codable {
         case .albumSelection:
             let id = try container.decode(UUID.self, forKey: .albumSelection)
             self = .albumSelection(id: id)
+
+        case .clipItemList:
+            let id = try container.decode(UUID.self, forKey: .clipItemList)
+            self = .clipItemList(id: id)
 
         case .tagSelection:
             var nestedContainer = try container.nestedUnkeyedContainer(forKey: .tagSelection)
@@ -155,6 +163,9 @@ extension ClipPreviewPageViewState.Modal: Codable {
         switch self {
         case let .albumSelection(id: id):
             try container.encode(id, forKey: .albumSelection)
+
+        case let .clipItemList(id: id):
+            try container.encode(id, forKey: .clipItemList)
 
         case let .tagSelection(id: id, tagIds: tagIds):
             var nestedContainer = container.nestedUnkeyedContainer(forKey: .tagSelection)

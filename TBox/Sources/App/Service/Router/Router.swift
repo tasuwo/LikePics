@@ -31,7 +31,8 @@ protocol Router {
                                  transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
 
     @discardableResult
-    func showClipItemListView(clipId: Clip.Identity,
+    func showClipItemListView(id: UUID,
+                              clipId: Clip.Identity,
                               transitioningController: ClipItemListTransitionControllable) -> Bool
 
     @discardableResult

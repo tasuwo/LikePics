@@ -58,13 +58,16 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
 
+    private let itemListTransitionController: ClipItemListTransitionControllable
+
     // MARK: - Initializers
 
     init(state: ClipPreviewPageViewRootState,
          cacheController: ClipItemInformationViewCacheController,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
-         transitionController: ClipPreviewPageTransitionControllerType)
+         transitionController: ClipPreviewPageTransitionControllerType,
+         itemListTransitionController: ClipItemListTransitionControllable)
     {
         struct CacheDependency: ClipPreviewPageViewCacheDependency {
             weak var informationViewCache: ClipItemInformationViewCaching?
@@ -89,6 +92,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.factory = factory
 
         self.router = dependency.router
+
+        self.itemListTransitionController = itemListTransitionController
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
@@ -258,6 +263,9 @@ extension ClipPreviewPageViewController {
 
     private func presentModalIfNeeded(for modal: ClipPreviewPageViewState.Modal?) {
         switch modal {
+        case let .clipItemList(id: id):
+            presentClipItemListModal(id: id)
+
         case let .albumSelection(id: id):
             presentAlbumSelectionModal(id: id)
 
@@ -266,6 +274,26 @@ extension ClipPreviewPageViewController {
 
         case .none:
             break
+        }
+    }
+
+    private func presentClipItemListModal(id: UUID) {
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .clipItemList)
+            .sink { [weak self] notification in
+                let itemId = notification.userInfo?[ModalNotification.UserInfoKey.selectedPreviewItem] as? ClipItem.Identity
+                self?.store.execute(.itemRequested(itemId))
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+            }
+
+        let succeeded = router.showClipItemListView(id: id,
+                                                    clipId: store.stateValue.clipId,
+                                                    transitioningController: itemListTransitionController)
+        if !succeeded {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalCompleted(false))
         }
     }
 

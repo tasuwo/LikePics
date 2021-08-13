@@ -5,7 +5,7 @@
 import UIKit
 
 class ClipItemListPresentationAnimator: NSObject {
-    static let transitionDuration: TimeInterval = 0.23
+    static let transitionDuration: TimeInterval = 0.17
 
     private weak var delegate: ClipItemListAnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol

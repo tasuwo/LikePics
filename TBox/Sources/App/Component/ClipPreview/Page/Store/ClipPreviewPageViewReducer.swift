@@ -10,7 +10,6 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
     & HasClipItemInformationTransitioningController
-    & HasClipItemListTransitionController
     & HasClipItemInformationViewCaching
     & HasPreviewLoader
     & HasTransitionLock
@@ -22,6 +21,10 @@ struct ClipPreviewPageViewReducer: Reducer {
 
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
+
+        if !nextState.isPageAnimated {
+            nextState.isPageAnimated = true
+        }
 
         switch action {
         // MARK: View Life-Cycle
@@ -118,6 +121,15 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.modal = nil
             return (nextState, .none)
 
+        case let .itemRequested(itemId):
+            guard let newIndex = nextState.items.firstIndex(where: { $0.id == itemId }) else {
+                return (nextState, .none)
+            }
+            nextState.isPageAnimated = false
+            nextState.currentIndex = newIndex
+            nextState.modal = nil
+            return (nextState, .none)
+
         case .modalCompleted:
             nextState.modal = nil
             return (nextState, .none)
@@ -170,10 +182,7 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .listed:
-            if let transitioningController = dependency.clipItemListTransitionController {
-                dependency.router.showClipItemListView(clipId: state.clipId,
-                                                       transitioningController: transitioningController)
-            }
+            nextState.modal = .clipItemList(id: UUID())
             return (nextState, .none)
 
         case .infoRequested:
